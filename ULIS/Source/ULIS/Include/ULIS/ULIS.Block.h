@@ -9,16 +9,10 @@
 */
 
 #include <stdint.h>
+#include <limits>
+#include "ULIS/ULIS.BaseTypes.h"
 
-/////////////////////////////////////////////////////
-// Fundamental Typedefs
-typedef uint8_t uint8;
-typedef uint16_t uint16;
-typedef uint32_t uint32;
-typedef int8_t int8;
-typedef int16_t int16;
-typedef int32_t int32;
-
+namespace ULIS {
 
 // ID specification
 //  32bit pattern:   0000 0000   0000 0000   0000 0000   0000 0000
@@ -39,169 +33,112 @@ typedef int32_t int32;
 
 /////////////////////////////////////////////////////
 // Colormode IDs
-#define FCM_BIT     0x0
-#define FCM_GRAY    0x1
-#define FCM_RGB     0x2
-#define FCM_CMY     0x3
-#define FCM_CMYK    0x4
-#define FCM_LAB     0x5
-#define FCM_XYZ     0x6
-#define FCM_HSV     0x7
-#define FCM_HSL     0x8
+#define ULIS_FCM_BIT        0x0
+#define ULIS_FCM_GRAY       0x1
+#define ULIS_FCM_RGB        0x2
+#define ULIS_FCM_CMY        0x3
+#define ULIS_FCM_CMYK       0x4
+#define ULIS_FCM_LAB        0x5
+#define ULIS_FCM_XYZ        0x6
+#define ULIS_FCM_HSV        0x7
+#define ULIS_FCM_HSL        0x8
 
 
 /////////////////////////////////////////////////////
 // Colorspace IDs
-#define FCS_NONE    0x0
-#define FCS_SRGB    0x1
-#define FCS_CADBRGB 0x2
-#define FCS_CXYZ    0x3
-#define FCS_CLAB    0x4
+#define ULIS_FCS_NONE       0x0
+#define ULIS_FCS_SRGB       0x1
+#define ULIS_FCS_CADBRGB    0x2
+#define ULIS_FCS_CXYZ       0x3
+#define ULIS_FCS_CLAB       0x4
 
 
 /////////////////////////////////////////////////////
 // Type IDs
-#define FCT_I8      0x0
-#define FCT_I16     0x1
-#define FCT_I32     0x2
-#define FCT_UI8     0x3
-#define FCT_UI16    0x4
-#define FCT_UI32    0x5
-#define FCT_F       0x6
-#define FCT_D       0x7
+#define ULIS_FCT_I8         0x0
+#define ULIS_FCT_I16        0x1
+#define ULIS_FCT_I32        0x2
+#define ULIS_FCT_UI8        0x3
+#define ULIS_FCT_UI16       0x4
+#define ULIS_FCT_UI32       0x5
+#define ULIS_FCT_F          0x6
+#define ULIS_FCT_D          0x7
 
 
 /////////////////////////////////////////////////////
 // Left Shift bitfield encoding
-#define LS_CM( i )  ((i&0xf)<<28)
-#define LS_CS( i )  ((i&0xf)<<24)
-#define LS_CT( i )  ((i&0xf)<<20)
-#define LS_LI( i )  ((i&1)<<19)
-#define LS_DE( i )  ((i&1)<<18)
-#define LS_PL( i )  ((i&1)<<17)
-#define LS_PR( i )  ((i&1)<<16)
-#define LS_NC( i )  ((i&0xf)<<12)
-#define LS_FS( i )  ((i&1)<<11)
-#define LS_SC( i )  ((i&1)<<10)
-#define LS_HE( i )  ((i&1)<<9)
+#define ULIS_LS_CM( i )     ((i&0xf)<<28)
+#define ULIS_LS_CS( i )     ((i&0xf)<<24)
+#define ULIS_LS_CT( i )     ((i&0xf)<<20)
+#define ULIS_LS_LI( i )     ((i&1)<<19)
+#define ULIS_LS_DE( i )     ((i&1)<<18)
+#define ULIS_LS_PL( i )     ((i&1)<<17)
+#define ULIS_LS_PR( i )     ((i&1)<<16)
+#define ULIS_LS_NC( i )     ((i&0xf)<<12)
+#define ULIS_LS_FS( i )     ((i&1)<<11)
+#define ULIS_LS_SC( i )     ((i&1)<<10)
+#define ULIS_LS_HE( i )     ((i&1)<<9)
 
 
 /////////////////////////////////////////////////////
 // Right Shift bitfield decoding
-#define RS_CM( i )  ((i&0xf0000000)>>28)
-#define RS_CS( i )  ((i&0x0f000000)>>24)
-#define RS_CT( i )  ((i&0x00f00000)>>20)
-#define RS_LI( i )  ((i&0x00080000)>>19)
-#define RS_DE( i )  ((i&0x00040000)>>18)
-#define RS_PL( i )  ((i&0x00020000)>>17)
-#define RS_PR( i )  ((i&0x00010000)>>16)
-#define RS_NC( i )  ((i&0x0000f000)>>12)
-#define RS_FS( i )  ((i&0x00000800)>>11)
-#define RS_SC( i )  ((i&0x00000400)>>10)
-#define RS_HE( i )  ((i&0x00000200)>>9)
-
-
-/////////////////////////////////////////////////////
-// Bitfield Enum IDs
-// Types
-#define CM_T    uint8
-#define CS_T    uint8
-#define CT_T    uint8
-#define LI_T    bool
-#define DE_T    bool
-#define PL_T    bool
-#define PR_T    bool
-#define NC_T    uint8
-#define FS_T    bool
-#define SC_T    bool
-#define HE_T    bool
-
-// Names
-#define CM_N    _tcm
-#define CS_N    _tcs
-#define CT_N    _tct
-#define LI_N    _tli
-#define DE_N    _tde
-#define PL_N    _tpl
-#define PR_N    _tpr
-#define NC_N    _tnc
-#define FS_N    _tfs
-#define SC_N    _tsc
-#define HE_N    _the
+#define ULIS_RS_CM( i )     ((i&0xf0000000)>>28)
+#define ULIS_RS_CS( i )     ((i&0x0f000000)>>24)
+#define ULIS_RS_CT( i )     ((i&0x00f00000)>>20)
+#define ULIS_RS_LI( i )     ((i&0x00080000)>>19)
+#define ULIS_RS_DE( i )     ((i&0x00040000)>>18)
+#define ULIS_RS_PL( i )     ((i&0x00020000)>>17)
+#define ULIS_RS_PR( i )     ((i&0x00010000)>>16)
+#define ULIS_RS_NC( i )     ((i&0x0000f000)>>12)
+#define ULIS_RS_FS( i )     ((i&0x00000800)>>11)
+#define ULIS_RS_SC( i )     ((i&0x00000400)>>10)
+#define ULIS_RS_HE( i )     ((i&0x00000200)>>9)
 
 
 /////////////////////////////////////////////////////
 // Bitfield Utility
-#define DECODE_ALL_FIELDS( i )  \
-     RS_CM( i ) \
-    ,RS_CS( i ) \
-    ,RS_CT( i ) \
-    ,RS_LI( i ) \
-    ,RS_DE( i ) \
-    ,RS_PL( i ) \
-    ,RS_PR( i ) \
-    ,RS_NC( i ) \
-    ,RS_FS( i ) \
-    ,RS_SC( i ) \
-    ,RS_HE( i )
+#define ULIS_ENCODE_ALL_FIELDS( cm, cs, ct, li, de, pl, pr, nc, fs, sc, he )    (   ULIS_LS_CM( cm ) | ULIS_LS_CS( cs ) | ULIS_LS_CT( ct ) | ULIS_LS_LI( li ) | ULIS_LS_DE( de ) | ULIS_LS_PL( pl ) | ULIS_LS_PR( pr ) | ULIS_LS_NC( nc ) | ULIS_LS_FS( fs ) | ULIS_LS_SC( sc ) | ULIS_LS_HE( he ) )
 
-#define REQUIRE_ALL_FIELDS \
-     CM_T CM_N \
-    ,CS_T CS_N \
-    ,CT_T CT_N \
-    ,LI_T LI_N \
-    ,DE_T DE_N \
-    ,PL_T PL_N \
-    ,PR_T PR_N \
-    ,NC_T NC_N \
-    ,FS_T FS_N \
-    ,SC_T SC_N \
-    ,HE_T HE_N
-
-#define UNROLL_ALL_FIELDS \
-     CM_N \
-    ,CS_N \
-    ,CT_N \
-    ,LI_N \
-    ,DE_N \
-    ,PL_N \
-    ,PR_N \
-    ,NC_N \
-    ,FS_N \
-    ,SC_N \
-    ,HE_N
 
 /////////////////////////////////////////////////////
 // Bitfields
-#define TYPE_sRGB_RGBI8         ( LS_CM( FCM_RGB ) | LS_CS( FCS_SRGB ) | LS_CT( FCT_I8 ) | LS_LI( 0 ) | LS_DE( 0 ) | LS_PL( 0 ) | LS_PR( 0 ) | LS_NC( 3 ) | LS_FS( 0 ) | LS_SC( 0 ) )
-#define TYPE_sRGB_RGBI8_PLANAR  ( LS_CM( FCM_RGB ) | LS_CS( FCS_SRGB ) | LS_CT( FCT_I8 ) | LS_LI( 0 ) | LS_DE( 0 ) | LS_PL( 1 ) | LS_PR( 0 ) | LS_NC( 3 ) | LS_FS( 0 ) | LS_SC( 0 ) )
+#define ULIS_TYPE_sRGB_RGBI8            ULIS_ENCODE_ALL_FIELDS( ULIS_FCM_RGB, ULIS_FCS_SRGB, ULIS_FCT_I8, 0, 0, 0, 0, 3, 0, 0, 0 )
+#define ULIS_TYPE_sRGB_RGBI8_PLANAR     ULIS_ENCODE_ALL_FIELDS( ULIS_FCM_RGB, ULIS_FCS_SRGB, ULIS_FCT_I8, 0, 0, 1, 0, 3, 0, 0, 0 )
 
 
 /////////////////////////////////////////////////////
-// TPPXIndex
-template< bool _tfs, bool _tsc, uint8 _tnc > struct TPPXIndex { const uint8 arr[_tnc] = { 0 }; };
-template< bool _tfs, bool _tsc > struct TPPXIndex< _tfs, _tsc, 1 > { const uint8 arr[1] = { 0 }; };
-template< bool _tfs, bool _tsc > struct TPPXIndex< _tfs, _tsc, 2 > { const uint8 arr[2] = { 0, 1 }; };
-template< bool _tfs, bool _tsc > struct TPPXIndex< _tfs, _tsc, 3 > { const uint8 arr[3] = { 0, 1, 2 }; };
-template< bool _tfs, bool _tsc > struct TPPXIndex< _tfs, _tsc, 4 > { const uint8 arr[4] = { 0, 1, 2, 3 }; };
-template< bool _tfs, bool _tsc > struct TPPXIndex< _tfs, _tsc, 5 > { const uint8 arr[5] = { 0, 1, 2, 3, 4 }; };
-template< bool _tsc > struct TPPXIndex< true, _tsc, 1 > { const uint8 arr[1] = { 0 }; };
-template< bool _tsc > struct TPPXIndex< true, _tsc, 2 > { const uint8 arr[2] = { 1, 0 }; };
-template< bool _tsc > struct TPPXIndex< true, _tsc, 3 > { const uint8 arr[3] = { 1, 2, 0 }; };
-template< bool _tsc > struct TPPXIndex< true, _tsc, 4 > { const uint8 arr[4] = { 1, 2, 3, 0 }; };
-template< bool _tsc > struct TPPXIndex< true, _tsc, 5 > { const uint8 arr[5] = { 1, 2, 3, 4, 0 }; };
-template< bool _tfs > struct TPPXIndex< _tfs, true, 1 > { const uint8 arr[1] = { 0 }; };
-template< bool _tfs > struct TPPXIndex< _tfs, true, 2 > { const uint8 arr[2] = { 1, 0 }; };
-template< bool _tfs > struct TPPXIndex< _tfs, true, 3 > { const uint8 arr[3] = { 2, 1, 0 }; };
-template< bool _tfs > struct TPPXIndex< _tfs, true, 4 > { const uint8 arr[4] = { 2, 1, 0, 3 }; };
-template< bool _tfs > struct TPPXIndex< _tfs, true, 5 > { const uint8 arr[5] = { 1, 2, 3, 0, 4 }; };
-template<> struct TPPXIndex< true, true, 1 > { const uint8 arr[1] = { 0 }; };
-template<> struct TPPXIndex< true, true, 2 > { const uint8 arr[2] = { 0, 1 }; };
-template<> struct TPPXIndex< true, true, 3 > { const uint8 arr[3] = { 2, 1, 0 }; };
-template<> struct TPPXIndex< true, true, 4 > { const uint8 arr[4] = { 3, 2, 1, 0 }; };
-template<> struct TPPXIndex< true, true, 5 > { const uint8 arr[5] = { 2, 3, 4, 1, 0 }; };
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+#define ULIS_ADD_INDEX_RULE( iCount, ... )          template< bool _tfs, bool _tsc > struct TPixelIndexRule< _tfs, _tsc, iCount > { const uint8 m[iCount] = __VA_ARGS__; }; 
+#define ULIS_ADD_FS_INDEX_RULE( iCount, ... )       template< bool _tsc > struct TPixelIndexRule< true, _tsc, iCount > { const uint8 m[iCount] = __VA_ARGS__; }; 
+#define ULIS_ADD_SC_INDEX_RULE( iCount, ... )       template< bool _tfs > struct TPixelIndexRule< _tfs, true, iCount > { const uint8 m[iCount] = __VA_ARGS__; }; 
+#define ULIS_ADD_FS_SC_INDEX_RULE( iCount, ... )    template<> struct TPixelIndexRule< true, true, iCount > { const uint8 m[iCount] = __VA_ARGS__; }; 
+template< bool _tfs, bool _tsc, uint8 _tnc >
+struct TPixelIndexRule final {};
+ULIS_ADD_INDEX_RULE( 1, { 0 } )
+ULIS_ADD_INDEX_RULE( 2, { 0, 1 } )
+ULIS_ADD_INDEX_RULE( 3, { 0, 1, 2 } )
+ULIS_ADD_INDEX_RULE( 4, { 0, 1, 2, 3 } )
+ULIS_ADD_INDEX_RULE( 5, { 0, 1, 2, 3, 4 } )
+ULIS_ADD_FS_INDEX_RULE( 1, { 0 } )
+ULIS_ADD_FS_INDEX_RULE( 2, { 1, 0 } )
+ULIS_ADD_FS_INDEX_RULE( 3, { 1, 2, 0 } )
+ULIS_ADD_FS_INDEX_RULE( 4, { 1, 2, 3, 0 } )
+ULIS_ADD_FS_INDEX_RULE( 5, { 1, 2, 3, 4, 0 } )
+ULIS_ADD_SC_INDEX_RULE( 1, { 0 } )
+ULIS_ADD_SC_INDEX_RULE( 2, { 1, 0 } )
+ULIS_ADD_SC_INDEX_RULE( 3, { 2, 1, 0 } )
+ULIS_ADD_SC_INDEX_RULE( 4, { 2, 1, 0, 3 } )
+ULIS_ADD_SC_INDEX_RULE( 5, { 1, 2, 3, 0, 4 } )
+ULIS_ADD_FS_SC_INDEX_RULE( 1, { 0 } )
+ULIS_ADD_FS_SC_INDEX_RULE( 2, { 0, 1 } )
+ULIS_ADD_FS_SC_INDEX_RULE( 3, { 2, 1, 0 } )
+ULIS_ADD_FS_SC_INDEX_RULE( 4, { 3, 2, 1, 0 } )
+ULIS_ADD_FS_SC_INDEX_RULE( 5, { 2, 3, 4, 1, 0 } )
 
 
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 // IPixelProxy
 class IPixelProxy
@@ -213,134 +150,145 @@ public:
 
 
 /////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
 // TPixelProxyBase
 template< typename _tt, bool _tpl, bool _tfs, bool _tsc, uint8 _tnc >
 struct TPixelProxyBase : public IPixelProxy
 {
-    TPPXIndex< _tfs, _tsc, _tnc > indexlist;
+    TPixelIndexRule< _tfs, _tsc, _tnc > indexlist;
 };
 
 
 /////////////////////////////////////////////////////
-// TBlockInfo
-template< typename _tt, bool _tpl, bool _tfs, bool _tsc, uint8 _tnc >
-struct TBlockInfo
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TBlockDataInfo
+template< typefield T, typename _tt >
+struct TBlockDataInfo
 {
+    static constexpr const typefieldId  cm = ULIS_RS_CM( T ); // ColorMode (Id)
+    static constexpr const typefieldId  cs = ULIS_RS_CS( T ); // ColorSpace (Id)
+    static constexpr const typefieldId  ct = ULIS_RS_CT( T ); // ChannelType (Id)
+    static constexpr const typefieldBit li = ULIS_RS_LI( T ); // Linear (Bit)
+    static constexpr const typefieldBit de = ULIS_RS_DE( T ); // Decimal (Bit)
+    static constexpr const typefieldBit pl = ULIS_RS_PL( T ); // Planar (Bit)
+    static constexpr const typefieldBit pr = ULIS_RS_PR( T ); // Premultiplied (Bit)
+    static constexpr const uint8        nc = ULIS_RS_NC( T ); // NumChannel ( Count )
+    static constexpr const typefieldBit fs = ULIS_RS_FS( T ); // FirstSwapped (Bit)
+    static constexpr const typefieldBit sc = ULIS_RS_SC( T ); // SwappedComponent (Bit)
+    static constexpr const typefieldBit he = ULIS_RS_HE( T ); // HasExtra (Bit)
+    static constexpr const uint8        channelCount = nc+(uint8)he; // Real Channel Count, add Extra Alpha if specified
+    static constexpr const char*  type_name() { return typeid(_tt).name(); } // Type Name as c-string
+    // Limits
+    static constexpr const _tt realtypemax = std::numeric_limits< _tt >::max();
+    static constexpr const _tt realtypemin = std::numeric_limits< _tt >::min();
+    static constexpr const _tt trangemax = de ? (_tt)1.0 : realtypemax;
+    static constexpr const _tt trangemin = de ? (_tt)0.0 : realtypemin;
+    static constexpr const int64_t irangemax = de ? 1 : (int64_t)realtypemax;
+    static constexpr const int64_t irangemin = de ? 0 : (int64_t)realtypemin;
+    static constexpr uint16_t depth = sizeof( _tt );
 };
 
 
 /////////////////////////////////////////////////////
-// TBlockStructureSelector
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TBlockDataStructure
 //--------------------------------------------------------------------------------------
-//----------------------------------------------------------- _tpl false, Interleaved
-template< typename _tt, bool _tpl, bool _tfs, bool _tsc, uint8 _tnc >
-class TBlockStructureSelector
+//----------------------------------------------------------- typefieldBit _tpl PL false, Interleaved
+template< typefield T, typename _tt, typefieldBit _tpl >
+class TBlockDataStructure
 {
+    typedef TBlockDataInfo< T, _tt > tBlockDataInfoType;
+
 public:
     // Construction / Destruction
-    TBlockStructureSelector() {
-        data = NULL;
+    TBlockDataStructure() : data( NULL ) {}
+
+    TBlockDataStructure( int width, int height ) {
+        data = new _tt[ width * height * tBlockDataInfoType::channelCount ];
     }
 
-    TBlockStructureSelector( int width, int height ) {
-        data = new _tt[ width * height * _tnc ];
-    }
+    ~TBlockDataStructure() { delete [] data; }
 
-    ~TBlockStructureSelector() {
-        delete [] data;
-    }
-
-private:
-    // Private Data
+protected:
+    // Protected Data
     _tt* data; // Interleaved contiguous repr
 };
 
 
 //--------------------------------------------------------------------------------------
-//----------------------------------------------------------- _tpl true, Planar
-template< typename _tt, bool _tfs, bool _tsc, uint8 _tnc >
-class TBlockStructureSelector< _tt, true, _tfs, _tsc, _tnc >
+//----------------------------------------------------------- typefieldBit _tpl PL true, Planar
+template< typefield T, typename _tt >
+class TBlockDataStructure< T, _tt, true >
 {
-public:
-    TBlockStructureSelector() {
-        data = NULL;
-    }
+    typedef TBlockDataInfo< T, _tt > tBlockDataInfoType;
 
-    TBlockStructureSelector( int width, int height ) {
-        data = new _tt*[ _tnc ];
-        for( int i = 0; i < _tnc; ++ i )
+public:
+    // Construction / Destruction
+    TBlockDataStructure() : data( NULL ) {}
+
+    TBlockDataStructure( int width, int height ) {
+        data = new _tt*[ tBlockDataInfoType::channelCount ];
+        for( int i = 0; i < tBlockDataInfoType::channelCount; ++ i )
             data[i] = new _tt[ width * height ];
     }
 
-    ~TBlockStructureSelector() {
-        for( int i = 0; i < _tnc; ++ i )
+    ~TBlockDataStructure() {
+        for( int i = 0; i < tBlockDataInfoType::channelCount; ++ i )
             delete [] data[i];
         delete [] data;
     }
 
-private:
-    // Private Data
+protected:
+    // Protected Data
     _tt** data; // Planar channels repr
 };
 
 
 /////////////////////////////////////////////////////
-// TBlockTypeSelector
-// FCT_I8   = 0 = int8
-// FCT_I16  = 1 = int16
-// FCT_I32  = 2 = int32
-// FCT_UI8  = 3 = uint8
-// FCT_UI16 = 4 = uint16
-// FCT_UI32 = 5 = uint32
-// FCT_F    = 6 = float
-// FCT_D    = 7 = double
-template< uint8 _tc, bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector final {};
-template< bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector< FCT_I8,     _tpl, _tfs, _tsc, _tnc > : public TBlockStructureSelector< int8,      _tpl, _tfs, _tsc, _tnc > { using tSuperClass = TBlockStructureSelector< int8,      _tpl, _tfs, _tsc, _tnc >; using tSuperClass::tSuperClass; };
-template< bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector< FCT_I16,    _tpl, _tfs, _tsc, _tnc > : public TBlockStructureSelector< int16,     _tpl, _tfs, _tsc, _tnc > { using tSuperClass = TBlockStructureSelector< int16,     _tpl, _tfs, _tsc, _tnc >; using tSuperClass::tSuperClass; };
-template< bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector< FCT_I32,    _tpl, _tfs, _tsc, _tnc > : public TBlockStructureSelector< int32,     _tpl, _tfs, _tsc, _tnc > { using tSuperClass = TBlockStructureSelector< int32,     _tpl, _tfs, _tsc, _tnc >; using tSuperClass::tSuperClass; };
-template< bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector< FCT_UI8,    _tpl, _tfs, _tsc, _tnc > : public TBlockStructureSelector< uint8,     _tpl, _tfs, _tsc, _tnc > { using tSuperClass = TBlockStructureSelector< uint8,     _tpl, _tfs, _tsc, _tnc >; using tSuperClass::tSuperClass; };
-template< bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector< FCT_UI16,   _tpl, _tfs, _tsc, _tnc > : public TBlockStructureSelector< uint16,    _tpl, _tfs, _tsc, _tnc > { using tSuperClass = TBlockStructureSelector< uint16,    _tpl, _tfs, _tsc, _tnc >; using tSuperClass::tSuperClass; };
-template< bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector< FCT_UI32,   _tpl, _tfs, _tsc, _tnc > : public TBlockStructureSelector< uint32,    _tpl, _tfs, _tsc, _tnc > { using tSuperClass = TBlockStructureSelector< uint32,    _tpl, _tfs, _tsc, _tnc >; using tSuperClass::tSuperClass; };
-template< bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector< FCT_F,      _tpl, _tfs, _tsc, _tnc > : public TBlockStructureSelector< float,     _tpl, _tfs, _tsc, _tnc > { using tSuperClass = TBlockStructureSelector< float,     _tpl, _tfs, _tsc, _tnc >; using tSuperClass::tSuperClass; };
-template< bool _tpl, bool _tfs, bool _tsc, uint8 _tnc > class TBlockTypeSelector< FCT_D,      _tpl, _tfs, _tsc, _tnc > : public TBlockStructureSelector< double,    _tpl, _tfs, _tsc, _tnc > { using tSuperClass = TBlockStructureSelector< double,    _tpl, _tfs, _tsc, _tnc >; using tSuperClass::tSuperClass; };
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TBlockDataStructureTypeSelector
+#define ULIS_ADD_STRUCTURE_TYPE( iID, iType ) template< typefield T > class TBlockDataStructureTypeSelector< T, /**/iID/**/ > : public TBlockDataStructure< T, /**/iType/**/, ULIS_RS_PL( T ) > { using tSuperClass = TBlockDataStructure< T, /**/iType/**/, ULIS_RS_PL( T ) >; using tSuperClass::tSuperClass; };
+template< typefield T, typefieldId _tct > class TBlockDataStructureTypeSelector final {};
+ULIS_ADD_STRUCTURE_TYPE( ULIS_FCT_I8  , int8   )
+ULIS_ADD_STRUCTURE_TYPE( ULIS_FCT_I16 , int16  )
+ULIS_ADD_STRUCTURE_TYPE( ULIS_FCT_I32 , int32  )
+ULIS_ADD_STRUCTURE_TYPE( ULIS_FCT_UI8 , uint8  )
+ULIS_ADD_STRUCTURE_TYPE( ULIS_FCT_UI16, uint16 )
+ULIS_ADD_STRUCTURE_TYPE( ULIS_FCT_UI32, uint32 )
+ULIS_ADD_STRUCTURE_TYPE( ULIS_FCT_F   , float  )
+ULIS_ADD_STRUCTURE_TYPE( ULIS_FCT_D   , double )
 
 
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 // TBlockData
-template< REQUIRE_ALL_FIELDS >
+template< typefield T >
 class TBlockData :
-    public TBlockTypeSelector< _tct, _tpl, _tfs, _tsc, _tnc >
+    public TBlockDataStructureTypeSelector< T, ULIS_RS_CT( T ) >
 {
-private:
-    // Forward Constructors
-    using tSuperClass = TBlockTypeSelector< _tct, _tpl, _tfs, _tsc, _tnc >;
-    using tSuperClass::tSuperClass;
+    using tSuperClass = TBlockDataStructureTypeSelector< T, ULIS_RS_CT( T ) >;
+    using tSuperClass::tSuperClass; 
+
+public:
+    uint8* Bytes() { return (uint8*)data; }
+    const uint8* Bytes() const { return (uint8*)data; }
 };
+
 
 
 /////////////////////////////////////////////////////
-// IAbstractBlock
-class IAbstractBlock
-{
-public:
-    // Construction / Destruction
-    IAbstractBlock() {}
-    virtual ~IAbstractBlock() {} // Polymorphic
-
-public:
-    // Public API
-    virtual uint32 ID() const = 0;
-};
-
-
+/////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 // TBlock
-template< uint32 _tid >
-class TBlock : public IAbstractBlock
+template< typefield T >
+class TBlock : public IBlock
 {
-public:
-    // Typedefs
-    typedef TBlockData< DECODE_ALL_FIELDS( _tid ) > tBlockDataType;
+    typedef TBlockData< T > tBlockDataType;
 
 public:
     // Construction / Destruction
@@ -349,11 +297,13 @@ public:
 
 public:
     // ¨Public API
-    virtual uint32 ID() const override { return _tid; }
+    virtual typefield RuntimeID() const override { return T; }
+    virtual uint8* Bytes() override { return d->Bytes(); }
+    virtual const uint8* Bytes() const override { return d->Bytes(); }
 
 public:
     // Constexpr API
-    static constexpr uint32 bitfield() { return _tid; }
+    static constexpr typefield Typefield() { return T; }
 
 private:
     // Private Data
@@ -361,62 +311,32 @@ private:
 };
 
 
+
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// IBlock
+class IBlock
+{
+public:
+    // Construction / Destruction
+    IBlock() {}
+    virtual ~IBlock() {} // Polymorphic
+
+public:
+    // Public API
+    virtual typefield RuntimeID() const = 0;
+    virtual uint8* Bytes() = 0;
+    virtual const uint8* Bytes() const = 0;
+};
+
+
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 // Typedefs
-typedef TBlock< TYPE_sRGB_RGBI8 > FBlock_sRGB_RGBI8;
-typedef TBlock< TYPE_sRGB_RGBI8_PLANAR > FBlock_sRGB_RGBI8_Planar;
+typedef TBlock< ULIS_TYPE_sRGB_RGBI8 >           FBlock_sRGB_RGBI8;
+typedef TBlock< ULIS_TYPE_sRGB_RGBI8_PLANAR >    FBlock_sRGB_RGBI8_Planar;
 
 
-/////////////////////////////////////////////////////
-// Utility
-
-template< uint32 _tid >
-void DoStuff( TBlock< _tid >* iBlock )
-{
-    auto dummy = 0;
-}
-
-
-void DoStuff2( IAbstractBlock* iBlock )
-{
-    auto dummy = 0;
-}
-
-
-IAbstractBlock* CreateBlock( uint32 id )
-{
-    switch( id )
-    {
-        case TYPE_sRGB_RGBI8:
-        {
-            return  new FBlock_sRGB_RGBI8();
-            break;
-        }
-
-        case TYPE_sRGB_RGBI8_PLANAR:
-        {
-            return  new FBlock_sRGB_RGBI8_Planar();
-            break;
-        }
-    }
-    return NULL;
-}
-
-
-void CallDoStuffSelectCast( IAbstractBlock* iBlock )
-{
-    switch( iBlock->ID() )
-    {
-        case TYPE_sRGB_RGBI8:
-        {
-            DoStuff( (TBlock< TYPE_sRGB_RGBI8 >*)iBlock );
-            break;
-        }
-
-        case TYPE_sRGB_RGBI8_PLANAR:
-        {
-            DoStuff( (TBlock< TYPE_sRGB_RGBI8_PLANAR >*)iBlock );
-            break;
-        }
-    }
-}
+} // namespace ULIS
