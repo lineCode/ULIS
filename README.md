@@ -1,5 +1,5 @@
 # ULIS
-![alt text](http://clementberthaud.com/dev/dep/Rivet/media/com/rivet_100.png "Rivet")
+![alt text](http://clementberthaud.com/dev/dep/ULIS/media/com/ulis_100.png "ULIS")
 
 Unlimited Library for Image Software
 
