@@ -1,0 +1,3 @@
+[submodule "ULIS/Tools/Submodules/ProjectDependencies/ProjectDependencies"]
+	path = ULIS/Tools/Submodules/ProjectDependencies/ProjectDependencies
+	url = git@perso.github.com:Robot-Fromage/ProjectDependencies.git
