@@ -32,7 +32,7 @@ set( CMAKE_DEBUG_POSTFIX d )
 project( ULIS CXX )
 
 # Read Preferences if needed
-if( ${RIVET_USE_CONFIG} )
+if( ${ULIS_USE_CONFIG} )
     # Read Default Preferences
     include(${CMAKE_CURRENT_SOURCE_DIR}/../Tools/DefaultConfig.cmake)
     # Read Preferences Overrides if set
@@ -50,13 +50,10 @@ if( ${RIVET_USE_CONFIG} )
     endif()
 endif()
 
-set (CMAKE_PREFIX_PATH ${RIVET_QT_CMAKE_PATH})
-set (CMAKE_AUTOMOC ON)
-
 # Add projects
 include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS/CMakeLists.txt)
 
-if( ${RIVET_BUILD_TESTS} )
+if( ${ULIS_BUILD_TESTS} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Test/CMakeLists.txt) # Depends on ULIS
 endif()
 
