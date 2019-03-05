@@ -177,7 +177,7 @@ struct TBlockDataInfo
 /////////////////////////////////////////////////////
 // TPixelProxyBase
 template< typefield T, typename _tt >
-struct TPixelProxy : public IPixelProxy
+struct TPixelProxy
 {
     typedef TBlockDataInfo< T, _tt > tBlockDataInfoType;
     typedef TPixelIndexRule< tBlockDataInfoType::fs, tBlockDataInfoType::sc, tBlockDataInfoType::channelCount > tPixelIndexRuleType;
@@ -303,16 +303,60 @@ class TBlockData :
     using tSuperClass::tSuperClass; 
 
 public:
-    uint8*          Bytes() { return (uint8*)data; }
-    const uint8*    Bytes() const { return (uint8*)data; }
-    uint8*          PixelByte( int x, int y ) { return (uint8*)data; }
-    const uint8*    PixelByte( int x, int y ) const { return (uint8*)data; }
-    uint8*          ScanlineByte( int row ) { return (uint8*)data; }
-    const uint8*    ScanlineByte( int row ) const { return (uint8*)data; }
-    int             Width() const { return  width; }
-    int             Height() const { return  height; }
+    uint8*          Bytes() { return (uint8*)tSuperClass::data; }
+    const uint8*    Bytes() const { return (uint8*)tSuperClass::data; }
+    uint8*          PixelByte( int x, int y ) { return (uint8*)tSuperClass::data; }
+    const uint8*    PixelByte( int x, int y ) const { return (uint8*)tSuperClass::data; }
+    uint8*          ScanlineByte( int row ) { return (uint8*)tSuperClass::data; }
+    const uint8*    ScanlineByte( int row ) const { return (uint8*)tSuperClass::data; }
+    int             Width() const { return  tSuperClass::width; }
+    int             Height() const { return  tSuperClass::height; }
 };
 
+
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// IBlock
+class IBlock
+{
+public:
+    // Construction / Destruction
+    IBlock() {}
+    virtual ~IBlock() {} // Polymorphic
+
+public:
+    // Public API
+    virtual typefield       ID() const = 0;
+    virtual uint8*          Bytes() = 0;
+    virtual const uint8*    Bytes() const = 0;
+    virtual uint8*          PixelByte( int x, int y ) = 0;
+    virtual const uint8*    PixelByte( int x, int y ) const = 0;
+    virtual uint8*          ScanlineByte( int row ) = 0;
+    virtual const uint8*    ScanlineByte( int row ) const = 0;
+    virtual typefieldId     ColorModeID() const = 0;
+    virtual typefieldId     ColorSpaceID() const = 0;
+    virtual typefieldId     ChannelTypeID() const = 0;
+    virtual bool            IsLinear() const = 0;
+    virtual bool            IsDecimal() const = 0;
+    virtual bool            IsPlanar() const = 0;
+    virtual bool            IsPremultiplied() const = 0;
+    virtual bool            HasAlpha() const = 0;
+    virtual bool            IsSwapped() const = 0;
+    virtual bool            IsAlphaFirst() const = 0;
+    virtual int             ChannelCount() const = 0;
+    virtual const char*     TypeName() const = 0;
+    virtual int64           RangeMaxI() const = 0;
+    virtual int64           RangeMinI() const = 0;
+    virtual double          RangeMaxD() const = 0;
+    virtual double          RangeMinD() const = 0;
+    virtual int             DepthBytes() const = 0;
+    virtual int             DepthBits() const = 0;
+    virtual int             BytesPerPixel() const = 0;
+    virtual int             BitsPerPixel() const = 0;
+    virtual int             Width() const = 0;
+    virtual int             Height() const = 0;
+};
 
 
 /////////////////////////////////////////////////////
@@ -369,51 +413,6 @@ public:
 private:
     // Private Data
     tBlockDataType* d;
-};
-
-
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-// IBlock
-class IBlock
-{
-public:
-    // Construction / Destruction
-    IBlock() {}
-    virtual ~IBlock() {} // Polymorphic
-
-public:
-    // Public API
-    virtual typefield       ID() const = 0;
-    virtual uint8*          Bytes() = 0;
-    virtual const uint8*    Bytes() const = 0;
-    virtual uint8*          PixelByte( int x, int y ) = 0;
-    virtual const uint8*    PixelByte( int x, int y ) const = 0;
-    virtual uint8*          ScanlineByte( int row ) = 0;
-    virtual const uint8*    ScanlineByte( int row ) const = 0;
-    virtual typefieldId     ColorModeID() const = 0;
-    virtual typefieldId     ColorSpaceID() const = 0;
-    virtual typefieldId     ChannelTypeID() const = 0;
-    virtual bool            IsLinear() const = 0;
-    virtual bool            IsDecimal() const = 0;
-    virtual bool            IsPlanar() const = 0;
-    virtual bool            IsPremultiplied() const = 0;
-    virtual bool            HasAlpha() const = 0;
-    virtual bool            IsSwapped() const = 0;
-    virtual bool            IsAlphaFirst() const = 0;
-    virtual int             ChannelCount() const = 0;
-    virtual const char*     TypeName() const = 0;
-    virtual int64           RangeMaxI() const = 0;
-    virtual int64           RangeMinI() const = 0;
-    virtual double          RangeMaxD() const = 0;
-    virtual double          RangeMinD() const = 0;
-    virtual int             DepthBytes() const = 0;
-    virtual int             DepthBits() const = 0;
-    virtual int             BytesPerPixel() const = 0;
-    virtual int             BitsPerPixel() const = 0;
-    virtual int             Width() const = 0;
-    virtual int             Height() const = 0;
 };
 
 
