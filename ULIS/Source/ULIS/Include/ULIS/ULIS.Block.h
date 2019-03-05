@@ -109,10 +109,10 @@ namespace ULIS {
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
-#define ULIS_ADD_INDEX_RULE( iCount, ... )          template< bool _tfs, bool _tsc > struct TPixelIndexRule< _tfs, _tsc, iCount > { const uint8 m[iCount] = __VA_ARGS__; }; 
-#define ULIS_ADD_FS_INDEX_RULE( iCount, ... )       template< bool _tsc > struct TPixelIndexRule< true, _tsc, iCount > { const uint8 m[iCount] = __VA_ARGS__; }; 
-#define ULIS_ADD_SC_INDEX_RULE( iCount, ... )       template< bool _tfs > struct TPixelIndexRule< _tfs, true, iCount > { const uint8 m[iCount] = __VA_ARGS__; }; 
-#define ULIS_ADD_FS_SC_INDEX_RULE( iCount, ... )    template<> struct TPixelIndexRule< true, true, iCount > { const uint8 m[iCount] = __VA_ARGS__; }; 
+#define ULIS_ADD_INDEX_RULE( iCount, ... )          template< bool _tfs, bool _tsc > struct TPixelIndexRule< _tfs, _tsc, iCount > { static constexpr const uint8 m[iCount] = __VA_ARGS__; }; 
+#define ULIS_ADD_FS_INDEX_RULE( iCount, ... )       template< bool _tsc > struct TPixelIndexRule< true, _tsc, iCount > { static constexpr const uint8 m[iCount] = __VA_ARGS__; }; 
+#define ULIS_ADD_SC_INDEX_RULE( iCount, ... )       template< bool _tfs > struct TPixelIndexRule< _tfs, true, iCount > { static constexpr const uint8 m[iCount] = __VA_ARGS__; }; 
+#define ULIS_ADD_FS_SC_INDEX_RULE( iCount, ... )    template<> struct TPixelIndexRule< true, true, iCount > { static constexpr const uint8 m[iCount] = __VA_ARGS__; }; 
 template< bool _tfs, bool _tsc, uint8 _tnc >
 struct TPixelIndexRule final {};
 ULIS_ADD_INDEX_RULE( 1, { 0 } )
@@ -140,29 +140,6 @@ ULIS_ADD_FS_SC_INDEX_RULE( 5, { 2, 3, 4, 1, 0 } )
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
-// IPixelProxy
-class IPixelProxy
-{
-public:
-    IPixelProxy() {}
-    ~IPixelProxy() {}
-};
-
-
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-// TPixelProxyBase
-template< typename _tt, bool _tpl, bool _tfs, bool _tsc, uint8 _tnc >
-struct TPixelProxyBase : public IPixelProxy
-{
-    TPixelIndexRule< _tfs, _tsc, _tnc > indexlist;
-};
-
-
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
 // TBlockDataInfo
 template< typefield T, typename _tt >
 struct TBlockDataInfo
@@ -179,17 +156,66 @@ struct TBlockDataInfo
     static constexpr const typefieldBit sc = ULIS_RS_SC( T ); // SwappedComponent (Bit)
     static constexpr const typefieldBit he = ULIS_RS_HE( T ); // HasExtra (Bit)
     static constexpr const uint8        channelCount = nc+(uint8)he; // Real Channel Count, add Extra Alpha if specified
-    static constexpr const char*  type_name() { return typeid(_tt).name(); } // Type Name as c-string
-    // Limits
-    static constexpr const _tt realtypemax = std::numeric_limits< _tt >::max();
-    static constexpr const _tt realtypemin = std::numeric_limits< _tt >::min();
-    static constexpr const _tt trangemax = de ? (_tt)1.0 : realtypemax;
-    static constexpr const _tt trangemin = de ? (_tt)0.0 : realtypemin;
-    static constexpr const int64_t irangemax = de ? 1 : (int64_t)realtypemax;
-    static constexpr const int64_t irangemin = de ? 0 : (int64_t)realtypemin;
-    static constexpr uint16_t depth = sizeof( _tt );
+    static constexpr const char*        type_name() { return typeid(_tt).name(); } // Type Name as c-string
+    static constexpr const _tt          realtypemax = std::numeric_limits< _tt >::max();
+    static constexpr const _tt          realtypemin = std::numeric_limits< _tt >::min();
+    static constexpr const _tt          trangemax = de ? (_tt)1.0 : realtypemax;
+    static constexpr const _tt          trangemin = de ? (_tt)0.0 : realtypemin;
+    static constexpr const int64        irangemax = de ? 1 : (int64)realtypemax;
+    static constexpr const int64        irangemin = de ? 0 : (int64)realtypemin;
+    static constexpr const double       drangemax = de ? 1.0 : (double)realtypemax;
+    static constexpr const double       drangemin = de ? 0.0 : (double)realtypemin;
+    static constexpr uint16_t           depthBytes = cm == ULIS_FCM_BIT ? 0 : sizeof( _tt );
+    static constexpr uint16_t           depthBits = cm == ULIS_FCM_BIT ? 1 : depthBytes * 8;
+    static constexpr uint16_t           bitsPerPixel = depthBits * channelCount;
+    static constexpr uint16_t           bytesPerPixel = depthBytes * channelCount;
 };
 
+
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TPixelProxyBase
+template< typefield T, typename _tt >
+struct TPixelProxy : public IPixelProxy
+{
+    typedef TBlockDataInfo< T, _tt > tBlockDataInfoType;
+    typedef TPixelIndexRule< tBlockDataInfoType::fs, tBlockDataInfoType::sc, tBlockDataInfoType::channelCount > tPixelIndexRuleType;
+    _tt* c[tBlockDataInfoType::channelCount];
+};
+
+
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TBlockDataStructure
+template< typefield T, typename _tt >
+class TBlockDataBase
+{
+    typedef TBlockDataInfo< T, _tt > tBlockDataInfoType;
+
+public:
+    typefieldId     ColorModeID() const { return  tBlockDataInfoType::cm; }
+    typefieldId     ColorSpaceID() const { return  tBlockDataInfoType::cs; }
+    typefieldId     ChannelTypeID() const { return  tBlockDataInfoType::ct; }
+    bool            IsLinear() const { return  tBlockDataInfoType::li; }
+    bool            IsDecimal() const { return  tBlockDataInfoType::de; }
+    bool            IsPlanar() const { return  tBlockDataInfoType::pl; }
+    bool            IsPremultiplied() const { return  tBlockDataInfoType::pr; }
+    bool            HasAlpha() const { return  tBlockDataInfoType::he; }
+    bool            IsSwapped() const { return  tBlockDataInfoType::sc; }
+    bool            IsAlphaFirst() const { return  tBlockDataInfoType::fs; };
+    int             ChannelCount() const { return  tBlockDataInfoType::channelCount; }
+    const char*     TypeName() const { return  tBlockDataInfoType::type_name(); }
+    int64           RangeMaxI() const { return  tBlockDataInfoType::irangemax; }
+    int64           RangeMinI() const { return  tBlockDataInfoType::irangemin; }
+    double          RangeMaxD() const { return  tBlockDataInfoType::drangemax; }
+    double          RangeMinD() const { return  tBlockDataInfoType::drangemin; }
+    int             DepthBytes() const { return  tBlockDataInfoType::depthBytes; }
+    int             DepthBits() const { return  tBlockDataInfoType::depthBits; }
+    int             BytesPerPixel() const { return  tBlockDataInfoType::bytesPerPixel; }
+    int             BitsPerPixel() const { return  tBlockDataInfoType::bitsPerPixel; }
+};
 
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
@@ -198,15 +224,15 @@ struct TBlockDataInfo
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- typefieldBit _tpl PL false, Interleaved
 template< typefield T, typename _tt, typefieldBit _tpl >
-class TBlockDataStructure
+class TBlockDataStructure : public TBlockDataBase< T, _tt >
 {
     typedef TBlockDataInfo< T, _tt > tBlockDataInfoType;
 
 public:
     // Construction / Destruction
-    TBlockDataStructure() : data( NULL ) {}
+    TBlockDataStructure() : data( NULL ), width(0), height(0) {}
 
-    TBlockDataStructure( int width, int height ) {
+    TBlockDataStructure( int iwidth, int iheight ) : width(iwidth), height(iheight) {
         data = new _tt[ width * height * tBlockDataInfoType::channelCount ];
     }
 
@@ -215,21 +241,22 @@ public:
 protected:
     // Protected Data
     _tt* data; // Interleaved contiguous repr
+    uint32 width, height;
 };
 
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- typefieldBit _tpl PL true, Planar
 template< typefield T, typename _tt >
-class TBlockDataStructure< T, _tt, true >
+class TBlockDataStructure< T, _tt, true > : public TBlockDataBase< T, _tt >
 {
     typedef TBlockDataInfo< T, _tt > tBlockDataInfoType;
 
 public:
     // Construction / Destruction
-    TBlockDataStructure() : data( NULL ) {}
+    TBlockDataStructure() : data( NULL ), width(0), height(0) {}
 
-    TBlockDataStructure( int width, int height ) {
+    TBlockDataStructure( int iwidth, int iheight ) : width(iwidth), height(iheight) {
         data = new _tt*[ tBlockDataInfoType::channelCount ];
         for( int i = 0; i < tBlockDataInfoType::channelCount; ++ i )
             data[i] = new _tt[ width * height ];
@@ -244,6 +271,7 @@ public:
 protected:
     // Protected Data
     _tt** data; // Planar channels repr
+    uint32 width, height;
 };
 
 
@@ -275,8 +303,14 @@ class TBlockData :
     using tSuperClass::tSuperClass; 
 
 public:
-    uint8* Bytes() { return (uint8*)data; }
-    const uint8* Bytes() const { return (uint8*)data; }
+    uint8*          Bytes() { return (uint8*)data; }
+    const uint8*    Bytes() const { return (uint8*)data; }
+    uint8*          PixelByte( int x, int y ) { return (uint8*)data; }
+    const uint8*    PixelByte( int x, int y ) const { return (uint8*)data; }
+    uint8*          ScanlineByte( int row ) { return (uint8*)data; }
+    const uint8*    ScanlineByte( int row ) const { return (uint8*)data; }
+    int             Width() const { return  width; }
+    int             Height() const { return  height; }
 };
 
 
@@ -286,20 +320,47 @@ public:
 /////////////////////////////////////////////////////
 // TBlock
 template< typefield T >
-class TBlock : public IBlock
+class TBlock final : public IBlock
 {
     typedef TBlockData< T > tBlockDataType;
 
 public:
     // Construction / Destruction
     TBlock() { d = new tBlockDataType( 0, 0 ); }
+    TBlock( int iwidth, int iheight ) { d = new tBlockDataType( iwidth, iheight ); }
     virtual ~TBlock() { delete d; } // Polymorphic
 
 public:
-    // ¨Public API
-    virtual typefield RuntimeID() const override { return T; }
-    virtual uint8* Bytes() override { return d->Bytes(); }
-    virtual const uint8* Bytes() const override { return d->Bytes(); }
+    // Public API
+    inline virtual typefield       ID() const override final { return T; }
+    inline virtual uint8*          Bytes() override final { return d->Bytes(); }
+    inline virtual const uint8*    Bytes() const override final { return d->Bytes(); }
+    inline virtual uint8*          PixelByte( int x, int y ) override final { return d->PixelByte( x, y ); }
+    inline virtual const uint8*    PixelByte( int x, int y ) const override final { return d->PixelByte( x, y ); }
+    inline virtual uint8*          ScanlineByte( int row ) override final { return d->ScanlineByte( row ); }
+    inline virtual const uint8*    ScanlineByte( int row ) const override final { return d->ScanlineByte( row ); }
+    inline virtual typefieldId     ColorModeID() const override final { return d->ColorModeID(); }
+    inline virtual typefieldId     ColorSpaceID() const override final { return d->ColorSpaceID(); }
+    inline virtual typefieldId     ChannelTypeID() const override final { return d->ChannelTypeID(); }
+    inline virtual bool            IsLinear() const override final { return d->IsLinear(); }
+    inline virtual bool            IsDecimal() const override final { return d->IsDecimal(); }
+    inline virtual bool            IsPlanar() const override final { return d->IsPlanar(); }
+    inline virtual bool            IsPremultiplied() const override final { return d->IsPremultiplied(); }
+    inline virtual bool            HasAlpha() const override final { return d->HasAlpha(); }
+    inline virtual bool            IsSwapped() const override final { return d->IsSwapped(); }
+    inline virtual bool            IsAlphaFirst() const override final { return d->IsAlphaFirst(); }
+    inline virtual int             ChannelCount() const override final { return d->ChannelCount(); }
+    inline virtual const char*     TypeName() const override final { return d->TypeName(); }
+    inline virtual int64           RangeMaxI() const override final { return d->RangeMaxI(); }
+    inline virtual int64           RangeMinI() const override final { return d->RangeMinI(); }
+    inline virtual double          RangeMaxD() const override final { return d->RangeMaxD(); }
+    inline virtual double          RangeMinD() const override final { return d->RangeMinD(); }
+    inline virtual int             DepthBytes() const override final { return d->DepthBytes(); }
+    inline virtual int             DepthBits() const override final { return d->DepthBits(); }
+    inline virtual int             BytesPerPixel() const override final { return d->BytesPerPixel(); }
+    inline virtual int             BitsPerPixel() const override final { return d->BitsPerPixel(); }
+    inline virtual int             Width() const override final { return d->Width(); }
+    inline virtual int             Height() const override final { return d->Height(); }
 
 public:
     // Constexpr API
@@ -309,7 +370,6 @@ private:
     // Private Data
     tBlockDataType* d;
 };
-
 
 
 /////////////////////////////////////////////////////
@@ -325,9 +385,35 @@ public:
 
 public:
     // Public API
-    virtual typefield RuntimeID() const = 0;
-    virtual uint8* Bytes() = 0;
-    virtual const uint8* Bytes() const = 0;
+    virtual typefield       ID() const = 0;
+    virtual uint8*          Bytes() = 0;
+    virtual const uint8*    Bytes() const = 0;
+    virtual uint8*          PixelByte( int x, int y ) = 0;
+    virtual const uint8*    PixelByte( int x, int y ) const = 0;
+    virtual uint8*          ScanlineByte( int row ) = 0;
+    virtual const uint8*    ScanlineByte( int row ) const = 0;
+    virtual typefieldId     ColorModeID() const = 0;
+    virtual typefieldId     ColorSpaceID() const = 0;
+    virtual typefieldId     ChannelTypeID() const = 0;
+    virtual bool            IsLinear() const = 0;
+    virtual bool            IsDecimal() const = 0;
+    virtual bool            IsPlanar() const = 0;
+    virtual bool            IsPremultiplied() const = 0;
+    virtual bool            HasAlpha() const = 0;
+    virtual bool            IsSwapped() const = 0;
+    virtual bool            IsAlphaFirst() const = 0;
+    virtual int             ChannelCount() const = 0;
+    virtual const char*     TypeName() const = 0;
+    virtual int64           RangeMaxI() const = 0;
+    virtual int64           RangeMinI() const = 0;
+    virtual double          RangeMaxD() const = 0;
+    virtual double          RangeMinD() const = 0;
+    virtual int             DepthBytes() const = 0;
+    virtual int             DepthBits() const = 0;
+    virtual int             BytesPerPixel() const = 0;
+    virtual int             BitsPerPixel() const = 0;
+    virtual int             Width() const = 0;
+    virtual int             Height() const = 0;
 };
 
 
