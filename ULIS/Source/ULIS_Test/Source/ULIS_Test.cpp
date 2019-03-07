@@ -12,7 +12,6 @@
 #include <ULISBlock>
 #include <ULISBlock2>
 #include <cstring>
-#include <array>
 
 using namespace ::ULIS;
 
@@ -123,30 +122,77 @@ void PrintBlockProperties( IBlock* iBlock )
 }
 
 
-static constexpr const uint8
-GetIndex( const char* ilayout, const char* imodel, uint8 num )
-{
-    return ::ULIS::ct_findindex( imodel[num], ilayout );
-}
-
-
-template <uint8 N, typename T, T... Nums>
-static constexpr const std::array<uint8, N-1> make_impl( const char* ilayout, const char (&imodel)[N], ::ULIS::integer_sequence<T, Nums...>) { return { GetIndex( ilayout, imodel, Nums ) ... }; }
-template <uint8 N> static constexpr const std::array<uint8, N-1> make_index_from_string( const char* ilayout, const char (&imodel)[N]) { return make_impl( ilayout, imodel, ::ULIS::make_integer_sequence<uint8, N-1>()); }
 static constexpr const char layout[] = "ZYXWVUTSRQPOMNLKJIHGFEDCBA";
 static constexpr const char model[] =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static constexpr const int count = ::ULIS::ct_strlen( model );
-static constexpr const std::array< uint8, count > arr = make_index_from_string( layout, model );
+static constexpr const std::array< uint8, count > arr = ::ULIS2::make_index_from_string( layout, model );
+
+
+/*
+// CRC32 Table (zlib polynomial)
+static constexpr uint32_t crc_table[256] = {
+    0x00000000L, 0x77073096L, 0xee0e612cL, 0x990951baL, 0x076dc419L,
+    0x706af48fL, 0xe963a535L, 0x9e6495a3L, 0x0edb8832L, 0x79dcb8a4L,
+    0xe0d5e91eL, 0x97d2d988L, 0x09b64c2bL, 0x7eb17cbdL, 0xe7b82d07L,
+};
+template<size_t idx>
+constexpr uint32_t crc32(const char * str)
+{
+    return (crc32<idx-1>(str) >> 8) ^ crc_table[(crc32<idx-1>(str) ^ str[idx]) & 0x000000FF];
+}
+
+// This is the stop-recursion function
+template<>
+constexpr uint32_t crc32<size_t(-1)>(const char * str)
+{
+    return 0xFFFFFFFF;
+}
+
+// This doesn't take into account the nul char
+#define COMPILE_TIME_CRC32_STR(x) (crc32<sizeof(x) - 2>(x) ^ 0xFFFFFFFF)
+
+enum TestEnum
+{
+    CrcVal01 = COMPILE_TIME_CRC32_STR("stack-overflow"),
+};
+*/
+
+
+template< class T >
+class rubbish
+{
+};
+
+
+template<> class rubbish< std::array< char, 5 > >
+{
+};
+
+static constexpr const std::array< char, 5 > ak = {"0000"};
+
 
 /*Main function to call above function for 0x01234567*/
 int main()
 {
+    ::ULIS2::TBlock< ::ULIS2::Block_plannar_premultiplied_uint8_32_R8G8B8A8_R0G1B2A3_integral > block;
+
     std::cout<< "layout: " << layout << std::endl;
     std::cout<< "model: " << model << std::endl;
     for( int i = 0; i < arr.size(); ++i )
         std::cout << model[i] << ": " << (int)arr[i] << "; ";
 
-    //static_assert( arer.data()[0] == 'o', "..." );
+    static_assert( ::ULIS::ct_findwordstart( "_PLANAR", "ULIS_TYPE_sRGB_RGBI8_PLANAR" ) == 20, "..." );
+    static_assert( ::ULIS::ct_findnext( 3, "_PLANAR", "_PLANAR00000_PLANAR" ) == 12, "..." );
+    static_assert( ::ULIS::ct_substring< 5 >( "jambon", 0 )[0] == 'j', "..." );
+
+
+
+    static_assert( ::ULIS::ct_substreq( ::ULIS::ct_getsubstring( "jaekj", 0, 4 ), ::ULIS::ct_getsubstring( "jaekj", 0, 4 ) ) , "..." );
+
+
+    std::cout << ::ULIS::ct_substring< 5 >( "jambon", 0 ).data() << std::endl;
+
+    static constexpr const std::array< char, 5 > b = { "0000" };
 
     getchar();
     return 0;
