@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <limits>
-#include "ULIS/ULIS.BaseTypes.h"
+#include "ULIS/ULIS.Base.h"
 
 namespace ULIS {
 
@@ -376,35 +376,35 @@ public:
 
 public:
     // Public API
-    inline virtual typefield       ID() const override final { return T; }
-    inline virtual uint8*          Bytes() override final { return d->Bytes(); }
-    inline virtual const uint8*    Bytes() const override final { return d->Bytes(); }
-    inline virtual uint8*          PixelByte( int x, int y ) override final { return d->PixelByte( x, y ); }
-    inline virtual const uint8*    PixelByte( int x, int y ) const override final { return d->PixelByte( x, y ); }
-    inline virtual uint8*          ScanlineByte( int row ) override final { return d->ScanlineByte( row ); }
-    inline virtual const uint8*    ScanlineByte( int row ) const override final { return d->ScanlineByte( row ); }
-    inline virtual typefieldId     ColorModeID() const override final { return d->ColorModeID(); }
-    inline virtual typefieldId     ColorSpaceID() const override final { return d->ColorSpaceID(); }
-    inline virtual typefieldId     ChannelTypeID() const override final { return d->ChannelTypeID(); }
-    inline virtual bool            IsLinear() const override final { return d->IsLinear(); }
-    inline virtual bool            IsDecimal() const override final { return d->IsDecimal(); }
-    inline virtual bool            IsPlanar() const override final { return d->IsPlanar(); }
-    inline virtual bool            IsPremultiplied() const override final { return d->IsPremultiplied(); }
-    inline virtual bool            HasAlpha() const override final { return d->HasAlpha(); }
-    inline virtual bool            IsSwapped() const override final { return d->IsSwapped(); }
-    inline virtual bool            IsAlphaFirst() const override final { return d->IsAlphaFirst(); }
-    inline virtual int             ChannelCount() const override final { return d->ChannelCount(); }
-    inline virtual const char*     TypeName() const override final { return d->TypeName(); }
-    inline virtual int64           RangeMaxI() const override final { return d->RangeMaxI(); }
-    inline virtual int64           RangeMinI() const override final { return d->RangeMinI(); }
-    inline virtual double          RangeMaxD() const override final { return d->RangeMaxD(); }
-    inline virtual double          RangeMinD() const override final { return d->RangeMinD(); }
-    inline virtual int             DepthBytes() const override final { return d->DepthBytes(); }
-    inline virtual int             DepthBits() const override final { return d->DepthBits(); }
-    inline virtual int             BytesPerPixel() const override final { return d->BytesPerPixel(); }
-    inline virtual int             BitsPerPixel() const override final { return d->BitsPerPixel(); }
-    inline virtual int             Width() const override final { return d->Width(); }
-    inline virtual int             Height() const override final { return d->Height(); }
+    FORCEINLINE virtual typefield       ID() const override final { return T; }
+    FORCEINLINE virtual uint8*          Bytes() override final { return d->Bytes(); }
+    FORCEINLINE virtual const uint8*    Bytes() const override final { return d->Bytes(); }
+    FORCEINLINE virtual uint8*          PixelByte( int x, int y ) override final { return d->PixelByte( x, y ); }
+    FORCEINLINE virtual const uint8*    PixelByte( int x, int y ) const override final { return d->PixelByte( x, y ); }
+    FORCEINLINE virtual uint8*          ScanlineByte( int row ) override final { return d->ScanlineByte( row ); }
+    FORCEINLINE virtual const uint8*    ScanlineByte( int row ) const override final { return d->ScanlineByte( row ); }
+    FORCEINLINE virtual typefieldId     ColorModeID() const override final { return d->ColorModeID(); }
+    FORCEINLINE virtual typefieldId     ColorSpaceID() const override final { return d->ColorSpaceID(); }
+    FORCEINLINE virtual typefieldId     ChannelTypeID() const override final { return d->ChannelTypeID(); }
+    FORCEINLINE virtual bool            IsLinear() const override final { return d->IsLinear(); }
+    FORCEINLINE virtual bool            IsDecimal() const override final { return d->IsDecimal(); }
+    FORCEINLINE virtual bool            IsPlanar() const override final { return d->IsPlanar(); }
+    FORCEINLINE virtual bool            IsPremultiplied() const override final { return d->IsPremultiplied(); }
+    FORCEINLINE virtual bool            HasAlpha() const override final { return d->HasAlpha(); }
+    FORCEINLINE virtual bool            IsSwapped() const override final { return d->IsSwapped(); }
+    FORCEINLINE virtual bool            IsAlphaFirst() const override final { return d->IsAlphaFirst(); }
+    FORCEINLINE virtual int             ChannelCount() const override final { return d->ChannelCount(); }
+    FORCEINLINE virtual const char*     TypeName() const override final { return d->TypeName(); }
+    FORCEINLINE virtual int64           RangeMaxI() const override final { return d->RangeMaxI(); }
+    FORCEINLINE virtual int64           RangeMinI() const override final { return d->RangeMinI(); }
+    FORCEINLINE virtual double          RangeMaxD() const override final { return d->RangeMaxD(); }
+    FORCEINLINE virtual double          RangeMinD() const override final { return d->RangeMinD(); }
+    FORCEINLINE virtual int             DepthBytes() const override final { return d->DepthBytes(); }
+    FORCEINLINE virtual int             DepthBits() const override final { return d->DepthBits(); }
+    FORCEINLINE virtual int             BytesPerPixel() const override final { return d->BytesPerPixel(); }
+    FORCEINLINE virtual int             BitsPerPixel() const override final { return d->BitsPerPixel(); }
+    FORCEINLINE virtual int             Width() const override final { return d->Width(); }
+    FORCEINLINE virtual int             Height() const override final { return d->Height(); }
 
 public:
     // Constexpr API

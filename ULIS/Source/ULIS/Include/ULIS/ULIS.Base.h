@@ -12,6 +12,9 @@
 
 namespace ULIS {
 
+#define RESTRICT __restrict
+#define FORCEINLINE __forceinline
+
 
 /////////////////////////////////////////////////////
 // Fundamental Typedefs

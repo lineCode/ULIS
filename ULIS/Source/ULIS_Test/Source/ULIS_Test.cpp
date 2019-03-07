@@ -10,6 +10,9 @@
 
 #include <iostream>
 #include <ULISBlock>
+#include <ULISBlock2>
+#include <cstring>
+#include <array>
 
 using namespace ::ULIS;
 
@@ -119,23 +122,33 @@ void PrintBlockProperties( IBlock* iBlock )
     std::cout << "Block Height: " << iBlock->Height() << std::endl;
 }
 
-/* function to show bytes in memory, from location start to start+n*/
-void show_mem_rep(char *start, int n)  
-{ 
-    int i; 
-    for (i = 0; i < n; i++) 
-         printf(" %.2x", start[i]); 
-    printf("\n"); 
-} 
-  
+
+static constexpr const uint8
+GetIndex( const char* ilayout, const char* imodel, uint8 num )
+{
+    return ::ULIS::ct_findindex( imodel[num], ilayout );
+}
+
+
+template <uint8 N, typename T, T... Nums>
+static constexpr const std::array<uint8, N-1> make_impl( const char* ilayout, const char (&imodel)[N], ::ULIS::integer_sequence<T, Nums...>) { return { GetIndex( ilayout, imodel, Nums ) ... }; }
+template <uint8 N> static constexpr const std::array<uint8, N-1> make_index_from_string( const char* ilayout, const char (&imodel)[N]) { return make_impl( ilayout, imodel, ::ULIS::make_integer_sequence<uint8, N-1>()); }
+static constexpr const char layout[] = "ZYXWVUTSRQPOMNLKJIHGFEDCBA";
+static constexpr const char model[] =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static constexpr const int count = ::ULIS::ct_strlen( model );
+static constexpr const std::array< uint8, count > arr = make_index_from_string( layout, model );
+
 /*Main function to call above function for 0x01234567*/
-int main() 
-{ 
-   uint16 i = 32045;
-   uint8* ptr = (uint8*)&i;
-   //ptr[0] = 0;
-   show_mem_rep((char *)&i, sizeof(i)); 
-   getchar(); 
-   return 0; 
-} 
+int main()
+{
+    std::cout<< "layout: " << layout << std::endl;
+    std::cout<< "model: " << model << std::endl;
+    for( int i = 0; i < arr.size(); ++i )
+        std::cout << model[i] << ": " << (int)arr[i] << "; ";
+
+    //static_assert( arer.data()[0] == 'o', "..." );
+
+    getchar();
+    return 0;
+}
 
