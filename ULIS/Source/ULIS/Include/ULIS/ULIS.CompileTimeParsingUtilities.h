@@ -13,6 +13,11 @@
 
 namespace ULIS {
 
+
+
+
+
+
 constexpr bool      ct_is_digit     ( char c) { return c <= '9' && c >= '0'; }
 constexpr int       ct_stoi_impl    ( const char* str, int value = 0) { return *str ? ct_is_digit(*str) ? ct_stoi_impl(str + 1, (*str - '0') + value * 10) : throw "compile-time-error: not a digit" : value; }
 constexpr const int ct_stoi         ( const char* str) { return ct_stoi_impl(str); }
@@ -89,65 +94,67 @@ constexpr auto make_indices(boost::mpl::int_<I>)
 */
 
 
+namespace cpp11 {
 /// A type that represents a parameter pack of zero or more integers.
 template<typename T, T... I>
-struct integer_sequence
-{
+struct integer_sequence {
     static_assert( std::is_integral<T>::value, "Integral type" );
-
     using type = T;
-
     static constexpr T size = sizeof...(I);
-
     /// Generate an integer_sequence with an additional element.
-    template<T N>
-    using append = integer_sequence<T, I..., N>;
-
+    template<T N> using append = integer_sequence<T, I..., N>;
     using next = append<size>;
 };
-
-template<typename T, T... I>
-constexpr T integer_sequence<T, I...>::size;
-
-template<std::size_t... I>
-using index_sequence = integer_sequence<std::size_t, I...>;
-
-namespace detail
-{
+template<typename T, T... I> constexpr T integer_sequence<T, I...>::size;
+template<std::size_t... I> using index_sequence = integer_sequence<std::size_t, I...>;
+namespace detail {
 // Metafunction that generates an integer_sequence of T containing [0, N)
 template<typename T, T Nt, std::size_t N>
-    struct iota
-    {
+struct iota {
     static_assert( Nt >= 0, "N cannot be negative" );
-
     using type = typename iota<T, Nt-1, N-1>::type::next;
-    };
-
+};
 // Terminal case of the recursive metafunction.
-template<typename T, T Nt>
-    struct iota<T, Nt, 0ul>
-    {
-    using type = integer_sequence<T>;
-    };
+template<typename T, T Nt> struct iota<T, Nt, 0ul> { using type = integer_sequence<T>; };
+} // namespace detail
+// make_integer_sequence<T, N> is an alias for integer_sequence<T, 0,...N-1>
+template<typename T, T N> using make_integer_sequence = typename detail::iota<T, N, N>::type;
+template<int N> using make_index_sequence = make_integer_sequence<std::size_t, N>;
+// index_sequence_for<A, B, C> is an alias for index_sequence<0, 1, 2>
+template<typename... Args> using index_sequence_for = make_index_sequence<sizeof...(Args)>;
+} // namespace cpp11
+
+
+template< int N >
+struct const_char_array
+{
+    const char s[N];
+    constexpr char operator[]( int i ) const { return s[i]; }
+    operator const char*() const { return s; }
+    constexpr const int Size() const { return N; }
+    constexpr const int Len() const { return N-1; }
+};
+
+template< int N, typename T, T... Nums >
+static constexpr
+const const_char_array< N >
+make_const_char_array_impl( const char* str, cpp11::integer_sequence< T, Nums... > )
+{
+    return { str[Nums] ... };
+}
+
+template< int N >
+static constexpr
+const const_char_array< N >
+make_const_char_array( const char (&str)[N] )
+{
+     return make_const_char_array_impl< N >( str, cpp11::make_integer_sequence< int, N >() );
 }
 
 
-// make_integer_sequence<T, N> is an alias for integer_sequence<T, 0,...N-1>
-template<typename T, T N>
-using make_integer_sequence = typename detail::iota<T, N, N>::type;
-
-template<int N>
-using make_index_sequence = make_integer_sequence<std::size_t, N>;
-
-
-// index_sequence_for<A, B, C> is an alias for index_sequence<0, 1, 2>
-template<typename... Args>
-using index_sequence_for = make_index_sequence<sizeof...(Args)>;
-
-
-static constexpr const uint8 GetIndex( const char* ilayout, const char* imodel, uint8 num ) { return ::ULIS::ct_findindex( imodel[num], ilayout ); }
-template <uint8 N, typename T, T... Nums> static constexpr const std::array<uint8, N-1> make_impl( const char* ilayout, const char (&imodel)[N], ::ULIS::integer_sequence<T, Nums...>) { return { GetIndex( ilayout, imodel, Nums ) ... }; }
-template <uint8 N> static constexpr const std::array<uint8, N-1> make_index_from_string( const char* ilayout, const char (&imodel)[N]) { return make_impl( ilayout, imodel, ::ULIS::make_integer_sequence<uint8, N-1>()); }
+static constexpr const uint8 SeekIndexForChar( const char* ilayout, const char* imodel, uint8 num ) { return ::ULIS::ct_findindex( imodel[num], ilayout ); }
+template <uint8 N, typename T, T... Nums> static constexpr const std::array<uint8, N-1> make_impl( const char* ilayout, const char (&imodel)[N], cpp11::integer_sequence<T, Nums...>) { return { SeekIndexForChar( ilayout, imodel, Nums ) ... }; }
+template <uint8 N> static constexpr const std::array<uint8, N-1> make_index_from_string( const char* ilayout, const char (&imodel)[N]) { return make_impl( ilayout, imodel, cpp11::make_integer_sequence<uint8, N-1>()); }
 
 
 struct Substring
@@ -198,7 +205,34 @@ ct_substreq( const Substring A, const Substring B )
 }
 
 
+/*
+// CRC32 Table (zlib polynomial)
+static constexpr uint32_t crc_table[256] = {
+    0x00000000L, 0x77073096L, 0xee0e612cL, 0x990951baL, 0x076dc419L,
+    0x706af48fL, 0xe963a535L, 0x9e6495a3L, 0x0edb8832L, 0x79dcb8a4L,
+    0xe0d5e91eL, 0x97d2d988L, 0x09b64c2bL, 0x7eb17cbdL, 0xe7b82d07L,
+};
+template<size_t idx>
+constexpr uint32_t crc32(const char * str)
+{
+    return (crc32<idx-1>(str) >> 8) ^ crc_table[(crc32<idx-1>(str) ^ str[idx]) & 0x000000FF];
+}
 
+// This is the stop-recursion function
+template<>
+constexpr uint32_t crc32<size_t(-1)>(const char * str)
+{
+    return 0xFFFFFFFF;
+}
+
+// This doesn't take into account the nul char
+#define COMPILE_TIME_CRC32_STR(x) (crc32<sizeof(x) - 2>(x) ^ 0xFFFFFFFF)
+
+enum TestEnum
+{
+    CrcVal01 = COMPILE_TIME_CRC32_STR("stack-overflow"),
+};
+*/
 
 
 
@@ -214,7 +248,7 @@ template< int N, typename T, T... Nums >
 static
 constexpr
 const std::array< char, N >
-ct_substring_impl( const char* str, int start, integer_sequence<T, Nums...> )
+ct_substring_impl( const char* str, int start, cpp11::integer_sequence<T, Nums...> )
 {
     return { GetChar( str, start, Nums ) ... };
 }
@@ -225,7 +259,7 @@ constexpr
 const std::array< char, N >
 ct_substring( const char* str, int start )
 {
-    return ct_substring_impl< N >( str, start, make_integer_sequence<int, N>());
+    return ct_substring_impl< N >( str, start, cpp11::make_integer_sequence<int, N>());
 }
 
 } // namespace ULIS

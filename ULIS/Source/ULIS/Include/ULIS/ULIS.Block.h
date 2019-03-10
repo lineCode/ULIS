@@ -20,7 +20,6 @@ namespace ULIS {
 //      - M: colormode ( bit, gray, RGB, CMY, CMYK, Lab, XYZ, HSL, HSV, Yuv, Yxy, YCBcr ) ( 4bits )
 //      - O: defaultcolorspace ( custom, sRGB, AdobeRGB, XYZ, Lab ) ( 8 possible values ) ( 4bit )
 //      - D: Channel Depth / Channel type ( 8, 16, 32, 64, 128, 256 ) ( int8, int16, int32, uint8, uint16, uint32, float, double ) ( 4bits )
-//      - L: Linear / Gamma ( 0, 1 ) ( 1bit )
 //      - I: Decimal / Integer ( 1 bit )
 //      - P: Planar / Interleaved ( 0, 1 ) ( 1bit )
 //      - S: Premultiplied / Straight ( 0, 1 ) ( 1bit )
