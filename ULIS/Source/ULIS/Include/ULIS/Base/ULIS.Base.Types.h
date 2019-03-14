@@ -3,18 +3,21 @@
 *   ULIS
 *__________________
 *
-* ULIS.BaseTypes.h
+* ULIS.Base.Types.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
+
+#pragma once
 
 #include <stdint.h>
 
 namespace ULIS {
 
-#define RESTRICT __restrict
+/////////////////////////////////////////////////////
+// Defines
+#define RESTRICT    __restrict
 #define FORCEINLINE __forceinline
-
 
 /////////////////////////////////////////////////////
 // Fundamental Typedefs
@@ -29,6 +32,5 @@ typedef int64_t     int64;
 typedef uint32      typefield;
 typedef uint8       typefieldId;
 typedef bool        typefieldBit;
-
 
 } // namespace ULIS

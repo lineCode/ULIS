@@ -8,9 +8,11 @@
 * Please refer to LICENSE.md
 */
 
+#pragma once
+
 #include <stdint.h>
 #include <limits>
-#include "ULIS/ULIS.Base.h"
+#include "ULIS/Base/ULIS.Base.Types.h"
 
 namespace ULIS {
 

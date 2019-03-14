@@ -8,13 +8,12 @@
 * Please refer to LICENSE.md
 */
 
-#include <stdint.h>
-#include <limits>
-#include "ULIS/ULIS.CompileTimeParsingUtilities.h"
-#include "ULIS/ULIS.Base.h"
+#pragma once
 
-namespace ULIS2 {
-using namespace ::ULIS;
+#include "ULIS/Base/ULIS.Base.Types.h"
+#include "ULIS/Imaging/CompileTime/ULIS.Imaging.CompileTime.BlockID.h"
+
+namespace ULIS {
 
 /////////////////////////////////////////////////////
 // Colormode IDs
@@ -94,5 +93,4 @@ private:
     tData* d;
 };
 
-
-} // namespace ULIS2
+} // namespace ULIS

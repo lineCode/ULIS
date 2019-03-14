@@ -9,32 +9,39 @@
 */
 
 #include <iostream>
-#include <ULISBlock>
-#include <ULISBlock2>
+#include <ULIS_Core>
 #include <cstring>
 
 using namespace ::ULIS;
 
+/*
 static constexpr const char layout[] = "B8G8R8A8";
 static constexpr const char model[] =  "RGBA";
 static constexpr const int count = ::ULIS::ct_strlen( model );
-static constexpr const std::array< uint8, count > arr = ::ULIS2::make_index_from_string( layout, model );
+static constexpr const std::array< uint8, count > arr = ::ULIS::make_index_from_string( layout, model );
+*/
+
+template< uint32 H >
+class xxx
+{
+};
 
 int main()
 {
-    ::ULIS2::TBlock< ::ULIS2::Block_plannar_premultiplied_uint8_32_R8G8B8A8_R0G1B2A3_integral > block;
-    
-    constexpr auto a = make_const_char_array( "ok" );
+    xxx< CONST_STR( "RGB" ).Hash() > xi;
 
-    std::cout<< "layout: " << layout << std::endl;
-    std::cout<< "model: " << model << std::endl;
-    for( int i = 0; i < arr.size(); ++i )
-        std::cout << model[i] << ": " << (int)arr[i] << "; ";
-    static_assert( ::ULIS::ct_substring< 5 >( "jambon", 0 )[0] == 'j', "..." );
-    std::cout << std::endl;
-    std::cout << ct_strlen( a ) << std::endl;
-    std::cout << strlen( a ) << std::endl;
+    constexpr const char* od = CONST_STR( "lol" ).s;
+    constexpr uint64 id = ParseID( CONST_STR( "o" ) );
 
+    TBlock< Block_plannar_premultiplied_uint8_32_R8G8B8A8_R0G1B2A3_integral > block;
+    constexpr auto a = CONST_STR( "00" );
+    int b = a.Size();
+
+    static_assert( CONST_STR( "RGB" ).Substring< 2 >().Len() == 2, "..." );
+    static_assert( CONST_STR( "RGB" ).Substring< 2 >() == CONST_STR( "RG" ), "..." );
+
+    std::cout<< CONST_STR( "RGB" ) << std::endl;
+    std::cout<< CONST_STR( "RGB" ).Substring< 2 >() << std::endl;
     getchar();
     return 0;
 }
