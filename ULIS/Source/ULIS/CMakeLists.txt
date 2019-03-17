@@ -17,6 +17,7 @@ target_include_directories(
     ULIS
     PUBLIC
     "ULIS/Include/"
+    ${ULIS_BOOST_INCLUDE_PATH}
     PRIVATE
     "ULIS/Source/ULIS/"
 )

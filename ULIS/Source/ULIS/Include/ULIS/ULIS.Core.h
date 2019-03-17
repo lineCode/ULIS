@@ -10,6 +10,4 @@
 
 #pragma once
 
-#include "ULIS/Base/ULIS.Base.Types.h"
-#include "ULIS/Base/CompileTime/ULIS.Base.ConstStr.h"
-#include "ULIS/Imaging/ULIS.Imaging.Block.h"
+#include "ULIS/Imaging/ULIS.Imaging.BlockTypes.h"

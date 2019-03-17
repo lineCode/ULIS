@@ -11,8 +11,8 @@
 #pragma once
 
 #include "ULIS/Base/ULIS.Base.Types.h"
-#include "ULIS/Base/CompileTime/ULIS.Base.IntegerSequence.h"
-#include "ULIS/Base/CompileTime/ULIS.Base.CRC32.h"
+#include "ULIS/Base/ULIS.Base.IntegerSequence.h"
+#include "ULIS/Base/ULIS.Base.CRC32.h"
 
 namespace ULIS {
 
@@ -54,7 +54,7 @@ struct const_str
     constexpr const int ToInt() const { return ct_stoi_impl( s ); }
     constexpr const bool IsNumber() const { bool ret = true; for( int i=0; i<Len(); ++i ) { if( !ct_is_digit( s[i] ) ) { ret = false; break; } } return ret; }
     constexpr const int FindIndex( char c ) const { return ct_findindex( c, s ); }
-    constexpr const uint32 Hash() const { return COMPILE_TIME_CRC32_STR( s ); }
+    constexpr const uint32 CRC32() const { return COMPILE_TIME_CRC32_STR( s ); }
     constexpr const int IndexOf( const char* word, int from = 0 ) const { return ct_indexof( word, s, from ); }
 
     static constexpr const char make_const_str_substring_impl_getchar( const char* str, int start, int num ) { return str[num+start]; }
@@ -67,10 +67,5 @@ template< int N, typename T, T... Nums > static constexpr const const_str< N > m
 template< int N > static constexpr const const_str< N > make_const_str( const char (&str)[N] ) { return make_const_str_impl< N >( str, ::ULIS::make_integer_sequence< int, N >() ); }
 #define CONST_STR( i ) make_const_str( i )
 
-/*
-static constexpr const uint8 SeekIndexForChar( const char* ilayout, const char* imodel, uint8 num ) { return ::ULIS::ct_findindex( imodel[num], ilayout ); }
-template <uint8 N, typename T, T... Nums> static constexpr const std::array<uint8, N-1> make_impl( const char* ilayout, const char (&imodel)[N], ::ULIS::integer_sequence<T, Nums...>) { return { SeekIndexForChar( ilayout, imodel, Nums ) ... }; }
-template <uint8 N> static constexpr const std::array<uint8, N-1> make_index_from_string( const char* ilayout, const char (&imodel)[N]) { return make_impl( ilayout, imodel, ::ULIS::make_integer_sequence<uint8, N-1>()); }
-*/
 
 } // namespace ULIS
