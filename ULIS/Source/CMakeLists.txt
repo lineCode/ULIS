@@ -6,15 +6,15 @@ SET( ULIS_BOOST_INCLUDE_PATH               "unset"     CACHE STRING    "Indicate
 SET( ULIS_BUILD_SHARED                     OFF         CACHE BOOL      "Sets if we build the library shared or static" )
 SET( ULIS_BUILD_TESTS                      ON          CACHE BOOL      "Sets if we build the test programs" )
 
-SET( IS_VISUALSTUDIO_PROJECT                OFF )
-SET( IS_MINGW_MAKEFILES                     OFF )
+SET( IS_VISUALSTUDIO_SOLUTION_MSVC  OFF )
+SET( IS_MINGW_MAKEFILE_GCC          OFF )
 
 if( ${CMAKE_GENERATOR} STREQUAL "Visual Studio 15 2017 Win64" )
-    SET( IS_VISUALSTUDIO_PROJECT            ON )
+    SET( IS_VISUALSTUDIO_SOLUTION_MSVC  ON )
 endif()
 
 if( ${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles" )
-    SET( IS_MINGW_MAKEFILES                 ON )
+    SET( IS_MINGW_MAKEFILE_GCC          ON )
 endif()
 
 # Generate only Debug and Release configurations for all projects
@@ -38,15 +38,15 @@ if( ${ULIS_USE_CONFIG} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/../Tools/DefaultConfig.cmake)
     # Read Preferences Overrides if set
     # For VisualStudio
-    if( ${IS_VISUALSTUDIO_PROJECT} )
-        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudioProjectConfig.cmake)
-            include(${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudioProjectConfig.cmake)
+    if( ${IS_VISUALSTUDIO_SOLUTION_MSVC} )
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_MSVC_Config.cmake)
+            include(${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_MSVC_Config.cmake)
         endif()
     endif()
     # For MinGW
-    if( ${IS_MINGW_MAKEFILES} )
-        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../MinGWMakefefilesConfig.cmake)
-            include(${CMAKE_CURRENT_SOURCE_DIR}/../../MinGWMakefefilesConfig.cmake)
+    if( ${IS_MINGW_MAKEFILE_GCC} )
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../MinGW_Makefile_GCC_Config.cmake)
+            include(${CMAKE_CURRENT_SOURCE_DIR}/../../MinGW_Makefile_GCC_Config.cmake)
         endif()
     endif()
 endif()
