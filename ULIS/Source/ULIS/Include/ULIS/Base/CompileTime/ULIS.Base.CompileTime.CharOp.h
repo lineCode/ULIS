@@ -20,15 +20,15 @@ namespace _CT {
 
 
 constexpr
-const bool
+bool
 ct_is_digit( char c )
 {
-    return c <= '9' && c >= '0';
+    return c >= '0' && c <= '9';
 }
 
 
 constexpr
-const int
+int
 ct_stoi_impl( const char* s, int value = 0 )
 {
     return *s ? ct_is_digit( *s ) ? ct_stoi_impl( s+1, (*s-'0') + value*10 ) : throw "error" : value;
