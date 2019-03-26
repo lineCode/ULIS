@@ -16,63 +16,78 @@ namespace _CT {
 
 
 /////////////////////////////////////////////////////
-// Compile-Time Char Operations
+// Compile-Time Constexpr cpp0x compliant Char Operations
 
 
-constexpr
-bool
-ct_is_digit( char c )
+/* check if char is a digit at compile time */
+constexpr bool
+is_digit( char c )
 {
     return c >= '0' && c <= '9';
 }
 
 
-constexpr
-int
-ct_stoi_impl( const char* s, int value = 0 )
+/* convert cstring to int at compile time, implementation, fail if not a number */
+constexpr int
+stoi_impl( const char* s, int value = 0 )
 {
-    return *s ? ct_is_digit( *s ) ? ct_stoi_impl( s+1, (*s-'0') + value*10 ) : throw "error" : value;
+    return *s ? is_digit( *s ) ? stoi_impl( s+1, (*s-'0') + value*10 ) : throw "error" : value;
 }
 
 
-constexpr
-const int
-ct_stoi( const char* s )
+/* convert cstring to int at compile time */
+constexpr int
+stoi( const char* s )
 {
-    return ct_stoi_impl( s );
+    return stoi_impl( s );
 }
 
 
-
-constexpr
-const int
-ct_strlen( const char* str )
+/* compute cstring length at compile time */
+constexpr int
+strlen( const char* str )
 {
-    return *str ? 1 + ct_strlen(str + 1) : 0;
+    return *str ? 1 + strlen(str + 1) : 0;
 }
 
 
-constexpr
-const bool
-ct_strings_equal( char const * a, char const * b )
+/* compare two cstrings at compile time */
+constexpr bool
+streq( char const * a, char const * b )
 {
-    return *a == *b && ( *a == '\0' || ct_strings_equal( a + 1, b + 1 ) );
+    return *a == *b && ( *a == '\0' || streq( a + 1, b + 1 ) );
 }
 
 
-constexpr
-const int
-ct_indexof( const char* word, const char* str, int from = 0 )
+/* check if cstring is a number at compile time */
+constexpr bool
+is_number( const char* s )
+{
+    bool ret = true;
+    for( int i=0; i< strlen( s ); ++i ) {
+        if( !is_digit( s[i] ) )
+        {
+            ret = false;
+            break;
+        }
+    }
+    return ret;
+}
+
+
+/* find index of word occurence from start in cstring at compile time */
+constexpr int
+indexof( const char* word, const char* str, int from = 0 )
 {
     int ret = -1;
     bool exit = false;
-    for( int i = from; i <= ct_strlen( str ); ++i ) {
+    for( int i = from; i <= strlen( str ); ++i ) {
         if( exit ) break;
-        for( int j = 0; j <= ct_strlen( word ); ++j ) {
+        for( int j = 0; j <= strlen( word ); ++j ) {
             if( str[i+j] != word[j] )
                 break;
 
-            if( j == ct_strlen( word ) - 1 )
+            if( j == strlen( word ) - 1 )
             {
                 ret = i;
                 exit = true;
@@ -84,7 +99,7 @@ ct_indexof( const char* word, const char* str, int from = 0 )
 }
 
 
-//constexpr const int ct_char_index_without_digits ( char c, const char* s ) { int cind = 0; int lpos = 0; while(1) { if( s[cind] == c ) { break; } if( !ct_is_digit( s[cind] ) ) { ++lpos; } ++cind; } return lpos; }
+//constexpr const int ct_char_index_without_digits ( char c, const char* s ) { int cind = 0; int lpos = 0; while(1) { if( s[cind] == c ) { break; } if( !is_digit( s[cind] ) ) { ++lpos; } ++cind; } return lpos; }
 
 
 } // namespace _CT

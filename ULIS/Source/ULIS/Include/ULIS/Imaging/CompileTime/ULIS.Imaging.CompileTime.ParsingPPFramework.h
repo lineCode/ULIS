@@ -57,11 +57,11 @@ namespace _CT {
 // BlockSpec
 /* build a specialization of TBlockSpec from token and compute string and hash equivalents */
 #define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                          \
-    static constexpr const uint32 Spec_##spec = CONST_STR( #spec ).CRC32();             \
+    static constexpr const uint32 Spec_##spec = ULIS_CONST_STR( #spec ).CRC32();             \
     template<> struct TBlockSpec< Spec_##spec > {                                       \
         static constexpr const char*        _ss = #spec;                                \
         static constexpr const uint32       _sh = Spec_##spec;                          \
-        static constexpr const FBlockInfo   _nf = ParseSpecStr( CONST_STR( #spec ) );   \
+        static constexpr const FBlockInfo   _nf = ParseSpecStr( ULIS_CONST_STR( #spec ) );   \
     };                                                                                  \
     typedef TBlock< Spec_##spec > F##spec;
 
@@ -102,13 +102,13 @@ namespace _CT {
 
 /////////////////////////////////////////////////////
 // String Parsing
-#define ULIS_PARSE_KW_START(    _iss, ikw )     _iss.IndexOf( ikw ) + ::ULIS::_CT::ct_strlen( ikw )
+#define ULIS_PARSE_KW_START(    _iss, ikw )     _iss.IndexOf( ikw ) + ::ULIS::_CT::strlen( ikw )
 #define ULIS_PARSE_KW_NEXT(     _iss, ikw )     _iss.IndexOf( ULIS_PARSE_KW_END_TOKEN_S, ULIS_PARSE_KW_START( _iss, ikw ) + 1 )
 #define ULIS_PARSE_KW_END(      _iss, ikw )     _iss.Size() - 1
 #define ULIS_PARSE_KW_STOP(     _iss, ikw )     ULIS_PARSE_KW_NEXT( _iss, ikw ) == -1 ? ULIS_PARSE_KW_END( _iss, ikw ) : ULIS_PARSE_KW_NEXT( _iss, ikw )
 #define ULIS_PARSE_KW_DELTA(    _iss, ikw )     ( ULIS_PARSE_KW_STOP( _iss, ikw ) ) - ( ULIS_PARSE_KW_START( _iss, ikw ) )
 #define ULIS_PARSE_KW_SUBSTR(   _iss, ikw )     _iss.Substring< ULIS_PARSE_KW_DELTA( _iss, ikw ) >( ULIS_PARSE_KW_START( _iss, ikw ) )
-#define ULIS_PARSE_KW_APPEND(   _iss, ikw )     Append< ::ULIS::_CT::ct_strlen( ikw ) + 1 >( ikw ).Append< ULIS_PARSE_KW_DELTA( _iss, ikw ) + 1 >( ULIS_PARSE_KW_SUBSTR( _iss, ikw ).s )
+#define ULIS_PARSE_KW_APPEND(   _iss, ikw )     Append< ::ULIS::_CT::strlen( ikw ) + 1 >( ikw ).Append< ULIS_PARSE_KW_DELTA( _iss, ikw ) + 1 >( ULIS_PARSE_KW_SUBSTR( _iss, ikw ).s )
 #define ULIS_PARSE_KW_APPEND_W( _iss, itk )     ULIS_PARSE_KW_APPEND( _iss, ULIS_PARSE_KW_MAKE_TOKEN_S( itk ) )
 
 
