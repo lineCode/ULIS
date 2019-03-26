@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cstring>
 #include <ULIS_Core>
+#include <array>
 
 #include <boost/preprocessor/arithmetic/add.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
@@ -57,42 +58,56 @@ int Gen( int i )
 }
 */
 
+//@todo: impl this index indirection
 /*
+static constexpr const uint8 SeekIndexForChar( const char* ilayout, const char* imodel, uint8 num ) { return ::ULIS::ct_charindex_without_digits( imodel[num], ilayout ); }
+template <uint8 N, typename T, T... Nums> static constexpr const std::array<uint8, N-1> make_impl( const char* ilayout, const char (&imodel)[N], ::ULIS::integer_sequence<T, Nums...>) { return { SeekIndexForChar( ilayout, imodel, Nums ) ... }; }
+template <uint8 N> static constexpr const std::array<uint8, N-1> make_index_from_string( const char* ilayout, const char (&imodel)[N]) { return make_impl( ilayout, imodel, ::ULIS::make_integer_sequence<uint8, N-1>()); }
+
+
 static constexpr const char layout[] = "B8G8R8A8";
 static constexpr const char model[] =  "RGBA";
 static constexpr const int count = ::ULIS::ct_strlen( model );
-static constexpr const std::array< uint8, count > arr = ::ULIS::make_index_from_string( layout, model );
-*/
-//@todo: impl this index indirection
-/*
-static constexpr const uint8 SeekIndexForChar( const char* ilayout, const char* imodel, uint8 num ) { return ::ULIS::ct_findindex( imodel[num], ilayout ); }
-template <uint8 N, typename T, T... Nums> static constexpr const std::array<uint8, N-1> make_impl( const char* ilayout, const char (&imodel)[N], ::ULIS::integer_sequence<T, Nums...>) { return { SeekIndexForChar( ilayout, imodel, Nums ) ... }; }
-template <uint8 N> static constexpr const std::array<uint8, N-1> make_index_from_string( const char* ilayout, const char (&imodel)[N]) { return make_impl( ilayout, imodel, ::ULIS::make_integer_sequence<uint8, N-1>()); }
+static constexpr const std::array< uint8, count > arr = make_index_from_string( layout, model );
 */
 
-/*
-std::cout << (int)( UINT16_MAX )            << std::endl;
-std::cout << (int)( UINT16_MAX / 257 )      << std::endl;
-std::cout << (int)( UINT16_MAX / 256 )      << std::endl;
-std::cout << (int)( UINT16_MAX / 255 )      << std::endl;
-std::cout << (int)( ( UINT16_MAX >> 8 ) )   << std::endl;
-std::cout << (int)( UINT8_MAX )             << std::endl;
-std::cout <<                                   std::endl;
-std::cout << ( UINT32_MAX )                 << std::endl;
-std::cout << ( UINT32_MAX / 65537 )         << std::endl;
-std::cout << ( UINT32_MAX / 65536 )         << std::endl;
-std::cout << ( UINT32_MAX / 65535 )         << std::endl;
-std::cout << ( ( UINT32_MAX >> 8 ) )        << std::endl;
-std::cout << ( UINT16_MAX )                 << std::endl;
-std::cout <<                                   std::endl;
-std::cout << (uint16)( UINT8_MAX * 0x101 )         << std::endl;
-std::cout << (uint32)( UINT16_MAX * 0x10001 )         << std::endl;
-std::cout << (uint32)( UINT32_MAX )         << std::endl;
-*/
+#define ULIS_PARSE_KW_START( _iss, ikw )    _iss.IndexOf( ikw ) + ::ULIS::nCT::ct_strlen( ikw )
+#define ULIS_PARSE_KW_NEXT( _iss, ikw )     _iss.IndexOf( "_", ULIS_PARSE_KW_START( _iss, ikw ) + 1 )
+#define ULIS_PARSE_KW_END( _iss, ikw )      _iss.Size() - 1
+#define ULIS_PARSE_KW_STOP( _iss, ikw )     ULIS_PARSE_KW_NEXT( _iss, ikw ) == -1 ? ULIS_PARSE_KW_END( _iss, ikw ) : ULIS_PARSE_KW_NEXT( _iss, ikw )
+#define ULIS_PARSE_KW_DELTA( _iss, ikw )    ( ULIS_PARSE_KW_STOP( _iss, ikw ) ) - ( ULIS_PARSE_KW_START( _iss, ikw ) )
+#define ULIS_PARSE_KW_SUBSTR( _iss, ikw )   _iss.Substring< ULIS_PARSE_KW_DELTA( _iss, ikw ) >( ULIS_PARSE_KW_START( _iss, ikw ) )
 
+#define ULIS_PARSE_KW_APPEND( _iss, ikw )   \
+    Append< ::ULIS::nCT::ct_strlen( ikw ) + 1 >( ikw ).Append< ULIS_PARSE_KW_DELTA( _iss, ikw ) + 1 >( ULIS_PARSE_KW_SUBSTR( _iss, ikw ).s )
 
 int main()
 {
+    constexpr auto c_fmt = CONST_STR( "Spec_ml:interleaved_am:straight_tp:uint8" );
+    constexpr auto a_fmt = CONST_STR( "Spec_tp:uint8_am:straight_ml:interleaved" );
+
+    constexpr const int imlstart    = ULIS_PARSE_KW_START( a_fmt, "_tp:" );
+    constexpr const int imlnext   = ULIS_PARSE_KW_NEXT( a_fmt, "_tp:" );
+    constexpr const int imlend  = ULIS_PARSE_KW_END( a_fmt, "_tp:" );
+    constexpr const int imlstop     = ULIS_PARSE_KW_STOP( a_fmt, "_tp:" );
+    constexpr const int dml = ULIS_PARSE_KW_DELTA( a_fmt, "_tp:" );
+    constexpr  auto tmp0 = ULIS_PARSE_KW_SUBSTR( a_fmt, "_tp:" );
+    constexpr auto r_fmt = CONST_STR( "Spec" ).Append< ::ULIS::nCT::ct_strlen( "_tp:" ) + 1 >( "_tp:" ).Append< dml + 1 >( tmp0.s );
+
+    constexpr auto g_fmt = CONST_STR( "Spec" ).ULIS_PARSE_KW_APPEND( a_fmt, "_ml:" ).ULIS_PARSE_KW_APPEND( a_fmt, "_am:" ).ULIS_PARSE_KW_APPEND( a_fmt, "_tp:" );
+
+    static_assert( g_fmt == c_fmt, "..." );
+    static_assert( g_fmt.CRC32() == c_fmt.CRC32(), "..." );
+
+    std::cout << a_fmt << std::endl;
+    std::cout << c_fmt << std::endl;
+    std::cout << g_fmt << std::endl;
+    std::cout << a_fmt.CRC32() << std::endl;
+    std::cout << a_fmt.CRC32() << std::endl;
+    std::cout << c_fmt.CRC32() << std::endl;
+    std::cout << c_fmt.CRC32() << std::endl;
+    std::cout << g_fmt.CRC32() << std::endl;
+    std::cout << g_fmt.CRC32() << std::endl;
     getchar();
     return 0;
 }

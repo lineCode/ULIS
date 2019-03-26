@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Base.IntegerSequence.h
+* ULIS.Base.CompileTime.IntegerSequence.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -13,6 +13,7 @@
 #include <type_traits>
 
 namespace ULIS {
+namespace nCT {
 
 
 /// A type that represents a parameter pack of zero or more integers.
@@ -55,5 +56,5 @@ template<int N> using make_index_sequence = make_integer_sequence<std::size_t, N
 // index_sequence_for<A, B, C> is an alias for index_sequence<0, 1, 2>
 template<typename... Args> using index_sequence_for = make_index_sequence<sizeof...(Args)>;
 
-
+} // namespace nCT
 } // namespace ULIS
