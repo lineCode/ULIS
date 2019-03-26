@@ -25,7 +25,7 @@ https://www.python.org/
         - Windows 7, 8, 10 and greater
         - Visual Studio Studio 15 2017 and greater
         - MinGW 64 7.xx
+        - Clang LLVM xx
 
 ###### Links:
 https://visualstudio.microsoft.com/fr/downloads/  \
-https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools-19123
