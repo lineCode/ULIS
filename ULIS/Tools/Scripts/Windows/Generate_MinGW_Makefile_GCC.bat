@@ -10,10 +10,10 @@ pushd %~dp0
 cd ../../../
 
 :: Make Generated dir for generated project if not exist
-IF NOT EXIST Generated_MinGW ( MKDIR Generated_MinGW )
+IF NOT EXIST Generated_MinGW_Makefile_GCC ( MKDIR Generated_MinGW_Makefile_GCC )
 
 :: Step in Generated dir
-cd Generated_MinGW
+cd Generated_MinGW_Makefile_GCC
 
 IF NOT EXIST Release ( MKDIR Release )
 IF NOT EXIST Debug ( MKDIR Debug )

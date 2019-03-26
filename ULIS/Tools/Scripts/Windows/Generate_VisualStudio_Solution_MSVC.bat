@@ -10,10 +10,10 @@ pushd %~dp0
 cd ../../../
 
 :: Make Generated dir for generated project if not exist
-IF NOT EXIST Generated_VisualStudio ( MKDIR Generated_VisualStudio )
+IF NOT EXIST Generated_VisualStudio_Solution_MSVC ( MKDIR Generated_VisualStudio_Solution_MSVC )
 
 :: Step in Generated dir
-cd Generated_VisualStudio
+cd Generated_VisualStudio_Solution_MSVC
 
 :: Clean cmake garbage if there
 IF EXIST CMakeFiles ( rmdir /S /Q CMakeFiles )
@@ -25,5 +25,5 @@ cmake -G "Visual Studio 15 2017 Win64" -DULIS_USE_CONFIG:BOOL=ON ../Source
 
 :: Create symbolic link to solution in root
 cd ../../
-IF EXIST ULIS.sln ( del ULIS.sln )
-mklink "ULIS.sln" "ULIS\Generated_VisualStudio\ULIS.sln"
+IF EXIST ULIS_MSVC.sln ( del ULIS_MSVC.sln )
+mklink "ULIS_MSVC.sln" "ULIS\Generated_VisualStudio_Solution_MSVC\ULIS.sln"
