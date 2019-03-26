@@ -10,34 +10,12 @@
 
 #pragma once
 
-#include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.ConstStr.h"
+#include "ULIS/Imaging/CompileTime/ULIS.Imaging.CompileTime.ParsingPPFramework.h"
 
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/seq/for_each.hpp>
-#include <boost/preprocessor/seq/cat.hpp>
-#include <boost/preprocessor/stringize.hpp>
-#include <boost/preprocessor/tuple/to_seq.hpp>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// Macro utilities
-#define ULIS_KEYS( ... ) ( __VA_ARGS__ )
-#define ULIS_KEYWORDS_CAT( cat )            kw##cat
-#define ULIS_ENUM_CAT( cat )                e##cat
-#define ULIS_MAKE_KEYWORD( r, data, elem )  BOOST_PP_STRINGIZE( elem )
-#define ULIS_MAKE_ENUM( r, data, elem )     BOOST_PP_CAT( k, elem ),
-#define ULIS_MAKE_ENUM_KEYS_TUPLE( r, data, elem )  ( BOOST_PP_CAT( k, elem ), elem ),
-
-#define ULIS_KEYS_TO_KEYWORDS( cat, keys )                                              \
-    constexpr const char* ULIS_KEYWORDS_CAT( cat )[] = {                                \
-        BOOST_PP_SEQ_FOR_EACH( ULIS_MAKE_KEYWORD, 0, BOOST_PP_TUPLE_TO_SEQ( keys ) ) };
-
-#define ULIS_KEYS_TO_ENUM( cat, keys )                                                  \
-    enum class ULIS_ENUM_CAT( cat ) : char {                                            \
-        BOOST_PP_SEQ_FOR_EACH( ULIS_MAKE_ENUM, 0, BOOST_PP_TUPLE_TO_SEQ( keys ) ) };
-
-/////////////////////////////////////////////////////
-// enum and keyword declaration
+// Enum and Keyword Declaration
 // memory_layout
 #define ULIS_KEYS_ML ULIS_KEYS( interleaved, planar )
 ULIS_KEYS_TO_KEYWORDS(  _ml, ULIS_KEYS_ML )
@@ -87,23 +65,9 @@ struct FBlockInfo
 
 
 /////////////////////////////////////////////////////
-// NormSpecStr
-template< int N >
-static
-constexpr
-const
-auto
-NormSpecStr( const nCT::const_str< N > spec_str )
-{
-    const int start_ml = spec_str.IndexOf( "_ml:" );
-    return spec_str.Substring< 2 >( start_ml );
-}
-
-
-/////////////////////////////////////////////////////
 // ParseSpecStr
 template< int N >
-static constexpr const FBlockInfo ParseSpecStr( nCT::const_str< N > spec_str )
+static constexpr const FBlockInfo ParseSpecStr( _CT::const_str< N > spec_str )
 {
     return  { e_ml::kinterleaved
             , e_am::kstraight
@@ -120,34 +84,7 @@ static constexpr const FBlockInfo ParseSpecStr( nCT::const_str< N > spec_str )
 
 /////////////////////////////////////////////////////
 // TBlockSpec
-template< uint32 > class TBlock;
 template< uint32 > struct TBlockSpec {};
-
-#define ULIS_SPEC_X( X, i ) _##X##:##i
-#define ULIS_SPEC_ML( i ) ULIS_SPEC_X( ml, i )
-#define ULIS_SPEC_AM( i ) ULIS_SPEC_X( am, i )
-#define ULIS_SPEC_TP( i ) ULIS_SPEC_X( tp, i )
-#define ULIS_SPEC_AS( i ) ULIS_SPEC_X( as, i )
-#define ULIS_SPEC_CM( i ) ULIS_SPEC_X( cm, i )
-#define ULIS_SPEC_EM( i ) ULIS_SPEC_X( em, i )
-
-#define ULIS_BLOCK_SPEC( ... ) BOOST_PP_SEQ_CAT( BOOST_PP_TUPLE_TO_SEQ( ( __VA_ARGS__ ) ) )
-
-/*
-ULIS_BLOCK_SPEC( _ml:interleaved
-               , _am:straight
-               , _tp:uint8
-                )
-*/
-
-#define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                          \
-    static constexpr const uint32 Spec_##spec = CONST_STR( #spec ).CRC32();             \
-    template<> struct TBlockSpec< Spec_##spec > {                                       \
-        static constexpr const char*        _ss = #spec;                                \
-        static constexpr const uint32       _sh = Spec_##spec;                          \
-        static constexpr const FBlockInfo   _nf = ParseSpecStr( CONST_STR( #spec ) );   \
-    };                                                                                  \
-    typedef TBlock< Spec_##spec > F##spec;
 
 } // namespace ULIS
 

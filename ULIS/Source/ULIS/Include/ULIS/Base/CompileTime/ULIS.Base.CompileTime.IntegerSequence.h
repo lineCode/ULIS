@@ -13,7 +13,7 @@
 #include <type_traits>
 
 namespace ULIS {
-namespace nCT {
+namespace _CT {
 
 
 /// A type that represents a parameter pack of zero or more integers.
@@ -35,14 +35,14 @@ template<std::size_t... I> using index_sequence = integer_sequence<std::size_t, 
 namespace detail {
 
 
-// Metafunction that generates an integer_sequence of T containing [0, N)
+// Metafu_CTion that generates an integer_sequence of T containing [0, N)
 template<typename T, T Nt, std::size_t N>
 struct iota {
     static_assert( Nt >= 0, "N cannot be negative" );
     using type = typename iota<T, Nt-1, N-1>::type::next;
 };
 
-// Terminal case of the recursive metafunction.
+// Terminal case of the recursive metafu_CTion.
 template<typename T, T Nt> struct iota<T, Nt, 0ul> { using type = integer_sequence<T>; };
 
 
@@ -56,5 +56,5 @@ template<int N> using make_index_sequence = make_integer_sequence<std::size_t, N
 // index_sequence_for<A, B, C> is an alias for index_sequence<0, 1, 2>
 template<typename... Args> using index_sequence_for = make_index_sequence<sizeof...(Args)>;
 
-} // namespace nCT
+} // namespace _CT
 } // namespace ULIS

@@ -71,30 +71,20 @@ static constexpr const int count = ::ULIS::ct_strlen( model );
 static constexpr const std::array< uint8, count > arr = make_index_from_string( layout, model );
 */
 
-#define ULIS_PARSE_KW_START( _iss, ikw )    _iss.IndexOf( ikw ) + ::ULIS::nCT::ct_strlen( ikw )
-#define ULIS_PARSE_KW_NEXT( _iss, ikw )     _iss.IndexOf( "_", ULIS_PARSE_KW_START( _iss, ikw ) + 1 )
-#define ULIS_PARSE_KW_END( _iss, ikw )      _iss.Size() - 1
-#define ULIS_PARSE_KW_STOP( _iss, ikw )     ULIS_PARSE_KW_NEXT( _iss, ikw ) == -1 ? ULIS_PARSE_KW_END( _iss, ikw ) : ULIS_PARSE_KW_NEXT( _iss, ikw )
-#define ULIS_PARSE_KW_DELTA( _iss, ikw )    ( ULIS_PARSE_KW_STOP( _iss, ikw ) ) - ( ULIS_PARSE_KW_START( _iss, ikw ) )
-#define ULIS_PARSE_KW_SUBSTR( _iss, ikw )   _iss.Substring< ULIS_PARSE_KW_DELTA( _iss, ikw ) >( ULIS_PARSE_KW_START( _iss, ikw ) )
-
-#define ULIS_PARSE_KW_APPEND( _iss, ikw )   \
-    Append< ::ULIS::nCT::ct_strlen( ikw ) + 1 >( ikw ).Append< ULIS_PARSE_KW_DELTA( _iss, ikw ) + 1 >( ULIS_PARSE_KW_SUBSTR( _iss, ikw ).s )
 
 int main()
 {
-    constexpr auto c_fmt = CONST_STR( "Spec_ml:interleaved_am:straight_tp:uint8" );
-    constexpr auto a_fmt = CONST_STR( "Spec_tp:uint8_am:straight_ml:interleaved" );
-
+    constexpr auto c_fmt = CONST_STR( "Spec__ml_interleaved__am_straight__tp_uint8" );
+    constexpr auto a_fmt = CONST_STR( "Spec__tp_uint8__am_straight__ml_interleaved" );
     constexpr const int imlstart    = ULIS_PARSE_KW_START( a_fmt, "_tp:" );
-    constexpr const int imlnext   = ULIS_PARSE_KW_NEXT( a_fmt, "_tp:" );
-    constexpr const int imlend  = ULIS_PARSE_KW_END( a_fmt, "_tp:" );
+    constexpr const int imlnext     = ULIS_PARSE_KW_NEXT( a_fmt, "_tp:" );
+    constexpr const int imlend      = ULIS_PARSE_KW_END( a_fmt, "_tp:" );
     constexpr const int imlstop     = ULIS_PARSE_KW_STOP( a_fmt, "_tp:" );
-    constexpr const int dml = ULIS_PARSE_KW_DELTA( a_fmt, "_tp:" );
-    constexpr  auto tmp0 = ULIS_PARSE_KW_SUBSTR( a_fmt, "_tp:" );
-    constexpr auto r_fmt = CONST_STR( "Spec" ).Append< ::ULIS::nCT::ct_strlen( "_tp:" ) + 1 >( "_tp:" ).Append< dml + 1 >( tmp0.s );
+    constexpr const int dml         = ULIS_PARSE_KW_DELTA( a_fmt, "_tp:" );
+    constexpr  auto tmp0            = ULIS_PARSE_KW_SUBSTR( a_fmt, "_tp:" );
+    constexpr auto r_fmt = CONST_STR( "Spec" ).Append< ::ULIS::_CT::ct_strlen( "_tp:" ) + 1 >( "_tp:" ).Append< dml + 1 >( tmp0.s );
 
-    constexpr auto g_fmt = CONST_STR( "Spec" ).ULIS_PARSE_KW_APPEND( a_fmt, "_ml:" ).ULIS_PARSE_KW_APPEND( a_fmt, "_am:" ).ULIS_PARSE_KW_APPEND( a_fmt, "_tp:" );
+    constexpr auto g_fmt = CONST_STR( "Spec" ).ULIS_PARSE_KW_APPEND_W( a_fmt, ml ).ULIS_PARSE_KW_APPEND_W( a_fmt, am ).ULIS_PARSE_KW_APPEND_W( a_fmt, tp );
 
     static_assert( g_fmt == c_fmt, "..." );
     static_assert( g_fmt.CRC32() == c_fmt.CRC32(), "..." );
