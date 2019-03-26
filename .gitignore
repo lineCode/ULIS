@@ -11,8 +11,7 @@ __pycache__/
 
 # Generated
 */Generated/*
-*/Generated_VisualStudio/*
-*/Generated_MinGW/*
+*/Generated*/*
 
 # Content
 */Content/*
