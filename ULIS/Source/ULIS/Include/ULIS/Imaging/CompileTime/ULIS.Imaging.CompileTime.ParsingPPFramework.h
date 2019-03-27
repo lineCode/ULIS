@@ -11,6 +11,7 @@
 #pragma once
 
 #include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.ConstStr.h"
+#include <boost/preprocessor/facilities/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/cat.hpp>
@@ -54,19 +55,6 @@ namespace _CT {
 
 
 /////////////////////////////////////////////////////
-// BlockSpec
-/* build a specialization of TBlockSpec from token and compute string and hash equivalents */
-#define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                          \
-    static constexpr const uint32 Spec_##spec = ULIS_CONST_STR( #spec ).CRC32();             \
-    template<> struct TBlockSpec< Spec_##spec > {                                       \
-        static constexpr const char*        _ss = #spec;                                \
-        static constexpr const uint32       _sh = Spec_##spec;                          \
-        static constexpr const FBlockInfo   _nf = ParseSpecStr( ULIS_CONST_STR( #spec ) );   \
-    };                                                                                  \
-    typedef TBlock< Spec_##spec > F##spec;
-
-
-/////////////////////////////////////////////////////
 // Keyword Token
 /* token delimiter for keyword start */
 #define ULIS_PARSE_KW_START_TOKEN __
@@ -87,7 +75,7 @@ namespace _CT {
 #define ULIS_PARSE_KW_MAKE_TOKEN_S( i ) BOOST_PP_STRINGIZE( ULIS_PARSE_KW_MAKE_TOKEN( i ) )
 
 /* build argument with keyword and delimiters */
-#define ULIS_SPEC_X( X, i ) ULIS_PARSE_KW_MAKE_TOKEN( X ) ## i
+#define ULIS_SPEC_X( X, i ) BOOST_PP_CAT( ULIS_PARSE_KW_MAKE_TOKEN( X ), i )
 
 /* shorthand for specific keyword arguments */
 #define ULIS_SPEC_ML( i ) ULIS_SPEC_X( ml, i )
@@ -110,6 +98,21 @@ namespace _CT {
 #define ULIS_PARSE_KW_SUBSTR(   _iss, ikw )     _iss.Substring< ULIS_PARSE_KW_DELTA( _iss, ikw ) >( ULIS_PARSE_KW_START( _iss, ikw ) )
 #define ULIS_PARSE_KW_APPEND(   _iss, ikw )     Append< ::ULIS::_CT::strlen( ikw ) + 1 >( ikw ).Append< ULIS_PARSE_KW_DELTA( _iss, ikw ) + 1 >( ULIS_PARSE_KW_SUBSTR( _iss, ikw ).s )
 #define ULIS_PARSE_KW_APPEND_W( _iss, itk )     ULIS_PARSE_KW_APPEND( _iss, ULIS_PARSE_KW_MAKE_TOKEN_S( itk ) )
+
+
+/////////////////////////////////////////////////////
+// BlockSpec
+/* build a specialization of TBlockSpec from token and compute string and hash equivalents */
+#define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                              \
+    static constexpr const uint32 BOOST_PP_CAT( Spec_, spec ) = ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) ).CRC32();            \
+    template<> struct TBlockSpec< BOOST_PP_CAT( Spec_, spec ) > {                                           \
+        static constexpr const char*        _ss = BOOST_PP_STRINGIZE( spec );                                    \
+        static constexpr const uint32       _sh = BOOST_PP_CAT( Spec_, spec );                              \
+        static constexpr const FBlockInfo   _nf = ParseSpecStr( ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) ) );  \
+    };                                                                                      \
+    typedef TBlock< BOOST_PP_CAT( Spec_, spec ) > BOOST_PP_CAT( FBlock, spec );
+
+#define ULIS_DECLARE_STATIC_BLOCK_SPEC_W( ... ) ULIS_DECLARE_STATIC_BLOCK_SPEC( ULIS_BLOCK_SPEC( __VA_ARGS__ ) )
 
 
 } // namespace _CT

@@ -16,7 +16,6 @@
 #include <boost/preprocessor/arithmetic/add.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 
-using namespace ::ULIS;
 
 /*
 template< int S >
@@ -71,6 +70,21 @@ static constexpr const int count = ::ULIS::strlen( model );
 static constexpr const std::array< uint8, count > arr = make_index_from_string( layout, model );
 */
 
+
+//ULIS_DECLARE_STATIC_BLOCK_SPEC_W( ULIS_SPEC_ML( interleaved ) )
+
+namespace ULIS {
+ULIS_DECLARE_STATIC_BLOCK_SPEC_W(
+    ULIS_SPEC_ML( interleaved ),
+    ULIS_SPEC_AM( straight ),
+    ULIS_SPEC_TP( uint8 ),
+    ULIS_SPEC_AS( natural ),
+    ULIS_SPEC_CM( RGB )
+    )
+}
+
+//int re = Spec___ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB;
+//FBlock__ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB a;
 
 int main()
 {
