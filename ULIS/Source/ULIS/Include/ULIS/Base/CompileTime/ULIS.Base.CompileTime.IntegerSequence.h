@@ -12,6 +12,7 @@
 
 #include <type_traits>
 
+
 namespace ULIS {
 namespace _CT {
 
@@ -29,7 +30,6 @@ struct integer_sequence {
 };
 
 template<typename T, T... I> constexpr T integer_sequence<T, I...>::size;
-
 template<std::size_t... I> using index_sequence = integer_sequence<std::size_t, I...>;
 
 namespace detail {
@@ -42,7 +42,7 @@ struct iota {
     using type = typename iota<T, Nt-1, N-1>::type::next;
 };
 
-// Terminal case of the recursive metafu_CTion.
+// Terminal case of the recursive metafunction.
 template<typename T, T Nt> struct iota<T, Nt, 0ul> { using type = integer_sequence<T>; };
 
 
@@ -52,9 +52,10 @@ template<typename T, T Nt> struct iota<T, Nt, 0ul> { using type = integer_sequen
 // make_integer_sequence<T, N> is an alias for integer_sequence<T, 0,...N-1>
 template<typename T, T N> using make_integer_sequence = typename detail::iota<T, N, N>::type;
 template<int N> using make_index_sequence = make_integer_sequence<std::size_t, N>;
-
 // index_sequence_for<A, B, C> is an alias for index_sequence<0, 1, 2>
 template<typename... Args> using index_sequence_for = make_index_sequence<sizeof...(Args)>;
 
+
 } // namespace _CT
 } // namespace ULIS
+
