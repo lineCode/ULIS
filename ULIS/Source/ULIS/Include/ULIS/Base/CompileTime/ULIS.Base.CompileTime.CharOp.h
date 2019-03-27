@@ -31,7 +31,7 @@ is_digit( char c )
 constexpr int
 stoi_impl( const char* s, int value = 0 )
 {
-    return *s ? is_digit( *s ) ? stoi_impl( s+1, (*s-'0') + value*10 ) : throw "error" : value;
+    return *s ? is_digit( *s ) ? stoi_impl( s+1, (*s-'0') + value*10 ) : -1 : value;
 }
 
 
@@ -63,15 +63,7 @@ streq( char const * a, char const * b )
 constexpr bool
 is_number( const char* s )
 {
-    bool ret = true;
-    for( int i=0; i< strlen( s ); ++i ) {
-        if( !is_digit( s[i] ) )
-        {
-            ret = false;
-            break;
-        }
-    }
-    return ret;
+    return *s ? is_digit( *s ) ? is_number( s+1 ) : false : true;
 }
 
 
@@ -98,6 +90,11 @@ indexof( const char* word, const char* str, int from = 0 )
     return ret;
 }
 
+/* short version ( breaks recursion depth limit )*/
+constexpr int indof( cstr w, cstr s, int f=0, int q=0 )
+{
+    return s[f+q] ? w[q] ? s[f+q] == w[q] ? q == strlen( w ) - 1 ? f : indof( w, s, f, q+1 ) : indof( w, s, f, q+1 ) : indof( w, s, f+1 ) : -1;
+}
 
 //constexpr const int ct_char_index_without_digits ( char c, const char* s ) { int cind = 0; int lpos = 0; while(1) { if( s[cind] == c ) { break; } if( !is_digit( s[cind] ) ) { ++lpos; } ++cind; } return lpos; }
 

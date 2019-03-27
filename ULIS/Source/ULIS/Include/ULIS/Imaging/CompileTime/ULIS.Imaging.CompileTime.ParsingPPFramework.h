@@ -11,6 +11,7 @@
 #pragma once
 
 #include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.ConstStr.h"
+#include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.Registry.h"
 #include <boost/preprocessor/facilities/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
@@ -87,6 +88,9 @@ namespace _CT {
 
 /* concatenate multiple keyword arguments with no preffered order */
 #define ULIS_BLOCK_SPEC( ... ) BOOST_PP_SEQ_CAT( BOOST_PP_TUPLE_TO_SEQ( ( __VA_ARGS__ ) ) )
+#define ULIS_SPEC_TO_STR( spec ) ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) )
+#define ULIS_SPEC_SS( spec )    BOOST_PP_CAT( _SS, spec )
+#define ULIS_SPEC_SH( spec )    BOOST_PP_CAT( _SH, spec )
 
 /////////////////////////////////////////////////////
 // String Parsing
@@ -103,14 +107,16 @@ namespace _CT {
 /////////////////////////////////////////////////////
 // BlockSpec
 /* build a specialization of TBlockSpec from token and compute string and hash equivalents */
-#define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                                                          \
-    static constexpr const uint32 BOOST_PP_CAT( Spec_, spec ) = ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) ).CRC32();   \
-    template<> struct TBlockSpec< BOOST_PP_CAT( Spec_, spec ) > {                                                       \
-        static constexpr const char*        _ss = BOOST_PP_STRINGIZE( spec );                                           \
-        static constexpr const uint32       _sh = BOOST_PP_CAT( Spec_, spec );                                          \
-        static constexpr const FBlockInfo   _nf = ParseSpecStr( ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) ) );         \
-    };                                                                                                                  \
-    typedef TBlock< BOOST_PP_CAT( Spec_, spec ) > BOOST_PP_CAT( FBlock, spec );
+#define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                          \
+    constexpr auto      ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                \
+    constexpr uint32    ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).CRC32();            \
+    template<> struct TBlockSpec< ULIS_SPEC_SH( spec ) > {                              \
+        static constexpr const char*        _ss = ULIS_SPEC_SS( spec ).s;               \
+        static constexpr const uint32       _sh = ULIS_SPEC_SH( spec );                 \
+        static constexpr const FBlockInfo   _nf = ParseSpecStr( ULIS_SPEC_SS( spec ) ); \
+    };                                                                                  \
+    typedef TBlock< ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                \
+    ULIS_APPEND_REG( ULIS_REG_BUILDER, ULIS_SPEC_SH( spec ) )
 
 #define ULIS_DECLARE_STATIC_BLOCK_SPEC_W( ... ) ULIS_DECLARE_STATIC_BLOCK_SPEC( ULIS_BLOCK_SPEC( __VA_ARGS__ ) )
 

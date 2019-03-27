@@ -18,34 +18,18 @@
 
 using namespace ::ULIS;
 
-template< int S >
-struct regt
-{
-    constexpr const int operator[]( int i ) const { return n[i]; }
-    const uint32 n[S] = { 0 };
-    constexpr const int Size() const { return S; }
-    template< int N, typename T, T... Nums > constexpr const regt< N > push_back_impl( uint32 i, ::ULIS::_CT::integer_sequence< T, Nums... > ) const { return { n[Nums] ..., i }; }
-    constexpr const regt< S + 1 > push_back( uint32 i ) const { return push_back_impl< S + 1 >( i, ::ULIS::_CT::make_integer_sequence< int, S >() ); }
-};
-
 /*
 constexpr regt< 1 > regbase = { 0 };
 constexpr auto reg1 = regbase.push_back( 3244 );
 constexpr auto reg2 = reg1.push_back( 4126 );
 */
 
-#define PREVIOUS( i ) BOOST_PP_SUB( i, 1 )
-#define CAT( a, b ) BOOST_PP_CAT( a, b )
-#define CREATE_REG( i ) constexpr regt< 1 > CAT( reg,  __COUNTER__ ) = { i };
-#define APPEND_REG_IMPL( i, c ) constexpr auto CAT( reg,  c ) = CAT( reg, PREVIOUS( c ) ).push_back( i );
-#define APPEND_REG( i ) APPEND_REG_IMPL( i, __COUNTER__ )
-#define ASSIGN_REG CAT( reg, PREVIOUS( __COUNTER__ ) )
-
-CREATE_REG( 454 )
-APPEND_REG( 1 )
-APPEND_REG( 2 )
-APPEND_REG( 3 )
-constexpr auto reg = ASSIGN_REG;
+/*
+ULIS_CREATE_REG( okreg, 454 )
+ULIS_APPEND_REG( okreg, 1 )
+ULIS_APPEND_REG( okreg, 2 )
+ULIS_APPEND_REG( okreg, 3 )
+constexpr auto reg = ULIS_ASSIGN_REG( okreg );
 
 int Gen( int i )
 {
@@ -58,6 +42,7 @@ int Gen( int i )
             return reg[1];
     }
 }
+*/
 
 //@todo: impl this index indirection
 /*
@@ -76,6 +61,9 @@ static constexpr const std::array< uint8, count > arr = make_index_from_string( 
 //ULIS_DECLARE_STATIC_BLOCK_SPEC_W( ULIS_SPEC_ML( interleaved ) )
 
 namespace ULIS {
+#define ULIS_REG_BUILDER ulis_reg_builder
+ULIS_CREATE_REG( ULIS_REG_BUILDER, 0 )
+
 ULIS_DECLARE_STATIC_BLOCK_SPEC_W(
     ULIS_SPEC_ML( interleaved ),
     ULIS_SPEC_AM( straight ),
@@ -83,14 +71,27 @@ ULIS_DECLARE_STATIC_BLOCK_SPEC_W(
     ULIS_SPEC_AS( natural ),
     ULIS_SPEC_CM( RGB )
     )
-}
 
+ULIS_DECLARE_STATIC_BLOCK_SPEC_W(
+    ULIS_SPEC_ML( planar ),
+    ULIS_SPEC_AM( straight ),
+    ULIS_SPEC_TP( uint8 ),
+    ULIS_SPEC_AS( natural )
+    )
+
+constexpr auto regx = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
+static_assert( regx[0] == 0, "..." );
+static_assert( regx[1] == _SH__ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB, "..." );
+static_assert( regx[2] == _SH__ml_planar__am_straight__tp_uint8__as_natural, "..." );
+}
 
 
 int main()
 {
     constexpr auto c_fmt = ULIS_CONST_STR( "Spec__ml_interleaved__am_straight__tp_uint8" );
     constexpr auto a_fmt = ULIS_CONST_STR( "Spec__tp_uint8__am_straight__ml_interleaved" );
+
+    /*
     constexpr const int imlstart    = ULIS_PARSE_KW_START( a_fmt, "_tp:" );
     constexpr const int imlnext     = ULIS_PARSE_KW_NEXT( a_fmt, "_tp:" );
     constexpr const int imlend      = ULIS_PARSE_KW_END( a_fmt, "_tp:" );
@@ -98,15 +99,18 @@ int main()
     constexpr const int dml         = ULIS_PARSE_KW_DELTA( a_fmt, "_tp:" );
     constexpr  auto tmp0            = ULIS_PARSE_KW_SUBSTR( a_fmt, "_tp:" );
     constexpr auto r_fmt = ULIS_CONST_STR( "Spec" ).Append< ::ULIS::_CT::strlen( "_tp:" ) + 1 >( "_tp:" ).Append< dml + 1 >( tmp0.s );
-
+    */
     constexpr auto g_fmt = ULIS_CONST_STR( "Spec" ).ULIS_PARSE_KW_APPEND_W( a_fmt, ml ).ULIS_PARSE_KW_APPEND_W( a_fmt, am ).ULIS_PARSE_KW_APPEND_W( a_fmt, tp );
 
     static_assert( g_fmt == c_fmt, "..." );
     static_assert( g_fmt.CRC32() == c_fmt.CRC32(), "..." );
 
-    for( int i = 0; i < reg.Size(); ++ i )
-        std::cout << reg[i] << std::endl;
+    for( int i = 0; i < regx.Size(); ++ i )
+        std::cout << (uint32)regx[i] << std::endl;
 
+    std::cout << FBlock__ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB::SpecStr() << std::endl;
+    std::cout << FBlock__ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB::SpecHash() << std::endl;
+    std::cout << a_fmt.s << std::endl;
     std::cout << a_fmt.s << std::endl;
     std::cout << c_fmt.s << std::endl;
     std::cout << g_fmt.s << std::endl;

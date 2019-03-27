@@ -32,5 +32,6 @@ typedef int64_t     int64;
 typedef uint32      typefield;
 typedef uint8       typefieldId;
 typedef bool        typefieldBit;
+typedef const char* cstr;
 
 } // namespace ULIS

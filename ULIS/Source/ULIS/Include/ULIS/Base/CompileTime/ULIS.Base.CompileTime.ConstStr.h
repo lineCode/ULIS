@@ -10,13 +10,9 @@
 
 #pragma once
 
-/* for typedefs */
 #include "ULIS/Base/ULIS.Base.Types.h"
-/* for underlying basic compile time operations */
 #include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.CharOp.h"
-/* for generating sequences at compile time */
 #include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.IntegerSequence.h"
-/* for generating crc32 hash at compile time */
 #include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.CRC32.h"
 
 
