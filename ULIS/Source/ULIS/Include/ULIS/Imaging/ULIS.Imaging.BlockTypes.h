@@ -17,7 +17,7 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // Declare Default Block Types
-ULIS_DECLARE_STATIC_BLOCK_SPEC( Block_Planar_Premultiplied_uint8_32_R8G8B8A8_R0G1B2A3_integral )
+//ULIS_DECLARE_STATIC_BLOCK_SPEC( Block_Planar_Premultiplied_uint8_32_R8G8B8A8_R0G1B2A3_integral )
 
 
 } // namespace ULIS
