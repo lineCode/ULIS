@@ -16,29 +16,32 @@
 #include <boost/preprocessor/arithmetic/add.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 
+using namespace ::ULIS;
 
-/*
 template< int S >
 struct regt
 {
     constexpr const int operator[]( int i ) const { return n[i]; }
-    const uint32 n[S] = { 0, 1 };
-    template< int N, typename T, T... Nums > constexpr const regt< N > push_back_impl( uint32 i, ::ULIS::integer_sequence< T, Nums... > ) const { return { n[Nums] ..., i }; }
-    constexpr const regt< S + 1 > push_back( uint32 i ) const { return push_back_impl< S + 1 >( i, ::ULIS::make_integer_sequence< int, S >() ); }
+    const uint32 n[S] = { 0 };
+    constexpr const int Size() const { return S; }
+    template< int N, typename T, T... Nums > constexpr const regt< N > push_back_impl( uint32 i, ::ULIS::_CT::integer_sequence< T, Nums... > ) const { return { n[Nums] ..., i }; }
+    constexpr const regt< S + 1 > push_back( uint32 i ) const { return push_back_impl< S + 1 >( i, ::ULIS::_CT::make_integer_sequence< int, S >() ); }
 };
 
+/*
 constexpr regt< 1 > regbase = { 0 };
 constexpr auto reg1 = regbase.push_back( 3244 );
 constexpr auto reg2 = reg1.push_back( 4126 );
+*/
 
 #define PREVIOUS( i ) BOOST_PP_SUB( i, 1 )
-#define APPLY( a ) a
-#define CAT( a, b ) APPLY( a ) ## APPLY( b )
-#define CREATE_REG( i ) constexpr regt< 1 > CAT( reg,  APPLY(__LINE__) ) = { i };
-#define APPEND_REG( i ) constexpr auto CAT( reg,  APPLY(__LINE__) ) = CAT( reg, PREVIOUS( __LINE__ ) ).push_back( i );
-#define ASSIGN_REG CAT( reg, PREVIOUS( __LINE__ ) )
+#define CAT( a, b ) BOOST_PP_CAT( a, b )
+#define CREATE_REG( i ) constexpr regt< 1 > CAT( reg,  __COUNTER__ ) = { i };
+#define APPEND_REG_IMPL( i, c ) constexpr auto CAT( reg,  c ) = CAT( reg, PREVIOUS( c ) ).push_back( i );
+#define APPEND_REG( i ) APPEND_REG_IMPL( i, __COUNTER__ )
+#define ASSIGN_REG CAT( reg, PREVIOUS( __COUNTER__ ) )
 
-CREATE_REG( 0 )
+CREATE_REG( 454 )
 APPEND_REG( 1 )
 APPEND_REG( 2 )
 APPEND_REG( 3 )
@@ -55,7 +58,6 @@ int Gen( int i )
             return reg[1];
     }
 }
-*/
 
 //@todo: impl this index indirection
 /*
@@ -83,8 +85,7 @@ ULIS_DECLARE_STATIC_BLOCK_SPEC_W(
     )
 }
 
-//int re = Spec___ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB;
-//FBlock__ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB a;
+
 
 int main()
 {
@@ -103,9 +104,12 @@ int main()
     static_assert( g_fmt == c_fmt, "..." );
     static_assert( g_fmt.CRC32() == c_fmt.CRC32(), "..." );
 
-    std::cout << a_fmt << std::endl;
-    std::cout << c_fmt << std::endl;
-    std::cout << g_fmt << std::endl;
+    for( int i = 0; i < reg.Size(); ++ i )
+        std::cout << reg[i] << std::endl;
+
+    std::cout << a_fmt.s << std::endl;
+    std::cout << c_fmt.s << std::endl;
+    std::cout << g_fmt.s << std::endl;
     std::cout << a_fmt.CRC32() << std::endl;
     std::cout << a_fmt.CRC32() << std::endl;
     std::cout << c_fmt.CRC32() << std::endl;

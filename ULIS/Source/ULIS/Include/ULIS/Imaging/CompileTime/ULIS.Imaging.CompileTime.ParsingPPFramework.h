@@ -90,10 +90,10 @@ namespace _CT {
 
 /////////////////////////////////////////////////////
 // String Parsing
-#define ULIS_PARSE_KW_START(    _iss, ikw )     _iss.IndexOf( ikw ) + ::ULIS::_CT::strlen( ikw )
-#define ULIS_PARSE_KW_NEXT(     _iss, ikw )     _iss.IndexOf( ULIS_PARSE_KW_END_TOKEN_S, ULIS_PARSE_KW_START( _iss, ikw ) + 1 )
-#define ULIS_PARSE_KW_END(      _iss, ikw )     _iss.Size() - 1
-#define ULIS_PARSE_KW_STOP(     _iss, ikw )     ULIS_PARSE_KW_NEXT( _iss, ikw ) == -1 ? ULIS_PARSE_KW_END( _iss, ikw ) : ULIS_PARSE_KW_NEXT( _iss, ikw )
+#define ULIS_PARSE_KW_START(    _iss, ikw )     ( _iss.IndexOf( ikw ) + ::ULIS::_CT::strlen( ikw ) )
+#define ULIS_PARSE_KW_NEXT(     _iss, ikw )     ( _iss.IndexOf( ULIS_PARSE_KW_END_TOKEN_S, ULIS_PARSE_KW_START( _iss, ikw ) + 1 ) )
+#define ULIS_PARSE_KW_END(      _iss, ikw )     ( _iss.Size() - 1 )
+#define ULIS_PARSE_KW_STOP(     _iss, ikw )     ( ULIS_PARSE_KW_NEXT( _iss, ikw ) == -1 ? ULIS_PARSE_KW_END( _iss, ikw ) : ULIS_PARSE_KW_NEXT( _iss, ikw ) )
 #define ULIS_PARSE_KW_DELTA(    _iss, ikw )     ( ULIS_PARSE_KW_STOP( _iss, ikw ) ) - ( ULIS_PARSE_KW_START( _iss, ikw ) )
 #define ULIS_PARSE_KW_SUBSTR(   _iss, ikw )     _iss.Substring< ULIS_PARSE_KW_DELTA( _iss, ikw ) >( ULIS_PARSE_KW_START( _iss, ikw ) )
 #define ULIS_PARSE_KW_APPEND(   _iss, ikw )     Append< ::ULIS::_CT::strlen( ikw ) + 1 >( ikw ).Append< ULIS_PARSE_KW_DELTA( _iss, ikw ) + 1 >( ULIS_PARSE_KW_SUBSTR( _iss, ikw ).s )
@@ -103,13 +103,13 @@ namespace _CT {
 /////////////////////////////////////////////////////
 // BlockSpec
 /* build a specialization of TBlockSpec from token and compute string and hash equivalents */
-#define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                              \
-    static constexpr const uint32 BOOST_PP_CAT( Spec_, spec ) = ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) ).CRC32();            \
-    template<> struct TBlockSpec< BOOST_PP_CAT( Spec_, spec ) > {                                           \
-        static constexpr const char*        _ss = BOOST_PP_STRINGIZE( spec );                                    \
-        static constexpr const uint32       _sh = BOOST_PP_CAT( Spec_, spec );                              \
-        static constexpr const FBlockInfo   _nf = ParseSpecStr( ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) ) );  \
-    };                                                                                      \
+#define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                                                          \
+    static constexpr const uint32 BOOST_PP_CAT( Spec_, spec ) = ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) ).CRC32();   \
+    template<> struct TBlockSpec< BOOST_PP_CAT( Spec_, spec ) > {                                                       \
+        static constexpr const char*        _ss = BOOST_PP_STRINGIZE( spec );                                           \
+        static constexpr const uint32       _sh = BOOST_PP_CAT( Spec_, spec );                                          \
+        static constexpr const FBlockInfo   _nf = ParseSpecStr( ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) ) );         \
+    };                                                                                                                  \
     typedef TBlock< BOOST_PP_CAT( Spec_, spec ) > BOOST_PP_CAT( FBlock, spec );
 
 #define ULIS_DECLARE_STATIC_BLOCK_SPEC_W( ... ) ULIS_DECLARE_STATIC_BLOCK_SPEC( ULIS_BLOCK_SPEC( __VA_ARGS__ ) )

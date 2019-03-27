@@ -35,6 +35,7 @@ struct const_str
     /* utility functions */
     constexpr operator const char*()                        const { return s; }
     constexpr const char* Get()                             const { return s; }
+    constexpr operator uint32()                             const { return CRC32(); }
     constexpr char  operator[]( int i )                     const { return s[i]; }
     constexpr bool  operator==( const const_str& other )    const { return streq( s, other.s ); }
     constexpr int Size()                                    const { return N; }
