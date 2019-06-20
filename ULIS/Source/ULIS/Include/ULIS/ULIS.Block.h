@@ -10,7 +10,8 @@
 
 #pragma once
 
-#include "ULIS/Imaging/ULIS.Imaging.BlockSpecInfo.h"
+#include <stdint.h>
+#include "ULIS/ULIS.BlockSpecInfo.h"
 
 namespace ULIS {
 
@@ -23,7 +24,7 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // TBlockData
-template< uint32 _SH >
+template< uint32_t _SH >
 class TBlockData
 {
 public:

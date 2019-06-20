@@ -10,13 +10,8 @@
 
 #include <iostream>
 #include <cstring>
-#include <ULIS_Core>
+//#include <ULIS_Core>
 #include <array>
-
-#include <boost/preprocessor/arithmetic/add.hpp>
-#include <boost/preprocessor/arithmetic/sub.hpp>
-
-using namespace ::ULIS;
 
 /*
 constexpr regt< 1 > regbase = { 0 };
@@ -60,6 +55,7 @@ static constexpr const std::array< uint8, count > arr = make_index_from_string( 
 
 //ULIS_DECLARE_STATIC_BLOCK_SPEC_W( ULIS_SPEC_ML( interleaved ) )
 
+/*
 namespace ULIS {
 #define ULIS_REG_BUILDER ulis_reg_builder
 ULIS_CREATE_REG( ULIS_REG_BUILDER, 0 )
@@ -84,12 +80,12 @@ static_assert( regx[0] == 0, "..." );
 static_assert( regx[1] == _SH__ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB, "..." );
 static_assert( regx[2] == _SH__ml_planar__am_straight__tp_uint8__as_natural, "..." );
 }
-
+*/
 
 int main()
 {
-    constexpr auto c_fmt = ULIS_CONST_STR( "Spec__ml_interleaved__am_straight__tp_uint8" );
-    constexpr auto a_fmt = ULIS_CONST_STR( "Spec__tp_uint8__am_straight__ml_interleaved" );
+    //constexpr auto c_fmt = ULIS_CONST_STR( "Spec__ml_interleaved__am_straight__tp_uint8" );
+    //constexpr auto a_fmt = ULIS_CONST_STR( "Spec__tp_uint8__am_straight__ml_interleaved" );
 
     /*
     constexpr const int imlstart    = ULIS_PARSE_KW_START( a_fmt, "_tp:" );
@@ -100,14 +96,18 @@ int main()
     constexpr  auto tmp0            = ULIS_PARSE_KW_SUBSTR( a_fmt, "_tp:" );
     constexpr auto r_fmt = ULIS_CONST_STR( "Spec" ).Append< ::ULIS::_CT::strlen( "_tp:" ) + 1 >( "_tp:" ).Append< dml + 1 >( tmp0.s );
     */
-    constexpr auto g_fmt = ULIS_CONST_STR( "Spec" ).ULIS_PARSE_KW_APPEND_W( a_fmt, ml ).ULIS_PARSE_KW_APPEND_W( a_fmt, am ).ULIS_PARSE_KW_APPEND_W( a_fmt, tp );
 
-    static_assert( g_fmt == c_fmt, "..." );
-    static_assert( g_fmt.CRC32() == c_fmt.CRC32(), "..." );
+    //constexpr auto g_fmt = ULIS_CONST_STR( "Spec" ).ULIS_PARSE_KW_APPEND_W( a_fmt, ml ).ULIS_PARSE_KW_APPEND_W( a_fmt, am ).ULIS_PARSE_KW_APPEND_W( a_fmt, tp );
 
+    //static_assert( g_fmt == c_fmt, "..." );
+    //static_assert( g_fmt.CRC32() == c_fmt.CRC32(), "..." );
+
+    /*
     for( int i = 0; i < regx.Size(); ++ i )
         std::cout << (uint32)regx[i] << std::endl;
+    */
 
+    /*
     std::cout << FBlock__ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB::SpecStr() << std::endl;
     std::cout << FBlock__ml_interleaved__am_straight__tp_uint8__as_natural__cm_RGB::SpecHash() << std::endl;
     std::cout << a_fmt.s << std::endl;
@@ -120,7 +120,8 @@ int main()
     std::cout << c_fmt.CRC32() << std::endl;
     std::cout << g_fmt.CRC32() << std::endl;
     std::cout << g_fmt.CRC32() << std::endl;
-    getchar();
+    */
+
     return 0;
 }
 

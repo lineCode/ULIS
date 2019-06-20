@@ -10,4 +10,4 @@
 
 #pragma once
 
-#include "ULIS/Imaging/ULIS.Imaging.BlockTypes.h"
+#include "ULIS/ULIS.BlockTypes.h"

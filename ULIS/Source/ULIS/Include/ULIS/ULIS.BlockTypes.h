@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "ULIS/Imaging/ULIS.Imaging.Block.h"
+#include "ULIS/ULIS.Block.h"
 
 namespace ULIS {
 

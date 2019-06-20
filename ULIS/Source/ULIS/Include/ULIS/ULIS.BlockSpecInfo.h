@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "ULIS/Imaging/CompileTime/ULIS.Imaging.CompileTime.ParsingPPFramework.h"
+#include "ULIS/ULIS.PP.h"
 
 
 namespace ULIS {
@@ -58,8 +58,8 @@ struct FBlockInfo
     const  e_as         _as; // arithmetical_set
     const  e_cm         _cm; // color_model
     const  e_em         _em; // endian_mode
-    const  uint16       _pd; // pixel_depth
-    const  uint8        _nc; // num_channels
+    const  uint16_t     _pd; // pixel_depth
+    const  uint8_t      _nc; // num_channels
     const  bool         _ea; // extra_alpha
 };
 
@@ -67,7 +67,7 @@ struct FBlockInfo
 /////////////////////////////////////////////////////
 // ParseSpecStr
 template< int N >
-static constexpr const FBlockInfo ParseSpecStr( _CT::const_str< N > spec_str )
+static constexpr const FBlockInfo ParseSpecStr( ::const_str< N > spec_str )
 {
     return  { e_ml::kinterleaved
             , e_am::kstraight

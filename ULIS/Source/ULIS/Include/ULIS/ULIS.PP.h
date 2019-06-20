@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.ConstStr.h"
-#include "ULIS/Base/CompileTime/ULIS.Base.CompileTime.Registry.h"
+#include <coal_core>
+#include "ULIS/Ulis.SpecReg.h"
 #include <boost/preprocessor/facilities/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
@@ -21,8 +21,6 @@
 
 
 namespace ULIS {
-namespace _CT {
-
 
 /////////////////////////////////////////////////////
 // Enum and Keyword
@@ -86,7 +84,7 @@ namespace _CT {
 #define ULIS_SPEC_CM( i ) ULIS_SPEC_X( cm, i )
 #define ULIS_SPEC_EM( i ) ULIS_SPEC_X( em, i )
 
-/* concatenate multiple keyword arguments with no preffered order */
+/* concatenate multiple keyword arguments with no prefered order */
 #define ULIS_BLOCK_SPEC( ... ) BOOST_PP_SEQ_CAT( BOOST_PP_TUPLE_TO_SEQ( ( __VA_ARGS__ ) ) )
 #define ULIS_SPEC_TO_STR( spec ) ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) )
 #define ULIS_SPEC_SS( spec )    BOOST_PP_CAT( _SS, spec )
@@ -120,7 +118,4 @@ namespace _CT {
 
 #define ULIS_DECLARE_STATIC_BLOCK_SPEC_W( ... ) ULIS_DECLARE_STATIC_BLOCK_SPEC( ULIS_BLOCK_SPEC( __VA_ARGS__ ) )
 
-
-} // namespace _CT
 } // namespace ULIS
-
