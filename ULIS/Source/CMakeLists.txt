@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.11.0)
 # Set Cache variables
 SET( ULIS_USE_CONFIG                       OFF         CACHE BOOL      "Scpecifies wether to use config files for overriding cache variables" )
 SET( ULIS_BOOST_INCLUDE_PATH               "unset"     CACHE STRING    "Indicates the path to boost include dir" )
+SET( ULIS_COAL_INCLUDE_PATH                "unset"     CACHE STRING    "Indicates the path to coal include dir" )
 SET( ULIS_BUILD_SHARED                     OFF         CACHE BOOL      "Sets if we build the library shared or static" )
 SET( ULIS_BUILD_TESTS                      ON          CACHE BOOL      "Sets if we build the test programs" )
 

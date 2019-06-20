@@ -1,3 +1,4 @@
-SET( ULIS_BOOST_INCLUDE_PATH    "default" )
+SET( ULIS_BOOST_INCLUDE_PATH   "default" )
+SET( ULIS_COAL_INCLUDE_PATH    "default" )
 SET( ULIS_BUILD_SHARED          OFF )
 SET( ULIS_BUILD_TESTS           ON )
