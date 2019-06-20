@@ -57,10 +57,10 @@ namespace ULIS {
 /////////////////////////////////////////////////////
 // Keyword Token
 /* token delimiter for keyword start */
-#define ULIS_PARSE_KW_START_TOKEN _
+#define ULIS_PARSE_KW_START_TOKEN __
 
 /* token delimiter for keyword end */
-#define ULIS_PARSE_KW_END_TOKEN :
+#define ULIS_PARSE_KW_END_TOKEN _
 
 /* stringized token delimiter for keyword start */
 #define ULIS_PARSE_KW_START_TOKEN_S BOOST_PP_STRINGIZE( ULIS_PARSE_KW_START_TOKEN )
@@ -74,20 +74,9 @@ namespace ULIS {
 /* stringized concatenated token delimiters around input */
 #define ULIS_PARSE_KW_MAKE_TOKEN_S( i ) BOOST_PP_STRINGIZE( ULIS_PARSE_KW_MAKE_TOKEN( i ) )
 
-/* build argument with keyword and delimiters */
-#define ULIS_SPEC_X( X, i ) BOOST_PP_CAT( ULIS_PARSE_KW_MAKE_TOKEN( X ), i )
-
-/* shorthand for specific keyword arguments */
-#define ULIS_SPEC_ML( i ) ULIS_SPEC_X( ml, i )
-#define ULIS_SPEC_AM( i ) ULIS_SPEC_X( am, i )
-#define ULIS_SPEC_TP( i ) ULIS_SPEC_X( tp, i )
-#define ULIS_SPEC_AS( i ) ULIS_SPEC_X( as, i )
-#define ULIS_SPEC_CM( i ) ULIS_SPEC_X( cm, i )
-#define ULIS_SPEC_EM( i ) ULIS_SPEC_X( em, i )
-
 /* concatenate multiple keyword arguments with no prefered order */
 #define ULIS_BLOCK_SPEC( ... ) BOOST_PP_SEQ_CAT( BOOST_PP_TUPLE_TO_SEQ( ( __VA_ARGS__ ) ) )
-#define ULIS_SPEC_TO_STR( spec ) ULIS_CONST_STR( BOOST_PP_STRINGIZE( spec ) )
+#define ULIS_SPEC_TO_STR( spec ) coalMakeFromString( BOOST_PP_STRINGIZE( spec ) )
 #define ULIS_SPEC_SS( spec )    BOOST_PP_CAT( _SS, spec )
 #define ULIS_SPEC_SH( spec )    BOOST_PP_CAT( _SH, spec )
 
