@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/facilities/apply.hpp>
+#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/cat.hpp>
 #include <boost/preprocessor/stringize.hpp>
@@ -50,17 +50,14 @@ namespace ULIS {
     enum class ULIS_ENUM_CAT( cat ) : int {                                             \
         BOOST_PP_SEQ_FOR_EACH( ULIS_MAKE_ENUM_SEQ, 0, BOOST_PP_TUPLE_TO_SEQ( keys ) ) };
 
-/* Make Tuple and build keys */
-#define ULIS_MAKE_KEYS( cat, ... ) ULIS_KEYS_TO_KEYWORDS( cat, ULIS_KEYS( __VA_ARGS__ ) ) ULIS_KEYS_TO_ENUM( cat, ULIS_KEYS( __VA_ARGS__ ) )
-
 
 /////////////////////////////////////////////////////
 // Keyword Token
 /* token delimiter for keyword start */
-#define ULIS_PARSE_KW_START_TOKEN _
+#define ULIS_PARSE_KW_START_TOKEN __
 
 /* token delimiter for keyword end */
-#define ULIS_PARSE_KW_END_TOKEN :
+#define ULIS_PARSE_KW_END_TOKEN _
 
 /* stringized token delimiter for keyword start */
 #define ULIS_PARSE_KW_START_TOKEN_S BOOST_PP_STRINGIZE( ULIS_PARSE_KW_START_TOKEN )
@@ -102,5 +99,21 @@ namespace ULIS {
 #define ULIS_PARSE_KW_APPEND(   _iss, ikw )     Append< ::ULIS::_CT::strlen( ikw ) + 1 >( ikw ).Append< ULIS_PARSE_KW_DELTA( _iss, ikw ) + 1 >( ULIS_PARSE_KW_SUBSTR( _iss, ikw ).s )
 #define ULIS_PARSE_KW_APPEND_W( _iss, itk )     ULIS_PARSE_KW_APPEND( _iss, ULIS_PARSE_KW_MAKE_TOKEN_S( itk ) )
 
+
+/////////////////////////////////////////////////////
+// BlockSpec
+/* build a specialization of TBlockSpec from token and compute string and hash equivalents */
+#define ULIS_DECLARE_STATIC_BLOCK_SPEC( spec )                                          \
+    constexpr auto      ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                \
+    constexpr uint32    ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).CRC32();            \
+    template<> struct TBlockSpec< ULIS_SPEC_SH( spec ) > {                              \
+        static constexpr const char*        _ss = ULIS_SPEC_SS( spec ).s;               \
+        static constexpr const uint32       _sh = ULIS_SPEC_SH( spec );                 \
+        static constexpr const FBlockInfo   _nf = ParseSpecStr( ULIS_SPEC_SS( spec ) ); \
+    };                                                                                  \
+    typedef TBlock< ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                \
+    ULIS_APPEND_REG( ULIS_REG_BUILDER, ULIS_SPEC_SH( spec ) )
+
+#define ULIS_DECLARE_STATIC_BLOCK_SPEC_W( ... ) ULIS_DECLARE_STATIC_BLOCK_SPEC( ULIS_BLOCK_SPEC( __VA_ARGS__ ) )
 
 } // namespace ULIS
