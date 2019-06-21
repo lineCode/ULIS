@@ -23,7 +23,7 @@ template< int S >
 struct TSpecReg
 {
     const uint32_t n[S] = { 0 };
-    constexpr const int operator[]( int i ) const { return n[i]; }
+    constexpr const uint32_t operator[]( int i ) const { return n[i]; }
     constexpr const int Size()              const { return S; }
 
     template< int N, typename T, T... Nums > constexpr const TSpecReg< N > push_back_impl( uint32_t i, std::integer_sequence< T, Nums... > ) const { return { n[Nums] ..., i }; }
