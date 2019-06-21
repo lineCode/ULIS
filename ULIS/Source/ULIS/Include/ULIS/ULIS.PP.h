@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/facilities/apply.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
