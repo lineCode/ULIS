@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.SpecReg.h
+* ULIS.Data.SpecReg.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -11,6 +11,7 @@
 #pragma once
 
 #include <utility>
+#include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/cat.hpp>
 
@@ -38,6 +39,7 @@ struct TSpecReg
 #define ULIS_APPEND_REG_IMPL( irname, i, c )    constexpr auto ULIS_CAT( irname,  c ) = ULIS_CAT( irname, ULIS_PREVIOUS( c ) ).push_back( i );
 #define ULIS_APPEND_REG( irname, i )            ULIS_APPEND_REG_IMPL( irname, i, __COUNTER__ )
 #define ULIS_ASSIGN_REG( irname )               ULIS_CAT( irname, ULIS_PREVIOUS( __COUNTER__ ) )
+#define ULIS_ASSIGN_REG_COUNT                   ULIS_PREVIOUS( __COUNTER__ )
 #define ULIS_REG                                constexpr auto
 
 } // namespace ULIS

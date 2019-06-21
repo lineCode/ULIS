@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Spec.h
+* ULIS.Data.Spec.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -12,8 +12,8 @@
 
 #include <stdint.h>
 #include <coal_core>
-#include "ULIS/ULIS.PP.h"
-#include "ULIS/ULIS.SpecReg.h"
+#include "ULIS/Data/ULIS.Data.PP.h"
+#include "ULIS/Data/ULIS.Data.SpecReg.h"
 
 namespace ULIS {
 
