@@ -12,6 +12,7 @@
 
 #include <utility>
 #include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/slot/slot.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/cat.hpp>
 
@@ -41,6 +42,7 @@ struct TSpecReg
 #define ULIS_APPEND_REG_IMPL( irname, i, c )    constexpr auto ULIS_CAT( irname,  c ) = ULIS_CAT( irname, ULIS_PREVIOUS( c ) ).push_back( i );
 #define ULIS_APPEND_REG( irname, i )            ULIS_APPEND_REG_IMPL( irname, i, __COUNTER__ )
 #define ULIS_ASSIGN_REG( irname )               ULIS_CAT( irname, ULIS_PREVIOUS( __COUNTER__ ) )
+#define ULIS_ASSIGN_REG_SIZE                    __COUNTER__
 #define ULIS_REG_TYPE                           constexpr auto
 #define ULIS_REPEAT                             BOOST_PP_REPEAT
 

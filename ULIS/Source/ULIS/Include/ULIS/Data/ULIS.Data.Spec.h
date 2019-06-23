@@ -71,10 +71,22 @@ struct FSpec
 // TBlockSpec
 
 template< uint32_t > struct TBlockSpec {
-    static constexpr const FSpec        _nf = { "Invalid", 0, e_tp::kuint8, e_cm::kRGB, e_ea::knoAlpha, "", e_nm::ktypeLimits };
+    static constexpr const FSpec        _nf = { "Invalid"
+                                              , 0
+                                              , e_tp::kuint8
+                                              , e_cm::kRGB
+                                              , e_ea::knoAlpha
+                                              , "None"
+                                              , e_nm::ktypeLimits
+                                              , false
+                                              , 0
+                                              , 0
+                                              , 0
+                                              , 0
+                                              };
 };
 
-template< uint32_t N > const FSpec TBlockSpec< N >::_nf;
+template< uint32_t N > constexpr const FSpec TBlockSpec< N >::_nf;
 
 /////////////////////////////////////////////////////
 // Info
@@ -119,7 +131,7 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
                                                                   , ULIS_SPEC_SH( spec )    \
                                                                   , tp, cm, ea, cl, nm )    \
     };                                                                                      \
-    const FSpec TBlockSpec< ULIS_SPEC_SH( spec ) >::_nf;                                    \
+    constexpr const FSpec TBlockSpec< ULIS_SPEC_SH( spec ) >::_nf;                          \
     typedef TBlock< ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                    \
     ULIS_APPEND_REG( ULIS_REG_BUILDER, ULIS_SPEC_SH( spec ) )
 

@@ -18,6 +18,7 @@ namespace ULIS {
 
 
 #define ULIS_REG_BUILDER ulis_reg_builder
+
 ULIS_CREATE_REG( ULIS_REG_BUILDER, 0 )
 ULIS_DECLSPEC( double,  LAB,    hasAlpha,   LABA,   typeLimits )
 ULIS_DECLSPEC( float,   VEC,    noAlpha,    XYZW,   typeLimits )
@@ -31,11 +32,12 @@ ULIS_DECLSPEC( float,   RGB,    hasAlpha,   RGBA,   normalized )
 ULIS_DECLSPEC( double,  RGB,    hasAlpha,   RGBA,   normalized )
 ULIS_DECLSPEC( float,   RGB,    noAlpha,    RGB,   normalized )
 ULIS_DECLSPEC( double,  RGB,    noAlpha,    RGB,   normalized )
-ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
+
 #define ULIS_REG ::ULIS::ulis_types_reg
+ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
+
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 #define ULIS_REG_SIZE 13
-
 
 } // namespace ULIS
 

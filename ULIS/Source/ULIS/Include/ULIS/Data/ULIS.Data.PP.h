@@ -33,7 +33,7 @@ namespace ULIS {
 #define ULIS_ENUM_CAT( cat ) e##cat
 
 /* delegate macro for sequential 'stringization' of token */
-#define ULIS_MAKE_KEYWORD_SEQ( r, data, elem ) BOOST_PP_STRINGIZE( elem )
+#define ULIS_MAKE_KEYWORD_SEQ( r, data, elem ) BOOST_PP_STRINGIZE( elem ),
 
 /* delegate macro for sequential 'enumerization' of token */
 #define ULIS_MAKE_ENUM_SEQ( r, data, elem ) BOOST_PP_CAT( k, elem ),
