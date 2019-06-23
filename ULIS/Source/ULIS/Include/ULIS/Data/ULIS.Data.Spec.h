@@ -51,8 +51,8 @@ ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _nm, ULIS_KEYS_NM ) // normal_mode
 struct FSpec
 {
     // Core properties
-    const char*         _ss;
-    const uint32_t      _sh;
+    const char*         _ss; // spec-str
+    const uint32_t      _sh; // spec-hash
     const  e_tp         _tp; // type
     const  e_cm         _cm; // color_model
     const  e_ea         _ea; // extra_alpha
@@ -71,9 +71,10 @@ struct FSpec
 // TBlockSpec
 
 template< uint32_t > struct TBlockSpec {
-    static constexpr const char*        _ss = "Invalid";
     static constexpr const FSpec        _nf = { "Invalid", 0, e_tp::kuint8, e_cm::kRGB, e_ea::knoAlpha, "", e_nm::ktypeLimits };
 };
+
+template< uint32_t N > const FSpec TBlockSpec< N >::_nf;
 
 /////////////////////////////////////////////////////
 // Info
@@ -114,11 +115,11 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
     coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                    \
     constexpr uint32_t  ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).hash();                 \
     template<> struct ::ULIS::TBlockSpec< ULIS_SPEC_SH( spec ) > {                          \
-        static constexpr const char*        _ss = ULIS_SPEC_SS( spec ).s;                   \
         static constexpr const FSpec        _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )    \
                                                                   , ULIS_SPEC_SH( spec )    \
                                                                   , tp, cm, ea, cl, nm )    \
     };                                                                                      \
+    const FSpec TBlockSpec< ULIS_SPEC_SH( spec ) >::_nf;                                    \
     typedef TBlock< ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                    \
     ULIS_APPEND_REG( ULIS_REG_BUILDER, ULIS_SPEC_SH( spec ) )
 

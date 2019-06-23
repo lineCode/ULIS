@@ -28,7 +28,7 @@ int main()
     for( int i = 0; i < ULIS_REG_SIZE; ++i )
     {
         auto spec = BlockSpec( i );
-        std::cout << i << std::endl;
+        std::cout << spec._ss << std::endl;
     }
 
     return 0;
