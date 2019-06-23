@@ -47,6 +47,7 @@ PrintSpecs()
         std::cout << "num_channels      :   " << (int)spec._nc << std::endl;
         std::cout << "pixel_depth       :   " << (int)spec._pd << std::endl;
         std::cout << "type_max          :   " << (double)spec._tm << std::endl;
+        std::cout << "======================================" << std::endl << std::endl;
     }
 }
 

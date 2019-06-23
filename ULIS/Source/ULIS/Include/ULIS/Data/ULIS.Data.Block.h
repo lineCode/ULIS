@@ -21,23 +21,9 @@ namespace ULIS {
 #define tData TBlockData< _SH >
 
 /////////////////////////////////////////////////////
-// TBlockDataInfo
-    /*
-template< uint32_t _SH , typename T >
-struct TTypeInfo
-{
-    static constexpr const char*    type_name() { return typeid( T ).name(); } // Type Name as c-string
-    static constexpr const T        type_max    = std::numeric_limits< T >::max();
-    static constexpr const T        type_min    = std::numeric_limits< T >::min();
-    static constexpr const T        range_max   = tSpec::_nm: ? (T)1 : type_max;
-    static constexpr const T        range_min   = tSpec::_nm: ? (T)0 : type_max;
-};
-*/
-
-/////////////////////////////////////////////////////
 // TBlockData
 template< uint32_t _SH >
-class TBlockData
+class TBlockData final
 {
 public:
     // Construction / Destruction
@@ -47,24 +33,24 @@ public:
         , data      ( nullptr   )
     {}
 
-    TBlockData( int iwidth, int iheight )
-        : width     ( iwidth    )
-        , height    ( iheight   )
-        , data      ( new uint8_t[ iwidth * iheight * tSpec::_pd ] )
+    TBlockData( int iWidth, int iHeight )
+        : width     ( iWidth    )
+        , height    ( iHeight   )
+        , data      ( new uint8_t[ iWidth * iHeight * tSpec::_nf._pd ] )
     {}
 
     ~TBlockData() { if( data ) delete[] data; }
 public:
     // Public API
-    uint8_t*        Data()                      { return data; }
-    const uint8_t*  Data() const                { return data; }
-    uint8_t*        Pixel( int x, int y )       { return nullptr; }
-    const uint8_t*  Pixel( int x, int y ) const { return nullptr; }
-    uint8_t*        Scanline( int row )         { return nullptr; }
-    const uint8_t*  Scanline( int row ) const   { return nullptr; }
-    int             Depth() const               { return 0; }
-    int             Width() const               { return width; }
-    int             Height() const              { return height; }
+    uint8_t*        Data                        ()                                              { return data;                  }
+    const uint8_t*  Data                        ()                  const                       { return data;                  }
+    uint8_t*        Pixel                       ( int x, int y )                                { return nullptr;               }
+    const uint8_t*  Pixel                       ( int x, int y )    const                       { return nullptr;               }
+    uint8_t*        Scanline                    ( int row )                                     { return nullptr;               }
+    const uint8_t*  Scanline                    ( int row )         const                       { return nullptr;               }
+    int             Depth                       ()                  const                       { return tSpec::_nf._pd;        }
+    int             Width                       ()                  const                       { return width;                 }
+    int             Height                      ()                  const                       { return height;                }
 
 private:
     // Private Data
@@ -84,34 +70,50 @@ public:
     virtual ~IBlock() {} // Polymorphic
 public:
     // Public API
-    virtual const char*     Name() const                    = 0;
-    virtual const uint32_t  Id() const                      = 0;
-    virtual uint8_t*        Data()                          = 0;
-    virtual const uint8_t*  Data() const                    = 0;
-    virtual uint8_t*        Pixel( int x, int y )           = 0;
-    virtual const uint8_t*  Pixel( int x, int y ) const     = 0;
-    virtual uint8_t*        Scanline( int row )             = 0;
-    virtual const uint8_t*  Scanline( int row ) const       = 0;
-    virtual int             Depth() const                   = 0;
-    virtual int             Width() const                   = 0;
-    virtual int             Height() const                  = 0;
+    virtual const char*     Name                ()                  const   = 0;
+    virtual const uint32_t  Id                  ()                  const   = 0;
+    virtual uint8_t*        Data                ()                          = 0;
+    virtual const uint8_t*  Data                ()                  const   = 0;
+    virtual uint8_t*        Pixel               ( int x, int y )            = 0;
+    virtual const uint8_t*  Pixel               ( int x, int y )    const   = 0;
+    virtual uint8_t*        Scanline            ( int row )                 = 0;
+    virtual const uint8_t*  Scanline            ( int row )         const   = 0;
+    virtual int             Depth               ()                  const   = 0;
+    virtual int             Width               ()                  const   = 0;
+    virtual int             Height              ()                  const   = 0;
+    virtual double          MaxD                ()                  const   = 0;
+    virtual int64_t         MaxI                ()                  const   = 0;
 };
 
 
 /////////////////////////////////////////////////////
 // TBlock
 template< uint32_t _SH >
-class TBlock : public IBlock
+class TBlock final : public IBlock
 {
 public:
     // Construction / Destruction
-    TBlock() { d = new tData(); }
     virtual ~TBlock() { delete d; } // Polymorphic
+    TBlock()
+        : d( nullptr )
+    {}
+
+    TBlock( int iWidth, int iHeight )
+        : d( nullptr )
+    {
+        d = new tData( iWidth, iHeight );
+    }
+
+public:
+    // Template API
+    template< typename T >
+    constexpr  T Max() const  { return  (T)tSpec::_nf._tm; }
+
 public:
     // Public API
-    virtual const char*             Name        ()                  const   override    final   { return tSpec::_nf._ss;            }
-    virtual const uint32_t          Id          ()                  const   override    final   { return tSpec::_nf._sh;            }
-    virtual uint8_t*                Data        ()                  override            final   { return d->Data();             }
+    virtual const char*             Name        ()                  const   override    final   { return tSpec::_nf._ss;        }
+    virtual const uint32_t          Id          ()                  const   override    final   { return tSpec::_nf._sh;        }
+    virtual uint8_t*                Data        ()                          override    final   { return d->Data();             }
     virtual const uint8_t*          Data        ()                  const   override    final   { return d->Data();             }
     virtual uint8_t*                Pixel       ( int x, int y )            override    final   { return d->Pixel( x, y );      }
     virtual const uint8_t*          Pixel       ( int x, int y )    const   override    final   { return d->Pixel( x, y );      }
@@ -120,11 +122,13 @@ public:
     virtual int                     Depth       ()                  const   override    final   { return d->Depth();            }
     virtual int                     Width       ()                  const   override    final   { return d->Width();            }
     virtual int                     Height      ()                  const   override    final   { return d->Height();           }
+    virtual double                  MaxD        ()                  const   override    final   { return  Max< double >();      }
+    virtual int64_t                 MaxI        ()                  const   override    final   { return  Max< int64_t >();     }
 
 public:
     // Constexpr API
-    static constexpr const char*    SpecStr() { return tSpec::_ss; }
-    static constexpr const uint32_t SpecHash() { return tSpec::_sh; }
+    static constexpr const char*    TypeStr()   { return tSpec::_nf._ss; }
+    static constexpr const uint32_t TypeId()    { return tSpec::_nf._sh; }
 
 private:
     // Private Data

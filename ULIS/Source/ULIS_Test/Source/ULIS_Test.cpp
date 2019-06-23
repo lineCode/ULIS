@@ -14,6 +14,10 @@
 int main()
 {
     ::ULIS::PrintSpecs();
+    ::ULIS::IBlock* block = new ::ULIS::FBlockRGBA8( 200, 200 );
+    std::cout << block->Name() << std::endl;
+    std::cout << block->MaxI() << std::endl;
+    delete  block;
     return 0;
 }
 
