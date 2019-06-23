@@ -76,10 +76,10 @@ namespace ULIS {
 #define ULIS_PARSE_KW_MAKE_TOKEN_S( i ) BOOST_PP_STRINGIZE( ULIS_PARSE_KW_MAKE_TOKEN( i ) )
 
 /* concatenate multiple keyword arguments with no prefered order */
-#define ULIS_BLOCK_SPEC( ... ) BOOST_PP_SEQ_CAT( BOOST_PP_TUPLE_TO_SEQ( ( __VA_ARGS__ ) ) )
-#define ULIS_SPEC_TO_STR( spec ) coalMakeFromString( BOOST_PP_STRINGIZE( spec ) )
-#define ULIS_SPEC_SS( spec )    BOOST_PP_CAT( _SpecStr_, spec )
-#define ULIS_SPEC_SH( spec )    BOOST_PP_CAT( _SpecHash_, spec )
+#define ULIS_BLOCK_SPEC( ... )      BOOST_PP_SEQ_CAT( BOOST_PP_TUPLE_TO_SEQ( ( __VA_ARGS__ ) ) )
+#define ULIS_SPEC_TO_STR( spec )    coalMakeFromString( BOOST_PP_STRINGIZE( spec ) )
+#define ULIS_SPEC_SS( spec )        BOOST_PP_CAT( _SpecStr_, spec )
+#define ULIS_SPEC_SH( spec )        BOOST_PP_CAT( _SpecHash_, spec )
 
 /////////////////////////////////////////////////////
 // String Parsing

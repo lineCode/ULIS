@@ -146,5 +146,7 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 /* Public macro for block spec */
 #define ULIS_DECLSPEC( tp, cm, ea, cl, nm ) ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, ULIS_BLOCK_SPEC(   tp, cm, ea, cl, nm ) )
 
+
+#define ULIS_GETSPEC( i ) ::ULIS::TBlockSpec< i >::_nf;
 } // namespace ULIS
 

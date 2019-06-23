@@ -13,10 +13,12 @@
 
 int main()
 {
-    ::ULIS::PrintSpecs();
+    //::ULIS::PrintSpecs();
+
+    auto spec = ULIS_GETSPEC( ::ULIS::FBlockRGBA8::TypeId() );
+    std::cout << spec._ss << std::endl;
+
     ::ULIS::IBlock* block = new ::ULIS::FBlockRGBA8( 200, 200 );
-    std::cout << block->Name() << std::endl;
-    std::cout << block->MaxI() << std::endl;
     delete  block;
     return 0;
 }
