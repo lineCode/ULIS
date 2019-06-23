@@ -81,16 +81,5 @@ namespace ULIS {
 #define ULIS_SPEC_SS( spec )        BOOST_PP_CAT( _SpecStr_, spec )
 #define ULIS_SPEC_SH( spec )        BOOST_PP_CAT( _SpecHash_, spec )
 
-/////////////////////////////////////////////////////
-// String Parsing
-#define ULIS_PARSE_KW_START(    _iss, ikw )     ( _iss.IndexOf( ikw ) + ::ULIS::_CT::strlen( ikw ) )
-#define ULIS_PARSE_KW_NEXT(     _iss, ikw )     ( _iss.IndexOf( ULIS_PARSE_KW_END_TOKEN_S, ULIS_PARSE_KW_START( _iss, ikw ) + 1 ) )
-#define ULIS_PARSE_KW_END(      _iss, ikw )     ( _iss.Size() - 1 )
-#define ULIS_PARSE_KW_STOP(     _iss, ikw )     ( ULIS_PARSE_KW_NEXT( _iss, ikw ) == -1 ? ULIS_PARSE_KW_END( _iss, ikw ) : ULIS_PARSE_KW_NEXT( _iss, ikw ) )
-#define ULIS_PARSE_KW_DELTA(    _iss, ikw )     ( ULIS_PARSE_KW_STOP( _iss, ikw ) ) - ( ULIS_PARSE_KW_START( _iss, ikw ) )
-#define ULIS_PARSE_KW_SUBSTR(   _iss, ikw )     _iss.Substring< ULIS_PARSE_KW_DELTA( _iss, ikw ) >( ULIS_PARSE_KW_START( _iss, ikw ) )
-#define ULIS_PARSE_KW_APPEND(   _iss, ikw )     Append< ::ULIS::_CT::strlen( ikw ) + 1 >( ikw ).Append< ULIS_PARSE_KW_DELTA( _iss, ikw ) + 1 >( ULIS_PARSE_KW_SUBSTR( _iss, ikw ).s )
-#define ULIS_PARSE_KW_APPEND_W( _iss, itk )     ULIS_PARSE_KW_APPEND( _iss, ULIS_PARSE_KW_MAKE_TOKEN_S( itk ) )
-
 
 } // namespace ULIS

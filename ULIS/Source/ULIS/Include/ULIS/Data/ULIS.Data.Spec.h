@@ -65,6 +65,7 @@ struct FSpec
     const  uint8_t      _nc; // num_channels
     const  uint16_t     _pd; // pixel_depth
     const  double       _tm; // type_max
+    const  double       _rm; // range_max
 };
 
 /////////////////////////////////////////////////////
@@ -83,6 +84,7 @@ template< uint32_t > struct TBlockSpec {
                                        , 0                   // num_channels
                                        , 0                   // pixel_depth
                                        , 0                   // type_max
+                                       , 0                   // range_max
                                        };
 };
 
@@ -91,15 +93,15 @@ template< uint32_t N > constexpr const FSpec TBlockSpec< N >::_nf;
 
 /////////////////////////////////////////////////////
 // Info
-/* Info specifiers for parsing */
-/* We check if a type is decimal */
-constexpr  bool is_decimal( ::ULIS::e_tp iTp ) { return  iTp == ::ULIS::e_tp::kdouble || iTp == ::ULIS::e_tp::kfloat ? true : false; }
+/* Info spec for parsing */
+/* We check that a type is decimal */
+constexpr  inline bool is_decimal( ::ULIS::e_tp iTp ) { return  iTp == ::ULIS::e_tp::kdouble || iTp == ::ULIS::e_tp::kfloat ? true : false; }
 /* Getters for all types size & max value */
 template< e_tp iTp > constexpr  uint16_t    type_size() { return  0; }
 template< e_tp iTp > constexpr  double      type_max()  { return  0; }
 /* Repeater macros for type getters */
-#define ULIS_TYPE_SIZE_REPEAT( r, data, elem )  template<> constexpr  uint16_t  type_size<  BOOST_PP_CAT( e_tp::k, elem ) >() { return  sizeof( elem ); }
-#define ULIS_TYPE_MAX_REPEAT( r, data, elem )   template<> constexpr  double    type_max<   BOOST_PP_CAT( e_tp::k, elem ) >() { return  std::numeric_limits< elem >::max(); }
+#define ULIS_TYPE_SIZE_REPEAT( r, data, elem )  template<> inline constexpr  uint16_t  type_size<  BOOST_PP_CAT( e_tp::k, elem ) >() { return  sizeof( elem ); }
+#define ULIS_TYPE_MAX_REPEAT( r, data, elem )   template<> inline constexpr  double    type_max<   BOOST_PP_CAT( e_tp::k, elem ) >() { return  std::numeric_limits< elem >::max(); }
 /* specialize type size for all types */
 BOOST_PP_SEQ_FOR_EACH( ULIS_TYPE_SIZE_REPEAT, void, ULIS_SEQ_TP )
 /* specialize type max for all types */
@@ -116,8 +118,9 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
     uint8_t             nc = iEa == ::ULIS::e_ea::khasAlpha ? rc - 1 : rc;
     uint16_t            pd = type_size< iTp >() * rc;
     double              tm = type_max< iTp >();
+    double              rm = dm ? type_max< iTp >() : type_max< iTp >() + 1;
     static_assert( iNm == e_nm::knormalized ? dm : true, "Integer types cannot be normalized" );
-    return  { iSs, iSh, iTp, iCm, iEa, iCl, iNm, dm, rc, nc, pd, tm };
+    return  { iSs, iSh, iTp, iCm, iEa, iCl, iNm, dm, rc, nc, pd, tm, rm };
 }
 
 /* small wrapper for readability in other macros */

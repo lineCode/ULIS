@@ -20,6 +20,7 @@ int main()
 
     ::ULIS::IBlock* block = new ::ULIS::FBlockRGBA8( 200, 200 );
     delete  block;
+
     return 0;
 }
 
