@@ -11,23 +11,25 @@
 #include <iostream>
 #include <ULIS_core>
 
-#define ULIS_REG_SWITCH_OP( z, n, data ) case n: return  ::ULIS::TBlockSpec< ::ULIS::ulis_types_reg[ n ] >:: data;
-
 auto
-BlockSpecOp( uint32_t i )
+BlockSpec( uint32_t i )
 {
     switch( i )
     {
-        BOOST_PP_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, _ss )
-        default: return  "default";
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case n: return  ::ULIS::TBlockSpec< ::ULIS::ulis_types_reg[ n ] >:: data;
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, _nf )
+        #undef ULIS_REG_SWITCH_OP
+        default: return  ::ULIS::FSpec{};
     }
 }
-
 
 int main()
 {
     for( int i = 0; i < ULIS_REG_SIZE; ++i )
-        std::cout << BlockSpecOp( i ) << std::endl;
+    {
+        auto spec = BlockSpec( i );
+        std::cout << i << std::endl;
+    }
 
     return 0;
 }

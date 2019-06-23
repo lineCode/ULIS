@@ -23,12 +23,14 @@ namespace ULIS {
 template< int S >
 struct TSpecReg
 {
+    // Data
     const uint32_t n[S] = { 0 };
-    constexpr const uint32_t operator[]( int i ) const { return n[i]; }
-    constexpr const int Size()              const { return S; }
 
-    template< int N, typename T, T... Nums > constexpr const TSpecReg< N > push_back_impl( uint32_t i, std::integer_sequence< T, Nums... > ) const { return { n[Nums] ..., i }; }
-    constexpr const TSpecReg< S + 1 > push_back( uint32_t i ) const { return push_back_impl< S + 1 >( i, std::make_integer_sequence< int, S >() ); }
+    // Public API
+    constexpr const uint32_t            operator[]  ( int i )       const { return n[i]; }
+    constexpr const int                 Size        ()              const { return S; }
+    constexpr const TSpecReg< S + 1 >   push_back   ( uint32_t i )  const { return push_back_impl< S + 1 >( i, std::make_integer_sequence< int, S >() ); }
+    template< int N, typename T, T... Nums > constexpr const TSpecReg< N > push_back_impl  ( uint32_t i, std::integer_sequence< T, Nums... > ) const { return { n[Nums] ..., i }; }
 };
 
 /////////////////////////////////////////////////////
@@ -39,7 +41,7 @@ struct TSpecReg
 #define ULIS_APPEND_REG_IMPL( irname, i, c )    constexpr auto ULIS_CAT( irname,  c ) = ULIS_CAT( irname, ULIS_PREVIOUS( c ) ).push_back( i );
 #define ULIS_APPEND_REG( irname, i )            ULIS_APPEND_REG_IMPL( irname, i, __COUNTER__ )
 #define ULIS_ASSIGN_REG( irname )               ULIS_CAT( irname, ULIS_PREVIOUS( __COUNTER__ ) )
-#define ULIS_ASSIGN_REG_COUNT                   ULIS_PREVIOUS( __COUNTER__ )
-#define ULIS_REG                                constexpr auto
+#define ULIS_REG_TYPE                           constexpr auto
+#define ULIS_REPEAT                             BOOST_PP_REPEAT
 
 } // namespace ULIS

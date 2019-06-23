@@ -52,7 +52,7 @@ namespace ULIS {
         BOOST_PP_SEQ_FOR_EACH( ULIS_MAKE_ENUM_SEQ, 0, BOOST_PP_TUPLE_TO_SEQ( keys ) ) };
 
 /* Make Tuple and build keys */
-#define ULIS_MAKE_KEYS( cat, ... ) ULIS_KEYS_TO_KEYWORDS( cat, ULIS_KEYS( __VA_ARGS__ ) ) ULIS_KEYS_TO_ENUM( cat, ULIS_KEYS( __VA_ARGS__ ) )
+#define ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( cat, ... ) ULIS_KEYS_TO_KEYWORDS( cat, __VA_ARGS__ ) ULIS_KEYS_TO_ENUM( cat, __VA_ARGS__ )
 
 
 /////////////////////////////////////////////////////

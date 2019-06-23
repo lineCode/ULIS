@@ -11,10 +11,11 @@
 #pragma once
 
 
-#include "ULIS/Data/ULIS.Data.Spec.h"
+#include "ULIS/Data/ULIS.Data.Block.h"
 
 
 namespace ULIS {
+
 
 #define ULIS_REG_BUILDER ulis_reg_builder
 ULIS_CREATE_REG( ULIS_REG_BUILDER, 0 )
@@ -28,10 +29,12 @@ ULIS_DECLSPEC( uint8,   RGB,    noAlpha,    RGB,    typeLimits )
 ULIS_DECLSPEC( uint8,   RGB,    noAlpha,    BGR,    typeLimits )
 ULIS_DECLSPEC( float,   RGB,    hasAlpha,   RGBA,   normalized )
 ULIS_DECLSPEC( double,  RGB,    hasAlpha,   RGBA,   normalized )
-ULIS_DECLSPEC( float,   RGB,    noAlpha,    RGB,    normalized )
-ULIS_DECLSPEC( double,  RGB,    noAlpha,    RGB,    normalized )
-ULIS_REG ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
-#define ULIS_REG_SIZE ULIS_ASSIGN_REG_COUNT
+ULIS_DECLSPEC( float,   RGB,    noAlpha,    RGB,   normalized )
+ULIS_DECLSPEC( double,  RGB,    noAlpha,    RGB,   normalized )
+ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
+#define ULIS_REG ::ULIS::ulis_types_reg
+constexpr auto temp_reg_size = ulis_types_reg.Size();
+#define ULIS_REG_SIZE 13
 
 
 } // namespace ULIS
