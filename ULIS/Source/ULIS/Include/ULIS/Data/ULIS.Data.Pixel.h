@@ -20,7 +20,8 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // Defines
-#define tSpec TBlockSpec< _SH >
+#define tSpec           TBlockSpec< _SH >
+#define tPixelLayout    TPixelLayout< _SH >
 
 /////////////////////////////////////////////////////
 // TRedirector
@@ -31,7 +32,11 @@ template< int N > struct TRedirector { const uint8_t arr[ N ]; };
 // Layout Redirection Parsing Utility
 constexpr uint8 ParseLayoutRedirector_Imp_GetIndex( const char* iModel, const char* iLayout, bool iAlpha, int i )
 {
-    return  i < ::__coal__::strlen( iModel ) ? ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( 'A', iLayout, 0 );
+    /* Layout orded */
+    //return  i < ::__coal__::strlen( iModel ) ? ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( 'A', iLayout, 0 );
+
+    /* Alpha first */
+    return  iAlpha ? i == 0 ? ::__coal__::indexof( 'A', iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 );
 }
 
 
@@ -119,6 +124,7 @@ public:
     inline bool        IsDecimal       ()  const   { return tSpec::_nf._dm;                    }
     inline int         NumChannels     ()  const   { return tSpec::_nf._rc;                    }
     inline int         ColorChannels   ()  const   { return tSpec::_nf._nc;                    }
+    inline int         RedirectedIndex ( int i )  const   { return tPixelLayout::red.arr[i];          }
 };
 
 /////////////////////////////////////////////////////
@@ -132,8 +138,8 @@ public:
 
 public:
     // Public API
-    tPixelType&  operator[]( uint8 i ) { return m[ i ]; }
-    const  tPixelType&  operator[]( uint8 i )  const { return m[ i ] }
+            tPixelType&  operator[]( uint8 i )          { return m[ tPixelLayout::red.arr[i] ]; }
+    const   tPixelType&  operator[]( uint8 i )  const   { return m[ tPixelLayout::red.arr[i] ]; }
 
 private:
     // Private Data
@@ -151,8 +157,8 @@ public:
 
 public:
     // Public API
-    tPixelType&  operator[]( uint8 i ) { return m[i]; }
-    const  tPixelType&  operator[]( uint8 i )  const { return m[i]; }
+            tPixelType&  operator[]( uint8 i )          { return m[ tPixelLayout::red.arr[i] ]; }
+    const   tPixelType&  operator[]( uint8 i )  const   { return m[ tPixelLayout::red.arr[i] ]; }
 
 private:
     // Private Data
