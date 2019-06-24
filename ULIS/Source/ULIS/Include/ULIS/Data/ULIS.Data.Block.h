@@ -45,18 +45,20 @@ public:
     ~TBlockData() { if( data ) delete[] data; }
 public:
     // Public API
-    uint8_t*        Data                        ()                                              { return data;                  }
-    const uint8_t*  Data                        ()                  const                       { return data;                  }
-    uint8_t*        Pixel                       ( int x, int y )                                { return nullptr;               }
-    const uint8_t*  Pixel                       ( int x, int y )    const                       { return nullptr;               }
-    uint8_t*        Scanline                    ( int row )                                     { return nullptr;               }
-    const uint8_t*  Scanline                    ( int row )         const                       { return nullptr;               }
-    int             Depth                       ()                  const                       { return tSpec::_nf._pd;        }
-    int             Width                       ()                  const                       { return width;                 }
-    int             Height                      ()                  const                       { return height;                }
-
-    CColor          GetPixelColor               ( int x, int y )                                { return CColor();              }
-    CColor          GetPixelColor               ( int x, int y )    const                       { return CColor();              }
+    inline uint8_t*        DataPtr                     ()                                              { return data;                          }
+    inline const uint8_t*  DataPtr                     ()                  const                       { return data;                          }
+    inline uint8_t*        PixelPtr                    ( int x, int y )                                { return nullptr;                       }
+    inline const uint8_t*  PixelPtr                    ( int x, int y )    const                       { return nullptr;                       }
+    inline uint8_t*        ScanlinePtr                 ( int row )                                     { return nullptr;                       }
+    inline const uint8_t*  ScanlinePtr                 ( int row )         const                       { return nullptr;                       }
+    inline int             Depth                       ()                  const                       { return tSpec::_nf._pd;                }
+    inline int             Width                       ()                  const                       { return width;                         }
+    inline int             Height                      ()                  const                       { return height;                        }
+    inline int             BytesPerPixel               ()                  const                       { return Depth();                       }
+    inline int             BytesPerScanLine            ()                  const                       { return Depth() * Width();             }
+    inline int             BytesTotal                  ()                  const                       { return Depth() * Width() * Height();  }
+    inline CColor          GetPixelColor               ( int x, int y )                                { return CColor();                      }
+    inline CColor          GetPixelColor               ( int x, int y )    const                       { return CColor();                      }
 
 private:
     // Private Data
@@ -83,12 +85,12 @@ public:
     // Public API
     virtual const char*     Name                ()                                          const   = 0;
     virtual const uint32_t  Id                  ()                                          const   = 0;
-    virtual uint8_t*        Data                ()                                                  = 0;
-    virtual const uint8_t*  Data                ()                                          const   = 0;
-    virtual uint8_t*        Pixel               ( int x, int y )                                    = 0;
-    virtual const uint8_t*  Pixel               ( int x, int y )                            const   = 0;
-    virtual uint8_t*        Scanline            ( int row )                                         = 0;
-    virtual const uint8_t*  Scanline            ( int row )                                 const   = 0;
+    virtual uint8_t*        DataPtr             ()                                                  = 0;
+    virtual const uint8_t*  DataPtr             ()                                          const   = 0;
+    virtual uint8_t*        PixelPtr            ( int x, int y )                                    = 0;
+    virtual const uint8_t*  PixelPtr            ( int x, int y )                            const   = 0;
+    virtual uint8_t*        ScanlinePtr         ( int row )                                         = 0;
+    virtual const uint8_t*  ScanlinePtr         ( int row )                                 const   = 0;
     virtual int             Depth               ()                                          const   = 0;
     virtual int             Width               ()                                          const   = 0;
     virtual int             Height              ()                                          const   = 0;
@@ -151,43 +153,42 @@ public:
 
 public:
     // Public API
-    virtual const char*             Name                ()                  const   override    final   { return tSpec::_nf._ss;                    }
-    virtual const uint32_t          Id                  ()                  const   override    final   { return tSpec::_nf._sh;                    }
-    virtual uint8_t*                Data                ()                          override    final   { return d->Data();                         }
-    virtual const uint8_t*          Data                ()                  const   override    final   { return d->Data();                         }
-    virtual uint8_t*                Pixel               ( int x, int y )            override    final   { return d->Pixel( x, y );                  }
-    virtual const uint8_t*          Pixel               ( int x, int y )    const   override    final   { return d->Pixel( x, y );                  }
-    virtual uint8_t*                Scanline            ( int row )                 override    final   { return d->Scanline( row );                }
-    virtual const uint8_t*          Scanline            ( int row )         const   override    final   { return d->Scanline( row );                }
-    virtual int                     Depth               ()                  const   override    final   { return d->Depth();                        }
-    virtual int                     Width               ()                  const   override    final   { return d->Width();                        }
-    virtual int                     Height              ()                  const   override    final   { return d->Height();                       }
-    virtual double                  MaxD                ()                  const   override    final   { return Max< double >();                   }
-    virtual int64_t                 MaxI                ()                  const   override    final   { return Max< int64_t >();                  }
-    virtual double                  RangeD              ()                  const   override    final   { return Range< double >();                 }
-    virtual int64_t                 RangeI              ()                  const   override    final   { return Range< int64_t >();                }
-    virtual int                     BytesPerPixel       ()                  const   override    final   { return d->Depth();                        }
-    virtual int                     BytesPerScanLine    ()                  const   override    final   { return Depth() * Width();                 }
-    virtual int                     BytesTotal          ()                  const   override    final   { return Depth() * Height();                }
-    virtual e_tp                    Type                ()                  const   override    final   { return tSpec::_nf._tp;                    }
-    virtual e_cm                    ColorModel          ()                  const   override    final   { return tSpec::_nf._cm;                    }
-    virtual e_ea                    ExtraAlpha          ()                  const   override    final   { return tSpec::_nf._ea;                    }
-    virtual bool                    HasAlpha            ()                  const   override    final   { return ExtraAlpha() == e_ea::khasAlpha;   }
-    virtual const char*             ChannelLayout       ()                  const   override    final   { return tSpec::_nf._cl;                    }
-    virtual e_nm                    NormalMode          ()                  const   override    final   { return tSpec::_nf._nm;                    }
-    virtual bool                    IsNormalized        ()                  const   override    final   { return NormalMode() == e_nm::knormalized; }
-    virtual bool                    IsDecimal           ()                  const   override    final   { return tSpec::_nf._dm;                    }
-    virtual int                     NumChannels         ()                  const   override    final   { return tSpec::_nf._rc;                    }
-    virtual int                     ColorChannels       ()                  const   override    final   { return tSpec::_nf._nc;                    }
-
-    virtual CColor                  GetPixelColor       ( int x, int y )            override    final   { return  d->GetPixelColor( x, y );         }
-    virtual CColor                  GetPixelColor       ( int x, int y )    const   override    final   { return  d->GetPixelColor( x, y );         }
+    inline virtual const char*             Name                ()                  const   override    final   { return tSpec::_nf._ss;                    }
+    inline virtual const uint32_t          Id                  ()                  const   override    final   { return tSpec::_nf._sh;                    }
+    inline virtual uint8_t*                DataPtr             ()                          override    final   { return d->DataPtr();                      }
+    inline virtual const uint8_t*          DataPtr             ()                  const   override    final   { return d->DataPtr();                      }
+    inline virtual uint8_t*                PixelPtr            ( int x, int y )            override    final   { return d->PixelPtr( x, y );               }
+    inline virtual const uint8_t*          PixelPtr            ( int x, int y )    const   override    final   { return d->PixelPtr( x, y );               }
+    inline virtual uint8_t*                ScanlinePtr         ( int row )                 override    final   { return d->ScanlinePtr( row );             }
+    inline virtual const uint8_t*          ScanlinePtr         ( int row )         const   override    final   { return d->ScanlinePtr( row );             }
+    inline virtual int                     Depth               ()                  const   override    final   { return d->Depth();                        }
+    inline virtual int                     Width               ()                  const   override    final   { return d->Width();                        }
+    inline virtual int                     Height              ()                  const   override    final   { return d->Height();                       }
+    inline virtual double                  MaxD                ()                  const   override    final   { return Max< double >();                   }
+    inline virtual int64_t                 MaxI                ()                  const   override    final   { return Max< int64_t >();                  }
+    inline virtual double                  RangeD              ()                  const   override    final   { return Range< double >();                 }
+    inline virtual int64_t                 RangeI              ()                  const   override    final   { return Range< int64_t >();                }
+    inline virtual int                     BytesPerPixel       ()                  const   override    final   { return d->BytesPerPixel();                }
+    inline virtual int                     BytesPerScanLine    ()                  const   override    final   { return d->BytesPerScanLine();             }
+    inline virtual int                     BytesTotal          ()                  const   override    final   { return d->BytesTotal();                   }
+    inline virtual e_tp                    Type                ()                  const   override    final   { return tSpec::_nf._tp;                    }
+    inline virtual e_cm                    ColorModel          ()                  const   override    final   { return tSpec::_nf._cm;                    }
+    inline virtual e_ea                    ExtraAlpha          ()                  const   override    final   { return tSpec::_nf._ea;                    }
+    inline virtual bool                    HasAlpha            ()                  const   override    final   { return ExtraAlpha() == e_ea::khasAlpha;   }
+    inline virtual const char*             ChannelLayout       ()                  const   override    final   { return tSpec::_nf._cl;                    }
+    inline virtual e_nm                    NormalMode          ()                  const   override    final   { return tSpec::_nf._nm;                    }
+    inline virtual bool                    IsNormalized        ()                  const   override    final   { return NormalMode() == e_nm::knormalized; }
+    inline virtual bool                    IsDecimal           ()                  const   override    final   { return tSpec::_nf._dm;                    }
+    inline virtual int                     NumChannels         ()                  const   override    final   { return tSpec::_nf._rc;                    }
+    inline virtual int                     ColorChannels       ()                  const   override    final   { return tSpec::_nf._nc;                    }
+    inline virtual CColor                  GetPixelColor       ( int x, int y )            override    final   { return  d->GetPixelColor( x, y );         }
+    inline virtual CColor                  GetPixelColor       ( int x, int y )    const   override    final   { return  d->GetPixelColor( x, y );         }
 
 public:
     // Constexpr API
-    static constexpr const FSpec    TypeSpec    ()  { return tSpec::_nf;        }
-    static constexpr const char*    TypeStr     ()  { return tSpec::_nf._ss;    }
-    static constexpr const uint32_t TypeId      ()  { return tSpec::_nf._sh;    }
+    inline static constexpr const FSpec    TypeSpec    ()  { return tSpec::_nf;        }
+    inline static constexpr const char*    TypeStr     ()  { return tSpec::_nf._ss;    }
+    inline static constexpr const uint32_t TypeId      ()  { return tSpec::_nf._sh;    }
 
 private:
     // Private Data

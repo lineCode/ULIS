@@ -23,15 +23,13 @@ namespace ULIS {
 typedef  uint8_t    uint8;
 typedef  uint16_t   uint16;
 typedef  uint32_t   uint32;
-typedef  int8_t     int8;
-typedef  int16_t    int16;
-typedef  int32_t    int32;
+typedef  uint64_t   uint64;
 
 /////////////////////////////////////////////////////
 // Enum and Keyword Declaration
 /* We declare keys for type decl keywords */
-#define ULIS_KEYS_TP ULIS_KEYS( uint8, uint16, uint32, int8, int16, int32, float, double )
-#define ULIS_KEYS_CM ULIS_KEYS( GREY, RGB, HSL, HSV, CMYK, YUV, YCbCr, LAB, XYZ, VEC )
+#define ULIS_KEYS_TP ULIS_KEYS( uint8, uint16, uint32, float, double )
+#define ULIS_KEYS_CM ULIS_KEYS( GREY, RGB, HSL, HSV, CMYK, YUV, LAB, XYZ, VEC )
 #define ULIS_KEYS_EA ULIS_KEYS( hasAlpha, noAlpha )
 #define ULIS_KEYS_NM ULIS_KEYS( normalized, typeLimits )
 #define ULIS_SEQ_TP  BOOST_PP_TUPLE_TO_SEQ( ULIS_KEYS_TP )

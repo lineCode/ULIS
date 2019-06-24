@@ -34,13 +34,28 @@ Process( ::ULIS::IBlock* iBlock )
     }
 }
 
+namespace ULIS {
+template<> constexpr TRedirector< 4 > TPixelLayout< FBlockBGBA8::TypeId() >::m;
+}
 
 int main()
 {
-    ::ULIS::PrintSpecs();
-    //constexpr ::ULIS::FSpec spec = ULIS_GETSPEC( ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::IBlock* block = new ::ULIS::FBlockRGBA8( 200, 200 );
+    //std::cout << ::ULIS::TPixelLayout< ::ULIS::FBlockBGBA8::TypeId() >::m.m[0] << std::endl;
+    coal em = ::ULIS::TPixelLayout< ::ULIS::FBlockBGBA8::TypeId() >::m;
+    for( int i = 0; i < 4; ++i )
+        std::cout << (int)em.m[i] << std::endl;
 
+    ::ULIS::TPixelValue< ULIS_REG[1] > myPixel;
+    for( int i = 0; i < myPixel.NumChannels(); ++i )
+        myPixel[i] = i;
+
+    std::cout << myPixel.ChannelLayout() << std::endl;
+    for( int i = 0; i < myPixel.NumChannels(); ++i )
+        std::cout << myPixel[i] << std::endl;
+
+    //::ULIS::PrintSpecs();
+
+    ::ULIS::IBlock* block = new ::ULIS::FBlockRGBA8( 200, 200 );
     Process( block );
     delete  block;
 

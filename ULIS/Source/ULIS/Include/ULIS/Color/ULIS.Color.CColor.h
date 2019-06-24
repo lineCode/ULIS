@@ -27,6 +27,7 @@ enum class eCColorModel : int
 
 /////////////////////////////////////////////////////
 // Model Correspondance
+/*
 static e_cm  ColorModelFromCColorModel( eCColorModel iValue )
 {
     switch( iValue )
@@ -51,6 +52,7 @@ static eCColorModel  CColorModelFromColorModel( e_cm iValue )
         default:            return  eCColorModel::kRGB;
     }
 }
+*/
 
 /////////////////////////////////////////////////////
 // CColor
