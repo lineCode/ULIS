@@ -27,20 +27,20 @@ namespace ULIS {
 template< int N >
 struct TRedirector
 {
-    const uint8_t m[ N ];
+    const uint8_t arr[ N ];
 };
 
 
-constexpr uint8 ParseLayoutRedirector_Imp_GetIndex( int i )
+constexpr uint8 ParseLayoutRedirector_Imp_GetIndex( const char* iModel, const char* iLayout, bool iAlpha, int i )
 {
-    return  i;
+    return  i < ::__coal__::strlen( iModel ) ? ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( 'A', iLayout, 0 );
 }
 
 
 template< int N, typename T, T... Nums >
 constexpr TRedirector< N > ParseLayoutRedirector_Imp( const char* iModel, const char* iLayout, bool iAlpha, std::integer_sequence< T, Nums... > )
 {
-    return { ParseLayoutRedirector_Imp_GetIndex( Nums ) ... };
+    return { ParseLayoutRedirector_Imp_GetIndex( iModel, iLayout, iAlpha, Nums ) ... };
 }
 
 
@@ -54,8 +54,11 @@ constexpr TRedirector< N > ParseLayoutRedirector( const char* iModel, const char
 template< uint32_t _SH >
 struct TPixelLayout
 {
-    static constexpr TRedirector< tSpec::_nf._rc > m = ParseLayoutRedirector< tSpec::_nf._rc >( kw_cm[ (int)tSpec::_nf._cm ], tSpec::_nf._cl, tSpec::_nf._ea == e_ea::khasAlpha );
+    static constexpr TRedirector< tSpec::_nf._rc > red = ParseLayoutRedirector< tSpec::_nf._rc >( kw_cm[ (int)tSpec::_nf._cm ], tSpec::_nf._cl, tSpec::_nf._ea == e_ea::khasAlpha );
 };
+
+template< uint32_t _SH >
+constexpr TRedirector< tSpec::_nf._rc > TPixelLayout< _SH >::red;
 
 
 /////////////////////////////////////////////////////
@@ -124,10 +127,11 @@ class TPixelValue final : public TPixelInfo< _SH >
 public:
     // Typedef
     using tPixelType = typename TPixelInfo< _SH >::tPixelType;
+
 public:
     // Public API
-    tPixelType&  operator[]( uint8 i ) { return m[i]; }
-    const  tPixelType&  operator[]( uint8 i )  const { return m[i]; }
+    tPixelType&  operator[]( uint8 i ) { return m[ i ]; }
+    const  tPixelType&  operator[]( uint8 i )  const { return m[ i ] }
 
 private:
     // Private Data

@@ -56,7 +56,7 @@ constexpr auto temp_reg_size = ulis_types_reg.Size();
 // Mainstream typedefs
 /* easy typedefs for the most common block types defined earlier */
 typedef ::ULIS::FBlockuint8RGBhasAlphaRGBAtypeLimits FBlockRGBA8;
-typedef ::ULIS::FBlockuint8RGBhasAlphaBGRAtypeLimits FBlockBGBA8;
+typedef ::ULIS::FBlockuint8RGBhasAlphaBGRAtypeLimits FBlockBGRA8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaARGBtypeLimits FBlockARGB8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaABGRtypeLimits FBlockABGR8;
 
