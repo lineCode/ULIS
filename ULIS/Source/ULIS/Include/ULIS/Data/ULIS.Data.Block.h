@@ -11,7 +11,9 @@
 #pragma once
 
 #include "ULIS/Data/ULIS.Data.Spec.h"
+#include "ULIS/Data/ULIS.Data.Pixel.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
+#include "ULIS/Color/ULIS.Color.CColor.h"
 
 namespace ULIS {
 
@@ -52,6 +54,9 @@ public:
     int             Depth                       ()                  const                       { return tSpec::_nf._pd;        }
     int             Width                       ()                  const                       { return width;                 }
     int             Height                      ()                  const                       { return height;                }
+
+    CColor          GetPixelColor               ( int x, int y )                                { return CColor();              }
+    CColor          GetPixelColor               ( int x, int y )    const                       { return CColor();              }
 
 private:
     // Private Data
@@ -104,6 +109,9 @@ public:
     virtual bool            IsDecimal           ()                                          const   = 0;
     virtual int             NumChannels         ()                                          const   = 0;
     virtual int             ColorChannels       ()                                          const   = 0;
+
+    virtual CColor          GetPixelColor       ( int x, int y )                                    = 0;
+    virtual CColor          GetPixelColor       ( int x, int y )                            const   = 0;
 
     void  Invalidate        ()                                          { if( mInvCb ) mInvCb( this, mInvInfo, 0, 0, Width(), Height() ); }
     void  Invalidate        ( const FInvalidRect& iRect )               { if( mInvCb ) mInvCb( this, mInvInfo, iRect.x, iRect.y, iRect.width, iRect.height ); }
@@ -171,6 +179,9 @@ public:
     virtual bool                    IsDecimal           ()                  const   override    final   { return tSpec::_nf._dm;                    }
     virtual int                     NumChannels         ()                  const   override    final   { return tSpec::_nf._rc;                    }
     virtual int                     ColorChannels       ()                  const   override    final   { return tSpec::_nf._nc;                    }
+
+    virtual CColor                  GetPixelColor       ( int x, int y )            override    final   { return  d->GetPixelColor( x, y );         }
+    virtual CColor                  GetPixelColor       ( int x, int y )    const   override    final   { return  d->GetPixelColor( x, y );         }
 
 public:
     // Constexpr API

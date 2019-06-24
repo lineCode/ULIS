@@ -3,12 +3,12 @@
 *   ULIS
 *__________________
 *
-* ULIS.Core.h
+* ULIS.Maths.Geometry.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
 
-#pragma once
+namespace ULIS {
 
-#include "ULIS/Data/ULIS.Data.Op.h"
-#include "ULIS/Color/ULIS.Color.CColor.h"
+} // namespace ULIS
+
