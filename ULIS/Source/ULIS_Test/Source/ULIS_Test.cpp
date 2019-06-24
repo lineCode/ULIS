@@ -37,8 +37,8 @@ Process( ::ULIS::IBlock* iBlock )
 
 int main()
 {
-    //::ULIS::PrintSpecs();
-    
+    ::ULIS::PrintSpecs();
+
     ::ULIS::TPixelValue< ::ULIS::FBlockABGR8::TypeId() > pixel;
 
     for( int i = 0; i < pixel.NumChannels(); ++i )
