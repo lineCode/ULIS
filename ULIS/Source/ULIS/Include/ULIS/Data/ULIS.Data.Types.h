@@ -25,8 +25,6 @@ ULIS_CREATE_REG( ULIS_REG_BUILDER, 0 )
 /////////////////////////////////////////////////////
 // Types declspec
 /* Actual types specializations */
-ULIS_DECLSPEC( double,  LAB,    hasAlpha,   LABA,   typeLimits )
-ULIS_DECLSPEC( float,   VEC,    noAlpha,    XYZW,   typeLimits )
 ULIS_DECLSPEC( uint8,   RGB,    hasAlpha,   RGBA,   typeLimits )
 ULIS_DECLSPEC( uint8,   RGB,    hasAlpha,   ARGB,   typeLimits )
 ULIS_DECLSPEC( uint8,   RGB,    hasAlpha,   BGRA,   typeLimits )
@@ -37,6 +35,7 @@ ULIS_DECLSPEC( float,   RGB,    hasAlpha,   RGBA,   normalized )
 ULIS_DECLSPEC( double,  RGB,    hasAlpha,   RGBA,   normalized )
 ULIS_DECLSPEC( float,   RGB,    noAlpha,    RGB,   normalized )
 ULIS_DECLSPEC( double,  RGB,    noAlpha,    RGB,   normalized )
+ULIS_DECLSPEC( double,  LAB,    hasAlpha,   LABA,   typeLimits )
 
 /////////////////////////////////////////////////////
 // Types assign
@@ -50,7 +49,7 @@ ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
 /* temp assign reg size ( workaround ) */
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 /* Reg size macro for usage during preprocessor ( workaround ) */
-#define ULIS_REG_SIZE 13
+#define ULIS_REG_SIZE 12
 
 /////////////////////////////////////////////////////
 // Mainstream typedefs

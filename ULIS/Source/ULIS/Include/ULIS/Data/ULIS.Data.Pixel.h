@@ -23,14 +23,12 @@ namespace ULIS {
 #define tSpec TBlockSpec< _SH >
 
 /////////////////////////////////////////////////////
-// TPixelLayout
-template< int N >
-struct TRedirector
-{
-    const uint8_t arr[ N ];
-};
+// TRedirector
+/* A simple array for storing the redirection index */
+template< int N > struct TRedirector { const uint8_t arr[ N ]; };
 
-
+/////////////////////////////////////////////////////
+// Layout Redirection Parsing Utility
 constexpr uint8 ParseLayoutRedirector_Imp_GetIndex( const char* iModel, const char* iLayout, bool iAlpha, int i )
 {
     return  i < ::__coal__::strlen( iModel ) ? ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( 'A', iLayout, 0 );
@@ -50,19 +48,22 @@ constexpr TRedirector< N > ParseLayoutRedirector( const char* iModel, const char
     return  ParseLayoutRedirector_Imp< N >( iModel, iLayout, iAlpha, std::make_integer_sequence< int, N >() );
 }
 
-
+/////////////////////////////////////////////////////
+// TLayout
+/* Pixel Layout obtained from hash, holding the Redirector */
 template< uint32_t _SH >
 struct TPixelLayout
 {
     static constexpr TRedirector< tSpec::_nf._rc > red = ParseLayoutRedirector< tSpec::_nf._rc >( kw_cm[ (int)tSpec::_nf._cm ], tSpec::_nf._cl, tSpec::_nf._ea == e_ea::khasAlpha );
 };
 
-template< uint32_t _SH >
-constexpr TRedirector< tSpec::_nf._rc > TPixelLayout< _SH >::red;
+/* Post definition of template redirector 'red' member to ensure it has a location in memory for external use */
+template< uint32_t _SH > constexpr TRedirector< tSpec::_nf._rc > TPixelLayout< _SH >::red;
 
 
 /////////////////////////////////////////////////////
 // TPixelTypeSelector
+/* Shenanigans for type operations */
 template< typename T > struct TNextPixelType { using _tUnderlyingNextPixelType = T; };
 template<> struct TNextPixelType< uint8     >{ using _tUnderlyingNextPixelType = uint16; };
 template<> struct TNextPixelType< uint16    >{ using _tUnderlyingNextPixelType = uint32; };
@@ -82,7 +83,8 @@ template< e_tp _TP > struct TPixelTypeSelector {};
 BOOST_PP_SEQ_FOR_EACH( ULIS_TYPE_SELECTOR_REPEAT, void, ULIS_SEQ_TP )
 
 /////////////////////////////////////////////////////
-// TPixelBase
+// TPixelInfo
+/* Basically a wrapper around FSpec, adding type info for ease of use */
 template< uint32_t _SH >
 class TPixelInfo
 {

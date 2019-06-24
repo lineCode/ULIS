@@ -37,19 +37,18 @@ Process( ::ULIS::IBlock* iBlock )
 
 int main()
 {
-    coal em = ::ULIS::TPixelLayout< ::ULIS::FBlockBGRA8::TypeId() >::red;
-    for( int i = 0; i < 4; ++i )
-        std::cout << (int)em.arr[i] << std::endl;
+    ::ULIS::PrintSpecs();
 
-    ::ULIS::TPixelValue< ULIS_REG[1] > myPixel;
+    for( int i = 0; i < 4; ++i )
+        std::cout << (int)::ULIS::TPixelLayout< ::ULIS::FBlockRGBA8::TypeId() >::red.arr[i] << std::endl;
+
+    ::ULIS::TPixelValue< ::ULIS::FBlockRGBA8::TypeId() > myPixel;
     for( int i = 0; i < myPixel.NumChannels(); ++i )
-        myPixel[i] = i;
+        myPixel[i] = i * 18;
 
     std::cout << myPixel.ChannelLayout() << std::endl;
     for( int i = 0; i < myPixel.NumChannels(); ++i )
-        std::cout << myPixel[i] << std::endl;
-
-    //::ULIS::PrintSpecs();
+        std::cout << (int)myPixel[i] << std::endl;
 
     ::ULIS::IBlock* block = new ::ULIS::FBlockRGBA8( 200, 200 );
     Process( block );
