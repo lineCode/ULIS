@@ -31,7 +31,7 @@ typedef  int32_t    int32;
 // Enum and Keyword Declaration
 /* We declare keys for type decl keywords */
 #define ULIS_KEYS_TP ULIS_KEYS( uint8, uint16, uint32, int8, int16, int32, float, double )
-#define ULIS_KEYS_CM ULIS_KEYS( GREY, RGB, HSL, HSV, CMY, CMYK, YUV, YCbCr, LAB, XYZ, VEC )
+#define ULIS_KEYS_CM ULIS_KEYS( G, RGB, HSL, HSV, CMYK, YUV, Lab, XYZ )
 #define ULIS_KEYS_EA ULIS_KEYS( hasAlpha, noAlpha )
 #define ULIS_KEYS_NM ULIS_KEYS( normalized, typeLimits )
 #define ULIS_SEQ_TP  BOOST_PP_TUPLE_TO_SEQ( ULIS_KEYS_TP )

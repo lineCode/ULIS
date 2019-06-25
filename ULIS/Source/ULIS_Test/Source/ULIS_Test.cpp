@@ -41,11 +41,11 @@ int main()
 
     ::ULIS::TPixelValue< ::ULIS::FBlockBGRA8::TypeId() > pixel;
 
+    pixel[0] = 255;
     std::cout << (int)pixel.Alpha() << std::endl;
 
     for( int i = 0; i < pixel.NumChannels(); ++i )
     {
-        pixel[i] = 255;
         std::cout << pixel.RedirectedIndex( i ) << std::endl;
     }
 
