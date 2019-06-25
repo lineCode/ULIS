@@ -18,7 +18,8 @@ namespace ULIS {
 // Supported CColor Models
 enum class eCColorModel : int
 {
-    kGREY,
+    kInvalid,
+    kG,
     kRGB,
     kHSL,
     kHSV,
@@ -27,16 +28,16 @@ enum class eCColorModel : int
 
 /////////////////////////////////////////////////////
 // Model Correspondance
-/*
 static e_cm  ColorModelFromCColorModel( eCColorModel iValue )
 {
     switch( iValue )
     {
-        case eCColorModel::kGREY:   return  e_cm::kGREY;
-        case eCColorModel::kRGB:    return  e_cm::kRGB;
-        case eCColorModel::kHSL:    return  e_cm::kHSL;
-        case eCColorModel::kHSV:    return  e_cm::kHSV;
-        case eCColorModel::kCMYK:   return  e_cm::kCMYK;
+        case eCColorModel::kInvalid:    return  e_cm::kG;
+        case eCColorModel::kG:          return  e_cm::kG;
+        case eCColorModel::kRGB:        return  e_cm::kRGB;
+        case eCColorModel::kHSL:        return  e_cm::kHSL;
+        case eCColorModel::kHSV:        return  e_cm::kHSV;
+        case eCColorModel::kCMYK:       return  e_cm::kCMYK;
     }
 }
 
@@ -44,15 +45,14 @@ static eCColorModel  CColorModelFromColorModel( e_cm iValue )
 {
     switch( iValue )
     {
-        case e_cm::kGREY:   return  eCColorModel::kGREY;
+        case e_cm::kG:      return  eCColorModel::kG;
         case e_cm::kRGB:    return  eCColorModel::kRGB;
         case e_cm::kHSL:    return  eCColorModel::kHSL;
         case e_cm::kHSV:    return  eCColorModel::kHSV;
         case e_cm::kCMYK:   return  eCColorModel::kCMYK;
-        default:            return  eCColorModel::kRGB;
+        default:            return  eCColorModel::kInvalid;
     }
 }
-*/
 
 /////////////////////////////////////////////////////
 // CColor

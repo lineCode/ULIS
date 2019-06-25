@@ -20,8 +20,8 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // Defines
-#define tSpec           TBlockSpec< _SH >
-#define tPixelLayout    TPixelLayout< _SH >
+#define tSpec       TBlockSpec< _SH >
+#define tLayout     TPixelLayout< _SH >
 
 /////////////////////////////////////////////////////
 // TRedirector
@@ -36,7 +36,10 @@ constexpr uint8 ParseLayoutRedirector_Imp_GetIndex( const char* iModel, const ch
     //return  i < ::__coal__::strlen( iModel ) ? ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( 'A', iLayout, 0 );
 
     /* Alpha first */
-    return  iAlpha ? i == 0 ? ::__coal__::indexof( 'A', iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 );
+    //return  iAlpha ? i == 0 ? ::__coal__::indexof( 'A', iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 );
+
+    /* Alpha last */
+    return  iAlpha ? i == ::__coal__::strlen( iModel ) ? ::__coal__::indexof( 'A', iLayout, 0 ) : ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( iModel[i], iLayout, 0 );
 }
 
 
@@ -117,69 +120,171 @@ public:
     inline bool        IsDecimal       ()  const   { return tSpec::_nf._dm;                     }
     inline int         NumChannels     ()  const   { return tSpec::_nf._rc;                     }
     inline int         ColorChannels   ()  const   { return tSpec::_nf._nc;                     }
-    inline int         RedirectedIndex ( int i )  const   { return tPixelLayout::red.arr[i];    }
+    inline int         RedirectedIndex ( int i )  const   { return tLayout::red.arr[i];    }
 };
 
 /////////////////////////////////////////////////////
 // TPixelBase
-template< uint32_t _SH >
+template< typename T, uint32_t _SH >
 class TPixelBase : public TPixelInfo< _SH >
-{
-};
-
-/////////////////////////////////////////////////////
-// TPixelValue
-template< uint32_t _SH >
-class TPixelValue final : public TPixelInfo< _SH >
 {
     typedef TPixelInfo< _SH > tSuperClass;
 
 public:
     // Typedef
-    using tPixelType = typename TPixelInfo< _SH >::tPixelType;
+    using tPixelType = typename tSuperClass::tPixelType;
+
+public:
+    // Public API
+    inline         tPixelType&     GetRaw( uint8 i )                       { return m[ i ]; }
+    inline const   tPixelType&     GetRaw( uint8 i )               const   { return m[ i ]; }
+    inline         tPixelType&     GetComponent( uint8 i )                 { return m[ tLayout::red.arr[i] ]; }
+    inline const   tPixelType&     GetComponent( uint8 i )         const   { return m[ tLayout::red.arr[i] ]; }
+    inline         tPixelType&     GetComponent( uint8 i, tPixelType iValue )                 { m[ tLayout::red.arr[i] ] = iValue; }
+    inline const   tPixelType&     GetComponent( uint8 i, tPixelType iValue )         const   { m[ tLayout::red.arr[i] ] = iValue; }
+    inline         tPixelType&     operator[]( uint8 i )                   { return m[ tLayout::red.arr[i] ]; }
+    inline const   tPixelType&     operator[]( uint8 i )           const   { return m[ tLayout::red.arr[i] ]; }
+    inline         tPixelType      Alpha()                         const   { return tSpec::_nf._ea == e_ea::khasAlpha ? m[ tLayout::red.arr[ tSpec::_nf._nc ] ] : Max(); }
+    inline         void            SetAlpha( tPixelType iValue )           { if(    tSpec::_nf._ea == e_ea::khasAlpha ) m[ tLayout::red.arr[ tSpec::_nf._nc ] ] = iValue; }
+
+protected:
+    // Protected Data
+    T m[ tSpec::_nf._rc ];
+};
+
+/////////////////////////////////////////////////////
+// TPixelAcessor
+template< typename T, uint32_t _SH, e_cm _CM >
+class TPixelAcessor : public TPixelBase< T, _SH >
+{
+    typedef TPixelBase< T, _SH > tSuperClass;
+
+public:
+    // Typedef
+    using tPixelType = typename tSuperClass::tPixelType;
+
+public:
+    // Public API
+};
+
+#define ULIS_SPEC_PIXEL_ACCESSOR_START( iCm )                       \
+    template< typename T, uint32_t _SH >                            \
+    class TPixelAcessor< T, _SH, BOOST_PP_CAT( e_cm::k, iCm ) >     \
+        : public TPixelBase< T, _SH > {                             \
+    typedef TPixelBase< T, _SH > tSuperClass;                       \
+    public: using tPixelType = typename tSuperClass::tPixelType;
+#define ULIS_SPEC_PIXEL_ACCESSOR_END    };
+
+#define ULIS_SPEC_COMPONENT( iComp, iIndex )                                                                                \
+    inline          tPixelType&     iComp       ()                      { return tSuperClass::GetComponent( iIndex );    }  \
+    inline  const   tPixelType&     iComp       () const                { return tSuperClass::GetComponent( iIndex );    }  \
+    inline          tPixelType      Get##iComp  ()                      { return tSuperClass::GetComponent( iIndex );    }  \
+    inline  void                    Set##iComp  ( tPixelType iValue )   { tSuperClass::SetComponent( iIndex, iValue );   }
+
+ULIS_SPEC_PIXEL_ACCESSOR_START( G )
+    ULIS_SPEC_COMPONENT( G,     0 )
+    ULIS_SPEC_COMPONENT( Gray,  0 )
+ULIS_SPEC_PIXEL_ACCESSOR_END
+
+ULIS_SPEC_PIXEL_ACCESSOR_START( RGB )
+    ULIS_SPEC_COMPONENT( Red,   0 )
+    ULIS_SPEC_COMPONENT( Green, 1 )
+    ULIS_SPEC_COMPONENT( Blue,  2 )
+    ULIS_SPEC_COMPONENT( R,     0 )
+    ULIS_SPEC_COMPONENT( G,     1 )
+    ULIS_SPEC_COMPONENT( B,     2 )
+ULIS_SPEC_PIXEL_ACCESSOR_END
+
+ULIS_SPEC_PIXEL_ACCESSOR_START( HSL )
+    ULIS_SPEC_COMPONENT( Hue,           0 )
+    ULIS_SPEC_COMPONENT( Saturation,    1 )
+    ULIS_SPEC_COMPONENT( Lightness,     2 )
+    ULIS_SPEC_COMPONENT( H,             0 )
+    ULIS_SPEC_COMPONENT( S,             1 )
+    ULIS_SPEC_COMPONENT( L,             2 )
+ULIS_SPEC_PIXEL_ACCESSOR_END
+
+ULIS_SPEC_PIXEL_ACCESSOR_START( HSV )
+    ULIS_SPEC_COMPONENT( Hue,           0 )
+    ULIS_SPEC_COMPONENT( Saturation,    1 )
+    ULIS_SPEC_COMPONENT( Value,         2 )
+    ULIS_SPEC_COMPONENT( H,             0 )
+    ULIS_SPEC_COMPONENT( S,             1 )
+    ULIS_SPEC_COMPONENT( V,             2 )
+ULIS_SPEC_PIXEL_ACCESSOR_END
+
+ULIS_SPEC_PIXEL_ACCESSOR_START( CMYK )
+    ULIS_SPEC_COMPONENT( Cyan,      0 )
+    ULIS_SPEC_COMPONENT( Magenta,   1 )
+    ULIS_SPEC_COMPONENT( Yellow,    2 )
+    ULIS_SPEC_COMPONENT( Key,       3 )
+    ULIS_SPEC_COMPONENT( Black,     3 )
+    ULIS_SPEC_COMPONENT( C,         0 )
+    ULIS_SPEC_COMPONENT( M,         1 )
+    ULIS_SPEC_COMPONENT( Y,         2 )
+    ULIS_SPEC_COMPONENT( K,         3 )
+ULIS_SPEC_PIXEL_ACCESSOR_END
+
+ULIS_SPEC_PIXEL_ACCESSOR_START( YUV )
+    ULIS_SPEC_COMPONENT( Y, 0 )
+    ULIS_SPEC_COMPONENT( U, 1 )
+    ULIS_SPEC_COMPONENT( V, 2 )
+ULIS_SPEC_PIXEL_ACCESSOR_END
+
+ULIS_SPEC_PIXEL_ACCESSOR_START( Lab )
+    ULIS_SPEC_COMPONENT( L, 0 )
+    ULIS_SPEC_COMPONENT( a, 1 )
+    ULIS_SPEC_COMPONENT( b, 2 )
+ULIS_SPEC_PIXEL_ACCESSOR_END
+
+ULIS_SPEC_PIXEL_ACCESSOR_START( XYZ )
+    ULIS_SPEC_COMPONENT( X, 0 )
+    ULIS_SPEC_COMPONENT( Y, 1 )
+    ULIS_SPEC_COMPONENT( Z, 2 )
+ULIS_SPEC_PIXEL_ACCESSOR_END
+
+/////////////////////////////////////////////////////
+// TPixelValue
+template< uint32_t _SH >
+class TPixelValue final : public TPixelAcessor< typename TPixelInfo< _SH >::tPixelType, _SH, tSpec::_nf._cm >
+{
+    typedef TPixelAcessor< typename TPixelInfo< _SH >::tPixelType, _SH, tSpec::_nf._cm > tSuperClass;
+
+public:
+    // Typedef
+    using tPixelType = typename tSuperClass::tPixelType;
 
 public:
     // Construction / Destruction
     TPixelValue()
     {
-        for( int i = 0; i < tSuperClass::NumChannels(); ++i )
-            m[i] = (tPixelType)0;
+        for( int i = 0; i < tSpec::_nf._rc; ++i )
+            tSuperClass::m[i] = (tPixelType)0;
     }
-
-public:
-    // Public API
-            tPixelType&     operator[]( uint8 i )           { return m[ tPixelLayout::red.arr[i] ]; }
-    const   tPixelType&     operator[]( uint8 i )   const   { return m[ tPixelLayout::red.arr[i] ]; }
-
-            tPixelType      Alpha()                 const   { return tSpec::_nf._ea == e_ea::khasAlpha ? m[0] : fallback_max; }
-private:
-    // Private Data
-    tPixelType m[ tSpec::_nf._rc ];
-    static const tPixelType fallback_max = tSpec::_nf._tm;
 };
 
 /////////////////////////////////////////////////////
 // TPixelProxy
 template< uint32_t _SH >
-class TPixelProxy final : public TPixelInfo< _SH >
+class TPixelProxy final : public TPixelBase< typename TPixelInfo< _SH >::tPixelType*, _SH >
 {
+    typedef TPixelBase< typename TPixelInfo< _SH >::tPixelType*, _SH > tSuperClass;
+
 public:
     // Typedef
-    using tPixelType = typename TPixelInfo< _SH >::tPixelType;
+    using tPixelType = typename tSuperClass::tPixelType;
 
 public:
-    // Public API
-            tPixelType&  operator[]( uint8 i )          { return m[ tPixelLayout::red.arr[i] ]; }
-    const   tPixelType&  operator[]( uint8 i )  const   { return m[ tPixelLayout::red.arr[i] ]; }
-
-private:
-    // Private Data
-    tPixelType* m;
+    // Construction / Destruction
+    TPixelProxy()
+    {
+    }
 };
 
 /////////////////////////////////////////////////////
 // Undefines
 #undef tSpec
+#undef tLayout
 
 
 } // namespace ULIS

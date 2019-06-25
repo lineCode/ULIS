@@ -41,13 +41,21 @@ int main()
 
     ::ULIS::TPixelValue< ::ULIS::FBlockBGRA8::TypeId() > pixel;
 
-    pixel[0] = 255;
-    std::cout << (int)pixel.Alpha() << std::endl;
-
+    pixel.SetAlpha( 'A' );
+    pixel[0] = 'R';
+    pixel[1] = 'G';
+    pixel[2] = 'B';
     for( int i = 0; i < pixel.NumChannels(); ++i )
     {
-        std::cout << pixel.RedirectedIndex( i ) << std::endl;
+        //std::cout << pixel.RedirectedIndex( i ) << std::endl;
+        //std::cout << (int)pixel[i] << std::endl;
+        std::cout << pixel.GetRaw(i) << std::endl;
     }
+
+    std::cout << pixel.R() << std::endl;
+    std::cout << pixel.G() << std::endl;
+    std::cout << pixel.B() << std::endl;
+    std::cout << pixel.Alpha() << std::endl;
 
     ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 200, 200 );
     Process( block );
