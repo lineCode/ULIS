@@ -101,30 +101,30 @@ public:
 
 public:
     // Template API
-    template< typename T >
-    constexpr  T MaxT() const  { return  (T)tSpec::_nf._tm; }
-
-    template< typename T >
-    constexpr  T RangeT() const  { return  (T)tSpec::_nf._rm; }
+    constexpr  tPixelType       Max()       const  { return  (tPixelType)tSpec::_nf._tm; }
+    constexpr  tNextPixelType   Range()     const  { return  (tNextPixelType)tSpec::_nf._rm; }
 
 public:
     // Public API
-    inline int         Depth           ()  const   { return tSpec::_nf._pd;                    }
-    inline double      MaxD            ()  const   { return MaxT< double >();                   }
-    inline int64_t     MaxI            ()  const   { return MaxT< int64_t >();                  }
-    inline double      RangeD          ()  const   { return RangeT< double >();                 }
-    inline int64_t     RangeI          ()  const   { return RangeT< int64_t >();                }
-    inline e_tp        Type            ()  const   { return tSpec::_nf._tp;                    }
-    inline e_cm        ColorModel      ()  const   { return tSpec::_nf._cm;                    }
-    inline e_ea        ExtraAlpha      ()  const   { return tSpec::_nf._ea;                    }
-    inline bool        HasAlpha        ()  const   { return ExtraAlpha() == e_ea::khasAlpha;   }
-    inline const char* ChannelLayout   ()  const   { return tSpec::_nf._cl;                    }
-    inline e_nm        NormalMode      ()  const   { return tSpec::_nf._nm;                    }
-    inline bool        IsNormalized    ()  const   { return NormalMode() == e_nm::knormalized; }
-    inline bool        IsDecimal       ()  const   { return tSpec::_nf._dm;                    }
-    inline int         NumChannels     ()  const   { return tSpec::_nf._rc;                    }
-    inline int         ColorChannels   ()  const   { return tSpec::_nf._nc;                    }
-    inline int         RedirectedIndex ( int i )  const   { return tPixelLayout::red.arr[i];          }
+    inline int         Depth           ()  const   { return tSpec::_nf._pd;                     }
+    inline e_tp        Type            ()  const   { return tSpec::_nf._tp;                     }
+    inline e_cm        ColorModel      ()  const   { return tSpec::_nf._cm;                     }
+    inline e_ea        ExtraAlpha      ()  const   { return tSpec::_nf._ea;                     }
+    inline bool        HasAlpha        ()  const   { return ExtraAlpha() == e_ea::khasAlpha;    }
+    inline const char* ChannelLayout   ()  const   { return tSpec::_nf._cl;                     }
+    inline e_nm        NormalMode      ()  const   { return tSpec::_nf._nm;                     }
+    inline bool        IsNormalized    ()  const   { return NormalMode() == e_nm::knormalized;  }
+    inline bool        IsDecimal       ()  const   { return tSpec::_nf._dm;                     }
+    inline int         NumChannels     ()  const   { return tSpec::_nf._rc;                     }
+    inline int         ColorChannels   ()  const   { return tSpec::_nf._nc;                     }
+    inline int         RedirectedIndex ( int i )  const   { return tPixelLayout::red.arr[i];    }
+};
+
+/////////////////////////////////////////////////////
+// TPixelBase
+template< uint32_t _SH >
+class TPixelBase : public TPixelInfo< _SH >
+{
 };
 
 /////////////////////////////////////////////////////
@@ -132,18 +132,30 @@ public:
 template< uint32_t _SH >
 class TPixelValue final : public TPixelInfo< _SH >
 {
+    typedef TPixelInfo< _SH > tSuperClass;
+
 public:
     // Typedef
     using tPixelType = typename TPixelInfo< _SH >::tPixelType;
 
 public:
-    // Public API
-            tPixelType&  operator[]( uint8 i )          { return m[ tPixelLayout::red.arr[i] ]; }
-    const   tPixelType&  operator[]( uint8 i )  const   { return m[ tPixelLayout::red.arr[i] ]; }
+    // Construction / Destruction
+    TPixelValue()
+    {
+        for( int i = 0; i < tSuperClass::NumChannels(); ++i )
+            m[i] = (tPixelType)0;
+    }
 
+public:
+    // Public API
+            tPixelType&     operator[]( uint8 i )           { return m[ tPixelLayout::red.arr[i] ]; }
+    const   tPixelType&     operator[]( uint8 i )   const   { return m[ tPixelLayout::red.arr[i] ]; }
+
+            tPixelType      Alpha()                 const   { return tSpec::_nf._ea == e_ea::khasAlpha ? m[0] : fallback_max; }
 private:
     // Private Data
     tPixelType m[ tSpec::_nf._rc ];
+    static const tPixelType fallback_max = tSpec::_nf._tm;
 };
 
 /////////////////////////////////////////////////////
