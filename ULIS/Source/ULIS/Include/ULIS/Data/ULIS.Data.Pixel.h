@@ -144,7 +144,7 @@ public:
     inline const   tPixelType&     GetComponent( uint8 i, tPixelType iValue )         const   { m[ tLayout::red.arr[i] ] = iValue; }
     inline         tPixelType&     operator[]( uint8 i )                   { return m[ tLayout::red.arr[i] ]; }
     inline const   tPixelType&     operator[]( uint8 i )           const   { return m[ tLayout::red.arr[i] ]; }
-    inline         tPixelType      Alpha()                         const   { return tSpec::_nf._ea == e_ea::khasAlpha ? m[ tLayout::red.arr[ tSpec::_nf._nc ] ] : Max(); }
+    inline         tPixelType      Alpha()                         const   { return tSpec::_nf._ea == e_ea::khasAlpha ? m[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSuperClass::Max(); }
     inline         void            SetAlpha( tPixelType iValue )           { if(    tSpec::_nf._ea == e_ea::khasAlpha ) m[ tLayout::red.arr[ tSpec::_nf._nc ] ] = iValue; }
 
 protected:
@@ -263,6 +263,7 @@ public:
     }
 };
 
+/*
 /////////////////////////////////////////////////////
 // TPixelProxy
 template< uint32_t _SH >
@@ -280,6 +281,7 @@ public:
     {
     }
 };
+*/
 
 /////////////////////////////////////////////////////
 // Undefines

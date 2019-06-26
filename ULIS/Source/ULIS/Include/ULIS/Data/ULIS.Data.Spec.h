@@ -10,21 +10,13 @@
 
 #pragma once
 
-#include <stdint.h>                         // For std integer types 8, 16, 32
 #include <limits>                           // For type max values
 #include <coal_core>                        // For compile-time string parsing and hashing
+#include "ULIS/Data/ULIS.Data.Types.h"      // For shorthand types
 #include "ULIS/Data/ULIS.Data.PP.h"         // For preprocessor macros framework
 #include "ULIS/Data/ULIS.Data.SpecReg.h"    // For registry operations
 
 namespace ULIS {
-/////////////////////////////////////////////////////
-// Typedefs
-/* We declare shorthand types in ULIS namespace for ease of use with keyword declarations */
-typedef  uint8_t    uint8;
-typedef  uint16_t   uint16;
-typedef  uint32_t   uint32;
-typedef  uint64_t   uint64;
-
 /////////////////////////////////////////////////////
 // Enum and Keyword Declaration
 /* We declare keys for type decl keywords */

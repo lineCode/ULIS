@@ -11,6 +11,7 @@
 #pragma once
 
 #include <utility>
+#include <stdint.h>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/slot/slot.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>

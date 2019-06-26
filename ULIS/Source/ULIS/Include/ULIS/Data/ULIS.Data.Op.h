@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include <assert.h>
-#include "ULIS/Data/ULIS.Data.Types.h"
+#include "ULIS/Data/ULIS.Data.Decl.h"
 
 namespace ULIS {
 

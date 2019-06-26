@@ -40,7 +40,6 @@ int main()
     //::ULIS::PrintSpecs();
 
     ::ULIS::TPixelValue< ::ULIS::FBlockBGRA8::TypeId() > pixel;
-
     pixel.SetAlpha( 'A' );
     pixel[0] = 'R';
     pixel[1] = 'G';
@@ -58,6 +57,9 @@ int main()
     std::cout << pixel.Alpha() << std::endl;
 
     ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 200, 200 );
+    ::ULIS::IBlock* block2 = new ::ULIS::FBlockBGRA8( 300, 300 );
+    std::cout << block->GetMD5Hash() << std::endl;
+    std::cout << block2->GetMD5Hash() << std::endl;
     Process( block );
     delete block;
 

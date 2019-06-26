@@ -12,6 +12,7 @@
 
 #include "ULIS/Data/ULIS.Data.Spec.h"
 #include "ULIS/Data/ULIS.Data.Pixel.h"
+#include "ULIS/Data/ULIS.Data.MD5.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
 #include "ULIS/Color/ULIS.Color.CColor.h"
 
@@ -119,6 +120,8 @@ public:
     void  Invalidate        ( const FInvalidRect& iRect )               { if( mInvCb ) mInvCb( this, mInvInfo, iRect.x, iRect.y, iRect.width, iRect.height ); }
     void  SetInvalidateCB   ( fpInvalidateFunction iCb, void* iInfo )   { mInvCb = iCb; mInvInfo = iInfo; }
 
+    virtual std::string     GetMD5Hash          ()                                          const   = 0;
+
 protected:
     fpInvalidateFunction    mInvCb;
     void*                   mInvInfo;
@@ -183,7 +186,7 @@ public:
     inline virtual int                     ColorChannels       ()                  const   override    final   { return tSpec::_nf._nc;                    }
     inline virtual CColor                  GetPixelColor       ( int x, int y )            override    final   { return  d->GetPixelColor( x, y );         }
     inline virtual CColor                  GetPixelColor       ( int x, int y )    const   override    final   { return  d->GetPixelColor( x, y );         }
-
+    inline virtual std::string             GetMD5Hash          ()                  const   override    final   { return  MD5( DataPtr(), BytesTotal() );   }
 public:
     // Constexpr API
     inline static constexpr const FSpec    TypeSpec    ()  { return tSpec::_nf;        }
