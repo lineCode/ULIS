@@ -11,7 +11,6 @@
 #include <ULIS_CORE>
 
 
-
 template< uint32_t _SH >
 void
 Process_Imp( ::ULIS::TBlock< _SH >* iBlock )
@@ -46,6 +45,19 @@ int main()
     std::cout << block->GetUUID() << std::endl;
     ::ULIS::IBlock* block2 = new ::ULIS::FBlockBGRA8( 200, 200 );
     std::cout << block2->GetUUID() << std::endl;
+
+    ::ULIS::FBlockBGRA8* cast_ptr = (::ULIS::FBlockBGRA8*)block;
+    ::ULIS::FBlockBGRA8::tPixelProxy proxy = cast_ptr->PixelProxy( 0, 0 );
+    auto test = proxy.RedirectedIndex( 0 );
+    proxy.SetRed(   'R' );
+    proxy.SetGreen( 'G' );
+    proxy.SetBlue(  'B' );
+    proxy.SetAlpha( 'A' );
+    ::ULIS::FBlockBGRA8::tPixelValue value = cast_ptr->PixelValue( 0, 0 );
+    std::cout << value.R() << std::endl;
+    std::cout << value.G() << std::endl;
+    std::cout << value.B() << std::endl;
+    std::cout << value.GetAlpha() << std::endl;
 
 
     Process( block );

@@ -49,10 +49,10 @@ public:
     // Public API
     inline uint8_t*             DataPtr             ()                                              { return data;                          }
     inline const uint8_t*       DataPtr             ()                  const                       { return data;                          }
-    inline uint8_t*             PixelPtr            ( int x, int y )                                { return nullptr;                       }
-    inline const uint8_t*       PixelPtr            ( int x, int y )    const                       { return nullptr;                       }
-    inline uint8_t*             ScanlinePtr         ( int row )                                     { return nullptr;                       }
-    inline const uint8_t*       ScanlinePtr         ( int row )         const                       { return nullptr;                       }
+    inline uint8_t*             PixelPtr            ( int x, int y )                                { return data + ( x * BytesPerPixel() + y * BytesPerScanLine() ); }
+    inline const uint8_t*       PixelPtr            ( int x, int y )    const                       { return data + ( x * BytesPerPixel() + y * BytesPerScanLine() ); }
+    inline uint8_t*             ScanlinePtr         ( int row )                                     { return data + ( row * BytesPerScanLine() ); }
+    inline const uint8_t*       ScanlinePtr         ( int row )         const                       { return data + ( row * BytesPerScanLine() ); }
     inline int                  Depth               ()                  const                       { return tSpec::_nf._pd;                }
     inline int                  Width               ()                  const                       { return width;                         }
     inline int                  Height              ()                  const                       { return height;                        }
@@ -61,7 +61,10 @@ public:
     inline int                  BytesTotal          ()                  const                       { return Depth() * Width() * Height();  }
     inline CColor               GetPixelColor       ( int x, int y )                                { return CColor();                      }
     inline CColor               GetPixelColor       ( int x, int y )    const                       { return CColor();                      }
-    inline TPixelValue< _SH >   PixelValue          ( int x, int y )    const                       { return  TPixelValue< _SH >();         }
+    inline TPixelProxy< _SH >   PixelProxy          ( int x, int y )                                { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );   }
+    inline TPixelProxy< _SH >   PixelProxy          ( int x, int y )    const                       { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );   }
+    inline TPixelValue< _SH >   PixelValue          ( int x, int y )                                { return  TPixelValue< _SH >( PixelProxy( x, y ) ); }
+    inline TPixelValue< _SH >   PixelValue          ( int x, int y )    const                       { return  TPixelValue< _SH >( PixelProxy( x, y ) ); }
 
 private:
     // Private Data
@@ -139,7 +142,8 @@ class TBlock final : public IBlock
 {
 public:
     // Typedef
-    typedef TPixelValue< _SH > tPixelValueType;
+    typedef TPixelValue< _SH > tPixelValue;
+    typedef TPixelProxy< _SH > tPixelProxy;
     using tPixelType        = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingPixelType;
     using tNextPixelType    = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingNextPixelType;
     using tPrevPixelType    = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingPrevPixelType;
@@ -204,7 +208,8 @@ public:
     inline virtual uint32                   GetCRC32Hash        ()                  const   override    final   { return  COAL_CRC32_DAT( DataPtr(), BytesTotal() ); }
     inline virtual std::string              GetUUID             ()                  const   override    final   { return  id;                               }
 
-    inline tPixelValueType                  PixelValue          ( int x, int y )    const                       { return  d->PixelValue( x, y );            }
+    inline tPixelValue                      PixelValue          ( int x, int y )    const                       { return  d->PixelValue( x, y );            }
+    inline tPixelProxy                      PixelProxy          ( int x, int y )    const                       { return  d->PixelProxy( x, y );            }
 
 public:
     // Constexpr API

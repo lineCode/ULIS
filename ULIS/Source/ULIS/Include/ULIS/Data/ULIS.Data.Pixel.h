@@ -79,8 +79,23 @@ public:
 };
 
 /////////////////////////////////////////////////////
+// TPixelData
+template< typename T, uint8 _NC, bool _PT >
+struct TPixelData {};
+
+template< typename T, uint8 _NC >
+struct TPixelData< T, _NC, true > {
+    T raw[ _NC ];
+};
+
+template< typename T, uint8 _NC >
+struct TPixelData< T, _NC, false > {
+    T* raw;
+};
+
+/////////////////////////////////////////////////////
 // TPixelBase
-template< uint32_t _SH >
+template< uint32_t _SH, bool _PT >
 class TPixelBase : public TPixelInfo< _SH >
 {
     typedef TPixelInfo< _SH > tSuperClass;
@@ -91,29 +106,29 @@ public:
 
 public:
     // Public API
-    inline         tPixelType&     GetRaw( uint8 i )                       { return m[ i ]; }
-    inline const   tPixelType&     GetRaw( uint8 i )               const   { return m[ i ]; }
-    inline         tPixelType&     GetComponent( uint8 i )                 { return m[ tLayout::red.arr[i] ]; }
-    inline const   tPixelType&     GetComponent( uint8 i )         const   { return m[ tLayout::red.arr[i] ]; }
-    inline         tPixelType&     GetComponent( uint8 i, tPixelType iValue )                 { m[ tLayout::red.arr[i] ] = iValue; }
-    inline const   tPixelType&     GetComponent( uint8 i, tPixelType iValue )         const   { m[ tLayout::red.arr[i] ] = iValue; }
-    inline         tPixelType&     operator[]( uint8 i )                   { return m[ tLayout::red.arr[i] ]; }
-    inline const   tPixelType&     operator[]( uint8 i )           const   { return m[ tLayout::red.arr[i] ]; }
-    inline         tPixelType      Alpha()                         const   { return tSpec::_nf._ea == e_ea::khasAlpha ? m[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSuperClass::Max(); }
-    inline         void            SetAlpha( tPixelType iValue )           { if(    tSpec::_nf._ea == e_ea::khasAlpha ) m[ tLayout::red.arr[ tSpec::_nf._nc ] ] = iValue; }
+    inline         tPixelType&     GetRaw( uint8 i )                                    { return d.raw[ i ]; }
+    inline const   tPixelType&     GetRaw( uint8 i )                            const   { return d.raw[ i ]; }
+    inline         tPixelType&     GetComponent( uint8 i )                              { return d.raw[ tLayout::red.arr[i] ]; }
+    inline const   tPixelType&     GetComponent( uint8 i )                      const   { return d.raw[ tLayout::red.arr[i] ]; }
+    inline         void            SetComponent( uint8 i, tPixelType iValue )          { d.raw[ tLayout::red.arr[i] ] = iValue; }
+    inline const   void            SetComponent( uint8 i, tPixelType iValue )   const  { d.raw[ tLayout::red.arr[i] ] = iValue; }
+    inline         tPixelType&     operator[]( uint8 i )                                { return d.raw[ tLayout::red.arr[i] ]; }
+    inline const   tPixelType&     operator[]( uint8 i )                        const   { return d.raw[ tLayout::red.arr[i] ]; }
+    inline         tPixelType      GetAlpha()                                   const   { return tSpec::_nf._ea == e_ea::khasAlpha ? d.raw[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSuperClass::Max(); }
+    inline         void            SetAlpha( tPixelType iValue )                        { if(    tSpec::_nf._ea == e_ea::khasAlpha ) d.raw[ tLayout::red.arr[ tSpec::_nf._nc ] ] = iValue; }
 
 protected:
     // Protected Data
-    tPixelType m[ tSpec::_nf._rc ];
+    TPixelData< tPixelType, tSpec::_nf._rc, _PT > d;
 };
 
 
 /////////////////////////////////////////////////////
 // TPixelAcessor
-template< uint32_t _SH, e_cm _CM >
-class TPixelAcessor : public TPixelBase< _SH >
+template< uint32_t _SH, e_cm _CM, bool _PT >
+class TPixelAcessor : public TPixelBase< _SH, _PT >
 {
-    typedef TPixelBase< _SH > tSuperClass;
+    typedef TPixelBase< _SH, _PT > tSuperClass;
 
 public:
     // Typedef
@@ -124,10 +139,10 @@ public:
 };
 
 #define ULIS_SPEC_PIXEL_ACCESSOR_START( iCm )                       \
-    template< uint32_t _SH >                            \
-    class TPixelAcessor< _SH, BOOST_PP_CAT( e_cm::k, iCm ) >     \
-        : public TPixelBase< _SH > {                             \
-    typedef TPixelBase< _SH > tSuperClass;                       \
+    template< uint32_t _SH, bool _PT  >                             \
+    class TPixelAcessor< _SH, BOOST_PP_CAT( e_cm::k, iCm ), _PT >   \
+        : public TPixelBase< _SH, _PT > {                           \
+    typedef TPixelBase< _SH, _PT > tSuperClass;                     \
     public: using tPixelType = typename tSuperClass::tPixelType;
 #define ULIS_SPEC_PIXEL_ACCESSOR_END    };
 
@@ -200,11 +215,16 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( XYZ )
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 /////////////////////////////////////////////////////
+// FDecls
+template< uint32_t _SH > class TPixelValue;
+template< uint32_t _SH > class TPixelProxy;
+
+/////////////////////////////////////////////////////
 // TPixelValue
 template< uint32_t _SH >
-class TPixelValue final : public TPixelAcessor< _SH, tSpec::_nf._cm >
+class TPixelValue final : public TPixelAcessor< _SH, tSpec::_nf._cm, true >
 {
-    typedef TPixelAcessor< _SH, tSpec::_nf._cm > tSuperClass;
+    typedef TPixelAcessor< _SH, tSpec::_nf._cm, true > tSuperClass;
 
 public:
     // Typedef
@@ -217,35 +237,49 @@ public:
     TPixelValue()
     {
         for( int i = 0; i < tSpec::_nf._rc; ++i )
-            tSuperClass::m[i] = (tPixelType)0;
+            tSuperClass::d.raw[i] = (tPixelType)0;
     }
 
+    TPixelValue( const TPixelProxy< _SH >& iProxy )
+    {
+        for( int i = 0; i < tSpec::_nf._rc; ++i )
+            tSuperClass::SetComponent( i, iProxy[i] );
+    }
+
+    /*
     template< uint32_t _OH >
     TPixelValue< _SH >& operator=( const TPixelValue< _OH >& iOther )
     {
         return *this;
     }
+    */
 };
 
-/*
 /////////////////////////////////////////////////////
 // TPixelProxy
 template< uint32_t _SH >
-class TPixelProxy final : public TPixelBase< typename TPixelInfo< _SH >::tPixelType*, _SH >
+class TPixelProxy final : public TPixelAcessor< _SH, tSpec::_nf._cm, false >
 {
-    typedef TPixelBase< typename TPixelInfo< _SH >::tPixelType*, _SH > tSuperClass;
+    typedef TPixelAcessor< _SH, tSpec::_nf._cm, false > tSuperClass;
 
 public:
     // Typedef
-    using tPixelType = typename tSuperClass::tPixelType;
+    using tPixelType        = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingPixelType;
+    using tNextPixelType    = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingNextPixelType;
+    using tPrevPixelType    = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingPrevPixelType;
 
 public:
     // Construction / Destruction
     TPixelProxy()
     {
+        tSuperClass::d.raw = nullptr;
+    }
+
+    TPixelProxy( uint8* iPtr )
+    {
+        tSuperClass::d.raw = (tPixelType*)iPtr;
     }
 };
-*/
 
 /////////////////////////////////////////////////////
 // Undefines
