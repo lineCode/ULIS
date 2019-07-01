@@ -8,6 +8,7 @@ SET( ULIS_BUILD_SHARED                     OFF         CACHE BOOL      "Sets if 
 SET( ULIS_BUILD_TESTS                      ON          CACHE BOOL      "Sets if we build the test programs" )
 SET( ULIS_BUILD_GUIS                       ON          CACHE BOOL      "Sets if we build the gui programs" )
 SET( ULIS_QT_CMAKE_PATH                	   "unset"     CACHE STRING    "Indicates the path to Qt cmake package" )
+SET( ULIS_GLM_INCLUDE_PATH                 "unset"     CACHE STRING    "Indicates the path to glm include dir" )
 
 SET( IS_VISUALSTUDIO_SOLUTION_MSVC  OFF )
 SET( IS_MINGW_MAKEFILE_GCC          OFF )
