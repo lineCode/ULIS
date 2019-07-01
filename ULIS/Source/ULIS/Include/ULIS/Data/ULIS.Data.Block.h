@@ -13,6 +13,7 @@
 #include "ULIS/Data/ULIS.Data.Spec.h"
 #include "ULIS/Data/ULIS.Data.Pixel.h"
 #include "ULIS/Data/ULIS.Data.MD5.h"
+#include "ULIS/Data/ULIS.Data.ID.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
 #include "ULIS/Color/ULIS.Color.CColor.h"
 
@@ -123,6 +124,7 @@ public:
 
     virtual std::string     GetMD5Hash          ()                                          const   = 0;
     virtual uint32          GetCRC32Hash        ()                                          const   = 0;
+    virtual std::string     GetUUID             ()                                          const   = 0;
 
 protected:
     fpInvalidateFunction    mInvCb;
@@ -147,12 +149,15 @@ public:
     virtual ~TBlock() { delete d; } // Polymorphic
     TBlock()
         : d( nullptr )
-    {}
+    {
+        id = generate_uuid( 16 );
+    }
 
     TBlock( int iWidth, int iHeight )
         : d( nullptr )
     {
         d = new tData( iWidth, iHeight );
+        id = generate_uuid( 16 );
     }
 
 public:
@@ -197,6 +202,7 @@ public:
     inline virtual CColor                   GetPixelColor       ( int x, int y )    const   override    final   { return  d->GetPixelColor( x, y );         }
     inline virtual std::string              GetMD5Hash          ()                  const   override    final   { return  MD5( DataPtr(), BytesTotal() );   }
     inline virtual uint32                   GetCRC32Hash        ()                  const   override    final   { return  COAL_CRC32_DAT( DataPtr(), BytesTotal() ); }
+    inline virtual std::string              GetUUID             ()                  const   override    final   { return  id;                               }
 
     inline tPixelValueType                  PixelValue          ( int x, int y )    const                       { return  d->PixelValue( x, y );            }
 
@@ -209,6 +215,7 @@ public:
 private:
     // Private Data
     tData* d;
+    std::string id;
 };
 
 

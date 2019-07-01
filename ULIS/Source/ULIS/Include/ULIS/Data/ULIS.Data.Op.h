@@ -11,6 +11,8 @@
 #pragma once
 
 #include <iostream>
+#include <stdlib.h>
+#include <ctime>
 #include <assert.h>
 #include "ULIS/Data/ULIS.Data.Decl.h"
 
@@ -49,6 +51,12 @@ PrintSpecs()
         std::cout << "type_max          :   " << (double)spec._tm << std::endl;
         std::cout << "======================================" << std::endl << std::endl;
     }
+}
+
+void
+Init()
+{
+    srand(time(0));
 }
 
 } // namespace ULIS
