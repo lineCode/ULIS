@@ -11,6 +11,7 @@
 #pragma once
 
 #include <string>
+#include <cstring>
 #include "ULIS/Data/ULIS.Data.Types.h"
 
 namespace ULIS {

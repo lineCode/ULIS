@@ -138,8 +138,9 @@ class TBlock final : public IBlock
 public:
     // Typedef
     typedef TPixelValue< _SH > tPixelValueType;
-    using tPixelType = typename tPixelValueType::tPixelType;
-    using tNextPixelType = typename tPixelValueType::tNextPixelType;
+    using tPixelType        = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingPixelType;
+    using tNextPixelType    = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingNextPixelType;
+    using tPrevPixelType    = typename TPixelTypeSelector< tSpec::_nf._tp >::_tUnderlyingPrevPixelType;
 
 public:
     // Construction / Destruction
@@ -175,10 +176,10 @@ public:
     inline virtual int                      Depth               ()                  const   override    final   { return d->Depth();                        }
     inline virtual int                      Width               ()                  const   override    final   { return d->Width();                        }
     inline virtual int                      Height              ()                  const   override    final   { return d->Height();                       }
-    inline virtual double                   MaxD                ()                  const   override    final   { return MaxT< double >();                   }
-    inline virtual int64_t                  MaxI                ()                  const   override    final   { return MaxT< int64_t >();                  }
-    inline virtual double                   RangeD              ()                  const   override    final   { return RangeT< double >();                 }
-    inline virtual int64_t                  RangeI              ()                  const   override    final   { return RangeT< int64_t >();                }
+    inline virtual double                   MaxD                ()                  const   override    final   { return MaxT< double >();                  }
+    inline virtual int64_t                  MaxI                ()                  const   override    final   { return MaxT< int64_t >();                 }
+    inline virtual double                   RangeD              ()                  const   override    final   { return RangeT< double >();                }
+    inline virtual int64_t                  RangeI              ()                  const   override    final   { return RangeT< int64_t >();               }
     inline virtual int                      BytesPerPixel       ()                  const   override    final   { return d->BytesPerPixel();                }
     inline virtual int                      BytesPerScanLine    ()                  const   override    final   { return d->BytesPerScanLine();             }
     inline virtual int                      BytesTotal          ()                  const   override    final   { return d->BytesTotal();                   }

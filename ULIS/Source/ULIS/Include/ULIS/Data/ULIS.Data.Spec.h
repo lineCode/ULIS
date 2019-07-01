@@ -122,17 +122,27 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
                      ( ss, sh, BOOST_PP_STRINGIZE( cl ) );
 
 /////////////////////////////////////////////////////
+// Post decl _nf template struct member of TBlockSpec specializations, branching workaround for GCC / CLANG / MSVC
+#if defined(__clang__)
+#define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockSpec< ULIS_SPEC_SH( spec ) >::_nf;
+#elif defined(__GNUC__) || defined(__GNUG__)
+#define ULIS_POSTDECL_NF( spec )
+#elif defined(_MSC_VER)
+#define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockSpec< ULIS_SPEC_SH( spec ) >::_nf;
+#endif
+
+/////////////////////////////////////////////////////
 // TBlockSpec Specialization
 /* build a specialization of TBlockSpec from token and compute string and hash equivalents */
 #define ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, spec )                                       \
     coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                    \
     constexpr uint32_t  ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).hash();                 \
-    template<> struct ::ULIS::TBlockSpec< ULIS_SPEC_SH( spec ) > {                          \
+    template<> struct TBlockSpec< ULIS_SPEC_SH( spec ) > {                          \
         static constexpr const FSpec        _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )    \
                                                                   , ULIS_SPEC_SH( spec )    \
                                                                   , tp, cm, ea, cl, nm )    \
     };                                                                                      \
-    constexpr const FSpec TBlockSpec< ULIS_SPEC_SH( spec ) >::_nf;                          \
+    ULIS_POSTDECL_NF( spec )                                                                \
     typedef TBlock< ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                    \
     ULIS_APPEND_REG( ULIS_REG_BUILDER, ULIS_SPEC_SH( spec ) )
 
