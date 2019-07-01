@@ -125,7 +125,7 @@ public:
 
 /////////////////////////////////////////////////////
 // TPixelBase
-template< typename T, uint32_t _SH >
+template< uint32_t _SH >
 class TPixelBase : public TPixelInfo< _SH >
 {
     typedef TPixelInfo< _SH > tSuperClass;
@@ -149,15 +149,16 @@ public:
 
 protected:
     // Protected Data
-    T m[ tSpec::_nf._rc ];
+    tPixelType m[ tSpec::_nf._rc ];
 };
+
 
 /////////////////////////////////////////////////////
 // TPixelAcessor
-template< typename T, uint32_t _SH, e_cm _CM >
-class TPixelAcessor : public TPixelBase< T, _SH >
+template< uint32_t _SH, e_cm _CM >
+class TPixelAcessor : public TPixelBase< _SH >
 {
-    typedef TPixelBase< T, _SH > tSuperClass;
+    typedef TPixelBase< _SH > tSuperClass;
 
 public:
     // Typedef
@@ -168,10 +169,10 @@ public:
 };
 
 #define ULIS_SPEC_PIXEL_ACCESSOR_START( iCm )                       \
-    template< typename T, uint32_t _SH >                            \
-    class TPixelAcessor< T, _SH, BOOST_PP_CAT( e_cm::k, iCm ) >     \
-        : public TPixelBase< T, _SH > {                             \
-    typedef TPixelBase< T, _SH > tSuperClass;                       \
+    template< uint32_t _SH >                            \
+    class TPixelAcessor< _SH, BOOST_PP_CAT( e_cm::k, iCm ) >     \
+        : public TPixelBase< _SH > {                             \
+    typedef TPixelBase< _SH > tSuperClass;                       \
     public: using tPixelType = typename tSuperClass::tPixelType;
 #define ULIS_SPEC_PIXEL_ACCESSOR_END    };
 
@@ -246,13 +247,14 @@ ULIS_SPEC_PIXEL_ACCESSOR_END
 /////////////////////////////////////////////////////
 // TPixelValue
 template< uint32_t _SH >
-class TPixelValue final : public TPixelAcessor< typename TPixelInfo< _SH >::tPixelType, _SH, tSpec::_nf._cm >
+class TPixelValue final : public TPixelAcessor< _SH, tSpec::_nf._cm >
 {
-    typedef TPixelAcessor< typename TPixelInfo< _SH >::tPixelType, _SH, tSpec::_nf._cm > tSuperClass;
+    typedef TPixelAcessor< _SH, tSpec::_nf._cm > tSuperClass;
 
 public:
     // Typedef
     using tPixelType = typename tSuperClass::tPixelType;
+    using tNextPixelType = typename tSuperClass::tNextPixelType;
 
 public:
     // Construction / Destruction
@@ -260,6 +262,12 @@ public:
     {
         for( int i = 0; i < tSpec::_nf._rc; ++i )
             tSuperClass::m[i] = (tPixelType)0;
+    }
+
+    template< uint32_t _OH >
+    TPixelValue< _SH >& operator=( const TPixelValue< _OH >& iOther )
+    {
+        return *this;
     }
 };
 
@@ -287,7 +295,6 @@ public:
 // Undefines
 #undef tSpec
 #undef tLayout
-
 
 } // namespace ULIS
 

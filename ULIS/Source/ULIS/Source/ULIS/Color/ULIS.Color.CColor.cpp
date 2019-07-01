@@ -288,6 +288,23 @@ CColor::ToCMYK()  const
 }
 
 
+CColor
+CColor::ToModel( eCColorModel iModel )  const
+{
+    if( mMode == iModel )
+        return  *this;
+
+    switch( iModel )
+    {
+        case eCColorModel::kRGB:    return  ToRGB();
+        case eCColorModel::kHSL:    return  ToHSL();
+        case eCColorModel::kHSV:    return  ToHSV();
+        case eCColorModel::kCMYK:   return  ToCMYK();
+        default: return  CColor( eCColorModel::kInvalid );
+    }
+}
+
+
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------- Static Makers API
 

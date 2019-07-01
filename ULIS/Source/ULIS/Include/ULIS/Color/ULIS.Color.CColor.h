@@ -80,6 +80,7 @@ public:
     CColor  ToHSL()  const;
     CColor  ToHSV()  const;
     CColor  ToCMYK()  const;
+    CColor  ToModel( eCColorModel )  const;
 
 public:
     // Static Makers API

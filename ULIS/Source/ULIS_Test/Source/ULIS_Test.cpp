@@ -38,28 +38,8 @@ Process( ::ULIS::IBlock* iBlock )
 int main()
 {
     //::ULIS::PrintSpecs();
-
     ::ULIS::TPixelValue< ::ULIS::FBlockBGRA8::TypeId() > pixel;
-    pixel.SetAlpha( 'A' );
-    pixel[0] = 'R';
-    pixel[1] = 'G';
-    pixel[2] = 'B';
-    for( int i = 0; i < pixel.NumChannels(); ++i )
-    {
-        //std::cout << pixel.RedirectedIndex( i ) << std::endl;
-        //std::cout << (int)pixel[i] << std::endl;
-        std::cout << pixel.GetRaw(i) << std::endl;
-    }
-
-    std::cout << pixel.R() << std::endl;
-    std::cout << pixel.G() << std::endl;
-    std::cout << pixel.B() << std::endl;
-    std::cout << pixel.Alpha() << std::endl;
-
     ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 200, 200 );
-    ::ULIS::IBlock* block2 = new ::ULIS::FBlockBGRA8( 300, 300 );
-    std::cout << block->GetMD5Hash() << std::endl;
-    std::cout << block2->GetMD5Hash() << std::endl;
     Process( block );
     delete block;
 
