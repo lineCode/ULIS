@@ -10,54 +10,56 @@
 
 #pragma once
 
-#include "ULIS/Data/ULIS.Data.Spec.h"
-#include "ULIS/Data/ULIS.Data.Pixel.h"
-#include "ULIS/Data/ULIS.Data.MD5.h"
-#include "ULIS/Data/ULIS.Data.ID.h"
-#include "ULIS/Maths/ULIS.Maths.Geometry.h"
+
 #include "ULIS/Color/ULIS.Color.CColor.h"
+#include "ULIS/Data/ULIS.Data.ID.h"
+#include "ULIS/Data/ULIS.Data.MD5.h"
+#include "ULIS/Data/ULIS.Data.Pixel.h"
+#include "ULIS/Data/ULIS.Data.Spec.h"
+#include "ULIS/Maths/ULIS.Maths.Geometry.h"
+
 
 namespace ULIS {
-
 /////////////////////////////////////////////////////
 // Defines
 #define tSpec TBlockInfo< _SH >
 #define tData TBlockData< _SH >
 
+
 /////////////////////////////////////////////////////
 // TBlockData
-template< uint32_t _SH >
+template< uint32 _SH >
 class TBlockData final
 {
 public:
     // Construction / Destruction
     TBlockData()
-        : width     ( 0         )
-        , height    ( 0         )
-        , data      ( nullptr   )
+        : width     ( 0                                                 )
+        , height    ( 0                                                 )
+        , data      ( nullptr                                           )
     {}
 
     TBlockData( int iWidth, int iHeight )
-        : width     ( iWidth    )
-        , height    ( iHeight   )
-        , data      ( new uint8_t[ iWidth * iHeight * tSpec::_nf._pd ] )
+        : width     ( iWidth                                            )
+        , height    ( iHeight                                           )
+        , data      ( new uint8[ iWidth * iHeight * tSpec::_nf._pd ]    )
     {}
 
     ~TBlockData() { if( data ) delete[] data; }
 public:
     // Public API
-    inline         uint8_t*                     DataPtr             ()                                                                          { return  data;                                                         }
-    inline         const uint8_t*               DataPtr             ()                                              const                       { return  data;                                                         }
-    inline         uint8_t*                     PixelPtr            ( int x, int y )                                                            { return  data + ( x * BytesPerPixel() + y * BytesPerScanLine() );      }
-    inline         const uint8_t*               PixelPtr            ( int x, int y )                                const                       { return  data + ( x * BytesPerPixel() + y * BytesPerScanLine() );      }
-    inline         uint8_t*                     ScanlinePtr         ( int row )                                                                 { return  data + ( row * BytesPerScanLine() );                          }
-    inline         const uint8_t*               ScanlinePtr         ( int row )                                     const                       { return  data + ( row * BytesPerScanLine() );                          }
+    inline         uint8*                       DataPtr             ()                                                                          { return  data;                                                         }
+    inline         const uint8*                 DataPtr             ()                                              const                       { return  data;                                                         }
+    inline         uint8*                       PixelPtr            ( int x, int y )                                                            { return  data + ( x * BytesPerPixel() + y * BytesPerScanLine() );      }
+    inline         const uint8*                 PixelPtr            ( int x, int y )                                const                       { return  data + ( x * BytesPerPixel() + y * BytesPerScanLine() );      }
+    inline         uint8*                       ScanlinePtr         ( int row )                                                                 { return  data + ( row * BytesPerScanLine() );                          }
+    inline         const uint8*                 ScanlinePtr         ( int row )                                     const                       { return  data + ( row * BytesPerScanLine() );                          }
     inline         int                          Depth               ()                                              const                       { return  tSpec::_nf._pd;                                               }
     inline         int                          Width               ()                                              const                       { return  width;                                                        }
     inline         int                          Height              ()                                              const                       { return  height;                                                       }
     inline         int                          BytesPerPixel       ()                                              const                       { return  Depth();                                                      }
     inline         int                          BytesPerScanLine    ()                                              const                       { return  Depth() * Width();                                            }
-    inline         int                          BytesTotal          ()                                              const                       { return  Depth() * Width() * Height();                                 }
+    inline         int                          BytesTotal          ()                                              const                       { return  BytesPerScanLine() * Height();                                }
     inline         CColor                       PixelColor          ( int x, int y )                                                            { return  CColor();                                                     }
     inline         CColor                       PixelColor          ( int x, int y )                                const                       { return  CColor();                                                     }
     inline         TPixelProxy< _SH >           PixelProxy          ( int x, int y )                                                            { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );               }
@@ -70,9 +72,9 @@ public:
 
 private:
     // Private Data
-    uint32_t    width;
-    uint32_t    height;
-    uint8_t*    data;
+    uint32  width;
+    uint32  height;
+    uint8*  data;
 };
 
 
@@ -92,20 +94,20 @@ public:
 public:
     // Public API
            virtual const char*                  Name                ()                                              const                       = 0;
-           virtual const uint32_t               Id                  ()                                              const                       = 0;
-           virtual uint8_t*                     DataPtr             ()                                                                          = 0;
-           virtual const uint8_t*               DataPtr             ()                                              const                       = 0;
-           virtual uint8_t*                     PixelPtr            ( int x, int y )                                                            = 0;
-           virtual const uint8_t*               PixelPtr            ( int x, int y )                                const                       = 0;
-           virtual uint8_t*                     ScanlinePtr         ( int row )                                                                 = 0;
-           virtual const uint8_t*               ScanlinePtr         ( int row )                                     const                       = 0;
+           virtual const uint32                 Id                  ()                                              const                       = 0;
+           virtual uint8*                       DataPtr             ()                                                                          = 0;
+           virtual const uint8*                 DataPtr             ()                                              const                       = 0;
+           virtual uint8*                       PixelPtr            ( int x, int y )                                                            = 0;
+           virtual const uint8*                 PixelPtr            ( int x, int y )                                const                       = 0;
+           virtual uint8*                       ScanlinePtr         ( int row )                                                                 = 0;
+           virtual const uint8*                 ScanlinePtr         ( int row )                                     const                       = 0;
            virtual int                          Depth               ()                                              const                       = 0;
            virtual int                          Width               ()                                              const                       = 0;
            virtual int                          Height              ()                                              const                       = 0;
            virtual double                       MaxD                ()                                              const                       = 0;
-           virtual int64_t                      MaxI                ()                                              const                       = 0;
+           virtual int64                        MaxI                ()                                              const                       = 0;
            virtual double                       RangeD              ()                                              const                       = 0;
-           virtual int64_t                      RangeI              ()                                              const                       = 0;
+           virtual int64                        RangeI              ()                                              const                       = 0;
            virtual int                          BytesPerPixel       ()                                              const                       = 0;
            virtual int                          BytesPerScanLine    ()                                              const                       = 0;
            virtual int                          BytesTotal          ()                                              const                       = 0;
@@ -138,7 +140,7 @@ protected:
 
 /////////////////////////////////////////////////////
 // TBlock
-template< uint32_t _SH >
+template< uint32 _SH >
 class TBlock final : public IBlock
 {
 public:
@@ -154,17 +156,14 @@ public:
     virtual ~TBlock() { delete d; } // Polymorphic
 
     TBlock()
-        : d( nullptr )
-    {
-        id = generate_uuid( 16 );
-    }
+        : d     ( nullptr                       )
+        , id    ( generate_uuid( 16 )           )
+    {}
 
     TBlock( int iWidth, int iHeight )
-        : d( nullptr )
-    {
-        d = new tData( iWidth, iHeight );
-        id = generate_uuid( 16 );
-    }
+        : d     ( new tData( iWidth, iHeight )  )
+        , id    ( generate_uuid( 16 )           )
+    {}
 
 public:
     // Template API
@@ -177,20 +176,20 @@ public:
 public:
     // Public API
     inline virtual const char*                  Name                ()                                              const   override    final   { return  tSpec::_nf._ss;                                               }
-    inline virtual const uint32_t               Id                  ()                                              const   override    final   { return  tSpec::_nf._sh;                                               }
-    inline virtual uint8_t*                     DataPtr             ()                                                      override    final   { return  d->DataPtr();                                                 }
-    inline virtual const uint8_t*               DataPtr             ()                                              const   override    final   { return  d->DataPtr();                                                 }
-    inline virtual uint8_t*                     PixelPtr            ( int x, int y )                                        override    final   { return  d->PixelPtr( x, y );                                          }
-    inline virtual const uint8_t*               PixelPtr            ( int x, int y )                                const   override    final   { return  d->PixelPtr( x, y );                                          }
-    inline virtual uint8_t*                     ScanlinePtr         ( int row )                                             override    final   { return  d->ScanlinePtr( row );                                        }
-    inline virtual const uint8_t*               ScanlinePtr         ( int row )                                     const   override    final   { return  d->ScanlinePtr( row );                                        }
+    inline virtual const uint32                 Id                  ()                                              const   override    final   { return  tSpec::_nf._sh;                                               }
+    inline virtual uint8*                       DataPtr             ()                                                      override    final   { return  d->DataPtr();                                                 }
+    inline virtual const uint8*                 DataPtr             ()                                              const   override    final   { return  d->DataPtr();                                                 }
+    inline virtual uint8*                       PixelPtr            ( int x, int y )                                        override    final   { return  d->PixelPtr( x, y );                                          }
+    inline virtual const uint8*                 PixelPtr            ( int x, int y )                                const   override    final   { return  d->PixelPtr( x, y );                                          }
+    inline virtual uint8*                       ScanlinePtr         ( int row )                                             override    final   { return  d->ScanlinePtr( row );                                        }
+    inline virtual const uint8*                 ScanlinePtr         ( int row )                                     const   override    final   { return  d->ScanlinePtr( row );                                        }
     inline virtual int                          Depth               ()                                              const   override    final   { return  d->Depth();                                                   }
     inline virtual int                          Width               ()                                              const   override    final   { return  d->Width();                                                   }
     inline virtual int                          Height              ()                                              const   override    final   { return  d->Height();                                                  }
     inline virtual double                       MaxD                ()                                              const   override    final   { return  MaxT< double >();                                             }
-    inline virtual int64_t                      MaxI                ()                                              const   override    final   { return  MaxT< int64_t >();                                            }
+    inline virtual int64                        MaxI                ()                                              const   override    final   { return  MaxT< int64 >();                                              }
     inline virtual double                       RangeD              ()                                              const   override    final   { return  RangeT< double >();                                           }
-    inline virtual int64_t                      RangeI              ()                                              const   override    final   { return  RangeT< int64_t >();                                          }
+    inline virtual int64                        RangeI              ()                                              const   override    final   { return  RangeT< int64 >();                                            }
     inline virtual int                          BytesPerPixel       ()                                              const   override    final   { return  d->BytesPerPixel();                                           }
     inline virtual int                          BytesPerScanLine    ()                                              const   override    final   { return  d->BytesPerScanLine();                                        }
     inline virtual int                          BytesTotal          ()                                              const   override    final   { return  d->BytesTotal();                                              }
@@ -221,7 +220,7 @@ public:
     // Constexpr API
     inline static  constexpr const FSpec        TypeSpec            ()                                                                          { return  tSpec::_nf;                                                   }
     inline static  constexpr const char*        TypeStr             ()                                                                          { return  tSpec::_nf._ss;                                               }
-    inline static  constexpr const uint32_t     TypeId              ()                                                                          { return  tSpec::_nf._sh;                                               }
+    inline static  constexpr const uint32       TypeId              ()                                                                          { return  tSpec::_nf._sh;                                               }
 
 private:
     // Private Data
