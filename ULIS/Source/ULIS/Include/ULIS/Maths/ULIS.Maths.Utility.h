@@ -41,6 +41,5 @@ template< typename T > T Clamp( T iValue, T iMin, T iMax )
 }
 
 
-
 } // namespace ULIS
 

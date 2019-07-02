@@ -37,14 +37,14 @@ Process( ::ULIS::IBlock* iBlock )
 
 int main()
 {
-    ::ULIS::Init();
+    ::ULIS::InitID();
 
     //::ULIS::PrintSpecs();
     ::ULIS::TPixelValue< ::ULIS::FBlockBGRA8::TypeId() > pixel;
     ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 200, 200 );
-    std::cout << block->GetUUID() << std::endl;
+    std::cout << block->UUID() << std::endl;
     ::ULIS::IBlock* block2 = new ::ULIS::FBlockBGRA8( 200, 200 );
-    std::cout << block2->GetUUID() << std::endl;
+    std::cout << block2->UUID() << std::endl;
 
     ::ULIS::FBlockBGRA8* cast_ptr = (::ULIS::FBlockBGRA8*)block;
     ::ULIS::FBlockBGRA8::tPixelProxy proxy = cast_ptr->PixelProxy( 0, 0 );

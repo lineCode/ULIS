@@ -18,12 +18,24 @@
 
 namespace ULIS {
 
-auto
-BlockSpec( uint32_t i )
+::ULIS::IBlock*
+MakeBlock( int width, int height, uint32_t ID )
+{
+    switch( ID )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  new ::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >( width, height );
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+        default: return  nullptr;
+    }
+}
+
+::ULIS::FSpec
+BlockInfo( uint32_t i )
 {
     switch( i )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case n: return  ::ULIS::TBlockSpec< ::ULIS::ulis_types_reg[ n ] >:: data;
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case n: return  ::ULIS::TBlockInfo< ::ULIS::ulis_types_reg[ n ] >:: data;
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, _nf )
         #undef ULIS_REG_SWITCH_OP
         default: return  ::ULIS::FSpec{};
@@ -33,9 +45,9 @@ BlockSpec( uint32_t i )
 void
 PrintSpecs()
 {
-        for( int i = 0; i < ULIS_REG_SIZE; ++i )
+    for( int i = 0; i < ULIS_REG_SIZE; ++i )
     {
-        auto spec = BlockSpec( i );
+        auto spec = BlockInfo( i );
         std::cout << "======================================" << std::endl;
         std::cout << "spec-str          :   " << spec._ss << std::endl;
         std::cout << "spec-hash         :   " << (uint32_t)spec._sh << std::endl;
@@ -54,7 +66,7 @@ PrintSpecs()
 }
 
 void
-Init()
+InitID()
 {
     srand(time(0));
 }

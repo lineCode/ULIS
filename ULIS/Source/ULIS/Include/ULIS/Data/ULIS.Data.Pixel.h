@@ -21,7 +21,7 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // Defines
-#define tSpec       TBlockSpec< _SH >
+#define tSpec       TBlockInfo< _SH >
 #define tLayout     TPixelLayout< _SH >
 
 /////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ public:
     inline bool        IsNormalized    ()  const   { return NormalMode() == e_nm::knormalized;  }
     inline bool        IsDecimal       ()  const   { return tSpec::_nf._dm;                     }
     inline int         NumChannels     ()  const   { return tSpec::_nf._rc;                     }
-    inline int         ColorChannels   ()  const   { return tSpec::_nf._nc;                     }
+    inline int         NumColorChannels()  const   { return tSpec::_nf._nc;                     }
     inline int         RedirectedIndex ( int i )  const   { return tLayout::red.arr[i];    }
 };
 

@@ -59,9 +59,9 @@ struct FSpec
 };
 
 /////////////////////////////////////////////////////
-// TBlockSpec
+// TBlockInfo
 /* Template specialized Block Spec structure */
-template< uint32_t > struct TBlockSpec {
+template< uint32_t > struct TBlockInfo {
     static constexpr const FSpec _nf = { "Invalid"           // spec-str
                                        , 0                   // spec-hash
                                        , e_tp::kuint8        // type
@@ -79,7 +79,7 @@ template< uint32_t > struct TBlockSpec {
 };
 
 /* Explicit decl of nf member for linkage safety on clang */
-template< uint32_t N > constexpr const FSpec TBlockSpec< N >::_nf;
+template< uint32_t N > constexpr const FSpec TBlockInfo< N >::_nf;
 
 /////////////////////////////////////////////////////
 // Info
@@ -122,22 +122,22 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
                      ( ss, sh, BOOST_PP_STRINGIZE( cl ) );
 
 /////////////////////////////////////////////////////
-// Post decl _nf template struct member of TBlockSpec specializations, branching workaround for GCC / CLANG / MSVC
+// Post decl _nf template struct member of TBlockInfo specializations, branching workaround for GCC / CLANG / MSVC
 #if defined(__clang__)
-#define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockSpec< ULIS_SPEC_SH( spec ) >::_nf;
+#define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockInfo< ULIS_SPEC_SH( spec ) >::_nf;
 #elif defined(__GNUC__) || defined(__GNUG__)
 #define ULIS_POSTDECL_NF( spec )
 #elif defined(_MSC_VER)
-#define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockSpec< ULIS_SPEC_SH( spec ) >::_nf;
+#define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockInfo< ULIS_SPEC_SH( spec ) >::_nf;
 #endif
 
 /////////////////////////////////////////////////////
-// TBlockSpec Specialization
-/* build a specialization of TBlockSpec from token and compute string and hash equivalents */
+// TBlockInfo Specialization
+/* build a specialization of TBlockInfo from token and compute string and hash equivalents */
 #define ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, spec )                                       \
     coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                    \
     constexpr uint32_t  ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).hash();                 \
-    template<> struct TBlockSpec< ULIS_SPEC_SH( spec ) > {                          \
+    template<> struct TBlockInfo< ULIS_SPEC_SH( spec ) > {                                  \
         static constexpr const FSpec        _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )    \
                                                                   , ULIS_SPEC_SH( spec )    \
                                                                   , tp, cm, ea, cl, nm )    \
@@ -150,6 +150,6 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 #define ULIS_DECLSPEC( tp, cm, ea, cl, nm ) ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, ULIS_BLOCK_SPEC(   tp, cm, ea, cl, nm ) )
 
 
-#define ULIS_GETSPEC( i ) ::ULIS::TBlockSpec< i >::_nf;
+#define ULIS_GETSPEC( i ) ::ULIS::TBlockInfo< i >::_nf;
 } // namespace ULIS
 

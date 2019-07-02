@@ -18,7 +18,7 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // Defines
-#define tSpec       TBlockSpec< _SH >
+#define tSpec       TBlockInfo< _SH >
 #define tLayout     TPixelLayout< _SH >
 
 /////////////////////////////////////////////////////

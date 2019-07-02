@@ -22,7 +22,7 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // Defines
-#define tSpec TBlockSpec< _SH >
+#define tSpec TBlockInfo< _SH >
 #define tData TBlockData< _SH >
 
 /////////////////////////////////////////////////////
@@ -59,8 +59,8 @@ public:
     inline int                  BytesPerPixel       ()                  const                       { return Depth();                       }
     inline int                  BytesPerScanLine    ()                  const                       { return Depth() * Width();             }
     inline int                  BytesTotal          ()                  const                       { return Depth() * Width() * Height();  }
-    inline CColor               GetPixelColor       ( int x, int y )                                { return CColor();                      }
-    inline CColor               GetPixelColor       ( int x, int y )    const                       { return CColor();                      }
+    inline CColor               PixelColor          ( int x, int y )                                { return CColor();                      }
+    inline CColor               PixelColor          ( int x, int y )    const                       { return CColor();                      }
     inline TPixelProxy< _SH >   PixelProxy          ( int x, int y )                                { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );   }
     inline TPixelProxy< _SH >   PixelProxy          ( int x, int y )    const                       { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );   }
     inline TPixelValue< _SH >   PixelValue          ( int x, int y )                                { return  TPixelValue< _SH >( PixelProxy( x, y ) ); }
@@ -80,7 +80,7 @@ class IBlock
 {
 public:
     // Typedef
-    typedef void (*fpInvalidateFunction)( IBlock* /*data*/, void* /*info*/, int /*x*/, int /*y*/, int /*width*/, int /*height*/ );
+    typedef void (*fpInvalidateFunction)( IBlock* /*data*/, void* /*info*/, const FInvalidRect& /*rect*/ );
 
 public:
     // Construction / Destruction
@@ -116,18 +116,20 @@ public:
     virtual bool            IsNormalized        ()                                          const   = 0;
     virtual bool            IsDecimal           ()                                          const   = 0;
     virtual int             NumChannels         ()                                          const   = 0;
-    virtual int             ColorChannels       ()                                          const   = 0;
+    virtual int             NumColorChannels    ()                                          const   = 0;
 
-    virtual CColor          GetPixelColor       ( int x, int y )                                    = 0;
-    virtual CColor          GetPixelColor       ( int x, int y )                            const   = 0;
-
-    void  Invalidate        ()                                          { if( mInvCb ) mInvCb( this, mInvInfo, 0, 0, Width(), Height() ); }
-    void  Invalidate        ( const FInvalidRect& iRect )               { if( mInvCb ) mInvCb( this, mInvInfo, iRect.x, iRect.y, iRect.width, iRect.height ); }
+    void  Invalidate        ()                                          { if( mInvCb ) mInvCb( this, mInvInfo, { 0, 0, Width(), Height() } ); }
+    void  Invalidate        ( const FInvalidRect& iRect )               { if( mInvCb ) mInvCb( this, mInvInfo, iRect ); }
     void  SetInvalidateCB   ( fpInvalidateFunction iCb, void* iInfo )   { mInvCb = iCb; mInvInfo = iInfo; }
 
-    virtual std::string     GetMD5Hash          ()                                          const   = 0;
-    virtual uint32          GetCRC32Hash        ()                                          const   = 0;
-    virtual std::string     GetUUID             ()                                          const   = 0;
+    virtual std::string     MD5Hash             ()                                          const   = 0;
+    virtual uint32          CRC32Hash           ()                                          const   = 0;
+    virtual std::string     UUID                ()                                          const   = 0;
+
+    virtual CColor          PixelColor          ( int x, int y )                                    = 0;
+    virtual CColor          PixelColor          ( int x, int y )                            const   = 0;
+
+    virtual void            SetPixelColor       ( int x, int y, const CColor& iColor )              = 0;
 
 protected:
     fpInvalidateFunction    mInvCb;
@@ -201,15 +203,20 @@ public:
     inline virtual bool                     IsNormalized        ()                  const   override    final   { return NormalMode() == e_nm::knormalized; }
     inline virtual bool                     IsDecimal           ()                  const   override    final   { return tSpec::_nf._dm;                    }
     inline virtual int                      NumChannels         ()                  const   override    final   { return tSpec::_nf._rc;                    }
-    inline virtual int                      ColorChannels       ()                  const   override    final   { return tSpec::_nf._nc;                    }
-    inline virtual CColor                   GetPixelColor       ( int x, int y )            override    final   { return  d->GetPixelColor( x, y );         }
-    inline virtual CColor                   GetPixelColor       ( int x, int y )    const   override    final   { return  d->GetPixelColor( x, y );         }
-    inline virtual std::string              GetMD5Hash          ()                  const   override    final   { return  MD5( DataPtr(), BytesTotal() );   }
-    inline virtual uint32                   GetCRC32Hash        ()                  const   override    final   { return  COAL_CRC32_DAT( DataPtr(), BytesTotal() ); }
-    inline virtual std::string              GetUUID             ()                  const   override    final   { return  id;                               }
-
+    inline virtual int                      NumColorChannels    ()                  const   override    final   { return tSpec::_nf._nc;                    }
+    inline virtual std::string              MD5Hash             ()                  const   override    final   { return  MD5( DataPtr(), BytesTotal() );   }
+    inline virtual uint32                   CRC32Hash           ()                  const   override    final   { return  COAL_CRC32_DAT( DataPtr(), BytesTotal() ); }
+    inline virtual std::string              UUID                ()                  const   override    final   { return  id;                               }
+    inline virtual CColor                   PixelColor          ( int x, int y )            override    final   { return  d->PixelColor( x, y );            }
+    inline virtual CColor                   PixelColor          ( int x, int y )    const   override    final   { return  d->PixelColor( x, y );            }
+    inline tPixelValue                      PixelValue          ( int x, int y )                                { return  d->PixelValue( x, y );            }
     inline tPixelValue                      PixelValue          ( int x, int y )    const                       { return  d->PixelValue( x, y );            }
+    inline tPixelProxy                      PixelProxy          ( int x, int y )                                { return  d->PixelProxy( x, y );            }
     inline tPixelProxy                      PixelProxy          ( int x, int y )    const                       { return  d->PixelProxy( x, y );            }
+
+    inline virtual void     SetPixelColor   ( int x, int y, const CColor& iValue )          override    final   { d->SetPixelColor( x, y, iValue ); }
+    inline void             SetPixelValue   ( int x, int y, const tPixelValue& iValue )                         { d->SetPixelValue( x, y, iValue ); }
+    inline void             SetPixelProxy   ( int x, int y, const tPixelProxy& iValue )                         { d->SetPixelProxy( x, y, iValue ); }
 
 public:
     // Constexpr API

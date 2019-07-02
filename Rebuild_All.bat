@@ -2,7 +2,6 @@
 setlocal
 pushd %~dp0
 
-call Clean_All.bat
 call Generate_All.bat
 cd ULIS
 cd Generated_MinGW_Makefile_GCC
