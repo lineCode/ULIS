@@ -24,9 +24,8 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 500, 500 );
     ::ULIS::FBlockBGRA8* ptr = (::ULIS::FBlockBGRA8*)block;
 
-    ::ULIS::IBlock* blockop = ::ULIS::MakeBlock( 500, 500, ::ULIS::FBlockBGRA8::TypeId() );
-
-    assert( blockop->Name() == block->Name() );
+    //::ULIS::IBlock* blockop = ::ULIS::MakeBlock( 500, 500, ::ULIS::FBlockBGRA8::TypeId() );
+    //assert( blockop->Name() == block->Name() );
 
     for( int y = 0; y < ptr->Height(); ++y )
     {
@@ -50,6 +49,12 @@ int main( int argc, char *argv[] )
     w->show();
 
     int exit_code = app.exec();
+
+    delete label;
+    delete image;
+    delete w;
+    delete block;
+
     return  exit_code;
 }
 
