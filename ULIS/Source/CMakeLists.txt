@@ -5,8 +5,8 @@ SET( ULIS_USE_CONFIG                       OFF         CACHE BOOL      "Scpecifi
 SET( ULIS_BOOST_INCLUDE_PATH               "unset"     CACHE STRING    "Indicates the path to boost include dir" )
 SET( ULIS_COAL_INCLUDE_PATH                "unset"     CACHE STRING    "Indicates the path to coal include dir" )
 SET( ULIS_BUILD_SHARED                     OFF         CACHE BOOL      "Sets if we build the library shared or static" )
-SET( ULIS_BUILD_TESTS                      ON          CACHE BOOL      "Sets if we build the test programs" )
-SET( ULIS_BUILD_GUIS                       ON          CACHE BOOL      "Sets if we build the gui programs" )
+SET( ULIS_BUILD_TESTS                      OFF         CACHE BOOL      "Sets if we build the test programs" )
+SET( ULIS_BUILD_GUIS                       OFF         CACHE BOOL      "Sets if we build the gui programs" )
 SET( ULIS_QT_CMAKE_PATH                	   "unset"     CACHE STRING    "Indicates the path to Qt cmake package" )
 SET( ULIS_GLM_INCLUDE_PATH                 "unset"     CACHE STRING    "Indicates the path to glm include dir" )
 
@@ -22,7 +22,7 @@ if( ${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles" )
 endif()
 
 # Generate only Debug and Release configurations for all projects
-set( CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
+set( CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE )
 # Generate only x64 configurations for all projects
 #set( CMAKE_GENERATOR_PLATFORM x64 )
 # Get rid of cmake's ZERO_CHECK for solution
@@ -46,22 +46,42 @@ if( ${ULIS_USE_CONFIG} )
     # Read Default Preferences
     include(${CMAKE_CURRENT_SOURCE_DIR}/../Tools/DefaultConfig.cmake)
     # Read Preferences Overrides if set
-    # For VisualStudio
-    if( ${IS_VISUALSTUDIO_SOLUTION_MSVC} )
-        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_MSVC_Config.cmake)
-            include(${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_MSVC_Config.cmake)
-        endif()
-    endif()
-    # For MinGW
-    if( ${IS_MINGW_MAKEFILE_GCC} )
-        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../MinGW_Makefile_GCC_Config.cmake)
-            include(${CMAKE_CURRENT_SOURCE_DIR}/../../MinGW_Makefile_GCC_Config.cmake)
-        endif()
-    endif()
+	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+		# using Clang
+		if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_CLANG_LLVM_Config.cmake)
+			include(${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_CLANG_LLVM_Config.cmake)
+		endif()
+	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+		# using GCC
+		if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../MinGW_Makefile_GCC_Config.cmake)
+			include(${CMAKE_CURRENT_SOURCE_DIR}/../../MinGW_Makefile_GCC_Config.cmake)
+		endif()
+	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+		# using Intel C++
+	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+		# using Visual Studio C++
+		if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_MSVC_Config.cmake)
+			include(${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_MSVC_Config.cmake)
+		endif()
+	endif()
+	
+	
+	
 endif()
 
-set (CMAKE_PREFIX_PATH ${ULIS_QT_CMAKE_PATH})
-set (CMAKE_AUTOMOC ON)
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	# using Clang
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	# using GCC
+	set (CMAKE_PREFIX_PATH ${ULIS_QT_CMAKE_PATH})
+	set (CMAKE_AUTOMOC ON)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+	# using Intel C++
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+	# using Visual Studio C++
+	set (CMAKE_PREFIX_PATH ${ULIS_QT_CMAKE_PATH})
+	set (CMAKE_AUTOMOC ON)
+endif()
 
 # Add projects
 include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS/CMakeLists.txt)
