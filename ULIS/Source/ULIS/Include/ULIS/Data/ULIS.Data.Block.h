@@ -42,10 +42,16 @@ public:
     TBlockData( int iWidth, int iHeight )
         : width     ( iWidth                                            )
         , height    ( iHeight                                           )
-        , data      ( new uint8[ iWidth * iHeight * tSpec::_nf._pd ]    )
-    {}
+        , data      ( nullptr                                           )
+    {
+        data = new uint8[ iWidth * iHeight * tSpec::_nf._pd ];
+    }
 
-    ~TBlockData() { if( data ) delete[] data; }
+    ~TBlockData()
+    {
+        if( data ) delete[] data;
+    }
+
 public:
     // Public API
     inline         uint8*                       DataPtr             ()                                                                          { return  data;                                                         }
@@ -67,8 +73,8 @@ public:
     inline         TPixelValue< _SH >           PixelValue          ( int x, int y )                                                            { return  TPixelValue< _SH >( PixelProxy( x, y ) );                     }
     inline         TPixelValue< _SH >           PixelValue          ( int x, int y )                                const                       { return  TPixelValue< _SH >( PixelProxy( x, y ) );                     }
     inline         void                         SetPixelColor       ( int x, int y, const CColor& iValue )                                      {                                                                       }
-    inline         void                         SetPixelValue       ( int x, int y, const TPixelValue< _SH >& iValue )                          {                                                                       }
-    inline         void                         SetPixelProxy       ( int x, int y, const TPixelProxy< _SH >& iValue )                          {                                                                       }
+    inline         void                         SetPixelValue       ( int x, int y, const TPixelValue< _SH >& iValue )                          { PixelProxy( x, y ) = iValue;                                          }
+    inline         void                         SetPixelProxy       ( int x, int y, const TPixelProxy< _SH >& iValue )                          { PixelProxy( x, y ) = iValue;                                          }
 
 private:
     // Private Data

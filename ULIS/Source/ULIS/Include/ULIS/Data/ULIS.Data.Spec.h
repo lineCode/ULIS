@@ -56,6 +56,7 @@ struct FSpec
     const  uint16_t     _pd; // pixel_depth
     const  double       _tm; // type_max
     const  double       _rm; // range_max
+    const  uint8_t      _ma; // memory_alignment
 };
 
 /////////////////////////////////////////////////////
@@ -75,6 +76,7 @@ template< uint32_t > struct TBlockInfo {
                                        , 0                   // pixel_depth
                                        , 0                   // type_max
                                        , 0                   // range_max
+                                       , 16                  // memory_alignment
                                        };
 };
 
@@ -109,8 +111,9 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
     uint16_t            pd = type_size< iTp >() * rc;
     double              tm = type_max< iTp >();
     double              rm = dm ? type_max< iTp >() : type_max< iTp >() + 1;
+    uint8_t             ma = 16;
     static_assert( iNm == e_nm::knormalized ? dm : true, "Integer types cannot be normalized" );
-    return  { iSs, iSh, iTp, iCm, iEa, iCl, iNm, dm, rc, nc, pd, tm, rm };
+    return  { iSs, iSh, iTp, iCm, iEa, iCl, iNm, dm, rc, nc, pd, tm, rm, ma };
 }
 
 /* small wrapper for readability in other macros */

@@ -246,13 +246,14 @@ public:
             tSuperClass::SetComponent( i, iProxy[i] );
     }
 
-    /*
-    template< uint32_t _OH >
-    TPixelValue< _SH >& operator=( const TPixelValue< _OH >& iOther )
+public:
+    // Public API
+    TPixelValue< _SH >& operator=( const TPixelProxy< _SH >& iOther )
     {
+        for( int i = 0; i < tSpec::_nf._rc; ++i )
+            tSuperClass::SetComponent( i, iOther[i] );
         return *this;
     }
-    */
 };
 
 /////////////////////////////////////////////////////
@@ -278,6 +279,15 @@ public:
     TPixelProxy( uint8* iPtr )
     {
         tSuperClass::d.raw = (tPixelType*)iPtr;
+    }
+
+public:
+    // Public API
+    TPixelProxy< _SH >& operator=( const TPixelValue< _SH >& iOther )
+    {
+        for( int i = 0; i < tSpec::_nf._rc; ++i )
+            tSuperClass::SetComponent( i, iOther[i] );
+        return *this;
     }
 };
 
