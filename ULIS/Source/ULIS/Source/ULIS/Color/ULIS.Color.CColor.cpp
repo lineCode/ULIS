@@ -68,6 +68,27 @@ CColor::operator!=( const  CColor& Other )  const
 //-------------------------------------------------------------- Instance Conversion API
 
 
+
+CColor
+CColor::ToGrey()  const
+{
+    if( mMode == eCColorModel::kG )
+        return  *this;
+
+    if( mMode != eCColorModel::kRGB )
+        return  ToRGB().ToGrey();
+
+    CColor out;
+    int r = Red();
+    int g = Green();
+    int b = Blue();
+    int grey = ( r + g + b ) / 3;
+
+    out.SetGrey( grey, Alpha() );
+    return  out;
+}
+
+
 CColor
 CColor::ToRGB()  const
 {
@@ -77,6 +98,13 @@ CColor::ToRGB()  const
     CColor out;
     switch( mMode )
     {
+        case eCColorModel::kG:
+        {
+            int grey = Grey();
+            out.SetRGB( grey, grey, grey, Alpha() );
+            break;
+        }
+
         case eCColorModel::kHSL:
         {
             float h = HSLHueF() * 360;
@@ -321,6 +349,16 @@ CColor::FromRGBHexValue( uint32 rgbHexValue, int alpha )
 
 //static
 CColor
+CColor::FromGrey( int g, int alpha )
+{
+    CColor out;
+    out.SetGrey( g, alpha );
+    return out;
+}
+
+
+//static
+CColor
 CColor::FromRGB( int r, int g, int b, int alpha )
 {
     CColor out;
@@ -356,6 +394,16 @@ CColor::FromCMYK( int c, int m, int y, int k, int alpha )
     CColor out;
     out.SetCMYK( c, m, y, k );
     return out;
+}
+
+
+//static
+CColor
+CColor::FromGreyF( float g, float alpha )
+{
+    CColor out;
+    out.SetGreyF( g, alpha );
+    return  out;
 }
 
 
@@ -447,6 +495,24 @@ CColor::RGBHexValue()  const
     int b = rgb.Blue();
     uint32 out = ( uint32( r ) << 16 ) + ( uint32( g ) << 8 ) + ( uint32( b ) << 0 );
     return  out;
+}
+
+ // Grey
+int
+CColor::Grey()  const
+{
+    if( mMode != eCColorModel::kG )
+        return  ToGrey().Grey();
+    return  mRepr.grey.g >> 8;
+}
+
+
+float
+CColor::GreyF()  const
+{
+    if( mMode != eCColorModel::kG )
+        return  ToGrey().GreyF();
+    return  mRepr.grey.g / float( UINT16_MAX );
 }
 
 
@@ -749,6 +815,26 @@ CColor::SetAlphaF( float value )
 
 
 void
+CColor::SetGrey( int g )
+{
+    if( mMode != eCColorModel::kG )
+        SetGrey( g, Alpha() );
+    else
+        mRepr.grey.g = 0x101 * Clamp( g, 0, 0xff );
+}
+
+
+void
+CColor::SetGreyF( float g )
+{
+    if( mMode != eCColorModel::kRGB )
+        SetGreyF( g, AlphaF() );
+    else
+        mRepr.grey.g = floor( Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
+}
+
+
+void
 CColor::SetRed( int value )
 {
     if( mMode != eCColorModel::kRGB )
@@ -821,6 +907,19 @@ CColor::SetRGBHexValue( uint32 rgbHexValue, int alpha )
 }
 
 
+
+void
+CColor::SetGrey( int g, int alpha )
+{
+    mMode = eCColorModel::kG;
+    mRepr.grey.alpha = 0x101 * Clamp( alpha, 0, 0xff );
+    mRepr.grey.g     = 0x101 * Clamp( g, 0, 0xff );
+    mRepr.grey._0    = 0;
+    mRepr.grey._1    = 0;
+    mRepr.grey._     = 0;
+}
+
+
 void
 CColor::SetRGB( int r, int g, int b, int alpha )
 {
@@ -868,6 +967,18 @@ CColor::SetCMYK( int c, int m, int y, int k, int alpha )
     mRepr.cmyk.m     = 0x101 * Clamp( m, 0, 0xff );
     mRepr.cmyk.y     = 0x101 * Clamp( y, 0, 0xff );
     mRepr.cmyk.k     = 0x101 * Clamp( k, 0, 0xff );
+}
+
+
+void
+CColor::SetGreyF( float g, float alpha )
+{
+    mMode = eCColorModel::kRGB;
+    mRepr.grey.alpha = floor( Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.grey.g     = floor( Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.grey._0    = 0;
+    mRepr.grey._1    = 0;
+    mRepr.grey._     = 0;
 }
 
 

@@ -77,6 +77,7 @@ public:
 
 public:
     // Instance Conversion API
+    CColor  ToGrey()  const;
     CColor  ToRGB()  const;
     CColor  ToHSL()  const;
     CColor  ToHSV()  const;
@@ -86,11 +87,13 @@ public:
 public:
     // Static Makers API
     static  CColor  FromRGBHexValue( uint32 rgbHexValue, int alpha = 255 );
+    static  CColor  FromGrey( int g, int alpha = 255 );
     static  CColor  FromRGB( int r, int g, int b, int alpha = 255 );
     static  CColor  FromHSL( int h, int s, int l, int alpha = 255 );
     static  CColor  FromHSV( int h, int s, int v, int alpha = 255 );
     static  CColor  FromCMYK( int c, int m, int y, int k, int alpha = 255 );
 
+    static  CColor  FromGreyF( float f, float alpha = 1.f );
     static  CColor  FromRGBF( float r, float g, float b, float alpha = 1.f );
     static  CColor  FromHSLF( float h, float s, float l, float alpha = 1.f );
     static  CColor  FromHSVF( float h, float s, float v, float alpha = 1.f );
@@ -106,6 +109,10 @@ public:
 
     // Hex
     uint32  RGBHexValue()       const;
+
+    // Grey
+    int     Grey()              const;
+    float   GreyF()           const;
 
     // RGB
     int     Red()               const;
@@ -154,6 +161,9 @@ public:
     void  SetAlpha( int );
     void  SetAlphaF( float );
 
+    void  SetGrey( int );
+    void  SetGreyF( float );
+
     void  SetRed( int );
     void  SetGreen( int );
     void  SetBlue( int );
@@ -161,6 +171,8 @@ public:
     void  SetGreenF( float );
     void  SetBlueF( float );
 
+    void  SetGrey( int g, int alpha = 255 );
+    void  SetGreyF( float g, float alpha = 1.f );
     void  SetRGBHexValue( uint32 rgbHexValue, int alpha = 255 );
     void  SetRGB( int r, int g, int b, int alpha = 255 );
     void  SetHSL( int h, int s, int l, int alpha = 255 );
@@ -175,6 +187,7 @@ private:
     // Private Data Members
     eCColorModel  mMode;
     union { // Union with pad '_', internal repr
+        struct { uint16 alpha, g, _0, _1, _; } grey;
         struct { uint16 alpha, r, g, b, _; } rgb;
         struct { uint16 alpha, h, s, l, _; } hsl;
         struct { uint16 alpha, h, s, v, _; } hsv;
