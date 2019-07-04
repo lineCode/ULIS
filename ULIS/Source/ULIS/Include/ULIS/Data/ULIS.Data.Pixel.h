@@ -98,7 +98,7 @@ public:
     inline const   tPixelType&                  operator[]          ( uint8 i )                                     const                       { return d[ tLayout::red.arr[i] ];                                      }
     inline         tPixelType                   GetAlpha            ()                                              const                       { return tSpec::_nf._ea == e_ea::khasAlpha ? d[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSuperClass::Max();  }
     inline         void                         SetAlpha            ( tPixelType iValue )                                                       { if(    tSpec::_nf._ea == e_ea::khasAlpha ) d[ tLayout::red.arr[ tSpec::_nf._nc ] ] = iValue;              }
-    TPixelBase< _SH >&                         operator=            ( const TPixelBase< _SH >& iOther )                                         { memcpy( tSuperClass::d, iOther.Ptr(), tSpec::_nf._pd ); return *this; }
+    TPixelBase< _SH >&                          operator=           ( const TPixelBase< _SH >& iOther )                                         { memcpy( tSuperClass::d, iOther.Ptr(), tSpec::_nf._pd ); return *this; }
 protected:
     // Protected Data
     tPixelType* d;

@@ -17,6 +17,7 @@
 #include <ULIS_CORE>
 
 
+
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
@@ -38,6 +39,14 @@ int main( int argc, char *argv[] )
             prox.SetAlpha( 255 );
         }
     }
+
+    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
+    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
+    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
+    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
+    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
+    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
+    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_ARGB32 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
