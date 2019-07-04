@@ -36,6 +36,8 @@ Process( ::ULIS::IBlock* iBlock )
 }
 
 
+
+
 int main()
 {
     ::ULIS::InitID();
@@ -80,7 +82,6 @@ int main()
     size_t alloc_end_memloc = memloc_alloc_start + ( data_start_shift + storage );
     int data_end_overflow = alloc_end_memloc & offset;
 
-    
     std::cout << "width:        " << width << std::endl;
     std::cout << "height:       " << height << std::endl;
     std::cout << "depth:        " << depth << std::endl;

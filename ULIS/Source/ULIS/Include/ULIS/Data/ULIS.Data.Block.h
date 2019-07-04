@@ -13,6 +13,7 @@
 
 #include "ULIS/Color/ULIS.Color.CColor.h"
 #include "ULIS/Data/ULIS.Data.ID.h"
+#include "ULIS/Data/ULIS.Data.Mem.h"
 #include "ULIS/Data/ULIS.Data.MD5.h"
 #include "ULIS/Data/ULIS.Data.Pixel.h"
 #include "ULIS/Data/ULIS.Data.Spec.h"
@@ -23,8 +24,6 @@ namespace ULIS {
 /////////////////////////////////////////////////////
 // Defines
 #define tSpec TBlockInfo< _SH >
-#define tData TBlockData< _SH >
-
 
 /////////////////////////////////////////////////////
 // TBlockData
@@ -34,32 +33,30 @@ class TBlockData final
 public:
     // Construction / Destruction
     TBlockData()
-        : width     ( 0                                                 )
-        , height    ( 0                                                 )
-        , data      ( nullptr                                           )
+        : width     ( 0 )
+        , height    ( 0 )
+        , data      ()
     {}
 
     TBlockData( int iWidth, int iHeight )
-        : width     ( iWidth                                            )
-        , height    ( iHeight                                           )
-        , data      ( nullptr                                           )
+        : width     ( iWidth    )
+        , height    ( iHeight   )
+        , data      ()
     {
-        data = new uint8[ iWidth * iHeight * tSpec::_nf._pd ];
+        data.Allocate( BytesTotal() );
     }
 
     ~TBlockData()
-    {
-        if( data ) delete[] data;
-    }
+    {}
 
 public:
     // Public API
-    inline         uint8*                       DataPtr             ()                                                                          { return  data;                                                         }
-    inline         const uint8*                 DataPtr             ()                                              const                       { return  data;                                                         }
-    inline         uint8*                       PixelPtr            ( int x, int y )                                                            { return  data + ( x * BytesPerPixel() + y * BytesPerScanLine() );      }
-    inline         const uint8*                 PixelPtr            ( int x, int y )                                const                       { return  data + ( x * BytesPerPixel() + y * BytesPerScanLine() );      }
-    inline         uint8*                       ScanlinePtr         ( int row )                                                                 { return  data + ( row * BytesPerScanLine() );                          }
-    inline         const uint8*                 ScanlinePtr         ( int row )                                     const                       { return  data + ( row * BytesPerScanLine() );                          }
+    inline         uint8*                       DataPtr             ()                                                                          { return  data.Ptr();                                                   }
+    inline         const uint8*                 DataPtr             ()                                              const                       { return  data.Ptr();                                                   }
+    inline         uint8*                       PixelPtr            ( int x, int y )                                                            { return  DataPtr() + ( x * BytesPerPixel() + y * BytesPerScanLine() ); }
+    inline         const uint8*                 PixelPtr            ( int x, int y )                                const                       { return  DataPtr() + ( x * BytesPerPixel() + y * BytesPerScanLine() ); }
+    inline         uint8*                       ScanlinePtr         ( int row )                                                                 { return  DataPtr() + ( row * BytesPerScanLine() );                     }
+    inline         const uint8*                 ScanlinePtr         ( int row )                                     const                       { return  DataPtr() + ( row * BytesPerScanLine() );                     }
     inline         int                          Depth               ()                                              const                       { return  tSpec::_nf._pd;                                               }
     inline         int                          Width               ()                                              const                       { return  width;                                                        }
     inline         int                          Height              ()                                              const                       { return  height;                                                       }
@@ -80,7 +77,7 @@ private:
     // Private Data
     uint32  width;
     uint32  height;
-    uint8*  data;
+    TAlignedMemory< uint8, tSpec::_nf._ma > data;
 };
 
 
@@ -162,13 +159,13 @@ public:
     virtual ~TBlock() { delete d; } // Polymorphic
 
     TBlock()
-        : d     ( nullptr                       )
-        , id    ( generate_uuid( 16 )           )
+        : d     ( nullptr                                   )
+        , id    ( generate_uuid( 16 )                       )
     {}
 
     TBlock( int iWidth, int iHeight )
-        : d     ( new tData( iWidth, iHeight )  )
-        , id    ( generate_uuid( 16 )           )
+        : d     ( new TBlockData< _SH >( iWidth, iHeight )  )
+        , id    ( generate_uuid( 16 )                       )
     {}
 
 public:
@@ -230,15 +227,14 @@ public:
 
 private:
     // Private Data
-    tData*      d;
-    std::string id;
+    TBlockData< _SH >*  d;
+    std::string         id;
 };
 
 
 /////////////////////////////////////////////////////
 // Undefines
 #undef tSpec
-#undef tData
 
 
 } // namespace ULIS

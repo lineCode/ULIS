@@ -1,14 +1,12 @@
-/***************************************************************************************
- *
- *   DraftsmanCore
- *__________________
- *
- * @file DraftsmanCore.__private__.GenerateUUID.cpp
- * @author Clement BERTHAUD <code@clementberthaud.com>
- * @date 16/12/2018
- * @brief Implementation of DraftsmanCore GenerateUUID private module
- * @licence MIT License - Copyright (c) 2018-2019 Draftsman - Clement BERTHAUD <code@clementberthaud.com>
- */
+/*************************************************************************
+*
+*   ULIS
+*__________________
+*
+* ULIS.Data.ID.h
+* Clement Berthaud - Layl
+* Please refer to LICENSE.md
+*/
 
 #include "ULIS/Data/ULIS.Data.ID.h"
 
