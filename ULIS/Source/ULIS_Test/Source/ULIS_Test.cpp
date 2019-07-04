@@ -36,85 +36,43 @@ Process( ::ULIS::IBlock* iBlock )
 }
 
 
+inline __m128i _mm_mullo_epi8(__m128i a, __m128i b)
+{
+    __m128i zero    = _mm_setzero_si128();
+    __m128i Alo     = _mm_unpacklo_epi8(a, zero);
+    __m128i Ahi     = _mm_unpackhi_epi8(a, zero);
+    __m128i Blo     = _mm_unpacklo_epi8(b, zero);
+    __m128i Bhi     = _mm_unpackhi_epi8(b, zero);
+    __m128i Clo     = _mm_mullo_epi16(Alo, Blo);
+    __m128i Chi     = _mm_mullo_epi16(Ahi, Bhi);
+    __m128i maskLo  = _mm_set_epi8(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 14, 12, 10, 8, 6, 4, 2, 0);
+    __m128i maskHi  = _mm_set_epi8(14, 12, 10, 8, 6, 4, 2, 0, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80);
+    __m128i C       = _mm_or_si128(_mm_shuffle_epi8(Clo, maskLo), _mm_shuffle_epi8(Chi, maskHi));
+     return C;
+}
+
+
+void printvec( const char* title, const ::ULIS::FVectorSIMD128& iVec )
+{
+    std::cout << title << ": [";
+    for( int i = 0; i < 16; ++i )
+        std::cout << (int)iVec.u8[i] << ",";
+    std::cout << "]" << std::endl;
+}
 
 
 int main()
 {
-    ::ULIS::InitID();
+    using namespace ::ULIS;
 
-    //::ULIS::PrintSpecs();
-    /*
-    ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 200, 200 );
-    ::ULIS::FBlockBGRA8* ptr = (::ULIS::FBlockBGRA8*)block;
+    FVectorSIMD128 vec;
+    for( int i = 0; i < 16; ++i ) vec.u8[i] = i;
 
-    ::ULIS::FBlockBGRA8::tPixelProxy proxy = ptr->PixelProxy( 0, 0 );
-    ::ULIS::FBlockBGRA8::tPixelValue value;
-    value.SetRed(   'R' );
-    value.SetGreen( 'G' );
-    value.SetBlue(  'B' );
-    value.SetAlpha( 'A' );
-    proxy = value;
-    std::cout << proxy.R() << std::endl;
-    std::cout << proxy.G() << std::endl;
-    std::cout << proxy.B() << std::endl;
-    std::cout << proxy.GetAlpha() << std::endl;
-    std::cout << proxy.Depth() << std::endl;
+    FVectorSIMD128 mul;
+    mul.m128i = _mm_set1_epi8( 16 );
 
-    Process( block );
-    delete block;
-    */
-
-    int width       = 99;
-    int height      = 98;
-    int depth       = 4;
-    int alignment   = 16;
-    int offset      = alignment - 1;
-    int required    = width * height * depth;
-    int overflow    = required & offset;
-    int waste       = ( alignment - overflow ) & offset;
-    int storage     = required + waste;
-    int total       = offset + storage;
-    uint8_t* alloc = new uint8_t[ total ];
-
-    size_t memloc_alloc_start = (size_t)alloc;
-    int alloc_start_overflow = memloc_alloc_start & offset;
-    int data_start_shift = ( alignment - alloc_start_overflow ) & offset;
-    size_t alloc_end_memloc = memloc_alloc_start + ( data_start_shift + storage );
-    int data_end_overflow = alloc_end_memloc & offset;
-
-    std::cout << "width:        " << width << std::endl;
-    std::cout << "height:       " << height << std::endl;
-    std::cout << "depth:        " << depth << std::endl;
-    std::cout << "alignment:    " << alignment << std::endl;
-    std::cout << "offset:       " << offset << std::endl;
-    std::cout << "required:     " << required << std::endl;
-    std::cout << "overflow:     " << overflow << std::endl;
-    std::cout << "waste:        " << waste << std::endl;
-    std::cout << "storage:      " << storage << std::endl;
-    std::cout << "total:        " << total << std::endl;
-    std::cout << std::endl;
-    std::cout << "memloc_alloc_start:   " << memloc_alloc_start << std::endl;
-    std::cout << "alloc_start_overflow: " << alloc_start_overflow << std::endl;
-    std::cout << "data_start_shift:     " << data_start_shift << std::endl;
-    std::cout << "alloc_end_memloc:     " << alloc_end_memloc << std::endl;
-    std::cout << "data_end_overflow:    " << data_end_overflow << std::endl;
-
-    /*
-    std::cout << required << std::endl;
-    std::cout << (uint64_t)(memloc) << std::endl;
-    std::cout << (uint64_t)(memloc + 1) << std::endl;
-    std::cout << (uint64_t)(memloc + 1 ) % 16 << std::endl;
-    std::cout << (uint64_t)(((size_t)(memloc + 1 ) + (alignment - 1)) & ~(alignment - 1)) << std::endl;
-    */
-
-    /*
-    void* aligned_malloc(size_t required_bytes, size_t alignment) {
-    int offset = alignment - 1;
-    void* P = (void * ) malloc(required_bytes + offset);
-    void* q = (void * ) (((size_t)(p) + offset) & ~(alignment - 1));
-    return q;
-    }
-    */
+    FVectorSIMD128 res;
+    res.m128i = _mm_mullo_epi8( vec.m128i, mul.m128i );
 
     return 0;
 }

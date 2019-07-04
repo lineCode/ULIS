@@ -15,7 +15,7 @@
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FVectorSIMD
+// FVectorSIMD128
 struct alignas( 16 ) FVectorSIMD128
 {
     union {
@@ -23,8 +23,8 @@ struct alignas( 16 ) FVectorSIMD128
         uint8   u8[16];
         uint16  u16[8];
         uint32  u32[4];
-        __m128  vecf;
-        __m128i veci;
+        __m128  m128;
+        __m128i m128i;
     };
 };
 
