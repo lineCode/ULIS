@@ -14,16 +14,19 @@
 #include <QPixmap>
 #include <QLabel>
 #include <ULIS_CORE>
+#include <thread>
 
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
 
-    ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 64, 64 );
+    ::ULIS::FBlockBGRA8* block = new ::ULIS::FBlockBGRA8( 64, 64 );
+    ::ULIS::FBlockBGRA8::tPixelValue val;
 
+    val.SetColor( ::ULIS::CColor::FromRGB( 255, 0, 0 ) );
     for( int y = 0; y < block->Height(); ++y )
         for( int x = 0; x < block->Width(); ++x )
-            block->SetPixelColor( x, y, ::ULIS::CColor::FromHSV( x, y, y, 255 ) );
+            block->SetPixelValue( x, y, val );
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_ARGB32 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
