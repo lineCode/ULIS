@@ -218,9 +218,9 @@ public:
     inline         tPixelProxy                  PixelProxy          ( int x, int y )                                const                       { return  d->PixelProxy( x, y );                                        }
     inline         void                         SetPixelValue       ( int x, int y, const tPixelValue& iValue )                                 { d->SetPixelValue( x, y, iValue );                                     }
     inline         void                         SetPixelProxy       ( int x, int y, const tPixelProxy& iValue )                                 { d->SetPixelProxy( x, y, iValue );                                     }
-    inline virtual void                         Clear               ()                                                                          { memset( DataPtr(), 0, BytesTotal() ); }
+    inline virtual void                         Clear               ()                                                      override    final   { memset( DataPtr(), 0, BytesTotal() ); }
 
-    virtual void Fill( const CColor& iColor ) {
+    virtual void Fill( const CColor& iColor ) override final {
         tPixelValue val;
         val.SetColor( iColor.ToModel( CColorModelFromColorModel( ColorModel() ) ) );
         const int w = Width();
@@ -230,7 +230,7 @@ public:
                 SetPixelValue( x, y, val );
     }
 
-    virtual void Clear( const FInvalidRect& iRect ) {
+    virtual void Clear( const FInvalidRect& iRect ) override final {
             int xmin = Maths::Max( iRect.x, 0 );
             int ymin = Maths::Max( iRect.y, 0 );
             int xmax = Maths::Min( iRect.x + iRect.width,  Width() );

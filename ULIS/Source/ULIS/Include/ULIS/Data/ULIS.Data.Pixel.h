@@ -166,12 +166,12 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( G )
     ULIS_SPEC_COMPONENT( G,     0           )
     ULIS_SPEC_COMPONENT( Gray,  0           )
     inline  CColor  GetColor()  const {
-        return  CColor::FromGreyF( ConvType< tPixelType, float >( G() ), ConvType< tPixelType, float >( GetAlpha() ) );
+        return  CColor::FromGreyF( ConvType< tPixelType, float >( G() ), ConvType< tPixelType, float >( tSuperClass::GetAlpha() ) );
     }
 
     inline  void    SetColor( const CColor& iColor ) {
         G() = ConvType< float, tPixelType >( iColor.GreyF() );
-        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+        tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
     }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
@@ -186,14 +186,14 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( RGB )
         return  CColor::FromRGBF( ConvType< tPixelType, float >( R() )
                                 , ConvType< tPixelType, float >( G() )
                                 , ConvType< tPixelType, float >( B() )
-                                , ConvType< tPixelType, float >( GetAlpha() ) );
+                                , ConvType< tPixelType, float >( tSuperClass::GetAlpha() ) );
     }
 
     inline  void    SetColor( const CColor& iColor ) {
         R() = ConvType< float, tPixelType >( iColor.RedF() );
         G() = ConvType< float, tPixelType >( iColor.GreenF() );
         B() = ConvType< float, tPixelType >( iColor.BlueF() );
-        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+        tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
     }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
@@ -208,14 +208,14 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( HSL )
         return  CColor::FromHSLF( ConvType< tPixelType, float >( H() )
                                 , ConvType< tPixelType, float >( S() )
                                 , ConvType< tPixelType, float >( L() )
-                                , ConvType< tPixelType, float >( GetAlpha() ) );
+                                , ConvType< tPixelType, float >( tSuperClass::GetAlpha() ) );
     }
 
     inline  void    SetColor( const CColor& iColor ) {
         H() = ConvType< float, tPixelType >( iColor.HSLHueF() );
         S() = ConvType< float, tPixelType >( iColor.HSLSaturationF() );
         L() = ConvType< float, tPixelType >( iColor.LightnessF() );
-        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+        tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
     }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
@@ -230,14 +230,14 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( HSV )
         return  CColor::FromHSVF( ConvType< tPixelType, float >( H() )
                                 , ConvType< tPixelType, float >( S() )
                                 , ConvType< tPixelType, float >( V() )
-                                , ConvType< tPixelType, float >( GetAlpha() ) );
+                                , ConvType< tPixelType, float >( tSuperClass::GetAlpha() ) );
     }
 
     inline  void    SetColor( const CColor& iColor ) {
         H() = ConvType< float, tPixelType >( iColor.HSVHueF() );
         S() = ConvType< float, tPixelType >( iColor.HSVSaturationF() );
         V() = ConvType< float, tPixelType >( iColor.ValueF() );
-        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+        tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
     }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
@@ -256,7 +256,7 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( CMYK )
                                  , ConvType< tPixelType, float >( M() )
                                  , ConvType< tPixelType, float >( Y() )
                                  , ConvType< tPixelType, float >( K() )
-                                 , ConvType< tPixelType, float >( GetAlpha() ) );
+                                 , ConvType< tPixelType, float >( tSuperClass::GetAlpha() ) );
     }
 
     inline  void    SetColor( const CColor& iColor ) {
@@ -264,7 +264,7 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( CMYK )
         M() = ConvType< float, tPixelType >( iColor.MagentaF() );
         Y() = ConvType< float, tPixelType >( iColor.YellowF() );
         K() = ConvType< float, tPixelType >( iColor.KeyF() );
-        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+        tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
     }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
