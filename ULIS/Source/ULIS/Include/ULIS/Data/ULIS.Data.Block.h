@@ -11,12 +11,10 @@
 #pragma once
 
 
-#include "ULIS/Color/ULIS.Color.CColor.h"
 #include "ULIS/Data/ULIS.Data.ID.h"
 #include "ULIS/Data/ULIS.Data.Mem.h"
 #include "ULIS/Data/ULIS.Data.MD5.h"
 #include "ULIS/Data/ULIS.Data.Pixel.h"
-#include "ULIS/Data/ULIS.Data.Spec.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
 
 
@@ -69,7 +67,7 @@ public:
     inline         TPixelProxy< _SH >           PixelProxy          ( int x, int y )                                const                       { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );               }
     inline         TPixelValue< _SH >           PixelValue          ( int x, int y )                                                            { return  TPixelValue< _SH >( PixelProxy( x, y ) );                     }
     inline         TPixelValue< _SH >           PixelValue          ( int x, int y )                                const                       { return  TPixelValue< _SH >( PixelProxy( x, y ) );                     }
-    inline         void                         SetPixelColor       ( int x, int y, const CColor& iValue )                                      {                                                                       }
+    inline         void                         SetPixelColor       ( int x, int y, const CColor& iValue )                                      { PixelProxy( x, y ).SetColor( iValue );                                }
     inline         void                         SetPixelValue       ( int x, int y, const TPixelValue< _SH >& iValue )                          { PixelProxy( x, y ) = iValue;                                          }
     inline         void                         SetPixelProxy       ( int x, int y, const TPixelProxy< _SH >& iValue )                          { PixelProxy( x, y ) = iValue;                                          }
 
