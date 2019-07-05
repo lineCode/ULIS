@@ -324,6 +324,7 @@ CColor::ToModel( eCColorModel iModel )  const
 
     switch( iModel )
     {
+        case eCColorModel::kG:      return  ToGrey();
         case eCColorModel::kRGB:    return  ToRGB();
         case eCColorModel::kHSL:    return  ToHSL();
         case eCColorModel::kHSV:    return  ToHSV();
