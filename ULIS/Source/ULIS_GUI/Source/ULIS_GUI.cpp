@@ -13,30 +13,17 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
-
 #include <ULIS_CORE>
-
-
 
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
 
-    ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 500, 500 );
-    ::ULIS::FBlockBGRA8* ptr = (::ULIS::FBlockBGRA8*)block;
+    ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 64, 64 );
 
-    block->Fill( ::ULIS::CColor( 255, 0, 0 ) );
-
-    for( int y = 0; y < ptr->Height(); ++y )
-    {
-        for( int x = 0; x < ptr->Width(); ++x )
-        {
-            auto prox = ptr->PixelProxy( x,y );
-            auto val = ptr->PixelValue( x,y );
-
+    for( int y = 0; y < block->Height(); ++y )
+        for( int x = 0; x < block->Width(); ++x )
             block->SetPixelColor( x, y, ::ULIS::CColor::FromHSV( x, y, y, 255 ) );
-        }
-    }
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_ARGB32 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

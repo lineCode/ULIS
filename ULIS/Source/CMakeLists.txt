@@ -89,6 +89,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS/CMakeLists.txt)
 
 if( ${ULIS_BUILD_TESTS} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Test/CMakeLists.txt) # Depends on ULIS
+    include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Test_SSE/CMakeLists.txt) # Depends on ULIS
+    include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Test_Thread/CMakeLists.txt) # Depends on ULIS
 endif()
 
 if( ${ULIS_BUILD_GUIS} )
