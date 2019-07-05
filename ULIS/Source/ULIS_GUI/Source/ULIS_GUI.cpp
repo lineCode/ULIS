@@ -25,28 +25,14 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 500, 500 );
     ::ULIS::FBlockBGRA8* ptr = (::ULIS::FBlockBGRA8*)block;
 
-    //::ULIS::IBlock* blockop = ::ULIS::MakeBlock( 500, 500, ::ULIS::FBlockBGRA8::TypeId() );
-    //assert( blockop->Name() == block->Name() );
-
     for( int y = 0; y < ptr->Height(); ++y )
     {
         for( int x = 0; x < ptr->Width(); ++x )
         {
-            ::ULIS::FBlockBGRA8::tPixelProxy prox = ptr->PixelProxy( x, y );
-            prox.SetRed( x );
-            prox.SetGreen( y );
-            prox.SetBlue( y );
-            prox.SetAlpha( 255 );
+            block->SetPixelColor( x, y, ::ULIS::CColor::FromHSV( x, y, y, 255 ) );
         }
     }
 
-    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
-    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
-    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
-    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
-    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
-    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
-    std::cout << sizeof( ::ULIS::FVectorSIMD128 ) << std::endl;
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_ARGB32 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
