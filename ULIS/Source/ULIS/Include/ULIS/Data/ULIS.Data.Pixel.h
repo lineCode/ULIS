@@ -10,10 +10,9 @@
 
 #pragma once
 
-#include <utility>
 #include "ULIS/Data/ULIS.Data.Spec.h"
 #include "ULIS/Data/ULIS.Data.Layout.h"
-#include "ULIS/Maths/ULIS.Maths.Geometry.h"
+#include "ULIS/Maths/ULIS.Maths.Utility.h"
 #include "ULIS/Color/ULIS.Color.CColor.h"
 
 namespace ULIS {
@@ -78,6 +77,12 @@ public:
 
 
 /////////////////////////////////////////////////////
+// TNormalizer
+template< typename T, e_nm _nm > struct TNormalizer                          { static inline T Apply( T iVal ) { return iVal; }                           };
+template< typename T >           struct TNormalizer< T, e_nm::knormalized >  { static inline T Apply( T iVal ) { return Clamp< T >( iVal, T(0), T(1) ); } };
+
+
+/////////////////////////////////////////////////////
 // TPixelBase
 template< uint32_t _SH >
 class TPixelBase : public TPixelInfo< _SH >
@@ -87,22 +92,55 @@ class TPixelBase : public TPixelInfo< _SH >
 
 public:
     // Public API
-    inline         void*                        Ptr                 ()                                              const                       { return  (void*)d;                                                     }
-    inline         tPixelType&                  GetRaw              ( uint8 i )                                                                 { return d[ i ];                                                        }
-    inline const   tPixelType&                  GetRaw              ( uint8 i )                                     const                       { return d[ i ];                                                        }
-    inline         tPixelType&                  GetComponent        ( uint8 i )                                                                 { return d[ tLayout::red.arr[i] ];                                      }
-    inline const   tPixelType&                  GetComponent        ( uint8 i )                                     const                       { return d[ tLayout::red.arr[i] ];                                      }
-    inline         void                         SetComponent        ( uint8 i, tPixelType iValue )                                              { d[ tLayout::red.arr[i] ] = iValue;                                    }
-    inline         void                         SetComponent        ( uint8 i, tPixelType iValue )                  const                       { d[ tLayout::red.arr[i] ] = iValue;                                    }
-    inline         tPixelType&                  operator[]          ( uint8 i )                                                                 { return d[ tLayout::red.arr[i] ];                                      }
-    inline const   tPixelType&                  operator[]          ( uint8 i )                                     const                       { return d[ tLayout::red.arr[i] ];                                      }
-    inline         tPixelType                   GetAlpha            ()                                              const                       { return tSpec::_nf._ea == e_ea::khasAlpha ? d[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSuperClass::Max();  }
-    inline         void                         SetAlpha            ( tPixelType iValue )                                                       { if(    tSpec::_nf._ea == e_ea::khasAlpha ) d[ tLayout::red.arr[ tSpec::_nf._nc ] ] = iValue;              }
-    TPixelBase< _SH >&                          operator=           ( const TPixelBase< _SH >& iOther )                                         { memcpy( tSuperClass::d, iOther.Ptr(), tSpec::_nf._pd ); return *this; }
+    inline         void*                        Ptr                 ()                                              const                       { return  (void*)d;                                                                                                                                                 }
+    inline         tPixelType&                  GetRaw              ( uint8 i )                                                                 { return d[ i ];                                                                                                                                                    }
+    inline const   tPixelType&                  GetRaw              ( uint8 i )                                     const                       { return d[ i ];                                                                                                                                                    }
+    inline         tPixelType&                  GetComponent        ( uint8 i )                                                                 { return d[ tLayout::red.arr[i] ];                                                                                                                                  }
+    inline const   tPixelType&                  GetComponent        ( uint8 i )                                     const                       { return d[ tLayout::red.arr[i] ];                                                                                                                                  }
+    inline         void                         SetComponent        ( uint8 i, tPixelType iValue )                                              { d[ tLayout::red.arr[i] ] = TNormalizer< tPixelType, tSpec::_nf._nm >::Apply( iValue );                                                                            }
+    inline         tPixelType&                  operator[]          ( uint8 i )                                                                 { return d[ tLayout::red.arr[i] ];                                                                                                                                  }
+    inline const   tPixelType&                  operator[]          ( uint8 i )                                     const                       { return d[ tLayout::red.arr[i] ];                                                                                                                                  }
+    inline         tPixelType                   GetAlpha            ()                                              const                       { return tSpec::_nf._ea == e_ea::khasAlpha ? d[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSpec::_nf._nm == e_nm::knormalized ? tPixelType( 1 ) : tSuperClass::Max();  }
+    inline         void                         SetAlpha            ( tPixelType iValue )                                                       { if(    tSpec::_nf._ea == e_ea::khasAlpha ) d[ tLayout::red.arr[ tSpec::_nf._nc ] ] = TNormalizer< tPixelType, tSpec::_nf._nm >::Apply( iValue );                  }
+    inline         TPixelBase< _SH >&           operator=           ( const TPixelBase< _SH >& iOther )                                         { memcpy( tSuperClass::d, iOther.Ptr(), tSpec::_nf._pd ); return *this;                                                                                             }
+
 protected:
     // Protected Data
     tPixelType* d;
 };
+
+
+/////////////////////////////////////////////////////
+// Conversion API
+template< typename T1, typename T2 > T2 inline ConvType( T1 iValue ) { return iValue; }
+template<> uint16   inline ConvType< uint8,  uint16 >( uint8 iValue  ) { return iValue * 0x101;                     }
+template<> uint32   inline ConvType< uint8,  uint32 >( uint8 iValue  ) { return iValue * 0x1010101;                 }
+template<> uint64   inline ConvType< uint8,  uint64 >( uint8 iValue  ) { return iValue * 0x10100000101;             }
+template<> uint32   inline ConvType< uint16, uint32 >( uint16 iValue ) { return iValue * 0x10001;                   }
+template<> uint64   inline ConvType< uint16, uint64 >( uint16 iValue ) { return iValue * 0x1000100010001;           }
+template<> uint64   inline ConvType< uint32, uint64 >( uint32 iValue ) { return iValue * 0x100000001;               }
+template<> uint8    inline ConvType< uint16, uint8  >( uint16 iValue ) { return iValue >> 8;                        }
+template<> uint8    inline ConvType< uint32, uint8  >( uint32 iValue ) { return iValue >> 24;                       }
+template<> uint8    inline ConvType< uint64, uint8  >( uint64 iValue ) { return iValue >> 56;                       }
+template<> uint16   inline ConvType< uint32, uint16 >( uint32 iValue ) { return iValue >> 16;                       }
+template<> uint16   inline ConvType< uint64, uint16 >( uint64 iValue ) { return iValue >> 48;                       }
+template<> uint32   inline ConvType< uint64, uint32 >( uint64 iValue ) { return iValue >> 32;                       }
+template<> float    inline ConvType< uint8,  float  >( uint8 iValue  ) { return iValue / (float)0xFF;               }
+template<> float    inline ConvType< uint16, float  >( uint16 iValue ) { return iValue / (float)0xFFFF;             }
+template<> float    inline ConvType< uint32, float  >( uint32 iValue ) { return iValue / (float)0xFFFFFFFF;         }
+template<> float    inline ConvType< uint64, float  >( uint64 iValue ) { return iValue / (float)0xFFFFFFFFFFFFFFFF; }
+template<> double   inline ConvType< uint8,  double >( uint8 iValue  ) { return iValue / (double)0xFF;              }
+template<> double   inline ConvType< uint16, double >( uint16 iValue ) { return iValue / (double)0xFFFF;            }
+template<> double   inline ConvType< uint32, double >( uint32 iValue ) { return iValue / (double)0xFFFFFFFF;        }
+template<> double   inline ConvType< uint64, double >( uint64 iValue ) { return iValue / (double)0xFFFFFFFFFFFFFFFF;}
+template<> uint8    inline ConvType< float,  uint8  >( float iValue  ) { return iValue * 0xFF;                      }
+template<> uint16   inline ConvType< float,  uint16 >( float iValue  ) { return iValue * 0xFFFF;                    }
+template<> uint32   inline ConvType< float,  uint32 >( float iValue  ) { return iValue * 0xFFFFFFFF;                }
+template<> uint64   inline ConvType< float,  uint64 >( float iValue  ) { return iValue * 0xFFFFFFFFFFFFFFFF;        }
+template<> uint8    inline ConvType< double, uint8  >( double iValue ) { return iValue * 0xFF;                      }
+template<> uint16   inline ConvType< double, uint16 >( double iValue ) { return iValue * 0xFFFF;                    }
+template<> uint32   inline ConvType< double, uint32 >( double iValue ) { return iValue * 0xFFFFFFFF;                }
+template<> uint64   inline ConvType< double, uint64 >( double iValue ) { return iValue * 0xFFFFFFFFFFFFFFFF;        }
 
 
 /////////////////////////////////////////////////////
@@ -114,7 +152,8 @@ template< uint32_t _SH, e_cm _CM > class TPixelAcessor : public TPixelBase< _SH 
     class TPixelAcessor< _SH, BOOST_PP_CAT( e_cm::k, iCm ) >        \
         : public TPixelBase< _SH > {                                \
     typedef TPixelBase< _SH > tSuperClass;                          \
-    ULIS_FORWARD_TYPE_SELECTOR
+    ULIS_FORWARD_TYPE_SELECTOR                                      \
+    public:
 #define ULIS_SPEC_PIXEL_ACCESSOR_END    };
 
 #define ULIS_SPEC_COMPONENT( iComp, iIndex )                                                                                \
@@ -126,6 +165,14 @@ template< uint32_t _SH, e_cm _CM > class TPixelAcessor : public TPixelBase< _SH 
 ULIS_SPEC_PIXEL_ACCESSOR_START( G )
     ULIS_SPEC_COMPONENT( G,     0           )
     ULIS_SPEC_COMPONENT( Gray,  0           )
+    inline  CColor  GetColor()  const {
+        return  CColor::FromGreyF( ConvType< tPixelType, float >( G() ), ConvType< tPixelType, float >( GetAlpha() ) );
+    }
+
+    inline  void    SetColor( const CColor& iColor ) {
+        G() = ConvType< float, tPixelType >( iColor.GreyF() );
+        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( RGB )
@@ -135,6 +182,19 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( RGB )
     ULIS_SPEC_COMPONENT( R,     0           )
     ULIS_SPEC_COMPONENT( G,     1           )
     ULIS_SPEC_COMPONENT( B,     2           )
+    inline  CColor  GetColor()  const {
+        return  CColor::FromRGBF( ConvType< tPixelType, float >( R() )
+                                , ConvType< tPixelType, float >( G() )
+                                , ConvType< tPixelType, float >( B() )
+                                , ConvType< tPixelType, float >( GetAlpha() ) );
+    }
+
+    inline  void    SetColor( const CColor& iColor ) {
+        R() = ConvType< float, tPixelType >( iColor.RedF() );
+        G() = ConvType< float, tPixelType >( iColor.GreenF() );
+        B() = ConvType< float, tPixelType >( iColor.BlueF() );
+        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( HSL )
@@ -144,6 +204,19 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( HSL )
     ULIS_SPEC_COMPONENT( H,             0   )
     ULIS_SPEC_COMPONENT( S,             1   )
     ULIS_SPEC_COMPONENT( L,             2   )
+    inline  CColor  GetColor()  const {
+        return  CColor::FromHSLF( ConvType< tPixelType, float >( H() )
+                                , ConvType< tPixelType, float >( S() )
+                                , ConvType< tPixelType, float >( L() )
+                                , ConvType< tPixelType, float >( GetAlpha() ) );
+    }
+
+    inline  void    SetColor( const CColor& iColor ) {
+        H() = ConvType< float, tPixelType >( iColor.HSLHueF() );
+        S() = ConvType< float, tPixelType >( iColor.HSLSaturationF() );
+        L() = ConvType< float, tPixelType >( iColor.LightnessF() );
+        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( HSV )
@@ -153,6 +226,19 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( HSV )
     ULIS_SPEC_COMPONENT( H,             0   )
     ULIS_SPEC_COMPONENT( S,             1   )
     ULIS_SPEC_COMPONENT( V,             2   )
+    inline  CColor  GetColor()  const {
+        return  CColor::FromHSVF( ConvType< tPixelType, float >( H() )
+                                , ConvType< tPixelType, float >( S() )
+                                , ConvType< tPixelType, float >( V() )
+                                , ConvType< tPixelType, float >( GetAlpha() ) );
+    }
+
+    inline  void    SetColor( const CColor& iColor ) {
+        H() = ConvType< float, tPixelType >( iColor.HSVHueF() );
+        S() = ConvType< float, tPixelType >( iColor.HSVSaturationF() );
+        V() = ConvType< float, tPixelType >( iColor.ValueF() );
+        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( CMYK )
@@ -165,24 +251,45 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( CMYK )
     ULIS_SPEC_COMPONENT( M,         1       )
     ULIS_SPEC_COMPONENT( Y,         2       )
     ULIS_SPEC_COMPONENT( K,         3       )
+    inline  CColor  GetColor()  const {
+        return  CColor::FromCMYKF( ConvType< tPixelType, float >( C() )
+                                 , ConvType< tPixelType, float >( M() )
+                                 , ConvType< tPixelType, float >( Y() )
+                                 , ConvType< tPixelType, float >( K() )
+                                 , ConvType< tPixelType, float >( GetAlpha() ) );
+    }
+
+    inline  void    SetColor( const CColor& iColor ) {
+        C() = ConvType< float, tPixelType >( iColor.CyanF() );
+        M() = ConvType< float, tPixelType >( iColor.MagentaF() );
+        Y() = ConvType< float, tPixelType >( iColor.YellowF() );
+        K() = ConvType< float, tPixelType >( iColor.KeyF() );
+        SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( YUV )
     ULIS_SPEC_COMPONENT( Y, 0               )
     ULIS_SPEC_COMPONENT( U, 1               )
     ULIS_SPEC_COMPONENT( V, 2               )
+    inline CColor GetColor()  const         { return  CColor( eCColorModel::kInvalid );    }
+    inline void   SetColor( const CColor& ) { memset( tSuperClass::d, 0, tSpec::_nf._pd ); }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( Lab )
     ULIS_SPEC_COMPONENT( L, 0               )
     ULIS_SPEC_COMPONENT( a, 1               )
     ULIS_SPEC_COMPONENT( b, 2               )
+    inline CColor GetColor()  const         { return  CColor( eCColorModel::kInvalid );    }
+    inline void   SetColor( const CColor& ) { memset( tSuperClass::d, 0, tSpec::_nf._pd ); }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( XYZ )
     ULIS_SPEC_COMPONENT( X, 0               )
     ULIS_SPEC_COMPONENT( Y, 1               )
     ULIS_SPEC_COMPONENT( Z, 2               )
+    inline CColor GetColor()  const         { return  CColor( eCColorModel::kInvalid );    }
+    inline void   SetColor( const CColor& ) { memset( tSuperClass::d, 0, tSpec::_nf._pd ); }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 /////////////////////////////////////////////////////
