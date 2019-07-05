@@ -64,6 +64,7 @@ void printvec( const char* title, const ::ULIS::FVectorSIMD128& iVec )
 int main()
 {
     using namespace ::ULIS;
+    PrintSpecs();
 
     FVectorSIMD128 vec;
     for( int i = 0; i < 16; ++i ) vec.u8[i] = i;
