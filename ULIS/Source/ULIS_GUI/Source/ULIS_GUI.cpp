@@ -25,14 +25,18 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* block = new ::ULIS::FBlockBGRA8( 500, 500 );
     ::ULIS::FBlockBGRA8* ptr = (::ULIS::FBlockBGRA8*)block;
 
+    block->Fill( ::ULIS::CColor( 255, 0, 0 ) );
+
     for( int y = 0; y < ptr->Height(); ++y )
     {
         for( int x = 0; x < ptr->Width(); ++x )
         {
+            auto prox = ptr->PixelProxy( x,y );
+            auto val = ptr->PixelValue( x,y );
+
             block->SetPixelColor( x, y, ::ULIS::CColor::FromHSV( x, y, y, 255 ) );
         }
     }
-
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_ARGB32 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

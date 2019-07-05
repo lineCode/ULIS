@@ -13,6 +13,8 @@
 
 namespace ULIS {
 
+namespace Maths {
+
 static float epsilon = .000001;
 
 template< typename T > T Min( T iA, T iB )
@@ -40,6 +42,8 @@ template< typename T > T Clamp( T iValue, T iMin, T iMax )
     return  Max( iMin, Min( iValue, iMax ) );
 }
 
+
+} // namespace Maths
 
 } // namespace ULIS
 

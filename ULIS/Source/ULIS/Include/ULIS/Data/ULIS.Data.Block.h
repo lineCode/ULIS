@@ -128,10 +128,12 @@ public:
            virtual CColor                       PixelColor          ( int x, int y )                                                            = 0;
            virtual CColor                       PixelColor          ( int x, int y )                                const                       = 0;
            virtual void                         SetPixelColor       ( int x, int y, const CColor& iColor )                                      = 0;
+           virtual void                         Fill                ( const CColor& iColor )                                                    = 0;
+           virtual void                         Clear               ()                                                                          = 0;
+           virtual void                         Clear               ( const FInvalidRect& iRect )                                               = 0;
                    void                         Invalidate          ()                                                                          { if( mInvCb ) mInvCb( this, mInvInfo, { 0, 0, Width(), Height() } );   }
                    void                         Invalidate          ( const FInvalidRect& iRect )                                               { if( mInvCb ) mInvCb( this, mInvInfo, iRect );                         }
                    void                         SetInvalidateCB     ( fpInvalidateFunction iCb, void* iInfo )                                   { mInvCb = iCb; mInvInfo = iInfo;                                       }
-
 protected:
     // Protected Data
     fpInvalidateFunction    mInvCb;
@@ -216,6 +218,30 @@ public:
     inline         tPixelProxy                  PixelProxy          ( int x, int y )                                const                       { return  d->PixelProxy( x, y );                                        }
     inline         void                         SetPixelValue       ( int x, int y, const tPixelValue& iValue )                                 { d->SetPixelValue( x, y, iValue );                                     }
     inline         void                         SetPixelProxy       ( int x, int y, const tPixelProxy& iValue )                                 { d->SetPixelProxy( x, y, iValue );                                     }
+    inline virtual void                         Clear               ()                                                                          { memset( DataPtr(), 0, BytesTotal() ); }
+
+    virtual void Fill( const CColor& iColor ) {
+        tPixelValue val;
+        val.SetColor( iColor.ToModel( CColorModelFromColorModel( ColorModel() ) ) );
+        const int w = Width();
+        const int h = Height();
+        for( int y = 0; y < h; ++y )
+            for( int x = 0; x < w; ++x )
+                SetPixelValue( x, y, val );
+    }
+
+    virtual void Clear( const FInvalidRect& iRect ) {
+            int xmin = Maths::Max( iRect.x, 0 );
+            int ymin = Maths::Max( iRect.y, 0 );
+            int xmax = Maths::Min( iRect.x + iRect.width,  Width() );
+            int ymax = Maths::Min( iRect.y + iRect.height, Height() );
+
+            int bytesToClear = ( xmax - xmin ) * BytesPerPixel();
+            int shift = xmin * BytesPerPixel();
+
+            for( int y = ymin; y < ymax; ++y )
+                memset( ScanlinePtr( y ) + shift, 0, bytesToClear );
+    }
 
 public:
     // Constexpr API
