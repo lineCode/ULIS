@@ -9,6 +9,8 @@
 */
 
 #include <ULIS_CORE>
+#include "ULIS/Thread/ULIS.Thread.Pool.h"
+
 #include <thread>
 #include <iomanip>
 #include <chrono>
@@ -119,13 +121,6 @@ TaskReport profile( Size iSize, int iNumThreads, int iNumRepeat )
     std::cout << "RESULT: " << average << "ms" << std::endl;
     std::cout << std::endl;
 
-    ::ULIS::CColor col = block->PixelColor( 32, 32 );
-    int r = col.Red();
-    int g = col.Green();
-    int b = col.Blue();
-    int a = col.Alpha();
-    auto dummy = 0;
-
     delete[] pool;
     delete  block;
 
@@ -133,7 +128,7 @@ TaskReport profile( Size iSize, int iNumThreads, int iNumRepeat )
 }
 
 
-int main()
+void RunTest_Old()
 {
     /*
     for( int i = 0; i < 15; ++i )
@@ -155,7 +150,21 @@ int main()
     {
         std::cout << vec[i].size.w << "     " << vec[i].numthreads << "     " << vec[i].time << std::endl;
     }
+}
 
+
+void InfiniteLoop()
+{
+    while( true )
+    {
+        auto dummy = 0;
+    }
+}
+
+
+
+int main()
+{
     return 0;
 }
 
