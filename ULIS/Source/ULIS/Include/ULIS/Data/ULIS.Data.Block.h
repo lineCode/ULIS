@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Data.Block.hr
+* ULIS.Data.Block.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -61,8 +61,8 @@ public:
     inline         int                          BytesPerPixel       ()                                              const                       { return  Depth();                                                      }
     inline         int                          BytesPerScanLine    ()                                              const                       { return  Depth() * Width();                                            }
     inline         int                          BytesTotal          ()                                              const                       { return  BytesPerScanLine() * Height();                                }
-    inline         CColor                       PixelColor          ( int x, int y )                                                            { return  CColor();                                                     }
-    inline         CColor                       PixelColor          ( int x, int y )                                const                       { return  CColor();                                                     }
+    inline         CColor                       PixelColor          ( int x, int y )                                                            { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) ).GetColor();    }
+    inline         CColor                       PixelColor          ( int x, int y )                                const                       { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) ).GetColor();    }
     inline         TPixelProxy< _SH >           PixelProxy          ( int x, int y )                                                            { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );               }
     inline         TPixelProxy< _SH >           PixelProxy          ( int x, int y )                                const                       { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );               }
     inline         TPixelValue< _SH >           PixelValue          ( int x, int y )                                                            { return  TPixelValue< _SH >( PixelProxy( x, y ) );                     }
