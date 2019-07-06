@@ -21,7 +21,7 @@ IF EXIST cmake_install.cmake ( del cmake_install.cmake )
 IF EXIST CMakeCache.txt ( del CMakeCache.txt )
 
 :: Rebuild Project
-cmake -G "Visual Studio 15 2017 Win64" -DULIS_USE_CONFIG:BOOL=ON ../Source
+cmake -G "Visual Studio 15 2017 Win64" -DULIS_USE_CONFIG:BOOL=ON -DULIS_EXPLICIT_COMPILER_ID:STRING="MSVC" ../Source
 
 :: Create symbolic link to solution in root
 cd ../../
