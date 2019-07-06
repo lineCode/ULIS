@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.11.0)
 
 # Set Cache variables
+SET( ULIS_EXPLICIT_COMPILER_ID             "unset"     CACHE STRING    "Explicitly set compiler ID from command line" )
 SET( ULIS_USE_CONFIG                       OFF         CACHE BOOL      "Scpecifies wether to use config files for overriding cache variables" )
 SET( ULIS_BOOST_INCLUDE_PATH               "unset"     CACHE STRING    "Indicates the path to boost include dir" )
 SET( ULIS_COAL_INCLUDE_PATH                "unset"     CACHE STRING    "Indicates the path to coal include dir" )
@@ -12,14 +13,6 @@ SET( ULIS_GLM_INCLUDE_PATH                 "unset"     CACHE STRING    "Indicate
 
 SET( IS_VISUALSTUDIO_SOLUTION_MSVC  OFF )
 SET( IS_MINGW_MAKEFILE_GCC          OFF )
-
-if( ${CMAKE_GENERATOR} STREQUAL "Visual Studio 15 2017 Win64" )
-    SET( IS_VISUALSTUDIO_SOLUTION_MSVC  ON )
-endif()
-
-if( ${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles" )
-    SET( IS_MINGW_MAKEFILE_GCC          ON )
-endif()
 
 # Generate only Debug and Release configurations for all projects
 set( CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE )
@@ -37,10 +30,29 @@ set(CMAKE_CXX_FLAGS "-std=c++14")
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 
 # Create global solution
 project( ULIS CXX )
+
+message( ${ULIS_EXPLICIT_COMPILER_ID} )
+if( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "CLANG" )
+	# CLANG
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
+	
+elseif( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "GCC" )
+	# GCC
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
+	message( "Additional flags for GCC ( Debug only ): -Wa,-mbig-obj" )
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wa,-mbig-obj")
+	
+elseif( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "MSVC" )
+	# MSVC
+	message( "Additional flags for MSVC ( Debug only ): -bigobj -Zi -Gm- -Od -Ob0 -RTC1 -MDd" )
+	message( "Additional flags for MSVC ( Debug / Release ): -EHsc" )
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -bigobj -Zi -Gm- -Od -Ob0 -RTC1 -MDd -EHsc")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -EHsc")
+	
+endif()
 
 # Read Preferences if needed
 if( ${ULIS_USE_CONFIG} )
@@ -65,9 +77,6 @@ if( ${ULIS_USE_CONFIG} )
 			include(${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_MSVC_Config.cmake)
 		endif()
 	endif()
-	
-	
-	
 endif()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
