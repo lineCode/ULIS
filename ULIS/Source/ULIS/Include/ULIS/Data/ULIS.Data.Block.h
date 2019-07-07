@@ -15,6 +15,7 @@
 #include "ULIS/Data/ULIS.Data.Mem.h"
 #include "ULIS/Data/ULIS.Data.MD5.h"
 #include "ULIS/Data/ULIS.Data.Pixel.h"
+#include "ULIS/Data/ULIS.Data.Vector.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
 
 
@@ -85,11 +86,14 @@ class IBlock
 {
 public:
     // Typedef
-    typedef void (*fpInvalidateFunction)( IBlock* /*data*/, void* /*info*/, const FInvalidRect& /*rect*/ );
+    typedef void (*fpInvalidateFunction)( IBlock* /*data*/, void* /*info*/, const FRect& /*rect*/ );
 
 public:
     // Construction / Destruction
-    IBlock() {}
+    IBlock()
+        : mInvCb(   nullptr )
+        , mInvInfo( nullptr )
+    {}
     virtual ~IBlock() {} // Polymorphic
 
 public:
@@ -130,9 +134,9 @@ public:
            virtual void                         SetPixelColor       ( int x, int y, const CColor& iColor )                                      = 0;
            virtual void                         Fill                ( const CColor& iColor )                                                    = 0;
            virtual void                         Clear               ()                                                                          = 0;
-           virtual void                         Clear               ( const FInvalidRect& iRect )                                               = 0;
+           virtual void                         Clear               ( const FRect& iRect )                                                      = 0;
                    void                         Invalidate          ()                                                                          { if( mInvCb ) mInvCb( this, mInvInfo, { 0, 0, Width(), Height() } );   }
-                   void                         Invalidate          ( const FInvalidRect& iRect )                                               { if( mInvCb ) mInvCb( this, mInvInfo, iRect );                         }
+                   void                         Invalidate          ( const FRect& iRect )                                                      { if( mInvCb ) mInvCb( this, mInvInfo, iRect );                         }
                    void                         SetInvalidateCB     ( fpInvalidateFunction iCb, void* iInfo )                                   { mInvCb = iCb; mInvInfo = iInfo;                                       }
 protected:
     // Protected Data
@@ -157,11 +161,6 @@ public:
 public:
     // Construction / Destruction
     virtual ~TBlock() { delete d; } // Polymorphic
-
-    TBlock()
-        : d     ( nullptr                                   )
-        , id    ( generate_uuid( 16 )                       )
-    {}
 
     TBlock( int iWidth, int iHeight )
         : d     ( new TBlockData< _SH >( iWidth, iHeight )  )
@@ -230,11 +229,11 @@ public:
                 SetPixelValue( x, y, val );
     }
 
-    virtual void Clear( const FInvalidRect& iRect ) override final {
+    virtual void Clear( const FRect& iRect ) override final {
             int xmin = Maths::Max( iRect.x, 0 );
             int ymin = Maths::Max( iRect.y, 0 );
-            int xmax = Maths::Min( iRect.x + iRect.width,  Width() );
-            int ymax = Maths::Min( iRect.y + iRect.height, Height() );
+            int xmax = Maths::Min( iRect.x + iRect.w, Width() );
+            int ymax = Maths::Min( iRect.y + iRect.h, Height() );
 
             int bytesToClear = ( xmax - xmin ) * BytesPerPixel();
             int shift = xmin * BytesPerPixel();
