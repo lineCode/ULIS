@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS_Test.cpp
+* ULIS_Test_SSE.cpp
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -48,6 +48,8 @@ int main()
 
     FVectorSIMD128 res;
     res.m128i = _mm_mullo_epi8( vec.m128i, mul.m128i );
+
+    std::cout << (int)( 0x80 ) << std::endl;
 
     return 0;
 }
