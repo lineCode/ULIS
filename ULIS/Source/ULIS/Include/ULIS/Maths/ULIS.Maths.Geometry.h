@@ -10,18 +10,66 @@
 
 #pragma once
 
+#include "ULIS/Maths/ULIS.Maths.Utility.h"
 
 namespace ULIS {
 
 
 /////////////////////////////////////////////////////
-// FInvalidRect
-struct FInvalidRect
+// FRect
+struct FRect
 {
+    FRect()
+        : x( 0 )
+        , y( 0 )
+        , w( 0 )
+        , h( 0 )
+    {}
+
+    FRect( int iX, int iY, int iW, int iH )
+        : x( iX )
+        , y( iY )
+        , w( iW )
+        , h( iH )
+    {}
+
     int x;
     int y;
-    int width;
-    int height;
+    int w;
+    int h;
+
+    FRect operator&( const FRect& iOther ) const
+    {
+        int x1 = Maths::Max( x, iOther.x );
+        int y1 = Maths::Max( y, iOther.y );
+        int x2 = Maths::Min( x + w, iOther.x + iOther.w );
+        int y2 = Maths::Min( y + h, iOther.y + iOther.h );
+        return  FRect( x1, y1, x2 - x1, y2 - y1 );
+    }
+
+    int Area() const
+    {
+        return  w * h;
+    }
+};
+
+
+/////////////////////////////////////////////////////
+// FPoint
+struct FPoint
+{
+    FPoint()
+        : x( 0 )
+        , y( 0 )
+    {}
+
+    FPoint( int iX, int iY )
+        : x( iX )
+        , y( iY )
+    {}
+
+    int x;
+    int y;
 };
 
 } // namespace ULIS
