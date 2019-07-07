@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS_Test.cpp
+* ULIS_Test_Thread.cpp
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -236,9 +236,62 @@ std::string stringizefloat( float val )
     return  out;
 }
 
+void ProfileFillRectAA()
+{
+    ::ULIS::FBlockBGRA8* block = new ::ULIS::FBlockBGRA8( 256, 256 );
+    int     num_threads     = 2;
+    int     num_op          = block->Width() * block->Height();
+    int     op_per_thread   = num_op / num_threads;
+
+    ::ULIS::FBlockBGRA8::tPixelValue val;
+    val.R() = 'R';
+    val.G() = 'G';
+    val.B() = 'B';
+    val.SetAlpha( 'A' );
+    ::ULIS::FThreadPool pool( num_threads );
+
+    std::cout << "=========================================" << std::endl;
+    std::cout << "Profiling: " << 256 << "x" << 256     << std::endl;
+    std::cout << "Num Threads:      " << num_threads    << std::endl;
+    std::cout << "Total Op:         " << num_op         << std::endl;
+    std::cout << "Op per Thread:    " << op_per_thread  << std::endl;
+    std::cout << std::fixed;
+    std::cout << std::setprecision( 2 );
+
+    auto start_time = std::chrono::steady_clock::now();
+
+    for( int k = 0; k < 1000; ++k )
+    {
+        std::cout << k << std::endl;
+        for( int l = 0; l < 1000; ++l )
+        {
+            int op_start   = 0;
+            int op_end     = op_per_thread;
+            for( int i = 0; i < num_threads; ++i )
+            {
+                pool.ScheduleJob( mt_fill_memcpy, block, op_start, op_end, std::ref( val ) );
+                op_start   += op_per_thread;
+                op_end     += op_per_thread;
+            }
+
+            pool.WaitForCompletion();
+        }
+    }
+    auto end_time   = std::chrono::steady_clock::now();
+    auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
+    auto avg        = delta / 1000.f;
+
+    std::cout << std::endl;
+    std::cout << "Result:   " << avg << "ms" << std::endl;
+    std::cout << std::endl;
+
+    delete  block;
+}
+
 
 int main( int argc, char *argv[] )
 {
+    /*
     int iterations = 200;
 
     std::vector< TaskReport > batch_mt_fill_memcpy_report;
@@ -272,6 +325,8 @@ int main( int argc, char *argv[] )
         std::cout << std::setprecision( 2 );
         std::cout << size << decn << num << dec0 << t0 << dec1 << t1 << dec2 << t2 << dec3 << t3 << std::endl;
     }
+    */
+    ProfileFillRectAA();
     return 0;
 }
 
