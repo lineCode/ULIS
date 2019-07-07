@@ -10,6 +10,5 @@
 
 #pragma once
 
-#include "ULIS/Data/ULIS.Data.Op.h"
-#include "ULIS/Data/ULIS.Data.Vector.h"
-#include "ULIS/Color/ULIS.Color.CColor.h"
+#include "ULIS/Data/ULIS.Data.h"
+#include "ULIS/Blend/ULIS.Blend.Context.h"
