@@ -65,11 +65,6 @@ PrintSpecs()
     }
 }
 
-void
-InitID()
-{
-    srand(time(0));
-}
 
 } // namespace ULIS
 
