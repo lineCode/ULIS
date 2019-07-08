@@ -42,8 +42,8 @@ ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _nm, ULIS_KEYS_NM ) // normal_mode
 struct FSpec
 {
     // Core properties
-    const char*         _ss; // spec-str
-    const uint32_t      _sh; // spec-hash
+    const char*         _ss; // spec_str
+    const uint32_t      _sh; // spec_hash
     const  e_tp         _tp; // type
     const  e_cm         _cm; // color_model
     const  e_ea         _ea; // extra_alpha
@@ -57,6 +57,7 @@ struct FSpec
     const  double       _tm; // type_max
     const  double       _rm; // range_max
     const  uint8_t      _ma; // memory_alignment
+    const  uint32_t     _lh; // layout_hash
 };
 
 /////////////////////////////////////////////////////
@@ -77,6 +78,7 @@ template< uint32_t > struct TBlockInfo {
                                        , 0                   // type_max
                                        , 0                   // range_max
                                        , 16                  // memory_alignment
+                                       , 0                   // layout_hash
                                        };
 };
 
@@ -112,8 +114,9 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
     double              tm = type_max< iTp >();
     double              rm = dm ? type_max< iTp >() : type_max< iTp >() + 1;
     uint8_t             ma = 16;
+    uint32_t            la = COAL_CRC32_STR( iCl );
     static_assert( iNm == e_nm::knormalized ? dm : true, "Integer types cannot be normalized" );
-    return  { iSs, iSh, iTp, iCm, iEa, iCl, iNm, dm, rc, nc, pd, tm, rm, ma };
+    return  { iSs, iSh, iTp, iCm, iEa, iCl, iNm, dm, rc, nc, pd, tm, rm, ma, la };
 }
 
 /* small wrapper for readability in other macros */
