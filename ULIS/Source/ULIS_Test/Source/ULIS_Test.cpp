@@ -38,11 +38,9 @@ Process( ::ULIS::IBlock* iBlock )
 
 int main()
 {
-    /*
     ::ULIS::PrintSpecs();
     int pause;
     std::cin >> pause;
-    */
 
     ::ULIS::IBlock* blockA = new ::ULIS::FBlockABGR8( 256, 256 );
     ::ULIS::IBlock* blockB = new ::ULIS::FBlockABGR8( 256, 256 );

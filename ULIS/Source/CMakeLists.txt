@@ -11,9 +11,6 @@ SET( ULIS_BUILD_GUIS                       OFF         CACHE BOOL      "Sets if 
 SET( ULIS_QT_CMAKE_PATH                	   "unset"     CACHE STRING    "Indicates the path to Qt cmake package" )
 SET( ULIS_GLM_INCLUDE_PATH                 "unset"     CACHE STRING    "Indicates the path to glm include dir" )
 
-SET( IS_VISUALSTUDIO_SOLUTION_MSVC  OFF )
-SET( IS_MINGW_MAKEFILE_GCC          OFF )
-
 # Generate only Debug and Release configurations for all projects
 set( CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE )
 # Generate only x64 configurations for all projects
@@ -59,10 +56,20 @@ if( ${ULIS_USE_CONFIG} )
     # Read Default Preferences
     include(${CMAKE_CURRENT_SOURCE_DIR}/../Tools/DefaultConfig.cmake)
     # Read Preferences Overrides if set
+	
+	if( ${CMAKE_GENERATOR} STREQUAL "Xcode" )
+		message( "OK LOADED FOR APPLE" )
+		if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../Xcode_Config.cmake)
+				include(${CMAKE_CURRENT_SOURCE_DIR}/../../Xcode_Config.cmake)
+		endif()
+	endif()
+	
 	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		# using Clang
-		if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_CLANG_LLVM_Config.cmake)
-			include(${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_CLANG_LLVM_Config.cmake)
+		if( ${CMAKE_GENERATOR} STREQUAL "Visual Studio 15 2017 Win64" )
+			if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_CLANG_LLVM_Config.cmake)
+				include(${CMAKE_CURRENT_SOURCE_DIR}/../../VisualStudio_Solution_CLANG_LLVM_Config.cmake)
+			endif()
 		endif()
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# using GCC
