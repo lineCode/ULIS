@@ -18,9 +18,10 @@ Unlimited Library for Image Software
         - Visual Studio Studio 15 2017 and greater OR Xcode
         - MinGW 64 7.xx ( optional )
         - Clang LLVM xx ( optional )
-		- coal
-		- boost_preprocessor
-		- glm
+        - coal
+        - boost_preprocessor
+        - glm
+        - Qt
 
 ###### Links:
 https://cmake.org/download/  \
