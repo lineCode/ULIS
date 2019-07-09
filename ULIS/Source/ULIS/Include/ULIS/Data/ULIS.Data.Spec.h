@@ -14,7 +14,6 @@
 #include <limits>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PreprocessorFramework.h"
-#include "ULIS/Base/ULIS.Base.Registry.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////

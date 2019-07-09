@@ -12,6 +12,7 @@
 
 
 #include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Base/ULIS.Base.Registry.h"
 #include <boost/preprocessor/slot/slot.hpp>
 
 
@@ -295,6 +296,7 @@ constexpr auto temp_reg_size = ulis_types_reg.Size();
 
 /////////////////////////////////////////////////////
 // Extern template declarations
+void ULIS_DECL_EXPORT_SYMBOL();
 /*
 #define ULIS_REG_OP( z, n, data ) extern template class TBlock< ::ULIS::ulis_types_reg[ n ] >;
 ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_OP, void )

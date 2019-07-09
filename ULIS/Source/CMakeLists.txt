@@ -42,6 +42,11 @@ elseif( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "GCC" )
 	message( "Additional flags for GCC ( Debug & Release ): -Wa,-mbig-obj" )
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
 	
+	# Support for alternat drop-in replacement of ld linker with Clang's lld, only for recent GCC ( not 7.3.0 shipped with Qt )
+	#set(CMAKE_LINKER lld)
+	#SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fuse-ld=lld")
+	#SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
+	
 elseif( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "MSVC" )
 	# MSVC
 	message( "Additional flags for MSVC ( Debug only ): -bigobj -Zi -Gm- -Od -Ob0 -RTC1 -MDd" )

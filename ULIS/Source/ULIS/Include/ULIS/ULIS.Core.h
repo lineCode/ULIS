@@ -13,6 +13,6 @@
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
 #include "ULIS/Interface/ULIS.Interface.Make.h"
 #include "ULIS/Interface/ULIS.Interface.Spec.h"
+#include "ULIS/Interface/ULIS.Interface.Blend.h"
+#include "ULIS/Interface/ULIS.Interface.GlobalPool.h"
 
-// TMP
-#include "ULIS/Blend/ULIS.Blend.BlendingContext.h"
