@@ -15,6 +15,7 @@
 #include "ULIS/Base/ULIS.Base.MD5.h"
 #include "ULIS/Base/ULIS.Base.VectorSIMD.h"
 #include "ULIS/Base/ULIS.Base.WeakUUID.h"
+#include "ULIS/Data/ULIS.Data.Meta.h"
 #include "ULIS/Data/ULIS.Data.Pixel.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
 
@@ -142,6 +143,7 @@ protected:
     // Protected Data
     fpInvalidateFunction    mInvCb;
     void*                   mInvInfo;
+    FBlockMetaData          meta;
 };
 
 

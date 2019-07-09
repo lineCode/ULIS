@@ -10,12 +10,9 @@
 
 #pragma once
 
+#include "ULIS/Color/ULIS.Color.ColorSpace.h"
 
 namespace ULIS {
-/////////////////////////////////////////////////////
-// Defines
-#define tSpec TBlockInfo< _SH >
-
 /////////////////////////////////////////////////////
 // FBlockMetaData
 class FBlockMetaData final
@@ -33,13 +30,9 @@ public:
 
 private:
     // Private Data
-    bool premultiplied
+    bool premultiplied;
+    FColorSpace colorspace;
 };
-
-
-/////////////////////////////////////////////////////
-// Undefines
-#undef tSpec
 
 
 } // namespace ULIS

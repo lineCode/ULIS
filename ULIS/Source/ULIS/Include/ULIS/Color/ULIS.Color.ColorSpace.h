@@ -12,8 +12,8 @@
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// IColorSpace
-class IColorSpace
+// FColorSpace
+class FColorSpace
 {
 };
 
