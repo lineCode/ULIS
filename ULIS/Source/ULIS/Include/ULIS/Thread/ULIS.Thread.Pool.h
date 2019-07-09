@@ -31,10 +31,13 @@ public:
 
 public:
     // Public API
-    template<class F> void  ScheduleJob(F&& f);
-    template<class F, typename ... Args > void ScheduleJob( F&& f, Args&& ... args );
-    void                    WaitForCompletion();
-    unsigned int            GetProcessed() const { return processed; }
+    template<class F>                       void  ScheduleJob(F&& f);
+    template<class F, typename ... Args >   void ScheduleJob( F&& f, Args&& ... args );
+    void                                    WaitForCompletion();
+    unsigned int                            GetProcessed() const { return processed; }
+    unsigned int                            GetNumWorkers() const { return workers.size(); }
+    void                                    SetNumWorkers( unsigned int );
+    unsigned int                            GetMaxWorkers() const { return  std::thread::hardware_concurrency(); }
 
 private:
     // Private API
@@ -102,6 +105,15 @@ void FThreadPool::WaitForCompletion()
 {
     std::unique_lock< std::mutex > lock( queue_mutex );
     cv_finished.wait( lock, [ this ](){ return tasks.empty() && ( busy == 0 ); } );
+}
+
+
+void FThreadPool::SetNumWorkers( unsigned int iValue )
+{
+    WaitForCompletion();
+    workers.clear();
+    for( unsigned int i = 0; i < iValue; ++i )
+        workers.emplace_back( std::bind( &FThreadPool::ThreadProcess, this ) );
 }
 
 

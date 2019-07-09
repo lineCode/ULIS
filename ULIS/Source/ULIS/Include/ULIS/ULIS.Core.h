@@ -13,3 +13,6 @@
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
 #include "ULIS/Interface/ULIS.Interface.Make.h"
 #include "ULIS/Interface/ULIS.Interface.Spec.h"
+
+// TMP
+#include "ULIS/Blend/ULIS.Blend.BlendingContext.h"
