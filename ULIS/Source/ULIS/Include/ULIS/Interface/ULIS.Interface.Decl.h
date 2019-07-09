@@ -12,6 +12,7 @@
 
 
 #include "ULIS/Data/ULIS.Data.Block.h"
+#include <boost/preprocessor/slot/slot.hpp>
 
 
 namespace ULIS {
@@ -291,6 +292,14 @@ ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 /* Reg size macro for usage during preprocessor ( workaround ) */
 #define ULIS_REG_SIZE 211
+
+/////////////////////////////////////////////////////
+// Extern template declarations
+/*
+#define ULIS_REG_OP( z, n, data ) extern template class TBlock< ::ULIS::ulis_types_reg[ n ] >;
+ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_OP, void )
+#undef ULIS_REG_OP
+*/
 
 /////////////////////////////////////////////////////
 // Mainstream typedefs

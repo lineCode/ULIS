@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include <cstdlib>
 
 namespace ULIS {
@@ -41,7 +42,7 @@ public:
         allocated_size      = size_bytes;
         pad_right           = ( alignement - ( size_bytes & offset ) ) & offset;
         size_t total        = offset + size_bytes + pad_right;
-        raw = new uint8_t[ total ];
+        raw = new uint8[ total ];
 
         size_t memloc_raw_start = (size_t)raw;
         pad_left = ( alignement - ( memloc_raw_start & offset ) ) & offset;

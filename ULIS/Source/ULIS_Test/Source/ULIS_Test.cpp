@@ -38,7 +38,7 @@ Process( ::ULIS::IBlock* iBlock )
 
 int main()
 {
-    ::ULIS::PrintSpecs();
+    //::ULIS::PrintSpecs();
     int pause;
     std::cin >> pause;
 

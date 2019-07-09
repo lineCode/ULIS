@@ -8,8 +8,6 @@
 * Please refer to LICENSE.md
 */
 
-#pragma once
-
 #include "ULIS/Thread/ULIS.Thread.GlobalPool.h"
 
 

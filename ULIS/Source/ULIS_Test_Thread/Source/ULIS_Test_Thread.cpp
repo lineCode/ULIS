@@ -229,7 +229,6 @@ std::string stringizefloat( float val )
 {
     std::string out;
     
-    double pi = 3.14159265359;
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2) << val;
     out = stream.str();

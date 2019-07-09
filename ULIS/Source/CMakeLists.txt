@@ -39,8 +39,8 @@ if( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "CLANG" )
 elseif( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "GCC" )
 	# GCC
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
-	message( "Additional flags for GCC ( Debug only ): -Wa,-mbig-obj" )
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wa,-mbig-obj")
+	message( "Additional flags for GCC ( Debug & Release ): -Wa,-mbig-obj" )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
 	
 elseif( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "MSVC" )
 	# MSVC
