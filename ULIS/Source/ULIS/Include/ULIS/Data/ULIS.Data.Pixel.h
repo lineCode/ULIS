@@ -79,7 +79,7 @@ public:
 /////////////////////////////////////////////////////
 // TNormalizer
 template< typename T, e_nm _nm > struct TNormalizer                          { static inline T Apply( T iVal ) { return iVal; }                                  };
-template< typename T >           struct TNormalizer< T, e_nm::knormalized >  { static inline T Apply( T iVal ) { return Maths::Clamp< T >( iVal, T(0), T(1) ); } };
+template< typename T >           struct TNormalizer< T, e_nm::knormalized >  { static inline T Apply( T iVal ) { return FMath::Clamp< T >( iVal, T(0), T(1) ); } };
 
 
 /////////////////////////////////////////////////////

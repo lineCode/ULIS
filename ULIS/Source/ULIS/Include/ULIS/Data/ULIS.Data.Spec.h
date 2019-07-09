@@ -10,11 +10,11 @@
 
 #pragma once
 
-#include <limits>                           // For type max values
-#include <coal_core>                        // For compile-time string parsing and hashing
-#include "ULIS/Data/ULIS.Data.Types.h"      // For shorthand types
-#include "ULIS/Data/ULIS.Data.PP.h"         // For preprocessor macros framework
-#include "ULIS/Data/ULIS.Data.SpecReg.h"    // For registry operations
+#include <coal_core>
+#include <limits>
+#include "ULIS/Base/ULIS.Base.BaseTypes.h"
+#include "ULIS/Base/ULIS.Base.PreprocessorFramework.h"
+#include "ULIS/Base/ULIS.Base.Registry.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -87,7 +87,6 @@ template< uint32_t N > constexpr const FSpec TBlockInfo< N >::_nf;
 
 /////////////////////////////////////////////////////
 // Info
-/* Info spec for parsing */
 /* We check that a type is decimal */
 constexpr  inline bool is_decimal( ::ULIS::e_tp iTp ) { return  iTp == ::ULIS::e_tp::kdouble || iTp == ::ULIS::e_tp::kfloat ? true : false; }
 /* Getters for all types size & max value */
@@ -100,6 +99,8 @@ template< e_tp iTp > constexpr  double      type_max()  { return  0; }
 BOOST_PP_SEQ_FOR_EACH( ULIS_TYPE_SIZE_REPEAT, void, ULIS_SEQ_TP )
 /* specialize type max for all types */
 BOOST_PP_SEQ_FOR_EACH( ULIS_TYPE_MAX_REPEAT,  void, ULIS_SEQ_TP )
+#undef ULIS_TYPE_SIZE_REPEAT
+#undef ULIS_TYPE_MAX_REPEAT
 
 /////////////////////////////////////////////////////
 // Parsing
@@ -114,9 +115,9 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
     double              tm = type_max< iTp >();
     double              rm = dm ? type_max< iTp >() : type_max< iTp >() + 1;
     uint8_t             ma = 16;
-    uint32_t            la = COAL_CRC32_STR( iCl );
+    uint32_t            lh = COAL_CRC32_STR( iCl );
     static_assert( iNm == e_nm::knormalized ? dm : true, "Integer types cannot be normalized" );
-    return  { iSs, iSh, iTp, iCm, iEa, iCl, iNm, dm, rc, nc, pd, tm, rm, ma, la };
+    return  { iSs, iSh, iTp, iCm, iEa, iCl, iNm, dm, rc, nc, pd, tm, rm, ma, lh };
 }
 
 /* small wrapper for readability in other macros */
@@ -154,8 +155,7 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 
 /* Public macro for block spec */
 #define ULIS_DECLSPEC( tp, cm, ea, cl, nm ) ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, ULIS_BLOCK_SPEC(   tp, cm, ea, cl, nm ) )
-
-
 #define ULIS_GETSPEC( i ) ::ULIS::TBlockInfo< i >::_nf;
+
 } // namespace ULIS
 

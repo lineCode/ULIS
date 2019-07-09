@@ -10,5 +10,6 @@
 
 #pragma once
 
-#include "ULIS/Data/ULIS.Data.h"
-#include "ULIS/Blend/ULIS.Blend.Context.h"
+#include "ULIS/Interface/ULIS.Interface.Decl.h"
+#include "ULIS/Interface/ULIS.Interface.Make.h"
+#include "ULIS/Interface/ULIS.Interface.Spec.h"

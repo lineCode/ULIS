@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Data.Layout.h
+* ULIS.Base.WeakUUID.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -15,9 +15,8 @@
 
 
 namespace ULIS {
-
-
-std::string generate_uuid( const unsigned int len );
-
-
+/////////////////////////////////////////////////////
+// Weak UUID
+std::string generate_weak_uuid( const unsigned int len );
 } // ULIS
+

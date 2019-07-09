@@ -10,14 +10,13 @@
 
 #pragma once
 
-
-#include "ULIS/Data/ULIS.Data.ID.h"
-#include "ULIS/Data/ULIS.Data.Mem.h"
-#include "ULIS/Data/ULIS.Data.MD5.h"
+#include "ULIS/Base/ULIS.Base.AlignedMemory.h"
+#include "ULIS/Base/ULIS.Base.CRC32.h"
+#include "ULIS/Base/ULIS.Base.MD5.h"
+#include "ULIS/Base/ULIS.Base.VectorSIMD.h"
+#include "ULIS/Base/ULIS.Base.WeakUUID.h"
 #include "ULIS/Data/ULIS.Data.Pixel.h"
-#include "ULIS/Data/ULIS.Data.Vector.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
-
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -138,6 +137,7 @@ public:
                    void                         Invalidate          ()                                                                          { if( mInvCb ) mInvCb( this, mInvInfo, { 0, 0, Width(), Height() } );   }
                    void                         Invalidate          ( const FRect& iRect )                                                      { if( mInvCb ) mInvCb( this, mInvInfo, iRect );                         }
                    void                         SetInvalidateCB     ( fpInvalidateFunction iCb, void* iInfo )                                   { mInvCb = iCb; mInvInfo = iInfo;                                       }
+
 protected:
     // Protected Data
     fpInvalidateFunction    mInvCb;
@@ -164,7 +164,7 @@ public:
 
     TBlock( int iWidth, int iHeight )
         : d     ( new TBlockData< _SH >( iWidth, iHeight )  )
-        , id    ( generate_uuid( 16 )                       )
+        , id    ( generate_weak_uuid( 16 )                  )
     {}
 
 public:
@@ -173,7 +173,6 @@ public:
     template< typename T > inline T             RangeT              ()                                              const                       { return  (T)tSpec::_nf._rm;                                            }
     inline         tPixelType                   Max                 ()                                              const                       { return  MaxT< tPixelType >();                                         }
     inline         tNextPixelType               Range               ()                                              const                       { return  RangeT< tNextPixelType >();                                   }
-
 
 public:
     // Public API
@@ -206,7 +205,7 @@ public:
     inline virtual int                          NumChannels         ()                                              const   override    final   { return  tSpec::_nf._rc;                                               }
     inline virtual int                          NumColorChannels    ()                                              const   override    final   { return  tSpec::_nf._nc;                                               }
     inline virtual std::string                  MD5Hash             ()                                              const   override    final   { return  MD5( DataPtr(), BytesTotal() );                               }
-    inline virtual uint32                       CRC32Hash           ()                                              const   override    final   { return  COAL_CRC32_DAT( DataPtr(), BytesTotal() );                    }
+    inline virtual uint32                       CRC32Hash           ()                                              const   override    final   { return  CRC32( DataPtr(), BytesTotal() );                             }
     inline virtual std::string                  UUID                ()                                              const   override    final   { return  id;                                                           }
     inline virtual CColor                       PixelColor          ( int x, int y )                                        override    final   { return  d->PixelColor( x, y );                                        }
     inline virtual CColor                       PixelColor          ( int x, int y )                                const   override    final   { return  d->PixelColor( x, y );                                        }
@@ -230,10 +229,10 @@ public:
     }
 
     virtual void Clear( const FRect& iRect ) override final {
-            int xmin = Maths::Max( iRect.x, 0 );
-            int ymin = Maths::Max( iRect.y, 0 );
-            int xmax = Maths::Min( iRect.x + iRect.w, Width() );
-            int ymax = Maths::Min( iRect.y + iRect.h, Height() );
+            int xmin = FMath::Max( iRect.x, 0 );
+            int ymin = FMath::Max( iRect.y, 0 );
+            int xmax = FMath::Min( iRect.x + iRect.w, Width() );
+            int ymax = FMath::Min( iRect.y + iRect.h, Height() );
 
             int bytesToClear = ( xmax - xmin ) * BytesPerPixel();
             int shift = xmin * BytesPerPixel();

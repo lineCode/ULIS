@@ -11,6 +11,7 @@
 #pragma once
 
 #include <utility>
+#include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Data/ULIS.Data.Spec.h"
 
 namespace ULIS {

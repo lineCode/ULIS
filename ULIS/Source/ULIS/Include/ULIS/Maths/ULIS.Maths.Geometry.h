@@ -40,10 +40,10 @@ struct FRect
 
     FRect operator&( const FRect& iOther ) const
     {
-        int x1 = Maths::Max( x, iOther.x );
-        int y1 = Maths::Max( y, iOther.y );
-        int x2 = Maths::Min( x + w, iOther.x + iOther.w );
-        int y2 = Maths::Min( y + h, iOther.y + iOther.h );
+        int x1 = FMath::Max( x, iOther.x );
+        int y1 = FMath::Max( y, iOther.y );
+        int x2 = FMath::Min( x + w, iOther.x + iOther.w );
+        int y2 = FMath::Min( y + h, iOther.y + iOther.h );
         return  FRect( x1, y1, x2 - x1, y2 - y1 );
     }
 

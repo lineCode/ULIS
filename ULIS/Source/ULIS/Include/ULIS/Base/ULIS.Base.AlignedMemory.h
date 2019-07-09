@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Data.Mem.h
+* ULIS.Base.AlignedMemory.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -12,10 +12,7 @@
 
 #include <cstdlib>
 
-
 namespace ULIS {
-
-
 /////////////////////////////////////////////////////
 // TAlignedMemory
 template< typename T, size_t alignement >

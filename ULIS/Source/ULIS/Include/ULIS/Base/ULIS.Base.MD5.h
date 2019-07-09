@@ -12,7 +12,7 @@
 
 #include <string>
 #include <cstring>
-#include "ULIS/Data/ULIS.Data.Types.h"
+#include "ULIS/Base/ULIS.Base.BaseTypes.h"
 
 namespace ULIS {
 

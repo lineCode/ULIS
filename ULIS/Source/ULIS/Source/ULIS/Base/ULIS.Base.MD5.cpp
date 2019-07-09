@@ -1,11 +1,17 @@
-// Copyright 2018-2019 Praxinos, Inc. All Rights Reserved.
+/*************************************************************************
+*
+*   ULIS
+*__________________
+*
+* ULIS.Base.MD5.cpp
+* Clement Berthaud - Layl
+* Please refer to LICENSE.md
+*/
 
-#include "ULIS/Data/ULIS.Data.MD5.h"
+#include "ULIS/Base/ULIS.Base.MD5.h"
 
 /////////////////////////////////////////////////////
 // Utility Macro
-
-
 #define S11 7
 #define S12 12
 #define S13 17
@@ -23,16 +29,11 @@
 #define S43 15
 #define S44 21
 
-
 namespace ULIS {
-
-
 /////////////////////////////////////////////////////
 // FMD5
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------- Construction
-
-
 FMD5::FMD5()
 {
     Init();
@@ -57,8 +58,6 @@ FMD5::FMD5( const uint8* data, int length )
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------- Private Internals
-
-
 void
 FMD5::Init()
 {
@@ -152,8 +151,6 @@ FMD5::Transform( const unsigned char block[64] )
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-
-
 void
 FMD5::Update( const unsigned char input[], uint32 length )
 {
@@ -237,8 +234,6 @@ FMD5::Hexdigest() const
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------ Private logic
-
-
 //static
 void
 FMD5::Decode( uint32 output[], const unsigned char input[], uint32 len )
@@ -346,8 +341,6 @@ FMD5::II( uint32 &a, uint32 b, uint32 c, uint32 d, uint32 x, uint32 s, uint32 ac
 
 /////////////////////////////////////////////////////
 // Accessibility util
-
-
 std::string MD5(const std::string str)
 {
     FMD5 m = FMD5(str);

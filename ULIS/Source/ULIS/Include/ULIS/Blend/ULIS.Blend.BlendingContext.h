@@ -3,18 +3,18 @@
 *   ULIS
 *__________________
 *
-* ULIS.Blend.Context.h
+* ULIS.Blend.BlendingContext.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
 
 #pragma once
 
-#include "ULIS/Data/ULIS.Data.h"
 #include <assert.h>
+#include "ULIS/Base/ULIS.Base.BaseTypes.h"
+#include "ULIS/Data/ULIS.Data.Block.h"
 
 namespace ULIS {
-
 /////////////////////////////////////////////////////
 // eBlendingMode
 enum class eBlendingMode : char

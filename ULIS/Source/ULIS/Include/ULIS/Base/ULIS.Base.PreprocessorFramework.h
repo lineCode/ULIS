@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Imaging.CompileTime.BlockID.h
+* ULIS.Base.PreprocessorFramework.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -38,9 +38,6 @@ namespace ULIS {
 /* delegate macro for sequential 'enumerization' of token */
 #define ULIS_MAKE_ENUM_SEQ( r, data, elem ) BOOST_PP_CAT( k, elem ),
 
-/* delegate macro for sequential concatenation of enum value with actual token */
-#define ULIS_MAKE_ENUM_KEYS_TUPLE_SEQ( r, data, elem ) ( BOOST_PP_CAT( k, elem ), elem ),
-
 /* build a keyword categroy as an array of strings from tokens */
 #define ULIS_KEYS_TO_KEYWORDS( cat, keys )                                              \
     constexpr const char* ULIS_KEYWORDS_CAT( cat )[] = {                                \
@@ -53,27 +50,6 @@ namespace ULIS {
 
 /* Make Tuple and build keys */
 #define ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( cat, ... ) ULIS_KEYS_TO_KEYWORDS( cat, __VA_ARGS__ ) ULIS_KEYS_TO_ENUM( cat, __VA_ARGS__ )
-
-
-/////////////////////////////////////////////////////
-// Keyword Token
-/* token delimiter for keyword start */
-#define ULIS_PARSE_KW_START_TOKEN __
-
-/* token delimiter for keyword end */
-#define ULIS_PARSE_KW_END_TOKEN _
-
-/* stringized token delimiter for keyword start */
-#define ULIS_PARSE_KW_START_TOKEN_S BOOST_PP_STRINGIZE( ULIS_PARSE_KW_START_TOKEN )
-
-/* stringized token delimiter for keyword end */
-#define ULIS_PARSE_KW_END_TOKEN_S BOOST_PP_STRINGIZE( ULIS_PARSE_KW_END_TOKEN )
-
-/* concatenate token delimiters around input */
-#define ULIS_PARSE_KW_MAKE_TOKEN( i ) BOOST_PP_CAT( BOOST_PP_CAT( ULIS_PARSE_KW_START_TOKEN, i ), ULIS_PARSE_KW_END_TOKEN )
-
-/* stringized concatenated token delimiters around input */
-#define ULIS_PARSE_KW_MAKE_TOKEN_S( i ) BOOST_PP_STRINGIZE( ULIS_PARSE_KW_MAKE_TOKEN( i ) )
 
 /* concatenate multiple keyword arguments with no prefered order */
 #define ULIS_BLOCK_SPEC( ... )      BOOST_PP_SEQ_CAT( BOOST_PP_TUPLE_TO_SEQ( ( __VA_ARGS__ ) ) )

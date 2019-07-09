@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Data.Block.h
+* ULIS.Thread.Pool.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -20,8 +20,6 @@
 #include <atomic>
 
 namespace ULIS {
-
-
 /////////////////////////////////////////////////////
 // FThreadPool
 class FThreadPool

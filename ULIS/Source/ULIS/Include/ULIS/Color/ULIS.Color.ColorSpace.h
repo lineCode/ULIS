@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Color.SColor.h
+* ULIS.Color.ColorSpace.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -12,7 +12,10 @@
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// Todo
+// IColorSpace
+class IColorSpace
+{
+};
 
 } // namespace ULIS
 
