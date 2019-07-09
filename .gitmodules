@@ -1,6 +1,3 @@
 [submodule "ULIS/Tools/Submodules/ProjectDependencies/ProjectDependencies"]
 	path = ULIS/Tools/Submodules/ProjectDependencies/ProjectDependencies
 	url = https://github.com/Robot-Fromage/ProjectDependencies
-[submodule "ULIS/Tools/Submodules/fuel"]
-	path = ULIS/Tools/Submodules/fuel
-	url = https://github.com/Robot-Fromage/fuel
