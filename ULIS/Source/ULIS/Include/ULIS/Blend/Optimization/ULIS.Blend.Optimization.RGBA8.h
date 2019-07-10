@@ -45,20 +45,7 @@ public:
                      const FPoint& iShift,
                      const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
-        //TMP!!!!!!!!!!
-        const int x1 = iROI.y;
-        const int y1 = iROI.y;
-        const int x2 = x1 + iROI.w;
-        const int y2 = y1 + iROI.h;
-        TPixelBlender< _SH, _BM > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
-        for( int y = y1; y < y2; ++y )
-        {
-            for( int x = x1; x < x2; ++x )
-            {
-                iBlockBack->SetPixelColor( x, y, CColor( 255, 255, 255 ) );
-            }
-        }
-        //TMP!!!!!!!!!!
+        TBlockBlender_Default< _SH, _BM, tSpec::_nf._tp, tSpec::_nf._cm, tSpec::_nf._ea, tSpec::_nf._lh, tSpec::_nf._nm, tSpec::_nf._dm >::Run( iBlockTop, iBlockBack, iOpacity, iROI, iShift, iPerfStrat );
     }
 };
 
