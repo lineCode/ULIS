@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
+#include "ULIS/Base/ULIS.Base.PerfStrat.h"
 #include "ULIS/Blend/ULIS.Blend.BlendingModes.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Blend/ULIS.Blend.BlockBlender.h"
@@ -28,7 +29,7 @@ template< uint32 _SH >
 class TBlendingContext
 {
 public:
-    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, float iOpacity = 1.f, int ix = 0, int iy = 0, bool callInvalidCB = true )
+    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, float iOpacity = 1.f, int ix = 0, int iy = 0, bool callInvalidCB = true, const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
         if( iOpacity == 0.f )
             return;
@@ -42,7 +43,7 @@ public:
 
         FPoint shift( -ix, -iy );
 
-        #define ULIS_SWITCH_OP( iMode )  TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift )
+        #define ULIS_SWITCH_OP( iMode )  TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerfStrat )
         ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, ULIS_SWITCH_OP )
         #undef ULIS_SWITCH_OP
 
@@ -52,7 +53,7 @@ public:
         iBlockBack->Invalidate( inter_bb );
     }
 
-    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, bool callInvalidCB = true )
+    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, bool callInvalidCB = true, const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
         if( iOpacity == 0.f )
             return;
@@ -66,7 +67,7 @@ public:
         if( !intersects ) return;
         FPoint shift( 0, 0 );
 
-        #define ULIS_SWITCH_OP( iMode )  TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift )
+        #define ULIS_SWITCH_OP( iMode ) TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerfStrat )
         ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, ULIS_SWITCH_OP )
         #undef ULIS_SWITCH_OP
 

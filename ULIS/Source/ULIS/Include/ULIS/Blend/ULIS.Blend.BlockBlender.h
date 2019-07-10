@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
+#include "ULIS/Base/ULIS.Base.PerfStrat.h"
 #include "ULIS/Blend/ULIS.Blend.BlendingModes.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Blend/ULIS.Blend.PixelBlender.h"
@@ -27,7 +28,7 @@ template< uint32 _SH, eBlendingMode _BM, e_tp _TP, e_cm _CM, e_ea _EA, uint32 _L
 class TBlockBlenderImp
 {
 public:
-    static void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift )
+    static void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift, const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
         const int x1 = iROI.y;
         const int y1 = iROI.y;
@@ -46,9 +47,9 @@ template< uint32 _SH, eBlendingMode _BM >
 class TBlockBlender
 {
 public:
-    static inline void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift )
+    static inline void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift, const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
-        TBlockBlenderImp< _SH, _BM, tSpec::_nf._tp, tSpec::_nf._cm, tSpec::_nf._ea, tSpec::_nf._lh, tSpec::_nf._nm, tSpec::_nf._dm >::Run( iBlockTop, iBlockBack, iOpacity, iROI, iShift );
+        TBlockBlenderImp< _SH, _BM, tSpec::_nf._tp, tSpec::_nf._cm, tSpec::_nf._ea, tSpec::_nf._lh, tSpec::_nf._nm, tSpec::_nf._dm >::Run( iBlockTop, iBlockBack, iOpacity, iROI, iShift, iPerfStrat );
     }
 };
 

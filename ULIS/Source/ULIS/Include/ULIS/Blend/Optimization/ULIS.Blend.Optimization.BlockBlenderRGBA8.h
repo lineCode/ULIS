@@ -27,7 +27,7 @@ template< uint32 _SH, eBlendingMode _BM, uint32 _LH, e_nm _NM, bool _DM >
 class TBlockBlenderImp< _SH, _BM, e_tp::kuint8, e_cm::kRGB, e_ea::khasAlpha, _LH, _NM, _DM >
 {
 public:
-    static void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift )
+    static void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift, const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
         const int x1 = iROI.y;
         const int y1 = iROI.y;
