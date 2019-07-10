@@ -24,7 +24,7 @@ FBlendingContext::Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iM
 
     switch( iBlockTop->Id() )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: TBlendingContext< ::ULIS::ulis_types_reg[ n ] >::Blend( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockTop, (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockBack, iMode, iOpacity, ix, iy, callInvalidCB );
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: TBlendingContext< ::ULIS::ulis_types_reg[ n ] >::Blend( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockTop, (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockBack, iMode, iOpacity, ix, iy, callInvalidCB ); break;
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
     }
@@ -39,7 +39,7 @@ FBlendingContext::Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iM
 
     switch( iBlockTop->Id() )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: TBlendingContext< ::ULIS::ulis_types_reg[ n ] >::Blend( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockTop, (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockBack, iMode, iArea, iOpacity, callInvalidCB );
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: TBlendingContext< ::ULIS::ulis_types_reg[ n ] >::Blend( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockTop, (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockBack, iMode, iArea, iOpacity, callInvalidCB ); break;
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
     }

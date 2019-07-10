@@ -20,6 +20,20 @@ namespace ULIS {
 // Defines
 #define tSpec TBlockInfo< _SH >
 
+
+/////////////////////////////////////////////////////
+// Basic Compositing
+template< uint32 _SH >
+static inline
+typename TBlock< _SH >::tPixelType
+Union( typename TBlock< _SH >::tPixelType b,
+       typename TBlock< _SH >::tPixelType s )
+{
+    return  ( b + s ) - ConvType< typename TBlock< _SH >::tNextPixelType,
+                          typename TBlock< _SH >::tPixelType >
+                        ((typename TBlock< _SH >::tNextPixelType)( b * s ) );
+}
+
 /////////////////////////////////////////////////////
 // TPixelBlender
 template< uint32 _SH, eBlendingMode _BM >
@@ -34,13 +48,13 @@ struct TPixelBlender
 
     void Apply( int x, int y )
     {
+        typename TBlock< _SH >::tPixelProxy pixelBack = back->PixelProxy( x, y );
+        typename TBlock< _SH >::tPixelProxy pixelTop  = top->PixelProxy( x + shift.x, y + shift.y );
+        typename TBlock< _SH >::tPixelType  alphaBack = pixelBack.GetAlpha();
+        typename TBlock< _SH >::tPixelType  alphaTop  = ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( (typename TBlock< _SH >::tNextPixelType)( pixelTop.GetAlpha() * opacity ) );
+        typename TBlock< _SH >::tPixelType  alphaResult = Union< _SH >( alphaBack, alphaTop );
+        typename TBlock< _SH >::tPixelType  var = alphaResult == 0 ? 0 : ( alphaTop * TBlock< _SH >::StaticMax() ) / alphaResult;
         /*
-        cv::Mat Cb( 1, 4, fmt, back->Pixel( x, y ) );
-        cv::Mat Cs( 1, 4, fmt, front->Pixel( x + shift.x, y + shift.y ) );
-        T ab = Cb.at< T >( 0, 3 );
-        T as = ( Cs.at< T >( 0, 3 ) * opacity ) / MAX_uint8;
-        T ar = Union< T >( ab, as );
-        T var = ar == 0 ? 0 : ( as * MAX_uint8 ) / ar;
         Cb.at< T >( 0, 0 ) = Composer< mode, T >::BasicCompositing( Cb.at< T >( 0, 0 ), Cs.at< T >( 0, 0 ), ab, var );
         Cb.at< T >( 0, 1 ) = Composer< mode, T >::BasicCompositing( Cb.at< T >( 0, 1 ), Cs.at< T >( 0, 1 ), ab, var );
         Cb.at< T >( 0, 2 ) = Composer< mode, T >::BasicCompositing( Cb.at< T >( 0, 2 ), Cs.at< T >( 0, 2 ), ab, var );

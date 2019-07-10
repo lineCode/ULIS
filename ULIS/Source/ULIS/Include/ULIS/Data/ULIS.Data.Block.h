@@ -170,6 +170,10 @@ public:
     {}
 
 public:
+    // Static Max API
+    static tPixelType StaticMax() { return (tPixelType)std::numeric_limits< tPixelType >::max(); }
+
+public:
     // Template API
     template< typename T > inline T             MaxT                ()                                              const                       { return  (T)tSpec::_nf._tm;                                            }
     template< typename T > inline T             RangeT              ()                                              const                       { return  (T)tSpec::_nf._rm;                                            }

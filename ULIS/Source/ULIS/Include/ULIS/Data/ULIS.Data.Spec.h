@@ -78,11 +78,8 @@ template< uint32_t > struct TBlockInfo {
                                        , 0                   // range_max
                                        , 16                  // memory_alignment
                                        , 0                   // layout_hash
-                                       };
+    };
 };
-
-/* Explicit decl of nf member for linkage safety on clang */
-template< uint32_t N > constexpr const FSpec TBlockInfo< N >::_nf;
 
 /////////////////////////////////////////////////////
 // Info
@@ -137,19 +134,26 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 #define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockInfo< ULIS_SPEC_SH( spec ) >::_nf;
 #endif
 
+#if defined(__clang__)
+#define ULIS_PREDECL_NF inline
+#elif defined(__GNUC__) || defined(__GNUG__)
+#define ULIS_PREDECL_NF
+#elif defined(_MSC_VER)
+#define ULIS_PREDECL_NF
+#endif
+
 /////////////////////////////////////////////////////
 // TBlockInfo Specialization
 /* build a specialization of TBlockInfo from token and compute string and hash equivalents */
-#define ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, spec )                                       \
-    coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                    \
-    constexpr uint32_t  ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).hash();                 \
-    template<> struct TBlockInfo< ULIS_SPEC_SH( spec ) > {                                  \
-        static constexpr const FSpec        _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )    \
-                                                                  , ULIS_SPEC_SH( spec )    \
-                                                                  , tp, cm, ea, cl, nm )    \
-    };                                                                                      \
-    ULIS_POSTDECL_NF( spec )                                                                \
-    typedef TBlock< ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                    \
+#define ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, spec )                                               \
+    coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                            \
+    constexpr uint32_t  ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).hash();                         \
+    template<> struct TBlockInfo< ULIS_SPEC_SH( spec ) > {                                          \
+        ULIS_PREDECL_NF static constexpr const FSpec _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )   \
+                                                                           , ULIS_SPEC_SH( spec )   \
+                                                                           , tp, cm, ea, cl, nm )   \
+    };                                                                                              \
+    typedef TBlock< ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                            \
     ULIS_APPEND_REG( ULIS_REG_BUILDER, ULIS_SPEC_SH( spec ) )
 
 /* Public macro for block spec */

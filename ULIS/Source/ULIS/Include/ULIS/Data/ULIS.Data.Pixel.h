@@ -119,7 +119,7 @@ template<> uint64   inline ConvType< uint8,  uint64 >( uint8 iValue  ) { return 
 template<> uint32   inline ConvType< uint16, uint32 >( uint16 iValue ) { return iValue * 0x10001;                   }
 template<> uint64   inline ConvType< uint16, uint64 >( uint16 iValue ) { return iValue * 0x1000100010001;           }
 template<> uint64   inline ConvType< uint32, uint64 >( uint32 iValue ) { return iValue * 0x100000001;               }
-template<> uint8    inline ConvType< uint16, uint8  >( uint16 iValue ) { return iValue >> 8;                        }
+template<> uint8    inline ConvType< uint16, uint8  >( uint16 iValue ) { return ( iValue + 1 + ( iValue>>8 ) ) >> 8;}
 template<> uint8    inline ConvType< uint32, uint8  >( uint32 iValue ) { return iValue >> 24;                       }
 template<> uint8    inline ConvType< uint64, uint8  >( uint64 iValue ) { return iValue >> 56;                       }
 template<> uint16   inline ConvType< uint32, uint16 >( uint32 iValue ) { return iValue >> 16;                       }
