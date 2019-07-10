@@ -28,18 +28,19 @@ template< uint32        _SH,    // Format
           uint32        _LH,    // Layout
           e_nm          _NM,    // Normalized
           bool          _DM >   // Decimal
-class TBlockBlenderImp< _SH,
-                        _BM,
+
+class TBlockBlenderImp< _SH,                // Format
+                        _BM,                // Blending Mode
                         e_tp::kuint8,       // uint8
                         e_cm::kRGB,         // RGB
                         e_ea::khasAlpha,    // Alpha
-                        _LH,
-                        _NM,
-                        _DM >
+                        _LH,                // Layout
+                        _NM,                // Normalized
+                        _DM >               // Decimal
 {
 public:
     static void Run( TBlock< _SH >* iBlockTop,
-                     TBlock< _SH >* iBlockBack,
+                     TBlock< _SH >* iBlockBack  ,
                      typename TBlock< _SH >::tPixelType iOpacity,
                      const FRect& iROI,
                      const FPoint& iShift,
