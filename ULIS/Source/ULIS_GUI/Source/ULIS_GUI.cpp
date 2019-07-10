@@ -20,15 +20,13 @@ int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
 
-    ::ULIS::FBlockBGRA8* block = new ::ULIS::FBlockBGRA8( 64, 64 );
-    ::ULIS::FBlockBGRA8::tPixelValue val;
+    ::ULIS::IBlock* blockA = ::ULIS::MakeBlock( 256, 256, ::ULIS::FBlockBGRA8::TypeId() );
+    ::ULIS::IBlock* blockB = ::ULIS::MakeBlock( 256, 256, ::ULIS::FBlockBGRA8::TypeId() );
+    blockA->Fill( ::ULIS::CColor::FromRGB( 255, 0, 0, 255 ) );
+    blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 255 ) );
+    ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kNormal, 0.5f );
 
-    val.SetColor( ::ULIS::CColor::FromRGB( 255, 0, 0 ) );
-    for( int y = 0; y < block->Height(); ++y )
-        for( int x = 0; x < block->Width(); ++x )
-            block->SetPixelValue( x, y, val );
-
-    QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_ARGB32 );
+    QImage* image   = new QImage( blockA->DataPtr(), blockA->Width(), blockA->Height(), blockA->BytesPerScanLine(), QImage::Format::Format_ARGB32 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
     QWidget* w      = new QWidget();
     QLabel* label   = new QLabel( w );
@@ -42,7 +40,8 @@ int main( int argc, char *argv[] )
     delete label;
     delete image;
     delete w;
-    delete block;
+    delete blockA;
+    delete blockB;
 
     return  exit_code;
 }

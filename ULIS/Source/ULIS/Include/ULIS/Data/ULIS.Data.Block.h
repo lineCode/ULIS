@@ -170,8 +170,10 @@ public:
     {}
 
 public:
-    // Static Max API
-    static tPixelType StaticMax() { return (tPixelType)std::numeric_limits< tPixelType >::max(); }
+    static tPixelType   StaticFastMax() { return (tPixelType)std::numeric_limits< tPixelType >::max(); }
+    static tPixelType   StaticMax() { return (tPixelType)tSpec::_nf._tm; }
+    static int          StaticNumChannels         () { return  tSpec::_nf._rc; }
+    static int          StaticNumColorChannels    () { return  tSpec::_nf._nc; }
 
 public:
     // Template API

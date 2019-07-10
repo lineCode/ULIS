@@ -108,8 +108,8 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
     uint8_t             rc = ::__coal__::strlen( iCl );
     uint8_t             nc = iEa == ::ULIS::e_ea::khasAlpha ? rc - 1 : rc;
     uint16_t            pd = type_size< iTp >() * rc;
-    double              tm = type_max< iTp >();
-    double              rm = dm ? type_max< iTp >() : type_max< iTp >() + 1;
+    double              tm = iNm == e_nm::knormalized ? 1.0 : type_max< iTp >();
+    double              rm = dm ? tm : tm + 1;
     uint8_t             ma = 16;
     uint32_t            lh = COAL_CRC32_STR( iCl );
     static_assert( iNm == e_nm::knormalized ? dm : true, "Integer types cannot be normalized" );

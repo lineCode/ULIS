@@ -20,19 +20,63 @@ namespace ULIS {
 // Defines
 #define tSpec TBlockInfo< _SH >
 
+/////////////////////////////////////////////////////
+// BlendFunc Functors
+template< uint32 _SH, eBlendingMode _BM >
+struct BlendFunc {
+    static inline
+    typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs )
+    {
+        return Cs;
+    }
+};
+
+
+// Normal
+template< uint32 _SH >
+struct BlendFunc< _SH, eBlendingMode::kNormal >
+{
+    static inline
+    typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs )
+    {
+        return Cs;
+    }
+};
+
+
+// Multiply
+template< uint32 _SH >
+struct BlendFunc< _SH, eBlendingMode::kMultiply >
+{
+    static inline
+    typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs )
+    {
+        return ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( Cb * Cs );
+    }
+};
 
 /////////////////////////////////////////////////////
-// Basic Compositing
+// Union Compositing
 template< uint32 _SH >
 static inline
 typename TBlock< _SH >::tPixelType
 Union( typename TBlock< _SH >::tPixelType b,
        typename TBlock< _SH >::tPixelType s )
 {
-    return  ( b + s ) - ConvType< typename TBlock< _SH >::tNextPixelType,
-                          typename TBlock< _SH >::tPixelType >
-                        ((typename TBlock< _SH >::tNextPixelType)( b * s ) );
+    return  ( b + s ) - ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( (typename TBlock< _SH >::tNextPixelType)( b * s ) );
 }
+
+/////////////////////////////////////////////////////
+// Composer / BasicCompositing
+template< uint32 _SH, eBlendingMode _BM >
+struct Composer
+{
+    static
+    typename TBlock< _SH >::tPixelType
+    BasicCompositing( typename TBlock< _SH >::tPixelType Cb, typename TBlock< _SH >::tPixelType Cs, typename TBlock< _SH >::tPixelType ab, typename TBlock< _SH >::tPixelType var ) {
+        return  ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( ( TBlock< _SH >::StaticMax() - var ) * Cb   +   var * ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( ( TBlock< _SH >::StaticMax() - ab ) * Cs + ab * BlendFunc< _SH, _BM >::Compute( Cb, Cs ) ) );
+    }
+};
 
 /////////////////////////////////////////////////////
 // TPixelBlender
@@ -50,17 +94,14 @@ struct TPixelBlender
     {
         typename TBlock< _SH >::tPixelProxy pixelBack = back->PixelProxy( x, y );
         typename TBlock< _SH >::tPixelProxy pixelTop  = top->PixelProxy( x + shift.x, y + shift.y );
-        typename TBlock< _SH >::tPixelType  alphaBack = pixelBack.GetAlpha();
-        typename TBlock< _SH >::tPixelType  alphaTop  = ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( (typename TBlock< _SH >::tNextPixelType)( pixelTop.GetAlpha() * opacity ) );
-        typename TBlock< _SH >::tPixelType  alphaResult = Union< _SH >( alphaBack, alphaTop );
-        typename TBlock< _SH >::tPixelType  var = alphaResult == 0 ? 0 : ( alphaTop * TBlock< _SH >::StaticMax() ) / alphaResult;
-        /*
-        Cb.at< T >( 0, 0 ) = Composer< mode, T >::BasicCompositing( Cb.at< T >( 0, 0 ), Cs.at< T >( 0, 0 ), ab, var );
-        Cb.at< T >( 0, 1 ) = Composer< mode, T >::BasicCompositing( Cb.at< T >( 0, 1 ), Cs.at< T >( 0, 1 ), ab, var );
-        Cb.at< T >( 0, 2 ) = Composer< mode, T >::BasicCompositing( Cb.at< T >( 0, 2 ), Cs.at< T >( 0, 2 ), ab, var );
-        Cb.at< T >( 0, 3 ) = ar;
-        */
-        auto dummy = 0;
+        const typename TBlock< _SH >::tPixelType  alphaBack = pixelBack.GetAlpha();
+        const typename TBlock< _SH >::tPixelType  alphaTop  = ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( (typename TBlock< _SH >::tNextPixelType)( pixelTop.GetAlpha() * opacity ) );
+        const typename TBlock< _SH >::tPixelType  alphaResult = Union< _SH >( alphaBack, alphaTop );
+        const typename TBlock< _SH >::tPixelType  var = alphaResult == 0 ? 0 : ( alphaTop * TBlock< _SH >::StaticMax() ) / alphaResult;
+        const int max_chan = TBlock< _SH >::StaticNumColorChannels();
+        for( int i = 0; i < max_chan; ++i )
+            pixelBack.SetComponent( i, Composer< _SH, _BM >::BasicCompositing( pixelBack.GetComponent( i ), pixelTop.GetComponent( i ), alphaBack, var ) );
+        pixelBack.SetAlpha( alphaResult );
     }
 
     TBlock< _SH >* top;
