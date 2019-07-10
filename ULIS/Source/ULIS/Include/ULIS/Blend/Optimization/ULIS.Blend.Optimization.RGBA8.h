@@ -23,12 +23,29 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // TBlockBlender_Imp
-template< uint32 _SH, eBlendingMode _BM, uint32 _LH, e_nm _NM, bool _DM >
-class TBlockBlenderImp< _SH, _BM, e_tp::kuint8, e_cm::kRGB, e_ea::khasAlpha, _LH, _NM, _DM >
+template< uint32        _SH,    // Format
+          eBlendingMode _BM,    // Blending Mode
+          uint32        _LH,    // Layout
+          e_nm          _NM,    // Normalized
+          bool          _DM >   // Decimal
+class TBlockBlenderImp< _SH,
+                        _BM,
+                        e_tp::kuint8,       // uint8
+                        e_cm::kRGB,         // RGB
+                        e_ea::khasAlpha,    // Alpha
+                        _LH,
+                        _NM,
+                        _DM >
 {
 public:
-    static void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static void Run( TBlock< _SH >* iBlockTop,
+                     TBlock< _SH >* iBlockBack,
+                     typename TBlock< _SH >::tPixelType iOpacity,
+                     const FRect& iROI,
+                     const FPoint& iShift,
+                     const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
+        //TMP!!!!!!!!!!
         const int x1 = iROI.y;
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
@@ -41,6 +58,7 @@ public:
                 iBlockBack->SetPixelColor( x, y, CColor( 255, 255, 255 ) );
             }
         }
+        //TMP!!!!!!!!!!
     }
 };
 
