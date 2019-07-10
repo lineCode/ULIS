@@ -14,5 +14,6 @@
 #include "ULIS/Interface/ULIS.Interface.Make.h"
 #include "ULIS/Interface/ULIS.Interface.Spec.h"
 #include "ULIS/Interface/ULIS.Interface.Blend.h"
-#include "ULIS/Interface/ULIS.Interface.GlobalPool.h"
+#include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
+#include "ULIS/Global/ULIS.Global.GlobalCPUConfig.h"
 

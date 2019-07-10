@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Blend.BlendingContext.h
+* ULIS.Blend.Optimization.RGBA8.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -13,8 +13,10 @@
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Blend/ULIS.Blend.BlendingModes.h"
-#include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Blend/ULIS.Blend.BlockBlender.h"
+#include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Global/ULIS.Global.GlobalCPUConfig.h"
+#include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////

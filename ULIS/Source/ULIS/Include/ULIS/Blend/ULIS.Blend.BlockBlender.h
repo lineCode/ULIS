@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Blend.BlendingContext.h
+* ULIS.Blend.BlockBlender.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */

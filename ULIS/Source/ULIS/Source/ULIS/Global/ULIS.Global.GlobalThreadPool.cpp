@@ -3,29 +3,28 @@
 *   ULIS
 *__________________
 *
-* ULIS.Interface.GlobalPool.h
+* ULIS.Interface.GlobalThreadPool.cpp
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
 
-#pragma once
-
-#include "ULIS/Thread/ULIS.Thread.Pool.h"
+#include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 
 
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FGlobalThreadPool
-class FGlobalThreadPool
+// Public API
+//static
+FThreadPool&
+FGlobalThreadPool::Get()
 {
-private:
-    // Construction / Destruction
-    FGlobalThreadPool ();
+    static FThreadPool* pool;
+    if( !pool )
+        pool = new FThreadPool();
 
-public:
-    // Public API
-    static FThreadPool& Get();
-}; 
+    return  *pool;
+}
 
 } // namespace ULIS
 

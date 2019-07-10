@@ -3,26 +3,25 @@
 *   ULIS
 *__________________
 *
-* ULIS.Base.CPUConfig.h
+* ULIS.Interface.GlobalCPUConfig.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
 
-#include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/FeatureDetector/cpu_x86.h"
+#pragma once
+
+#include "ULIS/Base/ULIS.Base.CPUConfig.h"
+
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FCPUConfig
-struct FCPUConfig
+// FGlobalCPUConfig
+class FGlobalCPUConfig
 {
-    FCPUConfig()
-    {
-        info.detect_host();
-    }
-
-    ::FeatureDetector::cpu_x86 info;
-};
+public:
+    // Public API
+    static FGlobalCPUConfig& Get();
+}; 
 
 } // namespace ULIS
 
