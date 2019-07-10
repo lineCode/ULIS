@@ -288,6 +288,73 @@ void ProfileFillRectAA()
 }
 
 
+
+void mt_blend_normal( ::ULIS::FBlockdoubleCMYKhasAlphaACMYKnormalized* iBlockA, ::ULIS::FBlockdoubleCMYKhasAlphaACMYKnormalized* iBlockB )
+{
+    ::ULIS::FBlendingContext::Blend( iBlockB, iBlockA, ::ULIS::eBlendingMode::kNormal, 0.5f );
+}
+
+
+void ProfileBlendNormal()
+{
+    ::ULIS::FBlockdoubleCMYKhasAlphaACMYKnormalized* blockB = new ::ULIS::FBlockdoubleCMYKhasAlphaACMYKnormalized( 256, 256 );
+    int     num_threads     = 16;
+    int     num_op          = blockB->Width() * blockB->Height();
+    int     op_per_thread   = num_op / num_threads;
+
+    ::ULIS::FBlockBGRA8::tPixelValue val;
+    val.R() = 'R';
+    val.G() = 'G';
+    val.B() = 'B';
+    val.SetAlpha( 'A' );
+    ::ULIS::FThreadPool pool( num_threads );
+
+    std::cout << "=========================================" << std::endl;
+    std::cout << "Profiling: " << 256 << "x" << 256     << std::endl;
+    std::cout << "Num Threads:      " << num_threads    << std::endl;
+    std::cout << "Total Op:         " << num_op         << std::endl;
+    std::cout << "Op per Thread:    " << op_per_thread  << std::endl;
+    std::cout << std::fixed;
+    std::cout << std::setprecision( 2 );
+
+    std::vector< ::ULIS::FBlockdoubleCMYKhasAlphaACMYKnormalized* > images;
+    for( int i = 0; i < 1000; ++i )
+    {
+        images.push_back( new ::ULIS::FBlockdoubleCMYKhasAlphaACMYKnormalized( 256, 256 ) );
+    }
+
+    auto start_time = std::chrono::steady_clock::now();
+
+    for( int k = 0; k < 1000; ++k )
+    {
+        std::cout << k << std::endl;
+        int op_start   = 0;
+        int op_end     = op_per_thread;
+        for( int i = 0; i < num_threads; ++i )
+        {
+            pool.ScheduleJob( mt_blend_normal, images[i], blockB );
+            op_start   += op_per_thread;
+            op_end     += op_per_thread;
+        }
+
+        pool.WaitForCompletion();
+    }
+    auto end_time   = std::chrono::steady_clock::now();
+    auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
+    auto avg        = delta / 1000.f;
+
+    std::cout << std::endl;
+    std::cout << "Result:   " << avg << "ms" << std::endl;
+    std::cout << std::endl;
+
+    for( int i = 0; i < 1000; ++i )
+    {
+        delete images[i];
+    }
+    delete  blockB;
+}
+
+
 int main( int argc, char *argv[] )
 {
     /*
@@ -325,7 +392,8 @@ int main( int argc, char *argv[] )
         std::cout << size << decn << num << dec0 << t0 << dec1 << t1 << dec2 << t2 << dec3 << t3 << std::endl;
     }
     */
-    ProfileFillRectAA();
+    //ProfileFillRectAA();
+    ProfileBlendNormal();
     return 0;
 }
 

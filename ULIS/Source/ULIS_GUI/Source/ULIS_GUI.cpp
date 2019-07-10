@@ -23,6 +23,11 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* blockA = ::ULIS::MakeBlock( 256, 256, ::ULIS::FBlockBGRA8::TypeId() );
     ::ULIS::IBlock* blockB = ::ULIS::MakeBlock( 256, 256, ::ULIS::FBlockBGRA8::TypeId() );
     blockA->Fill( ::ULIS::CColor::FromRGB( 255, 0, 0, 255 ) );
+
+    for( int i = 0; i < blockA->Height(); ++i )
+        for( int j = 0; j < blockA->Width(); ++j )
+            blockA->SetPixelColor( j, i, ::ULIS::CColor::FromHSLF( j / (float)blockA->Width(), 1.f, i / (float)blockA->Height() ) );
+
     blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 255 ) );
     ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kNormal, 0.5f );
 
