@@ -16,7 +16,9 @@
 #include "ULIS/Blend/ULIS.Blend.BlendingModes.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Blend/ULIS.Blend.BlockBlender.h"
-#include "ULIS/Blend/Optimization/ULIS.Blend.Optimization.BlockBlenderRGBA8.h"
+
+// Load optimizations
+#include "ULIS/Blend/Optimization/ULIS.Blend.Optimization.RGBA8.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
