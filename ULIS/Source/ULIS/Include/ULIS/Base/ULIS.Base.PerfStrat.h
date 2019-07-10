@@ -19,11 +19,11 @@ namespace ULIS {
 struct FPerfStrat
 {
     FPerfStrat()
-        : use_sse_if_available( false )
+        : use_sse_if_available( true )
         , desired_workers( std::thread::hardware_concurrency() )
     {}
 
-    FPerfStrat( bool iSSE, bool iMT, unsigned int iWorkers = std::thread::hardware_concurrency() )
+    FPerfStrat( bool iSSE, unsigned int iWorkers = std::thread::hardware_concurrency() )
         : use_sse_if_available( iSSE )
         , desired_workers( iWorkers )
     {}

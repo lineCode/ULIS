@@ -16,12 +16,12 @@ namespace ULIS {
 // FGlobalThreadPool
 // Public API
 //static
-FGlobalCPUConfig&
+FCPUConfig&
 FGlobalCPUConfig::Get()
 {
-    static FGlobalCPUConfig* conf;
+    static FCPUConfig* conf;
     if( !conf )
-        conf = new FGlobalCPUConfig();
+        conf = new FCPUConfig();
 
     return  *conf;
 }

@@ -48,7 +48,16 @@ public:
                      const FPoint& iShift,
                      const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
-        TBlockBlender_Default< _SH, _BM, tSpec::_nf._tp, tSpec::_nf._cm, tSpec::_nf._ea, tSpec::_nf._lh, tSpec::_nf._nm, tSpec::_nf._dm >::Run( iBlockTop, iBlockBack, iOpacity, iROI, iShift, iPerfStrat );
+        static bool support_SSE_SSE2_SSSE3 = FGlobalCPUConfig::Get().info.HW_SSE && FGlobalCPUConfig::Get().info.HW_SSE2 && FGlobalCPUConfig::Get().info.HW_SSSE3;
+
+        if( iPerfStrat.use_sse_if_available && support_SSE_SSE2_SSSE3 )
+        {
+            auto dummy = 0;
+        }
+        else
+        {
+            TBlockBlender_Default< _SH, _BM, tSpec::_nf._tp, tSpec::_nf._cm, tSpec::_nf._ea, tSpec::_nf._lh, tSpec::_nf._nm, tSpec::_nf._dm >::Run( iBlockTop, iBlockBack, iOpacity, iROI, iShift, iPerfStrat );
+        }
     }
 };
 

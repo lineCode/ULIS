@@ -24,11 +24,23 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // TBlockBlender_Default
-template< uint32 _SH, eBlendingMode _BM, e_tp _TP, e_cm _CM, e_ea _EA, uint32 _LH, e_nm _NM, bool _DM >
+template< uint32        _SH
+        , eBlendingMode _BM
+        , e_tp          _TP
+        , e_cm          _CM
+        , e_ea          _EA
+        , uint32        _LH
+        , e_nm          _NM
+        , bool          _DM >
 class TBlockBlender_Default
 {
 public:
-    static void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static void Run( TBlock< _SH >*                     iBlockTop
+                   , TBlock< _SH >*                     iBlockBack
+                   , typename TBlock< _SH >::tPixelType iOpacity
+                   , const FRect&                       iROI
+                   , const FPoint&                      iShift
+                   , const FPerfStrat&                  iPerfStrat = FPerfStrat() )
     {
         const int x1 = iROI.y;
         const int y1 = iROI.y;
@@ -44,25 +56,69 @@ public:
 
 /////////////////////////////////////////////////////
 // TBlockBlender_Imp
-template< uint32 _SH, eBlendingMode _BM, e_tp _TP, e_cm _CM, e_ea _EA, uint32 _LH, e_nm _NM, bool _DM >
+template< uint32        _SH
+        , eBlendingMode _BM
+        , e_tp          _TP
+        , e_cm          _CM
+        , e_ea          _EA
+        , uint32        _LH
+        , e_nm          _NM
+        , bool          _DM >
 class TBlockBlenderImp
 {
 public:
-    static inline void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static inline void Run( TBlock< _SH >*                      iBlockTop
+                          , TBlock< _SH >*                      iBlockBack
+                          , typename TBlock< _SH >::tPixelType  iOpacity
+                          , const FRect&                        iROI
+                          , const FPoint&                       iShift
+                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
     {
-        TBlockBlender_Default< _SH, _BM, tSpec::_nf._tp, tSpec::_nf._cm, tSpec::_nf._ea, tSpec::_nf._lh, tSpec::_nf._nm, tSpec::_nf._dm >::Run( iBlockTop, iBlockBack, iOpacity, iROI, iShift, iPerfStrat );
+        TBlockBlender_Default< _SH
+                             , _BM
+                             , tSpec::_nf._tp
+                             , tSpec::_nf._cm
+                             , tSpec::_nf._ea
+                             , tSpec::_nf._lh
+                             , tSpec::_nf._nm
+                             , tSpec::_nf._dm >
+                             ::Run( iBlockTop
+                                  , iBlockBack
+                                  , iOpacity
+                                  , iROI
+                                  , iShift
+                                  , iPerfStrat );
     }
 };
 
 /////////////////////////////////////////////////////
 // TBlockBlender
-template< uint32 _SH, eBlendingMode _BM >
+template< uint32        _SH
+        , eBlendingMode _BM >
 class TBlockBlender
 {
 public:
-    static inline void Run( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, typename TBlock< _SH >::tPixelType iOpacity, const FRect& iROI, const FPoint& iShift, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static inline void Run( TBlock< _SH >*                      iBlockTop
+                          , TBlock< _SH >*                      iBlockBack
+                          , typename TBlock< _SH >::tPixelType  iOpacity
+                          , const FRect&                        iROI
+                          , const FPoint&                       iShift
+                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
     {
-        TBlockBlenderImp< _SH, _BM, tSpec::_nf._tp, tSpec::_nf._cm, tSpec::_nf._ea, tSpec::_nf._lh, tSpec::_nf._nm, tSpec::_nf._dm >::Run( iBlockTop, iBlockBack, iOpacity, iROI, iShift, iPerfStrat );
+        TBlockBlenderImp< _SH
+                        , _BM
+                        , tSpec::_nf._tp
+                        , tSpec::_nf._cm
+                        , tSpec::_nf._ea
+                        , tSpec::_nf._lh
+                        , tSpec::_nf._nm
+                        , tSpec::_nf._dm >
+                        ::Run( iBlockTop
+                             , iBlockBack
+                             , iOpacity
+                             , iROI
+                             , iShift
+                             , iPerfStrat );
     }
 };
 

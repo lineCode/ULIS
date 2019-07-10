@@ -20,7 +20,7 @@ class FGlobalCPUConfig
 {
 public:
     // Public API
-    static FGlobalCPUConfig& Get();
+    static FCPUConfig& Get();
 }; 
 
 } // namespace ULIS
