@@ -30,6 +30,10 @@
 #   error "No cpuid intrinsic defined for processor architecture."
 #endif
 
+#ifndef _XCR_XFEATURE_ENABLED_MASK
+#define _XCR_XFEATURE_ENABLED_MASK 0
+#endif
+
 namespace FeatureDetector{
     using std::cout;
     using std::endl;
