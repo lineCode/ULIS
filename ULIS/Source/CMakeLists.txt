@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.11.0)
 
 # Set Cache variables
+SET( ULIS_EXPLICIT_HOST_ID             	   "unset"     CACHE STRING    "Explicitly set host ID from command line" )
 SET( ULIS_EXPLICIT_COMPILER_ID             "unset"     CACHE STRING    "Explicitly set compiler ID from command line" )
 SET( ULIS_USE_CONFIG                       OFF         CACHE BOOL      "Scpecifies wether to use config files for overriding cache variables" )
 SET( ULIS_BOOST_INCLUDE_PATH               "unset"     CACHE STRING    "Indicates the path to boost include dir" )
