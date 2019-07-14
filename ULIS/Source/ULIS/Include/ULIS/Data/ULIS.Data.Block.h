@@ -34,15 +34,15 @@ public:
     TBlockData()
         : width     ( 0 )
         , height    ( 0 )
-        , data      ()
+        , data      ( nullptr )
     {}
 
     TBlockData( int iWidth, int iHeight )
         : width     ( iWidth    )
         , height    ( iHeight   )
-        , data      ()
+        , data      ( nullptr )
     {
-        data.Allocate( BytesTotal() );
+        data = new uint8[ BytesTotal() ];
     }
 
     ~TBlockData()
@@ -50,8 +50,8 @@ public:
 
 public:
     // Public API
-    inline         uint8*                       DataPtr             ()                                                                          { return  data.Ptr();                                                   }
-    inline         const uint8*                 DataPtr             ()                                              const                       { return  data.Ptr();                                                   }
+    inline         uint8*                       DataPtr             ()                                                                          { return  data;                                                   }
+    inline         const uint8*                 DataPtr             ()                                              const                       { return  data;                                                   }
     inline         uint8*                       PixelPtr            ( int x, int y )                                                            { return  DataPtr() + ( x * BytesPerPixel() + y * BytesPerScanLine() ); }
     inline         const uint8*                 PixelPtr            ( int x, int y )                                const                       { return  DataPtr() + ( x * BytesPerPixel() + y * BytesPerScanLine() ); }
     inline         uint8*                       ScanlinePtr         ( int row )                                                                 { return  DataPtr() + ( row * BytesPerScanLine() );                     }
@@ -76,7 +76,7 @@ private:
     // Private Data
     uint32  width;
     uint32  height;
-    TAlignedMemory< uint8, tSpec::_nf._ma > data;
+    uint8*  data;
 };
 
 

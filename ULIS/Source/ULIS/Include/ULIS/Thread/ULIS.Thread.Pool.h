@@ -31,8 +31,23 @@ public:
 
 public:
     // Public API
-    template<class F>                       void  ScheduleJob(F&& f);
-    template<class F, typename ... Args >   void ScheduleJob( F&& f, Args&& ... args );
+    template<class F>
+    void ScheduleJob( F&& f )
+    {
+        std::unique_lock< std::mutex > lock( queue_mutex );
+        tasks.emplace_back( std::forward< F >( f ) );
+        cv_task.notify_one();
+    }
+
+    template<class F, typename ... Args >
+    void ScheduleJob( F&& f, Args&& ... args )
+    {
+        std::unique_lock< std::mutex > lock( queue_mutex );
+        tasks.emplace_back( std::bind( std::forward< F >( f ), std::forward< Args >( args ) ... ) );
+        cv_task.notify_one();
+    }
+
+
     void                                    WaitForCompletion();
     unsigned int                            GetProcessed() const { return processed; }
     unsigned int                            GetNumWorkers() const { return workers.size(); }

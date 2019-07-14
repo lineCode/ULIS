@@ -72,7 +72,7 @@ public:
     inline         bool                         IsDecimal           ()                                              const                       { return tSpec::_nf._dm;                                                }
     inline         int                          NumChannels         ()                                              const                       { return tSpec::_nf._rc;                                                }
     inline         int                          NumColorChannels    ()                                              const                       { return tSpec::_nf._nc;                                                }
-    inline         int                          RedirectedIndex     ( int i )                                       const                       { return tLayout::red.arr[i];                                           }
+    static inline  int                          RedirectedIndex     ( int i )                                                                   { return tLayout::red.arr[i];                                           }
 };
 
 

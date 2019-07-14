@@ -41,23 +41,6 @@ FThreadPool::~FThreadPool()
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-template<class F>
-void FThreadPool::ScheduleJob( F&& f )
-{
-    std::unique_lock< std::mutex > lock( queue_mutex );
-    tasks.emplace_back( std::forward< F >( f ) );
-    cv_task.notify_one();
-}
-
-template<class F, typename ... Args >
-void FThreadPool::ScheduleJob( F&& f, Args&& ... args )
-{
-    std::unique_lock< std::mutex > lock( queue_mutex );
-    tasks.emplace_back( std::bind( std::forward< F >( f ), std::forward< Args >( args ) ... ) );
-    cv_task.notify_one();
-}
-
-
 void FThreadPool::WaitForCompletion()
 {
     std::unique_lock< std::mutex > lock( queue_mutex );

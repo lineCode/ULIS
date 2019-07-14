@@ -24,6 +24,9 @@ int main()
     blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 255 ) );
     ::ULIS::FBlendingContext::Blend( blockA, blockB, ::ULIS::eBlendingMode::kNormal, 0.5 );
 
+    uint8_t* ptr = 0;
+    uint8_t* ptrstride = ptr + 45;
+
     return 0;
 }
 
