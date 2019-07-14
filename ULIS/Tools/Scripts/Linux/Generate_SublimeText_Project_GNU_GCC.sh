@@ -5,12 +5,12 @@ cd "`dirname "$0"`"
 cd ../../../
 
 ## Make Generated dir for generated project if not exist
-if [ ! -d Generated_Ubuntu ]; then 
-	mkdir Generated_Ubuntu
+if [ ! -d Generated_SublimeText_Project_GNU_GCC ]; then 
+	mkdir Generated_SublimeText_Project_GNU_GCC
 fi
 
 ## Step in Generated dir
-cd Generated_Ubuntu
+cd Generated_SublimeText_Project_GNU_GCC
 
 ## Make Release dir for generated project if not exist
 if [ ! -d Release ]; then 

@@ -9,5 +9,5 @@ if [ ! -f Xcode_Config.cmake ]; then
 fi
 
 if [ ! -f Ubuntu_Config.cmake ]; then
-     cp "ULIS/Tools/DefaultConfig.cmake" "Ubuntu_Config.cmake"
+     cp "ULIS/Tools/DefaultConfig.cmake" "SublimeText_Project_GNU_GCC_Config.cmake"
 fi
