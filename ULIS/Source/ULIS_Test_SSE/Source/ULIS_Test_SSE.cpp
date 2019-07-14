@@ -8,7 +8,7 @@
 * Please refer to LICENSE.md
 */
 
-#include <ULIS_CORE>
+#include <ULIS_Core>
 
 
 inline __m128i _mm_mullo_epi8(__m128i a, __m128i b)

@@ -13,8 +13,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
-#include <ULIS_CORE>
-#include <thread>
+#include <ULIS_Core>
 
 int main( int argc, char *argv[] )
 {

@@ -121,7 +121,7 @@ public:
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;
-        const uint8 alpha_index     = (uint8)typename TBlock< _SH >::tPixelProxy::RedirectedIndex( 3 );
+        const uint8 alpha_index     = (uint8) TBlock< _SH >::tPixelProxy::RedirectedIndex( 3 );
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
             global_pool.ScheduleJob( TBlockBlender_RGBA8_SSE< _SH >::ProcessScanLine, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift, alpha_index );

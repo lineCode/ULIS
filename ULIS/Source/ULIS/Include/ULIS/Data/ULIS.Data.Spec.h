@@ -29,7 +29,7 @@ namespace ULIS {
 #define ULIS_SEQ_NM  BOOST_PP_TUPLE_TO_SEQ( ULIS_KEYS_NM )
 /* We make enum and cstring keywords out of theme */
 // Enums:       enum class              e_xx : int  { kXXX,   ... };
-// Keywords:    constexpr const char*   kw_xx[] =   { "XXX",  ... };
+// Keywords:    constexpr char*   kw_xx[] =   { "XXX",  ... };
 ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _tp, ULIS_KEYS_TP ) // type
 ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _cm, ULIS_KEYS_CM ) // color_model
 ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _ea, ULIS_KEYS_EA ) // extra_alpha
@@ -63,7 +63,7 @@ struct FSpec
 // TBlockInfo
 /* Template specialized Block Spec structure */
 template< uint32_t > struct TBlockInfo {
-    static constexpr const FSpec _nf = { "Invalid"           // spec-str
+    static constexpr FSpec _nf = { "Invalid"           // spec-str
                                        , 0                   // spec-hash
                                        , e_tp::kuint8        // type
                                        , e_cm::kRGB          // color_model
@@ -127,11 +127,11 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 /////////////////////////////////////////////////////
 // Post decl _nf template struct member of TBlockInfo specializations, branching workaround for GCC / CLANG / MSVC
 #if defined(__clang__)
-#define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockInfo< ULIS_SPEC_SH( spec ) >::_nf;
+#define ULIS_POSTDECL_NF( spec )    constexpr FSpec TBlockInfo< ULIS_SPEC_SH( spec ) >::_nf;
 #elif defined(__GNUC__) || defined(__GNUG__)
 #define ULIS_POSTDECL_NF( spec )
 #elif defined(_MSC_VER)
-#define ULIS_POSTDECL_NF( spec )    constexpr const FSpec TBlockInfo< ULIS_SPEC_SH( spec ) >::_nf;
+#define ULIS_POSTDECL_NF( spec )    constexpr FSpec TBlockInfo< ULIS_SPEC_SH( spec ) >::_nf;
 #endif
 
 #if defined(__clang__)
@@ -149,7 +149,7 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
     coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                            \
     constexpr uint32_t  ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).hash();                         \
     template<> struct TBlockInfo< ULIS_SPEC_SH( spec ) > {                                          \
-        ULIS_PREDECL_NF static constexpr const FSpec _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )   \
+        ULIS_PREDECL_NF static constexpr FSpec _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )   \
                                                                            , ULIS_SPEC_SH( spec )   \
                                                                            , tp, cm, ea, cl, nm )   \
     };                                                                                              \

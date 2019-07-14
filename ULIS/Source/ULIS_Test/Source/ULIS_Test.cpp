@@ -8,7 +8,7 @@
 * Please refer to LICENSE.md
 */
 
-#include <ULIS_CORE>
+#include <ULIS_Core>
 #include "ULIS/Base/FeatureDetector/cpu_x86.h"
 
 int main()

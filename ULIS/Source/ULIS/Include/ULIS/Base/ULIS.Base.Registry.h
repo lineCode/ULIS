@@ -27,10 +27,10 @@ struct TRegistry
     const uint32_t n[S] = { 0 };
 
     // Public API
-    constexpr const uint32_t            operator[]  ( int i )       const { return  n[i]; }
-    constexpr const int                 Size        ()              const { return S; }
-    constexpr const TRegistry< S + 1 >  push_back   ( uint32_t i )  const { return push_back_impl< S + 1 >( i, std::make_integer_sequence< int, S >() ); }
-    template< int N, typename T, T... Nums > constexpr const TRegistry< N > push_back_impl  ( uint32_t i, std::integer_sequence< T, Nums... > ) const { return { n[Nums] ..., i }; }
+    constexpr uint32_t            operator[]  ( int i )       const { return  n[i]; }
+    constexpr int                 Size        ()              const { return S; }
+    constexpr TRegistry< S + 1 >  push_back   ( uint32_t i )  const { return push_back_impl< S + 1 >( i, std::make_integer_sequence< int, S >() ); }
+    template< int N, typename T, T... Nums > constexpr TRegistry< N > push_back_impl  ( uint32_t i, std::integer_sequence< T, Nums... > ) const { return { n[Nums] ..., i }; }
 };
 
 /////////////////////////////////////////////////////

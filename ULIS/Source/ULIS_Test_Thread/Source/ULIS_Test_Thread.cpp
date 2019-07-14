@@ -8,7 +8,7 @@
 * Please refer to LICENSE.md
 */
 
-#include <ULIS_CORE>
+#include <ULIS_Core>
 #include "ULIS/Thread/ULIS.Thread.Pool.h"
 
 #include <thread>

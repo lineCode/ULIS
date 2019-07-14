@@ -251,9 +251,9 @@ public:
 
 public:
     // Constexpr API
-    inline static  constexpr const FSpec        TypeSpec            ()                                                                          { return  tSpec::_nf;                                                   }
-    inline static  constexpr const char*        TypeStr             ()                                                                          { return  tSpec::_nf._ss;                                               }
-    inline static  constexpr const uint32       TypeId              ()                                                                          { return  tSpec::_nf._sh;                                               }
+    inline static  constexpr FSpec        TypeSpec            ()                                                                          { return  tSpec::_nf;                                                   }
+    inline static  constexpr char*        TypeStr             ()                                                                          { return  tSpec::_nf._ss;                                               }
+    inline static  constexpr uint32       TypeId              ()                                                                          { return  tSpec::_nf._sh;                                               }
 
 private:
     // Private Data
