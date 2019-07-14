@@ -24,7 +24,7 @@ IF EXIST CMakeFiles ( rmdir /S /Q CMakeFiles )
 IF EXIST cmake_install.cmake ( del cmake_install.cmake )
 IF EXIST CMakeCache.txt ( del CMakeCache.txt )
 :: Rebuild Project
-cmake -G "MinGW Makefiles" -DULIS_USE_CONFIG:BOOL=ON -DCMAKE_BUILD_TYPE=Release -DULIS_EXPLICIT_COMPILER_ID:STRING="GCC" ../../Source
+cmake -G "MinGW Makefiles" -DULIS_USE_CONFIG:BOOL=ON -DCMAKE_BUILD_TYPE=Release -DULIS_EXPLICIT_COMPILER_ID:STRING="GCC" -DULIS_EXPLICIT_HOST_ID:STRING="WIN" ../../Source
 
 cd ..
 cd Debug
@@ -33,4 +33,4 @@ IF EXIST CMakeFiles ( rmdir /S /Q CMakeFiles )
 IF EXIST cmake_install.cmake ( del cmake_install.cmake )
 IF EXIST CMakeCache.txt ( del CMakeCache.txt )
 :: Rebuild Project
-cmake -G "MinGW Makefiles" -DULIS_USE_CONFIG:BOOL=ON -DCMAKE_BUILD_TYPE=Debug -DULIS_EXPLICIT_COMPILER_ID:STRING="GCC" ../../Source
+cmake -G "MinGW Makefiles" -DULIS_USE_CONFIG:BOOL=ON -DCMAKE_BUILD_TYPE=Debug -DULIS_EXPLICIT_COMPILER_ID:STRING="GCC" -DULIS_EXPLICIT_HOST_ID:STRING="WIN" ../../Source

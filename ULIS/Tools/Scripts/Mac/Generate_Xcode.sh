@@ -24,4 +24,4 @@ if [ -f CMakeCache.txt ]; then
 fi
 
 ## Rebuild Project
-cmake -G "Xcode" -DULIS_USE_CONFIG:BOOL=ON -DULIS_EXPLICIT_COMPILER_ID:STRING="CLANG" ../Source
+cmake -G "Xcode" -DULIS_USE_CONFIG:BOOL=ON -DULIS_EXPLICIT_COMPILER_ID:STRING="CLANG" -DULIS_EXPLICIT_HOST_ID:STRING="MAC" ../Source

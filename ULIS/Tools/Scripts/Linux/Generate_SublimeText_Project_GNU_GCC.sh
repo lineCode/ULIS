@@ -52,4 +52,4 @@ if [ -f CMakeCache.txt ]; then
 fi
 
 ## Rebuild Project
-cmake -G "Sublime Text 2 - Unix Makefiles" -DULIS_USE_CONFIG:BOOL=ON -DCMAKE_BUILD_TYPE=Debug -DULIS_EXPLICIT_COMPILER_ID:STRING="GCC" ../../Source
+cmake -G "Sublime Text 2 - Unix Makefiles" -DULIS_USE_CONFIG:BOOL=ON -DCMAKE_BUILD_TYPE=Debug -DULIS_EXPLICIT_COMPILER_ID:STRING="GCC" -DULIS_EXPLICIT_HOST_ID:STRING="GNU" ../../Source
