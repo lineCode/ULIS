@@ -11,6 +11,8 @@
 #include "ULIS/Color/ULIS.Color.CColor.h"
 #include "ULIS/Maths/ULIS.Maths.Utility.h"
 #include <cstdlib>
+#include <cmath>
+#include <math.h>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -116,8 +118,8 @@ CColor::ToRGB()  const
             float var_h = h / 60;
             if ( var_h == 6 ) var_h = 0;
             int var_i = var_h;
-            float C = ( 1 - abs( 2 * l - 1 ) ) * s;
-            float X = C * ( 1 - abs( fmod( var_h, 2 ) - 1 ) );
+            float C = ( 1 - fabs( 2 * l - 1 ) ) * s;
+            float X = C * ( 1 - fabs( fmod( var_h, 2 ) - 1 ) );
             float m = l - C / 2;
             if      ( var_i == 0 ) { r = C; g = X; b = 0; }
             else if ( var_i == 1 ) { r = X; g = C; b = 0; }
@@ -229,9 +231,9 @@ CColor::ToHSL()  const
         float deltaG = ( ( ( cmax - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
         float deltaB = ( ( ( cmax - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
 
-             if( abs( r - cmax ) < FMath::epsilon )   h = deltaB - deltaG;
-        else if( abs( g - cmax ) < FMath::epsilon )   h = (1.0 / 3.0) + deltaR - deltaB;
-        else if( abs( b - cmax ) < FMath::epsilon )   h = (2.0 / 3.0) + deltaG - deltaR;
+             if( fabs( r - cmax ) < FMath::epsilon )   h = deltaB - deltaG;
+        else if( fabs( g - cmax ) < FMath::epsilon )   h = (1.0 / 3.0) + deltaR - deltaB;
+        else if( fabs( b - cmax ) < FMath::epsilon )   h = (2.0 / 3.0) + deltaG - deltaR;
 
         if( h < 0.0 ) h += 1.0;
         if( h > 1.0 ) h -= 1.0;
@@ -276,9 +278,9 @@ CColor::ToHSV()  const
         float deltaG = ( ( ( cmax - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
         float deltaB = ( ( ( cmax - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
 
-        if( abs( r - cmax ) < FMath::epsilon )        h = deltaB - deltaG;
-        else if( abs( g - cmax ) < FMath::epsilon )   h = (1.0 / 3.0) + deltaR - deltaB;
-        else if( abs( b - cmax ) < FMath::epsilon )   h = (2.0 / 3.0) + deltaG - deltaR;
+        if( fabs( r - cmax ) < FMath::epsilon )        h = deltaB - deltaG;
+        else if( fabs( g - cmax ) < FMath::epsilon )   h = (1.0 / 3.0) + deltaR - deltaB;
+        else if( fabs( b - cmax ) < FMath::epsilon )   h = (2.0 / 3.0) + deltaG - deltaR;
 
         if( h < 0.0 ) h += 1.0;
 
@@ -463,10 +465,10 @@ CColor::IsSimilar( const CColor& A, const CColor& B, int threshold )
     int BG = Brgb.Green();
     int BB = Brgb.Blue();
     int Balpha = Brgb.Alpha();
-    return  ( abs( AR - BR ) <= threshold ) &&
-            ( abs( AG - BG ) <= threshold ) &&
-            ( abs( AB - BB ) <= threshold ) &&
-            ( abs( Aalpha - Balpha ) <= threshold );
+    return  ( fabs( AR - BR ) <= threshold ) &&
+            ( fabs( AG - BG ) <= threshold ) &&
+            ( fabs( AB - BB ) <= threshold ) &&
+            ( fabs( Aalpha - Balpha ) <= threshold );
 }
 
 //--------------------------------------------------------------------------------------

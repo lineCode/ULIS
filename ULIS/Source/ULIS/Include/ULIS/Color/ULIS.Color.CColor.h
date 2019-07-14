@@ -11,7 +11,6 @@
 #pragma once
 
 #include "ULIS/Data/ULIS.Data.Spec.h"
-#include <cmath>
 
 namespace ULIS {
 
