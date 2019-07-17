@@ -9,7 +9,8 @@
 */
 
 #include <ULIS_Core>
-
+using namespace ::ULIS;
+#define PRINTV( i ) printv( #i, i )
 
 inline __m128i _mm_mullo_epi8(__m128i a, __m128i b)
 {
@@ -27,18 +28,24 @@ inline __m128i _mm_mullo_epi8(__m128i a, __m128i b)
 }
 
 
-void printvec( const char* title, const ::ULIS::FVectorSIMD128& iVec )
+void printv( const char* title, const ::ULIS::FVectorSIMD128& iVec )
 {
     std::cout << title << ": [";
     for( int i = 0; i < 16; ++i )
-        std::cout << (int)iVec.u8[i] << ",";
+        std::cout << (int)iVec.u8[i] << (i == 15 ? "" : ",");
     std::cout << "]" << std::endl;
+}
+
+void printv( const char* title, const ::ULIS::FDualVectorSIMD128& iVec )
+{
+    std::cout << "Dual " << title << std::endl;
+    printv( "lo", iVec.lo );
+    printv( "hi", iVec.hi );
 }
 
 
 int main()
 {
-    using namespace ::ULIS;
 
     FVectorSIMD128 vec;
     for( int i = 0; i < 16; ++i ) vec.u8[i] = i;
@@ -49,7 +56,12 @@ int main()
     FVectorSIMD128 res;
     res.m128i = _mm_mullo_epi8( vec.m128i, mul.m128i );
 
-    std::cout << (int)( 0x80 ) << std::endl;
+    FDualVectorSIMD128 dual;
+    dual.lo.m128i = vec.m128i;
+    dual.hi.m128i = vec.m128i;
+
+    PRINTV( vec );
+    PRINTV( dual );
 
     return 0;
 }

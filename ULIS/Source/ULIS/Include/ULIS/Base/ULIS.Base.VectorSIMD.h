@@ -19,13 +19,18 @@ namespace ULIS {
 struct alignas( 16 ) FVectorSIMD128
 {
     union {
-        float   f[4];
         uint8   u8[16];
         uint16  u16[8];
-        uint32  u32[4];
-        __m128  m128f;
         __m128i m128i;
     };
+};
+
+/////////////////////////////////////////////////////
+// FDualVectorSIMD128
+struct alignas( 16 ) FDualVectorSIMD128
+{
+    FVectorSIMD128 lo;
+    FVectorSIMD128 hi;
 };
 
 } // namespace ULIS
