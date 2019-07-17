@@ -12,6 +12,9 @@ SET( ULIS_BUILD_GUIS                       OFF         CACHE BOOL      "Sets if 
 SET( ULIS_QT_CMAKE_PATH                	   "unset"     CACHE STRING    "Indicates the path to Qt cmake package" )
 SET( ULIS_GLM_INCLUDE_PATH                 "unset"     CACHE STRING    "Indicates the path to glm include dir" )
 
+# Display host & compiler
+message( "Generating: ${ULIS_EXPLICIT_HOST_ID} ${ULIS_EXPLICIT_COMPILER_ID}")
+
 # Generate only Debug and Release configurations for all projects
 set( CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE )
 
