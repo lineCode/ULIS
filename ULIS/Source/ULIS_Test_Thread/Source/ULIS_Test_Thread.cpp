@@ -58,7 +58,7 @@ void mt_fill_SSE( ::ULIS::FBlockBGRA8* iBlock, int start, int end, const ::ULIS:
     uint8_t*    dst = iBlock->DataPtr() + start * dep;
     int         del = ( end - start ) / 16;
 
-    ::ULIS::FVectorSIMD128 vec;
+    ::ULIS::FVectorSIMD128_8bit vec;
     memcpy( &vec.u8[0],  src, dep );
     memcpy( &vec.u8[4],  src, dep );
     memcpy( &vec.u8[8],  src, dep );

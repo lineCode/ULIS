@@ -50,9 +50,9 @@ public:
 
         for( int i = 0; i < op; ++i )
         {
-            FVectorSIMD128 pixel_back_SIMD;
+            FVectorSIMD128_8bit pixel_back_SIMD;
             pixel_back_SIMD.m128i = _mm_loadu_si128( (__m128i const*)base_pixel_back );
-            FVectorSIMD128 pixel_top_SIMD;
+            FVectorSIMD128_8bit pixel_top_SIMD;
             pixel_top_SIMD.m128i = _mm_loadu_si128( (__m128i const*)base_pixel_top );
 
             uint8 alpha_back[4] = { *( base_alpha_back ), *( base_alpha_back + 4 ), *( base_alpha_back + 8 ), *( base_alpha_back + 12 ) };
@@ -65,19 +65,19 @@ public:
                 alpha_var[i]    = alpha_result[i] == 0 ? 0 : ( alpha_top[i] * 255 ) / alpha_result[i];
             }
 
-            FVectorSIMD128 alpha_back_SIMD;
+            FVectorSIMD128_8bit alpha_back_SIMD;
             alpha_back_SIMD.m128i = _mm_set_epi8( alpha_back[0], alpha_back[0], alpha_back[0], alpha_back[0]
                                                 , alpha_back[1], alpha_back[1], alpha_back[1], alpha_back[1]
                                                 , alpha_back[2], alpha_back[2], alpha_back[2], alpha_back[2]
                                                 , alpha_back[3], alpha_back[3], alpha_back[3], alpha_back[3] );
 
-            FVectorSIMD128 alpha_var_SIMD;
+            FVectorSIMD128_8bit alpha_var_SIMD;
             alpha_var_SIMD.m128i = _mm_set_epi8( alpha_var[0], alpha_var[0], alpha_var[0], alpha_var[0]
                                                , alpha_var[1], alpha_var[1], alpha_var[1], alpha_var[1]
                                                , alpha_var[2], alpha_var[2], alpha_var[2], alpha_var[2]
                                                , alpha_var[3], alpha_var[3], alpha_var[3], alpha_var[3] );
 
-            FVectorSIMD128 vec255;
+            FVectorSIMD128_8bit vec255;
             vec255.m128i = _mm_set1_epi8( 255 );
 
             // ( ( MAX_uint8 - var ) * Cb + var * ( ( ( MAX_uint8 - ab ) * Cs + ab * BlendFunc< mode, uint8 >::Compute( Cb, Cs ) ) / MAX_uint8 ) ) / MAX_uint8;

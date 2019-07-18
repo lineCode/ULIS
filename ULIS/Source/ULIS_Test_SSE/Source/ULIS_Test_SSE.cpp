@@ -28,7 +28,7 @@ inline __m128i _mm_mullo_epi8(__m128i a, __m128i b)
 }
 
 
-void printv( const char* title, const ::ULIS::FVectorSIMD128& iVec )
+void printv( const char* title, const ::ULIS::FVectorSIMD128_8bit& iVec )
 {
     std::cout << title << ": [";
     for( int i = 0; i < 16; ++i )
@@ -36,7 +36,7 @@ void printv( const char* title, const ::ULIS::FVectorSIMD128& iVec )
     std::cout << "]" << std::endl;
 }
 
-void printv( const char* title, const ::ULIS::FDualVectorSIMD128& iVec )
+void printv( const char* title, const ::ULIS::FVectorSIMD128_Dual8bit& iVec )
 {
     std::cout << "Dual " << title << std::endl;
     printv( "lo", iVec.lo );
@@ -46,22 +46,22 @@ void printv( const char* title, const ::ULIS::FDualVectorSIMD128& iVec )
 
 int main()
 {
+    __m128i zero = _mm_setzero_si128();
 
-    FVectorSIMD128 vec;
-    for( int i = 0; i < 16; ++i ) vec.u8[i] = i;
+    FVectorSIMD128_8bit vecA;
+    vecA.m128i = _mm_set1_epi8( 240 );
 
-    FVectorSIMD128 mul;
-    mul.m128i = _mm_set1_epi8( 16 );
+    FVectorSIMD128_8bit vecB;
+    vecB.m128i = _mm_set1_epi8( 50 );
 
-    FVectorSIMD128 res;
-    res.m128i = _mm_mullo_epi8( vec.m128i, mul.m128i );
+    FVectorSIMD128_8bit res_1;
+    res_1.m128i = _mm_unpacklo_epi8( vecA.m128i, zero );
 
-    FDualVectorSIMD128 dual;
-    dual.lo.m128i = vec.m128i;
-    dual.hi.m128i = vec.m128i;
+    FVectorSIMD128_8bit res_2;
+    res_2.m128i = _mm_unpackhi_epi8( vecA.m128i, zero );
 
-    PRINTV( vec );
-    PRINTV( dual );
+    PRINTV( res_1 );
+    PRINTV( res_2 );
 
     return 0;
 }
