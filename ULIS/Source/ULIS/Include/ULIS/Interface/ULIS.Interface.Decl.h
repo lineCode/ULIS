@@ -132,7 +132,6 @@ ULIS_DECLSPEC(double,RGB,noAlpha,RGB,normalized)
 ULIS_DECLSPEC(double,RGB,noAlpha,BGR,normalized)
 ULIS_DECLSPEC(double,RGB,noAlpha,RGB,typeLimits)
 ULIS_DECLSPEC(double,RGB,noAlpha,BGR,typeLimits)
-/*
 ULIS_DECLSPEC(uint8,HSL,hasAlpha,HSLA,typeLimits)
 ULIS_DECLSPEC(uint8,HSL,hasAlpha,AHSL,typeLimits)
 ULIS_DECLSPEC(uint8,HSL,noAlpha,HSL,typeLimits)
@@ -280,7 +279,6 @@ ULIS_DECLSPEC(double,XYZ,hasAlpha,XYZA,typeLimits)
 ULIS_DECLSPEC(double,XYZ,hasAlpha,AXYZ,typeLimits)
 ULIS_DECLSPEC(double,XYZ,noAlpha,XYZ,normalized)
 ULIS_DECLSPEC(double,XYZ,noAlpha,XYZ,typeLimits)
-*/
 
 /////////////////////////////////////////////////////
 // Reg assign
@@ -294,7 +292,7 @@ ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
 /* temp assign reg size ( workaround ) */
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 /* Reg size macro for usage during preprocessor ( workaround ) */
-#define ULIS_REG_SIZE 64
+#define ULIS_REG_SIZE 211
 
 /////////////////////////////////////////////////////
 // Extern template declarations

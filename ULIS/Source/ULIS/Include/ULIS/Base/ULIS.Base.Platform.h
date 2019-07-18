@@ -14,7 +14,7 @@ namespace ULIS {
 /////////////////////////////////////////////////////
 // Platform defines
 
-//#define ULIS_ENABLE_FORCEINLINE
+#define ULIS_ENABLE_FORCEINLINE
 #ifdef ULIS_ENABLE_FORCEINLINE
     #if defined(__clang__)
     #define ULIS_FORCEINLINE inline __attribute__ ((always_inline))

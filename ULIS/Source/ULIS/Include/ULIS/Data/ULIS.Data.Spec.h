@@ -59,11 +59,19 @@ struct FSpec
     const  uint32_t     _lh; // layout_hash
 };
 
+#if defined(__clang__)
+#define ULIS_PREDECL_NF inline
+#elif defined(__GNUC__) || defined(__GNUG__)
+#define ULIS_PREDECL_NF
+#elif defined(_MSC_VER)
+#define ULIS_PREDECL_NF
+#endif
+
 /////////////////////////////////////////////////////
 // TBlockInfo
 /* Template specialized Block Spec structure */
 template< uint32_t > struct TBlockInfo {
-    static constexpr FSpec _nf = { "Invalid"           // spec-str
+    ULIS_PREDECL_NF static constexpr FSpec _nf = { "Invalid"           // spec-str
                                        , 0                   // spec-hash
                                        , e_tp::kuint8        // type
                                        , e_cm::kRGB          // color_model
@@ -132,14 +140,6 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 #define ULIS_POSTDECL_NF( spec )
 #elif defined(_MSC_VER)
 #define ULIS_POSTDECL_NF( spec )    constexpr FSpec TBlockInfo< ULIS_SPEC_SH( spec ) >::_nf;
-#endif
-
-#if defined(__clang__)
-#define ULIS_PREDECL_NF inline
-#elif defined(__GNUC__) || defined(__GNUG__)
-#define ULIS_PREDECL_NF
-#elif defined(_MSC_VER)
-#define ULIS_PREDECL_NF
 #endif
 
 /////////////////////////////////////////////////////

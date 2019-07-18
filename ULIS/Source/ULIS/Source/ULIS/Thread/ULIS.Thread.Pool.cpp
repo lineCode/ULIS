@@ -49,6 +49,19 @@ void FThreadPool::WaitForCompletion()
 void FThreadPool::SetNumWorkers( unsigned int iValue )
 {
     WaitForCompletion();
+
+    // set stop-condition
+    std::unique_lock< std::mutex > latch( queue_mutex );
+    stop = true;
+    cv_task.notify_all();
+    latch.unlock();
+
+    // all threads terminate, then we're done.
+    for( auto& t : workers )
+        t.join();
+
+    stop = false;
+
     workers.clear();
     for( unsigned int i = 0; i < iValue; ++i )
         workers.emplace_back( std::bind( &FThreadPool::ThreadProcess, this ) );
