@@ -23,11 +23,9 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* blockB = ::ULIS::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
     blockA->Fill( ::ULIS::CColor::FromRGB( 255, 0, 0, 255 ) );
 
-    /*
     for( int i = 0; i < blockA->Height(); ++i )
         for( int j = 0; j < blockA->Width(); ++j )
             blockA->SetPixelColor( j, i, ::ULIS::CColor::FromHSLF( j / (float)blockA->Width(), 1.f, i / (float)blockA->Height() ) );
-    */
 
     blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 255 ) );
     ::ULIS::FPerfStrat strat( true, 64 );

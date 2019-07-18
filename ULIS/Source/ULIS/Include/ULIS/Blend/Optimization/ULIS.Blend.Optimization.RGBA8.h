@@ -39,52 +39,53 @@ public:
                                , const uint8                        iAlphaIndex )
     {
         // Base ptrs for scanlines
-        uint8* scanline_pixel_back  = iBlockBack->PixelPtr( iX1, iLine );
-        uint8* scanline_pixel_top   = iBlockTop->PixelPtr( iX1 + iShift.x, iLine + iShift.y );
-        uint8* base_pixel_back      = scanline_pixel_back;
-        uint8* base_pixel_top       = scanline_pixel_top ;
-        uint8* base_alpha_back      = scanline_pixel_back   + iAlphaIndex;
-        uint8* base_alpha_top       = scanline_pixel_top    + iAlphaIndex;
-        const int   delta   = iX2 - iX1;
-        const int   op      = delta / 4;
+        uint8* base_pixel_back = iBlockBack->PixelPtr( iX1, iLine );
+        uint8* base_pixel_top  = iBlockTop->PixelPtr( iX1 + iShift.x, iLine + iShift.y );
+        const int delta = iX2 - iX1;
+        const int op    = delta / 4;
 
+        uint8 asmi[4] = { iAlphaIndex, iAlphaIndex + 4, iAlphaIndex + 8, iAlphaIndex + 12 };
+        __m128i asm = _mm_set_epi8( asmi[3], asmi[3], asmi[3], asmi[3]
+                                  , asmi[2], asmi[2], asmi[2], asmi[2]
+                                  , asmi[1], asmi[1], asmi[1], asmi[1]
+                                  , asmi[0], asmi[0], asmi[0], asmi[0] );
+        FVectorSIMD128_8bit var_spread_mask;
+        var_spread_mask.Set4( 0, 1, 2, 3 );
+        FVectorSIMD128_8bit opacity;
+        opacity.Set1( iOpacity );
+        FVectorSIMD128_8bit max = FVectorSIMD128_8bit::Max();
+        FVectorSIMD128_8bit pixel_back_SIMD;
+        FVectorSIMD128_8bit pixel_top_SIMD;
+        FVectorSIMD128_8bit alpha_back_SIMD;
+        FVectorSIMD128_8bit alpha_top_SIMD;
+        FVectorSIMD128_8bit alpha_resultSIMD;
+        FVectorSIMD128_8bit alpha_varSIMD;
+        FVectorSIMD128_8bit res;
         for( int i = 0; i < op; ++i )
         {
-            FVectorSIMD128_8bit pixel_back_SIMD;
-            FVectorSIMD128_8bit pixel_top_SIMD;
             pixel_back_SIMD.Load( base_pixel_back );
             pixel_top_SIMD.Load( base_pixel_top );
+            alpha_back_SIMD.m128i = _mm_shuffle_epi8( pixel_back_SIMD.m128i, asm );
+            alpha_top_SIMD.m128i =  _mm_shuffle_epi8( pixel_top_SIMD.m128i, asm );
+            alpha_top_SIMD = DownScale( alpha_top_SIMD * opacity );
+            alpha_resultSIMD = Contract( ( Spread( alpha_back_SIMD ) + Spread( alpha_top_SIMD ) ) - Spread( DownScale( alpha_back_SIMD * alpha_top_SIMD ) ) );
+            alpha_varSIMD.u8[0] = alpha_resultSIMD.u8[0] == 0 ? 0 : ( alpha_top_SIMD.u8[0] * 255 ) / alpha_resultSIMD.u8[0];
+            alpha_varSIMD.u8[1] = alpha_resultSIMD.u8[1] == 0 ? 0 : ( alpha_top_SIMD.u8[1] * 255 ) / alpha_resultSIMD.u8[1];
+            alpha_varSIMD.u8[2] = alpha_resultSIMD.u8[2] == 0 ? 0 : ( alpha_top_SIMD.u8[2] * 255 ) / alpha_resultSIMD.u8[2];
+            alpha_varSIMD.u8[3] = alpha_resultSIMD.u8[3] == 0 ? 0 : ( alpha_top_SIMD.u8[3] * 255 ) / alpha_resultSIMD.u8[3];
+            alpha_varSIMD.m128i = _mm_shuffle_epi8( alpha_varSIMD.m128i, var_spread_mask.m128i );
 
-            uint8 alpha_back[4] = { *( base_alpha_back ), *( base_alpha_back + 4 ), *( base_alpha_back + 8 ), *( base_alpha_back + 12 ) };
-            uint8 alpha_top[4]  = { *( base_alpha_top ),  *( base_alpha_top + 4 ),  *( base_alpha_top + 8 ),  *( base_alpha_top + 12 ) };
-            for( int j = 0; j < 4; ++j )
-                alpha_top[j] = ( alpha_top[j] * iOpacity ) / 255;
-
-            uint8 alpha_result[4];
-            uint8 alpha_var[4];
-            for( int j = 0; j < 4; ++j ) {
-                alpha_result[j] = Union< _SH >( alpha_back[j], alpha_top[j] );
-                alpha_var[j]    = alpha_result[j] == 0 ? 0 : ( alpha_top[j] * 255 ) / alpha_result[j];
-            }
-
-            FVectorSIMD128_8bit alpha_back_SIMD;
-            FVectorSIMD128_8bit alpha_var_SIMD;
-            alpha_back_SIMD.Set4( alpha_back[0], alpha_back[1], alpha_back[2], alpha_back[3] );
-            alpha_var_SIMD.Set4( alpha_var[0], alpha_var[1], alpha_var[2], alpha_var[3] );
-
-            FVectorSIMD128_8bit max = FVectorSIMD128_8bit::Max();
-            FVectorSIMD128_8bit res;
-            res = DownScale( ( max - alpha_var_SIMD ) * pixel_back_SIMD + alpha_var_SIMD * DownScale( ( max - alpha_back_SIMD ) * pixel_top_SIMD + alpha_back_SIMD * /*BLEND*/pixel_top_SIMD/*BLEND*/ ) );
-            memcpy( base_pixel_back, res.u8, 16 );
+            res = DownScale( ( max - alpha_varSIMD ) * pixel_back_SIMD + alpha_varSIMD * DownScale( ( max - alpha_back_SIMD ) * pixel_top_SIMD + alpha_back_SIMD * /*BLEND*/pixel_top_SIMD/*BLEND*/ ) );
+            _mm_storeu_si128( (__m128i*)base_pixel_back, res.m128i );
+            /*
             *( base_alpha_back ) = alpha_result[0];
             *( base_alpha_back + 4 ) = alpha_result[1];
             *( base_alpha_back + 8 ) = alpha_result[2];
             *( base_alpha_back + 12 ) = alpha_result[3];
+            */
 
-            base_pixel_back   = base_pixel_back + 16;
-            base_pixel_top    = base_pixel_top  + 16;
-            base_alpha_back   = base_alpha_back + 16;
-            base_alpha_top    = base_alpha_top  + 16;
+            base_pixel_back   += 16;
+            base_pixel_top    += 16;
         }
     }
 

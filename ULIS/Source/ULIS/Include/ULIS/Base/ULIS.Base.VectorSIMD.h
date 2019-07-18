@@ -58,20 +58,20 @@ struct alignas( 16 ) FVectorSIMD128_8bit
     }
 
     ULIS_FORCEINLINE void Set2( uint8 e0, uint8 e1 ) {
-        m128i = _mm_set_epi8( e0, e0, e0, e0, e0, e0, e0, e0, e1, e1, e1, e1, e1, e1, e1, e1 );
+        m128i = _mm_set_epi8( e1, e1, e1, e1, e1, e1, e1, e1, e0, e0, e0, e0, e0, e0, e0, e0 );
     }
 
     ULIS_FORCEINLINE void Set4( uint8 e0, uint8 e1, uint8 e2, uint8 e3 ) {
-        m128i = _mm_set_epi8( e0, e0, e0, e0, e1, e1, e1, e1, e2, e2, e2, e2, e3, e3, e3, e3 );
+        m128i = _mm_set_epi8( e3, e3, e3, e3, e2, e2, e2, e2, e1, e1, e1, e1, e0, e0, e0, e0 );
     }
 
     ULIS_FORCEINLINE void Set8( uint8 e0, uint8 e1, uint8 e2, uint8 e3, uint8 e4, uint8 e5, uint8 e6, uint8 e7 ) {
-        m128i = _mm_set_epi8( e0, e0, e1, e1, e2, e2, e3, e3, e4, e4, e5, e5, e6, e6, e7, e7 );
+        m128i = _mm_set_epi8( e7, e7, e6, e6, e5, e5, e4, e4, e3, e3, e2, e2, e1, e1, e0, e0 );
     }
 
     ULIS_FORCEINLINE void Set16( uint8 e0, uint8 e1, uint8 e2,  uint8 e3,  uint8 e4,  uint8 e5,  uint8 e6,  uint8 e7
                     , uint8 e8, uint8 e9, uint8 e10, uint8 e11, uint8 e12, uint8 e13, uint8 e14, uint8 e15 ) {
-        m128i = _mm_set_epi8( e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15 );
+        m128i = _mm_set_epi8( e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0 );
     }
 
     // Operators Imp
@@ -143,7 +143,17 @@ ULIS_FORCEINLINE FVectorSIMD128_Dual8bit Spread( const FVectorSIMD128_8bit& i )
     return  tmp;
 }
 
-ULIS_FORCEINLINE FVectorSIMD128_Dual8bit Upscale( const FVectorSIMD128_8bit& i )
+ULIS_FORCEINLINE FVectorSIMD128_8bit Contract( const FVectorSIMD128_Dual8bit& i )
+{
+    FVectorSIMD128_8bit tmp;
+    __m128i zero    = _mm_setzero_si128();
+    __m128i maskLo  = _mm_set_epi8(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 14, 12, 10, 8, 6, 4, 2, 0);
+    __m128i maskHi  = _mm_set_epi8(14, 12, 10, 8, 6, 4, 2, 0, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80);
+    tmp.m128i       = _mm_or_si128(_mm_shuffle_epi8(i.lo.m128i, maskLo), _mm_shuffle_epi8(i.hi.m128i, maskHi));
+    return  tmp;
+}
+
+ULIS_FORCEINLINE FVectorSIMD128_Dual8bit UpScale( const FVectorSIMD128_8bit& i )
 {
     FVectorSIMD128_Dual8bit tmp;
     __m128i zero    = _mm_setzero_si128();

@@ -299,19 +299,21 @@ void ProfileBlendNormal()
 {
     ::ULIS::FBlockRGBA8* blockA = new ::ULIS::FBlockRGBA8( 8192, 8192 );
     ::ULIS::FBlockRGBA8* blockB = new ::ULIS::FBlockRGBA8( 8192, 8192 );
+    blockA->Fill( ::ULIS::CColor::FromRGB( 255, 0, 0, 255 ) );
+    blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 180 ) );
     std::cout << "=========================================" << std::endl;
 
     ::ULIS::FPerfStrat strat( true, 64 );
     auto start_time = std::chrono::steady_clock::now();
 
-    for( int k = 0; k < 100; ++k )
+    for( int k = 0; k < 1000; ++k )
     {
         std::cout << k << std::endl;
-        ::ULIS::FBlendingContext::Blend( blockA, blockB, ::ULIS::eBlendingMode::kNormal, 0.5f, 0, 0, true, strat );
+        ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kNormal, 0.5f, 0, 0, true, strat );
     }
     auto end_time   = std::chrono::steady_clock::now();
     auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
-    auto avg        = delta / 500.f;
+    auto avg        = delta / 1000.f;
 
     std::cout << std::endl;
     std::cout << "Result:   " << avg << "ms" << std::endl;

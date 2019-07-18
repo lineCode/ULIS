@@ -58,9 +58,14 @@ void printv( const char* title, const ::ULIS::FVectorSIMD128_Dual8bit& iVec )
 int main()
 {
     FVectorSIMD128_8bit vecA;
-    FVectorSIMD128_8bit vecB;
-    vecA.Set1( 48 );
-    vecB.Set1( 22 );
+    vecA.Set16( 'R', 'G', 'B', 255, 'R', 'G', 'B', 188, 'R', 'G', 'B', 30, 'R', 'G', 'B', 0 );
+
+    FVectorSIMD128_8bit mask;
+    mask.Set16( 3, 3, 3, 3, 7, 7, 7, 7, 11, 11, 11, 11, 15, 15, 15, 15 );
+
+    vecA.m128i = _mm_shuffle_epi8(vecA.m128i, mask.m128i );
+    PRINTV( vecA );
+    PRINTV( mask );
 
     return 0;
 }
