@@ -112,8 +112,67 @@ struct alignas( 16 ) FVectorSIMD128_8bit
 // FVectorSIMD128_Dual8bit
 struct alignas( 16 ) FVectorSIMD128_Dual8bit
 {
+    // Data
     FVectorSIMD128_8bit lo;
     FVectorSIMD128_8bit hi;
+
+    // Operators
+    ULIS_FORCEINLINE FVectorSIMD128_Dual8bit operator+( FVectorSIMD128_Dual8bit i ) {
+        FVectorSIMD128_Dual8bit tmp;
+        tmp.lo.m128i = _mm_adds_epu16( lo.m128i, i.lo.m128i );
+        tmp.hi.m128i = _mm_adds_epu16( hi.m128i, i.hi.m128i );
+        return  tmp;
+    }
+
+    ULIS_FORCEINLINE FVectorSIMD128_Dual8bit operator-( FVectorSIMD128_Dual8bit i ) {
+        FVectorSIMD128_Dual8bit tmp;
+        tmp.lo.m128i = _mm_subs_epu16( lo.m128i, i.lo.m128i );
+        tmp.hi.m128i = _mm_subs_epu16( hi.m128i, i.hi.m128i );
+        return  tmp;
+    }
 };
+
+/////////////////////////////////////////////////////
+// External Operators
+ULIS_FORCEINLINE FVectorSIMD128_Dual8bit Spread( const FVectorSIMD128_8bit& i )
+{
+    FVectorSIMD128_Dual8bit tmp;
+    __m128i zero    = _mm_setzero_si128();
+    tmp.lo.m128i = _mm_unpacklo_epi8( i.m128i, zero);
+    tmp.hi.m128i = _mm_unpackhi_epi8( i.m128i, zero);
+    return  tmp;
+}
+
+ULIS_FORCEINLINE FVectorSIMD128_Dual8bit Upscale( const FVectorSIMD128_8bit& i )
+{
+    FVectorSIMD128_Dual8bit tmp;
+    __m128i zero    = _mm_setzero_si128();
+    __m128i factor  = _mm_set1_epi16( 0x101 );
+    tmp.lo.m128i = _mm_mullo_epi16( _mm_unpacklo_epi8( i.m128i, zero), factor );
+    tmp.hi.m128i = _mm_mullo_epi16( _mm_unpackhi_epi8( i.m128i, zero), factor );
+    return  tmp;
+}
+
+
+ULIS_FORCEINLINE FVectorSIMD128_8bit DownScale( const FVectorSIMD128_Dual8bit& i )
+{
+    FVectorSIMD128_8bit tmp;
+    __m128i ones = _mm_set1_epi16( 1 );
+    __m128i lo = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( i.lo.m128i, ones ), _mm_srli_epi16( i.lo.m128i, 8 ) ), 8 );
+    __m128i hi = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( i.hi.m128i, ones ), _mm_srli_epi16( i.hi.m128i, 8 ) ), 8 );
+    __m128i maskLo  = _mm_set_epi8(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 14, 12, 10, 8, 6, 4, 2, 0);
+    __m128i maskHi  = _mm_set_epi8(14, 12, 10, 8, 6, 4, 2, 0, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80);
+    tmp.m128i = _mm_or_si128(_mm_shuffle_epi8(lo, maskLo), _mm_shuffle_epi8(hi, maskHi));
+    return  tmp;
+}
+
+ULIS_FORCEINLINE FVectorSIMD128_Dual8bit operator*( const FVectorSIMD128_8bit& iLhs, const FVectorSIMD128_8bit& iRhs )
+{
+    FVectorSIMD128_Dual8bit tmp;
+    __m128i zero = _mm_setzero_si128();
+    tmp.lo.m128i = _mm_mullo_epi16(_mm_unpacklo_epi8( iLhs.m128i, zero), _mm_unpacklo_epi8( iRhs.m128i, zero));
+    tmp.hi.m128i = _mm_mullo_epi16(_mm_unpackhi_epi8( iLhs.m128i, zero), _mm_unpackhi_epi8( iRhs.m128i, zero));
+    return  tmp;
+}
 
 } // namespace ULIS

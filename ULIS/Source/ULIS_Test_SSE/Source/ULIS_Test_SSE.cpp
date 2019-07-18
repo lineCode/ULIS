@@ -36,32 +36,31 @@ void printv( const char* title, const ::ULIS::FVectorSIMD128_8bit& iVec )
     std::cout << "]" << std::endl;
 }
 
+void printv16( const char* title, const ::ULIS::FVectorSIMD128_8bit& iVec )
+{
+    std::cout << title << ": [";
+    for( int i = 0; i < 8; ++i )
+        std::cout << (int)iVec.u16[i] << (i == 7 ? "" : ",");
+    std::cout << "]" << std::endl;
+}
+
+
 void printv( const char* title, const ::ULIS::FVectorSIMD128_Dual8bit& iVec )
 {
     std::cout << "Dual " << title << std::endl;
     printv( "lo", iVec.lo );
+    printv16( "lo", iVec.lo );
     printv( "hi", iVec.hi );
+    printv16( "hi", iVec.hi );
 }
 
 
 int main()
 {
-    __m128i zero = _mm_setzero_si128();
-
     FVectorSIMD128_8bit vecA;
-    vecA.m128i = _mm_set1_epi8( 240 );
-
     FVectorSIMD128_8bit vecB;
-    vecB.m128i = _mm_set1_epi8( 50 );
-
-    FVectorSIMD128_8bit res_1;
-    res_1.m128i = _mm_unpacklo_epi8( vecA.m128i, zero );
-
-    FVectorSIMD128_8bit res_2;
-    res_2.m128i = _mm_unpackhi_epi8( vecA.m128i, zero );
-
-    PRINTV( res_1 );
-    PRINTV( res_2 );
+    vecA.Set1( 48 );
+    vecB.Set1( 22 );
 
     return 0;
 }
