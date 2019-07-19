@@ -1,26 +1,32 @@
 Normal
+Behind
 Dissolve
+
 Darken
 Multiply
-Color burn
-Darker color
-Linear burn
+ColorBurn
+LinearBurn
+DarkerColor
+
 Lighten
 Screen
-Color dodge
-Linear dodge
-Lighter color
+ColorDodge
+LinearDodge
+LighterColor
+
 Overlay
-Soft light
-Hard light
-Vivid light
-Linear light
-Pin light
-Hard Mix
+SoftLight
+HardLight
+VividLight
+LinearLight
+PinLight
+HardMix
+
 Difference
 Exclusion
 Substract
 Divide
+
 Hue
 Saturation
 Color

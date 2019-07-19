@@ -44,6 +44,18 @@ struct BlendFunc< _SH, eBlendingMode::kNormal >
 };
 
 
+// Normal
+template< uint32 _SH >
+struct BlendFunc< _SH, eBlendingMode::kNormal >
+{
+    static inline
+    typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs )
+    {
+        return Cs;
+    }
+};
+
+
 // Multiply
 template< uint32 _SH >
 struct BlendFunc< _SH, eBlendingMode::kMultiply >

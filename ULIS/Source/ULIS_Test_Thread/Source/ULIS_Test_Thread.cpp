@@ -305,7 +305,7 @@ void ProfileBlendNormal()
     ::ULIS::FPerfStrat strat( true, 64 );
     auto start_time = std::chrono::steady_clock::now();
 
-    for( int k = 0; k < 100; ++k )
+    for( int k = 0; k < 1000; ++k )
     {
         std::cout << k << std::endl;
         ::ULIS::FBlendingContext::Blend( top, back, ::ULIS::eBlendingMode::kNormal, 0.5f, 0, 0, true, strat );
@@ -313,7 +313,7 @@ void ProfileBlendNormal()
 
     auto end_time   = std::chrono::steady_clock::now();
     auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
-    auto avg        = delta / 100.f;
+    auto avg        = delta / 1000.f;
 
     std::cout << std::endl;
     std::cout << "Result:   " << avg << "ms" << std::endl;
@@ -365,6 +365,8 @@ int main( int argc, char *argv[] )
     ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
     pool.SetNumWorkers( 64 );
     ProfileBlendNormal();
+    int pause;
+    std::cin >> pause;
     return 0;
 }
 
