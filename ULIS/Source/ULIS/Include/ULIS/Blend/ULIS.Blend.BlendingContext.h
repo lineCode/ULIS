@@ -13,6 +13,7 @@
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.WeakPRNG.h"
 #include "ULIS/Blend/ULIS.Blend.BlendingModes.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Blend/ULIS.Blend.BlockBlender.h"
@@ -45,6 +46,7 @@ public:
 
         FPoint shift( -ix, -iy );
 
+        ResetPRNGSeed();
         #define ULIS_SWITCH_OP( iMode )  TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerfStrat )
         ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, ULIS_SWITCH_OP )
         #undef ULIS_SWITCH_OP
@@ -69,6 +71,7 @@ public:
         if( !intersects ) return;
         FPoint shift( 0, 0 );
 
+        ResetPRNGSeed();
         #define ULIS_SWITCH_OP( iMode ) TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerfStrat )
         ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, ULIS_SWITCH_OP )
         #undef ULIS_SWITCH_OP

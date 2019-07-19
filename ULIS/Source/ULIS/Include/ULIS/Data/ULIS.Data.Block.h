@@ -32,21 +32,25 @@ class TBlockData final
 public:
     // Construction / Destruction
     TBlockData()
-        : width     ( 0 )
-        , height    ( 0 )
-        , data      ( nullptr )
+        : width     ( 0         )
+        , height    ( 0         )
+        , data      ( nullptr   )
+        , owned     ( true      )
     {}
 
     TBlockData( int iWidth, int iHeight )
         : width     ( iWidth    )
         , height    ( iHeight   )
-        , data      ( nullptr )
+        , data      ( nullptr   )
+        , owned     ( true      )
     {
         data = new uint8[ BytesTotal() ];
     }
 
     ~TBlockData()
-    {}
+    {
+        if( owned && data ) delete [] data;
+    }
 
 public:
     // Public API
@@ -77,6 +81,7 @@ private:
     uint32  width;
     uint32  height;
     uint8*  data;
+    bool owned;
 };
 
 
