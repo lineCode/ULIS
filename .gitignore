@@ -22,9 +22,6 @@ ULIS/Tools/EmbeddedDependencies*/*
 # Private config files
 **.pconfig**
 
-# Resources
-*/Resources/*
-
 # Project config files
 ProjectConfigOverrides.cmake
 VisualStudio_Solution_MSVC_Config.cmake
