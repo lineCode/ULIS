@@ -28,7 +28,7 @@ int main( int argc, char *argv[] )
     QLabel* label   = new QLabel( w );
     label->setPixmap( pixmap );
 
-    w->resize( pixmap.size() );
+    w->setFixedSize( pixmap.size() );
     w->show();
 
     int exit_code = app.exec();
