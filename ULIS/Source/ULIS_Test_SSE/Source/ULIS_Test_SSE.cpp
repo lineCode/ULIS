@@ -58,14 +58,14 @@ void printv( const char* title, const ::ULIS::FVectorSIMD128_Dual8bit& iVec )
 int main()
 {
     FVectorSIMD128_8bit vecA;
-    vecA.Set16( 'R', 'G', 'B', 255, 'R', 'G', 'B', 188, 'R', 'G', 'B', 30, 'R', 'G', 'B', 0 );
+    vecA.Set16( 0, 4, 8, 12, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 );
 
-    FVectorSIMD128_8bit mask;
-    mask.Set16( 3, 3, 3, 3, 7, 7, 7, 7, 11, 11, 11, 11, 15, 15, 15, 15 );
+    FVectorSIMD128_8bit ext;
+    ext.m128i = _mm_cvtepu8_epi32 ( vecA.m128i );
 
-    vecA.m128i = _mm_shuffle_epi8(vecA.m128i, mask.m128i );
-    PRINTV( vecA );
-    PRINTV( mask );
+    for( int i = 0; i < 4; ++i )
+        std::cout << (int)ext.u32[i] << ",";
+
 
     return 0;
 }

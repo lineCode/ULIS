@@ -24,6 +24,7 @@ struct alignas( 16 ) FVectorSIMD128_8bit
     union {
         uint8   u8[16];
         uint16  u16[8];
+        uint32  u32[4];
         __m128i m128i;
     };
 
