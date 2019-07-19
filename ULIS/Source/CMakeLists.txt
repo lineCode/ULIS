@@ -135,6 +135,7 @@ if( ${ULIS_BUILD_TESTS} )
 
     if( ${ULIS_BUILD_GUIS} )
     	include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI/CMakeLists.txt)
+    	include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Blend/CMakeLists.txt)
 	endif()
 endif()
 
