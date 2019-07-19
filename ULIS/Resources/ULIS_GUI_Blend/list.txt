@@ -1,0 +1,27 @@
+Normal
+Dissolve
+Darken
+Multiply
+Color burn
+Darker color
+Linear burn
+Lighten
+Screen
+Color dodge
+Linear dodge
+Lighter color
+Overlay
+Soft light
+Hard light
+Vivid light
+Linear light
+Pin light
+Hard Mix
+Difference
+Exclusion
+Substract
+Divide
+Hue
+Saturation
+Color
+Luminosity
