@@ -297,31 +297,42 @@ void mt_blend_normal( ::ULIS::FBlockdoubleCMYKhasAlphaACMYKnormalized* iBlockA, 
 
 void ProfileBlendNormal()
 {
-    int size = 16384;
-    ::ULIS::FBlockRGBA8* blockA = new ::ULIS::FBlockRGBA8( size, size );
-    ::ULIS::FBlockRGBA8* blockB = new ::ULIS::FBlockRGBA8( size, size );
-    blockA->Fill( ::ULIS::CColor::FromRGB( 255, 0, 0, 255 ) );
-    blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 255 ) );
+    int size = 4096;
+    std::vector< ::ULIS::FBlockRGBA8* > back;
+    std::vector< ::ULIS::FBlockRGBA8* > top;
+    for( int i = 0; i < 100; ++i )
+    {
+        back.emplace_back( new ::ULIS::FBlockRGBA8( size, size ) );
+        top.emplace_back( new ::ULIS::FBlockRGBA8( size, size ) );
+    }
     std::cout << "=========================================" << std::endl;
-
     ::ULIS::FPerfStrat strat( false, 64 );
     auto start_time = std::chrono::steady_clock::now();
 
-    for( int k = 0; k < 300; ++k )
+    for( int k = 0; k < 20; ++k )
     {
         std::cout << k << std::endl;
-        ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kNormal, 0.5f, 0, 0, true, strat );
+        for( int i = 0; i < 100; ++i )
+        {
+            ::ULIS::FBlendingContext::Blend( top[i], back[i], ::ULIS::eBlendingMode::kNormal, 0.5f, 0, 0, true, strat );
+        }
     }
+
     auto end_time   = std::chrono::steady_clock::now();
     auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
-    auto avg        = delta / 300.f;
+    auto avg        = delta / 20.f;
 
     std::cout << std::endl;
     std::cout << "Result:   " << avg << "ms" << std::endl;
     std::cout << std::endl;
 
-    delete  blockA;
-    delete  blockB;
+    for( int i = 0; i < 100; ++i )
+    {
+        delete back[i];
+        delete top[i];
+    }
+    back.clear();
+    top.clear();
 }
 
 
@@ -364,7 +375,7 @@ int main( int argc, char *argv[] )
     */
     //ProfileFillRectAA();
     ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
-    pool.SetNumWorkers( 16 );
+    pool.SetNumWorkers( 64 );
     ProfileBlendNormal();
     return 0;
 }
