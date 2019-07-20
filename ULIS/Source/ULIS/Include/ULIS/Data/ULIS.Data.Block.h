@@ -47,6 +47,15 @@ public:
         data = new uint8[ BytesTotal() ];
     }
 
+    TBlockData( int iWidth, int iHeight, uint8* iData )
+        : width     ( iWidth    )
+        , height    ( iHeight   )
+        , data      ( iData   )
+        , owned     ( false      )
+    {
+        data = new uint8[ BytesTotal() ];
+    }
+
     ~TBlockData()
     {
         if( owned && data ) delete [] data;
@@ -172,6 +181,12 @@ public:
     TBlock( int iWidth, int iHeight )
         : d     ( new TBlockData< _SH >( iWidth, iHeight )  )
         , id    ( generate_weak_uuid( 16 )                  )
+        , IBlock()
+    {}
+
+    TBlock( int iWidth, int iHeight, uint8* iData )
+        : d     ( new TBlockData< _SH >( iWidth, iHeight, iData )   )
+        , id    ( generate_weak_uuid( 16 )                          )
         , IBlock()
     {}
 
