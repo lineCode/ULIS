@@ -32,7 +32,7 @@ template< uint32 _SH >
 class TBlendingContext
 {
 public:
-    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, float iOpacity = 1.f, int ix = 0, int iy = 0, bool callInvalidCB = true, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, float iOpacity = 1.f, int ix = 0, int iy = 0, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true )
     {
         if( iOpacity == 0.f )
             return;
@@ -57,7 +57,7 @@ public:
         iBlockBack->Invalidate( inter_bb );
     }
 
-    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, bool callInvalidCB = true, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true )
     {
         if( iOpacity == 0.f )
             return;

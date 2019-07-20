@@ -33,7 +33,7 @@ public:
     // x: where is iBlockTop blended on x axis
     // y: where is iBlockTop blended on y axis
     // callInvalidCB: should we call the invalid callback once done ( default true )
-    static void Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, float iOpacity = 1.f, int ix = 0, int iy = 0, bool callInvalidCB = true, const FPerfStrat& iPerfStrat = FPerfStrat() );
+    static void Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, float iOpacity = 1.f, int ix = 0, int iy = 0, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
 
     // Blend
     // Blends two Blocks
@@ -45,7 +45,7 @@ public:
     // iOpacity: the opcaity of iBlockTop
     // iArea: the area to blend
     // callInvalidCB: should we call the invalid callback once done ( default true )
-    static void Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, bool callInvalidCB = true, const FPerfStrat& iPerfStrat = FPerfStrat() );
+    static void Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
 };
 
 } // namespace ULIS

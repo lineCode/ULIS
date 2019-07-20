@@ -180,6 +180,8 @@ public:
     static tPixelType   StaticMax() { return (tPixelType)tSpec::_nf._tm; }
     static int          StaticNumChannels         () { return  tSpec::_nf._rc; }
     static int          StaticNumColorChannels    () { return  tSpec::_nf._nc; }
+    static eCColorModel PreferedModel() { return  CColorModelFromColorModel( tSpec::_nf._cm ); };
+    static tPixelValue  PixelValueForColor( const  CColor& iColor ) { tPixelValue tmp; tmp.SetColor( iColor.ToModel( PreferedModel() ) ); return  tmp; };
 
 public:
     // Template API
