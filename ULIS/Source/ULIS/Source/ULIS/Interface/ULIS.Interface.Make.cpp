@@ -12,9 +12,12 @@
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
 
 namespace ULIS {
+/////////////////////////////////////////////////////
+// FMakeContext
 
+//static
 ::ULIS::IBlock*
-MakeBlock( int width, int height, uint32_t ID )
+FMakeContext::MakeBlock( int width, int height, uint32_t ID )
 {
     switch( ID )
     {
@@ -25,9 +28,9 @@ MakeBlock( int width, int height, uint32_t ID )
     }
 }
 
-
+//static
 ::ULIS::IBlock*
-MakeBlock( int width, int height, uint8* iData, uint32_t ID )
+FMakeContext::MakeBlock( int width, int height, uint8* iData, uint32_t ID )
 {
     switch( ID )
     {
