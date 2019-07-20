@@ -19,8 +19,8 @@ int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
 
-    ::ULIS::IBlock* blockA = ::ULIS::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::IBlock* blockB = ::ULIS::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
     blockA->Fill( ::ULIS::CColor::FromRGB( 255, 0, 0, 255 ) );
 
     for( int i = 0; i < blockA->Height(); ++i )
@@ -28,8 +28,8 @@ int main( int argc, char *argv[] )
             blockA->SetPixelColor( j, i, ::ULIS::CColor::FromHSLF( j / (float)blockA->Width(), 1.f, i / (float)blockA->Height() ) );
 
     blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 255 ) );
-    ::ULIS::FPerfStrat strat( false, 64 );
-    ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kMultiply, 0.5f, 0, 0, true, strat );
+    ::ULIS::FPerfStrat strat;
+    ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kMultiply, 0.5f, 0, 0, strat, true );
 
     QImage* image   = new QImage( blockA->DataPtr(), blockA->Width(), blockA->Height(), blockA->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

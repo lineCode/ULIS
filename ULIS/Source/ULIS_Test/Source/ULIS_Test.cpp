@@ -18,7 +18,7 @@ int main()
     feature_info.detect_host();
     feature_info.print();
 
-    ::ULIS::IBlock* blockA = ::ULIS::MakeBlock( 256, 256, ::ULIS::FBlockABGR8::TypeId() );
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 256, 256, ::ULIS::FBlockABGR8::TypeId() );
     blockA->Fill( ::ULIS::CColor::FromRGB( 255, 0, 0, 127 ) );
     ::ULIS::IBlock* blockB = new ::ULIS::FBlockABGR8( 256, 256 );
     blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 255 ) );

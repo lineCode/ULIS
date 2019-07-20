@@ -57,7 +57,7 @@ public:
         const int y2 = y1 + iROI.h;
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( TBlockCopier_Default_ScanLine< _SH >::ProcessScanLine, iBlock, iValue, y, x1, x2, iShift );
+            global_pool.ScheduleJob( TBlockCopier_Default_ScanLine< _SH >::ProcessScanLine, iSrc, iDst, y, x1, x2, iShift );
 
         global_pool.WaitForCompletion();
     }
@@ -92,7 +92,7 @@ public:
         const int y2 = y1 + iROI.h;
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( TBlockCopier_Default_ScanLine< _SH >::ProcessScanLine, iBlock, iValue, y, x1, x2, iShift );
+            global_pool.ScheduleJob( TBlockCopier_Default_ScanLine< _SH >::ProcessScanLine, iSrc, iDst, y, x1, x2, iShift );
 
         global_pool.WaitForCompletion();
     }

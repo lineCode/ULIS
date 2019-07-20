@@ -31,11 +31,11 @@ public:
     static void CopyBlockRectInto( TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const FRect& iRect, const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
         FRect src_bb = FRect( 0, 0, iSrc->Width(), iSrc->Height() );
-        FRect rect_bb = FRect( iArea.x, iArea.y, FMath::Min( iDst->Width(), iArea.w ), FMath::Min( iDst->Height(), iArea.h ) );
+        FRect rect_bb = FRect( iRect.x, iRect.y, FMath::Min( iDst->Width(), iRect.w ), FMath::Min( iDst->Height(), iRect.h ) );
         FRect inter_bb  = src_bb & rect_bb;
         bool intersects = inter_bb.Area() > 0;
         if( inter_bb.Area() <= 0 ) return;
-        FPoint shift( -ix, -iy );
+        FPoint shift( -iRect.x, -iRect.y );
 
         TBlockCopier< _SH >::Run( iSrc, iDst, inter_bb, shift, iPerfStrat );
     }

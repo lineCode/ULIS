@@ -88,7 +88,7 @@ FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, con
 {
     assert( iSrc->Id() == iDst->Id() );
 
-    switch( iSrc->Id )
+    switch( iSrc->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                    \
             case ::ULIS::ulis_types_reg[ n ]:                                                       \
