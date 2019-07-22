@@ -8,7 +8,7 @@
 * Please refer to LICENSE.md
 */
 
-#include <ULIS_Core>
+#include <ULIS_CORE>
 
 struct FSize { int w, h; };
 FSize image_sizes[] ={ { 64, 64 }

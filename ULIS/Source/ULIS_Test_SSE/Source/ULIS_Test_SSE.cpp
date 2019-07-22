@@ -8,7 +8,7 @@
 * Please refer to LICENSE.md
 */
 
-#include <ULIS_Core>
+#include <ULIS_CORE>
 using namespace ::ULIS;
 #define PRINTV( i ) printv( #i, i )
 
