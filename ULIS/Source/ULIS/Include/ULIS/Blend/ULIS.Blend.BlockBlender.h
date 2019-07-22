@@ -62,7 +62,7 @@ public:
         const int y2 = y1 + iROI.h;
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( TBlockBlender_Default_ScanLine< _SH, _BM, _TP, _CM, _EA, _LH, _NM, _DM >::ProcessScanLine, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift );
+            global_pool.ScheduleJob( ProcessScanLine, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift );
 
         global_pool.WaitForCompletion();
     }

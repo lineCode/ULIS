@@ -36,7 +36,7 @@ public:
     {
         void*       src     = iSrc->PixelPtr( iX1, iLine );
         void*       dst     = iDst->PixelPtr( iX1 + iShift.x, iLine + iShift.y );
-        int         dep     = iBlock->Depth();
+        int         dep     = iSrc->Depth();
 
         for( int i = iX1; i < iX2; ++i )
         {
@@ -57,7 +57,7 @@ public:
         const int y2 = y1 + iROI.h;
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( TBlockCopier_Default_ScanLine< _SH >::ProcessScanLine, iSrc, iDst, y, x1, x2, iShift );
+            global_pool.ScheduleJob( ProcessScanLine, iSrc, iDst, y, x1, x2, iShift );
 
         global_pool.WaitForCompletion();
     }
@@ -92,7 +92,7 @@ public:
         const int y2 = y1 + iROI.h;
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( TBlockCopier_Default_ScanLine< _SH >::ProcessScanLine, iSrc, iDst, y, x1, x2, iShift );
+            global_pool.ScheduleJob( ProcessScanLine, iSrc, iDst, y, x1, x2, iShift );
 
         global_pool.WaitForCompletion();
     }
