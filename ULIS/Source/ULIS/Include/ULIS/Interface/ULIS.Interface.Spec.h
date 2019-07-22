@@ -17,6 +17,7 @@
 namespace ULIS {
 
 ::ULIS::FSpec BlockInfo( uint32_t i );
+::ULIS::FSpec BlockSpec( uint32_t i );
 void PrintSpecs();
 
 } // namespace ULIS

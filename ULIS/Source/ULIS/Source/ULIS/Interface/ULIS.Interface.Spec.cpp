@@ -26,6 +26,18 @@ BlockInfo( uint32_t i )
     }
 }
 
+::ULIS::FSpec
+BlockSpec( uint32_t i )
+{
+    switch( i )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  ::ULIS::TBlockInfo< ::ULIS::ulis_types_reg[ n ] >:: data;
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, _nf )
+        #undef ULIS_REG_SWITCH_OP
+        default: return  ::ULIS::FSpec{};
+    }
+}
+
 void
 PrintSpecs()
 {
