@@ -194,6 +194,7 @@ int copy( int argc, char *argv[] )
 // ULIS_Profiler.exe clear  0           64  1000    256     mem
 // ULIS_Profiler.exe fill   0           32  200     2048    sse
 // ULIS_Profiler.exe clear  3726693057  64  500     8192    reg
+// ULIS_Profiler.exe blend  3726693057  32  10000   256     reg     8
 int main( int argc, char *argv[] )
 {
     // Expected input:

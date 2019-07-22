@@ -176,6 +176,7 @@ public:
                    , const FPoint&                      iShift
                    , const FPerfStrat&                  iPerfStrat = FPerfStrat() )
     {
+        /*
         if( iPerfStrat.use_sse_if_available && FGlobalCPUConfig::Get().info.HW_SSSE3 )
         {
             TBlockBlender_RGBA8_SSE< _SH >::Run( iBlockTop
@@ -187,6 +188,7 @@ public:
         }
         else
         {
+        */
             TBlockBlender_Default< _SH
                              , _BM
                              , tSpec::_nf._tp
@@ -201,7 +203,7 @@ public:
                                   , iROI
                                   , iShift
                                   , iPerfStrat );
-        }
+        //}
     }
 };
 
