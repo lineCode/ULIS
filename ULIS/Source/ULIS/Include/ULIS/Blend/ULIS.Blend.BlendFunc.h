@@ -22,7 +22,7 @@ namespace ULIS {
 #define tSpec TBlockInfo< _SH >
 #define ttPixelType typename TBlock< _SH >::tPixelType
 #define ttNextPixelType typename TBlock< _SH >::tNextPixelType
-#define ttMax typename TBlock< _SH >::StaticFastMax()
+#define ttMax TBlock< _SH >::StaticFastMax()
 #define ttDownscale ConvType< ttNextPixelType, ttPixelType >
 #define ttUpscale ConvType< ttPixelType, ttNextPixelType >
 #define ttNorm ConvType< ttPixelType, float >

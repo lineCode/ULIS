@@ -8,7 +8,7 @@
 * Please refer to LICENSE.md
 */
 
-#include <ULIS_Core>
+#include <ULIS_CORE>
 #include "ULIS/Thread/ULIS.Thread.Pool.h"
 
 #include <thread>
@@ -302,13 +302,13 @@ void ProfileBlendNormal()
     ::ULIS::FBlockRGBA8* top = new ::ULIS::FBlockRGBA8( size, size );
 
     std::cout << "=========================================" << std::endl;
-    ::ULIS::FPerfStrat strat( true, 64 );
+    ::ULIS::FPerfStrat strat;
     auto start_time = std::chrono::steady_clock::now();
 
     for( int k = 0; k < 1000; ++k )
     {
         std::cout << k << std::endl;
-        ::ULIS::FBlendingContext::Blend( top, back, ::ULIS::eBlendingMode::kNormal, 0.5f, 0, 0, true, strat );
+        ::ULIS::FBlendingContext::Blend( top, back, ::ULIS::eBlendingMode::kNormal, 0.5f, 0, 0, strat, true );
     }
 
     auto end_time   = std::chrono::steady_clock::now();

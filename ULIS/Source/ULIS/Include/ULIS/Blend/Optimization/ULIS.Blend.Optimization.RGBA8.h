@@ -30,13 +30,13 @@ class TBlockBlender_RGBA8_SSE
 {
 public:
     static void ProcessScanLineSSE( TBlock< _SH >*                  iBlockTop
-                               , TBlock< _SH >*                     iBlockBack
-                               , typename TBlock< _SH >::tPixelType iOpacity
-                               , const int                          iLine
-                               , const int                          iX1
-                               , const int                          iX2
-                               , const FPoint&                      iShift
-                               , uint8                              iAlphaIndex )
+                                  , TBlock< _SH >*                     iBlockBack
+                                  , typename TBlock< _SH >::tPixelType iOpacity
+                                  , const int                          iLine
+                                  , const int                          iX1
+                                  , const int                          iX2
+                                  , const FPoint&                      iShift
+                                  , uint8                              iAlphaIndex )
     {
         // Base ptrs for scanlines
         uint8* bpb = iBlockBack->PixelPtr( iX1, iLine );
