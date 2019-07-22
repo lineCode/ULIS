@@ -70,6 +70,12 @@ bool check_opt( const std::string& opt )
     return  ( opt == "sse" || opt == "mem" || opt == "reg" );
 }
 
+
+bool check_mode( int mode )
+{
+    return  mode >= 0 && mode < (int)::ULIS::eBlendingMode::kNumBlendingModes;
+}
+
 int clear( int argc, char *argv[] )
 {
     // Expected input:
@@ -109,6 +115,19 @@ int fill( int argc, char *argv[] )
     // 5 - size
     // 6 - opt
     // 7 - ignored
+    std::cout << "Processing fill, parsing args..." << std::endl;
+    if( argc != 7 ) { return error( "Bad args, abort." ); }
+    ::ULIS::uint32  fmt  = std::stoul( std::string( argv[2] ).c_str() );
+    ::ULIS::uint32  NT   = std::atoi( std::string( argv[3] ).c_str() );
+    ::ULIS::uint32  num  = std::atoi( std::string( argv[4] ).c_str() );
+    ::ULIS::uint32  size = std::atoi( std::string( argv[5] ).c_str() );
+    std::string     opt  = std::string( argv[6] );
+    std::cout << "OP:   " << "fill"    << std::endl;
+    if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::BlockSpec( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
+    if( check_NT(     NT      ) )   { std::cout << "NT:   " << NT         << std::endl; } else { return error( "Bad arg: NT, abort."    ); }
+    if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
+    if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
+    if( check_opt(    opt     ) )   { std::cout << "opt:  " << opt        << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
 
     return 0;
 }
@@ -124,6 +143,21 @@ int blend( int argc, char *argv[] )
     // 5 - size
     // 6 - opt
     // 7 - mode
+    std::cout << "Processing fill, parsing args..." << std::endl;
+    if( argc != 8 ) { return error( "Bad args, abort." ); }
+    ::ULIS::uint32  fmt  = std::stoul( std::string( argv[2] ).c_str() );
+    ::ULIS::uint32  NT   = std::atoi( std::string( argv[3] ).c_str() );
+    ::ULIS::uint32  num  = std::atoi( std::string( argv[4] ).c_str() );
+    ::ULIS::uint32  size = std::atoi( std::string( argv[5] ).c_str() );
+    std::string     opt  = std::string( argv[6] );
+    ::ULIS::uint32  mode = std::atoi( std::string( argv[7] ).c_str() );
+    std::cout << "OP:   " << "fill"    << std::endl;
+    if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::BlockSpec( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
+    if( check_NT(     NT      ) )   { std::cout << "NT:   " << NT         << std::endl; } else { return error( "Bad arg: NT, abort."    ); }
+    if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
+    if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
+    if( check_opt(    opt     ) )   { std::cout << "opt:  " << opt        << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
+    if( check_mode(   mode    ) )   { std::cout << "mode: " << ::ULIS::kwBlendingMode[mode] << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
 
     return 0;
 }
@@ -139,6 +173,19 @@ int copy( int argc, char *argv[] )
     // 5 - size
     // 6 - opt
     // 7 - ignored
+    std::cout << "Processing copy, parsing args..." << std::endl;
+    if( argc != 7 ) { return error( "Bad args, abort." ); }
+    ::ULIS::uint32  fmt  = std::stoul( std::string( argv[2] ).c_str() );
+    ::ULIS::uint32  NT   = std::atoi( std::string( argv[3] ).c_str() );
+    ::ULIS::uint32  num  = std::atoi( std::string( argv[4] ).c_str() );
+    ::ULIS::uint32  size = std::atoi( std::string( argv[5] ).c_str() );
+    std::string     opt  = std::string( argv[6] );
+    std::cout << "OP:   " << "copy"    << std::endl;
+    if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::BlockSpec( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
+    if( check_NT(     NT      ) )   { std::cout << "NT:   " << NT         << std::endl; } else { return error( "Bad arg: NT, abort."    ); }
+    if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
+    if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
+    if( check_opt(    opt     ) )   { std::cout << "opt:  " << opt        << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
 
     return 0;
 }
