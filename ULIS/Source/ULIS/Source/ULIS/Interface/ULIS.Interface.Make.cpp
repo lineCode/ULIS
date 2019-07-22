@@ -68,7 +68,7 @@ FMakeContext::CopyBlock( ::ULIS::IBlock* iBlock, const FPerfStrat& iPerfStrat )
 void
 FMakeContext::CopyBlockInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FPerfStrat& iPerfStrat )
 {
-    CopyBlockRectInto( iSrc, iDst, FRect( 0, 0, iSrc->Width(), iSrc->Height() ), iPerfStrat );
+    CopyBlockRectInto( iSrc, iDst, FRect( 0, 0, iDst->Width(), iDst->Height() ), iPerfStrat );
 }
 
 
@@ -97,6 +97,7 @@ FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, con
                         ::CopyBlockRectInto( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iSrc   \
                                            , (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iDst   \
                                            , iRect, iPerfStrat );                                   \
+                        break;                                                                      \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP

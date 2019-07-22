@@ -45,33 +45,43 @@ struct BlendFunc {
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Normal
-ULIS_SPEC_BLENDFUNC_COMPUTE_START( Normal )
-    return Cs;
-ULIS_SPEC_BLENDFUNC_COMPUTE_END
+template< uint32 _SH > struct BlendFunc< _SH, eBlendingMode::kNormal > {
+    static inline typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs ) {
+        return Cs;
+    }
+};
 //--------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------- Normal
-ULIS_SPEC_BLENDFUNC_COMPUTE_START( Behind )
-    return Cb;
-ULIS_SPEC_BLENDFUNC_COMPUTE_END
+//------------------------------------------------------------------------------- Behind
+template< uint32 _SH > struct BlendFunc< _SH, eBlendingMode::kBehind > {
+    static inline typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs ) {
+        return Cb;
+    }
+};
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Darken
-ULIS_SPEC_BLENDFUNC_COMPUTE_START( Darken )
+template< uint32 _SH > struct BlendFunc< _SH, eBlendingMode::kDarken > {
+    static inline typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs ) {
         return  FMath::Min( Cb, Cs );
-ULIS_SPEC_BLENDFUNC_COMPUTE_END
+    }
+};
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Multiply
-ULIS_SPEC_BLENDFUNC_COMPUTE_START( Multiply )
+template< uint32 _SH > struct BlendFunc< _SH, eBlendingMode::kMultiply > {
+    static inline typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs ) {
         return  ttDownscale( ttNextPixelType( Cb * Cs ) );
-ULIS_SPEC_BLENDFUNC_COMPUTE_END
+    }
+};
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- ColorBurn
-ULIS_SPEC_BLENDFUNC_COMPUTE_START( ColorBurn )
-        return  Cs == ttPixelType( 0 ) ? Cs : ttMax - FMath::Min( ttMax, ttUpscale( ttMax - Cb ) / Cs );
-ULIS_SPEC_BLENDFUNC_COMPUTE_END
+template< uint32 _SH > struct BlendFunc< _SH, eBlendingMode::kColorBurn > {
+    static inline typename TBlock< _SH >::tPixelType Compute( const typename TBlock< _SH >::tPixelType& Cb, const typename TBlock< _SH >::tPixelType& Cs ) {
+            return  Cs == ttPixelType( 0 ) ? Cs : ttMax - ttPixelType( FMath::Min( ttNextPixelType( ttMax ), ttNextPixelType( ttUpscale( ttMax - Cb ) / Cs ) ) );
+    }
+};
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- LinearBurn
 ULIS_SPEC_BLENDFUNC_COMPUTE_START( LinearBurn )
-        return  Cs + Cb - ttMax;
+        return  Cs + Cb < ttMax ? ttPixelType( 0 ) : Cs + Cb - ttMax;
 ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Lighten
@@ -81,27 +91,29 @@ ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Screen
 ULIS_SPEC_BLENDFUNC_COMPUTE_START( Screen )
-        return  Cb + Cs - ttDownscale( Cb * Cs )
+        return  Cb + Cs - ttDownscale( Cb * Cs );
 ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- ColorDodge
 ULIS_SPEC_BLENDFUNC_COMPUTE_START( ColorDodge )
-        return  Cs == ttMax ? Cs : FMath::Min( ttMax, ttUpscale( Cb ) / ( ttMax - Cs ) );
+        return  Cs == ttMax ? Cs : ttPixelType( FMath::Min( ttNextPixelType( ttMax ), ttNextPixelType( ttUpscale( Cb ) / ( ttMax - Cs ) ) ) );
 ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- LinearDodge
 ULIS_SPEC_BLENDFUNC_COMPUTE_START( LinearDodge )
-        return  ttPixelType( Fmath::Min( ttNextPixelType( ttMax ), ttNextPixelType( Cb + Cs ) ) );
+        return  ttPixelType( FMath::Min( ttNextPixelType( ttMax ), ttNextPixelType( Cb + Cs ) ) );
 ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Overlay
 ULIS_SPEC_BLENDFUNC_COMPUTE_START( Overlay )
-        return  ttNorm( Cs ) < 0.5f ? ttDownscale( Cb * ( 2 * Cs ) ) : ttMax - 2 * ttDownscale( ( ttMax * Cs ) * ( ttMax - Cb ) );
+        return  ttNorm( Cb ) < 0.5f ? ttDownscale( 2 * Cs * Cb ) : ttMax - ttDownscale( 2 * ( ttMax - Cs ) * ( ttMax - Cb ) );
 ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- SoftLight
 ULIS_SPEC_BLENDFUNC_COMPUTE_START( SoftLight )
-        return  ttNorm( Cs ) < 0.5f ? ttDownscale( ( 2 * Cs - ttMax ) * ( Cb - ttDownscale( Cb * Cb ) ) ) + Cb : ( 2 * Cs - ttMax ) * ( sqrt( double( Cb ) ) - Cb ) + Cb;
+        ttPixelType q = ttDownscale( ttNextPixelType( Cb * Cb ) );
+        ttNextPixelType d = 2 * Cs;
+        return  q + ttDownscale( d * Cb ) - ttDownscale( d * q );
 ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- HardLight
@@ -141,7 +153,7 @@ ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- Substract
 ULIS_SPEC_BLENDFUNC_COMPUTE_START( Substract )
-        return  Cb + Cs < ttMax ? 0 : Cb + Cs - ttMax;
+        return  Cb > Cs ? Cb - Cs : 0;
 ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Divide

@@ -27,9 +27,8 @@ int main( int argc, char *argv[] )
         for( int j = 0; j < blockA->Width(); ++j )
             blockA->SetPixelColor( j, i, ::ULIS::CColor::FromHSLF( j / (float)blockA->Width(), 1.f, i / (float)blockA->Height() ) );
 
-    blockB->Fill( ::ULIS::CColor::FromRGB( 0, 0, 255, 255 ) );
-    ::ULIS::FPerfStrat strat;
-    ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kMultiply, 0.5f, 0, 0, strat, true );
+    ::ULIS::FClearFillContext::Fill( blockB, ::ULIS::CColor( 255, 255, 255 ) );
+    ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kNormal, 0.5f );
 
     QImage* image   = new QImage( blockA->DataPtr(), blockA->Width(), blockA->Height(), blockA->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

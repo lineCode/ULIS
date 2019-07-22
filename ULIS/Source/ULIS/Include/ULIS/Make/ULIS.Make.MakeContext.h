@@ -33,7 +33,6 @@ public:
         FRect src_bb = FRect( 0, 0, iSrc->Width(), iSrc->Height() );
         FRect rect_bb = FRect( iRect.x, iRect.y, FMath::Min( iDst->Width(), iRect.w ), FMath::Min( iDst->Height(), iRect.h ) );
         FRect inter_bb  = src_bb & rect_bb;
-        bool intersects = inter_bb.Area() > 0;
         if( inter_bb.Area() <= 0 ) return;
         FPoint shift( -iRect.x, -iRect.y );
 

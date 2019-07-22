@@ -53,7 +53,6 @@ public:
         , data      ( iData   )
         , owned     ( false      )
     {
-        data = new uint8[ BytesTotal() ];
     }
 
     ~TBlockData()
