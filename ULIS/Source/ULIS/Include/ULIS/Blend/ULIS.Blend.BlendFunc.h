@@ -158,7 +158,7 @@ ULIS_SPEC_BLENDFUNC_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Divide
 ULIS_SPEC_BLENDFUNC_COMPUTE_START( Divide )
-        return  Cs == 0 ? 0 : Cb / Cs;
+        return  Cs == ttPixelType( 0 ) ? ttMax : ttPixelType( FMath::Min( ttNextPixelType( ttMax ) , ttNextPixelType( ttUpscale( Cb ) / Cs ) ) );
 ULIS_SPEC_BLENDFUNC_COMPUTE_END
 
 /////////////////////////////////////////////////////
