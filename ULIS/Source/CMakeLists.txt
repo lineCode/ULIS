@@ -132,6 +132,7 @@ if( ${ULIS_BUILD_TESTS} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Test/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Test_SSE/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Test_Thread/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Profiler/CMakeLists.txt)
 
     if( ${ULIS_BUILD_GUIS} )
     	include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI/CMakeLists.txt)
