@@ -9,6 +9,7 @@
 */
 
 #include <ULIS_CORE>
+#include <chrono>
 
 struct FSize { int w, h; };
 FSize image_sizes[] ={ { 64, 64 }
@@ -101,6 +102,30 @@ int clear( int argc, char *argv[] )
     if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
     if( check_opt(    opt     ) )   { std::cout << "opt:  " << opt        << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
 
+    ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
+    pool.SetNumWorkers( NT );
+
+    ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
+
+    ::ULIS::FPerfStrat strat;
+    if( opt == "mem" ) strat.use_mem_if_available;
+    if( opt == "sse" ) strat.use_sse_if_available;
+
+    auto start_time = std::chrono::steady_clock::now();
+
+    for( int l = 0; l < num; ++l )
+        ::ULIS::FClearFillContext::Clear( block, strat );
+
+    auto end_time   = std::chrono::steady_clock::now();
+    auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
+    float average   = delta / (float)num;
+
+    std::cout << std::endl;
+    std::cout << "Result:   " << average << "ms" << std::endl;
+    std::cout << std::endl;
+
+    delete block;
+
     return 0;
 }
 
@@ -128,6 +153,31 @@ int fill( int argc, char *argv[] )
     if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
     if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
     if( check_opt(    opt     ) )   { std::cout << "opt:  " << opt        << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
+
+    ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
+    pool.SetNumWorkers( NT );
+
+    ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
+    ::ULIS::CColor color( 0, 0, 0 );
+
+    ::ULIS::FPerfStrat strat;
+    if( opt == "mem" ) strat.use_mem_if_available;
+    if( opt == "sse" ) strat.use_sse_if_available;
+
+    auto start_time = std::chrono::steady_clock::now();
+
+    for( int l = 0; l < num; ++l )
+        ::ULIS::FClearFillContext::Fill( block, color, strat );
+
+    auto end_time   = std::chrono::steady_clock::now();
+    auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
+    float average   = delta / (float)num;
+
+    std::cout << std::endl;
+    std::cout << "Result:   " << average << "ms" << std::endl;
+    std::cout << std::endl;
+
+    delete block;
 
     return 0;
 }
@@ -159,6 +209,33 @@ int blend( int argc, char *argv[] )
     if( check_opt(    opt     ) )   { std::cout << "opt:  " << opt        << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
     if( check_mode(   mode    ) )   { std::cout << "mode: " << ::ULIS::kwBlendingMode[mode] << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
 
+    ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
+    pool.SetNumWorkers( NT );
+
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
+    ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
+    ::ULIS::eBlendingMode bm = (::ULIS::eBlendingMode)mode;
+
+    ::ULIS::FPerfStrat strat;
+    if( opt == "mem" ) strat.use_mem_if_available;
+    if( opt == "sse" ) strat.use_sse_if_available;
+
+    auto start_time = std::chrono::steady_clock::now();
+
+    for( int l = 0; l < num; ++l )
+        ::ULIS::FBlendingContext::Blend( blockA, blockB, bm, 1.f, 0, 0, strat );
+
+    auto end_time   = std::chrono::steady_clock::now();
+    auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
+    float average   = delta / (float)num;
+
+    std::cout << std::endl;
+    std::cout << "Result:   " << average << "ms" << std::endl;
+    std::cout << std::endl;
+
+    delete blockA;
+    delete blockB;
+
     return 0;
 }
 
@@ -186,6 +263,32 @@ int copy( int argc, char *argv[] )
     if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
     if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
     if( check_opt(    opt     ) )   { std::cout << "opt:  " << opt        << std::endl; } else { return error( "Bad arg: opt, abort."   ); }
+
+    ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
+    pool.SetNumWorkers( NT );
+
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
+    ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
+
+    ::ULIS::FPerfStrat strat;
+    if( opt == "mem" ) strat.use_mem_if_available;
+    if( opt == "sse" ) strat.use_sse_if_available;
+
+    auto start_time = std::chrono::steady_clock::now();
+
+    for( int l = 0; l < num; ++l )
+        ::ULIS::FMakeContext::CopyBlockInto( blockA, blockB, strat );
+
+    auto end_time   = std::chrono::steady_clock::now();
+    auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
+    float average   = delta / (float)num;
+
+    std::cout << std::endl;
+    std::cout << "Result:   " << average << "ms" << std::endl;
+    std::cout << std::endl;
+
+    delete blockA;
+    delete blockB;
 
     return 0;
 }
