@@ -62,5 +62,16 @@ PrintSpecs()
 }
 
 
+void
+PrintShortSpecs()
+{
+    for( int i = 0; i < ULIS_REG_SIZE; ++i )
+    {
+        auto spec = BlockInfo( i );
+        std::cout << (uint32_t)spec._sh << "    " << spec._ss << std::endl;
+    }
+}
+
+
 } // namespace ULIS
 

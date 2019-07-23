@@ -9,15 +9,10 @@
 */
 
 #include <ULIS_CORE>
-#include "ULIS/Base/FeatureDetector/cpu_x86.h"
 
 int main()
 {
-    //::ULIS::PrintSpecs();
-    FeatureDetector::cpu_x86 feature_info;
-    feature_info.detect_host();
-    feature_info.print();
-
+    ::ULIS::PrintShortSpecs();
     return 0;
 }
 
