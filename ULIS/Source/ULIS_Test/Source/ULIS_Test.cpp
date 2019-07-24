@@ -9,14 +9,14 @@
 */
 
 #include <ULIS_CORE>
-#include "ULIS/Base/FeatureDetector/cpu_x86.h"
 
 int main()
 {
-    //::ULIS::PrintSpecs();
-    FeatureDetector::cpu_x86 feature_info;
-    feature_info.detect_host();
-    feature_info.print();
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 400, 400, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( 400, 400, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::FBlendingContext::Blend( blockB, blockA, ::ULIS::eBlendingMode::kNormal );
+
+    auto dummy = 0;
 
     return 0;
 }
