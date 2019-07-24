@@ -112,7 +112,7 @@ public:
 public:
     // Public API
            virtual const char*                  Name                ()                                              const                       = 0;
-           virtual const uint32                 Id                  ()                                              const                       = 0;
+           virtual uint32                       Id                  ()                                              const                       = 0;
            virtual uint8*                       DataPtr             ()                                                                          = 0;
            virtual const uint8*                 DataPtr             ()                                              const                       = 0;
            virtual uint8*                       PixelPtr            ( int x, int y )                                                            = 0;
@@ -207,7 +207,7 @@ public:
 public:
     // Public API
     inline virtual const char*                  Name                ()                                              const   override    final   { return  tSpec::_nf._ss;                                               }
-    inline virtual const uint32                 Id                  ()                                              const   override    final   { return  tSpec::_nf._sh;                                               }
+    inline virtual uint32                       Id                  ()                                              const   override    final   { return  tSpec::_nf._sh;                                               }
     inline virtual uint8*                       DataPtr             ()                                                      override    final   { return  d->DataPtr();                                                 }
     inline virtual const uint8*                 DataPtr             ()                                              const   override    final   { return  d->DataPtr();                                                 }
     inline virtual uint8*                       PixelPtr            ( int x, int y )                                        override    final   { return  d->PixelPtr( x, y );                                          }
