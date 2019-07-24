@@ -3,35 +3,21 @@
 *   ULIS
 *__________________
 *
-* ULIS.Data.Block.h
+* ULIS.Color.DeviceColorSpace.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
 
 #pragma once
 
-#include "ULIS/Color/ULIS.Color.ColorSpaces.h"
+#include "ULIS/Color/ULIS.Color.AbstractColorSpace.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FBlockMetaData
-class FBlockMetaData final
+// IDeviceColorSpace
+class IDeviceColorSpace : public IAbstractColorSpace
 {
-public:
-    // Construction / Destruction
-    FBlockMetaData()
-    {}
-
-    ~FBlockMetaData()
-    {}
-
-public:
-    // Public API
-
-private:
-    // Private Data
 };
-
 
 } // namespace ULIS
 

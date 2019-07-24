@@ -3,17 +3,19 @@
 *   ULIS
 *__________________
 *
-* ULIS.Color.ColorSpace.h
+* ULIS.Color.LogicalColorSpace.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
 
 #pragma once
 
+#include "ULIS/Color/ULIS.Color.AbstractColorSpace.h"
+
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FColorSpace
-class FColorSpace
+// ILogicalColorSpace
+class ILogicalColorSpace : public IAbstractColorSpace
 {
 };
 
