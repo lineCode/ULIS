@@ -17,6 +17,8 @@ namespace ULIS {
 // FColorSpaceCustomRGB
 class FColorSpaceCustomRGB : public ILogicalColorSpace
 {
+public:
+    virtual e_cm AssociatedModel() const override { return e_cm::kRGB; }
 };
 
 } // namespace ULIS

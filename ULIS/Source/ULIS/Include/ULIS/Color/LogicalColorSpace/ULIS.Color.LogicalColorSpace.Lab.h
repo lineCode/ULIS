@@ -17,6 +17,8 @@ namespace ULIS {
 // FColorSpaceLab
 class FColorSpaceLab : public ILogicalColorSpace
 {
+public:
+    virtual e_cm AssociatedModel() const override { return e_cm::kLab; }
 };
 
 } // namespace ULIS

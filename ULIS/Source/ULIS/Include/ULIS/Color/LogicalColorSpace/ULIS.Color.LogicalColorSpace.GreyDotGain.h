@@ -17,6 +17,8 @@ namespace ULIS {
 // FColorSpaceGreyDotGain
 class FColorSpaceGreyDotGain : public ILogicalColorSpace
 {
+public:
+    virtual e_cm AssociatedModel() const override { return e_cm::kG; }
 };
 
 } // namespace ULIS
