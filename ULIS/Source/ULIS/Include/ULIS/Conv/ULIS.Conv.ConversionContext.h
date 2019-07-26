@@ -22,9 +22,13 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // TConversionContext
-template< uint32 _SH >
 class TConversionContext
 {
+    template< uint32 _SHA, uint32 _SHB >
+    static void Convert( TBlock< _SHA >* iBlockA, TBlock< _SHB >* iBlockB, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    {
+        assert( iBlockA & iBlockB );
+    }
 };
 
 /////////////////////////////////////////////////////
