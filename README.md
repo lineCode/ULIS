@@ -1,28 +1,48 @@
 # ULIS
 ![alt text](http://clementberthaud.com/dev/dep/ULIS/media/com/Banner.png "ULIS")
-Unlimited Library for Image Software
+Unlimited Library for Imaging Systems
 
+## Description
+        - Cross-Platform C++14 Library
+        - Generic digital image processing
+        - 2D Software rasterizer
+        - Unlimited image formats ( u8, u16, u32, float, double )
+        - Custom bit-ordered memory layouts
+        - All Photoshop pixel blending modes
+        - Color models ( RGB, HSL, HSV, CMYK, ... )
+        - Color-managed pipelines, Color Space support ( icm profiles and device-independant )
+        - Optimized algorithms with multithreading
+        - Optimized algorithms with SIMD Extensions ( SSE2 )
+        - Big Images ( 300000 px * 300000 px)
+        - Image pools and caches for optimisations
+        - Memory storage of animated image sequences
 
-## Requirements
-###### Hardware:
-        - 64bit machine
-        - At least 8GB RAM
+## Software Requirements Specification ( SRS )
+        - 64bit OS - Linux, Windows or MacOS
+        - CMake ( 3.11.4 or greater )
+        - Git ( 2.17.0 or greater )
+        - C++ compiler with C++14 support
+        - Python ( 3.7 or greater ) available from PATH as "python3" ( optional )
 
-###### Software:
-        - CMake 3.11.4 and greater
-        - Git 2.17.0 and greater
-        - A Python 3.7 or greater install available from PATH as "python3"
-        - Windows 7, 8, 10 and greater OR MacOs
-        - Visual Studio Studio 15 2017 and greater OR Xcode
-        - MinGW 64 7.xx ( optional )
-        - Clang LLVM xx ( optional )
-        - coal
-        - boost_preprocessor
-        - glm
-        - Qt
+## Supported Compilers
+        - MinGW 64 7.xx
+        - Clang LLVM xx
+        - MSVC
+        - GNU GCC
 
-###### Links:
-https://cmake.org/download/  \
-https://git-scm.com/download/win  \
-https://visualstudio.microsoft.com/fr/downloads/  \
-https://www.python.org/
+## Library Dependencies
+        - coal ( https://github.com/Robot-Fromage/coal )
+        - boost_preprocessor ( https://github.com/boostorg/preprocessor )
+        - glm ( https://github.com/g-truc/glm )
+        - Qt ( https://www.qt.io/, Optional )
+
+## Officially Supported IDEs
+        - Windows: VisualStudio 2017
+        - macOS: XCode
+        - Linux: SublimeText
+
+## Getting Started
+        - git clone https://github.com/Robot-Fromage/ULIS
+        - cd ULIS
+        - #Windows: call Setup.bat
+        - #macOS / Linux : sh Setup.sh
