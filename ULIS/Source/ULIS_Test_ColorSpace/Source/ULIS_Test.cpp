@@ -136,6 +136,9 @@ int main()
     cmsCloseProfile( hOutProfile );
     cmsDoTransform( hTransform, &Lab, RGB, 1 );
     cmsDeleteTransform( hTransform );
+    assert( RGB[0] == 119 );
+    assert( RGB[1] == 119 );
+    assert( RGB[2] == 119 );
 
     return 0;
 }
