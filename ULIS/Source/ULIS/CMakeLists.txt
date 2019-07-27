@@ -13,6 +13,13 @@ add_library( ULIS ${source_list} )
 
 target_compile_definitions(ULIS PUBLIC UNICODE)
 
+target_link_libraries (
+    ULIS
+    PUBLIC
+    debug ${ULIS_LCMS2_DEBUG_LIB_PATH}
+    optimized ${ULIS_LCMS2_RELEASE_LIB_PATH}
+)
+
 target_include_directories(
     ULIS
     PUBLIC
@@ -20,6 +27,7 @@ target_include_directories(
     ${ULIS_BOOST_INCLUDE_PATH}
 	${ULIS_COAL_INCLUDE_PATH}
 	${ULIS_GLM_INCLUDE_PATH}
+	${ULIS_LCMS2_INCLUDE_PATH}
     PRIVATE
     "ULIS/Source/ULIS/"
 )

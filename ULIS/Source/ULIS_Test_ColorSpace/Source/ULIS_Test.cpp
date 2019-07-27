@@ -14,6 +14,7 @@
 #include "ULIS/Color/ColorSpace/Constants/ULIS.Color.ColorSpace.Constants.StandardIlluminant.h"
 #include <sstream>
 #include <iomanip>
+#include "lcms2.h"
 
 void printvec2( const char* iTitle, const glm::vec2& iVec )
 {
@@ -112,5 +113,29 @@ int main()
     printvec3( "standardIlluminant_chromaticityCoordinates_CIE_1964_10_F10   ", ::ULIS::standardIlluminantTristimulusFromChromaticity( ::ULIS::standardIlluminant_chromaticityCoordinates_CIE_1964_10_F10   ) );
     printvec3( "standardIlluminant_chromaticityCoordinates_CIE_1964_10_F11   ", ::ULIS::standardIlluminantTristimulusFromChromaticity( ::ULIS::standardIlluminant_chromaticityCoordinates_CIE_1964_10_F11   ) );
     printvec3( "standardIlluminant_chromaticityCoordinates_CIE_1964_10_F12   ", ::ULIS::standardIlluminantTristimulusFromChromaticity( ::ULIS::standardIlluminant_chromaticityCoordinates_CIE_1964_10_F12   ) );
+
+    cmsHPROFILE hInProfile;
+    cmsHPROFILE hOutProfile;
+    cmsHTRANSFORM hTransform;
+    cmsUInt8Number RGB[3];
+    cmsCIELab Lab = { 50, 0, 0 };
+    cmsCIExyY D65;
+    D65.x = ::ULIS::standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.x;
+    D65.y = ::ULIS::standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.y;
+    D65.Y = 1.f;
+
+    hInProfile  = cmsCreateLab4Profile( &D65 );
+    hOutProfile = cmsCreate_sRGBProfile();
+    hTransform = cmsCreateTransform( hInProfile
+                                   , TYPE_Lab_DBL
+                                   , hOutProfile
+                                   , TYPE_RGB_8
+                                   , INTENT_PERCEPTUAL, 0 );
+
+    cmsCloseProfile( hInProfile  );
+    cmsCloseProfile( hOutProfile );
+    cmsDoTransform( hTransform, &Lab, RGB, 1 );
+    cmsDeleteTransform( hTransform );
+
     return 0;
 }
