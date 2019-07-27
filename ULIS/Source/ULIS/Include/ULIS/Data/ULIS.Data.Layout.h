@@ -31,9 +31,9 @@ template< int N > struct TRedirector { const uint8_t arr[ N ]; };
 // Layout Redirection Parsing Utility
 constexpr uint8 ParseLayoutRedirector_Imp_GetIndex( const char* iModel, const char* iLayout, bool iAlpha, int i )
 {
-    /* Layout orded : */    //return  i < ::__coal__::strlen( iModel ) ? ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( 'A', iLayout, 0 );
-    /* Alpha first  : */    //return  iAlpha ? i == 0 ? ::__coal__::indexof( 'A', iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 );
-    /* Alpha last   : */    return  iAlpha ? i == ::__coal__::strlen( iModel ) ? ::__coal__::indexof( 'A', iLayout, 0 ) : ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( iModel[i], iLayout, 0 );
+    /* Layout ordered : */    //return  i < ::__coal__::strlen( iModel ) ? ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( 'A', iLayout, 0 );
+    /* Alpha first  :   */    //return  iAlpha ? i == 0 ? ::__coal__::indexof( 'A', iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 ) : ::__coal__::indexof( iModel[i-1], iLayout, 0 );
+    /* Alpha last   :   */      return  iAlpha ? i == ::__coal__::strlen( iModel ) ? ::__coal__::indexof( 'A', iLayout, 0 ) : ::__coal__::indexof( iModel[i], iLayout, 0 ) : ::__coal__::indexof( iModel[i], iLayout, 0 );
 }
 
 

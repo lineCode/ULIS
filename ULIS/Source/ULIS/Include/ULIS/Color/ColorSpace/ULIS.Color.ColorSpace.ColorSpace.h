@@ -3,22 +3,23 @@
 *   ULIS
 *__________________
 *
-* ULIS.Color.LogicalColorSpace.XYZ.h
+* ULIS.Color.ColorSpace.ColorSpace.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
 
 #pragma once
 
-#include "ULIS/Color/ULIS.Color.LogicalColorSpace.h"
+#include "ULIS/Color/ColorSpace/Constants/ULIS.Color.ColorSpace.Constants.StandardIlluminant.h"
+#include "ULIS/Color/ColorSpace/ULIS.Color.ColorSpace.ModelSupport.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FColorSpaceXYZ
-class FColorSpaceXYZ : public ILogicalColorSpace
+// IColorSpace
+class IColorSpace
 {
 public:
-    virtual e_cm AssociatedModel() const override { return e_cm::kXYZ; }
+    virtual e_cm AssociatedModel() const = 0;
 };
 
 } // namespace ULIS

@@ -87,7 +87,7 @@ void print_short_op( const std::string& iOp, const std::string& iFormat, const s
 std::string stringizefloat( float val )
 {
     std::string out;
-    
+
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2) << val;
     out = stream.str();

@@ -29,7 +29,7 @@ template< uint32 _SH >
 class TBlockBlender_RGBA8_SSE
 {
 public:
-    static void ProcessScanLineSSE( TBlock< _SH >*                  iBlockTop
+    static void ProcessScanLineSSE( TBlock< _SH >*                     iBlockTop
                                   , TBlock< _SH >*                     iBlockBack
                                   , typename TBlock< _SH >::tPixelType iOpacity
                                   , const int                          iLine

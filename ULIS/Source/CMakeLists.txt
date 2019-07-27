@@ -135,6 +135,7 @@ if( ${ULIS_BUILD_TESTS} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Profiler/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Specs/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Features/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_Test_ColorSpace/CMakeLists.txt)
 
     if( ${ULIS_BUILD_GUIS} )
     	include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI/CMakeLists.txt)
