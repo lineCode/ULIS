@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS_Test.cpp
+* ULIS_GUI_Blend.cpp
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */

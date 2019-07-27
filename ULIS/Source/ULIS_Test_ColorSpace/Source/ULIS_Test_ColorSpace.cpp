@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS_Test.cpp
+* ULIS_Test_ColorSpace.cpp
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */

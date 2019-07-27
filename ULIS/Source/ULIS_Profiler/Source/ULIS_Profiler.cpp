@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS_Test_Thread.cpp
+* ULIS_Profiler.cpp
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
