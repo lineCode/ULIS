@@ -19,7 +19,7 @@ namespace ULIS {
 FCPUConfig&
 FGlobalCPUConfig::Get()
 {
-    static FCPUConfig* conf;
+    static FCPUConfig* conf = NULL;
     if( !conf )
         conf = new FCPUConfig();
 

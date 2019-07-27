@@ -19,7 +19,7 @@ namespace ULIS {
 FThreadPool&
 FGlobalThreadPool::Get()
 {
-    static FThreadPool* pool;
+    static FThreadPool* pool = NULL;
     if( !pool )
         pool = new FThreadPool();
 
