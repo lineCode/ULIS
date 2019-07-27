@@ -12,7 +12,11 @@
 
 int main()
 {
-    ::ULIS::uint8 res =::ULIS::ConvType< ::ULIS::uint16, ::ULIS::uint8 >( (::ULIS::uint16)65025 );
-    std::cout << (int)res << std::endl;
+    using namespace ::ULIS;
+    IBlock* blockA = FMakeContext::MakeBlock( 500, 500, FBlockRGBA8::TypeId() );
+    IBlock* blockB = FMakeContext::MakeBlock( 500, 500, FBlockRGBA8::TypeId() );
+    FClearFillContext::Fill( blockA, CColor( 255, 0, 0 ) );
+    FClearFillContext::Clear( blockB );
+    FBlendingContext::Blend( blockA, blockB, eBlendingMode::kNormal );
     return 0;
 }
