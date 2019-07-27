@@ -14,6 +14,8 @@
 #include "ULIS/Data/ULIS.Data.Layout.h"
 #include "ULIS/Maths/ULIS.Maths.Utility.h"
 #include "ULIS/Color/ULIS.Color.CColor.h"
+#include "ULIS/Color/ULIS.Color.ColorProfile.h"
+#include "ULIS/Color/ULIS.Color.ProfileRegistry.h"
 
 namespace ULIS {
 

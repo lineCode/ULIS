@@ -11,48 +11,9 @@
 #pragma once
 
 #include "ULIS/Data/ULIS.Data.Spec.h"
+#include "ULIS/Color/ULIS.Color.ModelSupport.h"
 
 namespace ULIS {
-
-/////////////////////////////////////////////////////
-// Supported CColor Models
-enum class eCColorModel : int
-{
-    kInvalid,
-    kG,
-    kRGB,
-    kHSL,
-    kHSV,
-    kCMYK,
-};
-
-/////////////////////////////////////////////////////
-// Model Correspondance
-static e_cm  ColorModelFromCColorModel( eCColorModel iValue )
-{
-    switch( iValue )
-    {
-        case eCColorModel::kInvalid:    return  e_cm::kG;
-        case eCColorModel::kG:          return  e_cm::kG;
-        case eCColorModel::kRGB:        return  e_cm::kRGB;
-        case eCColorModel::kHSL:        return  e_cm::kHSL;
-        case eCColorModel::kHSV:        return  e_cm::kHSV;
-        case eCColorModel::kCMYK:       return  e_cm::kCMYK;
-    }
-}
-
-static eCColorModel  CColorModelFromColorModel( e_cm iValue )
-{
-    switch( iValue )
-    {
-        case e_cm::kG:      return  eCColorModel::kG;
-        case e_cm::kRGB:    return  eCColorModel::kRGB;
-        case e_cm::kHSL:    return  eCColorModel::kHSL;
-        case e_cm::kHSV:    return  eCColorModel::kHSV;
-        case e_cm::kCMYK:   return  eCColorModel::kCMYK;
-        default:            return  eCColorModel::kInvalid;
-    }
-}
 
 /////////////////////////////////////////////////////
 // CColor

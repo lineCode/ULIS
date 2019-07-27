@@ -11,7 +11,6 @@
 #include <ULIS_CORE>
 #include <glm/vec3.hpp>
 #include <glm/mat3x3.hpp>
-#include "ULIS/Color/ColorSpace/Constants/ULIS.Color.ColorSpace.Constants.StandardIlluminant.h"
 #include <sstream>
 #include <iomanip>
 #include "lcms2.h"
