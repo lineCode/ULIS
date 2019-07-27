@@ -13,6 +13,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat3x3.hpp>
+#include "lcms2.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -134,6 +135,10 @@ static const glm::mat3x3 chromaticAdaptaion_bradfordInverseTransformationMatrix(
                                                                                  0.4323053f,  0.5183603f, 0.0492912f,
                                                                                 -0.0085287f,  0.0400428f, 0.9684867f );
 
+/////////////////////////////////////////////////////
+// LCMS API xyY whitepoints
+static const cmsCIExyY whitepoint_D50 = { standardIlluminant_chromaticityCoordinates_CIE_1931_2_D50.x, standardIlluminant_chromaticityCoordinates_CIE_1931_2_D50.y, 1.f };
+static const cmsCIExyY whitepoint_D65 = { standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.x, standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.y, 1.f };
 
 } // namespace ULIS
 

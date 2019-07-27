@@ -26,6 +26,8 @@ void printvec3( const char* iTitle, const glm::vec3& iVec )
     std::cout << iTitle << " " << iVec.x << " " << iVec.y << " " << iVec.z << std::endl;
 }
 
+static const cmsHPROFILE defaultLabProfile = cmsCreateLab4Profile(0);
+
 int main()
 {
     std::cout << "Chromaticity pairs" << std::endl;
@@ -118,14 +120,12 @@ int main()
     cmsHPROFILE hOutProfile;
     cmsHTRANSFORM hTransform;
     cmsUInt8Number RGB[3];
-    cmsCIELab Lab = { 50, 0, 0 };
-    cmsCIExyY D65;
-    D65.x = ::ULIS::standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.x;
-    D65.y = ::ULIS::standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.y;
-    D65.Y = 1.f;
-
-    hInProfile  = cmsCreateLab4Profile( &D65 );
+    cmsCIELab Lab = { 50, 255, 255 };
+    hInProfile  = cmsCreateLab4Profile( &::ULIS::whitepoint_D65 );
     hOutProfile = cmsCreate_sRGBProfile();
+
+    cmsColorSpaceSignature sig = cmsGetColorSpace( hInProfile );
+    assert( sig == cmsSigLabData );
     hTransform = cmsCreateTransform( hInProfile
                                    , TYPE_Lab_DBL
                                    , hOutProfile
@@ -136,9 +136,15 @@ int main()
     cmsCloseProfile( hOutProfile );
     cmsDoTransform( hTransform, &Lab, RGB, 1 );
     cmsDeleteTransform( hTransform );
-    assert( RGB[0] == 119 );
-    assert( RGB[1] == 119 );
-    assert( RGB[2] == 119 );
+    auto dummy = 0;
+
+    ::ULIS::FBlockRGBA8* block = new ::ULIS::FBlockRGBA8( 500, 500 );
+    ::ULIS::FClearFillContext::Clear( block );
+    ::ULIS::FBlockRGBA8::tPixelValue pixel;
+    pixel.SetRed    ( 255   );
+    pixel.SetGreen  ( 255   );
+    pixel.SetBlue   ( 255   );
+    pixel.SetAlpha  ( 0     );
 
     return 0;
 }
