@@ -19,4 +19,5 @@
 #include "ULIS/Interface/ULIS.Interface.Paint.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 #include "ULIS/Global/ULIS.Global.GlobalCPUConfig.h"
+#include "ULIS/Global/ULIS.Global.GlobalColor.h"
 

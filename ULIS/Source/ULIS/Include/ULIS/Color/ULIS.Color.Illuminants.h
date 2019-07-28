@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Color.Constants.h
+* ULIS.Color.Illuminants.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "ULIS/Color/ULIS.Color.Constants.h"
+#include "ULIS/Color/ULIS.Color.Illuminants.h"
 #include "ULIS/Color/ULIS.Color.ModelSupport.h"
 #include "lcms2.h"
 
