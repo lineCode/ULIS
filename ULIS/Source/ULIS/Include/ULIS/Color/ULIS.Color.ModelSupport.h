@@ -123,7 +123,7 @@ static e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
         case cmsSigXYZData      : return  e_cm::kXYZ;
         case cmsSigLabData      : return  e_cm::kLab;
         case cmsSigLuvData      : return  default_cm;
-        case cmsSigYCbCrData    : return  default_cm;
+        case cmsSigYCbCrData    : return  e_cm::kYUV;
         case cmsSigYxyData      : return  default_cm;
         case cmsSigRgbData      : return  e_cm::kRGB;
         case cmsSigGrayData     : return  e_cm::kG;
