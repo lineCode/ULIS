@@ -41,12 +41,9 @@ int main( int argc, char *argv[] )
     float deadzone_horizontal = 0.25f;
     int padding_left = ( deadzone_horizontal * block->Width() ) / 2;
     int padding_top = -( deadzone_vertical * block->Height() ) / 2;
-    for( int i = 0; i < 471; ++i ) // 1nanometer step 830 - 360 = 470
+    for( int i = 60; i < 280; ++i ) // 1nanometer step 830 - 360 = 470
     {
-        cmsCIEXYZ XYZ;
-        XYZ.X = ::ULIS::CMF_XYZ_CIE_2_1931_1nm[i].x;
-        XYZ.Y = ::ULIS::CMF_XYZ_CIE_2_1931_1nm[i].y;
-        XYZ.Z = ::ULIS::CMF_XYZ_CIE_2_1931_1nm[i].z;
+        cmsCIEXYZ XYZ = ::ULIS::CMF_XYZ_CIE_2_1931_1nm[i];
         cmsCIExyY xyY;
         cmsXYZ2xyY( &xyY, &XYZ );
         int x = xyY.x * block->Width()              + padding_left;
