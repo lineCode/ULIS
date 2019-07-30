@@ -41,8 +41,8 @@ public:
         for( int i = iX1; i < iX2; ++i )
         {
             memcpy( dst, src, dep );
-            src = src + dep;
-            dst = dst + dep;
+            src = static_cast<uint8*>(src) + dep;
+            dst = static_cast<uint8*>(dst) + dep;
         }
     }
 

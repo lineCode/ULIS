@@ -43,6 +43,11 @@ struct FMath
     static inline T Clamp( T iValue, T iMin, T iMax ) {
         return  Max( iMin, Min( iValue, iMax ) );
     }
+    
+    template< typename T >
+    static inline T Abs( T iA ) {
+        return ( iA < 0 ? -iA : iA );
+    }
 }; // struct FMath
 
 

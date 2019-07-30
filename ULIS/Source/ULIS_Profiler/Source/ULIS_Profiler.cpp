@@ -12,7 +12,9 @@
 #include <chrono>
 #include <sstream>
 #include <iomanip>
+#if defined(_MSC_VER)
 #include <Windows.h>
+#endif
 
 struct FSize { int w, h; };
 FSize image_sizes[] ={ { 64, 64 }
