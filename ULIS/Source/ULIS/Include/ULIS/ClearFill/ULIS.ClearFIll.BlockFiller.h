@@ -48,7 +48,7 @@ public:
                           , const typename TBlock< _SH >::tPixelValue&   iValue
                           , const FRect&                        iROI )
     {
-        const int x1 = iROI.y;
+        const int x1 = iROI.x;
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;
@@ -81,7 +81,7 @@ public:
                           , const typename TBlock< _SH >::tPixelValue&   iValue
                           , const FRect&                        iROI )
     {
-        const int x1 = iROI.y;
+        const int x1 = iROI.x;
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;
@@ -104,7 +104,7 @@ public:
                           , const typename TBlock< _SH >::tPixelValue&   iValue
                           , const FRect&                        iROI )
     {
-        const int x1 = iROI.y;
+        const int x1 = iROI.x;
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;

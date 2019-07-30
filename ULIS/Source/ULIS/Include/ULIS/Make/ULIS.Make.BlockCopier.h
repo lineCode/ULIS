@@ -51,7 +51,7 @@ public:
                           , const FRect&                        iROI
                           , const FPoint&                       iShift )
     {
-        const int x1 = iROI.y;
+        const int x1 = iROI.x;
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;
@@ -86,7 +86,7 @@ public:
                           , const FRect&                        iROI
                           , const FPoint&                       iShift )
     {
-        const int x1 = iROI.y;
+        const int x1 = iROI.x;
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;
@@ -110,7 +110,7 @@ public:
                           , const FRect&                        iROI
                           , const FPoint&                       iShift )
     {
-        const int x1 = iROI.y;
+        const int x1 = iROI.x;
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;
