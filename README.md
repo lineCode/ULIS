@@ -74,6 +74,30 @@ The contents of these files should look like this:
 
 Make sure you cloned the dependencies and built them if needed. You can then copy the path for the requested components. All paths should use forward slashes on all OS, even Windows macOS and Linux. All paths should have a trailing forward slash too. `ULIS_QT_CMAKE_PATH` is optional and can remain to `"default"`, in that case `ULIS_BUILD_GUIS` should remain `OFF`too. Make sure you fill the path for the config file of your compiler / IDE of choice, and that components you use were built with the same compiler. The building process of the dependencies will not be detailled here, it is left for the user to figure out, although most dependencies are header-only and i provide a CMakeLists in order to build Little-CMS easily, which can also be found in the Scripts folder of ULIS.
 
+There is an example of a fully configured config.cmake file:
+
+        SET( ULIS_BOOST_INCLUDE_PATH        "C:/Users/Desktop/work/boost_preprocessor/include/" )
+        SET( ULIS_COAL_INCLUDE_PATH         "C:/Users/Desktop/work/coal/coal/Source/coal/Include/" )
+        SET( ULIS_BUILD_SHARED              OFF )
+        SET( ULIS_BUILD_TESTS               ON )
+        SET( ULIS_BUILD_GUIS                ON )
+        SET( ULIS_QT_CMAKE_PATH             "C:/Qt/5.12.2/msvc2017_64/lib/cmake/" )
+        SET( ULIS_GLM_INCLUDE_PATH          "C:/Users/Desktop/work/glm_distribution/glm/" )
+        SET( ULIS_LCMS2_INCLUDE_PATH        "C:/Users/Desktop/work/Little-CMS_MSVC_distribution/include/" )
+        SET( ULIS_LCMS2_DEBUG_LIB_PATH      "C:/Users/Desktop/work/Little-CMS_MSVC_distribution/lcms2d.lib" )
+        SET( ULIS_LCMS2_RELEASE_LIB_PATH    "C:/Users/Desktop/work/Little-CMS_MSVC_distribution/lcms2.lib" )
+
+When you're done you should launch the appropriate script according to your configuration:
+
+        Generate_MinGW_Makefile_GCC.bat
+        Generate_VisualStudio_Solution_CLANG_LLVM.bat
+        Generate_VisualStudio_Solution_MSVC.bat
+        Generate_SublimeText_Project_GNU_GCC.sh
+        Generate_Xcode.sh
+
+The generated project files will be found under `ULIS/Generated_*/` where you fill find solution files according to your config.
+Project files are git-ignored and are never commited.
+
 ## Optional Components
 On Linux, the provided scripts generate the CMake makefiles for SublimeText solutions, you can install the free demo or paid version of SublimeText in order to enjoy it.
 
