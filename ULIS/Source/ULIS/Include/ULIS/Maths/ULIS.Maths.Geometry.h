@@ -11,6 +11,7 @@
 #pragma once
 
 #include "ULIS/Maths/ULIS.Maths.Utility.h"
+#include <cmath>
 
 namespace ULIS {
 
@@ -67,6 +68,18 @@ struct FPoint
         : x( iX )
         , y( iY )
     {}
+    
+    FPoint RotateAround( FPoint pivotPoint, float radianRotation)
+    {
+        //Trigonometric direction
+        double sin = -std::sin(radianRotation);
+        double cos = -std::cos(radianRotation);
+        
+        x -= pivotPoint.x;
+        y -= pivotPoint.y;
+        
+        return FPoint( ( x * cos - y * sin ) + pivotPoint.x, ( x * sin + y * cos ) + pivotPoint.y );
+    }
 
     int x;
     int y;
