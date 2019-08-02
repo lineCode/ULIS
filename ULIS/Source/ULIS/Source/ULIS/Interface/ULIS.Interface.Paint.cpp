@@ -74,6 +74,24 @@ FPainterContext::DrawCircle( IBlock* iBlock, const FPoint iCenter, const int iRa
     
 //static
 void
+FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
+            case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
+            {                                                                                                                                                                                  \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawEllipse( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iA, iB, iRotationDegrees, iColor, iPerfStrat, callInvalidCB );     \
+                break;                                                                                                                                                                         \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+    
+    
+//static
+void
 FPainterContext::DrawArc( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
 {
     switch( iBlock->Id() )

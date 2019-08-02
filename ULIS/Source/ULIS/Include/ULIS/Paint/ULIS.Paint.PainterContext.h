@@ -263,6 +263,58 @@ public:
         }
     }
     
+    // ---
+    
+    
+    static void DrawEllipse( TBlock< _SH >*       iBlock
+                       , const FPoint             iCenter
+                       , const int                iA
+                       , const int                iB
+                       , const double             iRotationDegrees
+                       , const CColor&            iColor
+                       , const FPerfStrat&        iPerfStrat
+                       , bool                     callInvalidCB )
+    {
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+
+        int a2 = iA * iA;
+        int b2 = iB * iB;
+        int fa2 = 4 * a2;
+        int fb2 = 4 * b2;
+        int x, y, sigma;
+        
+        for( x = 0, y = iB, sigma = 2*b2+a2*(1-2*iB) ; b2 * x <= a2 * y; x++ )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+            
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--;
+            }
+            sigma += b2*(4 * x + 6);
+        }
+        
+        for( x = iA, y = 0, sigma = 2*a2+b2*(1-2*iA) ; a2 * y <= b2 * x; y++ )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+            
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--;
+            }
+            sigma += a2*(4 * y + 6);
+        }
+
+    }
+    
     
     // ---
     

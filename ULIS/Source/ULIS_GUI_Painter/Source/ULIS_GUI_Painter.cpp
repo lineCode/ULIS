@@ -26,6 +26,7 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
     ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 255, 255, 255 ) );
 
+    /*
     //Vertical
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,50), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ) );
     
@@ -54,6 +55,7 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(300,900), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
     
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(700,900), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
+    */
     
     //circles
     /*for( int i = 0; i < 255; i+=5)
@@ -62,22 +64,26 @@ int main( int argc, char *argv[] )
      }*/
     
     //Arcs
+    /*
         ::ULIS::FPainterContext::DrawArc( block, ::ULIS::FPoint(500,500), 255, 246, 152, ::ULIS::CColor( 0, 0 ,0 ) );
         ::ULIS::FPainterContext::DrawArc( block, ::ULIS::FPoint(500,500), 127, 123, 52, ::ULIS::CColor( 0, 0 ,0 ) );
         ::ULIS::FPainterContext::DrawArc( block, ::ULIS::FPoint(500,500), 350, 16, 278, ::ULIS::CColor( 0, 0 ,0 ) );
         ::ULIS::FPainterContext::DrawArc( block, ::ULIS::FPoint(500,500), 200, 127, 78, ::ULIS::CColor( 0, 0 ,0 ) );
         ::ULIS::FPainterContext::DrawArc( block, ::ULIS::FPoint(500,500), 50, 301, 28, ::ULIS::CColor( 0, 0 ,0 ) );
+     */
     
     
-    //Rectangels
+    //Rectangles
+    /*
     ::ULIS::FPainterContext::DrawRectangle( block, ::ULIS::FPoint(50,950), ::ULIS::FPoint(950, 975), ::ULIS::CColor( 0, 0 ,0 ) );
     
     ::ULIS::FPainterContext::DrawRectangle( block, ::ULIS::FPoint(300,960), ::ULIS::FPoint(303, 965), ::ULIS::CColor( 0, 0 ,0 ) );
     
     ::ULIS::FPainterContext::DrawRectangle( block, ::ULIS::FPoint(325,960), ::ULIS::FPoint(328, 965), ::ULIS::CColor( 0, 0 ,0 ), true );
-    
+    */
     
     //Polygons
+    /*
     std::vector< ::ULIS::FPoint > points;
     points.push_back( ::ULIS::FPoint( 500, 200 ) );
     points.push_back( ::ULIS::FPoint( 666, 750 ) );
@@ -91,6 +97,12 @@ int main( int argc, char *argv[] )
     }
     
     ::ULIS::FPainterContext::DrawPolygon( block, points, ::ULIS::CColor( 0, 0 ,0 ) );
+    */
+    
+    //Ellipses
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 0, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 0, ::ULIS::CColor( 0, 0 ,0 ) );
+
     
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
