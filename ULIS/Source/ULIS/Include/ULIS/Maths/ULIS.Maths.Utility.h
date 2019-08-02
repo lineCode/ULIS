@@ -10,6 +10,7 @@
 
 #pragma once
 
+# define PI           3.14159265358979323846  /* pi */
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -48,6 +49,17 @@ struct FMath
     static inline T Abs( T iA ) {
         return ( iA < 0 ? -iA : iA );
     }
+    
+    static inline double RadToDeg( double iRad )
+    {
+        return ( iRad * 180 / PI );
+    }
+    
+    static inline double DegToRad( double iDeg )
+    {
+        return ( iDeg * PI / 180 );
+    }
+    
 }; // struct FMath
 
 

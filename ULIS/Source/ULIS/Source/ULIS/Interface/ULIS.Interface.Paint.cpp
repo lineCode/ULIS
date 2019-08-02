@@ -71,6 +71,25 @@ FPainterContext::DrawCircle( IBlock* iBlock, const FPoint iCenter, const int iRa
     }
 }
     
+    
+//static
+void
+FPainterContext::DrawArc( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
+            case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
+            {                                                                                                                                                                                  \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawArc( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerfStrat, callInvalidCB );     \
+                break;                                                                                                                                                                         \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+    
+    
 //static
 void
 FPainterContext::DrawRectangle( IBlock* iBlock, const FPoint iTopLeft, const FPoint iBottomRight, const CColor& iColor, const bool iFilled, const FPerfStrat& iPerfStrat, bool callInvalidCB )
