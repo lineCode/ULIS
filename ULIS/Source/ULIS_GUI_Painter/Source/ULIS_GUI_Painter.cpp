@@ -24,7 +24,7 @@ int main( int argc, char *argv[] )
     QApplication app( argc, argv );
 
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 255, 255, 255 ) );
+    ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 40, 40, 40 ) );
 
     /*
     //Vertical

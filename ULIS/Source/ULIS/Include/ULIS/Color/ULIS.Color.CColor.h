@@ -20,10 +20,6 @@ namespace ULIS {
 class  CColor
 {
 public:
-    // Enums
-    
-
-public:
     // Construction
     CColor();
     CColor( int r, int g, int b, int alpha = 255 );
