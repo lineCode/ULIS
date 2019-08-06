@@ -100,10 +100,18 @@ int main( int argc, char *argv[] )
     */
     
     //Ellipses
-    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 0, ::ULIS::CColor( 0, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 0, ::ULIS::CColor( 0, 0 ,0 ) );
-
+    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, ::ULIS::CColor( 0, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, ::ULIS::CColor( 0, 0 ,0 ) );
     
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 150, 100, 28, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 214, ::ULIS::CColor( 0, 0 ,0 ) );
+    
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 18, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 45, ::ULIS::CColor( 0, 0 ,0 ) );
+    
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 400, 300, 0, ::ULIS::CColor( 0, 0 ,0 ) );
+
+
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

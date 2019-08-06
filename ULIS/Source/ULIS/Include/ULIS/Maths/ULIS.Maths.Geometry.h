@@ -69,7 +69,7 @@ struct FPoint
         , y( iY )
     {}
     
-    FPoint RotateAround( FPoint pivotPoint, float radianRotation)
+    FPoint RotateAround( FPoint pivotPoint, double radianRotation)
     {
         //Trigonometric direction
         double sin = -std::sin(radianRotation);
@@ -83,6 +83,36 @@ struct FPoint
 
     int x;
     int y;
+};
+    
+/////////////////////////////////////////////////////
+// FPoint64 bits
+struct FPoint64
+{
+    FPoint64()
+        : x( 0 )
+        , y( 0 )
+    {}
+
+    FPoint64( int64 iX, int64 iY )
+        : x( iX )
+        , y( iY )
+    {}
+    
+    FPoint64 RotateAround( FPoint pivotPoint, double radianRotation)
+    {
+        //Trigonometric direction
+        double sin = -std::sin(radianRotation);
+        double cos = -std::cos(radianRotation);
+        
+        x -= pivotPoint.x;
+        y -= pivotPoint.y;
+        
+        return FPoint64( ( x * cos - y * sin ) + pivotPoint.x, ( x * sin + y * cos ) + pivotPoint.y );
+    }
+
+    int64 x;
+    int64 y;
 };
 
 } // namespace ULIS

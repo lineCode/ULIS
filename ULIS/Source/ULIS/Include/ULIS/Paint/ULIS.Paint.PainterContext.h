@@ -265,18 +265,116 @@ public:
     
     // ---
     
+    static void GetEllipseAxesPoints(  const int iA
+                                     , const int iB
+                                     , double iRotationRadians
+                                     , FPoint64* ptA
+                                     , FPoint64* ptB )
+    {
+        iRotationRadians = std::fmod( iRotationRadians, PI / 2); // We want ptA in the first quadrant, et ptB in the second. This enables it
+        
+        ptA->x = std::cos( iRotationRadians ) * iA;
+        ptA->y = std::sin( iRotationRadians ) * iA;
+        
+        ptB->x = std::cos( iRotationRadians + PI / 2 ) * iB;
+        ptB->y = std::sin( iRotationRadians + PI / 2 ) * iB;
+    }
+
     
-    static void DrawEllipse( TBlock< _SH >*       iBlock
+    static void DrawRotatedEllipse( TBlock< _SH >*       iBlock
                        , const FPoint             iCenter
                        , const int                iA
                        , const int                iB
-                       , const double             iRotationDegrees
+                       , const int                iRotationDegrees
                        , const CColor&            iColor
                        , const FPerfStrat&        iPerfStrat
                        , bool                     callInvalidCB )
     {
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
 
+        
+        FPoint64 p1;
+        FPoint64 p2;
+        
+        GetEllipseAxesPoints( iA, iB, ::ULIS::FMath::DegToRad( iRotationDegrees ), &p1, &p2);
+        
+        int64 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
+        int64 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
+        
+        
+        std::cout << "p1Coeff: " << p1Coeff << std::endl;
+        std::cout << "p2Coeff: " << p2Coeff << std::endl;
+        
+        std::cout << "xa = " << p1.x << " ya = " << p1.y << std::endl;
+        std::cout << "xb = " << p2.x << " yb = " << p2.y << std::endl;
+        
+        int64 A = (p1.x * p1.x) * p2Coeff +
+                  (p2.x * p2.x) * p1Coeff;
+        
+        int64 B = ( p1.x * p1.y ) * p2Coeff +
+                  ( p2.x * p2.y ) * p1Coeff;
+       
+        int64 C = (p1.y * p1.y) * p2Coeff +
+                  (p2.y * p2.y) * p1Coeff;
+        
+        int64 D = p1Coeff *
+                  p2Coeff;
+      //  1563886116
+      //  7991108449
+        int64 x = -p1.x;
+        int64 y = -p1.y;
+        
+        int64 dx = B * p1.x + C * p1.y;
+        int64 dy = -( A * p1.x + B * p1.y );
+        
+
+        
+        std::cout << "x" << x << std::endl;
+        std::cout << "y" << y << std::endl;
+
+        
+        std::cout << "A = " << A << std::endl;
+        std::cout << "B = " << B << std::endl;
+        std::cout << "C = " << C << std::endl;
+        std::cout << "D = " << D << std::endl;
+        
+        while( dx <= 0 )
+        {
+            
+            std::cout << "dx = " << dx << " dy = " << dy << std::endl;
+            std::cout << "ratio = " << (double(dy)/double(dx)) << std::endl;
+
+
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+            //iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+            
+            
+            y++;
+            std::cout << "y++" << std::endl;
+            int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D; //should be around 0, bug
+            std::cout << "sigma = " << sigma << std::endl;
+            if( sigma < 0)
+            {
+                dx -= B;
+                dy += A;
+                x--;
+                std::cout << "x--" << std::endl;
+            }
+            dx += C;
+            dy -= B;
+        };
+    }
+    
+    static void DrawEllipse( TBlock< _SH >*       iBlock
+                       , const FPoint             iCenter
+                       , const int                iA
+                       , const int                iB
+                       , const CColor&            iColor
+                       , const FPerfStrat&        iPerfStrat
+                       , bool                     callInvalidCB )
+    {
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+        
         int a2 = iA * iA;
         int b2 = iB * iB;
         int fa2 = 4 * a2;
@@ -312,7 +410,6 @@ public:
             }
             sigma += a2*(4 * y + 6);
         }
-
     }
     
     
