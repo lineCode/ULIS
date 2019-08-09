@@ -119,104 +119,6 @@ public:
             }
         }
     }
-
-    // ---
-    
-    static void DrawGradientLine( TBlock< _SH >*            iBlock
-                         , const FPoint             iP0
-                         , const FPoint             iP1
-                         , const CColor&            iColor1
-                         , const CColor&            iColor2
-                         , const FPerfStrat&        iPerfStrat
-                         , bool                     callInvalidCB )
-    {
-        TPixelValue< _SH > val1 = iBlock->PixelValueForColor( iColor1 );
-        TPixelValue< _SH > val2 = iBlock->PixelValueForColor( iColor2 );
-        
-        //val1 + val2;
-        
-        FPoint p0;
-        FPoint p1;
-        
-
-        if( ::ULIS::FMath::Abs( iP1.y - iP0.y ) < ::ULIS::FMath::Abs( iP1.x - iP0.x )) //x slope > y slope
-        {
-            if( iP1.x > iP0.x )
-            {
-                p0 = iP0;
-                p1 = iP1;
-            }
-            else
-            {
-                p0 = iP1;
-                p1 = iP0;
-            }
-            
-            int dx = p1.x - p0.x;
-            int dy = p1.y - p0.y;
-            int yStep = 1;
-        
-            if( dy < 0)
-            {
-                yStep = -1;
-                dy = -dy;
-            }
-        
-            int slopeDifferential = 2 * dy - dx;
-            int y = p0.y;
-        
-            for( int x = p0.x; x < p1.x; x++)
-            {
-                iBlock->SetPixelValue( x, y, val1 );
-                
-                if( slopeDifferential > 0 )
-                {
-                    y += yStep;
-                    slopeDifferential-=(2 * dx);
-                }
-                slopeDifferential+=(2 * dy);
-            }
-        }
-        else //y slope > x slope
-        {
-            if( iP1.y > iP0.y )
-            {
-                p0 = iP0;
-                p1 = iP1;
-            }
-            else
-            {
-                p0 = iP1;
-                p1 = iP0;
-            }
-            
-            int dx = p1.x - p0.x;
-            int dy = p1.y - p0.y;
-            int xStep = 1;
-        
-            if( dx < 0)
-            {
-                xStep = -1;
-                dx = -dx;
-            }
-        
-            int slopeDifferential = 2 * dx - dy;
-            int x = p0.x;
-        
-            for( int y = p0.y; y < p1.y; y++)
-            {
-                iBlock->SetPixelValue( x, y, val1 );
-                
-                if( slopeDifferential > 0 )
-                {
-                    x += xStep;
-                    slopeDifferential-=(2 * dy);
-                }
-                slopeDifferential+=(2 * dx);
-            }
-        }
-    }
-    
     
     // ---
     
@@ -244,6 +146,7 @@ public:
             iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
             iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
             iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
@@ -260,6 +163,41 @@ public:
                 y--;
                 x++;
             }
+        }
+    }
+    
+    
+    static void DrawCircleBresenham(  TBlock< _SH >*            iBlock
+                                    , const FPoint             iCenter
+                                    , const int                iRadius
+                                    , const CColor&            iColor
+                                    , const FPerfStrat&        iPerfStrat
+                                    , bool                     callInvalidCB )
+    {
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+
+        int x = 0;
+        int y = iRadius;
+        int m = 5 - 4 * iRadius;
+        while( x <= y )
+        {
+            //If 0° is on top and we turn clockwise
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            
+            if( m > 0 )
+            {
+                y--;
+                m = m - 8 * y;
+            }
+            x++;
+            m = m + 8 * x + 4;
         }
     }
     
@@ -291,79 +229,157 @@ public:
                        , bool                     callInvalidCB )
     {
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
-
         
         FPoint64 p1;
         FPoint64 p2;
         
         GetEllipseAxesPoints( iA, iB, ::ULIS::FMath::DegToRad( iRotationDegrees ), &p1, &p2);
         
-        int64 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
-        int64 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
+        __int128 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
+        __int128 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
         
+        __int128 A = (p1.x * p1.x) * p2Coeff +
+                     (p2.x * p2.x) * p1Coeff;
         
-        std::cout << "p1Coeff: " << p1Coeff << std::endl;
-        std::cout << "p2Coeff: " << p2Coeff << std::endl;
-        
-        std::cout << "xa = " << p1.x << " ya = " << p1.y << std::endl;
-        std::cout << "xb = " << p2.x << " yb = " << p2.y << std::endl;
-        
-        int64 A = (p1.x * p1.x) * p2Coeff +
-                  (p2.x * p2.x) * p1Coeff;
-        
-        int64 B = ( p1.x * p1.y ) * p2Coeff +
-                  ( p2.x * p2.y ) * p1Coeff;
+        __int128 B = ( p1.x * p1.y ) * p2Coeff +
+                     ( p2.x * p2.y ) * p1Coeff;
        
-        int64 C = (p1.y * p1.y) * p2Coeff +
-                  (p2.y * p2.y) * p1Coeff;
+        __int128 C = (p1.y * p1.y) * p2Coeff +
+                     (p2.y * p2.y) * p1Coeff;
         
-        int64 D = p1Coeff *
-                  p2Coeff;
-      //  1563886116
-      //  7991108449
+        __int128 D = p1Coeff *
+                     p2Coeff;
+
         int64 x = -p1.x;
         int64 y = -p1.y;
         
-        int64 dx = B * p1.x + C * p1.y;
-        int64 dy = -( A * p1.x + B * p1.y );
+        __int128 dx = -(B * p1.x + C * p1.y);
+        __int128 dy =  A * p1.x + B * p1.y;
         
 
-        
-        std::cout << "x" << x << std::endl;
-        std::cout << "y" << y << std::endl;
-
-        
-        std::cout << "A = " << A << std::endl;
-        std::cout << "B = " << B << std::endl;
-        std::cout << "C = " << C << std::endl;
-        std::cout << "D = " << D << std::endl;
-        
-        while( dx <= 0 )
+        //Case 1 ----------------------------
+        if( dx == 0 || ::ULIS::FMath::Abs( dy / dx ) >= 1 )
         {
-            
-            std::cout << "dx = " << dx << " dy = " << dy << std::endl;
-            std::cout << "ratio = " << (double(dy)/double(dx)) << std::endl;
-
-
-            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
-            //iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
-            
-            
-            y++;
-            std::cout << "y++" << std::endl;
-            int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D; //should be around 0, bug
-            std::cout << "sigma = " << sigma << std::endl;
-            if( sigma < 0)
+            //Slope = dy/dx //Initial slope to infinite
+            while( dx < 0 )
             {
-                dx -= B;
-                dy += A;
-                x--;
-                std::cout << "x--" << std::endl;
-            }
-            dx += C;
-            dy -= B;
-        };
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                y++;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma < 0)
+                {
+                    dx -= B;
+                    dy += A;
+                    x--;
+                }
+                dx += C;
+                dy -= B;
+            };
+            
+            //Slope = dy/dx //Infinite to 1
+            while( dx < dy )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                y++;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma > 0 )
+                {
+                    dx += B;
+                    dy -= A;
+                    x++;
+                }
+                dx += C;
+                dy -= B;
+            };
+            
+            //Slope = dy/dx //1 to 0
+            while( dy > 0 )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                x++;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma < 0 )
+                {
+                    dx += C;
+                    dy -= B;
+                    y++;
+                }
+                dx += B;
+                dy -= A;
+            };
+            
+            //Slope = dy/dx //0 to -1
+            while( dx > -dy )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                x++;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma > 0 )
+                {
+                    dx -= C;
+                    dy += B;
+                    y--;
+                }
+                dx += B;
+                dy -= A;
+            };
+            
+            //Slope = dy/dx //Continue until y == p1.y, slope always < -1
+            while( y > p1.y )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                y--;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma < 0 )
+                {
+                    dx += B;
+                    dy -= A;
+                    x++;
+                }
+                dx -= C;
+                dy += B;
+            };
+        }
+        //Case 2 -------------------------------
+        /*else
+        {
+            //Slope = dy/dx //Initial slope to -1
+            while( dx < 0 )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                y++;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma < 0)
+                {
+                    dx -= B;
+                    dy += A;
+                    x--;
+                }
+                dx += C;
+                dy -= B;
+            };
+        }*/
     }
+    
+    
     
     static void DrawEllipse( TBlock< _SH >*       iBlock
                        , const FPoint             iCenter
@@ -554,6 +570,141 @@ public:
                 y--;
                 x++;
             }
+        }
+    }
+    
+    
+    // ---
+    
+    static void DrawArcBresenham( TBlock< _SH >*            iBlock
+                                , const FPoint              iCenter
+                                , const int                 iRadius
+                                , const int                 iStartDegree
+                                , const int                 iEndDegree
+                                , const CColor&             iColor
+                                , const FPerfStrat&         iPerfStrat
+                                , bool                      callInvalidCB )
+    {
+        if( iRadius == 0 )
+            return;
+        
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+        
+        int sizeAngleToDraw = (iEndDegree - iStartDegree + 360) % 360; //Positive modulo
+        int currentAngle = iStartDegree;
+        
+        int octantsToDraw[8] = {0, 0, 0, 0, 0 ,0 ,0 ,0 }; // 0: Don't draw the octant. 1: draw fully the octant. 2: draw part of the octant
+        int directionToDraw[8][2] = { {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0} ,{0, 0} ,{0, 0} ,{0, 0} }; // 1 clockwise, -1 anti-clockwise, 0 irrelevant, second entry is angle to draw on octant
+        
+        if( currentAngle % 45 == 0 )
+            octantsToDraw[ currentAngle / 45 ] = 1;
+        else
+        {
+            octantsToDraw[ currentAngle / 45 ] = 2;
+            directionToDraw[ currentAngle / 45 ][0] = -1;
+            directionToDraw[ currentAngle / 45 ][1] = 45 - (currentAngle % 45);
+        }
+
+        sizeAngleToDraw -= ( 45 - (iStartDegree % 45) );
+
+        while (sizeAngleToDraw >= 45 )
+        {
+            currentAngle = ( currentAngle + 45 ) % 360;
+            octantsToDraw[ currentAngle / 45] = 1;
+            sizeAngleToDraw -= 45;
+        }
+        
+        if( sizeAngleToDraw > 0 )
+        {
+            currentAngle = ( currentAngle + 45 ) % 360;
+            octantsToDraw[ currentAngle / 45] = 2;
+            directionToDraw[ currentAngle / 45 ][0] = 1;
+            directionToDraw[ currentAngle / 45 ][1] = sizeAngleToDraw;
+        }
+        
+    
+        int x = 0; // R * cos(angle) -> angle = acos( x / iRadius )
+        int y = iRadius; //We start from the top of the circle for the first octant
+        int m = 5 - 4 * iRadius;
+        while ( x <= y ) //We draw 8 octants
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (PI / 2) );
+            
+            //If 0° is on top and we turn clockwise // Simple cases
+            if( octantsToDraw[0] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+           
+            if( octantsToDraw[1] == 1 ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+           
+            if( octantsToDraw[2] == 1 ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+           
+            if( octantsToDraw[3] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+           
+            if( octantsToDraw[4] == 1 ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+           
+            if( octantsToDraw[5] == 1 ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            
+            if( octantsToDraw[6] == 1 ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+           
+            if( octantsToDraw[7] == 1 ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            
+            
+            // Complex cases
+            if( octantsToDraw[0] == 2)
+            {
+                if ( directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                else if ( directionToDraw[0][0] == -1 && currentAngleOnFirstOctant > directionToDraw[0][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+            }
+            
+            if( octantsToDraw[1] == 2)
+            {
+                if ( directionToDraw[1][0] == 1 && currentAngleOnFirstOctant > directionToDraw[1][1] ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val );
+                else if ( directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1] ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val );
+            }
+
+            if( octantsToDraw[2] == 2)
+            {
+                if ( directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1] ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val );
+                else if ( directionToDraw[2][0] == -1 && currentAngleOnFirstOctant > directionToDraw[2][1] ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val );
+            }
+            
+            if( octantsToDraw[3] == 2)
+            {
+                if ( directionToDraw[3][0] == 1 && currentAngleOnFirstOctant > directionToDraw[3][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+                else if ( directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+            }
+            
+            if( octantsToDraw[4] == 2)
+            {
+                if ( directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                else if ( directionToDraw[4][0] == -1 && currentAngleOnFirstOctant > directionToDraw[4][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+            }
+            
+            if( octantsToDraw[5] == 2)
+            {
+                if ( directionToDraw[5][0] == 1 && currentAngleOnFirstOctant > directionToDraw[5][1] ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );
+                else if ( directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1] ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );
+            }
+            
+            if( octantsToDraw[6] == 2)
+            {
+                if ( directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1] ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val );
+                else if ( directionToDraw[6][0] == -1 && currentAngleOnFirstOctant > directionToDraw[6][1] ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val );
+            }
+            
+            if( octantsToDraw[7] == 2)
+            {
+                if ( directionToDraw[7][0] == 1 && currentAngleOnFirstOctant < directionToDraw[7][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+                else if ( directionToDraw[7][0] == -1 && currentAngleOnFirstOctant > directionToDraw[7][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+            }
+            
+            
+            if( m > 0 )
+            {
+                y--;
+                m = m - 8 * y;
+            }
+            x++;
+            m = m + 8 * x + 4;
         }
     }
     

@@ -45,7 +45,7 @@ FPainterContext::DrawGradientLine( IBlock* iBlock, const FPoint p0, const FPoint
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                   \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                      \
             {                                                                                                                                                                      \
-                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawGradientLine( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, p0, p1, iColor1, iColor2, iPerfStrat, callInvalidCB );     \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawLine( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, p0, p1, iColor1, iPerfStrat, callInvalidCB );     \
                 break;                                                                                                                                                             \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -64,6 +64,24 @@ FPainterContext::DrawCircle( IBlock* iBlock, const FPoint iCenter, const int iRa
             case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
             {                                                                                                                                                                                  \
                 TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawCircle( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iColor, iPerfStrat, callInvalidCB );     \
+                break;                                                                                                                                                                         \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+    
+
+//static
+void
+FPainterContext::DrawCircleBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
+            case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
+            {                                                                                                                                                                                  \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawCircleBresenham( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iColor, iPerfStrat, callInvalidCB );     \
                 break;                                                                                                                                                                         \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -124,6 +142,25 @@ FPainterContext::DrawArc( IBlock* iBlock, const FPoint iCenter, const int iRadiu
         #undef ULIS_REG_SWITCH_OP
     }
 }
+    
+    
+//static
+void
+FPainterContext::DrawArcBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
+            case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
+            {                                                                                                                                                                                  \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawArcBresenham( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerfStrat, callInvalidCB );     \
+                break;                                                                                                                                                                         \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+    
     
     
 //static
