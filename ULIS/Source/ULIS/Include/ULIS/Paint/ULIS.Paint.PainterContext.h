@@ -356,9 +356,28 @@ public:
             };
         }
         //Case 2 -------------------------------
-        /*else
+        else
         {
             //Slope = dy/dx //Initial slope to -1
+            while( -dx > dy )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                x--;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma > 0)
+                {
+                    dx += C;
+                    dy -= B;
+                    y++;
+                }
+                dx -= B;
+                dy += A;
+            };
+            
+            //Slope = dy/dx //-1 to infinite
             while( dx < 0 )
             {
                 iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
@@ -376,7 +395,65 @@ public:
                 dx += C;
                 dy -= B;
             };
-        }*/
+
+            //Slope = dy/dx //Infinite to 1
+            while( dx < dy )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                y++;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma > 0 )
+                {
+                    dx += B;
+                    dy -= A;
+                    x++;
+                }
+                dx += C;
+                dy -= B;
+            };
+            
+            //Slope = dy/dx //1 to 0
+            while( dy > 0 )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                x++;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma < 0 )
+                {
+                    dx += C;
+                    dy -= B;
+                    y++;
+                }
+                dx += B;
+                dy -= A;
+            };
+            
+            //Slope = dy/dx //Continue until x == p1.x, slope always > -1
+            while( x < p1.x )
+            {
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                x++;
+                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma > 0 )
+                {
+                    dx -= C;
+                    dy += B;
+                    y--;
+                }
+                dx += B;
+                dy -= A;
+
+            };
+        }
     }
     
     
