@@ -58,11 +58,22 @@ int main( int argc, char *argv[] )
     */
     
     //circles
-    /*for( int i = 0; i < 255; i+=5)
+   /* for( int i = 0; i < 255; i+=5)
     {
         ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(500,500), i, ::ULIS::CColor( 0, i ,0 ) );
-    }*/
-    
+    }
+    */
+   
+    /*
+    ::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(500,500), 200, ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(250,300), 78, ::ULIS::CColor( 0, 255 ,0 ), true );
+    ::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(400,200), 25, ::ULIS::CColor( 0, 0 ,255 ), true );
+     */
+    /*
+    ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(500,500), 200, ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(250,300), 78, ::ULIS::CColor( 0, 255 ,0 ), true );
+    ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(400,200), 25, ::ULIS::CColor( 0, 0 ,255 ), true );
+    */
     //Arcs
     /*
         ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 255, 246, 152, ::ULIS::CColor( 0, 0 ,0 ) );
@@ -100,12 +111,13 @@ int main( int argc, char *argv[] )
     */
     
     //Ellipses
-    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, ::ULIS::CColor( 0, 0 ,0 ) );
-    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, ::ULIS::CColor( 0, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, ::ULIS::CColor( 0, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, ::ULIS::CColor( 0, 0 ,0 ), true );
     
-    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 214, ::ULIS::CColor( 0, 0 ,0 ) );
     
-    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 18, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 214, ::ULIS::CColor( 0, 0 ,0 ), true );
+    
+    /*::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 18, ::ULIS::CColor( 0, 0 ,0 ) );
     ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 85, ::ULIS::CColor( 0, 0 ,0 ) );
     ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 150, 100, 28, ::ULIS::CColor( 0, 0 ,0 ) );
     
@@ -115,7 +127,7 @@ int main( int argc, char *argv[] )
     
     ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 150, 68, ::ULIS::CColor( 0, 0 ,0 ) );
 
-    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 400, 0, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 400, 0, ::ULIS::CColor( 0, 0 ,0 ) );*/
 
 
 

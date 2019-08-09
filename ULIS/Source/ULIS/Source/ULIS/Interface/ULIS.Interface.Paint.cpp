@@ -56,14 +56,14 @@ FPainterContext::DrawGradientLine( IBlock* iBlock, const FPoint p0, const FPoint
 
 //static
 void
-FPainterContext::DrawCircle( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+FPainterContext::DrawCircleAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerfStrat& iPerfStrat, bool callInvalidCB )
 {
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
             {                                                                                                                                                                                  \
-                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawCircle( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iColor, iPerfStrat, callInvalidCB );     \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawCircleAndres( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iColor, iFilled, iPerfStrat, callInvalidCB );     \
                 break;                                                                                                                                                                         \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -74,14 +74,14 @@ FPainterContext::DrawCircle( IBlock* iBlock, const FPoint iCenter, const int iRa
 
 //static
 void
-FPainterContext::DrawCircleBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+FPainterContext::DrawCircleBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerfStrat& iPerfStrat, bool callInvalidCB )
 {
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
             {                                                                                                                                                                                  \
-                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawCircleBresenham( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iColor, iPerfStrat, callInvalidCB );     \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawCircleBresenham( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iColor, iFilled, iPerfStrat, callInvalidCB );     \
                 break;                                                                                                                                                                         \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -93,14 +93,14 @@ FPainterContext::DrawCircleBresenham( IBlock* iBlock, const FPoint iCenter, cons
 
 //static
 void
-FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled, const FPerfStrat& iPerfStrat, bool callInvalidCB )
 {
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
             {                                                                                                                                                                                  \
-                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawEllipse( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iA, iB, iColor, iPerfStrat, callInvalidCB );     \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawEllipse( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iA, iB, iColor, iFilled, iPerfStrat, callInvalidCB );     \
                 break;                                                                                                                                                                         \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -110,14 +110,14 @@ FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA
     
 //static
 void
-FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled,const FPerfStrat& iPerfStrat, bool callInvalidCB )
 {
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
             {                                                                                                                                                                                  \
-                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawRotatedEllipse( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iA, iB, iRotationDegrees, iColor, iPerfStrat, callInvalidCB );     \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawRotatedEllipse( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iA, iB, iRotationDegrees, iColor, iFilled, iPerfStrat, callInvalidCB );     \
                 break;                                                                                                                                                                         \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -128,14 +128,14 @@ FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const
     
 //static
 void
-FPainterContext::DrawArc( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+FPainterContext::DrawArcAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
 {
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                  \
             {                                                                                                                                                                                  \
-                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawArc( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerfStrat, callInvalidCB );     \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawArcAndres( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerfStrat, callInvalidCB );     \
                 break;                                                                                                                                                                         \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
