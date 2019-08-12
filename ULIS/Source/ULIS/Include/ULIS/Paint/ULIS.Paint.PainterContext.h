@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include <vector>
+#include <map>
 #include <iostream>
 #include "ULIS/Interface/ULIS.Interface.ClearFill.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
@@ -39,14 +40,14 @@ public:
         //Vertical
         if( iP0.x == iP1.x )
         {
-            ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( iP0.x, iP0.y, 1, iP1.y - iP0.y ) );
+            ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( iP0.x, ::ULIS::FMath::Min( iP0.y, iP1.y ), 1, ::ULIS::FMath::Abs( iP1.y - iP0.y ) + 1 ) );
             return;
         }
         
         //Horizontal
         if ( iP0.y == iP1.y )
         {
-            ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( iP0.x, iP0.y, iP1.x - iP0.x, 1 ) );
+            ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( ::ULIS::FMath::Min( iP0.x, iP0.x ), iP0.y, ::ULIS::FMath::Abs( iP1.x - iP0.x ) + 1, 1 ) );
             return;
         }
         
@@ -546,6 +547,10 @@ public:
         
         InternalGetEllipseAxesPoints( iA, iB, ::ULIS::FMath::DegToRad( iRotationDegrees ), &p1, &p2);
         
+                                                           //               x  y
+        std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
+                                                           //                 [1]
+        
         __int128 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
         __int128 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
         
@@ -582,6 +587,11 @@ public:
                 
                 if( sigma < 0)
                 {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
                     dx -= B;
                     dy += A;
                     x--;
@@ -601,6 +611,11 @@ public:
                 
                 if( sigma > 0 )
                 {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
                     dx += B;
                     dy -= A;
                     x++;
@@ -614,7 +629,14 @@ public:
             {
                 iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
+
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
+
+
                 x++;
                 __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
@@ -633,7 +655,13 @@ public:
             {
                 iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
+
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
+
                 x++;
                 __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
@@ -658,6 +686,12 @@ public:
                 
                 if( sigma < 0 )
                 {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
+
                     dx += B;
                     dy -= A;
                     x++;
@@ -674,6 +708,12 @@ public:
             {
                 iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
                 
                 x--;
                 __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
@@ -699,6 +739,12 @@ public:
                 
                 if( sigma < 0)
                 {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
+                    
                     dx -= B;
                     dy += A;
                     x--;
@@ -718,6 +764,12 @@ public:
                 
                 if( sigma > 0 )
                 {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
+                    
                     dx += B;
                     dy -= A;
                     x++;
@@ -731,6 +783,12 @@ public:
             {
                 iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+        
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
                 
                 x++;
                 __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
@@ -751,6 +809,12 @@ public:
                 iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
                 
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
+                
                 x++;
                 __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
@@ -764,6 +828,15 @@ public:
                 dy -= A;
 
             };
+        }
+        
+        if( iFilled ) //We fill the ellipse by drawing vertical lines
+        {
+            for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
+            {
+                if( it->second.size() == 2 )
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerfStrat, callInvalidCB );
+            }
         }
     }
     

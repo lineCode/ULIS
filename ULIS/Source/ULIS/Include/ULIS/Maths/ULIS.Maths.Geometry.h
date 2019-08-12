@@ -81,6 +81,14 @@ struct FPoint
         return FPoint( ( x * cos - y * sin ) + pivotPoint.x, ( x * sin + y * cos ) + pivotPoint.y );
     }
 
+    //Give the symmetric of the point through the axis of equation ax + b = y
+    FPoint AxialSymmetry( float a, float b )
+    {
+        float d = ( x + ( y - b ) * a ) / ( 1 + a * a );
+        return FPoint( 2 * d - x,
+                       2 * d * a - y + 2 * b );
+    }
+
     int x;
     int y;
 };
@@ -110,10 +118,19 @@ struct FPoint64
         
         return FPoint64( ( x * cos - y * sin ) + pivotPoint.x, ( x * sin + y * cos ) + pivotPoint.y );
     }
+    
+    //Give the symmetric of the point through the axis of equation ax + b = y
+    FPoint64 AxialSymmetry( float a, float b )
+    {
+        float d = ( x + ( y - b ) * a ) / ( 1 + a * a );
+        return FPoint64( 2 * d - x,
+                         2 * d * a - y + 2 * b );
+    }
 
     int64 x;
     int64 y;
 };
 
+    
 } // namespace ULIS
 
