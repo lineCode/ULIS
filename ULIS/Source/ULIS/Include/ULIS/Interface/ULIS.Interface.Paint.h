@@ -33,7 +33,7 @@ public:
     static void DrawArcAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true  );
     static void DrawArcBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true  );
     static void DrawRectangle( IBlock* iBlock, const FPoint iTopLeft, const FPoint iBottomRight, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
-    static void DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
+    static void DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
 };
 
 } // namespace ULIS

@@ -47,7 +47,7 @@ public:
         //Horizontal
         if ( iP0.y == iP1.y )
         {
-            ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( ::ULIS::FMath::Min( iP0.x, iP0.x ), iP0.y, ::ULIS::FMath::Abs( iP1.x - iP0.x ) + 1, 1 ) );
+            ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( ::ULIS::FMath::Min( iP0.x, iP1.x ), iP0.y, ::ULIS::FMath::Abs( iP1.x - iP0.x ) + 1, 1 ) );
             return;
         }
         
@@ -937,20 +937,92 @@ public:
     static void DrawPolygon( TBlock< _SH >*                    iBlock
                                 , std::vector< FPoint >&       iPoints
                                 , const CColor&                iColor
+                                , const bool                   iFilled
                                 , const FPerfStrat&            iPerfStrat
                                 , bool                         callInvalidCB )
     {
         if( iPoints.size() < 3 )
             return;
         
-        for( int i = 0; i < iPoints.size() - 1; i++ )
+        int j = iPoints.size() - 1;
+        for( int i = 0; i < iPoints.size(); i++ )
         {
-            DrawLine( iBlock, iPoints.at( i ), iPoints.at( i + 1 ), iColor, iPerfStrat, callInvalidCB );
+            DrawLine( iBlock, iPoints.at( i ), iPoints.at( j ), iColor, iPerfStrat, callInvalidCB );
+            j = i;
         }
         
-        DrawLine( iBlock, iPoints.at( 0 ), iPoints.at( iPoints.size() - 1 ), iColor, iPerfStrat, callInvalidCB );
+        
+        if( iFilled )
+        {
+            int maxX = 0;
+            int maxY = 0;
+            int minX = INT_MAX;
+            int minY = INT_MAX;
+            
+            //Initialization of useful variables
+            for( int i = 0; i < iPoints.size(); i++ )
+            {
+                if( maxX < iPoints[i].x )
+                    maxX = iPoints[i].x;
+                if( maxY < iPoints[i].y )
+                    maxY = iPoints[i].y;
+                if( minX > iPoints[i].x )
+                    minX = iPoints[i].x;
+                if( minY > iPoints[i].y )
+                    minY = iPoints[i].y;
+            }
+            
+            //We go through the polygon by scanning it top to bottom
+            for (int y = minY; y <= maxY; y++)
+            {
+                std::vector< int > nodesX;
+                int j = iPoints.size() - 1;
+                
+                for( int i = 0; i < iPoints.size(); i++ )
+                {
+                    if( ( iPoints[i].y < y && iPoints[j].y >= y ) || ( iPoints[j].y < y && iPoints[i].y >= y ) )
+                    {
+                        nodesX.push_back( iPoints[i].x  + double( y - iPoints[i].y ) / double( iPoints[j].y - iPoints[i].y ) * (iPoints[j].x - iPoints[i].x ));
+                    }
+                    j = i;
+                }
+                
+                //Sorting the nodes on X
+                int i = 0;
+                int size = nodesX.size() - 1;
+                while( i < size )
+                {
+                    if( nodesX[i] > nodesX[i+1] )
+                    {
+                        int temp = nodesX[i];
+                        nodesX[i]=nodesX[i+1];
+                        nodesX[i+1] = temp;
+                        if( i > 0 )
+                            i--;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+                
+                //Filling the polygon on line y
+                for( i = 0; i < nodesX.size(); i+= 2)
+                {
+                    if( nodesX[i] > maxX ) break;
+                    if( nodesX[i+1] > minX )
+                    {
+                        if( nodesX[i] < minX )
+                            nodesX[i] = minX;
+                        if( nodesX[i+1] > maxX )
+                            nodesX[i+1] = maxX;
+                        
+                        DrawLine( iBlock, FPoint( nodesX[i], y), FPoint( nodesX[i+1], y ), iColor, iPerfStrat, callInvalidCB );
+                    }
+                }
+            }
+        }
     }
-    
 };
 
 /////////////////////////////////////////////////////

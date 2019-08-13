@@ -94,28 +94,37 @@ int main( int argc, char *argv[] )
     */
     
     //Polygons
-    /*
-    std::vector< ::ULIS::FPoint > points;
-    points.push_back( ::ULIS::FPoint( 500, 200 ) );
-    points.push_back( ::ULIS::FPoint( 666, 750 ) );
-    points.push_back( ::ULIS::FPoint( 250, 333 ) );
-    points.push_back( ::ULIS::FPoint( 750, 333 ) );
-    points.push_back( ::ULIS::FPoint( 333, 750 ) );
     
-    for( int i = 0; i < points.size(); i++)
+    std::vector< ::ULIS::FPoint > star;
+    star.push_back( ::ULIS::FPoint( 500, 200 ) );
+    star.push_back( ::ULIS::FPoint( 666, 750 ) );
+    star.push_back( ::ULIS::FPoint( 250, 333 ) );
+    star.push_back( ::ULIS::FPoint( 750, 333 ) );
+    star.push_back( ::ULIS::FPoint( 333, 750 ) );
+    
+
+    /*std::vector< ::ULIS::FPoint > pentagon;
+    pentagon.push_back( ::ULIS::FPoint( 500, 200 ) );
+    pentagon.push_back( ::ULIS::FPoint( 750, 333 ) );
+    pentagon.push_back( ::ULIS::FPoint( 666, 750 ) );
+    pentagon.push_back( ::ULIS::FPoint( 333, 750 ) );
+    pentagon.push_back( ::ULIS::FPoint( 250, 333 ) );*/
+    
+    /*for( int i = 0; i < points.size(); i++)
     {
         points.at(i) = points.at(i).RotateAround( ::ULIS::FPoint(500, 500), 1.57);
-    }
+    }*/
     
-    ::ULIS::FPainterContext::DrawPolygon( block, points, ::ULIS::CColor( 0, 0 ,0 ) );
-    */
+    ::ULIS::FPainterContext::DrawPolygon( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawPolygon( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
+    
     
     //Ellipses
     //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 300, 100, ::ULIS::CColor( 0, 0 ,0 ), true );
     //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, ::ULIS::CColor( 0, 0 ,0 ), true );
     
     
-    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 69, ::ULIS::CColor( 0, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 69, ::ULIS::CColor( 0, 0 ,0 ), true );
     
 
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 30, ::ULIS::CColor( 0, 0 ,0 ), true );

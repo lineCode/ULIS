@@ -184,14 +184,14 @@ FPainterContext::DrawRectangle( IBlock* iBlock, const FPoint iTopLeft, const FPo
     
 //static
 void
-FPainterContext::DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+FPainterContext::DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, const bool iFilled, const FPerfStrat& iPerfStrat, bool callInvalidCB )
 {
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                                         \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                                                                                            \
             {                                                                                                                                                                                            \
-                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawPolygon( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iPoints, iColor, iPerfStrat, callInvalidCB );      \
+                TPainterContext< ::ULIS::ulis_types_reg[ n ] >::DrawPolygon( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock, iPoints, iColor, iFilled, iPerfStrat, callInvalidCB );      \
                 break;                                                                                                                                                                                   \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
