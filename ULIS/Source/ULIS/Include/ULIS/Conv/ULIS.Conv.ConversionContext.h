@@ -14,25 +14,32 @@
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Make/ULIS.Make.MakeContext.h"
 
 namespace ULIS {
-/////////////////////////////////////////////////////
-// Defines
-#define tSpec TBlockInfo< _SH >
-
 /////////////////////////////////////////////////////
 // TConversionContext
 class TConversionContext
 {
-    template< uint32 _SHA, uint32 _SHB >
-    static void Convert( TBlock< _SHA >* iBlockA, TBlock< _SHB >* iBlockB, const FPerfStrat& iPerfStrat = FPerfStrat() )
+public:
+    template< uint32 _SHSrc, uint32 _SHDst >
+    static void ConvertTypeInto( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
-        assert( iBlockA & iBlockB );
+        // For:
+        // Any Types
+        // Any Layout
+        // Profile Agnostic
+        // Same Model
+        assert( iBlockSrc );
+        assert( iBlockDst );
+        assert( iBlockSrc->Width() == iBlockDst->Width() );
+        assert( iBlockSrc->Height() == iBlockDst->Height() );
+        using src_info = TBlockInfo< _SHSrc >;
+        using dst_info = TBlockInfo< _SHDst >;
+        assert( src_info::_nf._cm == dst_info::_nf._cm ); // Color Model
     }
 };
 
-/////////////////////////////////////////////////////
-// Undefines
-#undef tSpec
 
 } // namespace ULIS
+

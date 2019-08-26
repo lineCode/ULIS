@@ -13,6 +13,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
+#include "ULIS/Conv/ULIS.Conv.ConversionContext.h"
 #include <ULIS_CORE>
 
 
@@ -22,9 +23,14 @@ int main( int argc, char *argv[] )
     QApplication app( argc, argv );
 
     // ULIS Image Conv
-    ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 40, 40, 40 ) );
+    ::ULIS::IBlock* block8 = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBAf::TypeId() );
+    ::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 127, 127, 127 ) );
+    ::ULIS::FClearFillContext::Clear( blockf );
 
+    ::ULIS::FConvContext::ConvTypeInto( block8, blockf );
+
+    /*
     // Qt Window
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
@@ -42,5 +48,8 @@ int main( int argc, char *argv[] )
     delete block;
 
     return  exit_code;
+    */
+
+    return  0;
 }
 

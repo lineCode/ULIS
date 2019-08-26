@@ -28,6 +28,12 @@ class TMakeContext
 {
 public:
     // Copy
+    // Copy
+    static void CopyBlockInto( TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    {
+        CopyBlockRectInto( iSrc, iDst, FRect( 0, 0, iSrc->Width(), iSrc->Height() ), iPerfStrat );
+    }
+
     static void CopyBlockRectInto( TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const FRect& iRect, const FPerfStrat& iPerfStrat = FPerfStrat() )
     {
         FRect src_bb = FRect( 0, 0, iSrc->Width(), iSrc->Height() );

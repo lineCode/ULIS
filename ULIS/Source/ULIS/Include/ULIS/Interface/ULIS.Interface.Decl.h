@@ -310,5 +310,9 @@ typedef ::ULIS::FBlockuint8RGBhasAlphaRGBAtypeLimits FBlockRGBA8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaBGRAtypeLimits FBlockBGRA8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaARGBtypeLimits FBlockARGB8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaABGRtypeLimits FBlockABGR8;
+typedef ::ULIS::FBlockfloatRGBhasAlphaRGBAnormalized FBlockRGBAf;
+typedef ::ULIS::FBlockfloatRGBhasAlphaBGRAnormalized FBlockBGRAf;
+typedef ::ULIS::FBlockfloatRGBhasAlphaARGBnormalized FBlockARGBf;
+typedef ::ULIS::FBlockfloatRGBhasAlphaABGRnormalized FBlockABGRf;
 
 } // namespace ULIS
