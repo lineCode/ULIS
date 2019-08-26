@@ -15,6 +15,7 @@
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
 #include "ULIS/Color/ULIS.Color.CColor.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
+#include <vector>
 
 namespace ULIS { class IBlock; }
 

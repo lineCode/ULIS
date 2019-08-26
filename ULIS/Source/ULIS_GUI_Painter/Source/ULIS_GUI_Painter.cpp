@@ -14,7 +14,6 @@
 #include <QPixmap>
 #include <QLabel>
 #include <ULIS_CORE>
-#include "ULIS/Maths/ULIS.Maths.Geometry.h"
 
 int main( int argc, char *argv[] )
 {
