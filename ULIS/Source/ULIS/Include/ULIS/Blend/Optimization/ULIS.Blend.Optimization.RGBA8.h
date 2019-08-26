@@ -159,14 +159,14 @@ template< uint32        _SH,    // Format
           uint32        _LH,    // Layout
           e_nm          _NM,    // Normalized
           bool          _DM >   // Decimal
-class TBlockBlenderImp< _SH,                // Format
-                        _BM,                // Blending Mode
-                        e_tp::kuint8,       // uint8
-                        e_cm::kRGB,         // RGB
-                        e_ea::khasAlpha,    // Alpha
-                        _LH,                // Layout
-                        _NM,                // Normalized
-                        _DM >               // Decimal
+class TBlockBlender_Imp< _SH,                // Format
+                         _BM,                // Blending Mode
+                         e_tp::kuint8,       // uint8
+                         e_cm::kRGB,         // RGB
+                         e_ea::khasAlpha,    // Alpha
+                         _LH,                // Layout
+                         _NM,                // Normalized
+                         _DM >               // Decimal
 {
 public:
     static void Run( TBlock< _SH >*                     iBlockTop

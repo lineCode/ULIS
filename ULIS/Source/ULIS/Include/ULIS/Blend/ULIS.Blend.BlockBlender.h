@@ -168,7 +168,7 @@ template< uint32        _SH
         , uint32        _LH
         , e_nm          _NM
         , bool          _DM >
-class TBlockBlenderImp
+class TBlockBlender_Imp
 {
 public:
     static inline void Run( TBlock< _SH >*                      iBlockTop
@@ -209,20 +209,20 @@ public:
                           , const FPoint&                       iShift
                           , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
     {
-        TBlockBlenderImp< _SH
-                        , _BM
-                        , tSpec::_nf._tp
-                        , tSpec::_nf._cm
-                        , tSpec::_nf._ea
-                        , tSpec::_nf._lh
-                        , tSpec::_nf._nm
-                        , tSpec::_nf._dm >
-                        ::Run( iBlockTop
-                             , iBlockBack
-                             , iOpacity
-                             , iROI
-                             , iShift
-                             , iPerfStrat );
+        TBlockBlender_Imp< _SH
+                         , _BM
+                         , tSpec::_nf._tp
+                         , tSpec::_nf._cm
+                         , tSpec::_nf._ea
+                         , tSpec::_nf._lh
+                         , tSpec::_nf._nm
+                         , tSpec::_nf._dm >
+                         ::Run( iBlockTop
+                              , iBlockBack
+                              , iOpacity
+                              , iROI
+                              , iShift
+                              , iPerfStrat );
     }
 };
 
