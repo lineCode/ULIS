@@ -25,8 +25,8 @@ class TBlockTypeConverter_ScanLine
 public:
     static void ProcessScanLine( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, int iLine, int iX1, int iX2 )
     {
-        using tPixelProxySrc = TBlock< _SHSrc >::tPixelProxy;
-        using tPixelProxyDst = TBlock< _SHDst >::tPixelProxy;
+        using tPixelProxySrc = typename TBlock< _SHSrc >::tPixelProxy;
+        using tPixelProxyDst = typename TBlock< _SHDst >::tPixelProxy;
         using src_info = TBlockInfo< _SHSrc >;
         using dst_info = TBlockInfo< _SHDst >;
 
@@ -36,9 +36,9 @@ public:
             tPixelProxyDst dstProxy = iBlockDst->PixelProxy( x, iLine );
 
             for( int i = 0; i < src_info::_nf._nc; ++i )
-                dstProxy.SetComponent( i, ConvType< tPixelProxySrc::tPixelType, tPixelProxyDst::tPixelType >( srcProxy.GetComponent( i ) ) );
+                dstProxy.SetComponent( i, ConvType< typename tPixelProxySrc::tPixelType, typename tPixelProxyDst::tPixelType >( srcProxy.GetComponent( i ) ) );
 
-            dstProxy.SetAlpha( ConvType< tPixelProxySrc::tPixelType, tPixelProxyDst::tPixelType >( srcProxy.GetAlpha() ) );
+            dstProxy.SetAlpha( ConvType< typename tPixelProxySrc::tPixelType, typename tPixelProxyDst::tPixelType >( srcProxy.GetAlpha() ) );
         }
     }
 
@@ -64,8 +64,8 @@ class TBlockTypeConverter_MonoThread
 public:
     static void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst )
     {
-        using tPixelProxySrc = TBlock< _SHSrc >::tPixelProxy;
-        using tPixelProxyDst = TBlock< _SHDst >::tPixelProxy;
+        using tPixelProxySrc = typename TBlock< _SHSrc >::tPixelProxy;
+        using tPixelProxyDst = typename TBlock< _SHDst >::tPixelProxy;
         using src_info = TBlockInfo< _SHSrc >;
         using dst_info = TBlockInfo< _SHDst >;
 
@@ -76,8 +76,8 @@ public:
                 tPixelProxySrc srcProxy = iBlockSrc->PixelProxy( x, y );
                 tPixelProxyDst dstProxy = iBlockDst->PixelProxy( x, y );
                 for( int i = 0; i < src_info::_nf._nc; ++i )
-                    dstProxy.SetComponent( i, ConvType< tPixelProxySrc::tPixelType, tPixelProxyDst::tPixelType >( srcProxy.GetComponent( i ) ) );
-                dstProxy.SetAlpha( ConvType< tPixelProxySrc::tPixelType, tPixelProxyDst::tPixelType >( srcProxy.GetAlpha() ) );
+                    dstProxy.SetComponent( i, ConvType< typename tPixelProxySrc::tPixelType, typename tPixelProxyDst::tPixelType >( srcProxy.GetComponent( i ) ) );
+                dstProxy.SetAlpha( ConvType< typename tPixelProxySrc::tPixelType, typename tPixelProxyDst::tPixelType >( srcProxy.GetAlpha() ) );
             }
         }
     }
