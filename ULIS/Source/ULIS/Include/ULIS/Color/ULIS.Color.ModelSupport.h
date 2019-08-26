@@ -32,6 +32,7 @@ enum class eCColorModel : int
     kCMYK,
 };
 
+
 /////////////////////////////////////////////////////
 // Model Correspondance
 static e_cm  ColorModelFromCColorModel( eCColorModel iValue )
@@ -47,6 +48,7 @@ static e_cm  ColorModelFromCColorModel( eCColorModel iValue )
     }
 }
 
+
 static eCColorModel  CColorModelFromColorModel( e_cm iValue )
 {
     switch( iValue )
@@ -59,6 +61,7 @@ static eCColorModel  CColorModelFromColorModel( e_cm iValue )
         default:            return  eCColorModel::kInvalid;
     }
 }
+
 
 #define ULIS_SWITCH_SUPPORTED_MODELS( iValue, ... )                                                                 \
     switch( iValue )                                                                                                \
@@ -164,6 +167,25 @@ static e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
         case cmsSig15colorData  : return  default_cm;
         case cmsSigLuvKData     : return  default_cm;
         default                 : return  default_cm;
+    }
+}
+
+
+static e_cm ColorModelCompatFallback( e_cm iModel )
+{
+    // ( G, RGB, HSL, HSV, CMYK, YUV, Lab, XYZ )
+    switch( iModel )
+    {
+        case e_cm::kG:      return  e_cm::kG;
+        case e_cm::kRGB:    return  e_cm::kRGB;
+        case e_cm::kHSL:    return  e_cm::kRGB;
+        case e_cm::kHSV:    return  e_cm::kRGB;
+        case e_cm::kCMYK:   return  e_cm::kCMYK;
+        case e_cm::kYUV:    return  e_cm::kCMYK;
+        case e_cm::kLab:    return  e_cm::kLab;
+        case e_cm::kXYZ:    return  e_cm::kXYZ;
+
+        default:            return  e_cm::kRGB;
     }
 }
 

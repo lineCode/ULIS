@@ -20,8 +20,15 @@ namespace ULIS {
 class FColorProfile
 {
 public:
+    // Construction / Destruction
+    FColorProfile();
+    FColorProfile( cmsHPROFILE iProfile );
+    ~FColorProfile();
+
+public:
     // Public API
-    e_cm ModelSignature() const { return  model; };
+    e_cm ModelSignature() const;
+    bool ModelSupported( e_cm iModel );
 
 private:
     // Private Data
