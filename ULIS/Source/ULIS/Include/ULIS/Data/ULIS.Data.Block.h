@@ -176,14 +176,14 @@ public:
     virtual ~TBlock() { delete d; } // Polymorphic
 
     TBlock( int iWidth, int iHeight )
-        , IBlock()
-        : d     ( new TBlockData< _SH >( iWidth, iHeight )  )
+        : IBlock()
+        , d     ( new TBlockData< _SH >( iWidth, iHeight )  )
         , id    ( generate_weak_uuid( 16 )                  )
     {}
 
     TBlock( int iWidth, int iHeight, uint8* iData )
-        , IBlock()
-        : d     ( new TBlockData< _SH >( iWidth, iHeight, iData )   )
+        : IBlock()
+        , d     ( new TBlockData< _SH >( iWidth, iHeight, iData )   )
         , id    ( generate_weak_uuid( 16 )                          )
     {}
 
