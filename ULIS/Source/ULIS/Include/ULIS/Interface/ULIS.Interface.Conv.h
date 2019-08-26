@@ -22,7 +22,7 @@ namespace ULIS {
 class FConvContext
 {
 public:
-    static void ConvTypeInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() );
+    static void ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() );
 };
 
 } // namespace ULIS

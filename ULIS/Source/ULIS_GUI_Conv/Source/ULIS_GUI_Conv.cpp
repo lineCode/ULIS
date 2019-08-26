@@ -24,11 +24,21 @@ int main( int argc, char *argv[] )
 
     // ULIS Image Conv
     ::ULIS::IBlock* block8 = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBAf::TypeId() );
-    ::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 127, 127, 127 ) );
-    ::ULIS::FClearFillContext::Clear( blockf );
+    ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAf::TypeId() );
+    ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
 
-    ::ULIS::FConvContext::ConvTypeInto( block8, blockf );
+    ::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
+    ::ULIS::FClearFillContext::Clear( blockf );
+    ::ULIS::FClearFillContext::Fill( blockg, ::ULIS::CColor::FromGreyF( 0.5f ) );
+
+    ::ULIS::FConvContext::ConvTypeAndLayoutInto( block8, blockf );
+
+    ::ULIS::FBlockBGRAf::tPixelValue val = ((::ULIS::FBlockBGRAf*)blockf)->PixelValue( 0, 0 );
+    ::ULIS::uint8 R = val.R();
+    ::ULIS::uint8 G = val.G();
+    ::ULIS::uint8 B = val.B();
+    ::ULIS::uint8 A = val.GetAlpha();
+    auto dummy = 0;
 
     /*
     // Qt Window

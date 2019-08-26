@@ -20,14 +20,14 @@ namespace ULIS {
 
 
 template< uint32 _SHSrc >
-void  ConvTypeInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat )
+void  ConvTypeAndLayoutInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat )
 {
     switch( iBlockDst->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
             {                                                                                                                           \
-                TConversionContext::ConvertTypeInto< _SHSrc, ::ULIS::ulis_types_reg[ n ] >(                                             \
+                TConversionContext::ConvertTypeAndLayoutInto< _SHSrc, ::ULIS::ulis_types_reg[ n ] >(                                    \
                                                                  iBlockSrc,                                                             \
                                                                  (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockDst,             \
                                                                  iPerfStrat );                                                          \
@@ -41,16 +41,16 @@ void  ConvTypeInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlockDst, co
 
 //static
 void
-FConvContext::ConvTypeInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat )
+FConvContext::ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat )
 {
     switch( iBlockSrc->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
             case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
             {                                                                                                                           \
-                ConvTypeInto_Imp< ::ULIS::ulis_types_reg[ n ] >( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockSrc,             \
-                                                                 iBlockDst,                                                             \
-                                                                 iPerfStrat );                                                          \
+                ConvTypeAndLayoutInto_Imp< ::ULIS::ulis_types_reg[ n ] >( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockSrc,    \
+                                                                          iBlockDst,                                                    \
+                                                                          iPerfStrat );                                                 \
                 break;                                                                                                                  \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
