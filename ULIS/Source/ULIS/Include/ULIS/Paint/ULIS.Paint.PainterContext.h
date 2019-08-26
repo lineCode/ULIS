@@ -551,26 +551,26 @@ public:
         std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
                                                            //                 [1]
         
-        __int128 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
-        __int128 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
+        int64 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
+        int64 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
         
-        __int128 A = (p1.x * p1.x) * p2Coeff +
+        int64 A = (p1.x * p1.x) * p2Coeff +
                      (p2.x * p2.x) * p1Coeff;
         
-        __int128 B = ( p1.x * p1.y ) * p2Coeff +
+        int64 B = ( p1.x * p1.y ) * p2Coeff +
                      ( p2.x * p2.y ) * p1Coeff;
        
-        __int128 C = (p1.y * p1.y) * p2Coeff +
+        int64 C = (p1.y * p1.y) * p2Coeff +
                      (p2.y * p2.y) * p1Coeff;
         
-        __int128 D = p1Coeff *
+        int64 D = p1Coeff *
                      p2Coeff;
 
         int64 x = -p1.x;
         int64 y = -p1.y;
         
-        __int128 dx = -(B * p1.x + C * p1.y);
-        __int128 dy =  A * p1.x + B * p1.y;
+        int64 dx = -(B * p1.x + C * p1.y);
+        int64 dy =  A * p1.x + B * p1.y;
         
 
         //Case 1 ----------------------------
@@ -583,7 +583,7 @@ public:
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
                 
                 y++;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma < 0)
                 {
@@ -607,7 +607,7 @@ public:
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
                 
                 y++;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma > 0 )
                 {
@@ -638,7 +638,7 @@ public:
 
 
                 x++;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma < 0 )
                 {
@@ -663,7 +663,7 @@ public:
                 }
 
                 x++;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma > 0 )
                 {
@@ -682,7 +682,7 @@ public:
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
                 
                 y--;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma < 0 )
                 {
@@ -716,7 +716,7 @@ public:
                 }
                 
                 x--;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma > 0)
                 {
@@ -735,7 +735,7 @@ public:
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
                 
                 y++;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma < 0)
                 {
@@ -760,7 +760,7 @@ public:
                 iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
                 
                 y++;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma > 0 )
                 {
@@ -791,7 +791,7 @@ public:
                 }
                 
                 x++;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma < 0 )
                 {
@@ -816,7 +816,7 @@ public:
                 }
                 
                 x++;
-                __int128 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
                 
                 if( sigma > 0 )
                 {

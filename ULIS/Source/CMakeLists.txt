@@ -146,6 +146,7 @@ if( ${ULIS_BUILD_TESTS} )
     	include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Painter/CMakeLists.txt)
     	include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Blend/CMakeLists.txt)
     	include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Chromaticity/CMakeLists.txt)
+    	include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Conv/CMakeLists.txt)
 	endif()
 endif()
 

@@ -21,11 +21,12 @@ class FColorProfile
 {
 public:
     // Public API
-    e_cm ModelSignature() const { return  e_cm::kRGB; };
+    e_cm ModelSignature() const { return  model; };
 
 private:
     // Private Data
     cmsHPROFILE profile;
+    e_cm model;
 };
 
 } // namespace ULIS
