@@ -1,7 +1,7 @@
-Date:				30/07/2019
-Number of contributors:		1
-Estimated human time spent:	550 h
-Number of lines: 		8000
-Number of files: 		105
-Sources size:			383 ko
-Overall quality:		medium
+Date:				26/08/2019
+Number of contributors:		2
+Estimated human time spent:	700 h
+Number of lines: 		7842
+Number of files: 		79
+Sources size:			365 ko
+Overall quality:		low
