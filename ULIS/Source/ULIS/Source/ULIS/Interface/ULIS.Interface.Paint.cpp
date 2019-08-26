@@ -17,7 +17,6 @@
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FPainterContext
-    
 //static
 void
 FPainterContext::DrawLine( IBlock* iBlock, const FPoint p0, const FPoint p1, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
@@ -34,8 +33,8 @@ FPainterContext::DrawLine( IBlock* iBlock, const FPoint p0, const FPoint p1, con
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
-    
+
+
 //static
 void
 FPainterContext::DrawGradientLine( IBlock* iBlock, const FPoint p0, const FPoint p1, const CColor& iColor1, const CColor& iColor2, const FPerfStrat& iPerfStrat, bool callInvalidCB )
@@ -52,7 +51,7 @@ FPainterContext::DrawGradientLine( IBlock* iBlock, const FPoint p0, const FPoint
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
+
 
 //static
 void
@@ -70,7 +69,7 @@ FPainterContext::DrawCircleAndres( IBlock* iBlock, const FPoint iCenter, const i
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
+
 
 //static
 void
@@ -88,8 +87,7 @@ FPainterContext::DrawCircleBresenham( IBlock* iBlock, const FPoint iCenter, cons
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
-    
+
 
 //static
 void
@@ -107,7 +105,8 @@ FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
+
+
 //static
 void
 FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled,const FPerfStrat& iPerfStrat, bool callInvalidCB )
@@ -124,8 +123,8 @@ FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
-    
+
+
 //static
 void
 FPainterContext::DrawArcAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
@@ -142,8 +141,8 @@ FPainterContext::DrawArcAndres( IBlock* iBlock, const FPoint iCenter, const int 
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
-    
+
+
 //static
 void
 FPainterContext::DrawArcBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
@@ -160,9 +159,8 @@ FPainterContext::DrawArcBresenham( IBlock* iBlock, const FPoint iCenter, const i
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
-    
-    
+
+
 //static
 void
 FPainterContext::DrawRectangle( IBlock* iBlock, const FPoint iTopLeft, const FPoint iBottomRight, const CColor& iColor, const bool iFilled, const FPerfStrat& iPerfStrat, bool callInvalidCB )
@@ -179,9 +177,8 @@ FPainterContext::DrawRectangle( IBlock* iBlock, const FPoint iTopLeft, const FPo
         #undef ULIS_REG_SWITCH_OP
     }
 }
-    
-    
-    
+
+
 //static
 void
 FPainterContext::DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, const bool iFilled, const FPerfStrat& iPerfStrat, bool callInvalidCB )
@@ -198,6 +195,7 @@ FPainterContext::DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, co
         #undef ULIS_REG_SWITCH_OP
     }
 }
+
 
 } // namespace ULIS
 

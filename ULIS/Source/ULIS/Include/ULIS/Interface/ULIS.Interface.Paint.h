@@ -20,7 +20,7 @@ namespace ULIS { class IBlock; }
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FClearFillContext
+// FPainterContext
 class FPainterContext
 {
 public:
