@@ -68,4 +68,21 @@ FProfileRegistry::GetProfile( const std::string iKey )
 }
 
 
+std::string
+FProfileRegistry::DefaultProfileForModel( e_cm iModel )
+{
+    switch( iModel )
+    {
+        case e_cm::kG:      return  "Grey_Gamma2.2_D65";
+        case e_cm::kRGB:    return  "sRGB";
+        case e_cm::kHSL:    return  "sRGB";
+        case e_cm::kHSV:    return  "sRGB";
+        case e_cm::kCMYK:   return  "Default_CMYK";
+        case e_cm::kLab:    return  "Lab_D65";
+        case e_cm::kXYZ:    return  "XYZ";
+        default:            return  "invalid";
+    }
+}
+
+
 } // namespace ULIS
