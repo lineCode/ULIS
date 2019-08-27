@@ -270,14 +270,6 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( CMYK )
     }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
-ULIS_SPEC_PIXEL_ACCESSOR_START( YUV )
-    ULIS_SPEC_COMPONENT( Y, 0               )
-    ULIS_SPEC_COMPONENT( U, 1               )
-    ULIS_SPEC_COMPONENT( V, 2               )
-    inline CColor GetColor()  const         { return  CColor( eCColorModel::kInvalid );    }
-    inline void   SetColor( const CColor& ) { memset( tSuperClass::d, 0, tSpec::_nf._pd ); }
-ULIS_SPEC_PIXEL_ACCESSOR_END
-
 ULIS_SPEC_PIXEL_ACCESSOR_START( Lab )
     ULIS_SPEC_COMPONENT( L, 0               )
     ULIS_SPEC_COMPONENT( a, 1               )

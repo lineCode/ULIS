@@ -117,10 +117,6 @@ ULIS_DECLSPEC(uint8,CMYK,hasAlpha,CMYKA,typeLimits)
 ULIS_DECLSPEC(uint16,CMYK,hasAlpha,CMYKA,typeLimits)
 ULIS_DECLSPEC(uint32,CMYK,hasAlpha,CMYKA,typeLimits)
 ULIS_DECLSPEC(float,CMYK,hasAlpha,CMYKA,normalized)
-ULIS_DECLSPEC(uint8,YUV,hasAlpha,YUVA,typeLimits)
-ULIS_DECLSPEC(uint16,YUV,hasAlpha,YUVA,typeLimits)
-ULIS_DECLSPEC(uint32,YUV,hasAlpha,YUVA,typeLimits)
-ULIS_DECLSPEC(float,YUV,hasAlpha,YUVA,normalized)
 ULIS_DECLSPEC(uint8,Lab,hasAlpha,LabA,typeLimits)
 ULIS_DECLSPEC(uint16,Lab,hasAlpha,LabA,typeLimits)
 ULIS_DECLSPEC(uint32,Lab,hasAlpha,LabA,typeLimits)
@@ -142,7 +138,7 @@ ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
 /* temp assign reg size ( workaround ) */
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 /* Reg size macro for usage during preprocessor ( workaround ) */
-#define ULIS_REG_SIZE 61
+#define ULIS_REG_SIZE 57
 
 /////////////////////////////////////////////////////
 // Extern template declarations

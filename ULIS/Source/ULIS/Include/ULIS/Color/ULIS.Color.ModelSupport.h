@@ -126,7 +126,6 @@ static e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
         case cmsSigXYZData      : return  e_cm::kXYZ;
         case cmsSigLabData      : return  e_cm::kLab;
         case cmsSigLuvData      : return  default_cm;
-        case cmsSigYCbCrData    : return  e_cm::kYUV;
         case cmsSigYxyData      : return  default_cm;
         case cmsSigRgbData      : return  e_cm::kRGB;
         case cmsSigGrayData     : return  e_cm::kG;
@@ -173,7 +172,6 @@ static e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
 
 static e_cm ColorModelCompatFallback( e_cm iModel )
 {
-    // ( G, RGB, HSL, HSV, CMYK, YUV, Lab, XYZ )
     switch( iModel )
     {
         case e_cm::kG:      return  e_cm::kG;
@@ -181,7 +179,6 @@ static e_cm ColorModelCompatFallback( e_cm iModel )
         case e_cm::kHSL:    return  e_cm::kRGB;
         case e_cm::kHSV:    return  e_cm::kRGB;
         case e_cm::kCMYK:   return  e_cm::kCMYK;
-        case e_cm::kYUV:    return  e_cm::kCMYK;
         case e_cm::kLab:    return  e_cm::kLab;
         case e_cm::kXYZ:    return  e_cm::kXYZ;
 
