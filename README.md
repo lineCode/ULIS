@@ -76,16 +76,16 @@ Make sure you cloned the dependencies and built them if needed. You can then cop
 
 There is an example of a fully configured config.cmake file:
 
-        SET( ULIS_BOOST_INCLUDE_PATH        "C:/Users/Desktop/work/boost_preprocessor/include/" )
-        SET( ULIS_COAL_INCLUDE_PATH         "C:/Users/Desktop/work/coal/coal/Source/coal/Include/" )
+        SET( ULIS_BOOST_INCLUDE_PATH        "C:/Users/WorkStation/work/boost_preprocessor/include/" )
+        SET( ULIS_COAL_INCLUDE_PATH         "C:/Users/WorkStation/work/coal/coal/Source/coal/Include/" )
         SET( ULIS_BUILD_SHARED              OFF )
         SET( ULIS_BUILD_TESTS               ON )
         SET( ULIS_BUILD_GUIS                ON )
         SET( ULIS_QT_CMAKE_PATH             "C:/Qt/5.12.2/msvc2017_64/lib/cmake/" )
-        SET( ULIS_GLM_INCLUDE_PATH          "C:/Users/Desktop/work/glm_distribution/glm/" )
-        SET( ULIS_LCMS2_INCLUDE_PATH        "C:/Users/Desktop/work/Little-CMS_MSVC_distribution/include/" )
-        SET( ULIS_LCMS2_DEBUG_LIB_PATH      "C:/Users/Desktop/work/Little-CMS_MSVC_distribution/lcms2d.lib" )
-        SET( ULIS_LCMS2_RELEASE_LIB_PATH    "C:/Users/Desktop/work/Little-CMS_MSVC_distribution/lcms2.lib" )
+        SET( ULIS_GLM_INCLUDE_PATH          "C:/Users/WorkStation/work/glm_distribution/glm/" )
+        SET( ULIS_LCMS2_INCLUDE_PATH        "C:/Users/WorkStation/work/Little-CMS_MSVC_distribution/include/" )
+        SET( ULIS_LCMS2_DEBUG_LIB_PATH      "C:/Users/WorkStation/work/Little-CMS_MSVC_distribution/lcms2d.lib" )
+        SET( ULIS_LCMS2_RELEASE_LIB_PATH    "C:/Users/WorkStation/work/Little-CMS_MSVC_distribution/lcms2.lib" )
 
 When you're done you should launch the appropriate script according to your configuration:
 
