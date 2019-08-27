@@ -16,6 +16,7 @@
 #include "ULIS/Color/ULIS.Color.CColor.h"
 #include "ULIS/Color/ULIS.Color.ColorProfile.h"
 #include "ULIS/Color/ULIS.Color.ProfileRegistry.h"
+#include "ULIS/Global/ULIS.Global.GlobalProfileRegistry.h"
 
 namespace ULIS {
 

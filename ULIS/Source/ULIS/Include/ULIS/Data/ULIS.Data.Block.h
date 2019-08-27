@@ -36,7 +36,9 @@ public:
         , data      ( nullptr   )
         , owned     ( true      )
         , profile   ( nullptr   )
-    {}
+    {
+        profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf.cm );
+    }
 
     TBlockData( int iWidth, int iHeight )
         : width     ( iWidth    )
@@ -46,6 +48,7 @@ public:
         , profile   ( nullptr   )
     {
         data = new uint8[ BytesTotal() ];
+        profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf.cm );
     }
 
     TBlockData( int iWidth, int iHeight, uint8* iData )
@@ -55,6 +58,7 @@ public:
         , owned     ( false      )
         , profile   ( nullptr   )
     {
+        profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf.cm );
     }
 
     ~TBlockData()

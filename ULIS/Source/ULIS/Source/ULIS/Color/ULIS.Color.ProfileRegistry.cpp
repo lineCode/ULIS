@@ -69,7 +69,7 @@ FProfileRegistry::GetProfile( const std::string iKey )
 
 
 std::string
-FProfileRegistry::DefaultProfileForModel( e_cm iModel )
+FProfileRegistry::DefaultProfileNameForModel( e_cm iModel )
 {
     switch( iModel )
     {
@@ -82,6 +82,13 @@ FProfileRegistry::DefaultProfileForModel( e_cm iModel )
         case e_cm::kXYZ:    return  "XYZ";
         default:            return  "invalid";
     }
+}
+
+
+FColorProfile*
+FProfileRegistry::GetDefaultProfileForModel( e_cm iModel )
+{
+    return  GetProfile( DefaultProfileNameForModel( iModel ) );
 }
 
 
