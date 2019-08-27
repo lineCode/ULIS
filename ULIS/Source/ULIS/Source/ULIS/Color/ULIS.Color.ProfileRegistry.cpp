@@ -18,17 +18,26 @@ namespace ULIS {
 //----------------------------------------------------------- Construction / Destruction
 FProfileRegistry::FProfileRegistry()
 {
-    cmsToneCurve* gamma_2_2 = cmsBuildGamma( 0, 2.2 );
+    cmsToneCurve* gamma_2_2     = cmsBuildGamma( 0, 2.2 );
+    cmsToneCurve* gamma3_2_2[3] = { gamma_2_2, gamma_2_2, gamma_2_2 };
+
+    cmsCIExyYTRIPLE AdobeRGB_compat_chroma;
+    AdobeRGB_compat_chroma.Red      = cmsCIExyY{ 0.6400, 0.3300, 0.0300 };
+    AdobeRGB_compat_chroma.Green    = cmsCIExyY{ 0.2100, 0.7100, 0.0800 };
+    AdobeRGB_compat_chroma.Blue     = cmsCIExyY{ 0.1500, 0.0600, 0.7900 };
 
     mLockedSoftwareProfiles[ "sRGB" ]               = new FColorProfile( cmsCreate_sRGBProfile() );
+    mLockedSoftwareProfiles[ "AdobeRGB_compat" ]    = new FColorProfile( cmsCreateRGBProfile( &whitepoint_D65, &AdobeRGB_compat_chroma, gamma3_2_2 ) );
+
     mLockedSoftwareProfiles[ "Lab_D65" ]            = new FColorProfile( cmsCreateLab4Profile( &whitepoint_D65 ) );
     mLockedSoftwareProfiles[ "Lab_D50" ]            = new FColorProfile( cmsCreateLab4Profile( &whitepoint_D50 ) );
+
     mLockedSoftwareProfiles[ "XYZ" ]                = new FColorProfile( cmsCreateXYZProfile() );
     mLockedSoftwareProfiles[ "Grey_Gamma2.2_D65" ]  = new FColorProfile( cmsCreateGrayProfile( &whitepoint_D65, gamma_2_2 ) );
+
     mLockedSoftwareProfiles[ "Default_CMYK" ]       = new FColorProfile( cmsOpenProfileFromMem( Default_Profile_CMYK_SNAP, sizeof( Default_Profile_CMYK_SNAP ) ) );
 
     cmsFreeToneCurve( gamma_2_2 );
-
 }
 
 
