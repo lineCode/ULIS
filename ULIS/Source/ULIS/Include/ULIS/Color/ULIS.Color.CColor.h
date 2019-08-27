@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "ULIS/Data/ULIS.Data.Spec.h"
 #include "ULIS/Color/ULIS.Color.ModelSupport.h"
 
 namespace ULIS {
