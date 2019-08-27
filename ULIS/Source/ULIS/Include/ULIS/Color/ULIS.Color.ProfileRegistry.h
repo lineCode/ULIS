@@ -8,6 +8,8 @@
 * Please refer to LICENSE.md
 */
 
+#pragma once
+
 #include "ULIS/Color/ULIS.Color.ColorProfile.h"
 #include <unordered_map>
 #include <string>
