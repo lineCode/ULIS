@@ -150,9 +150,7 @@ public:
            virtual CColor                       PixelColor          ( int x, int y )                                                            = 0;
            virtual CColor                       PixelColor          ( int x, int y )                                const                       = 0;
            virtual void                         SetPixelColor       ( int x, int y, const CColor& iColor )                                      = 0;
-           virtual void                         Fill                ( const CColor& iColor )                                                    = 0;
            virtual void                         Clear               ()                                                                          = 0;
-           virtual void                         Clear               ( const FRect& iRect )                                                      = 0;
                    void                         Invalidate          ()                                                                          { if( mInvCb ) mInvCb( this, mInvInfo, { 0, 0, Width(), Height() } );   }
                    void                         Invalidate          ( const FRect& iRect )                                                      { if( mInvCb ) mInvCb( this, mInvInfo, iRect );                         }
                    void                         SetInvalidateCB     ( fpInvalidateFunction iCb, void* iInfo )                                   { mInvCb = iCb; mInvInfo = iInfo;                                       }
