@@ -21,7 +21,7 @@ int main( int argc, char *argv[] )
 
     ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
     ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    blockA->Fill( ::ULIS::CColor::FromRGB( 255, 0, 0, 255 ) );
+    ::ULIS::FClearFillContext::Fill( blockA, ::ULIS::CColor( 255, 0, 0 ) );
 
     for( int i = 0; i < blockA->Height(); ++i )
         for( int j = 0; j < blockA->Width(); ++j )
