@@ -15,16 +15,10 @@ namespace ULIS {
 // FColorProfile
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FColorProfile::FColorProfile()
-    : profile( cmsCreate_sRGBProfile() )
-    , model( e_cm::kRGB )
-{
-}
-
-
-FColorProfile::FColorProfile( cmsHPROFILE iProfile )
+FColorProfile::FColorProfile( const std::string& iName, cmsHPROFILE iProfile )
     : profile( iProfile )
     , model( ColorModelFromColorSpaceSignature( cmsGetColorSpace( iProfile ) ) )
+    , name( iName )
 {
 }
 
@@ -46,9 +40,23 @@ FColorProfile::ModelSignature()  const
 
 
 bool
-FColorProfile::ModelSupported( e_cm iModel )
+FColorProfile::ModelSupported( e_cm iModel ) const
 {
     return  ColorModelCompatFallback( iModel ) == model;
+}
+
+
+const std::string&
+FColorProfile::Name() const
+{
+    return  name;
+}
+
+
+cmsHPROFILE
+FColorProfile::ProfileHandle()
+{
+    return  profile;
 }
 
 
