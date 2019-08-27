@@ -9,9 +9,28 @@
 */
 
 #include "ULIS/Color/ULIS.Color.ColorProfile.h"
+#include <unordered_map>
+#include <string>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FProfileRegistry
+class FProfileRegistry
+{
+public:
+    // Construction / Destruction
+    FProfileRegistry();
+    ~FProfileRegistry();
+
+public:
+    // Public API
+    FColorProfile* GetProfile( const std::string iKey );
+
+private:
+    // Private Data
+    std::unordered_map< std::string, FColorProfile* > mLockedSoftwareProfiles;
+    std::unordered_map< std::string, FColorProfile* > mFileBasedProfiles;
+};
+
 
 } // namespace ULIS

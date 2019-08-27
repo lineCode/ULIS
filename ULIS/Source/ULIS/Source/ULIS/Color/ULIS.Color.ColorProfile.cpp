@@ -31,6 +31,7 @@ FColorProfile::FColorProfile( cmsHPROFILE iProfile )
 
 FColorProfile::~FColorProfile()
 {
+    cmsCloseProfile( profile );
     profile = nullptr;
 }
 
