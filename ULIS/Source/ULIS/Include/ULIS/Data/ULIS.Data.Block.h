@@ -35,6 +35,7 @@ public:
         , height    ( 0         )
         , data      ( nullptr   )
         , owned     ( true      )
+        , profile   ( nullptr   )
     {}
 
     TBlockData( int iWidth, int iHeight )
@@ -42,6 +43,7 @@ public:
         , height    ( iHeight   )
         , data      ( nullptr   )
         , owned     ( true      )
+        , profile   ( nullptr   )
     {
         data = new uint8[ BytesTotal() ];
     }
@@ -51,18 +53,20 @@ public:
         , height    ( iHeight   )
         , data      ( iData   )
         , owned     ( false      )
+        , profile   ( nullptr   )
     {
     }
 
     ~TBlockData()
     {
         if( owned && data ) delete [] data;
+        profile = nullptr;
     }
 
 public:
     // Public API
-    inline         uint8*                       DataPtr             ()                                                                          { return  data;                                                   }
-    inline         const uint8*                 DataPtr             ()                                              const                       { return  data;                                                   }
+    inline         uint8*                       DataPtr             ()                                                                          { return  data;                                                         }
+    inline         const uint8*                 DataPtr             ()                                              const                       { return  data;                                                         }
     inline         uint8*                       PixelPtr            ( int x, int y )                                                            { return  DataPtr() + ( x * BytesPerPixel() + y * BytesPerScanLine() ); }
     inline         const uint8*                 PixelPtr            ( int x, int y )                                const                       { return  DataPtr() + ( x * BytesPerPixel() + y * BytesPerScanLine() ); }
     inline         uint8*                       ScanlinePtr         ( int row )                                                                 { return  DataPtr() + ( row * BytesPerScanLine() );                     }
@@ -82,6 +86,7 @@ public:
     inline         void                         SetPixelColor       ( int x, int y, const CColor& iValue )                                      { PixelProxy( x, y ).SetColor( iValue );                                }
     inline         void                         SetPixelValue       ( int x, int y, const TPixelValue< _SH >& iValue )                          { PixelProxy( x, y ) = iValue;                                          }
     inline         void                         SetPixelProxy       ( int x, int y, const TPixelProxy< _SH >& iValue )                          { PixelProxy( x, y ) = iValue;                                          }
+    inline         FColorProfile*               ColorProfile        ()                                              const                       { return  profile;                                                      }
 
 private:
     // Private Data
@@ -89,6 +94,7 @@ private:
     uint32  height;
     uint8*  data;
     bool owned;
+    FColorProfile* profile;
 };
 
 
@@ -150,6 +156,7 @@ public:
                    void                         Invalidate          ()                                                                          { if( mInvCb ) mInvCb( this, mInvInfo, { 0, 0, Width(), Height() } );   }
                    void                         Invalidate          ( const FRect& iRect )                                                      { if( mInvCb ) mInvCb( this, mInvInfo, iRect );                         }
                    void                         SetInvalidateCB     ( fpInvalidateFunction iCb, void* iInfo )                                   { mInvCb = iCb; mInvInfo = iInfo;                                       }
+           virtual FColorProfile*               ColorProfile        ()                                              const                       = 0;
 
 protected:
     // Protected Data
@@ -244,30 +251,8 @@ public:
     inline         tPixelProxy                  PixelProxy          ( int x, int y )                                const                       { return  d->PixelProxy( x, y );                                        }
     inline         void                         SetPixelValue       ( int x, int y, const tPixelValue& iValue )                                 { d->SetPixelValue( x, y, iValue );                                     }
     inline         void                         SetPixelProxy       ( int x, int y, const tPixelProxy& iValue )                                 { d->SetPixelProxy( x, y, iValue );                                     }
-    inline virtual void                         Clear               ()                                                      override    final   { memset( DataPtr(), 0, BytesTotal() ); }
-
-    virtual void Fill( const CColor& iColor ) override final {
-        tPixelValue val;
-        val.SetColor( iColor.ToModel( CColorModelFromColorModel( ColorModel() ) ) );
-        const int w = Width();
-        const int h = Height();
-        for( int y = 0; y < h; ++y )
-            for( int x = 0; x < w; ++x )
-                SetPixelValue( x, y, val );
-    }
-
-    virtual void Clear( const FRect& iRect ) override final {
-            int xmin = FMath::Max( iRect.x, 0 );
-            int ymin = FMath::Max( iRect.y, 0 );
-            int xmax = FMath::Min( iRect.x + iRect.w, Width() );
-            int ymax = FMath::Min( iRect.y + iRect.h, Height() );
-
-            int bytesToClear = ( xmax - xmin ) * BytesPerPixel();
-            int shift = xmin * BytesPerPixel();
-
-            for( int y = ymin; y < ymax; ++y )
-                memset( ScanlinePtr( y ) + shift, 0, bytesToClear );
-    }
+    inline virtual void                         Clear               ()                                                      override    final   { memset( DataPtr(), 0, BytesTotal() );                                 }
+    inline virtual FColorProfile*               ColorProfile        ()                                              const   override    final   { return  d->ColorProfile();                                            }
 
 public:
     // Constexpr API
