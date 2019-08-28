@@ -76,6 +76,8 @@ public:
     inline         int                          NumChannels         ()                                              const                       { return tSpec::_nf._rc;                                                }
     inline         int                          NumColorChannels    ()                                              const                       { return tSpec::_nf._nc;                                                }
     static inline  int                          RedirectedIndex     ( int i )                                                                   { return tLayout::red.arr[i];                                           }
+
+    inline static  constexpr uint32       TypeId              ()                                                                          { return  tSpec::_nf._sh;                                               }
 };
 
 
@@ -343,7 +345,7 @@ public:
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
         memset( tSuperClass::d, 0, tSpec::_nf._pd );
-        tSuperClass::profile = iProfile;
+        tSuperClass::profile = FGlobalProfileRegistry::Get().GetProfile( iProfileTag );
         if( tSuperClass::profile )
             assert( tSuperClass::profile->ModelSupported( tSpec::_nf._cm ) );
         else
@@ -371,7 +373,7 @@ public:
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
         memcpy( tSuperClass::d, iProxy.Ptr(), tSpec::_nf._pd );
-        tSuperClass::profile = iProxy.profile;
+        tSuperClass::profile = iProxy.ColorProfile();
     }
 
     virtual ~TPixelValue() {
