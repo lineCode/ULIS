@@ -111,7 +111,20 @@ public:
     inline const   tPixelType&                  operator[]          ( uint8 i )                                     const                       { return d[ tLayout::red.arr[i] ];                                                                                                                                  }
     inline         tPixelType                   GetAlpha            ()                                              const                       { return tSpec::_nf._ea == e_ea::khasAlpha ? d[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSpec::_nf._nm == e_nm::knormalized ? tPixelType( 1 ) : tSuperClass::Max();  }
     inline         void                         SetAlpha            ( tPixelType iValue )                                                       { if(    tSpec::_nf._ea == e_ea::khasAlpha ) d[ tLayout::red.arr[ tSpec::_nf._nc ] ] = TNormalizer< tPixelType, tSpec::_nf._nm >::Apply( iValue );                  }
-    inline         TPixelBase< _SH >&           operator=           ( const TPixelBase< _SH >& iOther )                                         { memcpy( d, iOther.Ptr(), tSpec::_nf._pd ); profile = iOther.profile; *this;                                                                                       }
+    inline         TPixelBase< _SH >&           operator=           ( const TPixelBase< _SH >& iOther )                                         { memcpy( d, iOther.Ptr(), tSpec::_nf._pd ); profile = iOther.profile; return  *this;                                                                               }
+    inline         FColorProfile*               ColorProfile        ()                                              const                       { return  profile;                                                                                                                                                  }
+
+    inline  void  AssignColorProfile( FColorProfile* iProfile )  {
+        profile = iProfile;
+        if( profile )
+            assert( tSuperClass::profile->ModelSupported( tSpec::_nf._cm ) );
+    }
+
+    inline  void  AssignColorProfile( const std::string& iProfileTag )  {
+        profile = FGlobalProfileRegistry::Get().GetProfile( iProfileTag );
+        if( profile )
+            assert( tSuperClass::profile->ModelSupported( tSpec::_nf._cm ) );
+    }
 
 protected:
     // Protected Data
@@ -417,7 +430,7 @@ public:
 
 public:
     // Public API
-    inline  TPixelProxy< _SH >& operator=( const TPixelValue< _SH >& iOther ) { memcpy( tSuperClass::d, iOther.Ptr(), tSpec::_nf._pd ); tSuperClass::profile = iOther.profile; return *this; }
+    inline  TPixelProxy< _SH >& operator=( const TPixelValue< _SH >& iOther ) { memcpy( tSuperClass::d, iOther.Ptr(), tSpec::_nf._pd ); return *this; }
 };
 
 /////////////////////////////////////////////////////

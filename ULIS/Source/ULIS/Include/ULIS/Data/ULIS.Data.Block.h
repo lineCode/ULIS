@@ -114,14 +114,22 @@ public:
     inline         int                          BytesTotal          ()                                              const                       { return  BytesPerScanLine() * Height();                                }
     inline         CColor                       PixelColor          ( int x, int y )                                                            { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) ).GetColor();    }
     inline         CColor                       PixelColor          ( int x, int y )                                const                       { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) ).GetColor();    }
-    inline         TPixelProxy< _SH >           PixelProxy          ( int x, int y )                                                            { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );               }
-    inline         TPixelProxy< _SH >           PixelProxy          ( int x, int y )                                const                       { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ) );               }
+    inline         TPixelProxy< _SH >           PixelProxy          ( int x, int y )                                                            { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ), profile );      }
+    inline         TPixelProxy< _SH >           PixelProxy          ( int x, int y )                                const                       { return  TPixelProxy< _SH >( (uint8*)PixelPtr( x, y ), profile );      }
     inline         TPixelValue< _SH >           PixelValue          ( int x, int y )                                                            { return  TPixelValue< _SH >( PixelProxy( x, y ) );                     }
     inline         TPixelValue< _SH >           PixelValue          ( int x, int y )                                const                       { return  TPixelValue< _SH >( PixelProxy( x, y ) );                     }
     inline         void                         SetPixelColor       ( int x, int y, const CColor& iValue )                                      { PixelProxy( x, y ).SetColor( iValue );                                }
     inline         void                         SetPixelValue       ( int x, int y, const TPixelValue< _SH >& iValue )                          { PixelProxy( x, y ) = iValue;                                          }
     inline         void                         SetPixelProxy       ( int x, int y, const TPixelProxy< _SH >& iValue )                          { PixelProxy( x, y ) = iValue;                                          }
     inline         FColorProfile*               ColorProfile        ()                                              const                       { return  profile;                                                      }
+
+    inline  void  AssignColorProfile( const std::string& iProfileTag )  {
+        profile = FGlobalProfileRegistry::Get().GetProfile( iProfileTag );
+        if( profile )
+            assert( profile->ModelSupported( tSpec::_nf._cm ) );
+        else
+            profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
+    }
 
 private:
     // Private Data
@@ -190,6 +198,7 @@ public:
                    void                         Invalidate          ( const FRect& iRect )                                                      { if( mInvCb ) mInvCb( this, mInvInfo, iRect );                         }
                    void                         SetInvalidateCB     ( fpInvalidateFunction iCb, void* iInfo )                                   { mInvCb = iCb; mInvInfo = iInfo;                                       }
            virtual FColorProfile*               ColorProfile        ()                                              const                       = 0;
+           virtual void                         AssignColorProfile  ( const std::string& iProfileTag )                                          = 0;
 
 protected:
     // Protected Data
@@ -298,6 +307,7 @@ public:
     inline         void                         SetPixelProxy       ( int x, int y, const tPixelProxy& iValue )                                 { d->SetPixelProxy( x, y, iValue );                                     }
     inline virtual void                         Clear               ()                                                      override    final   { memset( DataPtr(), 0, BytesTotal() );                                 }
     inline virtual FColorProfile*               ColorProfile        ()                                              const   override    final   { return  d->ColorProfile();                                            }
+    inline virtual void                         AssignColorProfile  ( const std::string& iProfileTag )                      override    final   { d->AssignColorProfile( iProfileTag );                                 }
 
 public:
     // Constexpr API
