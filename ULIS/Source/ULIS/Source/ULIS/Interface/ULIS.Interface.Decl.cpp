@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Interface.Decl.h
+* ULIS.Interface.Decl.cpp
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
