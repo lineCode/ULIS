@@ -322,7 +322,7 @@ public:
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
         memcpy( tSuperClass::d, iValue.Ptr(), tSpec::_nf._pd );
-        tSuperClass::profile = nullptr;
+        tSuperClass::profile = iValue.profile;
     }
 
     // Move
@@ -330,7 +330,7 @@ public:
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
         memcpy( tSuperClass::d, iValue.Ptr(), tSpec::_nf._pd );
-        tSuperClass::profile = nullptr;
+        tSuperClass::profile = iValue.profile;
     }
 
     // From Proxy
@@ -338,7 +338,7 @@ public:
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
         memcpy( tSuperClass::d, iProxy.Ptr(), tSpec::_nf._pd );
-        tSuperClass::profile = nullptr;
+        tSuperClass::profile = iProxy.profile;
     }
 
     virtual ~TPixelValue() {
