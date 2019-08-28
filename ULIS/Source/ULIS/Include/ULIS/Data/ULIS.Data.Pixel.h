@@ -111,7 +111,7 @@ public:
     inline const   tPixelType&                  operator[]          ( uint8 i )                                     const                       { return d[ tLayout::red.arr[i] ];                                                                                                                                  }
     inline         tPixelType                   GetAlpha            ()                                              const                       { return tSpec::_nf._ea == e_ea::khasAlpha ? d[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSpec::_nf._nm == e_nm::knormalized ? tPixelType( 1 ) : tSuperClass::Max();  }
     inline         void                         SetAlpha            ( tPixelType iValue )                                                       { if(    tSpec::_nf._ea == e_ea::khasAlpha ) d[ tLayout::red.arr[ tSpec::_nf._nc ] ] = TNormalizer< tPixelType, tSpec::_nf._nm >::Apply( iValue );                  }
-    inline         TPixelBase< _SH >&           operator=           ( const TPixelBase< _SH >& iOther )                                         { memcpy( d, iOther.Ptr(), tSpec::_nf._pd ); return *this;                                                                                                          }
+    inline         TPixelBase< _SH >&           operator=           ( const TPixelBase< _SH >& iOther )                                         { memcpy( d, iOther.Ptr(), tSpec::_nf._pd ); profile = iOther.profile; *this;                                                                                       }
 
 protected:
     // Protected Data
@@ -317,6 +317,26 @@ public:
         tSuperClass::profile = nullptr;
     }
 
+    // Default with trusted profile
+    TPixelValue( FColorProfile* iProfile )
+    {
+        tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
+        memset( tSuperClass::d, 0, tSpec::_nf._pd );
+        tSuperClass::profile = iProfile;
+    }
+
+    // Default with profile tag
+    TPixelValue( const std::string& iProfileTag )
+    {
+        tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
+        memset( tSuperClass::d, 0, tSpec::_nf._pd );
+        tSuperClass::profile = iProfile;
+        if( tSuperClass::profile )
+            assert( tSuperClass::profile->ModelSupported( tSpec::_nf._cm ) );
+        else
+            tSuperClass::profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
+    }
+
     // Copy
     TPixelValue( const TPixelValue< _SH >& iValue )
     {
@@ -357,10 +377,38 @@ class TPixelProxy final : public TPixelAcessor< _SH, tSpec::_nf._cm >
 
 public:
     // Construction / Destruction
+
+    // From data, no profile
     TPixelProxy( uint8* iPtr )
     {
         tSuperClass::d = (tPixelType*)iPtr;
         tSuperClass::profile = nullptr;
+    }
+
+    // From data, with trusted profile
+    TPixelProxy( uint8* iPtr, FColorProfile* iProfile )
+    {
+        tSuperClass::d = (tPixelType*)iPtr;
+        tSuperClass::profile = iProfile;
+        //TODO: this is temporary
+        // we assume we trust the incoming profile ( probably coming from a block )
+        /*
+        if( tSuperClass::profile )
+            assert( tSuperClass::profile->ModelSupported( tSpec::_nf._cm ) );
+        else
+            tSuperClass::profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
+        */
+    }
+
+    // From data, with profile tag
+    TPixelProxy( uint8* iPtr, const std::string& iProfileTag )
+    {
+        tSuperClass::d = (tPixelType*)iPtr;
+        tSuperClass::profile = FGlobalProfileRegistry::Get().GetProfile( iProfileTag );
+        if( tSuperClass::profile )
+            assert( tSuperClass::profile->ModelSupported( tSpec::_nf._cm ) );
+        else
+            tSuperClass::profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
     }
 
     virtual ~TPixelProxy() {
@@ -369,7 +417,7 @@ public:
 
 public:
     // Public API
-    inline  TPixelProxy< _SH >& operator=( const TPixelValue< _SH >& iOther ) { memcpy( tSuperClass::d, iOther.Ptr(), tSpec::_nf._pd ); return *this; }
+    inline  TPixelProxy< _SH >& operator=( const TPixelValue< _SH >& iOther ) { memcpy( tSuperClass::d, iOther.Ptr(), tSpec::_nf._pd ); tSuperClass::profile = iOther.profile; return *this; }
 };
 
 /////////////////////////////////////////////////////
