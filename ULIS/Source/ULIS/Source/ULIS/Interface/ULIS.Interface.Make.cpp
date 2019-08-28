@@ -102,6 +102,8 @@ FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, con
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
     }
+    if( iSrc->ColorProfile() )
+        iDst->AssignColorProfile( iSrc->ColorProfile()->Name() );
 }
 
 } // namespace ULIS
