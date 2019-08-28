@@ -28,25 +28,17 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAf::TypeId() );
     ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
 
-    ::ULIS::FValueRGBA8 a;
-    ::ULIS::FValueBGRAf b;
-    a.SetRed(   128 );
-    a.SetGreen( 128 );
-    a.SetBlue(  128 );
-    ::ULIS::TConversionContext::ConvertTypeAndLayoutInto( a, b );
-    auto dummy0 = 0;
-
     ::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
     ::ULIS::FClearFillContext::Clear( blockf );
     ::ULIS::FClearFillContext::Fill( blockg, ::ULIS::CColor::FromGreyF( 0.5f ) );
 
     ::ULIS::FConvContext::ConvTypeAndLayoutInto( block8, blockf );
-
-    ::ULIS::FBlockBGRAf::tPixelValue val = ((::ULIS::FBlockBGRAf*)blockf)->PixelValue( 0, 0 );
-    ::ULIS::uint8 R = val.R();
-    ::ULIS::uint8 G = val.G();
-    ::ULIS::uint8 B = val.B();
-    ::ULIS::uint8 A = val.GetAlpha();
+    ::ULIS::FValueBGRAf floatBGRA;
+    ::ULIS::TConversionContext::ConvertTypeAndLayoutInto( ((::ULIS::FBlockRGBA8*)block8)->PixelProxy( 0, 0 ), floatBGRA );
+    float R = floatBGRA.R();
+    float G = floatBGRA.G();
+    float B = floatBGRA.B();
+    float A = floatBGRA.GetAlpha();
     auto dummy = 0;
 
     /*
