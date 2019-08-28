@@ -16,7 +16,6 @@
 #include "ULIS/Conv/ULIS.Conv.ConversionContext.h"
 #include <ULIS_CORE>
 
-
 int main( int argc, char *argv[] )
 {
     // Qt App
@@ -28,22 +27,16 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAf::TypeId() );
     ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
 
-    {
-        ::ULIS::FValueBGRAf floatBGRAA;
-        ::ULIS::FValueBGRAf floatBGRAB = std::forward< ::ULIS::FValueBGRAf&& >( floatBGRAA );
-    }
-
     ::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
     ::ULIS::FClearFillContext::Clear( blockf );
     ::ULIS::FClearFillContext::Fill( blockg, ::ULIS::CColor::FromGreyF( 0.5f ) );
 
-    ::ULIS::FConvContext::ConvTypeAndLayoutInto( block8, blockf );
-    ::ULIS::FValueBGRAf floatBGRA;
-    ::ULIS::TConversionContext::ConvertTypeAndLayoutInto( ((::ULIS::FBlockRGBA8*)block8)->PixelProxy( 0, 0 ), floatBGRA );
-    float R = floatBGRA.R();
-    float G = floatBGRA.G();
-    float B = floatBGRA.B();
-    float A = floatBGRA.GetAlpha();
+    ::ULIS::FValueRGBA8 val = ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 );
+    int R = val.R();
+    int G = val.G();
+    int B = val.B();
+    int A = val.GetAlpha();
+    std::string profilename = val.ColorProfile()->Name();
     auto dummy = 0;
 
     /*
