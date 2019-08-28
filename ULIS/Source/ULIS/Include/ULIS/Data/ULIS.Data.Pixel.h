@@ -94,6 +94,10 @@ class TPixelBase : public TPixelInfo< _SH >
     ULIS_FORWARD_TYPE_SELECTOR
 
 public:
+    // Destructor
+    virtual ~TPixelBase() {}
+
+public:
     // Public API
     inline         void*                        Ptr                 ()                                              const                       { return  (void*)d;                                                                                                                                                 }
     inline         tPixelType&                  GetRaw              ( uint8 i )                                                                 { return d[ i ];                                                                                                                                                    }
@@ -110,6 +114,7 @@ public:
 protected:
     // Protected Data
     tPixelType* d;
+    FColorProfile* profile;
 };
 
 
@@ -306,12 +311,19 @@ public:
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
         memset( tSuperClass::d, 0, tSpec::_nf._pd );
+        tSuperClass::profile = nullptr;
     }
 
     TPixelValue( const TPixelProxy< _SH >& iProxy )
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
         memcpy( tSuperClass::d, iProxy.Ptr(), tSpec::_nf._pd );
+        tSuperClass::profile = nullptr;
+    }
+
+    virtual ~TPixelValue() {
+        delete  tSuperClass::d;
+        tSuperClass::profile = nullptr;
     }
 };
 
@@ -328,6 +340,11 @@ public:
     TPixelProxy( uint8* iPtr )
     {
         tSuperClass::d = (tPixelType*)iPtr;
+        tSuperClass::profile = nullptr;
+    }
+
+    virtual ~TPixelProxy() {
+        tSuperClass::profile = nullptr;
     }
 
 public:
