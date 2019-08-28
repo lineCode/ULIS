@@ -35,7 +35,7 @@ public:
     void ScheduleJob( F&& f )
     {
         std::unique_lock< std::mutex > lock( queue_mutex );
-        tasks.emplace_back( std::forward< F >( f ) );
+        tasks.push_back( std::forward< F >( f ) );
         cv_task.notify_one();
     }
 
@@ -43,7 +43,7 @@ public:
     void ScheduleJob( F&& f, Args&& ... args )
     {
         std::unique_lock< std::mutex > lock( queue_mutex );
-        tasks.emplace_back( std::bind( std::forward< F >( f ), std::forward< Args >( args ) ... ) );
+        tasks.push_back( std::bind( std::forward< F >( f ), args ... ) );
         cv_task.notify_one();
     }
 
