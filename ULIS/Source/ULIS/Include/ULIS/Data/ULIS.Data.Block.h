@@ -61,6 +61,33 @@ public:
         profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
     }
 
+    TBlockData( int iWidth, int iHeight, const std::string& iProfileTag )
+        : width     ( iWidth    )
+        , height    ( iHeight   )
+        , data      ( nullptr   )
+        , owned     ( true      )
+        , profile   ( nullptr   )
+    {
+        data = new uint8[ BytesTotal() ];
+        profile = FGlobalProfileRegistry::Get().GetProfile( iProfileTag );
+
+        if( profile )
+            assert( profile->ModelSupported( tSpec::_nf._cm ) );
+    }
+
+    TBlockData( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag )
+        : width     ( iWidth    )
+        , height    ( iHeight   )
+        , data      ( iData   )
+        , owned     ( false      )
+        , profile   ( nullptr   )
+    {
+        profile = FGlobalProfileRegistry::Get().GetProfile( iProfileTag );
+
+        if( profile )
+            assert( profile->ModelSupported( tSpec::_nf._cm ) );
+    }
+
     ~TBlockData()
     {
         if( owned && data ) delete [] data;
@@ -193,6 +220,18 @@ public:
     TBlock( int iWidth, int iHeight, uint8* iData )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight, iData )   )
+        , id    ( generate_weak_uuid( 16 )                          )
+    {}
+
+    TBlock( int iWidth, int iHeight, const std::string& iProfileTag )
+        : IBlock()
+        , d     ( new TBlockData< _SH >( iWidth, iHeight, iProfileTag )  )
+        , id    ( generate_weak_uuid( 16 )                  )
+    {}
+
+    TBlock( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag )
+        : IBlock()
+        , d     ( new TBlockData< _SH >( iWidth, iHeight, iData, iProfileTag )   )
         , id    ( generate_weak_uuid( 16 )                          )
     {}
 
