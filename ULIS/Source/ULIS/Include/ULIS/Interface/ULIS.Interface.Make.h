@@ -22,8 +22,8 @@ namespace ULIS {
 class FMakeContext
 {
 public:
-    static ::ULIS::IBlock* MakeBlock( int width, int height, uint32_t ID );
-    static ::ULIS::IBlock* MakeBlockFromExternalData( int width, int height, uint8* iData, uint32_t ID );
+    static ::ULIS::IBlock* MakeBlock( int width, int height, uint32_t ID, const std::string& iProfileTag = "default" );
+    static ::ULIS::IBlock* MakeBlockFromExternalData( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag = "default" );
     static ::ULIS::IBlock* MakeBlockFromDataPerformCopy( int width, int height, uint8* iData, uint32_t ID, const FPerfStrat& iPerfStrat = FPerfStrat() );
     static ::ULIS::IBlock* CopyBlock( ::ULIS::IBlock* iBlock, const FPerfStrat& iPerfStrat = FPerfStrat() );
     static void CopyBlockInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FPerfStrat& iPerfStrat = FPerfStrat() );

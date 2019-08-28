@@ -73,6 +73,8 @@ public:
 
         if( profile )
             assert( profile->ModelSupported( tSpec::_nf._cm ) );
+        else
+            profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
     }
 
     TBlockData( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag )
@@ -86,6 +88,8 @@ public:
 
         if( profile )
             assert( profile->ModelSupported( tSpec::_nf._cm ) );
+        else
+            profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
     }
 
     ~TBlockData()

@@ -19,11 +19,11 @@ namespace ULIS {
 
 //static
 ::ULIS::IBlock*
-FMakeContext::MakeBlock( int width, int height, uint32_t ID )
+FMakeContext::MakeBlock( int width, int height, uint32_t ID, const std::string& iProfileTag )
 {
     switch( ID )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  new ::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >( width, height );
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  new ::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >( width, height, iProfileTag );
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
         default: return  nullptr;
@@ -32,11 +32,11 @@ FMakeContext::MakeBlock( int width, int height, uint32_t ID )
 
 //static
 ::ULIS::IBlock*
-FMakeContext::MakeBlockFromExternalData( int width, int height, uint8* iData, uint32_t ID )
+FMakeContext::MakeBlockFromExternalData( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag )
 {
     switch( ID )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  new ::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >( width, height, iData );
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  new ::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >( width, height, iData, iProfileTag );
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
         default: return  nullptr;
