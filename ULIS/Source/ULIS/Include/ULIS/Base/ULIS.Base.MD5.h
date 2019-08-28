@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Data.Pixel.h
+* ULIS.Base.MD5.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */

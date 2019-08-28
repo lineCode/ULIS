@@ -24,9 +24,17 @@ int main( int argc, char *argv[] )
 
     // ULIS Image Conv
     ::ULIS::IBlock* block8 = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId(), "AdobeRGB_compat" );
-    ::ULIS::IBlock* blockH = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockfloatHSLhasAlphaHSLAnormalized::TypeId(), "AdobeRGB_compat" );
+    ::ULIS::IBlock* blockH = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockfloatHSLhasAlphaHSLAnormalized::TypeId(), ::ULIS::DefaultProfiles::AdobeRGB_compat );
     ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAf::TypeId() );
     ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
+
+    ::ULIS::FValueRGBA8 a;
+    ::ULIS::FValueBGRAf b;
+    a.SetRed(   128 );
+    a.SetGreen( 128 );
+    a.SetBlue(  128 );
+    ::ULIS::TConversionContext::ConvertTypeAndLayoutInto( a, b );
+    auto dummy0 = 0;
 
     ::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
     ::ULIS::FClearFillContext::Clear( blockf );

@@ -39,6 +39,15 @@ public:
         assert( src_info::_nf._cm == dst_info::_nf._cm ); // Color Model
         TBlockTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Run( iBlockSrc, iBlockDst, iPerfStrat );
     }
+
+    template< uint32 _SHSrc, uint32 _SHDst >
+    static void ConvertTypeAndLayoutInto( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst )
+    {
+        using src_info = TBlockInfo< _SHSrc >;
+        using dst_info = TBlockInfo< _SHDst >;
+        assert( src_info::_nf._cm == dst_info::_nf._cm ); // Color Model
+        TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
+    }
 };
 
 

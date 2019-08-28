@@ -163,4 +163,13 @@ typedef ::ULIS::FBlockfloatRGBhasAlphaBGRAnormalized FBlockBGRAf;
 typedef ::ULIS::FBlockfloatRGBhasAlphaARGBnormalized FBlockARGBf;
 typedef ::ULIS::FBlockfloatRGBhasAlphaABGRnormalized FBlockABGRf;
 
+typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaRGBAtypeLimits::TypeId() > FValueRGBA8;
+typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaBGRAtypeLimits::TypeId() > FValueBGRA8;
+typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaARGBtypeLimits::TypeId() > FValueARGB8;
+typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaABGRtypeLimits::TypeId() > FValueABGR8;
+typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaRGBAnormalized::TypeId() > FValueRGBAf;
+typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaBGRAnormalized::TypeId() > FValueBGRAf;
+typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaARGBnormalized::TypeId() > FValueARGBf;
+typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaABGRnormalized::TypeId() > FValueABGRf;
+
 } // namespace ULIS

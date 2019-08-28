@@ -128,5 +128,35 @@ public:
 };
 
 
+/////////////////////////////////////////////////////
+// TPixelTypeConverter
+template< uint32 _SHSrc, uint32 _SHDst, int _MODEL_DIFF >
+class TPixelTypeConverter
+{
+public:
+    static inline void Apply( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst )
+    {
+    }
+};
+
+/////////////////////////////////////////////////////
+// TPixelTypeConverter
+template< uint32 _SHSrc, uint32 _SHDst >
+class TPixelTypeConverter< _SHSrc, _SHDst, 0 >
+{
+public:
+    static inline void Apply( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst )
+    {
+        using src_info = TBlockInfo< _SHSrc >;
+        using dst_info = TBlockInfo< _SHDst >;
+        using tSrcType = typename TPixelBase< _SHSrc >::tPixelType;
+        using tDstType = typename TPixelBase< _SHDst >::tPixelType;
+        for( int i = 0; i < src_info::_nf._nc; ++i )
+            iDst.SetComponent( i, ConvType< typename tSrcType, typename tDstType >( iSrc.GetComponent( i ) ) );
+        iDst.SetAlpha( ConvType< typename tSrcType, typename tDstType >( iSrc.GetAlpha() ) );
+    }
+};
+
+
 } // namespace ULIS
 

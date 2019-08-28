@@ -17,6 +17,19 @@
 
 namespace ULIS {
 /////////////////////////////////////////////////////
+// DefaultProfiles
+namespace DefaultProfiles
+{
+    static const std::string sRGB                = "sRGB";
+    static const std::string AdobeRGB_compat     = "AdobeRGB_compat";
+    static const std::string Lab_D65             = "Lab_D65";
+    static const std::string Lab_D50             = "Lab_D50";
+    static const std::string XYZ                 = "XYZ";
+    static const std::string Grey_Gamma2_2_D65   = "Grey_Gamma2.2_D65";
+    static const std::string Default_CMYK        = "Default_CMYK";
+};
+
+/////////////////////////////////////////////////////
 // FColorProfile
 class FColorProfile
 {

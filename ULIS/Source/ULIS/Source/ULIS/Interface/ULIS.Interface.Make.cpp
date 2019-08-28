@@ -46,10 +46,10 @@ FMakeContext::MakeBlockFromExternalData( int width, int height, uint8* iData, ui
 
 //static
 ::ULIS::IBlock*
-FMakeContext::MakeBlockFromDataPerformCopy( int width, int height, uint8* iData, uint32_t ID, const FPerfStrat& iPerfStrat )
+FMakeContext::MakeBlockFromDataPerformCopy( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag, const FPerfStrat& iPerfStrat )
 {
-    ::ULIS::IBlock* src = MakeBlockFromExternalData( width, height, iData, ID );
-    ::ULIS::IBlock* ret = MakeBlock( width, height, ID );
+    ::ULIS::IBlock* src = MakeBlockFromExternalData( width, height, iData, ID, iProfileTag );
+    ::ULIS::IBlock* ret = MakeBlock( width, height, ID, iProfileTag );
     CopyBlockInto( src, ret );
     delete src;
     return  ret;
