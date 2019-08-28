@@ -152,8 +152,8 @@ public:
         using tSrcType = typename TPixelBase< _SHSrc >::tPixelType;
         using tDstType = typename TPixelBase< _SHDst >::tPixelType;
         for( int i = 0; i < src_info::_nf._nc; ++i )
-            iDst.SetComponent( i, ConvType< typename tSrcType, typename tDstType >( iSrc.GetComponent( i ) ) );
-        iDst.SetAlpha( ConvType< typename tSrcType, typename tDstType >( iSrc.GetAlpha() ) );
+            iDst.SetComponent( i, ConvType< tSrcType, tDstType >( iSrc.GetComponent( i ) ) );
+        iDst.SetAlpha( ConvType< tSrcType, tDstType >( iSrc.GetAlpha() ) );
     }
 };
 
