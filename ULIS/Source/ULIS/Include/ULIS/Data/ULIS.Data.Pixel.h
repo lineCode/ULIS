@@ -95,7 +95,9 @@ class TPixelBase : public TPixelInfo< _SH >
 
 public:
     // Destructor
-    virtual ~TPixelBase() {}
+    virtual ~TPixelBase() {
+        auto dummy = 0;
+    }
 
 public:
     // Public API
@@ -307,6 +309,7 @@ class TPixelValue final : public TPixelAcessor< _SH, tSpec::_nf._cm >
 
 public:
     // Construction / Destruction
+    // Default
     TPixelValue()
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
@@ -314,6 +317,23 @@ public:
         tSuperClass::profile = nullptr;
     }
 
+    // Copy
+    TPixelValue( const TPixelValue< _SH >& iValue )
+    {
+        tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
+        memcpy( tSuperClass::d, iValue.Ptr(), tSpec::_nf._pd );
+        tSuperClass::profile = nullptr;
+    }
+
+    // Move
+    TPixelValue( const TPixelValue< _SH >&& iValue )
+    {
+        tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
+        memcpy( tSuperClass::d, iValue.Ptr(), tSpec::_nf._pd );
+        tSuperClass::profile = nullptr;
+    }
+
+    // From Proxy
     TPixelValue( const TPixelProxy< _SH >& iProxy )
     {
         tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
