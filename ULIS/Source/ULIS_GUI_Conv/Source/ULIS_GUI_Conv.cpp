@@ -28,6 +28,11 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAf::TypeId() );
     ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
 
+    {
+        ::ULIS::FValueBGRAf floatBGRAA;
+        ::ULIS::FValueBGRAf floatBGRAB = std::forward< ::ULIS::FValueBGRAf&& >( floatBGRAA );
+    }
+
     ::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
     ::ULIS::FClearFillContext::Clear( blockf );
     ::ULIS::FClearFillContext::Fill( blockg, ::ULIS::CColor::FromGreyF( 0.5f ) );
