@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.Data.Spec.h
+* ULIS.Spec.Spec.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -13,7 +13,7 @@
 #include <coal_core>
 #include <limits>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PreprocessorFramework.h"
+#include "ULIS/Spec/ULIS.Spec.PreprocessorFramework.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////

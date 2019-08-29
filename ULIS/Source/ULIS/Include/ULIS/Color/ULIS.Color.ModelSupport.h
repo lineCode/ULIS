@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "ULIS/Data/ULIS.Data.Spec.h"
+#include "ULIS/Spec/ULIS.Spec.Spec.h"
 #include "lcms2.h"
 
 namespace ULIS {

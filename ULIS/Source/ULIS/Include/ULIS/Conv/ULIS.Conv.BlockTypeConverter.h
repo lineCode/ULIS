@@ -14,7 +14,7 @@
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
-#include "ULIS/Make/ULIS.Make.MakeContext.h"
+#include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////

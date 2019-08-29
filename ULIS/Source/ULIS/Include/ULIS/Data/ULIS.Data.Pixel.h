@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "ULIS/Data/ULIS.Data.Spec.h"
+#include "ULIS/Spec/ULIS.Spec.Spec.h"
 #include "ULIS/Data/ULIS.Data.Layout.h"
 #include "ULIS/Maths/ULIS.Maths.Utility.h"
 #include "ULIS/Color/ULIS.Color.CColor.h"

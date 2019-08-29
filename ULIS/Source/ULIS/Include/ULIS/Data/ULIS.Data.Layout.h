@@ -12,7 +12,7 @@
 
 #include <utility>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Data/ULIS.Data.Spec.h"
+#include "ULIS/Spec/ULIS.Spec.Spec.h"
 
 namespace ULIS {
 
