@@ -29,8 +29,8 @@ namespace ULIS {
 #define ULIS_SEQ_EA  BOOST_PP_TUPLE_TO_SEQ( ULIS_KEYS_EA )
 #define ULIS_SEQ_NM  BOOST_PP_TUPLE_TO_SEQ( ULIS_KEYS_NM )
 /* We make enum and cstring keywords out of theme */
-// Enums:       enum class              e_xx : int  { kXXX,   ... };
-// Keywords:    constexpr char*   kw_xx[] =   { "XXX",  ... };
+// Enums:       enum class          e_xx : int { kXXX,  ... };
+// Keywords:    constexpr char*     kw_xx[] =  { "XXX", ... };
 ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _tp, ULIS_KEYS_TP ) // type
 ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _cm, ULIS_KEYS_CM ) // color_model
 ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _ea, ULIS_KEYS_EA ) // extra_alpha
@@ -49,6 +49,7 @@ struct FSpec
     const  e_ea         _ea; // extra_alpha
     const  char*        _cl; // channel_layout
     const  e_nm         _nm; // normal_mode
+
     // Infered properties
     const  bool         _dm; // decimal
     const  uint8_t      _rc; // real_channels
@@ -60,33 +61,25 @@ struct FSpec
     const  uint32_t     _lh; // layout_hash
 };
 
-#if defined(__clang__)
-#define ULIS_PREDECL_NF inline
-#elif defined(__GNUC__) || defined(__GNUG__)
-#define ULIS_PREDECL_NF
-#elif defined(_MSC_VER)
-#define ULIS_PREDECL_NF
-#endif
-
 /////////////////////////////////////////////////////
 // TBlockInfo
 /* Template specialized Block Spec structure */
 template< uint32_t > struct TBlockInfo {
-    ULIS_PREDECL_NF static constexpr FSpec _nf = { "Invalid"           // spec-str
-                                       , 0                   // spec-hash
-                                       , e_tp::kuint8        // type
-                                       , e_cm::kRGB          // color_model
-                                       , e_ea::knoAlpha      // extra_alpha
-                                       , "None"              // channel_layout
-                                       , e_nm::ktypeLimits   // normal_mode
-                                       , false               // decimal
-                                       , 0                   // real_channels
-                                       , 0                   // num_channels
-                                       , 0                   // pixel_depth
-                                       , 0                   // type_max
-                                       , 0                   // range_max
-                                       , 16                  // memory_alignment
-                                       , 0                   // layout_hash
+    ULIS_PREDECL_NF static constexpr FSpec _nf = { "Invalid"            // spec-str
+                                                   , 0                  // spec-hash
+                                                   , e_tp::kuint8       // type
+                                                   , e_cm::kRGB         // color_model
+                                                   , e_ea::knoAlpha     // extra_alpha
+                                                   , "None"             // channel_layout
+                                                   , e_nm::ktypeLimits  // normal_mode
+                                                   , false              // decimal
+                                                   , 0                  // real_channels
+                                                   , 0                  // num_channels
+                                                   , 0                  // pixel_depth
+                                                   , 0                  // type_max
+                                                   , 0                  // range_max
+                                                   , 16                 // memory_alignment
+                                                   , 0                  // layout_hash
     };
 };
 
@@ -94,15 +87,15 @@ template< uint32_t > struct TBlockInfo {
 // Info
 /* We check that a type is decimal */
 constexpr  inline bool is_decimal( ::ULIS::e_tp iTp ) { return  iTp == ::ULIS::e_tp::kdouble || iTp == ::ULIS::e_tp::kfloat ? true : false; }
+
 /* Getters for all types size & max value */
 template< e_tp iTp > constexpr  uint16_t    type_size() { return  0; }
 template< e_tp iTp > constexpr  double      type_max()  { return  0; }
 /* Repeater macros for type getters */
 #define ULIS_TYPE_SIZE_REPEAT( r, data, elem )  template<> inline constexpr  uint16_t  type_size<  BOOST_PP_CAT( e_tp::k, elem ) >() { return  sizeof( elem ); }
 #define ULIS_TYPE_MAX_REPEAT( r, data, elem )   template<> inline constexpr  double    type_max<   BOOST_PP_CAT( e_tp::k, elem ) >() { return  std::numeric_limits< elem >::max(); }
-/* specialize type size for all types */
+/* specialize type size & max for all types */
 BOOST_PP_SEQ_FOR_EACH( ULIS_TYPE_SIZE_REPEAT, void, ULIS_SEQ_TP )
-/* specialize type max for all types */
 BOOST_PP_SEQ_FOR_EACH( ULIS_TYPE_MAX_REPEAT,  void, ULIS_SEQ_TP )
 #undef ULIS_TYPE_SIZE_REPEAT
 #undef ULIS_TYPE_MAX_REPEAT
@@ -150,7 +143,7 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
     coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                            \
     constexpr uint32_t  ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).hash();                         \
     template<> struct TBlockInfo< ULIS_SPEC_SH( spec ) > {                                          \
-        ULIS_PREDECL_NF static constexpr FSpec _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )   \
+        ULIS_PREDECL_NF static constexpr FSpec _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )         \
                                                                            , ULIS_SPEC_SH( spec )   \
                                                                            , tp, cm, ea, cl, nm )   \
     };                                                                                              \

@@ -57,5 +57,14 @@ namespace ULIS {
 #define ULIS_SPEC_SS( spec )        BOOST_PP_CAT( _SpecStr_, spec )
 #define ULIS_SPEC_SH( spec )        BOOST_PP_CAT( _SpecHash_, spec )
 
+/* PREDECL for inline fix on CLANG */
+#if defined(__clang__)
+#define ULIS_PREDECL_NF inline
+#elif defined(__GNUC__) || defined(__GNUG__)
+#define ULIS_PREDECL_NF
+#elif defined(_MSC_VER)
+#define ULIS_PREDECL_NF
+#endif
+
 
 } // namespace ULIS
