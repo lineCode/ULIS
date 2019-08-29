@@ -39,6 +39,8 @@ int main( int argc, char *argv[] )
     std::string profilename = val.ColorProfile()->Name();
     auto dummy = 0;
 
+    ::ULIS::TConversionContext::ConvertTypeAndLayoutInto< ::ULIS::FBlockRGBA8::TypeId(), ::ULIS::FBlockRGBA8::TypeId() >( ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 ), val );
+
     /*
     // Qt Window
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
