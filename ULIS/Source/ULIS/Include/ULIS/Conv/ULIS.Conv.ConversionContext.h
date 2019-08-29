@@ -15,6 +15,7 @@
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
 #include "ULIS/Conv/ULIS.Conv.BlockTypeConverter.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Make/ULIS.Make.MakeContext.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -37,7 +38,10 @@ public:
         using src_info = TBlockInfo< _SHSrc >;
         using dst_info = TBlockInfo< _SHDst >;
         assert( src_info::_nf._cm == dst_info::_nf._cm ); // Color Model
-        TBlockTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Run( iBlockSrc, iBlockDst, iPerfStrat );
+        if( _SHSrc == _SHDst )
+            TMakeContext< _SHSrc >::CopyBlockInto( (const TBlock< _SHSrc >*)iBlockSrc, (TBlock< _SHSrc >*)iBlockDst, iPerfStrat );
+        else
+            TBlockTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Run( iBlockSrc, iBlockDst, iPerfStrat );
     }
 
     template< uint32 _SHSrc, uint32 _SHDst >
@@ -46,7 +50,10 @@ public:
         using src_info = TBlockInfo< _SHSrc >;
         using dst_info = TBlockInfo< _SHDst >;
         assert( src_info::_nf._cm == dst_info::_nf._cm ); // Color Model
-        TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
+        if( _SHSrc == _SHDst )
+            iDst = iSrc;
+        else
+            TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
     }
 };
 
