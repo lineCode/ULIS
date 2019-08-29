@@ -43,6 +43,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Create global solution
 project( ULIS CXX )
 
+# Check Endianness
 include (TestBigEndian)
 TEST_BIG_ENDIAN(IS_BIG_ENDIAN)
 if(IS_BIG_ENDIAN)
