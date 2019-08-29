@@ -27,7 +27,7 @@ template< uint32 _SH >
 class TBlockCopier_Default_ScanLine_Memcpy
 {
 public:
-    static void ProcessScanLine( TBlock< _SH >*                     iSrc
+    static void ProcessScanLine( const TBlock< _SH >*               iSrc
                                , TBlock< _SH >*                     iDst
                                , const int                          iLine
                                , const int                          iX1
@@ -46,7 +46,7 @@ public:
         }
     }
 
-    static inline void Run( TBlock< _SH >*                      iSrc
+    static inline void Run( const TBlock< _SH >*                iSrc
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift )
@@ -70,7 +70,7 @@ template< uint32 _SH >
 class TBlockCopier_Default_ScanLine
 {
 public:
-    static void ProcessScanLine( TBlock< _SH >*                     iSrc
+    static void ProcessScanLine( const TBlock< _SH >*               iSrc
                                , TBlock< _SH >*                     iDst
                                , const int                          iLine
                                , const int                          iX1
@@ -81,7 +81,7 @@ public:
             iDst->SetPixelProxy( x + iShift.x, iLine + iShift.y, iSrc->PixelProxy( x, iLine ) );
     }
 
-    static inline void Run( TBlock< _SH >*                      iSrc
+    static inline void Run( const TBlock< _SH >*                iSrc
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift )
@@ -105,7 +105,7 @@ template< uint32 _SH >
 class TBlockCopier_Default_MonoThread
 {
 public:
-    static inline void Run( TBlock< _SH >*                      iSrc
+    static inline void Run( const TBlock< _SH >*                iSrc
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift )
@@ -126,7 +126,7 @@ template< uint32 _SH >
 class TBlockCopier_Default
 {
 public:
-    static inline void Run( TBlock< _SH >*                      iSrc
+    static inline void Run( const TBlock< _SH >*                iSrc
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
@@ -150,7 +150,7 @@ template< uint32 _SH >
 class TBlockCopier_Imp
 {
 public:
-    static inline void Run( TBlock< _SH >*                      iSrc
+    static inline void Run( const TBlock< _SH >*                iSrc
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
@@ -166,7 +166,7 @@ template< uint32 _SH >
 class TBlockCopier
 {
 public:
-    static inline void Run( TBlock< _SH >*                      iSrc
+    static inline void Run( const TBlock< _SH >*                iSrc
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
