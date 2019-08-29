@@ -38,8 +38,12 @@ int main( int argc, char *argv[] )
     int A = val.GetAlpha();
     std::string profilename = val.ColorProfile()->Name();
     auto dummy = 0;
+    //::ULIS::TConversionContext::ConvertTypeAndLayoutInto< ::ULIS::FBlockRGBA8::TypeId(), ::ULIS::FBlockRGBA8::TypeId() >( ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 ), val );
 
-    ::ULIS::TConversionContext::ConvertTypeAndLayoutInto< ::ULIS::FBlockRGBA8::TypeId(), ::ULIS::FBlockRGBA8::TypeId() >( ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 ), val );
+    ::ULIS::FValueRGBA8 v1;
+    ::ULIS::FValueGf v2;
+    ::ULIS::TConversionContext::Convert( v1, v2 );
+    auto dummyx = 0;
 
     /*
     // Qt Window

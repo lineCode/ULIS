@@ -50,10 +50,53 @@ public:
         using src_info = TBlockInfo< _SHSrc >;
         using dst_info = TBlockInfo< _SHDst >;
         assert( src_info::_nf._cm == dst_info::_nf._cm ); // Color Model
+
+        //TODO: copy optimization in case of same model
+        /*
         if( _SHSrc == _SHDst )
             iDst = iSrc;
         else
-            TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
+        */
+        TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
+    }
+
+    struct FConversionDiagnosis
+    {
+        bool bSameFormat;
+        bool bSameType;
+        bool bSameModel;
+        bool bSameLayout;
+        bool bSameProfile;
+    };
+
+    template< uint32 _SHSrc, uint32 _SHDst >
+    static void Convert( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst )
+    {
+        using src_info = TBlockInfo< _SHSrc >;
+        using dst_info = TBlockInfo< _SHDst >;
+
+        FConversionDiagnosis diag;
+        diag.bSameFormat    = src_info::_nf._sh == dst_info::_nf._sh;
+        diag.bSameType      = src_info::_nf._tp == dst_info::_nf._tp;
+        diag.bSameModel     = src_info::_nf._cm == dst_info::_nf._cm;
+        diag.bSameLayout    = src_info::_nf._lh == dst_info::_nf._lh;
+        diag.bSameProfile   = iSrc.ColorProfile() == iDst.ColorProfile();
+
+        if( diag.bSameFormat && diag.bSameProfile )
+        {
+            //iDst = iSrc;
+            auto dummy = 0;
+            return;
+        }
+
+        constexpr uint32 srcDefaultModel = TDefaultModelFormat< src_info::_nf._cm >();
+        constexpr uint32 dstDefaultModel = TDefaultModelFormat< dst_info::_nf._cm >();
+        TPixelValue< srcDefaultModel > srcFallback;
+        TPixelValue< dstDefaultModel > dstFallback;
+        ConvertTypeAndLayoutInto< _SHSrc, srcDefaultModel >( iSrc, srcFallback );
+        auto dummy2 = 0;
+        //ConvertTypeAndLayoutInto< iSrc, dstDefaultModel >( iSrc, dstFallback );
+        //TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
     }
 };
 
