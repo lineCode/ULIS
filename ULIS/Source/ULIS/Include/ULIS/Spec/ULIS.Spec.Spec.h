@@ -14,6 +14,7 @@
 #include <limits>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Spec/ULIS.Spec.PreprocessorFramework.h"
+#include "lcms2.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -159,6 +160,15 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 /* Public macro for block spec */
 #define ULIS_DECLSPEC( tp, cm, ea, cl, nm ) ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, ULIS_BLOCK_SPEC(   tp, cm, ea, cl, nm ) )
 #define ULIS_GETSPEC( i ) ::ULIS::TBlockInfo< i >::_nf;
+
+/////////////////////////////////////////////////////
+// TDefaultModelFormat
+template< e_cm _CM > constexpr uint32 TDefaultModelFormat() { return  0; }
+#define ULIS_LCMS_DTYPE_GRAYA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))
+#define ULIS_LCMS_DTYPE_RGBA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
+#define ULIS_LCMS_DTYPE_CMYKA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(4))
+#define ULIS_LCMS_DTYPE_LabA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
+#define ULIS_LCMS_DTYPE_XYZA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
 
 } // namespace ULIS
 

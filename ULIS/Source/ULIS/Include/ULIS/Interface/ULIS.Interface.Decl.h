@@ -172,4 +172,14 @@ typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaBGRAnormalized::TypeId() > FV
 typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaARGBnormalized::TypeId() > FValueARGBf;
 typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaABGRnormalized::TypeId() > FValueABGRf;
 
+/////////////////////////////////////////////////////
+// TDefaultModelFormat Specialization
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kG >()     { return  FBlockfloatGhasAlphaGAnormalized::TypeId();       }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kRGB >()   { return  FBlockfloatRGBhasAlphaRGBAnormalized::TypeId();   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kHSL >()   { return  FBlockfloatHSLhasAlphaHSLAnormalized::TypeId();   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kHSV >()   { return  FBlockfloatHSVhasAlphaHSVAnormalized::TypeId();   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kCMYK >()  { return  FBlockfloatCMYKhasAlphaCMYKAnormalized::TypeId(); }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kLab >()   { return  FBlockfloatLabhasAlphaLabAnormalized::TypeId();   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  FBlockfloatXYZhasAlphaXYZAnormalized::TypeId();   }
+
 } // namespace ULIS

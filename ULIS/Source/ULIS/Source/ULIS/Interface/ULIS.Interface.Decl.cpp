@@ -19,5 +19,6 @@ void ULIS_DECL_EXPORT_SYMBOL() { return; }
 ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_OP, void )
 #undef ULIS_REG_OP
 */
+
 } // namespace ULIS
 
