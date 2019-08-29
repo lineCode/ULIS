@@ -43,6 +43,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Create global solution
 project( ULIS CXX )
 
+include (TestBigEndian)
+TEST_BIG_ENDIAN(IS_BIG_ENDIAN)
+if(IS_BIG_ENDIAN)
+    message(STATUS "BIG_ENDIAN")
+else()
+    message(STATUS "LITTLE_ENDIAN")
+endif()
+
 #--------------------------------------------
 # Flags for Compiler / Platforms
 # Flags for CLANG
