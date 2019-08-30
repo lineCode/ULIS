@@ -157,11 +157,7 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 /////////////////////////////////////////////////////
 // TDefaultModelFormat
 template< e_cm _CM > constexpr uint32 TDefaultModelFormat() { return  0; }
-#define ULIS_LCMS_DTYPE_GRAYA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))
-#define ULIS_LCMS_DTYPE_RGBA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
-#define ULIS_LCMS_DTYPE_CMYKA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(4))
-#define ULIS_LCMS_DTYPE_LabA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
-#define ULIS_LCMS_DTYPE_XYZA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
+template< e_cm _CM > constexpr uint32 TCMSConnectionFormat() { return  0; }
 
 } // namespace ULIS
 

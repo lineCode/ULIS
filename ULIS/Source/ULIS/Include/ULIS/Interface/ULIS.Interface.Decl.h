@@ -183,5 +183,21 @@ template<> constexpr uint32 TDefaultModelFormat< e_cm::kHSV >()   { return  FBlo
 template<> constexpr uint32 TDefaultModelFormat< e_cm::kCMYK >()  { return  FBlockfloatCMYKhasAlphaCMYKAnormalized::TypeId(); }
 template<> constexpr uint32 TDefaultModelFormat< e_cm::kLab >()   { return  FBlockfloatLabhasAlphaLabAnormalized::TypeId();   }
 template<> constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  FBlockfloatXYZhasAlphaXYZAnormalized::TypeId();   }
+/////////////////////////////////////////////////////
+// CMS extra formats for connection
+#define ULIS_LCMS_DTYPE_GRAYA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))
+#define ULIS_LCMS_DTYPE_RGBA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
+#define ULIS_LCMS_DTYPE_CMYKA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(4))
+#define ULIS_LCMS_DTYPE_LabA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
+#define ULIS_LCMS_DTYPE_XYZA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
+/////////////////////////////////////////////////////
+// TCMSConnectionFormat Specialization
+template<> constexpr uint32 TCMSConnectionFormat< e_cm::kG >()     { return  ULIS_LCMS_DTYPE_GRAYA_FLT; }
+template<> constexpr uint32 TCMSConnectionFormat< e_cm::kRGB >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
+template<> constexpr uint32 TCMSConnectionFormat< e_cm::kHSL >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
+template<> constexpr uint32 TCMSConnectionFormat< e_cm::kHSV >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
+template<> constexpr uint32 TCMSConnectionFormat< e_cm::kCMYK >()  { return  ULIS_LCMS_DTYPE_CMYKA_FLT; }
+template<> constexpr uint32 TCMSConnectionFormat< e_cm::kLab >()   { return  ULIS_LCMS_DTYPE_LabA_FLT;  }
+template<> constexpr uint32 TCMSConnectionFormat< e_cm::kXYZ >()   { return  ULIS_LCMS_DTYPE_XYZA_FLT;  }
 
 } // namespace ULIS

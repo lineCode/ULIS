@@ -51,13 +51,15 @@ public:
         using dst_info = TBlockInfo< _SHDst >;
         assert( src_info::_nf._cm == dst_info::_nf._cm ); // Color Model
 
-        //TODO: copy optimization in case of same model
-        /*
         if( _SHSrc == _SHDst )
-            iDst = iSrc;
+        {
+            memcpy( iDst.Ptr(), iSrc.Ptr(), src_info::_nf._pd );
+            iDst.AssignColorProfile( iSrc.ColorProfile() );
+        }
         else
-        */
-        TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
+        {
+            TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
+        }
     }
 
     struct FConversionDiagnosis
@@ -84,8 +86,8 @@ public:
 
         if( diag.bSameFormat && diag.bSameProfile )
         {
-            //iDst = iSrc;
-            auto dummy = 0;
+            memcpy( iDst.Ptr(), iSrc.Ptr(), src_info::_nf._pd );
+            iDst.AssignColorProfile( iSrc.ColorProfile() );
             return;
         }
 
@@ -94,7 +96,6 @@ public:
         TPixelValue< srcDefaultModel > srcFallback;
         TPixelValue< dstDefaultModel > dstFallback;
         ConvertTypeAndLayoutInto< _SHSrc, srcDefaultModel >( iSrc, srcFallback );
-        auto dummy2 = 0;
         //ConvertTypeAndLayoutInto< iSrc, dstDefaultModel >( iSrc, dstFallback );
         //TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
     }

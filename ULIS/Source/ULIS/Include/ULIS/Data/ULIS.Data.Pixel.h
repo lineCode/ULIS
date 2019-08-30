@@ -119,13 +119,13 @@ public:
     inline  void  AssignColorProfile( FColorProfile* iProfile )  {
         profile = iProfile;
         if( profile )
-            assert( tSuperClass::profile->ModelSupported( tSpec::_nf._cm ) );
+            assert( profile->ModelSupported( tSpec::_nf._cm ) );
     }
 
     inline  void  AssignColorProfile( const std::string& iProfileTag )  {
         profile = FGlobalProfileRegistry::Get().GetProfile( iProfileTag );
         if( profile )
-            assert( tSuperClass::profile->ModelSupported( tSpec::_nf._cm ) );
+            assert( profile->ModelSupported( tSpec::_nf._cm ) );
     }
 
 protected:
