@@ -155,6 +155,7 @@ ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_OP, void )
 /* easy typedefs for the most common block types defined earlier */
 typedef ::ULIS::FBlockuint8GnoAlphaGtypeLimits FBlockG8;
 typedef ::ULIS::FBlockfloatGnoAlphaGnormalized FBlockGf;
+typedef ::ULIS::FBlockuint32HSLhasAlphaHSLAtypeLimits FBlockHSLA32;
 typedef ::ULIS::FBlockuint8RGBhasAlphaRGBAtypeLimits FBlockRGBA8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaBGRAtypeLimits FBlockBGRA8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaARGBtypeLimits FBlockARGB8;
@@ -163,6 +164,7 @@ typedef ::ULIS::FBlockfloatRGBhasAlphaRGBAnormalized FBlockRGBAfn;
 typedef ::ULIS::FBlockfloatRGBhasAlphaBGRAnormalized FBlockBGRAfn;
 typedef ::ULIS::FBlockfloatRGBhasAlphaARGBnormalized FBlockARGBfn;
 typedef ::ULIS::FBlockfloatRGBhasAlphaABGRnormalized FBlockABGRfn;
+typedef ::ULIS::FBlockfloatLabhasAlphaLabAtypeLimits FBlockLabAfn;
 
 typedef ::ULIS::TPixelValue< FBlockuint8GnoAlphaGtypeLimits::TypeId() > FValueG8;
 typedef ::ULIS::TPixelValue< FBlockfloatGnoAlphaGnormalized::TypeId() > FValueGf;
