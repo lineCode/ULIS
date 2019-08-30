@@ -14,7 +14,6 @@
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
 #include "ULIS/Conv/ULIS.Conv.BlockTypeConverter.h"
-#include "ULIS/Conv/ULIS.Conv.Connection.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Make/ULIS.Make.MakeContext.h"
 
@@ -72,6 +71,46 @@ public:
         bool bSameProfile;
     };
 
+    /////////////////////////////////////////////////////
+    // TForwardConnector
+    template< uint32 _SH, e_cm _CM >
+    struct TForwardConnector
+    {
+        static TPixelValue< TModelConnectionFormat< _CM >() > ConnectionModelFormat( const TPixelValue< _SH >& iValue )
+        {
+            TPixelValue< TModelConnectionFormat< _CM >() > ret;
+            ConvertTypeAndLayoutInto< _SH, TModelConnectionFormat< _CM >() >( iValue, ret );
+            return  ret;
+        }
+    };
+
+    /////////////////////////////////////////////////////
+    // TForwardConnector Specialization
+    template< uint32 _SH >
+    struct TForwardConnector< _SH, e_cm::kHSL >
+    {
+        static TPixelValue< TModelConnectionFormat< e_cm::kHSL >() > ConnectionModelFormat( const TPixelValue< _SH >& iValue )
+        {
+            TPixelValue< TModelConnectionFormat< e_cm::kHSL >() > ret;
+            ret.SetColor( iValue.GetColor() );
+            return  ret;
+        }
+    };
+
+
+    template< uint32 _SH >
+    struct TForwardConnector< _SH, e_cm::kHSV >
+    {
+        static TPixelValue< TModelConnectionFormat< e_cm::kHSV >() > ConnectionModelFormat( const TPixelValue< _SH >& iValue )
+        {
+            TPixelValue< TModelConnectionFormat< e_cm::kHSV >() > ret;
+            ret.SetColor( iValue.GetColor() );
+            return  ret;
+        }
+    };
+
+    /////////////////////////////////////////////////////
+    // General Convert
     template< uint32 _SHSrc, uint32 _SHDst >
     static void Convert( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst )
     {

@@ -156,9 +156,9 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 
 /////////////////////////////////////////////////////
 // TDefaultModelFormat
-template< e_cm _CM > constexpr uint32 TDefaultModelFormat() { return  0; }
-template< e_cm _CM > constexpr uint32 TCMSConnectionType() { return  0; }
-template< e_cm _CM > constexpr uint32 TModelConnectionFormat() { return  0; }
+template< e_cm _CM > inline static constexpr uint32 TDefaultModelFormat() { return  0; }
+template< e_cm _CM > inline static constexpr uint32 TCMSConnectionType() { return  0; }
+template< e_cm _CM > inline static constexpr uint32 TModelConnectionFormat() { return  0; }
 
 } // namespace ULIS
 

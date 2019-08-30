@@ -9,14 +9,13 @@
 * Please refer to LICENSE.md
 */
 
-#include "ULIS/Data/ULIS.Data.Block.h"
-#include "ULIS/Conv/ULIS.Conv.ConversionContext.h"
 #include "ULIS/Interface/ULIS.Interface.Conv.h"
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
+#include "ULIS/Conv/ULIS.Conv.ConversionContext.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FConvContext
+// FConversionContext
 
 
 template< uint32 _SHSrc >
@@ -41,7 +40,7 @@ void  ConvTypeAndLayoutInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlo
 
 //static
 void
-FConvContext::ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat )
+FConversionContext::ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat )
 {
     switch( iBlockSrc->Id() )
     {

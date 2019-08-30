@@ -13,8 +13,8 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
-#include "ULIS/Conv/ULIS.Conv.ConversionContext.h"
 #include <ULIS_CORE>
+#include "ULIS/Conv/ULIS.Conv.ConversionContext.h"
 
 int main( int argc, char *argv[] )
 {
