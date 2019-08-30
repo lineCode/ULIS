@@ -97,6 +97,14 @@ class TPixelBase : public TPixelInfo< _SH >
 
 public:
     // Destructor
+    TPixelBase() {
+        d = nullptr;
+        profile = nullptr;
+#ifndef NDEBUG
+        debug_str = tSpec::_nf._ss;
+#endif // !NDEBUG
+    }
+
     virtual ~TPixelBase() {
         auto dummy = 0;
     }
@@ -132,6 +140,12 @@ protected:
     // Protected Data
     tPixelType* d;
     FColorProfile* profile;
+
+#ifndef NDEBUG
+    //CHECK: for debug only
+    std::string debug_str;
+#endif // !NDEBUG
+
 };
 
 
