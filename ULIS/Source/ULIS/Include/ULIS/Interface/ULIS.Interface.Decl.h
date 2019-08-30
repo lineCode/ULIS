@@ -120,10 +120,12 @@ ULIS_DECLSPEC(uint8,Lab,hasAlpha,LabA,typeLimits)
 ULIS_DECLSPEC(uint16,Lab,hasAlpha,LabA,typeLimits)
 ULIS_DECLSPEC(uint32,Lab,hasAlpha,LabA,typeLimits)
 ULIS_DECLSPEC(float,Lab,hasAlpha,LabA,normalized)
+ULIS_DECLSPEC(float,Lab,hasAlpha,LabA,typeLimits)
 ULIS_DECLSPEC(uint8,XYZ,hasAlpha,XYZA,typeLimits)
 ULIS_DECLSPEC(uint16,XYZ,hasAlpha,XYZA,typeLimits)
 ULIS_DECLSPEC(uint32,XYZ,hasAlpha,XYZA,typeLimits)
 ULIS_DECLSPEC(float,XYZ,hasAlpha,XYZA,normalized)
+ULIS_DECLSPEC(float,XYZ,hasAlpha,XYZA,typeLimits)
 
 /////////////////////////////////////////////////////
 // Reg assign
@@ -137,7 +139,7 @@ ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
 /* temp assign reg size ( workaround ) */
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 /* Reg size macro for usage during preprocessor ( workaround ) */
-#define ULIS_REG_SIZE 57
+#define ULIS_REG_SIZE 59
 
 /////////////////////////////////////////////////////
 // Extern template declarations
@@ -181,8 +183,8 @@ template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kRGB >()   
 template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kHSL >()   { return  FBlockfloatHSLhasAlphaHSLAnormalized::TypeId();   }
 template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kHSV >()   { return  FBlockfloatHSVhasAlphaHSVAnormalized::TypeId();   }
 template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kCMYK >()  { return  FBlockfloatCMYKhasAlphaCMYKAnormalized::TypeId(); }
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kLab >()   { return  FBlockfloatLabhasAlphaLabAnormalized::TypeId();   }
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  FBlockfloatXYZhasAlphaXYZAnormalized::TypeId();   }
+template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kLab >()   { return  FBlockfloatLabhasAlphaLabAtypeLimits::TypeId();   }
+template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  FBlockfloatXYZhasAlphaXYZAtypeLimits::TypeId();   }
 /////////////////////////////////////////////////////
 // CMS extra formats for connection
 #define ULIS_LCMS_DTYPE_GRAYA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))
@@ -206,7 +208,7 @@ template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kRGB >()
 template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kHSL >()   { return  FBlockfloatRGBhasAlphaRGBAnormalized::TypeId();   }
 template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kHSV >()   { return  FBlockfloatRGBhasAlphaRGBAnormalized::TypeId();   }
 template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kCMYK >()  { return  FBlockfloatCMYKhasAlphaCMYKAnormalized::TypeId(); }
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kLab >()   { return  FBlockfloatLabhasAlphaLabAnormalized::TypeId();   }
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kXYZ >()   { return  FBlockfloatXYZhasAlphaXYZAnormalized::TypeId();   }
+template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kLab >()   { return  FBlockfloatLabhasAlphaLabAtypeLimits::TypeId();   }
+template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kXYZ >()   { return  FBlockfloatXYZhasAlphaXYZAtypeLimits::TypeId();   }
 
 } // namespace ULIS

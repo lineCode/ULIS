@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "ULIS/ULIS.Config.h"
 #include "ULIS/Spec/ULIS.Spec.Spec.h"
 #include "ULIS/Data/ULIS.Data.Layout.h"
 #include "ULIS/Maths/ULIS.Maths.Utility.h"
@@ -66,7 +67,6 @@ public:
     inline         tNextPixelType               Range               ()                                              const                       { return  (tNextPixelType)tSpec::_nf._rm;                               }
     inline         int                          Depth               ()                                              const                       { return tSpec::_nf._pd;                                                }
     inline         e_tp                         Type                ()                                              const                       { return tSpec::_nf._tp;                                                }
-    inline         e_cm                         ColorModel          ()                                              const                       { return tSpec::_nf._cm;                                                }
     inline         e_ea                         ExtraAlpha          ()                                              const                       { return tSpec::_nf._ea;                                                }
     inline         bool                         HasAlpha            ()                                              const                       { return ExtraAlpha() == e_ea::khasAlpha;                               }
     inline         const char*                  ChannelLayout       ()                                              const                       { return tSpec::_nf._cl;                                                }
@@ -77,7 +77,8 @@ public:
     inline         int                          NumColorChannels    ()                                              const                       { return tSpec::_nf._nc;                                                }
     static inline  int                          RedirectedIndex     ( int i )                                                                   { return tLayout::red.arr[i];                                           }
 
-    inline static  constexpr uint32       TypeId              ()                                                                          { return  tSpec::_nf._sh;                                               }
+    inline static  constexpr uint32             TypeId              ()                                                                          { return  tSpec::_nf._sh;                                               }
+    inline static  constexpr e_cm               ColorModel          ()                                                                          { return  tSpec::_nf._cm;                                               }
 };
 
 
@@ -100,9 +101,10 @@ public:
     TPixelBase() {
         d = nullptr;
         profile = nullptr;
-#ifndef NDEBUG
-        debug_str = tSpec::_nf._ss;
-#endif // !NDEBUG
+
+#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+    std::string debug_str;
+#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
     virtual ~TPixelBase() {
@@ -141,10 +143,9 @@ protected:
     tPixelType* d;
     FColorProfile* profile;
 
-#ifndef NDEBUG
-    //CHECK: for debug only
+#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     std::string debug_str;
-#endif // !NDEBUG
+#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
 
 };
 

@@ -57,6 +57,5 @@ FConversionContext::ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlo
     }
 }
 
-
 } // namespace ULIS
 
