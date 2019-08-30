@@ -164,6 +164,7 @@ typedef ::ULIS::FBlockfloatRGBhasAlphaABGRnormalized FBlockABGRf;
 
 typedef ::ULIS::TPixelValue< FBlockuint8GnoAlphaGtypeLimits::TypeId() > FValueG8;
 typedef ::ULIS::TPixelValue< FBlockfloatGnoAlphaGnormalized::TypeId() > FValueGf;
+typedef ::ULIS::TPixelValue< FBlockuint32HSLhasAlphaHSLAtypeLimits::TypeId() > FValueHSLA32;
 typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaRGBAtypeLimits::TypeId() > FValueRGBA8;
 typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaBGRAtypeLimits::TypeId() > FValueBGRA8;
 typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaARGBtypeLimits::TypeId() > FValueARGB8;
