@@ -24,7 +24,7 @@ int main( int argc, char *argv[] )
     // ULIS Image Conv
     ::ULIS::IBlock* block8 = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId(), "AdobeRGB_compat" );
     ::ULIS::IBlock* blockH = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockfloatHSLhasAlphaHSLAnormalized::TypeId(), ::ULIS::DefaultProfiles::AdobeRGB_compat );
-    ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAf::TypeId() );
+    ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAfn::TypeId() );
     ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
 
     //::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
@@ -40,9 +40,17 @@ int main( int argc, char *argv[] )
     auto dummy = 0;
     //::ULIS::TConversionContext::ConvertTypeAndLayoutInto< ::ULIS::FBlockRGBA8::TypeId(), ::ULIS::FBlockRGBA8::TypeId() >( ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 ), val );
 
-    ::ULIS::FValueHSLA32 v1;
-    ::ULIS::FValueRGBA8 v2;
+    ::ULIS::FValueRGBA8 v1;
+    v1.SetR( 255 );
+    v1.SetG( 0 );
+    v1.SetB( 0 );
+    v1.SetAlpha( 255 );
+    ::ULIS::FValueLabAfn v2;
     ::ULIS::TConversionContext::Convert( v1, v2 );
+    float lL = v2.L();
+    float la = v2.a();
+    float lb = v2.b();
+    float lA = v2.GetAlpha();
     auto dummyx = 0;
 
     /*

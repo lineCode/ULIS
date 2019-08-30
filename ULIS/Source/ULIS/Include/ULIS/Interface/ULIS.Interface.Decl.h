@@ -159,10 +159,10 @@ typedef ::ULIS::FBlockuint8RGBhasAlphaRGBAtypeLimits FBlockRGBA8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaBGRAtypeLimits FBlockBGRA8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaARGBtypeLimits FBlockARGB8;
 typedef ::ULIS::FBlockuint8RGBhasAlphaABGRtypeLimits FBlockABGR8;
-typedef ::ULIS::FBlockfloatRGBhasAlphaRGBAnormalized FBlockRGBAf;
-typedef ::ULIS::FBlockfloatRGBhasAlphaBGRAnormalized FBlockBGRAf;
-typedef ::ULIS::FBlockfloatRGBhasAlphaARGBnormalized FBlockARGBf;
-typedef ::ULIS::FBlockfloatRGBhasAlphaABGRnormalized FBlockABGRf;
+typedef ::ULIS::FBlockfloatRGBhasAlphaRGBAnormalized FBlockRGBAfn;
+typedef ::ULIS::FBlockfloatRGBhasAlphaBGRAnormalized FBlockBGRAfn;
+typedef ::ULIS::FBlockfloatRGBhasAlphaARGBnormalized FBlockARGBfn;
+typedef ::ULIS::FBlockfloatRGBhasAlphaABGRnormalized FBlockABGRfn;
 
 typedef ::ULIS::TPixelValue< FBlockuint8GnoAlphaGtypeLimits::TypeId() > FValueG8;
 typedef ::ULIS::TPixelValue< FBlockfloatGnoAlphaGnormalized::TypeId() > FValueGf;
@@ -171,10 +171,11 @@ typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaRGBAtypeLimits::TypeId() > FV
 typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaBGRAtypeLimits::TypeId() > FValueBGRA8;
 typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaARGBtypeLimits::TypeId() > FValueARGB8;
 typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaABGRtypeLimits::TypeId() > FValueABGR8;
-typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaRGBAnormalized::TypeId() > FValueRGBAf;
-typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaBGRAnormalized::TypeId() > FValueBGRAf;
-typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaARGBnormalized::TypeId() > FValueARGBf;
-typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaABGRnormalized::TypeId() > FValueABGRf;
+typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaRGBAnormalized::TypeId() > FValueRGBAfn;
+typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaBGRAnormalized::TypeId() > FValueBGRAfn;
+typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaARGBnormalized::TypeId() > FValueARGBfn;
+typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaABGRnormalized::TypeId() > FValueABGRfn;
+typedef ::ULIS::TPixelValue< FBlockfloatLabhasAlphaLabAtypeLimits::TypeId() > FValueLabAfn;
 
 /////////////////////////////////////////////////////
 // TDefaultModelFormat Specialization
