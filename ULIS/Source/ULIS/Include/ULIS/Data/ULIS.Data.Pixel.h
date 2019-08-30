@@ -376,6 +376,14 @@ public:
         tSuperClass::profile = iProxy.ColorProfile();
     }
 
+    // From Base
+    TPixelValue( const TPixelBase< _SH >& iBase )
+    {
+        tSuperClass::d = new tPixelType[ tSpec::_nf._pd ];
+        memcpy( tSuperClass::d, iBase.Ptr(), tSpec::_nf._pd );
+        tSuperClass::profile = iBase.ColorProfile();
+    }
+
     virtual ~TPixelValue() {
         delete  tSuperClass::d;
         tSuperClass::profile = nullptr;

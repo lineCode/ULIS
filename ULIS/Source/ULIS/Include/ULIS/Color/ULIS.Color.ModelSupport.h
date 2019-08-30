@@ -170,7 +170,7 @@ static e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
 }
 
 
-static e_cm ColorModelCompatFallback( e_cm iModel )
+static constexpr e_cm ColorModelCompatFallback( e_cm iModel )
 {
     switch( iModel )
     {

@@ -14,6 +14,7 @@
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
 #include "ULIS/Conv/ULIS.Conv.BlockTypeConverter.h"
+#include "ULIS/Conv/ULIS.Conv.Connection.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Make/ULIS.Make.MakeContext.h"
 
@@ -91,11 +92,14 @@ public:
             return;
         }
 
+        // ALSH8 -> HSLAf -> RGBAf
         constexpr uint32 srcDefaultModel = TDefaultModelFormat< src_info::_nf._cm >();
-        constexpr uint32 dstDefaultModel = TDefaultModelFormat< dst_info::_nf._cm >();
         TPixelValue< srcDefaultModel > srcFallback;
-        TPixelValue< dstDefaultModel > dstFallback;
         ConvertTypeAndLayoutInto< _SHSrc, srcDefaultModel >( iSrc, srcFallback );
+        auto bb = TForwardConnector< _SHSrc, src_info::_nf._cm >::ConnectionModelFormat( iSrc );
+
+        constexpr uint32 dstDefaultModel = TDefaultModelFormat< dst_info::_nf._cm >();
+        TPixelValue< dstDefaultModel > dstFallback;
         //ConvertTypeAndLayoutInto< iSrc, dstDefaultModel >( iSrc, dstFallback );
         //TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
     }
