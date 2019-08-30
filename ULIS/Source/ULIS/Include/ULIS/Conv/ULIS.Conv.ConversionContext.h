@@ -111,9 +111,41 @@ public:
     };
 
     /////////////////////////////////////////////////////
+    // TBackwardConnector
+    template< uint32 _SHR, uint32 _SHCO, e_cm _CM >
+    struct TDropConnector
+    {
+        static void Apply( TPixelValue< _SHR >& iDst, const TPixelValue< _SHCO >& iConnector )
+        {
+            ConvertTypeAndLayoutInto< _SHCO, _SHR >( iConnector, iDst );
+        }
+    };
+
+    /////////////////////////////////////////////////////
+    // TForwardConnector Specialization
+    template< uint32 _SHR, uint32 _SHCO >
+    struct TDropConnector< _SHR, _SHCO, e_cm::kHSL >
+    {
+        static void Apply( TPixelValue< _SHR >& iDst, const TPixelValue< _SHCO >& iConnector )
+        {
+            iDst.SetColor( iConnector.GetColor() );
+        }
+    };
+
+
+    template< uint32 _SHR, uint32 _SHCO >
+    struct TDropConnector< _SHR, _SHCO, e_cm::kHSV >
+    {
+        static void Apply( TPixelValue< _SHR >& iDst, const TPixelValue< _SHCO >& iConnector )
+        {
+            iDst.SetColor( iConnector.GetColor() );
+        }
+    };
+
+    /////////////////////////////////////////////////////
     // General Convert
     template< uint32 _SHSrc, uint32 _SHDst >
-    static void Convert( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst )
+    static void Convert( const TPixelValue< _SHSrc >& iSrc, TPixelValue< _SHDst >& iDst )
     {
         using src_info = TBlockInfo< _SHSrc >;
         using dst_info = TBlockInfo< _SHDst >;
@@ -135,7 +167,7 @@ public:
         using tSrcConnectionType = TPixelValue< TModelConnectionFormat< src_info::_nf._cm >() >;
         using tDstConnectionType = TPixelValue< TModelConnectionFormat< dst_info::_nf._cm >() >;
         tSrcConnectionType srcConnectionValue = TForwardConnector< _SHSrc, src_info::_nf._cm >::ConnectionModelFormat( iSrc );
-        tDstConnectionType dstConnectionValue = TForwardConnector< _SHSrc, src_info::_nf._cm >::ConnectionModelFormat( iSrc );
+        tDstConnectionType dstConnectionValue = TForwardConnector< _SHDst, dst_info::_nf._cm >::ConnectionModelFormat( iDst );
 
         FColorProfile* src_profile = iSrc.ColorProfile();
         FColorProfile* dst_profile = iDst.ColorProfile();
@@ -159,9 +191,10 @@ public:
                                        , TCMSConnectionType< tDstConnectionType::ColorModel() >()
                                        , INTENT_PERCEPTUAL, 0 );
 
-        //cmsDoTransform( hTransform, &XYZ, block->PixelPtr( x, y ), 1 );
-        //ConvertTypeAndLayoutInto< iSrc, dstDefaultModel >( iSrc, dstFallback );
-        //TPixelTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Apply( iSrc, iDst );
+
+        cmsDoTransform( hTransform, srcConnectionValue.Ptr(), dstConnectionValue.Ptr(), 1 );
+
+        TDropConnector< _SHDst, TModelConnectionFormat< dst_info::_nf._cm >(), dst_info::_nf._cm >::Apply( iDst, dstConnectionValue );
     }
 };
 

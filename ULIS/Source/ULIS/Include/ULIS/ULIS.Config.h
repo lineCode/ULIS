@@ -17,5 +17,5 @@
 #endif // !NDEBUG
 
 #ifdef ULIS_DEBUG
-    //#define ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+    #define ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
 #endif // ULIS_DEBUG

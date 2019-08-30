@@ -103,7 +103,7 @@ public:
         profile = nullptr;
 
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
-    std::string debug_str;
+        debug_str = tSpec::_nf._ss;
 #endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 

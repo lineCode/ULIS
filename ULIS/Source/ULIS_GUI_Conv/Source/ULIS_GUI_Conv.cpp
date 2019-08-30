@@ -27,9 +27,9 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAf::TypeId() );
     ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
 
-    ::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
-    ::ULIS::FClearFillContext::Clear( blockf );
-    ::ULIS::FClearFillContext::Fill( blockg, ::ULIS::CColor::FromGreyF( 0.5f ) );
+    //::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
+    //::ULIS::FClearFillContext::Clear( blockf );
+    //::ULIS::FClearFillContext::Fill( blockg, ::ULIS::CColor::FromGreyF( 0.5f ) );
 
     ::ULIS::FValueRGBA8 val = ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 );
     int R = val.R();
