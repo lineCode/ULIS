@@ -15,6 +15,7 @@
 #include <QLabel>
 #include <ULIS_CORE>
 #include <ULIS/Color/ULIS.Color.ColorMatching.h>
+#include "ULIS/Conv/ULIS.Conv.ConversionContext.h"
 
 int main( int argc, char *argv[] )
 {
@@ -60,6 +61,31 @@ int main( int argc, char *argv[] )
     }
 
     cmsDeleteTransform( hTransform );
+
+    cmsHPROFILE hXYZProfile  = ::ULIS::FGlobalProfileRegistry::Get().GetDefaultProfileForModel( ::ULIS::e_cm::kXYZ )->ProfileHandle();
+    cmsHPROFILE hCMYKProfile  = ::ULIS::FGlobalProfileRegistry::Get().GetDefaultProfileForModel( ::ULIS::e_cm::kCMYK )->ProfileHandle();
+    cmsHPROFILE hsRGBProfile = ::ULIS::FGlobalProfileRegistry::Get().GetDefaultProfileForModel( ::ULIS::e_cm::kRGB )->ProfileHandle();
+    cmsHPROFILE hLabProfile = ::ULIS::FGlobalProfileRegistry::Get().GetDefaultProfileForModel( ::ULIS::e_cm::kLab )->ProfileHandle();
+    float cmyk_buf[5] = { 0, 0, 0, 0, 0 };
+    float rgb_buf[4] = { 0, 1, 1, 1 };
+    float lab_buf[4] = { 0, 0, 0, 0 };
+    //cmsHTRANSFORM trans = cmsCreateTransform( hCMYKProfile, ULIS_LCMS_DTYPE_CMYKA_FLT, hsRGBProfile, ULIS_LCMS_DTYPE_RGBA_FLT, INTENT_PERCEPTUAL, 0 );
+    //cmsHTRANSFORM trans = cmsCreateTransform( hsRGBProfile, ULIS_LCMS_DTYPE_RGBA_FLT, hCMYKProfile, ULIS_LCMS_DTYPE_CMYKA_FLT, INTENT_PERCEPTUAL, 0 );
+    cmsHTRANSFORM trans = cmsCreateTransform( hsRGBProfile, ULIS_LCMS_DTYPE_RGBA_FLT, hLabProfile, TYPE_LabA_FLT, INTENT_PERCEPTUAL, 0 );
+    cmsDoTransform( trans, rgb_buf, lab_buf, 1 );
+
+    ::ULIS::TPixelValue< ::ULIS::_SpecHash_floatCMYKhasAlphaCMYKAnormalized > cmyk;
+    cmyk.SetCyan( 1.0 );
+    cmyk.SetMagenta( 0.0 );
+    cmyk.SetYellow( 0.0 );
+    cmyk.SetKey( 0.0 );
+    ::ULIS::FValueBGRA8 rgb;
+    ::ULIS::TConversionContext::Convert( cmyk, rgb );
+    auto _r = rgb.R();
+    auto _g = rgb.G();
+    auto _b = rgb.B();
+    auto _a = rgb.GetAlpha();
+    auto breakpoint_dummy = 0;
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

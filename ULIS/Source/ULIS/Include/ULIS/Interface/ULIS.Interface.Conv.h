@@ -24,9 +24,6 @@ class FConversionContext
 {
 public:
     static void ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() );
-
-    template< uint32 _SHSrc, uint32 _SHDst >
-    static void Convert( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst );
 };
 
 } // namespace ULIS
