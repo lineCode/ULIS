@@ -16,7 +16,7 @@
 namespace ULIS {
 /////////////////////////////////////////////////////
 // Global Color Palettes
-namespace ePaletteMSWindows {
+namespace PaletteMSWindows {
 /////////////////////////////////////////////////////
 // eMSWindows
 static const CColor white       ( 255, 255, 255 );
@@ -36,10 +36,10 @@ static const CColor darkYellow  ( 128, 128, 0   );
 static const CColor gray        ( 160, 160, 164 );
 static const CColor darkGray    ( 128, 128, 128 );
 static const CColor lightGray   ( 192, 192, 192 );
-} // namespace ePaletteMSWindows
-namespace ePaletteMSPaintDebug {
+} // namespace PaletteMSWindows
+namespace PaletteMSPaintDebug {
 /////////////////////////////////////////////////////
-// ePaletteMSPaintDebug 
+// PaletteMSPaintDebug 
 static const CColor colors[] = {
     CColor( 237,  28,  36 ),
     CColor( 255, 127,  39 ),
@@ -57,6 +57,6 @@ static const CColor colors[] = {
     CColor( 200, 191, 231 ),
 }; // colors[]
 static constexpr int length = sizeof( colors ) / sizeof( CColor );
-} // namespace ePaletteMSPaintDebug
+} // namespace PaletteMSPaintDebug
 } // namespace ULIS
 

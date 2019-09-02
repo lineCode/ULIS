@@ -35,7 +35,7 @@ enum class eCColorModel : int
 
 /////////////////////////////////////////////////////
 // Model Correspondance
-static e_cm  ColorModelFromCColorModel( eCColorModel iValue )
+static inline e_cm  ColorModelFromCColorModel( eCColorModel iValue )
 {
     switch( iValue )
     {
@@ -49,7 +49,7 @@ static e_cm  ColorModelFromCColorModel( eCColorModel iValue )
 }
 
 
-static eCColorModel  CColorModelFromColorModel( e_cm iValue )
+static inline eCColorModel  CColorModelFromColorModel( e_cm iValue )
 {
     switch( iValue )
     {
@@ -118,7 +118,7 @@ static eCColorModel  CColorModelFromColorModel( e_cm iValue )
     case i6: return  true;                                                      \
     default: return  false;
 
-static e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
+static inline e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
 {
     e_cm default_cm = e_cm::kRGB;
     switch( iValue )
@@ -170,7 +170,7 @@ static e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
 }
 
 
-static constexpr e_cm ColorModelCompatFallback( e_cm iModel )
+static inline constexpr e_cm ColorModelCompatFallback( e_cm iModel )
 {
     switch( iModel )
     {

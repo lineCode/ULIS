@@ -24,11 +24,11 @@ void  ConvTypeAndLayoutInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlo
     switch( iBlockDst->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
-            case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
+            case ULIS_REG[ n ]:                                                                                           \
             {                                                                                                                           \
-                TConversionContext::ConvertTypeAndLayoutInto< _SHSrc, ::ULIS::ulis_types_reg[ n ] >(                                    \
+                TConversionContext::ConvertTypeAndLayoutInto< _SHSrc, ULIS_REG[ n ] >(                                    \
                                                                  iBlockSrc,                                                             \
-                                                                 (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockDst,             \
+                                                                 (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockDst,             \
                                                                  iPerfStrat );                                                          \
                 break;                                                                                                                  \
             }
@@ -45,9 +45,9 @@ FConversionContext::ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlo
     switch( iBlockSrc->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
-            case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
+            case ULIS_REG[ n ]:                                                                                           \
             {                                                                                                                           \
-                ConvTypeAndLayoutInto_Imp< ::ULIS::ulis_types_reg[ n ] >( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockSrc,    \
+                ConvTypeAndLayoutInto_Imp< ULIS_REG[ n ] >( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockSrc,    \
                                                                           iBlockDst,                                                    \
                                                                           iPerfStrat );                                                 \
                 break;                                                                                                                  \

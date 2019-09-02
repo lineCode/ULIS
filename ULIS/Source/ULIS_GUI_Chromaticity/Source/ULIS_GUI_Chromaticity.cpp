@@ -20,16 +20,13 @@
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
-
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( 512, 512, ::ULIS::FBlockRGBA8::TypeId() );
     ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 20, 20, 20 ) );
-
     cmsHPROFILE hInProfile;
     cmsHPROFILE hOutProfile;
     cmsHTRANSFORM hTransform;
     hInProfile  = cmsCreateXYZProfile();
     hOutProfile = cmsCreate_sRGBProfile();
-
     hTransform = cmsCreateTransform( hInProfile
                                    , TYPE_XYZ_DBL
                                    , hOutProfile
@@ -41,7 +38,7 @@ int main( int argc, char *argv[] )
     for( int i = 60; i < 280; ++i ) // 1nanometer step 830 - 360 = 470
     {
         // CIE1931 chromaticity diagram
-        cmsCIEXYZ XYZ = ::ULIS::CMF_XYZ_CIE_2_1931_1nm[i];
+        cmsCIEXYZ XYZ = ::ULIS::Chroma::CMF_XYZ_CIE_2_1931_1nm[i];
         cmsCIExyY xyY;
         cmsXYZ2xyY( &xyY, &XYZ );
         int x = xyY.x * block->Width();
@@ -50,7 +47,7 @@ int main( int argc, char *argv[] )
 
         // Uniform chromaticity scale
         /*
-        cmsCIEXYZ XYZ = ::ULIS::CMF_XYZ_CIE_2_1931_1nm[i];
+        cmsCIEXYZ XYZ = ::ULIS::Chroma::CMF_XYZ_CIE_2_1931_1nm[i];
         double sum = ( XYZ.X + 15 * XYZ.Y + 3 * XYZ.Z );
         double u = ( 4 * XYZ.X ) / sum;
         double v = ( 9 * XYZ.Y ) / sum;
@@ -59,7 +56,7 @@ int main( int argc, char *argv[] )
         cmsDoTransform( hTransform, &XYZ, block->PixelPtr( x, y ), 1 );
         */
     }
-
+    
     cmsDeleteTransform( hTransform );
 
     cmsHPROFILE hXYZProfile  = ::ULIS::FGlobalProfileRegistry::Get().GetDefaultProfileForModel( ::ULIS::e_cm::kXYZ )->ProfileHandle();
@@ -73,8 +70,7 @@ int main( int argc, char *argv[] )
     //cmsHTRANSFORM trans = cmsCreateTransform( hsRGBProfile, ULIS_LCMS_DTYPE_RGBA_FLT, hCMYKProfile, ULIS_LCMS_DTYPE_CMYKA_FLT, INTENT_PERCEPTUAL, 0 );
     cmsHTRANSFORM trans = cmsCreateTransform( hsRGBProfile, ULIS_LCMS_DTYPE_RGBA_FLT, hLabProfile, TYPE_LabA_FLT, INTENT_PERCEPTUAL, 0 );
     cmsDoTransform( trans, rgb_buf, lab_buf, 1 );
-
-    ::ULIS::TPixelValue< ::ULIS::_SpecHash_floatCMYKhasAlphaCMYKAnormalized > cmyk;
+    ::ULIS::TPixelValue< ::ULIS::Format::Format_floatCMYKhasAlphaCMYKAnormalized > cmyk;
     cmyk.SetCyan( 1.0 );
     cmyk.SetMagenta( 0.0 );
     cmyk.SetYellow( 0.0 );

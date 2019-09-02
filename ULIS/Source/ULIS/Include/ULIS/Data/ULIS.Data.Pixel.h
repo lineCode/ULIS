@@ -104,11 +104,10 @@ public:
 
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
-#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
     virtual ~TPixelBase() {
-        auto dummy = 0;
     }
 
 public:
@@ -145,7 +144,7 @@ protected:
 
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     std::string debug_str;
-#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
 
 };
 

@@ -15,11 +15,16 @@
 #include "ULIS/Spec/ULIS.Spec.Spec.h"
 
 namespace ULIS {
-
-::ULIS::FSpec BlockInfo( uint32_t i );
-::ULIS::FSpec BlockSpec( uint32_t i );
-void PrintSpecs();
-void PrintShortSpecs();
+/////////////////////////////////////////////////////
+// FSpecContext
+class FSpecContext
+{
+public:
+    static ::ULIS::FSpec BlockInfo( uint32_t i );
+    static ::ULIS::FSpec BlockSpec( uint32_t i );
+    static void PrintSpecs();
+    static void PrintShortSpecs();
+};
 
 } // namespace ULIS
 

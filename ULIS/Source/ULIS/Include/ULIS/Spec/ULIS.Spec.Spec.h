@@ -139,16 +139,22 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 /////////////////////////////////////////////////////
 // TBlockInfo Specialization
 /* build a specialization of TBlockInfo from token and compute string and hash equivalents */
-#define ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, spec )                                               \
-    coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                            \
-    constexpr uint32_t  ULIS_SPEC_SH( spec ) = ULIS_SPEC_SS( spec ).hash();                         \
-    template<> struct TBlockInfo< ULIS_SPEC_SH( spec ) > {                                          \
-        ULIS_PREDECL_NF static constexpr FSpec _nf = ULIS_PARSE_FSPEC( ULIS_SPEC_SS( spec )         \
-                                                                           , ULIS_SPEC_SH( spec )   \
-                                                                           , tp, cm, ea, cl, nm )   \
-    };                                                                                              \
-    typedef TBlock< ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                            \
-    ULIS_APPEND_REG( ULIS_REG_BUILDER, ULIS_SPEC_SH( spec ) )
+#define ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, spec )                                                   \
+    namespace rubbish {                                                                                 \
+    coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                                \
+    } /* namespace rubbish */                                                                           \
+    namespace Format {                                                                                  \
+    constexpr uint32_t  ULIS_SPEC_SH( spec ) = ::ULIS::rubbish:: ULIS_SPEC_SS( spec ).hash();           \
+    } /* namespace Format */                                                                            \
+    template<> struct TBlockInfo< Format:: ULIS_SPEC_SH( spec ) > {                                     \
+        ULIS_PREDECL_NF static constexpr FSpec _nf = ULIS_PARSE_FSPEC( rubbish:: ULIS_SPEC_SS( spec )   \
+                                                                     , Format:: ULIS_SPEC_SH( spec )    \
+                                                                     , tp, cm, ea, cl, nm )             \
+    };                                                                                                  \
+    namespace Format {                                                                                  \
+    typedef TBlock< Format:: ULIS_SPEC_SH( spec ) > BOOST_PP_CAT( FBlock, spec );                       \
+    } /* namespace eFormats */                                                                          \
+    ULIS_APPEND_REG( ULIS_REG_BUILDER, Format:: ULIS_SPEC_SH( spec ) )
 
 /* Public macro for block spec */
 #define ULIS_DECLSPEC( tp, cm, ea, cl, nm ) ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, ULIS_BLOCK_SPEC(   tp, cm, ea, cl, nm ) )
@@ -156,9 +162,9 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 
 /////////////////////////////////////////////////////
 // TDefaultModelFormat
-template< e_cm _CM > inline static constexpr uint32 TDefaultModelFormat() { return  0; }
-template< e_cm _CM > inline static constexpr uint32 TCMSConnectionType() { return  0; }
-template< e_cm _CM > inline static constexpr uint32 TModelConnectionFormat() { return  0; }
+template< e_cm _CM > constexpr uint32 TDefaultModelFormat() { return  0; }
+template< e_cm _CM > constexpr uint32 TCMSConnectionType() { return  0; }
+template< e_cm _CM > constexpr uint32 TModelConnectionFormat() { return  0; }
 
 } // namespace ULIS
 

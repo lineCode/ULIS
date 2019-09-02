@@ -16,6 +16,7 @@
 #include "lcms2.h"
 
 namespace ULIS {
+namespace Chroma {
 /////////////////////////////////////////////////////
 // Precomputed Chromaticity coordinates pairs
 // Chromaticity coordinates CIE1931 2°, whitepoint
@@ -107,7 +108,7 @@ static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1964_10_F12(    
 /////////////////////////////////////////////////////
 // Standard Illuminant Chromaticity Pairs & Tristimulus Values conversion, xyY <=> XYZ
 // This is equivalent to xyY -> XYZ
-static glm::vec3 standardIlluminantTristimulusFromChromaticity( const glm::vec2& iVec )
+static inline glm::vec3 standardIlluminantTristimulusFromChromaticity( const glm::vec2& iVec )
 {
     float tempY = 1.f / iVec.y;
     float X = tempY * iVec.x;
@@ -117,7 +118,7 @@ static glm::vec3 standardIlluminantTristimulusFromChromaticity( const glm::vec2&
 
 
 // This is equivalent to XYZ -> xyY
-static glm::vec2 standardIlluminantChromaticityFromTristimulus( const glm::vec3& iVec )
+static inline glm::vec2 standardIlluminantChromaticityFromTristimulus( const glm::vec3& iVec )
 {
     float tempSum = iVec.x + iVec.y + iVec.z;
     float x = iVec.x / tempSum;
@@ -139,6 +140,6 @@ static const glm::mat3x3 chromaticAdaptaion_bradfordInverseTransformationMatrix(
 // LCMS API xyY whitepoints
 static const cmsCIExyY whitepoint_D50 = { standardIlluminant_chromaticityCoordinates_CIE_1931_2_D50.x, standardIlluminant_chromaticityCoordinates_CIE_1931_2_D50.y, 1.f };
 static const cmsCIExyY whitepoint_D65 = { standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.x, standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.y, 1.f };
-
+} // namespace Chroma
 } // namespace ULIS
 

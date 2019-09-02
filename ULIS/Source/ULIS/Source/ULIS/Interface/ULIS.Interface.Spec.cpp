@@ -11,15 +11,17 @@
 
 #include <iostream>
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
+#include "ULIS/Interface/ULIS.Interface.Spec.h"
 
 namespace ULIS {
-
+/////////////////////////////////////////////////////
+// FSpecContext
 ::ULIS::FSpec
-BlockInfo( uint32_t i )
+FSpecContext::BlockInfo( uint32_t i )
 {
     switch( i )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case n: return  ::ULIS::TBlockInfo< ::ULIS::ulis_types_reg[ n ] >:: data;
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case n: return  ::ULIS::TBlockInfo< ULIS_REG[ n ] >:: data;
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, _nf )
         #undef ULIS_REG_SWITCH_OP
         default: return  ::ULIS::FSpec{};
@@ -27,11 +29,11 @@ BlockInfo( uint32_t i )
 }
 
 ::ULIS::FSpec
-BlockSpec( uint32_t i )
+FSpecContext::BlockSpec( uint32_t i )
 {
     switch( i )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  ::ULIS::TBlockInfo< ::ULIS::ulis_types_reg[ n ] >:: data;
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  ::ULIS::TBlockInfo< ULIS_REG[ n ] >:: data;
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, _nf )
         #undef ULIS_REG_SWITCH_OP
         default: return  ::ULIS::FSpec{};
@@ -39,7 +41,7 @@ BlockSpec( uint32_t i )
 }
 
 void
-PrintSpecs()
+FSpecContext::PrintSpecs()
 {
     for( int i = 0; i < ULIS_REG_SIZE; ++i )
     {
@@ -63,7 +65,7 @@ PrintSpecs()
 
 
 void
-PrintShortSpecs()
+FSpecContext::PrintShortSpecs()
 {
     for( int i = 0; i < ULIS_REG_SIZE; ++i )
     {

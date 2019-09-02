@@ -37,10 +37,10 @@ struct TRegistry
 // Utilities for registry manipulations
 #define ULIS_PREVIOUS( i )                      BOOST_PP_SUB( i, 1 )
 #define ULIS_CAT( a, b )                        BOOST_PP_CAT( a, b )
-#define ULIS_CREATE_REG( irname, i )            constexpr ::ULIS::TRegistry< 1 > ULIS_CAT( irname,  __COUNTER__ ) = { i };
-#define ULIS_APPEND_REG_IMPL( irname, i, c )    constexpr auto ULIS_CAT( irname,  c ) = ULIS_CAT( irname, ULIS_PREVIOUS( c ) ).push_back( i );
+#define ULIS_CREATE_REG( irname, i )            namespace rubbish { constexpr ::ULIS::TRegistry< 1 > ULIS_CAT( irname,  __COUNTER__ ) = { i }; }
+#define ULIS_APPEND_REG_IMPL( irname, i, c )    namespace rubbish { constexpr auto ULIS_CAT( irname,  c ) = ULIS_CAT( irname, ULIS_PREVIOUS( c ) ).push_back( i ); }
 #define ULIS_APPEND_REG( irname, i )            ULIS_APPEND_REG_IMPL( irname, i, __COUNTER__ )
-#define ULIS_ASSIGN_REG( irname )               ULIS_CAT( irname, ULIS_PREVIOUS( __COUNTER__ ) )
+#define ULIS_ASSIGN_REG( irname )               rubbish:: ULIS_CAT( irname, ULIS_PREVIOUS( __COUNTER__ ) )
 #define ULIS_REG_TYPE                           constexpr auto
 #define ULIS_REPEAT                             BOOST_PP_REPEAT
 

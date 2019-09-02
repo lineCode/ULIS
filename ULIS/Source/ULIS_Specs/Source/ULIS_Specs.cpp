@@ -12,7 +12,7 @@
 
 int main()
 {
-    ::ULIS::PrintShortSpecs();
+    ::ULIS::FSpecContext::PrintShortSpecs();
     return 0;
 }
 

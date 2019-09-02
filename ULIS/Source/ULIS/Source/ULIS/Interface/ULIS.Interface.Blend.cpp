@@ -25,10 +25,10 @@ FBlendingContext::Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iM
     switch( iBlockTop->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
-            case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
+            case ULIS_REG[ n ]:                                                                                           \
             {                                                                                                                           \
-                TBlendingContext< ::ULIS::ulis_types_reg[ n ] >::Blend( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockTop,      \
-                                                                        (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockBack,     \
+                TBlendingContext< ULIS_REG[ n ] >::Blend( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockTop,      \
+                                                                        (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockBack,     \
                                                                         iMode, iOpacity, ix, iy, iPerfStrat, callInvalidCB );           \
                 break;                                                                                                                  \
             }
@@ -47,10 +47,10 @@ FBlendingContext::Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iM
     switch( iBlockTop->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
-            case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
+            case ULIS_REG[ n ]:                                                                                           \
             {                                                                                                                           \
-                TBlendingContext< ::ULIS::ulis_types_reg[ n ] >::Blend( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockTop,      \
-                                                                        (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlockBack,     \
+                TBlendingContext< ULIS_REG[ n ] >::Blend( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockTop,      \
+                                                                        (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockBack,     \
                                                                         iMode, iArea, iOpacity, iPerfStrat, callInvalidCB );            \
                 break;                                                                                                                  \
             }

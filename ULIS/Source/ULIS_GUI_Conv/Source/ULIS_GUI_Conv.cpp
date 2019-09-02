@@ -23,7 +23,7 @@ int main( int argc, char *argv[] )
 
     // ULIS Image Conv
     ::ULIS::IBlock* block8 = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId(), "AdobeRGB_compat" );
-    ::ULIS::IBlock* blockH = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockfloatHSLhasAlphaHSLAnormalized::TypeId(), ::ULIS::DefaultProfiles::AdobeRGB_compat );
+    ::ULIS::IBlock* blockH = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::Format::FBlockfloatHSLhasAlphaHSLAnormalized::TypeId(), ::ULIS::DefaultProfiles::AdobeRGB_compat );
     ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAfn::TypeId() );
     ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
 

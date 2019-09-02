@@ -23,7 +23,7 @@ FMakeContext::MakeBlock( int width, int height, uint32_t ID, const std::string& 
 {
     switch( ID )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  new ::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >( width, height, iProfileTag );
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  new ::ULIS::TBlock< ULIS_REG[ n ] >( width, height, iProfileTag );
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
         default: return  nullptr;
@@ -36,7 +36,7 @@ FMakeContext::MakeBlockFromExternalData( int width, int height, uint8* iData, ui
 {
     switch( ID )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ::ULIS::ulis_types_reg[ n ]: return  new ::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >( width, height, iData, iProfileTag );
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  new ::ULIS::TBlock< ULIS_REG[ n ] >( width, height, iData, iProfileTag );
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
         default: return  nullptr;
@@ -91,11 +91,11 @@ FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, con
     switch( iSrc->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                    \
-            case ::ULIS::ulis_types_reg[ n ]:                                                       \
+            case ULIS_REG[ n ]:                                                       \
             {                                                                                       \
-                        ::ULIS::TMakeContext< ::ULIS::ulis_types_reg[ n ] >                         \
-                        ::CopyBlockRectInto( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iSrc   \
-                                           , (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iDst   \
+                        ::ULIS::TMakeContext< ULIS_REG[ n ] >                         \
+                        ::CopyBlockRectInto( (::ULIS::TBlock< ULIS_REG[ n ] >*)iSrc   \
+                                           , (::ULIS::TBlock< ULIS_REG[ n ] >*)iDst   \
                                            , iRect, iPerfStrat );                                   \
                         break;                                                                      \
             }

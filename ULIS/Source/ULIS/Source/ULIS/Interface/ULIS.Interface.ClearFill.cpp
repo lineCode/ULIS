@@ -23,9 +23,9 @@ FClearFillContext::Fill( IBlock* iBlock, const CColor& iColor, const FPerfStrat&
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
-            case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
+            case ULIS_REG[ n ]:                                                                                           \
             {                                                                                                                           \
-                TClearFillContext< ::ULIS::ulis_types_reg[ n ] >::Fill( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock          \
+                TClearFillContext< ULIS_REG[ n ] >::Fill( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock          \
                                                                       , iColor, iPerfStrat, callInvalidCB );                            \
                 break;                                                                                                                  \
             }
@@ -42,9 +42,9 @@ FClearFillContext::FillRect( IBlock* iBlock, const CColor& iColor, const FRect& 
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
-            case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
+            case ULIS_REG[ n ]:                                                                                           \
             {                                                                                                                           \
-                TClearFillContext< ::ULIS::ulis_types_reg[ n ] >::FillRect( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock      \
+                TClearFillContext< ULIS_REG[ n ] >::FillRect( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock      \
                                                                           , iColor, iRect, iPerfStrat, callInvalidCB );                 \
                 break;                                                                                                                  \
             }
@@ -61,9 +61,9 @@ FClearFillContext::Clear( IBlock* iBlock, const FPerfStrat& iPerfStrat, bool cal
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
-            case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
+            case ULIS_REG[ n ]:                                                                                           \
             {                                                                                                                           \
-                TClearFillContext< ::ULIS::ulis_types_reg[ n ] >::Clear( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock         \
+                TClearFillContext< ULIS_REG[ n ] >::Clear( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock         \
                                                                        , iPerfStrat, callInvalidCB );                                   \
                 break;                                                                                                                  \
             }
@@ -80,9 +80,9 @@ FClearFillContext::ClearRect( IBlock* iBlock, const FRect& iRect, const FPerfStr
     switch( iBlock->Id() )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                        \
-            case ::ULIS::ulis_types_reg[ n ]:                                                                                           \
+            case ULIS_REG[ n ]:                                                                                           \
             {                                                                                                                           \
-                TClearFillContext< ::ULIS::ulis_types_reg[ n ] >::ClearRect( (::ULIS::TBlock< ::ULIS::ulis_types_reg[ n ] >*)iBlock     \
+                TClearFillContext< ULIS_REG[ n ] >::ClearRect( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock     \
                                                                            ,iRect,  iPerfStrat, callInvalidCB );                        \
                 break;                                                                                                                  \
             }

@@ -135,6 +135,7 @@ struct alignas( 16 ) FVectorSIMD128_Dual8bit
 
 /////////////////////////////////////////////////////
 // External Operators
+namespace SIMD {
 ULIS_FORCEINLINE FVectorSIMD128_Dual8bit Spread( const FVectorSIMD128_8bit& i )
 {
     FVectorSIMD128_Dual8bit tmp;
@@ -186,4 +187,5 @@ ULIS_FORCEINLINE FVectorSIMD128_Dual8bit operator*( const FVectorSIMD128_8bit& i
     return  tmp;
 }
 
+} // namespace SIMD
 } // namespace ULIS

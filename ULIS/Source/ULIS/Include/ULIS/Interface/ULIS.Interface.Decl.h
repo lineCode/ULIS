@@ -127,25 +127,24 @@ ULIS_DECLSPEC(uint32,XYZ,hasAlpha,XYZA,typeLimits)
 ULIS_DECLSPEC(float,XYZ,hasAlpha,XYZA,normalized)
 ULIS_DECLSPEC(float,XYZ,hasAlpha,XYZA,typeLimits)
 
+namespace rubbish {
 /////////////////////////////////////////////////////
 // Reg assign
 /* we assign the result reg */
 ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
 /* we spec the name of the result reg for easy usage */
-#define ULIS_REG ::ULIS::ulis_types_reg
-
+#define ULIS_REG ::ULIS::rubbish::ulis_types_reg
 /////////////////////////////////////////////////////
 // Reg Size
 /* temp assign reg size ( workaround ) */
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 /* Reg size macro for usage during preprocessor ( workaround ) */
 #define ULIS_REG_SIZE 59
-
+} // namespace rubbish
 /////////////////////////////////////////////////////
 // Extern template declarations
-void ULIS_DECL_EXPORT_SYMBOL();
 /*
-#define ULIS_REG_OP( z, n, data ) extern template class TBlock< ::ULIS::ulis_types_reg[ n ] >;
+#define ULIS_REG_OP( z, n, data ) extern template class TBlock< ULIS_REG[ n ] >;
 ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_OP, void )
 #undef ULIS_REG_OP
 */
@@ -153,41 +152,40 @@ ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_OP, void )
 /////////////////////////////////////////////////////
 // Mainstream typedefs
 /* easy typedefs for the most common block types defined earlier */
-typedef ::ULIS::FBlockuint8GnoAlphaGtypeLimits FBlockG8;
-typedef ::ULIS::FBlockfloatGnoAlphaGnormalized FBlockGf;
-typedef ::ULIS::FBlockuint32HSLhasAlphaHSLAtypeLimits FBlockHSLA32;
-typedef ::ULIS::FBlockuint8RGBhasAlphaRGBAtypeLimits FBlockRGBA8;
-typedef ::ULIS::FBlockuint8RGBhasAlphaBGRAtypeLimits FBlockBGRA8;
-typedef ::ULIS::FBlockuint8RGBhasAlphaARGBtypeLimits FBlockARGB8;
-typedef ::ULIS::FBlockuint8RGBhasAlphaABGRtypeLimits FBlockABGR8;
-typedef ::ULIS::FBlockfloatRGBhasAlphaRGBAnormalized FBlockRGBAfn;
-typedef ::ULIS::FBlockfloatRGBhasAlphaBGRAnormalized FBlockBGRAfn;
-typedef ::ULIS::FBlockfloatRGBhasAlphaARGBnormalized FBlockARGBfn;
-typedef ::ULIS::FBlockfloatRGBhasAlphaABGRnormalized FBlockABGRfn;
-typedef ::ULIS::FBlockfloatLabhasAlphaLabAtypeLimits FBlockLabAfn;
-
-typedef ::ULIS::TPixelValue< FBlockuint8GnoAlphaGtypeLimits::TypeId() > FValueG8;
-typedef ::ULIS::TPixelValue< FBlockfloatGnoAlphaGnormalized::TypeId() > FValueGf;
-typedef ::ULIS::TPixelValue< FBlockuint32HSLhasAlphaHSLAtypeLimits::TypeId() > FValueHSLA32;
-typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaRGBAtypeLimits::TypeId() > FValueRGBA8;
-typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaBGRAtypeLimits::TypeId() > FValueBGRA8;
-typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaARGBtypeLimits::TypeId() > FValueARGB8;
-typedef ::ULIS::TPixelValue< FBlockuint8RGBhasAlphaABGRtypeLimits::TypeId() > FValueABGR8;
-typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaRGBAnormalized::TypeId() > FValueRGBAfn;
-typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaBGRAnormalized::TypeId() > FValueBGRAfn;
-typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaARGBnormalized::TypeId() > FValueARGBfn;
-typedef ::ULIS::TPixelValue< FBlockfloatRGBhasAlphaABGRnormalized::TypeId() > FValueABGRfn;
-typedef ::ULIS::TPixelValue< FBlockfloatLabhasAlphaLabAtypeLimits::TypeId() > FValueLabAfn;
+typedef ::ULIS::Format::FBlockuint8GnoAlphaGtypeLimits          FBlockG8;
+typedef ::ULIS::Format::FBlockfloatGnoAlphaGnormalized          FBlockGf;
+typedef ::ULIS::Format::FBlockuint32HSLhasAlphaHSLAtypeLimits   FBlockHSLA32;
+typedef ::ULIS::Format::FBlockuint8RGBhasAlphaRGBAtypeLimits    FBlockRGBA8;
+typedef ::ULIS::Format::FBlockuint8RGBhasAlphaBGRAtypeLimits    FBlockBGRA8;
+typedef ::ULIS::Format::FBlockuint8RGBhasAlphaARGBtypeLimits    FBlockARGB8;
+typedef ::ULIS::Format::FBlockuint8RGBhasAlphaABGRtypeLimits    FBlockABGR8;
+typedef ::ULIS::Format::FBlockfloatRGBhasAlphaRGBAnormalized    FBlockRGBAfn;
+typedef ::ULIS::Format::FBlockfloatRGBhasAlphaBGRAnormalized    FBlockBGRAfn;
+typedef ::ULIS::Format::FBlockfloatRGBhasAlphaARGBnormalized    FBlockARGBfn;
+typedef ::ULIS::Format::FBlockfloatRGBhasAlphaABGRnormalized    FBlockABGRfn;
+typedef ::ULIS::Format::FBlockfloatLabhasAlphaLabAtypeLimits    FBlockLabAfn;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_uint8GnoAlphaGtypeLimits > FValueG8;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatGnoAlphaGnormalized > FValueGf;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_uint32HSLhasAlphaHSLAtypeLimits > FValueHSLA32;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_uint8RGBhasAlphaRGBAtypeLimits > FValueRGBA8;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_uint8RGBhasAlphaBGRAtypeLimits > FValueBGRA8;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_uint8RGBhasAlphaARGBtypeLimits > FValueARGB8;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_uint8RGBhasAlphaABGRtypeLimits > FValueABGR8;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized > FValueRGBAfn;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatRGBhasAlphaBGRAnormalized > FValueBGRAfn;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatRGBhasAlphaARGBnormalized > FValueARGBfn;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatRGBhasAlphaABGRnormalized > FValueABGRfn;
+typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits > FValueLabAfn;
 
 /////////////////////////////////////////////////////
 // TDefaultModelFormat Specialization
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kG >()     { return  FBlockfloatGhasAlphaGAnormalized::TypeId();       }
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kRGB >()   { return  FBlockfloatRGBhasAlphaRGBAnormalized::TypeId();   }
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kHSL >()   { return  FBlockfloatHSLhasAlphaHSLAnormalized::TypeId();   }
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kHSV >()   { return  FBlockfloatHSVhasAlphaHSVAnormalized::TypeId();   }
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kCMYK >()  { return  FBlockfloatCMYKhasAlphaCMYKAnormalized::TypeId(); }
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kLab >()   { return  FBlockfloatLabhasAlphaLabAtypeLimits::TypeId();   }
-template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  FBlockfloatXYZhasAlphaXYZAtypeLimits::TypeId();   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kG >()     { return  ::ULIS::Format::Format_floatGhasAlphaGAnormalized;       }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kRGB >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kHSL >()   { return  ::ULIS::Format::Format_floatHSLhasAlphaHSLAnormalized;   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kHSV >()   { return  ::ULIS::Format::Format_floatHSVhasAlphaHSVAnormalized;   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kCMYK >()  { return  ::ULIS::Format::Format_floatCMYKhasAlphaCMYKAnormalized; }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kLab >()   { return  ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits;   }
+template<> constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  ::ULIS::Format::Format_floatXYZhasAlphaXYZAtypeLimits;   }
 /////////////////////////////////////////////////////
 // CMS extra formats for connection
 #define ULIS_LCMS_DTYPE_GRAYA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))
@@ -197,21 +195,21 @@ template<> inline static constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   
 #define ULIS_LCMS_DTYPE_XYZA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
 /////////////////////////////////////////////////////
 // TCMSConnectionFormat Specialization
-template<> inline static constexpr uint32 TCMSConnectionType< e_cm::kG >()     { return  ULIS_LCMS_DTYPE_GRAYA_FLT; }
-template<> inline static constexpr uint32 TCMSConnectionType< e_cm::kRGB >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
-template<> inline static constexpr uint32 TCMSConnectionType< e_cm::kHSL >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
-template<> inline static constexpr uint32 TCMSConnectionType< e_cm::kHSV >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
-template<> inline static constexpr uint32 TCMSConnectionType< e_cm::kCMYK >()  { return  ULIS_LCMS_DTYPE_CMYKA_FLT; }
-template<> inline static constexpr uint32 TCMSConnectionType< e_cm::kLab >()   { return  ULIS_LCMS_DTYPE_LabA_FLT;  }
-template<> inline static constexpr uint32 TCMSConnectionType< e_cm::kXYZ >()   { return  ULIS_LCMS_DTYPE_XYZA_FLT;  }
+template<> constexpr uint32 TCMSConnectionType< e_cm::kG >()     { return  ULIS_LCMS_DTYPE_GRAYA_FLT; }
+template<> constexpr uint32 TCMSConnectionType< e_cm::kRGB >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
+template<> constexpr uint32 TCMSConnectionType< e_cm::kHSL >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
+template<> constexpr uint32 TCMSConnectionType< e_cm::kHSV >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
+template<> constexpr uint32 TCMSConnectionType< e_cm::kCMYK >()  { return  ULIS_LCMS_DTYPE_CMYKA_FLT; }
+template<> constexpr uint32 TCMSConnectionType< e_cm::kLab >()   { return  ULIS_LCMS_DTYPE_LabA_FLT;  }
+template<> constexpr uint32 TCMSConnectionType< e_cm::kXYZ >()   { return  ULIS_LCMS_DTYPE_XYZA_FLT;  }
 /////////////////////////////////////////////////////
 // TModelConnectionFormat Specialization
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kG >()     { return  FBlockfloatGhasAlphaGAnormalized::TypeId();       }
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kRGB >()   { return  FBlockfloatRGBhasAlphaRGBAnormalized::TypeId();   }
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kHSL >()   { return  FBlockfloatRGBhasAlphaRGBAnormalized::TypeId();   }
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kHSV >()   { return  FBlockfloatRGBhasAlphaRGBAnormalized::TypeId();   }
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kCMYK >()  { return  FBlockfloatCMYKhasAlphaCMYKAnormalized::TypeId(); }
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kLab >()   { return  FBlockfloatLabhasAlphaLabAtypeLimits::TypeId();   }
-template<> inline static constexpr uint32 TModelConnectionFormat< e_cm::kXYZ >()   { return  FBlockfloatXYZhasAlphaXYZAtypeLimits::TypeId();   }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kG >()     { return  ::ULIS::Format::Format_floatGhasAlphaGAnormalized;       }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kRGB >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kHSL >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kHSV >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kCMYK >()  { return  ::ULIS::Format::Format_floatCMYKhasAlphaCMYKAnormalized; }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kLab >()   { return  ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits;   }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kXYZ >()   { return  ::ULIS::Format::Format_floatXYZhasAlphaXYZAtypeLimits;   }
 
 } // namespace ULIS

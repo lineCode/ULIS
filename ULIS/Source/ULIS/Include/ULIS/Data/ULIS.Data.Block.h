@@ -231,7 +231,7 @@ public:
     {
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
-#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
     TBlock( int iWidth, int iHeight, uint8* iData )
@@ -241,7 +241,7 @@ public:
     {
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
-#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
     TBlock( int iWidth, int iHeight, const std::string& iProfileTag )
@@ -251,7 +251,7 @@ public:
     {
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
-#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
     TBlock( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag )
@@ -261,7 +261,7 @@ public:
     {
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
-#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
 public:
@@ -337,7 +337,7 @@ private:
     std::string         id;
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     std::string debug_str;
-#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
 };
 
 

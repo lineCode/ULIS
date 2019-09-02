@@ -16,6 +16,7 @@
 #include "lcms2.h"
 
 namespace ULIS {
+namespace Chroma {
 /////////////////////////////////////////////////////
 // CIE 2° (1931) Table, XYZ CMFs ( 360nm to 830nm ) 1nm step
 static const cmsCIEXYZ CMF_XYZ_CIE_2_1931_1nm[ 471 ] = {
@@ -492,5 +493,6 @@ static const cmsCIEXYZ CMF_XYZ_CIE_2_1931_1nm[ 471 ] = {
 /*830*/ { 0.000001251141,0.000000451810,0.000000000000 }
 };
 
+} // namespace Chroma
 } // namespace ULIS
 
