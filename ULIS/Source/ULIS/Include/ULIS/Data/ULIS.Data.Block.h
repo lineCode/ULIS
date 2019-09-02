@@ -228,25 +228,41 @@ public:
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight )  )
         , id    ( generate_weak_uuid( 16 )                  )
-    {}
+    {
+#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+        debug_str = tSpec::_nf._ss;
+#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+    }
 
     TBlock( int iWidth, int iHeight, uint8* iData )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight, iData )   )
         , id    ( generate_weak_uuid( 16 )                          )
-    {}
+    {
+#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+        debug_str = tSpec::_nf._ss;
+#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+    }
 
     TBlock( int iWidth, int iHeight, const std::string& iProfileTag )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight, iProfileTag )  )
         , id    ( generate_weak_uuid( 16 )                  )
-    {}
+    {
+#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+        debug_str = tSpec::_nf._ss;
+#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+    }
 
     TBlock( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight, iData, iProfileTag )   )
         , id    ( generate_weak_uuid( 16 )                          )
-    {}
+    {
+#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+        debug_str = tSpec::_nf._ss;
+#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+    }
 
 public:
     static tPixelType   StaticFastMax() { return (tPixelType)std::numeric_limits< tPixelType >::max(); }
@@ -319,6 +335,9 @@ private:
     // Private Data
     TBlockData< _SH >*  d;
     std::string         id;
+#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+    std::string debug_str;
+#endif ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
 };
 
 
