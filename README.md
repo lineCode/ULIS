@@ -29,6 +29,12 @@ Unlimited Library for Imaging Systems
         - Clang LLVM xx
         - MSVC
         - GNU GCC
+        
+## Enforcinc a x64 toolchain
+        - #Windows:
+        - For Windows MSVC, ensure these global environment variables are set when launching an MSVC build environment:
+        - _IsNativeEnvironment true
+        - PreferredToolArchitecture x64
 
 ## Library Dependencies
         - coal ( https://github.com/Robot-Fromage/coal )
