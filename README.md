@@ -30,7 +30,7 @@ Unlimited Library for Imaging Systems
         - MSVC
         - GNU GCC
         
-## Enforcinc a x64 toolchain
+## Enforcing a x64 toolchain
         - #Windows:
         - For Windows MSVC, ensure these global environment variables are set when launching an MSVC build environment:
         - _IsNativeEnvironment true
