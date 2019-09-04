@@ -71,10 +71,7 @@ int main( int argc, char *argv[] )
     cmsHTRANSFORM trans = cmsCreateTransform( hsRGBProfile, ULIS_LCMS_DTYPE_RGBA_FLT, hLabProfile, TYPE_LabA_FLT, INTENT_PERCEPTUAL, 0 );
     cmsDoTransform( trans, rgb_buf, lab_buf, 1 );
     ::ULIS::TPixelValue< ::ULIS::Format::Format_floatCMYKhasAlphaCMYKAnormalized > cmyk;
-    cmyk.SetCyan( 1.0 );
-    cmyk.SetMagenta( 0.0 );
-    cmyk.SetYellow( 0.0 );
-    cmyk.SetKey( 0.0 );
+    cmyk.Set( 1, 0, 0, 0, 1 );
     ::ULIS::FValueBGRA8 rgb;
     ::ULIS::TConversionContext::Convert( cmyk, rgb );
     auto _r = rgb.R();

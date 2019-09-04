@@ -63,20 +63,19 @@ class TPixelInfo
 public:
     // Public API
 //  inline virtual type                         Name                ( params )                                      const   override    final   { body                                                                  }
-    inline         tPixelType                   Max                 ()                                              const                       { return  (tPixelType)tSpec::_nf._tm;                                   }
-    inline         tNextPixelType               Range               ()                                              const                       { return  (tNextPixelType)tSpec::_nf._rm;                               }
-    inline         int                          Depth               ()                                              const                       { return tSpec::_nf._pd;                                                }
-    inline         e_tp                         Type                ()                                              const                       { return tSpec::_nf._tp;                                                }
-    inline         e_ea                         ExtraAlpha          ()                                              const                       { return tSpec::_nf._ea;                                                }
-    inline         bool                         HasAlpha            ()                                              const                       { return ExtraAlpha() == e_ea::khasAlpha;                               }
-    inline         const char*                  ChannelLayout       ()                                              const                       { return tSpec::_nf._cl;                                                }
-    inline         e_nm                         NormalMode          ()                                              const                       { return tSpec::_nf._nm;                                                }
-    inline         bool                         IsNormalized        ()                                              const                       { return NormalMode() == e_nm::knormalized;                             }
-    inline         bool                         IsDecimal           ()                                              const                       { return tSpec::_nf._dm;                                                }
-    inline         int                          NumChannels         ()                                              const                       { return tSpec::_nf._rc;                                                }
-    inline         int                          NumColorChannels    ()                                              const                       { return tSpec::_nf._nc;                                                }
-    static inline  int                          RedirectedIndex     ( int i )                                                                   { return tLayout::red.arr[i];                                           }
-
+    inline static  constexpr tPixelType         Max                 ()                                                                          { return  (tPixelType)tSpec::_nf._tm;                                   }
+    inline static  constexpr tNextPixelType     Range               ()                                                                          { return  (tNextPixelType)tSpec::_nf._rm;                               }
+    inline static  constexpr int                Depth               ()                                                                          { return  tSpec::_nf._pd;                                               }
+    inline static  constexpr e_tp               Type                ()                                                                          { return  tSpec::_nf._tp;                                               }
+    inline static  constexpr e_ea               ExtraAlpha          ()                                                                          { return  tSpec::_nf._ea;                                               }
+    inline static  constexpr bool               HasAlpha            ()                                                                          { return  ExtraAlpha() == e_ea::khasAlpha;                              }
+    inline static  constexpr const char*        ChannelLayout       ()                                                                          { return  tSpec::_nf._cl;                                               }
+    inline static  constexpr e_nm               NormalMode          ()                                                                          { return  tSpec::_nf._nm;                                               }
+    inline static  constexpr bool               IsNormalized        ()                                                                          { return  NormalMode() == e_nm::knormalized;                            }
+    inline static  constexpr bool               IsDecimal           ()                                                                          { return  tSpec::_nf._dm;                                               }
+    inline static  constexpr int                NumChannels         ()                                                                          { return  tSpec::_nf._rc;                                               }
+    inline static  constexpr int                NumColorChannels    ()                                                                          { return  tSpec::_nf._nc;                                               }
+    inline static  constexpr int                RedirectedIndex     ( int i )                                                                   { return  tLayout::red.arr[i];                                          }
     inline static  constexpr uint32             TypeId              ()                                                                          { return  tSpec::_nf._sh;                                               }
     inline static  constexpr e_cm               ColorModel          ()                                                                          { return  tSpec::_nf._cm;                                               }
 };
@@ -120,7 +119,7 @@ public:
     inline         void                         SetComponent        ( uint8 i, tPixelType iValue )                                              { d[ tLayout::red.arr[i] ] = TNormalizer< tPixelType, tSpec::_nf._nm >::Apply( iValue );                                                                            }
     inline         tPixelType&                  operator[]          ( uint8 i )                                                                 { return d[ tLayout::red.arr[i] ];                                                                                                                                  }
     inline const   tPixelType&                  operator[]          ( uint8 i )                                     const                       { return d[ tLayout::red.arr[i] ];                                                                                                                                  }
-    inline         tPixelType                   GetAlpha            ()                                              const                       { return tSpec::_nf._ea == e_ea::khasAlpha ? d[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSpec::_nf._nm == e_nm::knormalized ? tPixelType( 1 ) : tSuperClass::Max();  }
+    inline         tPixelType                   GetAlpha            ()                                              const                       { return tSpec::_nf._ea == e_ea::khasAlpha ? d[ tLayout::red.arr[ tSpec::_nf._nc ] ] : tSuperClass::Max();                                                          }
     inline         void                         SetAlpha            ( tPixelType iValue )                                                       { if(    tSpec::_nf._ea == e_ea::khasAlpha ) d[ tLayout::red.arr[ tSpec::_nf._nc ] ] = TNormalizer< tPixelType, tSpec::_nf._nm >::Apply( iValue );                  }
     inline         TPixelBase< _SH >&           operator=           ( const TPixelBase< _SH >& iOther )                                         { memcpy( d, iOther.Ptr(), tSpec::_nf._pd ); profile = iOther.profile; return  *this;                                                                               }
     inline         FColorProfile*               ColorProfile        ()                                              const                       { return  profile;                                                                                                                                                  }
@@ -212,6 +211,11 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( G )
         G() = ConvType< float, tPixelType >( iColor.GreyF() );
         tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
     }
+
+    inline void   Set( tPixelType iG, tPixelType iA = tSuperClass::Max() ) {
+        G() = iG;
+        tSuperClass::SetAlpha( iA );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( RGB )
@@ -233,6 +237,13 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( RGB )
         G() = ConvType< float, tPixelType >( iColor.GreenF() );
         B() = ConvType< float, tPixelType >( iColor.BlueF() );
         tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+    }
+
+    inline void   Set( tPixelType iR, tPixelType iG, tPixelType iB, tPixelType iA = tSuperClass::Max() ) {
+        R() = iR;
+        G() = iG;
+        B() = iB;
+        tSuperClass::SetAlpha( iA );
     }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
@@ -256,6 +267,13 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( HSL )
         L() = ConvType< float, tPixelType >( iColor.LightnessF() );
         tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
     }
+
+    inline void   Set( tPixelType iH, tPixelType iS, tPixelType iL, tPixelType iA = tSuperClass::Max() ) {
+        H() = iH;
+        S() = iS;
+        L() = iL;
+        tSuperClass::SetAlpha( iA );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( HSV )
@@ -277,6 +295,13 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( HSV )
         S() = ConvType< float, tPixelType >( iColor.HSVSaturationF() );
         V() = ConvType< float, tPixelType >( iColor.ValueF() );
         tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
+    }
+
+    inline void   Set( tPixelType iH, tPixelType iS, tPixelType iV, tPixelType iA = tSuperClass::Max() ) {
+        H() = iH;
+        S() = iS;
+        V() = iV;
+        tSuperClass::SetAlpha( iA );
     }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
@@ -305,6 +330,14 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( CMYK )
         K() = ConvType< float, tPixelType >( iColor.KeyF() );
         tSuperClass::SetAlpha( ConvType< float, tPixelType >( iColor.AlphaF() ) );
     }
+
+    inline void   Set( tPixelType iC, tPixelType iM, tPixelType iY, tPixelType iK, tPixelType iA = tSuperClass::Max() ) {
+        C() = iC;
+        M() = iM;
+        Y() = iY;
+        K() = iK;
+        tSuperClass::SetAlpha( iA );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( Lab )
@@ -313,6 +346,12 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( Lab )
     ULIS_SPEC_COMPONENT( b, 2               )
     inline CColor GetColor()  const         { return  CColor( eCColorModel::kInvalid );    }
     inline void   SetColor( const CColor& ) { memset( tSuperClass::d, 0, tSpec::_nf._pd ); }
+    inline void   Set( tPixelType iL, tPixelType ia, tPixelType ib, tPixelType iA = tSuperClass::Max() ) {
+        L() = iL;
+        a() = ia;
+        b() = ib;
+        tSuperClass::SetAlpha( iA );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 ULIS_SPEC_PIXEL_ACCESSOR_START( XYZ )
@@ -321,6 +360,12 @@ ULIS_SPEC_PIXEL_ACCESSOR_START( XYZ )
     ULIS_SPEC_COMPONENT( Z, 2               )
     inline CColor GetColor()  const         { return  CColor( eCColorModel::kInvalid );    }
     inline void   SetColor( const CColor& ) { memset( tSuperClass::d, 0, tSpec::_nf._pd ); }
+    inline void   Set( tPixelType iX, tPixelType iY, tPixelType iZ, tPixelType iA = tSuperClass::Max() ) {
+        X() = iX;
+        Y() = iY;
+        Z() = iZ;
+        tSuperClass::SetAlpha( iA );
+    }
 ULIS_SPEC_PIXEL_ACCESSOR_END
 
 /////////////////////////////////////////////////////
