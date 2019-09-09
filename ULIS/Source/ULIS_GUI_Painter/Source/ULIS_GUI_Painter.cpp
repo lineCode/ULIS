@@ -20,9 +20,9 @@ int main( int argc, char *argv[] )
     QApplication app( argc, argv );
 
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 40, 40, 40 ) );
+    ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 255, 255, 255 ) );
 
-    /*
+    
     //Vertical
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,50), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ) );
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,950), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ) );
@@ -42,7 +42,15 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(700,100), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(300,900), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(700,900), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
-    */
+    
+    
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(750,950), ::ULIS::FPoint(753, 950), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(750,950), ::ULIS::FPoint(750, 953), ::ULIS::CColor( 255, 0 ,0 ) );
+
+    
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(247, 950), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(250, 947), ::ULIS::CColor( 255, 0 ,0 ) );
+
 
     //circles
     /*
@@ -57,15 +65,15 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(500,500), 200, ::ULIS::CColor( 255, 0 ,0 ), true );
     ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(250,300), 78, ::ULIS::CColor( 0, 255 ,0 ), true );
     ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(400,200), 25, ::ULIS::CColor( 0, 0 ,255 ), true );
-    */
+    
 
     //Arcs
-    /*
-        ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 255, 246, 152, ::ULIS::CColor( 0, 0 ,0 ) );
-        ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 127, 123, 52, ::ULIS::CColor( 0, 0 ,0 ) );
-        ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 350, 16, 278, ::ULIS::CColor( 0, 0 ,0 ) );
-        ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 200, 127, 78, ::ULIS::CColor( 0, 0 ,0 ) );
-        ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 50, 301, 28, ::ULIS::CColor( 0, 0 ,0 ) );
+    
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 255, 246, 152, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 127, 123, 52, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 350, 16, 278, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 200, 127, 78, ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 50, 301, 28, ::ULIS::CColor( 0, 0 ,0 ) );
     */
 
     //Rectangles
@@ -76,14 +84,17 @@ int main( int argc, char *argv[] )
     */
 
     //Polygons
+    /*
     std::vector< ::ULIS::FPoint > star;
+    
     star.push_back( ::ULIS::FPoint( 500, 200 ) );
     star.push_back( ::ULIS::FPoint( 666, 750 ) );
     star.push_back( ::ULIS::FPoint( 250, 333 ) );
     star.push_back( ::ULIS::FPoint( 750, 333 ) );
     star.push_back( ::ULIS::FPoint( 333, 750 ) );
-
-    /*
+    star.push_back( ::ULIS::FPoint( 333, 750 ) );
+    
+    
     std::vector< ::ULIS::FPoint > pentagon;
     pentagon.push_back( ::ULIS::FPoint( 500, 200 ) );
     pentagon.push_back( ::ULIS::FPoint( 750, 333 ) );
@@ -91,23 +102,42 @@ int main( int argc, char *argv[] )
     pentagon.push_back( ::ULIS::FPoint( 333, 750 ) );
     pentagon.push_back( ::ULIS::FPoint( 250, 333 ) );
 
-    for( int i = 0; i < points.size(); i++)
+    for( int i = 0; i < star.size(); i++)
     {
-        points.at(i) = points.at(i).RotateAround( ::ULIS::FPoint(500, 500), 1.57);
+        star.at(i) = star.at(i).RotateAround( ::ULIS::FPoint(500, 500), 1.57);
     }
-    */
+    
+    for( int i = 0; i < pentagon.size(); i++)
+    {
+        pentagon.at(i) = pentagon.at(i).RotateAround( ::ULIS::FPoint(500, 500), 1.57);
+    }
+    
     
     ::ULIS::FPainterContext::DrawPolygon( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );
-    //::ULIS::FPainterContext::DrawPolygon( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
-
+    ::ULIS::FPainterContext::DrawPolygon( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
+     */
+    
     //Ellipses
-    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 300, 100, ::ULIS::CColor( 0, 0 ,0 ), true );
-    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, ::ULIS::CColor( 0, 0 ,0 ), true );
+    /*
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 300, 100, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 69, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 30, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 100, 0, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 150, 100, 28, ::ULIS::CColor( 0, 0 ,0 ), false );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 400, 0, ::ULIS::CColor( 0, 0 ,0 ), false );
+    
+    */
+    
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 69, ::ULIS::CColor( 0, 0 ,0 ), true );
-    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 30, ::ULIS::CColor( 0, 0 ,0 ), true );
+    
+
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 30, ::ULIS::CColor( 0, 0 ,0 ), false );
+
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 100, 0, ::ULIS::CColor( 0, 0 ,0 ), true );
-    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 150, 100, 28, ::ULIS::CColor( 0, 0 ,0 ), true );
-    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 400, 0, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 350, 200, 2, ::ULIS::CColor( 0, 0 ,0 ), true );
+
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 400, 12, ::ULIS::CColor( 0, 0 ,0 ), true );
 
     // Qt Windowing
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

@@ -14,6 +14,8 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <chrono>
+#include <ctime>
 #include "ULIS/Interface/ULIS.Interface.ClearFill.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
@@ -23,7 +25,7 @@ namespace ULIS {
 /////////////////////////////////////////////////////
 // Defines
 #define tSpec TBlockInfo< _SH >
-
+#define BENCHMARKMODE true
 /////////////////////////////////////////////////////
 // TPainterContext
 template< uint32 _SH >
@@ -37,22 +39,7 @@ public:
                          , const FPerfStrat&        iPerfStrat
                          , bool                     callInvalidCB )
     {
-        //Vertical
-        if( iP0.x == iP1.x )
-        {
-            ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( iP0.x, ::ULIS::FMath::Min( iP0.y, iP1.y ), 1, ::ULIS::FMath::Abs( iP1.y - iP0.y ) + 1 ) );
-            return;
-        }
-        
-        //Horizontal
-        if ( iP0.y == iP1.y )
-        {
-            ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( ::ULIS::FMath::Min( iP0.x, iP1.x ), iP0.y, ::ULIS::FMath::Abs( iP1.x - iP0.x ) + 1, 1 ) );
-            return;
-        }
-        
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
-
         
         FPoint p0;
         FPoint p1;
@@ -84,7 +71,7 @@ public:
             int slopeDifferential = 2 * dy - dx;
             int y = p0.y;
         
-            for( int x = p0.x; x < p1.x; x++)
+            for( int x = p0.x; x <= p1.x; x++)
             {
                 iBlock->SetPixelValue( x, y, val );
                 
@@ -122,7 +109,7 @@ public:
             int slopeDifferential = 2 * dx - dy;
             int x = p0.x;
         
-            for( int y = p0.y; y < p1.y; y++)
+            for( int y = p0.y; y <= p1.y; y++)
             {
                 iBlock->SetPixelValue( x, y, val );
                 
@@ -148,6 +135,12 @@ public:
                                  , const FPerfStrat&        iPerfStrat
                                  , bool                     callInvalidCB )
     {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
 
         int x = 0;
@@ -196,6 +189,17 @@ public:
                 x++;
             }
         }
+        
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledCircleAndres: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "CircleAndres: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
     }
     
     
@@ -208,6 +212,13 @@ public:
                                     , const FPerfStrat&        iPerfStrat
                                     , bool                     callInvalidCB )
     {
+        
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
 
         int x = 0;
@@ -241,6 +252,17 @@ public:
             x++;
             m = m + 8 * x + 4;
         }
+        
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledCircleBresen: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "CircleBresen: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
     }
     
         // ---
@@ -256,6 +278,12 @@ public:
                               , const FPerfStrat&         iPerfStrat
                               , bool                      callInvalidCB )
     {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
         if( iRadius == 0 )
             return;
         
@@ -380,6 +408,13 @@ public:
                 x++;
             }
         }
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            std::cout << "ArcAndres: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
     }
     
     
@@ -395,6 +430,12 @@ public:
                                 , const FPerfStrat&         iPerfStrat
                                 , bool                      callInvalidCB )
     {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+
         if( iRadius == 0 )
             return;
         
@@ -509,6 +550,13 @@ public:
             x++;
             m = m + 8 * x + 4;
         }
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            std::cout << "ArcBresen: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
     }
     
     
@@ -530,7 +578,7 @@ public:
     }
 
     
-    static void DrawRotatedEllipse(  TBlock< _SH >*       iBlock
+    static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
                                    , const FPoint             iCenter
                                    , const int                iA
                                    , const int                iB
@@ -540,6 +588,12 @@ public:
                                    , const FPerfStrat&        iPerfStrat
                                    , bool                     callInvalidCB )
     {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
         
         FPoint64 p1;
@@ -838,11 +892,22 @@ public:
                     DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerfStrat, callInvalidCB );
             }
         }
+
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledRotatedEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "RotatedEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
     }
     
     
     
-    static void DrawEllipse(  TBlock< _SH >*       iBlock
+    static void DrawEllipse(  TBlock< _SH >*           iBlock
                             , const FPoint             iCenter
                             , const int                iA
                             , const int                iB
@@ -851,6 +916,12 @@ public:
                             , const FPerfStrat&        iPerfStrat
                             , bool                     callInvalidCB )
     {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
         
         int a2 = iA * iA;
@@ -900,6 +971,16 @@ public:
             }
             sigma += a2*(4 * y + 6);
         }
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "Ellipse: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
     }
     
     // ---
@@ -913,6 +994,12 @@ public:
                                 , const FPerfStrat&        iPerfStrat
                                 , bool                     callInvalidCB )
     {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
         if( iFilled )
         {
             ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( iTopLeft.x, iTopLeft.y, ULIS::FMath::Abs( iTopLeft.x - iBottomRight.x ) + 1, ULIS::FMath::Abs( iTopLeft.y - iBottomRight.y ) + 1 ) );
@@ -931,6 +1018,16 @@ public:
             //Right side
             ::ULIS::FClearFillContext::FillRect( iBlock, iColor, ::ULIS::FRect( iTopLeft.x + ULIS::FMath::Abs( iTopLeft.x - iBottomRight.x ), iTopLeft.y + 1, 1, ULIS::FMath::Abs( iTopLeft.y - iBottomRight.y ) - 1 ) );
         }
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledRectangle: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "Rectangle: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
     }
     
     
@@ -941,6 +1038,12 @@ public:
                                 , const FPerfStrat&            iPerfStrat
                                 , bool                         callInvalidCB )
     {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
         if( iPoints.size() < 3 )
             return;
         
@@ -1022,7 +1125,18 @@ public:
                 }
             }
         }
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledPolygon: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "Polygon: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
     }
+
 };
 
 /////////////////////////////////////////////////////
