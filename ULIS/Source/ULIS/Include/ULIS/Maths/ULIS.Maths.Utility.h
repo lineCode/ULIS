@@ -60,6 +60,24 @@ struct FMath
         return ( iDeg * PI / 180 );
     }
     
+    static inline int IntegerPartOfNumber( float iNumber )
+    {
+        return (int)iNumber;
+    }
+    
+    float FloatingPartOfNumber( float iNumber )
+    {
+        if ( iNumber > 0 )
+            return iNumber - IntegerPartOfNumber( iNumber );
+        else
+            return iNumber - ( IntegerPartOfNumber( iNumber ) + 1 );
+    }
+    
+    static inline int RoundNumber( float iNumber )
+    {
+        return (int)(iNumber + 0.5) ;
+    }
+    
 }; // struct FMath
 
 

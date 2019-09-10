@@ -126,6 +126,118 @@ public:
     // ---
     
     
+    static void DrawLineAA( TBlock< _SH >*            iBlock
+                           , const FPoint             iP0
+                           , const FPoint             iP1
+                           , const CColor&            iColor
+                           , const FPerfStrat&        iPerfStrat
+                           , bool                     callInvalidCB )
+    {
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+        
+        auto MaxAlpha = val.GetAlpha();
+        
+        FPoint p0;
+        FPoint p1;
+    
+
+        if( ::ULIS::FMath::Abs( iP1.y - iP0.y ) < ::ULIS::FMath::Abs( iP1.x - iP0.x )) //x slope > y slope
+        {
+            if( iP1.x > iP0.x )
+            {
+                p0 = iP0;
+                p1 = iP1;
+            }
+            else
+            {
+                p0 = iP1;
+                p1 = iP0;
+            }
+            
+            int dx = p1.x - p0.x;
+            int dy = p1.y - p0.y;
+            int yStep = 1;
+        
+            if( dy < 0)
+            {
+                yStep = -1;
+                dy = -dy;
+            }
+            
+            int errMax = -2 * dx + 2 * dy + 1;
+            int errMin = 2 * dy - 1;
+            int slopeDifferential = 2 * dy - dx;
+            int y = p0.y;
+        
+            for( int x = p0.x; x <= p1.x; x++)
+            {
+                float alphaTop = (1 - FMath::Abs( ( float( slopeDifferential - errMax ) / float( errMin - errMax ) ) - 0.5 ) ); //Interpolation of slopedifferential between errMin and errMax
+                
+                val.SetAlpha( MaxAlpha * alphaTop );
+                iBlock->SetPixelValue( x, y, val );
+                
+                val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+                iBlock->SetPixelValue( x, y + yStep, val );
+
+                if( slopeDifferential >= dx )
+                {
+                    y += yStep;
+                    slopeDifferential-=(2 * dx);
+                }
+                slopeDifferential+=(2 * dy);
+            }
+        }
+        else //y slope > x slope
+        {
+            if( iP1.y > iP0.y )
+            {
+                p0 = iP0;
+                p1 = iP1;
+            }
+            else
+            {
+                p0 = iP1;
+                p1 = iP0;
+            }
+            
+            int dx = p1.x - p0.x;
+            int dy = p1.y - p0.y;
+            int xStep = 1;
+        
+            if( dx < 0)
+            {
+                xStep = -1;
+                dx = -dx;
+            }
+            
+            int errMax = -2 * dy + 2 * dx + 1;
+            int errMin = 2 * dx - 1;
+            int slopeDifferential = 2 * dx - dy;
+            int x = p0.x;
+        
+            for( int y = p0.y; y <= p1.y; y++)
+            {
+                float alphaTop = (1 - FMath::Abs( ( float( slopeDifferential - errMax ) / float( errMin - errMax ) ) - 0.5 ) ); //Interpolation of slopedifferential between errMin and errMax
+
+                val.SetAlpha( MaxAlpha * alphaTop );
+                iBlock->SetPixelValue( x, y, val );
+                
+                val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+                iBlock->SetPixelValue( x + xStep, y, val );
+                
+                if( slopeDifferential >= dy )
+                {
+                    x += xStep;
+                    slopeDifferential-=(2 * dy);
+                }
+                slopeDifferential+=(2 * dx);
+            }
+        }
+    }
+    
+    // ---
+    
+    
     //You can draw concentric circles with this one. But multiple pixel outline at some part of the circle -> messier result
     static void DrawCircleAndres( TBlock< _SH >*            iBlock
                                  , const FPoint             iCenter

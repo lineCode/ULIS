@@ -20,38 +20,49 @@ int main( int argc, char *argv[] )
     QApplication app( argc, argv );
 
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 255, 255, 255 ) );
+    ::ULIS::FClearFillContext::Fill( block, ::ULIS::CColor( 255, 255, 255, 0 ) );
 
     
     //Vertical
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,50), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,950), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ) );
+    /*::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,50), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,950), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ), true );
 
     //Horizontal
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(50,500), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(950,500), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(50,500), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(950,500), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,0 ), true );
 
     //x slope
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(100,300), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,255 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(900,300), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,255 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(100,700), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,255 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(900,700), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,255 ) );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(100,300), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,255 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(900,300), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,255 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(100,700), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,255 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(900,700), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 0, 0 ,255 ), true );
     
     //y slope
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(300,100), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(700,100), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(300,900), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(700,900), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(300,100), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(700,100), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(300,900), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(700,900), ::ULIS::FPoint(500, 500), ::ULIS::CColor( 255, 0 ,0 ), true );
     
     
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(750,950), ::ULIS::FPoint(753, 950), ::ULIS::CColor( 255, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(750,950), ::ULIS::FPoint(750, 953), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(750,950), ::ULIS::FPoint(753, 950), ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(750,950), ::ULIS::FPoint(750, 953), ::ULIS::CColor( 255, 0 ,0 ), true );
 
     
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(247, 950), ::ULIS::CColor( 255, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(250, 947), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(247, 950), ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(250, 947), ::ULIS::CColor( 255, 0 ,0 ), true );*/
 
+    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(3,2), ::ULIS::FPoint(30, 4), ::ULIS::CColor( 255, 0 ,0 ) );
 
+    //::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(3,6), ::ULIS::FPoint(30, 8), ::ULIS::CColor( 255, 0 ,0 ) );
+    
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(51,64), ::ULIS::FPoint(750, 354), ::ULIS::CColor( 255, 0 ,0 ) );
+    
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(654,41), ::ULIS::FPoint(25, 200), ::ULIS::CColor( 255, 0 ,0 ) );
+    
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(275, 28), ::ULIS::FPoint(465, 888), ::ULIS::CColor( 0, 255 ,0 ) );
+    
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(275, 888), ::ULIS::FPoint(465, 25), ::ULIS::CColor( 0, 255 ,0 ) );
+    
     //circles
     /*
     for( int i = 0; i < 255; i+=5)
@@ -135,7 +146,7 @@ int main( int argc, char *argv[] )
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 30, ::ULIS::CColor( 0, 0 ,0 ), false );
 
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 100, 0, ::ULIS::CColor( 0, 0 ,0 ), true );
-    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 350, 200, 2, ::ULIS::CColor( 0, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 350, 200, 2, ::ULIS::CColor( 0, 0 ,0 ), true );
 
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 400, 12, ::ULIS::CColor( 0, 0 ,0 ), true );
 

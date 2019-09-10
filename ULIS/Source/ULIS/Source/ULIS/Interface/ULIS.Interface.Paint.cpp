@@ -33,6 +33,24 @@ FPainterContext::DrawLine( IBlock* iBlock, const FPoint p0, const FPoint p1, con
         #undef ULIS_REG_SWITCH_OP
     }
 }
+    
+
+//static
+void
+FPainterContext::DrawLineAA( IBlock* iBlock, const FPoint p0, const FPoint p1, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                   \
+            case ULIS_REG[ n ]:                                                                                                                                      \
+            {                                                                                                                                                                      \
+                TPainterContext< ULIS_REG[ n ] >::DrawLineAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, p0, p1, iColor, iPerfStrat, callInvalidCB );     \
+                break;                                                                                                                                                             \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
 
 
 //static
