@@ -31,7 +31,8 @@ public:
     static void DrawGradientLine( IBlock* iBlock, const FPoint p0, const FPoint p1, const CColor& iColor1, const CColor& iColor2, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
     
     static void DrawCircleAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
-    
+    static void DrawCircleAndresAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
+
     static void DrawCircleBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
     
     static void DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );

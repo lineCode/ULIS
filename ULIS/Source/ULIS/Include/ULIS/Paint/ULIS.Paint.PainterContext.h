@@ -315,6 +315,103 @@ public:
     }
     
     
+    
+    //You can draw concentric circles with this one. But multiple pixel outline at some part of the circle -> messier result
+    static void DrawCircleAndresAA( TBlock< _SH >*            iBlock
+                                  , const FPoint             iCenter
+                                  , const int                iRadius
+                                  , const CColor&            iColor
+                                  , const bool               iFilled
+                                  , const FPerfStrat&        iPerfStrat
+                                  , bool                     callInvalidCB )
+    {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+
+        auto MaxAlpha = val.GetAlpha();
+
+        int x = 0;
+        int y = iRadius; //We start from the top of the circle for the first octant
+        int diff = iRadius - 1;
+        int errMax = 2 * (iRadius - 1);
+        int errMin = 0;
+        while (y >= x) //We draw 8 octants
+        {
+            float alphaTop = (1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
+
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            //If 0° is on top and we turn clockwise
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y + 1, val ); // 0° to 45°
+            iBlock->SetPixelValue( iCenter.x + y - 1, iCenter.y - x, val ); // 90° to 45°
+            iBlock->SetPixelValue( iCenter.x + y - 1, iCenter.y + x, val ); // 90° to 135°
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y - 1, val ); // 180° to 135°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y - 1, val ); // 180° to 225°
+            iBlock->SetPixelValue( iCenter.x - y + 1, iCenter.y + x, val );  // 270° to 225°
+            iBlock->SetPixelValue( iCenter.x - y + 1, iCenter.y - x, val ); // 270° to 315°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y + 1, val ); // 0° to 315°
+            
+            if( diff >= ( 2 * x ) )
+            {
+                if( iFilled )
+                {
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                }
+                diff -= ( 2 * x + 1 );
+                x++;
+            }
+            else if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+            else
+            {
+                if( iFilled )
+                {
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                }
+                diff += (2 * ( y - x - 1 ) );
+                y--;
+                x++;
+            }
+        }
+        
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledCircleAndres: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "CircleAndres: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
+    }
+    
+    
     //Don't draw concentric circles with this one. But 1 pixel outline all around the circle -> Cleaner result
     static void DrawCircleBresenham(  TBlock< _SH >*           iBlock
                                     , const FPoint             iCenter
