@@ -158,6 +158,24 @@ FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA
         #undef ULIS_REG_SWITCH_OP
     }
 }
+    
+
+//static
+void
+FPainterContext::DrawEllipseAA( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
+            case ULIS_REG[ n ]:                                                                                                                                                  \
+            {                                                                                                                                                                                  \
+                TPainterContext< ULIS_REG[ n ] >::DrawEllipseAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, iCenter, iA, iB, iColor, iFilled, iPerfStrat, callInvalidCB );     \
+                break;                                                                                                                                                                         \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
 
 
 //static
@@ -205,7 +223,7 @@ FPainterContext::DrawArcAndresAA( IBlock* iBlock, const FPoint iCenter, const in
         #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
             case ULIS_REG[ n ]:                                                                                                                                                  \
             {                                                                                                                                                                                  \
-                TPainterContext< ULIS_REG[ n ] >::DrawArcAndres( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerfStrat, callInvalidCB );     \
+                TPainterContext< ULIS_REG[ n ] >::DrawArcAndresAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerfStrat, callInvalidCB );     \
                 break;                                                                                                                                                                         \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )

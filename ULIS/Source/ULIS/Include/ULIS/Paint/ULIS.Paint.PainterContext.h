@@ -511,8 +511,6 @@ public:
             }
             
             float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
-           
-            std::cout << "diff: " << diff << " alphaTop: " << alphaTop << std::endl;
             
             val.SetAlpha( MaxAlpha * alphaTop );
             
@@ -937,7 +935,7 @@ public:
         {
             end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed_seconds = end-start;
-            std::cout << "ArcAndres: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "ArcAndresAA: elapsed time: " << elapsed_seconds.count() << "s\n";
             std::cout << "----------------------------- \n";
         }
     }
@@ -1291,7 +1289,7 @@ public:
         {
             end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed_seconds = end-start;
-            std::cout << "ArcBresen: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "ArcBresenAA: elapsed time: " << elapsed_seconds.count() << "s\n";
             std::cout << "----------------------------- \n";
         }
     }
@@ -1719,6 +1717,136 @@ public:
             std::cout << "----------------------------- \n";
         }
     }
+    
+
+    static void DrawEllipseAA(  TBlock< _SH >*           iBlock
+                            , const FPoint             iCenter
+                            , const int                iA
+                            , const int                iB
+                            , const CColor&            iColor
+                            , const bool               iFilled
+                            , const FPerfStrat&        iPerfStrat
+                            , bool                     callInvalidCB )
+    {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+        
+        auto MaxAlpha = val.GetAlpha();
+        
+        int a2 = iA * iA;
+        int b2 = iB * iB;
+        int fa2 = 4 * a2;
+        int fb2 = 4 * b2;
+        int x, y, sigma;
+        
+        int errMax = 0;
+        int errMin =  2 * (2*a2+b2*(1-2*iA));
+        
+        
+        for( x = iA, y = 0, sigma = 2*a2+b2*(1-2*iA) ; a2 * y <= b2 * x; y++ )
+        {
+            float alphaTop = 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            int step = sigma < 0 ? 1 : -1;
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 90 to 135 degrees
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 270 to 225 degrees
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 90 to 45 degrees
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 270 to 315 degrees
+            
+            val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
+
+            iBlock->SetPixelValue( iCenter.x + x + step, iCenter.y + y, val ); // 90 to 135 degrees
+            iBlock->SetPixelValue( iCenter.x - x - step, iCenter.y + y, val ); // 270 to 225 degrees
+            iBlock->SetPixelValue( iCenter.x + x + step, iCenter.y - y, val ); // 90 to 45 degrees
+            iBlock->SetPixelValue( iCenter.x - x - step, iCenter.y - y, val ); // 270 to 315 degrees
+            
+            if( sigma >= 0)
+            {
+                if( iFilled )
+                {
+                    if( step == 1 )
+                    {
+                        DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                        DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                    }
+                    else //step = -1, we draw the aliasing on the inside of the ellipse, so we colorize one pixel less
+                    {
+                        DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iPerfStrat, callInvalidCB );
+                        DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iPerfStrat, callInvalidCB );
+                    }
+                }
+                sigma += fb2 * (1 - x);
+                x--;
+            }
+            sigma += a2*(4 * y + 6);
+        }
+        
+        errMax = 0;
+        errMin = 2 * (2*b2+a2*(1-2*iB));
+        
+        for( x = 0, y = iB, sigma = 2*b2+a2*(1-2*iB) ; b2 * x <= a2 * y; x++ )
+        {
+            float alphaTop = 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            int step = sigma <= 0 ? 1 : -1;
+
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180 to 135 degrees
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180 to 225 degrees
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0 to 45 degrees
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 360 to 315 degrees
+            
+            val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
+
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + step, val ); // 180 to 135 degrees
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + step, val ); // 180 to 225 degrees
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - step, val ); // 0 to 45 degrees
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y - step, val ); // 360 to 315 degrees
+            
+            if( iFilled )
+            {
+                if( step == 1 )
+                {
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                }
+                else //step = -1, we draw the aliasing on the inside of the ellipse, so we colorize one pixel less
+                {
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iPerfStrat, callInvalidCB );
+                }
+            }
+            
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--;
+            }
+            sigma += b2*(4 * x + 6);
+        }
+
+        
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledEllipseAA: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "EllipseAA: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
+    }
+    
     
     // ---
     
