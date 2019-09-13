@@ -503,7 +503,6 @@ public:
         int diff = 5 - 4 * iRadius;
         int errMax = 2 * ( 4 * iRadius - 5 );
         int errMin = 0;
-        std::cout << errMax << errMin << std::endl;
         while( x <= y )
         {
             if( diff > 0 )
@@ -1002,7 +1001,7 @@ public:
     
         int x = 0; // R * cos(angle) -> angle = acos( x / iRadius )
         int y = iRadius; //We start from the top of the circle for the first octant
-        int m = 5 - 4 * iRadius;
+        int diff = 5 - 4 * iRadius;
         while ( x <= y ) //We draw 8 octants
         {
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (PI / 2) );
@@ -1068,13 +1067,225 @@ public:
             }
             
             
-            if( m > 0 )
+            if( diff > 0 )
             {
                 y--;
-                m = m - 8 * y;
+                diff = diff - 8 * y;
             }
             x++;
-            m = m + 8 * x + 4;
+            diff = diff + 8 * x + 4;
+        }
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            std::cout << "ArcBresen: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
+    }
+    
+    //Don't draw concentric arcs with this one. But 1 pixel outline all around the arc -> Cleaner result
+    static void DrawArcBresenhamAA( TBlock< _SH >*            iBlock
+                                , const FPoint              iCenter
+                                , const int                 iRadius
+                                , const int                 iStartDegree
+                                , const int                 iEndDegree
+                                , const CColor&             iColor
+                                , const FPerfStrat&         iPerfStrat
+                                , bool                      callInvalidCB )
+    {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+
+        if( iRadius == 0 )
+            return;
+        
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+        
+        auto MaxAlpha = val.GetAlpha();
+        
+        int sizeAngleToDraw = (iEndDegree - iStartDegree + 360) % 360; //Positive modulo
+        int currentAngle = iStartDegree;
+        
+        int octantsToDraw[8] = {0, 0, 0, 0, 0 ,0 ,0 ,0 }; // 0: Don't draw the octant. 1: draw fully the octant. 2: draw part of the octant
+        int directionToDraw[8][2] = { {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0} ,{0, 0} ,{0, 0} ,{0, 0} }; // 1 clockwise, -1 anti-clockwise, 0 irrelevant, second entry is angle to draw on octant
+        
+        if( currentAngle % 45 == 0 )
+            octantsToDraw[ currentAngle / 45 ] = 1;
+        else
+        {
+            octantsToDraw[ currentAngle / 45 ] = 2;
+            directionToDraw[ currentAngle / 45 ][0] = -1;
+            directionToDraw[ currentAngle / 45 ][1] = 45 - (currentAngle % 45);
+        }
+
+        sizeAngleToDraw -= ( 45 - (iStartDegree % 45) );
+
+        while (sizeAngleToDraw >= 45 )
+        {
+            currentAngle = ( currentAngle + 45 ) % 360;
+            octantsToDraw[ currentAngle / 45] = 1;
+            sizeAngleToDraw -= 45;
+        }
+        
+        if( sizeAngleToDraw > 0 )
+        {
+            currentAngle = ( currentAngle + 45 ) % 360;
+            octantsToDraw[ currentAngle / 45] = 2;
+            directionToDraw[ currentAngle / 45 ][0] = 1;
+            directionToDraw[ currentAngle / 45 ][1] = sizeAngleToDraw;
+        }
+        
+    
+        int x = 0; // R * cos(angle) -> angle = acos( x / iRadius )
+        int y = iRadius; //We start from the top of the circle for the first octant
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        while ( x <= y ) //We draw 8 octants
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (PI / 2) );
+            
+            //If 0° is on top and we turn clockwise // Simple cases
+            if( octantsToDraw[0] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            if( octantsToDraw[1] == 1 ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+            if( octantsToDraw[2] == 1 ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            if( octantsToDraw[3] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+            if( octantsToDraw[4] == 1 ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            if( octantsToDraw[5] == 1 ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            if( octantsToDraw[6] == 1 ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            if( octantsToDraw[7] == 1 ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            
+            
+            // Complex cases
+            if( octantsToDraw[0] == 2)
+            {
+                if ( directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                else if ( directionToDraw[0][0] == -1 && currentAngleOnFirstOctant > directionToDraw[0][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+            }
+            
+            if( octantsToDraw[1] == 2)
+            {
+                if ( directionToDraw[1][0] == 1 && currentAngleOnFirstOctant > directionToDraw[1][1] ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val );
+                else if ( directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1] ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val );
+            }
+
+            if( octantsToDraw[2] == 2)
+            {
+                if ( directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1] ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val );
+                else if ( directionToDraw[2][0] == -1 && currentAngleOnFirstOctant > directionToDraw[2][1] ) iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val );
+            }
+            
+            if( octantsToDraw[3] == 2)
+            {
+                if ( directionToDraw[3][0] == 1 && currentAngleOnFirstOctant > directionToDraw[3][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+                else if ( directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+            }
+            
+            if( octantsToDraw[4] == 2)
+            {
+                if ( directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                else if ( directionToDraw[4][0] == -1 && currentAngleOnFirstOctant > directionToDraw[4][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+            }
+            
+            if( octantsToDraw[5] == 2)
+            {
+                if ( directionToDraw[5][0] == 1 && currentAngleOnFirstOctant > directionToDraw[5][1] ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );
+                else if ( directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1] ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );
+            }
+            
+            if( octantsToDraw[6] == 2)
+            {
+                if ( directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1] ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val );
+                else if ( directionToDraw[6][0] == -1 && currentAngleOnFirstOctant > directionToDraw[6][1] ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val );
+            }
+            
+            if( octantsToDraw[7] == 2)
+            {
+                if ( directionToDraw[7][0] == 1 && currentAngleOnFirstOctant < directionToDraw[7][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+                else if ( directionToDraw[7][0] == -1 && currentAngleOnFirstOctant > directionToDraw[7][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+            }
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            //We anti-aliase towards the exterior of the circle
+            if( octantsToDraw[0] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
+            if( octantsToDraw[1] == 1 ) iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y - x, val ); // 90° to 45°
+            if( octantsToDraw[2] == 1 ) iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y + x, val ); // 90° to 135°
+            if( octantsToDraw[3] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
+            if( octantsToDraw[4] == 1 ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
+            if( octantsToDraw[5] == 1 ) iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y + x, val );  // 270° to 225°
+            if( octantsToDraw[6] == 1 ) iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y - x, val ); // 270° to 315°
+            if( octantsToDraw[7] == 1 ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
+            
+
+            // Complex cases
+            if( octantsToDraw[0] == 2)
+            {
+                if ( directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - 1, val );
+                else if ( directionToDraw[0][0] == -1 && currentAngleOnFirstOctant > directionToDraw[0][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - 1, val );
+            }
+            
+            if( octantsToDraw[1] == 2)
+            {
+                if ( directionToDraw[1][0] == 1 && currentAngleOnFirstOctant > directionToDraw[1][1] ) iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y - x, val );
+                else if ( directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1] ) iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y - x, val );
+            }
+
+            if( octantsToDraw[2] == 2)
+            {
+                if ( directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1] ) iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y + x, val );
+                else if ( directionToDraw[2][0] == -1 && currentAngleOnFirstOctant > directionToDraw[2][1] ) iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y + x, val );
+            }
+            
+            if( octantsToDraw[3] == 2)
+            {
+                if ( directionToDraw[3][0] == 1 && currentAngleOnFirstOctant > directionToDraw[3][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + 1, val );
+                else if ( directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1] ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + 1, val );
+            }
+            
+            if( octantsToDraw[4] == 2)
+            {
+                if ( directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + 1, val );
+                else if ( directionToDraw[4][0] == -1 && currentAngleOnFirstOctant > directionToDraw[4][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + 1, val );
+            }
+            
+            if( octantsToDraw[5] == 2)
+            {
+                if ( directionToDraw[5][0] == 1 && currentAngleOnFirstOctant > directionToDraw[5][1] ) iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y + x, val );
+                else if ( directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1] ) iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y + x, val );
+            }
+            
+            if( octantsToDraw[6] == 2)
+            {
+                if ( directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1] ) iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y - x, val );
+                else if ( directionToDraw[6][0] == -1 && currentAngleOnFirstOctant > directionToDraw[6][1] ) iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y - x, val );
+            }
+            
+            if( octantsToDraw[7] == 2)
+            {
+                if ( directionToDraw[7][0] == 1 && currentAngleOnFirstOctant < directionToDraw[7][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y + 1, val );
+                else if ( directionToDraw[7][0] == -1 && currentAngleOnFirstOctant > directionToDraw[7][1] ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y + 1, val );
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
         }
         if( BENCHMARKMODE )
         {

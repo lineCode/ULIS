@@ -96,6 +96,9 @@ int main( int argc, char *argv[] )
     
     //::ULIS::FPainterContext::DrawArcAndres( block, ::ULIS::FPoint(500,250), 200, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
     //::ULIS::FPainterContext::DrawArcAndresAA( block, ::ULIS::FPoint(500,750), 200, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
+    
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,250), 190, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenhamAA( block, ::ULIS::FPoint(500,750), 190, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
 
 
     //Rectangles
