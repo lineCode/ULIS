@@ -342,7 +342,7 @@ public:
         int errMin = 0;
         while (y >= x) //We draw 8 octants
         {
-            float alphaTop = (1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
 
             val.SetAlpha( MaxAlpha * alphaTop );
             
@@ -356,16 +356,18 @@ public:
             iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
             iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
             
+            
             val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
             
-            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y + 1, val ); // 0° to 45°
-            iBlock->SetPixelValue( iCenter.x + y - 1, iCenter.y - x, val ); // 90° to 45°
-            iBlock->SetPixelValue( iCenter.x + y - 1, iCenter.y + x, val ); // 90° to 135°
-            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y - 1, val ); // 180° to 135°
-            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y - 1, val ); // 180° to 225°
-            iBlock->SetPixelValue( iCenter.x - y + 1, iCenter.y + x, val );  // 270° to 225°
-            iBlock->SetPixelValue( iCenter.x - y + 1, iCenter.y - x, val ); // 270° to 315°
-            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y + 1, val ); // 0° to 315°
+            //We anti-aliase towards the exterior of the circle
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
+            iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y - x, val ); // 90° to 45°
+            iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y + x, val ); // 90° to 135°
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
+            iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y + x, val );  // 270° to 225°
+            iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y - x, val ); // 270° to 315°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
             
             if( diff >= ( 2 * x ) )
             {
@@ -404,9 +406,9 @@ public:
             end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed_seconds = end-start;
             if( iFilled )
-                std::cout << "FilledCircleAndres: elapsed time: " << elapsed_seconds.count() << "s\n";
+                std::cout << "FilledCircleAndresAA: elapsed time: " << elapsed_seconds.count() << "s\n";
             else
-                std::cout << "CircleAndres: elapsed time: " << elapsed_seconds.count() << "s\n";
+                std::cout << "CircleAndresAA: elapsed time: " << elapsed_seconds.count() << "s\n";
             std::cout << "----------------------------- \n";
         }
     }
@@ -429,10 +431,10 @@ public:
             start = std::chrono::system_clock::now();
         
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
-
+        
         int x = 0;
         int y = iRadius;
-        int m = 5 - 4 * iRadius;
+        int diff = 5 - 4 * iRadius;
         while( x <= y )
         {
             //If 0° is on top and we turn clockwise
@@ -453,13 +455,105 @@ public:
                 DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
             }
             
-            if( m > 0 )
+            if( diff > 0 )
             {
                 y--;
-                m = m - 8 * y;
+                diff = diff - 8 * y;
             }
             x++;
-            m = m + 8 * x + 4;
+            diff = diff + 8 * x + 4;
+        }
+        
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledCircleBresen: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "CircleBresen: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
+    }
+    
+    // ---
+    
+    //Don't draw concentric circles with this one. But 1 pixel outline all around the circle -> Cleaner result
+    static void DrawCircleBresenhamAA(  TBlock< _SH >*           iBlock
+                                      , const FPoint             iCenter
+                                      , const int                iRadius
+                                      , const CColor&            iColor
+                                      , const bool               iFilled
+                                      , const FPerfStrat&        iPerfStrat
+                                      , bool                     callInvalidCB )
+    {
+        
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+        
+        auto MaxAlpha = val.GetAlpha();
+
+        int x = 0;
+        int y = iRadius;
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        std::cout << errMax << errMin << std::endl;
+        while( x <= y )
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+           
+            std::cout << "diff: " << diff << " alphaTop: " << alphaTop << std::endl;
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            //If 0° is on top and we turn clockwise
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            //We anti-aliase towards the exterior of the circle
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
+            iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y - x, val ); // 90° to 45°
+            iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y + x, val ); // 90° to 135°
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
+            iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y + x, val );  // 270° to 225°
+            iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y - x, val ); // 270° to 315°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
+            
+            if( iFilled )
+            {
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
         }
         
         if( BENCHMARKMODE )

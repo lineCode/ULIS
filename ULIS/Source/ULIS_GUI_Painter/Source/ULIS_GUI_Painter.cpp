@@ -78,8 +78,11 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(400,200), 25, ::ULIS::CColor( 0, 0 ,255 ), true );
     */
     
-    ::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(500,250), 200, ::ULIS::CColor( 255, 0 ,0 ) );
-    ::ULIS::FPainterContext::DrawCircleAndresAA( block, ::ULIS::FPoint(500,750), 200, ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(500,250), 200, ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawCircleAndresAA( block, ::ULIS::FPoint(500,750), 195, ::ULIS::CColor( 255, 0 ,0 ) );
+    
+    //::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(500,250), 200, ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(500,750), 195, ::ULIS::CColor( 255, 0 ,0 ) );
 
 
     //Arcs

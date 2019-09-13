@@ -34,6 +34,8 @@ public:
     static void DrawCircleAndresAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
 
     static void DrawCircleBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
+    static void DrawCircleBresenhamAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
+
     
     static void DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
     
