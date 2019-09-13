@@ -194,6 +194,24 @@ FPainterContext::DrawArcAndres( IBlock* iBlock, const FPoint iCenter, const int 
         #undef ULIS_REG_SWITCH_OP
     }
 }
+    
+
+//static
+void
+FPainterContext::DrawArcAndresAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
+            case ULIS_REG[ n ]:                                                                                                                                                  \
+            {                                                                                                                                                                                  \
+                TPainterContext< ULIS_REG[ n ] >::DrawArcAndresAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerfStrat, callInvalidCB );     \
+                break;                                                                                                                                                                         \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
 
 
 //static

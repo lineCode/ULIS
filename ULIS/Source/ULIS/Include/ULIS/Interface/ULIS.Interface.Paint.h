@@ -42,6 +42,7 @@ public:
     static void DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled = false, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true  );
     
     static void DrawArcAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true  );
+    static void DrawArcAndresAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true  );
     
     static void DrawArcBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true  );
     
