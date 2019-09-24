@@ -16,12 +16,6 @@ namespace ULIS {
 /////////////////////////////////////////////////////
 // Weak UUID
 //--------------------------------------------------------------------------------------
-//----------------------------------------------------- Private Unit Forward Declaration
-unsigned char random_char();
-std::string generate_hex( const  unsigned  int  len );
-
-
-//--------------------------------------------------------------------------------------
 //---------------------------------------------------------- Private Unit Implementation
 unsigned char random_char() {
     return  static_cast< unsigned  char >( rand()%256 );
@@ -43,7 +37,7 @@ std::string generate_hex( const  unsigned  int  len ) {
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------- Public Implementation
-std::string GenerateWeakUUID( const unsigned int len )
+std::string GenerateWeakUUID( uint8 len )
 {
     return  generate_hex( len );
 }

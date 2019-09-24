@@ -2,7 +2,7 @@ var searchData=
 [
   ['g_211',['g',['../class_u_l_i_s_1_1_c_color.html#af87cf4858dcde9ede0ad160e455f9dd5',1,'ULIS::CColor']]],
   ['generate_5fhex_212',['generate_hex',['../namespace_u_l_i_s.html#a7f5c0c1fb98e94757c05c60e5b2719f8',1,'ULIS']]],
-  ['generateweakuuid_213',['GenerateWeakUUID',['../namespace_u_l_i_s.html#ab123cbfaf42bd6cd0c2de25b583774aa',1,'ULIS::GenerateWeakUUID(uint8 iLen)'],['../namespace_u_l_i_s.html#aeb6ca0ed1c008058c941607f824dff8c',1,'ULIS::GenerateWeakUUID(const unsigned int len)']]],
+  ['generateweakuuid_213',['GenerateWeakUUID',['../namespace_u_l_i_s.html#ab123cbfaf42bd6cd0c2de25b583774aa',1,'ULIS']]],
   ['get_214',['Get',['../class_u_l_i_s_1_1_f_global_c_p_u_config.html#a351f74c18bc42ab40f79d81072676e10',1,'ULIS::FGlobalCPUConfig::Get()'],['../class_u_l_i_s_1_1_f_global_profile_registry.html#a85913930029e74954bb9f13f4e907009',1,'ULIS::FGlobalProfileRegistry::Get()'],['../class_u_l_i_s_1_1_f_global_thread_pool.html#a3429f45754e1169e2659270dbfdf15dd',1,'ULIS::FGlobalThreadPool::Get()']]],
   ['getalpha_215',['GetAlpha',['../class_u_l_i_s_1_1_t_pixel_base.html#a288b081613d6a02d6c63753ef5db45f1',1,'ULIS::TPixelBase']]],
   ['getcolor_216',['GetColor',['../namespace_u_l_i_s.html#a59ba0f1a7c1967c41840e3b56786afa7',1,'ULIS']]],

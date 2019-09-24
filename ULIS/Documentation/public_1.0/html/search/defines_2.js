@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['ulis_5fforward_5ftype_5fselector_826',['ULIS_FORWARD_TYPE_SELECTOR',['../_u_l_i_s_8_data_8_pixel_8h.html#abf390c470e681fe1c8cd28705224fc6f',1,'ULIS.Data.Pixel.h']]],
+  ['ulis_5flcms_5fdtype_5fcmyka_5fflt_827',['ULIS_LCMS_DTYPE_CMYKA_FLT',['../_u_l_i_s_8_interface_8_decl_8h.html#a9c7a6f905a2e4c9fcf0da24ea7b0d9c5',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5fcmyka_5fu16_828',['ULIS_LCMS_DTYPE_CMYKA_U16',['../_u_l_i_s_8_interface_8_decl_8h.html#a034b7fb7387d92ffb1933b99d43ff0a1',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5fgraya_5fflt_829',['ULIS_LCMS_DTYPE_GRAYA_FLT',['../_u_l_i_s_8_interface_8_decl_8h.html#a0b4d774e38f4807838eb2e40a01a1ea4',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5fgraya_5fu16_830',['ULIS_LCMS_DTYPE_GRAYA_U16',['../_u_l_i_s_8_interface_8_decl_8h.html#a36eafddef8fa398c790f75cb8eb374f0',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5flaba_5fflt_831',['ULIS_LCMS_DTYPE_LabA_FLT',['../_u_l_i_s_8_interface_8_decl_8h.html#a159386d2de35f1688042ba443a12d384',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5flaba_5fu16_832',['ULIS_LCMS_DTYPE_LabA_U16',['../_u_l_i_s_8_interface_8_decl_8h.html#a6934b30f1c40d5fa515d08997eb1a9dc',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5frgba_5fflt_833',['ULIS_LCMS_DTYPE_RGBA_FLT',['../_u_l_i_s_8_interface_8_decl_8h.html#a04a653b3ab80fec7f69b1a534169f63c',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5frgba_5fu16_834',['ULIS_LCMS_DTYPE_RGBA_U16',['../_u_l_i_s_8_interface_8_decl_8h.html#afa1165134afec1ed876c6851c3c6b00d',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5fxyza_5fflt_835',['ULIS_LCMS_DTYPE_XYZA_FLT',['../_u_l_i_s_8_interface_8_decl_8h.html#a3a611978c95711a5ce7ed883f17d533f',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5flcms_5fdtype_5fxyza_5fu16_836',['ULIS_LCMS_DTYPE_XYZA_U16',['../_u_l_i_s_8_interface_8_decl_8h.html#a995ea59139397b0d2b2aa49d9730fb94',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5freg_837',['ULIS_REG',['../_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5freg_5fbuilder_838',['ULIS_REG_BUILDER',['../_u_l_i_s_8_interface_8_decl_8h.html#a65ecd210b90e4c44f2db0ce142395066',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5freg_5fsize_839',['ULIS_REG_SIZE',['../_u_l_i_s_8_interface_8_decl_8h.html#a2815061f995c4d2c618b4105d7c16a31',1,'ULIS.Interface.Decl.h']]],
+  ['ulis_5fspec_5fcomponent_840',['ULIS_SPEC_COMPONENT',['../_u_l_i_s_8_data_8_pixel_8h.html#a650cdb09648a50e4d6beb2d55d78a153',1,'ULIS.Data.Pixel.h']]],
+  ['ulis_5fspec_5fpixel_5faccessor_5fend_841',['ULIS_SPEC_PIXEL_ACCESSOR_END',['../_u_l_i_s_8_data_8_pixel_8h.html#aecf5b2b00f6057858e26c6a016698845',1,'ULIS.Data.Pixel.h']]],
+  ['ulis_5fspec_5fpixel_5faccessor_5fstart_842',['ULIS_SPEC_PIXEL_ACCESSOR_START',['../_u_l_i_s_8_data_8_pixel_8h.html#a125af9c67d8a197ced6a60cf6aa2e214',1,'ULIS.Data.Pixel.h']]],
+  ['ulis_5ftype_5fselector_5frepeat_843',['ULIS_TYPE_SELECTOR_REPEAT',['../_u_l_i_s_8_data_8_pixel_8h.html#a173e0206e8fd1c1e7c0cfa1b3c8a9734',1,'ULIS.Data.Pixel.h']]]
+];
