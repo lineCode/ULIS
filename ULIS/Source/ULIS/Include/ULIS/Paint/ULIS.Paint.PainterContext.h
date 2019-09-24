@@ -1323,334 +1323,88 @@ public:
                                    , const FPerformanceOptions&        iPerformanceOptions
                                    , bool                     callInvalidCB )
     {
-        std::chrono::time_point<std::chrono::system_clock> start;
-        std::chrono::time_point<std::chrono::system_clock> end;
-        
-        if( BENCHMARKMODE )
-            start = std::chrono::system_clock::now();
-        
-        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
-        
-        FPoint64 p1;
-        FPoint64 p2;
-        
-        InternalGetEllipseAxesPoints( iA, iB, ::ULIS::FMath::DegToRad( iRotationDegrees ), &p1, &p2);
+        if( iRotationDegrees % 180 == 0 )
+        {
+            DrawEllipse( iBlock, iCenter, iA, iB, iColor, iFilled, iPerformanceOptions, callInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+            return;
+        }
+        if( iRotationDegrees % 90 == 0 )
+        {
+            DrawEllipse( iBlock, iCenter, iB, iA, iColor, iFilled, iPerformanceOptions, callInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+            return;
+        }
         
                                                            //               x  y
         std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
                                                            //                 [1]
+        storagePoints[0].push_back( iCenter.x );          // In order to only pass storagePoints in parameter to InternalDrawQuadRationalBezierSeg
+        storagePoints[0].push_back( iCenter.y );          // we store the center (useful in this function) at index 0 (we'll know it's there)
+
         
-        int64 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
-        int64 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
+        int a = iA;
+        int b = iB;
         
-        int64 A = (p1.x * p1.x) * p2Coeff +
-                     (p2.x * p2.x) * p1Coeff;
+        float dx = (long)iA*iA;
+        float dy = (long)iB*iB;
+        float s = std::sin( FMath::DegToRad( iRotationDegrees + 90 ) );
+        float dz = (dx - dy) * s;
+        dx = std::sqrt( dx - dz * s );
+        dy = std::sqrt( dy + dz * s );
+        a = dx + 0.5;
+        b = dy + 0.5;
+        dz = dz * a * b / (dx * dy );
         
-        int64 B = ( p1.x * p1.y ) * p2Coeff +
-                     ( p2.x * p2.y ) * p1Coeff;
-       
-        int64 C = (p1.y * p1.y) * p2Coeff +
-                     (p2.y * p2.y) * p1Coeff;
-        
-        int64 D = p1Coeff *
-                     p2Coeff;
-
-        int64 x = -p1.x;
-        int64 y = -p1.y;
-        
-        int64 dx = -(B * p1.x + C * p1.y);
-        int64 dy =  A * p1.x + B * p1.y;
+        int x0 = iCenter.x - a;
+        int y0 = iCenter.y - b;
+        int x1 = iCenter.x + a;
+        int y1 = iCenter.y + b;
+        dz = (4 * dz * cos( FMath::DegToRad( iRotationDegrees + 90 ) ) );
         
         
-        int64 errX = 0;
-        int64 errY = 0;
-
-        //Case 1 ----------------------------
-        if( dx == 0 || ::ULIS::FMath::Abs( dy / dx ) >= 1 )
-        {
-            //Slope = dy/dx //Initial slope to infinite
-            while( dx < 0 )
-            {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                y++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma < 0)
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-                    dx -= B;
-                    dy += A;
-                    x--;
-                }
-                dx += C;
-                dy -= B;
-            };
-            
-            //Slope = dy/dx //Infinite to 1
-            while( dx < dy )
-            {
-                iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y, val );
-                
-                y++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma > 0 )
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-                    dx += B;
-                    dy -= A;
-                    x++;
-                    if( errX == 0 )
-                        errX++;
-                }
-                dx += C;
-                dy -= B;
-            };
-            
-            
-            //Slope = dy/dx //1 to 0
-            while( dy > 0 )
-            {
-                iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y, val );
-
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-
-                x++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-
-                if( sigma < 0 )
-                {
-                    dx += C;
-                    dy -= B;
-                    y++;
-                }
-                dx += B;
-                dy -= A;
-            };
-            
-            
-            //Slope = dy/dx //0 to -1
-            while( dx > -dy )
-            {
-                iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y + errY, val );
-                iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y - errY, val );
-
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-
-                x++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma > 0 )
-                {
-                    dx -= C;
-                    dy += B;
-                    y--;
-                    if( errY == 0 )
-                        errY--;
-                    if( errX == 1)
-                    {
-                        iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y + errY, val );
-                        iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y - errY, val );
-                        errX--;
-                    }
-                }
-                dx += B;
-                dy -= A;
-            };
-            
-            //Slope = dy/dx //Continue until y == p1.y, slope always < -1
-            while( y >= p1.y )
-            {
-                iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y + errY, val );
-                iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y - errY, val );
-                
-                y--;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                                
-                if( sigma < 0 )
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-
-                    dx += B;
-                    dy -= A;
-                    x++;
-                }
-                dx -= C;
-                dy += B;
-            };
-        }
-        //Case 2 -------------------------------
-        else
-        {
-            //Slope = dy/dx //Initial slope to -1
-            while( -dx > dy )
-            {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-                
-                x--;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma > 0)
-                {
-                    dx += C;
-                    dy -= B;
-                    y++;
-                }
-                dx -= B;
-                dy += A;
-            };
-            
-            //Slope = dy/dx //-1 to infinite
-            while( dx < 0 )
-            {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                y++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma < 0)
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-                    
-                    dx -= B;
-                    dy += A;
-                    x--;
-                }
-                dx += C;
-                dy -= B;
-            };
-
-            //Slope = dy/dx //Infinite to 1
-            while( dx < dy )
-            {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                y++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma > 0 )
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-                    
-                    dx += B;
-                    dy -= A;
-                    x++;
-                }
-                dx += C;
-                dy -= B;
-            };
-            
-            //Slope = dy/dx //1 to 0
-            while( dy > 0 )
-            {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+        dx = x1 - x0;
+        dy = y1 - y0;
+        float w = dx * dy;
+        if( w != 0.0 )
+            w = ( w - dz ) / (w + w);
         
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-                
-                x++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma < 0 )
-                {
-                    dx += C;
-                    dy -= B;
-                    y++;
-                }
-                dx += B;
-                dy -= A;
-            };
-            
-            //Slope = dy/dx //Continue until x == p1.x, slope always > -1
-            while( x < p1.x )
-            {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-                
-                x++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma > 0 )
-                {
-                    dx -= C;
-                    dy += B;
-                    y--;
-                }
-                dx += B;
-                dy -= A;
-
-            };
-        }
+        if( w > 1 || w < 0 )
+            return;
+        
+        dx = std::floor( dx * w + 0.5 );
+        dy = std::floor( dy * w + 0.5 );
+        
+        InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
+        InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
+        InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
+        InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
         
         if( iFilled ) //We fill the ellipse by drawing vertical lines
         {
+            //We delete the values we stored for the center position
+            storagePoints[0].erase( storagePoints[0].begin() );
+            storagePoints[0].erase( storagePoints[0].begin() );
+
             for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
             {
                 if( it->second.size() == 2 )
-                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerformanceOptions, callInvalidCB );
-            }
-        }
+                {
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y + it->second[1] ), iColor, iPerformanceOptions, callInvalidCB );
+                }
+                if( it->second.size() > 2 ) // where we draw more than 2 pixels for a said y
+                {
+                    int minY = it->second[0];
+                    int maxY = it->second[0];
+                    for( int i = 1; i < it->second.size(); i++)
+                    {
+                        if( minY > it->second[i] )
+                            minY = it->second[i];
 
-        if( BENCHMARKMODE )
-        {
-            end = std::chrono::system_clock::now();
-            std::chrono::duration<double> elapsed_seconds = end-start;
-            if( iFilled )
-                std::cout << "FilledRotatedEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
-            else
-                std::cout << "RotatedEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
-            std::cout << "----------------------------- \n";
+                        if( maxY < it->second[i] )
+                            maxY = it->second[i];
+                    }
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + minY ), FPoint( iCenter.x + it->first, iCenter.y + maxY ), iColor, iPerformanceOptions, callInvalidCB );
+                }
+            }
         }
     }
     
@@ -1662,7 +1416,7 @@ public:
                                      , const int                iRotationDegrees
                                      , const CColor&            iColor
                                      , const bool               iFilled
-                                     , const FPerfStrat&        iPerfStrat
+                                     , const FPerformanceOptions&        iPerformanceOptions
                                      , bool                     callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -2075,7 +1829,7 @@ public:
             for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
             {
                 if( it->second.size() == 2 )
-                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerformanceOptions, callInvalidCB );
             }
         }
 
@@ -2463,8 +2217,9 @@ public:
                                                  , int y2
                                                  , float w
                                                  , const CColor& iColor
-                                                 , const FPerfStrat& iPerfStrat
-                                                 , bool callInvalidCB)
+                                                 , const FPerformanceOptions& iPerformanceOptions
+                                                 , bool callInvalidCB
+                                                 , std::map< int, std::vector< int > >* iStoragePoints = NULL)
     {
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
 
@@ -2502,15 +2257,19 @@ public:
                 sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
                 dx = floor((w*x1+x0)*xy+0.5);
                 dy = floor((y1*w+y0)*xy+0.5);
-                InternalDrawQuadRationalBezierSeg( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerfStrat, callInvalidCB );
+                InternalDrawQuadRationalBezierSeg( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerformanceOptions, callInvalidCB, iStoragePoints );
                 dx = floor((w*x1+x2)*xy+0.5);
                 dy = floor((y1*w+y2)*xy+0.5);
-                InternalDrawQuadRationalBezierSeg( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerfStrat, callInvalidCB );
+                InternalDrawQuadRationalBezierSeg( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerformanceOptions, callInvalidCB, iStoragePoints );
                 return;
             }
             err = dx+dy-xy;
             do {
                 iBlock->SetPixelValue( x0, y0, val );
+                if( iStoragePoints )
+                {
+                    (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                }
                 if (x0 == x2 && y0 == y2)
                     return;
                 x1 = 2 * err > dy; y1 = 2*( err + yy ) < -dy;
@@ -2518,7 +2277,21 @@ public:
                 if (2 * err > dx || x1) { x0 += sx; dx += xy; err += dy += yy; }
             } while (dy <= xy && dx >= xy);
         }
-        DrawLine( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerfStrat, callInvalidCB );
+        DrawLine( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerformanceOptions, callInvalidCB );
+        
+        if( iStoragePoints )
+        {
+            if( x0 == x2 && y0 == y2 ) //Corners where we draw a single pixel
+            {
+                (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+            }
+            else if( y0 == y2 ) //Horizontal lines
+            {
+                for( int i = x0; i < x2; i++ )
+                    (*iStoragePoints)[ i - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+            }
+            //We don't need to take care of vertical lines, since storagePoints is used to fill an ellipse using the exact same type of vertical lines
+        }
     }
     
     static void DrawQuadraticBezier( TBlock< _SH>*                   iBlock
@@ -2527,7 +2300,7 @@ public:
                                    , const FPoint&                   iCtrlPt2
                                    , const float                     iWeight
                                    , const CColor&                   iColor
-                                   , const FPerfStrat&               iPerfStrat
+                                   , const FPerformanceOptions&      iPerformanceOptions
                                    , bool                            callInvalidCB )
     {
         int x = iCtrlPt0.x - 2 * iCtrlPt1.x + iCtrlPt2.x;
@@ -2581,7 +2354,7 @@ public:
             x = std::floor( dx + 0.5 );
             y = std::floor( dy + 0.5 );
             dy = ( dx - pt0.x ) * ( pt1.y - pt0.y ) / ( pt1.x - pt0.x ) + pt0.y;
-            InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iPerfStrat, callInvalidCB  );
+            InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iPerformanceOptions, callInvalidCB  );
             dy = ( dx - pt2.x ) * ( pt1.y - pt2.y ) / ( pt1.x - pt2.x ) + pt2.y;
             pt1.y = std::floor( dy + 0.5 );
             pt0.x = pt1.x = x;
@@ -2614,7 +2387,7 @@ public:
             x = std::floor( dx + 0.5 );
             y = std::floor( dy + 0.5 );
             dx = ( pt1.x - pt0.x ) * ( dy - pt0.y ) / ( pt1.y - pt0.y ) + pt0.x;
-            InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerfStrat, callInvalidCB  );
+            InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerformanceOptions, callInvalidCB  );
             std::cout << "2Before: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y << " x: " << x << " y " << y <<   std::endl;
 
             dx = ( pt1.x - pt2.x ) * ( dy - pt2.y ) / ( pt1.y - pt2.y ) + pt2.x;
@@ -2624,7 +2397,7 @@ public:
             
             std::cout << "2: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
         }
-        InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerfStrat, callInvalidCB  );
+        InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerformanceOptions, callInvalidCB  );
     }
     
     
@@ -2638,7 +2411,7 @@ public:
                                                    , int y2
                                                    , float w
                                                    , const CColor& iColor
-                                                   , const FPerfStrat& iPerfStrat
+                                                   , const FPerformanceOptions& iPerformanceOptions
                                                    , bool callInvalidCB)
     {
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
@@ -2683,10 +2456,10 @@ public:
                 sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
                 dx = floor((w*x1+x0)*xy+0.5);
                 dy = floor((y1*w+y0)*xy+0.5);
-                InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerfStrat, callInvalidCB );
+                InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerformanceOptions, callInvalidCB );
                 dx = floor((w*x1+x2)*xy+0.5);
                 dy = floor((y1*w+y2)*xy+0.5);
-                InternalDrawQuadRationalBezierSegAA( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerfStrat, callInvalidCB );
+                InternalDrawQuadRationalBezierSegAA( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerformanceOptions, callInvalidCB );
                 return;
             }
             err = dx+dy-xy;
@@ -2753,7 +2526,7 @@ public:
                 
             } while (dy < dx);
         }
-        DrawLineAA( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerfStrat, callInvalidCB );
+        DrawLineAA( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerformanceOptions, callInvalidCB );
     }
     
     static void DrawQuadraticBezierAA( TBlock< _SH>*                   iBlock
@@ -2762,7 +2535,7 @@ public:
                                      , const FPoint&                   iCtrlPt2
                                      , const float                     iWeight
                                      , const CColor&                   iColor
-                                     , const FPerfStrat&               iPerfStrat
+                                     , const FPerformanceOptions&      iPerformanceOptions
                                      , bool                            callInvalidCB )
     {
         int x = iCtrlPt0.x - 2 * iCtrlPt1.x + iCtrlPt2.x;
@@ -2816,7 +2589,7 @@ public:
             x = std::floor( dx + 0.5 );
             y = std::floor( dy + 0.5 );
             dy = ( dx - pt0.x ) * ( pt1.y - pt0.y ) / ( pt1.x - pt0.x ) + pt0.y;
-            InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iPerfStrat, callInvalidCB  );
+            InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iPerformanceOptions, callInvalidCB  );
             dy = ( dx - pt2.x ) * ( pt1.y - pt2.y ) / ( pt1.x - pt2.x ) + pt2.y;
             pt1.y = std::floor( dy + 0.5 );
             pt0.x = pt1.x = x;
@@ -2849,7 +2622,7 @@ public:
             x = std::floor( dx + 0.5 );
             y = std::floor( dy + 0.5 );
             dx = ( pt1.x - pt0.x ) * ( dy - pt0.y ) / ( pt1.y - pt0.y ) + pt0.x;
-            InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerfStrat, callInvalidCB  );
+            InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerformanceOptions, callInvalidCB  );
             std::cout << "2Before: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y << " x: " << x << " y " << y <<   std::endl;
 
             dx = ( pt1.x - pt2.x ) * ( dy - pt2.y ) / ( pt1.y - pt2.y ) + pt2.x;
@@ -2859,7 +2632,7 @@ public:
             
             std::cout << "2: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
         }
-        InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerfStrat, callInvalidCB  );
+        InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerformanceOptions, callInvalidCB  );
     }
     
 

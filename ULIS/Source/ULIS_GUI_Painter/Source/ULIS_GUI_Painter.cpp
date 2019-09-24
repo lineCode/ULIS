@@ -163,11 +163,11 @@ int main( int argc, char *argv[] )
     */
     
     
-    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 100, 10, 0, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 100, 200, 20, ::ULIS::CColor( 255, 0 ,0 ), true );
     
-    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 750), 100, 200, 42, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 750), 100, 200, 42, ::ULIS::CColor( 0, 0 ,255 ), true );
 
-    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ) );
+    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ), true );
     
 
     //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 750), 200, 100, 0, ::ULIS::CColor( 255, 0 ,0 ) );
