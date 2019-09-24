@@ -38,6 +38,7 @@ public:
 
     
     static void DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true );
+    static void DrawRotatedEllipseAA( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool callInvalidCB = true );
     
     static void DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true  );
     static void DrawEllipseAA( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true  );
@@ -51,6 +52,9 @@ public:
     static void DrawRectangle( IBlock* iBlock, const FPoint iTopLeft, const FPoint iBottomRight, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true );
     
     static void DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true );
+    
+    static void DrawQuadraticBezier( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, const float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool callInvalidCB = true );
+    static void DrawQuadraticBezierAA( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, const float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool callInvalidCB = true );
 };
 
 } // namespace ULIS

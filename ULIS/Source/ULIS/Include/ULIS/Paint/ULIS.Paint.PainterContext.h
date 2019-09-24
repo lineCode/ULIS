@@ -1361,6 +1361,9 @@ public:
         int64 dx = -(B * p1.x + C * p1.y);
         int64 dy =  A * p1.x + B * p1.y;
         
+        
+        int64 errX = 0;
+        int64 errY = 0;
 
         //Case 1 ----------------------------
         if( dx == 0 || ::ULIS::FMath::Abs( dy / dx ) >= 1 )
@@ -1392,8 +1395,8 @@ public:
             //Slope = dy/dx //Infinite to 1
             while( dx < dy )
             {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y, val );
                 
                 y++;
                 int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
@@ -1408,16 +1411,19 @@ public:
                     dx += B;
                     dy -= A;
                     x++;
+                    if( errX == 0 )
+                        errX++;
                 }
                 dx += C;
                 dy -= B;
             };
             
+            
             //Slope = dy/dx //1 to 0
             while( dy > 0 )
             {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y, val );
 
                 if( iFilled )
                 {
@@ -1425,10 +1431,9 @@ public:
                     storagePoints[-x].push_back(-y);
                 }
 
-
                 x++;
                 int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
+
                 if( sigma < 0 )
                 {
                     dx += C;
@@ -1439,11 +1444,12 @@ public:
                 dy -= A;
             };
             
+            
             //Slope = dy/dx //0 to -1
             while( dx > -dy )
             {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y + errY, val );
+                iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y - errY, val );
 
                 if( iFilled )
                 {
@@ -1459,20 +1465,28 @@ public:
                     dx -= C;
                     dy += B;
                     y--;
+                    if( errY == 0 )
+                        errY--;
+                    if( errX == 1)
+                    {
+                        iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y + errY, val );
+                        iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y - errY, val );
+                        errX--;
+                    }
                 }
                 dx += B;
                 dy -= A;
             };
             
             //Slope = dy/dx //Continue until y == p1.y, slope always < -1
-            while( y > p1.y )
+            while( y >= p1.y )
             {
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                iBlock->SetPixelValue( iCenter.x + x - errX, iCenter.y - y + errY, val );
+                iBlock->SetPixelValue( iCenter.x - x + errX, iCenter.y + y - errY, val );
                 
                 y--;
                 int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
+                                
                 if( sigma < 0 )
                 {
                     if( iFilled )
@@ -1636,6 +1650,443 @@ public:
                 std::cout << "FilledRotatedEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
             else
                 std::cout << "RotatedEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
+    }
+    
+
+    static void DrawRotatedEllipseAA(  TBlock< _SH >*           iBlock
+                                     , const FPoint             iCenter
+                                     , const int                iA
+                                     , const int                iB
+                                     , const int                iRotationDegrees
+                                     , const CColor&            iColor
+                                     , const bool               iFilled
+                                     , const FPerfStrat&        iPerfStrat
+                                     , bool                     callInvalidCB )
+    {
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+        
+        auto MaxAlpha = val.GetAlpha();
+        
+        FPoint64 p1;
+        FPoint64 p2;
+        
+        InternalGetEllipseAxesPoints( iA, iB, ::ULIS::FMath::DegToRad( iRotationDegrees ), &p1, &p2);
+        
+                                                           //               x  y
+        std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
+                                                           //                 [1]
+        
+        int64 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
+        int64 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
+        
+        int64 A = (p1.x * p1.x) * p2Coeff +
+                     (p2.x * p2.x) * p1Coeff;
+        
+        int64 B = ( p1.x * p1.y ) * p2Coeff +
+                     ( p2.x * p2.y ) * p1Coeff;
+       
+        int64 C = (p1.y * p1.y) * p2Coeff +
+                     (p2.y * p2.y) * p1Coeff;
+        
+        int64 D = p1Coeff *
+                     p2Coeff;
+
+        int64 x = -p1.x;
+        int64 y = -p1.y;
+        
+        int64 dx = -(B * p1.x + C * p1.y);
+        int64 dy =  A * p1.x + B * p1.y;
+        
+        int64 errMax = 0;
+        int64 errMin = 2 * (A * x * x + 2 * B * x * (y + 1) + C * (y + 1) * (y + 1) - D);
+        
+        std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
+
+        //Case 1 ----------------------------
+        if( dx == 0 || ::ULIS::FMath::Abs( dy / dx ) >= 1 )
+        {
+            //Slope = dy/dx //Initial slope to infinite
+            while( dx < 0 )
+            {
+                int64 sigma = A * x * x + 2 * B * x * (y + 1) + C * (y + 1) * (y + 1) - D;
+                int step = sigma < 0 ? 1 : -1;
+                
+                float alphaTop = FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
+
+                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
+                
+                val.SetAlpha( MaxAlpha * alphaTop );
+                
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
+
+                iBlock->SetPixelValue( iCenter.x + x - step, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x + step, iCenter.y + y, val );
+                
+                y++;
+                
+                if( sigma < 0)
+                {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
+                    dx -= B;
+                    dy += A;
+                    x--;
+                }
+                dx += C;
+                dy -= B;
+            };
+            
+            errMax = 0;
+            errMin = 2 * (A * x * x + 2 * B * x * (y + 1) + C * (y + 1) * (y + 1) - D);
+            
+            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
+
+            
+            //Slope = dy/dx //Infinite to 1
+            while( dx < dy )
+            {
+                int64 sigma = A * x * x + 2 * B * x * (y + 1) + C * (y + 1) * (y + 1) - D;
+                int step = sigma < 0 ? 1 : -1;
+
+                float alphaTop = FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
+                
+                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
+                
+                val.SetAlpha( MaxAlpha * alphaTop );
+                
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
+
+                iBlock->SetPixelValue( iCenter.x + x - step, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x + step, iCenter.y + y, val );
+                
+                y++;
+                
+                if( sigma > 0 )
+                {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
+                    dx += B;
+                    dy -= A;
+                    x++;
+                }
+                dx += C;
+                dy -= B;
+            };
+            
+            errMax = 0;
+            errMin = 2 * (A * (x + 1) * (x + 1) + 2 * B * (x + 1) * y + C * y * y - D);
+            
+            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
+            
+            //Slope = dy/dx //1 to 0
+            while( dy > 0 )
+            {
+                int64 sigma = A * (x + 1) * (x + 1) + 2 * B * (x + 1) * y + C * y * y - D;
+                int step = sigma < 0 ? 1 : -1;
+                
+                float alphaTop =  FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
+                
+                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
+                
+                val.SetAlpha( MaxAlpha * alphaTop );
+                
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
+
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - step, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + step, val );
+
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
+                
+                x++;
+                
+                if( sigma < 0 )
+                {
+                    dx += C;
+                    dy -= B;
+                    y++;
+                }
+                dx += B;
+                dy -= A;
+            };
+            
+            errMax = 0;
+            errMin = 2 * (A * (x + 1) * (x + 1) + 2 * B * (x + 1) * y + C * y * y - D);
+            
+            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
+            
+            //Slope = dy/dx //0 to -1
+            while( dx > -dy )
+            {
+                int64 sigma = A * (x + 1) * (x + 1) + 2 * B * (x + 1) * y + C * y * y - D;
+                int step = sigma < 0 ? 1 : -1;
+                
+                float alphaTop =  FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
+                
+                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
+                
+                val.SetAlpha( MaxAlpha * alphaTop );
+                
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
+
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - step, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + step, val );
+
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
+
+                x++;
+                
+                if( sigma > 0 )
+                {
+                    dx -= C;
+                    dy += B;
+                    y--;
+                }
+                dx += B;
+                dy -= A;
+            };
+            
+            errMax = 0;
+            errMin = 2 * (A * x * x + 2 * B * x * (y - 1) + C * (y - 1) * (y - 1) - D);
+            
+            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
+            
+            //Slope = dy/dx //Continue until y == p1.y, slope always < -1
+            while( y > p1.y )
+            {
+                int64 sigma = A * x * x + 2 * B * x * (y - 1) + C * (y - 1) * (y - 1) - D;
+                int step = sigma < 0 ? 1 : -1;
+                
+                float alphaTop =  FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
+                
+                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
+                
+                val.SetAlpha( MaxAlpha * alphaTop );
+                
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
+
+                iBlock->SetPixelValue( iCenter.x + x - step, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x + step, iCenter.y + y, val );
+                
+                y--;
+                
+                if( sigma < 0 )
+                {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
+
+                    dx += B;
+                    dy -= A;
+                    x++;
+                }
+                dx -= C;
+                dy += B;
+            };
+        }
+        //Case 2 -------------------------------
+        else
+        {
+            errMax = 0;
+            errMin = 2 * (A * (x - 1) * (x - 1) + 2 * B * (x - 1) * y + C * y * y - D);
+            
+            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
+            
+            //Slope = dy/dx //Initial slope to -1
+            while( -dx > dy )
+            {
+                int64 sigma = A * (x - 1) * (x - 1) + 2 * B * (x - 1) * y + C * y * y - D;
+                int step = sigma < 0 ? 1 : -1;
+                
+                float alphaTop =  FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
+
+                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
+                
+                val.SetAlpha( MaxAlpha * alphaTop );
+                
+                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
+
+                iBlock->SetPixelValue( iCenter.x + x - step, iCenter.y - y, val );
+                iBlock->SetPixelValue( iCenter.x - x + step, iCenter.y + y, val );
+                
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
+                
+                x--;
+
+                if( sigma > 0)
+                {
+                    dx += C;
+                    dy -= B;
+                    y++;
+                }
+                dx -= B;
+                dy += A;
+            };
+            
+            //Slope = dy/dx //-1 to infinite
+            while( dx < 0 )
+            {
+                //iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                //iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                y++;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma < 0)
+                {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
+                    
+                    dx -= B;
+                    dy += A;
+                    x--;
+                }
+                dx += C;
+                dy -= B;
+            };
+
+            //Slope = dy/dx //Infinite to 1
+            while( dx < dy )
+            {
+                //iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                //iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                y++;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma > 0 )
+                {
+                    if( iFilled )
+                    {
+                        storagePoints[x].push_back(y);
+                        storagePoints[-x].push_back(-y);
+                    }
+                    
+                    dx += B;
+                    dy -= A;
+                    x++;
+                }
+                dx += C;
+                dy -= B;
+            };
+            
+            //Slope = dy/dx //1 to 0
+            while( dy > 0 )
+            {
+                //iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                //iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+        
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
+                
+                x++;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma < 0 )
+                {
+                    dx += C;
+                    dy -= B;
+                    y++;
+                }
+                dx += B;
+                dy -= A;
+            };
+            
+            //Slope = dy/dx //Continue until x == p1.x, slope always > -1
+            while( x < p1.x )
+            {
+                //iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+                //iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+                
+                if( iFilled )
+                {
+                    storagePoints[x].push_back(y);
+                    storagePoints[-x].push_back(-y);
+                }
+                
+                x++;
+                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
+                
+                if( sigma > 0 )
+                {
+                    dx -= C;
+                    dy += B;
+                    y--;
+                }
+                dx += B;
+                dy -= A;
+
+            };
+        }
+        
+        if( iFilled ) //We fill the ellipse by drawing vertical lines
+        {
+            for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
+            {
+                if( it->second.size() == 2 )
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerfStrat, callInvalidCB );
+            }
+        }
+
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledRotatedEllipseAA: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "RotatedEllipseAA: elapsed time: " << elapsed_seconds.count() << "s\n";
             std::cout << "----------------------------- \n";
         }
     }
@@ -2001,7 +2452,418 @@ public:
             std::cout << "----------------------------- \n";
         }
     }
+    
+    
+    static void InternalDrawQuadRationalBezierSeg( TBlock< _SH>* iBlock
+                                                 , int x0
+                                                 , int y0
+                                                 , int x1
+                                                 , int y1
+                                                 , int x2
+                                                 , int y2
+                                                 , float w
+                                                 , const CColor& iColor
+                                                 , const FPerfStrat& iPerfStrat
+                                                 , bool callInvalidCB)
+    {
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
 
+        int sx = x2-x1, sy = y2-y1;
+        double dx = x0-x2, dy = y0-y2, xx = x0-x1, yy = y0-y1;
+        double xy = xx*sy+yy*sx, cur = xx*sy-yy*sx, err;
+        
+        if( xx*sx > 0.0 || yy*sy > 0.0 )
+        {
+            std::cout << "OUT" << std::endl;
+            return;
+        }
+        
+        if (cur != 0.0 && w > 0.0) {
+            if (sx*(long)sx+sy*(long)sy > xx*xx+yy*yy) {
+                x2 = x0; x0 -= dx; y2 = y0; y0 -= dy; cur = -cur;
+            }
+            xx = 2.0*(4.0*w*sx*xx+dx*dx);
+            yy = 2.0*(4.0*w*sy*yy+dy*dy);
+            sx = x0 < x2 ? 1 : -1;
+            sy = y0 < y2 ? 1 : -1;
+            xy = -2.0*sx*sy*(2.0*w*xy+dx*dy);
+            if (cur*sx*sy < 0.0)
+            {
+                xx = -xx; yy = -yy; xy = -xy; cur = -cur;
+            }
+            dx = 4.0*w*(x1-x0)*sy*cur+xx/2.0+xy;
+            dy = 4.0*w*(y0-y1)*sx*cur+yy/2.0+xy;
+            if (w < 0.5 && dy > dx)
+            {
+                cur = -(w+1.0)/2.0;
+                w = sqrt(w);
+                xy = 1.0/(w+1.0);
+                sx = floor((x0+2.0*w*x1+x2)*xy/2.0+0.5);
+                sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
+                dx = floor((w*x1+x0)*xy+0.5);
+                dy = floor((y1*w+y0)*xy+0.5);
+                InternalDrawQuadRationalBezierSeg( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerfStrat, callInvalidCB );
+                dx = floor((w*x1+x2)*xy+0.5);
+                dy = floor((y1*w+y2)*xy+0.5);
+                InternalDrawQuadRationalBezierSeg( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerfStrat, callInvalidCB );
+                return;
+            }
+            err = dx+dy-xy;
+            do {
+                iBlock->SetPixelValue( x0, y0, val );
+                if (x0 == x2 && y0 == y2)
+                    return;
+                x1 = 2 * err > dy; y1 = 2*( err + yy ) < -dy;
+                if (2 * err < dx || y1) { y0 += sy; dy += xy; err += dx += xx; }
+                if (2 * err > dx || x1) { x0 += sx; dx += xy; err += dy += yy; }
+            } while (dy <= xy && dx >= xy);
+        }
+        DrawLine( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerfStrat, callInvalidCB );
+    }
+    
+    static void DrawQuadraticBezier( TBlock< _SH>*                   iBlock
+                                   , const FPoint&                   iCtrlPt0
+                                   , const FPoint&                   iCtrlPt1
+                                   , const FPoint&                   iCtrlPt2
+                                   , const float                     iWeight
+                                   , const CColor&                   iColor
+                                   , const FPerfStrat&               iPerfStrat
+                                   , bool                            callInvalidCB )
+    {
+        int x = iCtrlPt0.x - 2 * iCtrlPt1.x + iCtrlPt2.x;
+        int y = iCtrlPt0.y - 2 * iCtrlPt1.y + iCtrlPt2.y;
+        double dx = iCtrlPt0.x - iCtrlPt1.x;
+        double dy = iCtrlPt0.y - iCtrlPt1.y;
+        double dWeight;
+        double dt;
+        double dq;
+        
+        FPoint pt0 = iCtrlPt0;
+        FPoint pt1 = iCtrlPt1;
+        FPoint pt2 = iCtrlPt2;
+        
+        float weight = iWeight;
+
+        if( weight < 0) //Can't draw a bezier curve with a weight < 0
+            return;
+        
+        if( dx * ( pt2.x - pt1.x ) > 0 )
+        {
+            if( dy * ( pt2.y - pt1.y ) > 0 )
+            {
+                if( FMath::Abs( dx * y ) > FMath::Abs( dy * x ) )
+                {
+                    pt0.x = pt2.x;
+                    pt2.x = dx + pt1.x;
+                    pt0.y = pt2.y;
+                    pt2.y = dy + pt1.y;
+                }
+            }
+            if( pt0.x == pt2.x || weight == 1.0 )
+            {
+                dt = (pt0.x - pt1.x) / (double)x;
+            }
+            else
+            {
+                dq = std::sqrt( 4.0 * weight * weight * ( pt0.x - pt1.x ) * ( pt2.x - pt1.x ) + ( pt2.x - pt0.x ) * (long)( pt2.x - pt0.x ) );
+                
+                if( pt1.x < pt0.x )
+                    dq = -dq;
+                
+                dt = ( 2.0 * weight * ( pt0.x - pt1.x ) - pt0.x + pt2.x + dq ) / (2.0 * ( 1.0 - weight ) * ( pt2.x - pt0.x ) );
+            }
+            dq = 1.0 / ( 2.0 * dt * ( 1.0 - dt ) * ( weight - 1.0 ) + 1.0);
+            dx = ( dt * dt * ( pt0.x - 2.0 * weight * pt1.x + pt2.x ) + 2.0 * dt * ( weight * pt1.x - pt0.x ) + pt0.x) * dq;
+            dy = ( dt * dt * ( pt0.y - 2.0 * weight * pt1.y + pt2.y ) + 2.0 * dt * ( weight * pt1.y - pt0.y ) + pt0.y) * dq;
+            dWeight = dt * (weight - 1.0) + 1.0;
+            dWeight *= (dWeight * dq);
+            weight = ( ( 1.0 - dt ) * ( weight - 1.0 ) + 1.0 ) * std::sqrt(dq);
+            x = std::floor( dx + 0.5 );
+            y = std::floor( dy + 0.5 );
+            dy = ( dx - pt0.x ) * ( pt1.y - pt0.y ) / ( pt1.x - pt0.x ) + pt0.y;
+            InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iPerfStrat, callInvalidCB  );
+            dy = ( dx - pt2.x ) * ( pt1.y - pt2.y ) / ( pt1.x - pt2.x ) + pt2.y;
+            pt1.y = std::floor( dy + 0.5 );
+            pt0.x = pt1.x = x;
+            pt0.y = y;
+            
+            std::cout << "1: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
+        }
+        
+        if( ( pt0.y - pt1.y ) * (long)( pt2.y - pt1.y ) > 0 )
+        {
+            if( pt0.y == pt2.y || iWeight == 1.0 )
+            {
+                dt = ( pt0.y - pt1.y ) / ( pt0.y - 2.0 * pt1.y + pt2.y );
+            }
+            else
+            {
+                dq = std::sqrt( 4.0 * weight * weight * ( pt0.y - pt1.y ) * ( pt2.y - pt1.y ) + ( pt2.y - pt0.y ) * (long)( pt2.y - pt0.y ) );
+                
+                if( pt1.y < pt0.y )
+                    dq = -dq;
+                
+                dt = ( 2.0 * weight * ( pt0.y - pt1.y ) - pt0.y + pt2.y + dq ) / (2.0 * ( 1.0 - weight ) * ( pt2.y - pt0.y ) );
+            }
+            dq = 1.0 / ( 2.0 * dt * ( 1.0 - dt ) * ( weight - 1.0 ) + 1.0);
+            dx = ( dt * dt * ( pt0.x - 2.0 * weight * pt1.x + pt2.x ) + 2.0 * dt * ( weight * pt1.x - pt0.x ) + pt0.x) * dq;
+            dy = ( dt * dt * ( pt0.y - 2.0 * weight * pt1.y + pt2.y ) + 2.0 * dt * ( weight * pt1.y - pt0.y ) + pt0.y) * dq;
+            dWeight = dt * (weight - 1.0) + 1.0;
+            dWeight *= (dWeight * dq);
+            weight = ( ( 1.0 - dt ) * ( weight - 1.0 ) + 1.0 ) * std::sqrt(dq);
+            x = std::floor( dx + 0.5 );
+            y = std::floor( dy + 0.5 );
+            dx = ( pt1.x - pt0.x ) * ( dy - pt0.y ) / ( pt1.y - pt0.y ) + pt0.x;
+            InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerfStrat, callInvalidCB  );
+            std::cout << "2Before: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y << " x: " << x << " y " << y <<   std::endl;
+
+            dx = ( pt1.x - pt2.x ) * ( dy - pt2.y ) / ( pt1.y - pt2.y ) + pt2.x;
+            pt1.x = std::floor( dx + 0.5 );
+            pt0.x = x;
+            pt0.y = pt1.y = y;
+            
+            std::cout << "2: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
+        }
+        InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerfStrat, callInvalidCB  );
+    }
+    
+    
+    
+    static void InternalDrawQuadRationalBezierSegAA( TBlock< _SH>* iBlock
+                                                   , int x0
+                                                   , int y0
+                                                   , int x1
+                                                   , int y1
+                                                   , int x2
+                                                   , int y2
+                                                   , float w
+                                                   , const CColor& iColor
+                                                   , const FPerfStrat& iPerfStrat
+                                                   , bool callInvalidCB)
+    {
+        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+        auto MaxAlpha = val.GetAlpha();
+
+        int sx = x2-x1, sy = y2-y1;
+        double dx = x0-x2, dy = y0-y2, xx = x0-x1, yy = y0-y1;
+        double xy = xx*sy+yy*sx, cur = xx*sy-yy*sx, err, ed;
+        bool f;
+        
+        if( xx*sx > 0.0 || yy*sy > 0.0 )
+        {
+            return;
+        }
+        
+        if (cur != 0.0 && w > 0.0)
+        {
+            if (sx*(long)sx+sy*(long)sy > xx*xx+yy*yy)
+            {
+                x2 = x0; x0 -= dx; y2 = y0; y0 -= dy; cur = -cur;
+            }
+            xx = 2.0*(4.0*w*sx*xx+dx*dx);
+            yy = 2.0*(4.0*w*sy*yy+dy*dy);
+            sx = x0 < x2 ? 1 : -1;
+            sy = y0 < y2 ? 1 : -1;
+            xy = -2.0*sx*sy*(2.0*w*xy+dx*dy);
+            
+            if (cur*sx*sy < 0.0)
+            {
+                xx = -xx; yy = -yy; xy = -xy; cur = -cur;
+            }
+            
+            dx = 4.0*w*(x1-x0)*sy*cur+xx/2.0+xy;
+            dy = 4.0*w*(y0-y1)*sx*cur+yy/2.0+xy;
+            
+            if (w < 0.5 && dy > dx)
+            {
+                cur = -(w+1.0)/2.0;
+                w = sqrt(w);
+                xy = 1.0/(w+1.0);
+                sx = floor((x0+2.0*w*x1+x2)*xy/2.0+0.5);
+                sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
+                dx = floor((w*x1+x0)*xy+0.5);
+                dy = floor((y1*w+y0)*xy+0.5);
+                InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerfStrat, callInvalidCB );
+                dx = floor((w*x1+x2)*xy+0.5);
+                dy = floor((y1*w+y2)*xy+0.5);
+                InternalDrawQuadRationalBezierSegAA( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerfStrat, callInvalidCB );
+                return;
+            }
+            err = dx+dy-xy;
+            do
+            {
+                cur = std::min( dx - xy, xy - dy );
+                ed = std::max( dx - xy, xy - dy );
+                ed += ( 2 * ed * cur * cur / (4.0 * ed * ed + cur * cur ) );
+                x1 = MaxAlpha * ( 1 - FMath::Abs( err - dx - dy + xy ) / ed );
+                f = (2 * err + dy) < 0;
+                
+                if( x1 > MaxAlpha || x1 < 0 )
+                    std::cout << "x1: " << x1 << std::endl;
+
+                if( x1 <= MaxAlpha )
+                {
+                    val.SetAlpha( x1 );
+                    iBlock->SetPixelValue( x0, y0, val );
+                }
+
+                if( f )
+                {
+                    if( y0 == y2 )
+                        return;
+                    if( ( dx - err ) < ed )
+                    {
+                        float alpha = FMath::Abs( 1 - ( dx - err ) / ed );
+                        
+                        if( alpha > 1 || alpha < 0 )
+                            std::cout << "1: " << alpha << std::endl;
+                        
+                        val.SetAlpha( MaxAlpha * alpha );
+                        iBlock->SetPixelValue( x0 + sx, y0, val );
+                    }
+                }
+            
+                if( 2 * err + dx > 0 )
+                {
+                    if( x0 == x2 )
+                        return;
+                    if( ( err - dy ) < ed )
+                    {
+                        float alpha = FMath::Abs( 1 - ( err - dy ) / ed );
+                        
+                        if( alpha > 1 || alpha < 0 )
+                        {
+                            std::cout << "2: " << alpha << " x: " << x0 << std::endl;
+                        }
+                        
+                        val.SetAlpha( MaxAlpha * alpha );
+                        iBlock->SetPixelValue( x0, y0 + sy, val );
+                    }
+                    x0 += sx;
+                    dx += xy;
+                    err += dy += yy;
+                }
+            
+                if( f )
+                {
+                    y0 += sy;
+                    dy += xy;
+                    err += dx += xx;
+                }
+                
+            } while (dy < dx);
+        }
+        DrawLineAA( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerfStrat, callInvalidCB );
+    }
+    
+    static void DrawQuadraticBezierAA( TBlock< _SH>*                   iBlock
+                                     , const FPoint&                   iCtrlPt0
+                                     , const FPoint&                   iCtrlPt1
+                                     , const FPoint&                   iCtrlPt2
+                                     , const float                     iWeight
+                                     , const CColor&                   iColor
+                                     , const FPerfStrat&               iPerfStrat
+                                     , bool                            callInvalidCB )
+    {
+        int x = iCtrlPt0.x - 2 * iCtrlPt1.x + iCtrlPt2.x;
+        int y = iCtrlPt0.y - 2 * iCtrlPt1.y + iCtrlPt2.y;
+        double dx = iCtrlPt0.x - iCtrlPt1.x;
+        double dy = iCtrlPt0.y - iCtrlPt1.y;
+        double dWeight;
+        double dt;
+        double dq;
+        
+        FPoint pt0 = iCtrlPt0;
+        FPoint pt1 = iCtrlPt1;
+        FPoint pt2 = iCtrlPt2;
+        
+        float weight = iWeight;
+
+        if( weight < 0) //Can't draw a bezier curve with a weight < 0
+            return;
+        
+        if( dx * ( pt2.x - pt1.x ) > 0 )
+        {
+            if( dy * ( pt2.y - pt1.y ) > 0 )
+            {
+                if( FMath::Abs( dx * y ) > FMath::Abs( dy * x ) )
+                {
+                    pt0.x = pt2.x;
+                    pt2.x = dx + pt1.x;
+                    pt0.y = pt2.y;
+                    pt2.y = dy + pt1.y;
+                }
+            }
+            if( pt0.x == pt2.x || weight == 1.0 )
+            {
+                dt = (pt0.x - pt1.x) / (double)x;
+            }
+            else
+            {
+                dq = std::sqrt( 4.0 * weight * weight * ( pt0.x - pt1.x ) * ( pt2.x - pt1.x ) + ( pt2.x - pt0.x ) * (long)( pt2.x - pt0.x ) );
+                
+                if( pt1.x < pt0.x )
+                    dq = -dq;
+                
+                dt = ( 2.0 * weight * ( pt0.x - pt1.x ) - pt0.x + pt2.x + dq ) / (2.0 * ( 1.0 - weight ) * ( pt2.x - pt0.x ) );
+            }
+            dq = 1.0 / ( 2.0 * dt * ( 1.0 - dt ) * ( weight - 1.0 ) + 1.0);
+            dx = ( dt * dt * ( pt0.x - 2.0 * weight * pt1.x + pt2.x ) + 2.0 * dt * ( weight * pt1.x - pt0.x ) + pt0.x) * dq;
+            dy = ( dt * dt * ( pt0.y - 2.0 * weight * pt1.y + pt2.y ) + 2.0 * dt * ( weight * pt1.y - pt0.y ) + pt0.y) * dq;
+            dWeight = dt * (weight - 1.0) + 1.0;
+            dWeight *= (dWeight * dq);
+            weight = ( ( 1.0 - dt ) * ( weight - 1.0 ) + 1.0 ) * std::sqrt(dq);
+            x = std::floor( dx + 0.5 );
+            y = std::floor( dy + 0.5 );
+            dy = ( dx - pt0.x ) * ( pt1.y - pt0.y ) / ( pt1.x - pt0.x ) + pt0.y;
+            InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iPerfStrat, callInvalidCB  );
+            dy = ( dx - pt2.x ) * ( pt1.y - pt2.y ) / ( pt1.x - pt2.x ) + pt2.y;
+            pt1.y = std::floor( dy + 0.5 );
+            pt0.x = pt1.x = x;
+            pt0.y = y;
+            
+            std::cout << "1: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
+        }
+        
+        if( ( pt0.y - pt1.y ) * (long)( pt2.y - pt1.y ) > 0 )
+        {
+            if( pt0.y == pt2.y || iWeight == 1.0 )
+            {
+                dt = ( pt0.y - pt1.y ) / ( pt0.y - 2.0 * pt1.y + pt2.y );
+            }
+            else
+            {
+                dq = std::sqrt( 4.0 * weight * weight * ( pt0.y - pt1.y ) * ( pt2.y - pt1.y ) + ( pt2.y - pt0.y ) * (long)( pt2.y - pt0.y ) );
+                
+                if( pt1.y < pt0.y )
+                    dq = -dq;
+                
+                dt = ( 2.0 * weight * ( pt0.y - pt1.y ) - pt0.y + pt2.y + dq ) / (2.0 * ( 1.0 - weight ) * ( pt2.y - pt0.y ) );
+            }
+            dq = 1.0 / ( 2.0 * dt * ( 1.0 - dt ) * ( weight - 1.0 ) + 1.0);
+            dx = ( dt * dt * ( pt0.x - 2.0 * weight * pt1.x + pt2.x ) + 2.0 * dt * ( weight * pt1.x - pt0.x ) + pt0.x) * dq;
+            dy = ( dt * dt * ( pt0.y - 2.0 * weight * pt1.y + pt2.y ) + 2.0 * dt * ( weight * pt1.y - pt0.y ) + pt0.y) * dq;
+            dWeight = dt * (weight - 1.0) + 1.0;
+            dWeight *= (dWeight * dq);
+            weight = ( ( 1.0 - dt ) * ( weight - 1.0 ) + 1.0 ) * std::sqrt(dq);
+            x = std::floor( dx + 0.5 );
+            y = std::floor( dy + 0.5 );
+            dx = ( pt1.x - pt0.x ) * ( dy - pt0.y ) / ( pt1.y - pt0.y ) + pt0.x;
+            InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerfStrat, callInvalidCB  );
+            std::cout << "2Before: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y << " x: " << x << " y " << y <<   std::endl;
+
+            dx = ( pt1.x - pt2.x ) * ( dy - pt2.y ) / ( pt1.y - pt2.y ) + pt2.x;
+            pt1.x = std::floor( dx + 0.5 );
+            pt0.x = x;
+            pt0.y = pt1.y = y;
+            
+            std::cout << "2: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
+        }
+        InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerfStrat, callInvalidCB  );
+    }
+    
+
+    
 };
 
 /////////////////////////////////////////////////////

@@ -146,13 +146,13 @@ int main( int argc, char *argv[] )
     
     //Ellipses
     
-    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, ::ULIS::CColor( 255, 0 ,0 ), true );
+    /*::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, ::ULIS::CColor( 255, 0 ,0 ), true );
 
     ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, ::ULIS::CColor( 0, 255 ,0 ) );
     
     ::ULIS::FPainterContext::DrawEllipseAA( block, ::ULIS::FPoint(500, 750), 300, 90, ::ULIS::CColor( 255, 0 ,0 ), true );
     
-    ::ULIS::FPainterContext::DrawEllipseAA( block, ::ULIS::FPoint(500, 750), 300, 90, ::ULIS::CColor( 0, 255 ,0 ) );
+    ::ULIS::FPainterContext::DrawEllipseAA( block, ::ULIS::FPoint(500, 750), 300, 90, ::ULIS::CColor( 0, 255 ,0 ) );*/
     
     /*::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 69, ::ULIS::CColor( 0, 0 ,0 ), true );
     ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 30, ::ULIS::CColor( 0, 0 ,0 ), true );
@@ -162,15 +162,31 @@ int main( int argc, char *argv[] )
     
     */
     
-    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 69, ::ULIS::CColor( 0, 0 ,0 ), true );
+    
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 100, 10, 0, ::ULIS::CColor( 255, 0 ,0 ) );
+    
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 750), 100, 200, 42, ::ULIS::CColor( 255, 0 ,0 ) );
+
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ) );
     
 
-    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 30, ::ULIS::CColor( 0, 0 ,0 ), false );
+    //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 750), 200, 100, 0, ::ULIS::CColor( 255, 0 ,0 ) );
+    
+    //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 750), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ) );
 
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 100, 0, ::ULIS::CColor( 0, 0 ,0 ), true );
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 350, 200, 2, ::ULIS::CColor( 0, 0 ,0 ), true );
 
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 400, 12, ::ULIS::CColor( 0, 0 ,0 ), true );
+    
+    // Beziers
+    
+    ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 500, 500 ), ::ULIS::FPoint( 1000, 250 ), ::ULIS::FPoint( 800, 100 ), 1.0, ::ULIS::CColor( 255, 0 ,0 ) );
+    
+    ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 100, 200 ), ::ULIS::FPoint( 400, 50 ), ::ULIS::FPoint( 800, 700 ), 1.0, ::ULIS::CColor( 255, 255 ,0 ) );
+    
+    ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 200, 800 ), ::ULIS::FPoint( 50, 50 ), ::ULIS::FPoint( 500, 300 ), 1.0, ::ULIS::CColor( 0, 255 ,0 ) );
+    
 
     // Qt Windowing
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

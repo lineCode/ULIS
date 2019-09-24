@@ -194,6 +194,24 @@ FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const
         #undef ULIS_REG_SWITCH_OP
     }
 }
+    
+    
+//static
+void
+FPainterContext::DrawRotatedEllipseAA( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled,const FPerformanceOptions& iPerformanceOptions, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                               \
+            case ULIS_REG[ n ]:                                                                                                                                                  \
+            {                                                                                                                                                                                  \
+                TPainterContext< ULIS_REG[ n ] >::DrawRotatedEllipseAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, iCenter, iA, iB, iRotationDegrees, iColor, iFilled, iPerformanceOptions, callInvalidCB );     \
+                break;                                                                                                                                                                         \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
 
 
 //static
@@ -302,6 +320,40 @@ FPainterContext::DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, co
         #undef ULIS_REG_SWITCH_OP
     }
 }
+    
+//static
+void FPainterContext::DrawQuadraticBezier( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, const float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                                         \
+            case ULIS_REG[ n ]:                                                                                                                                                            \
+            {                                                                                                                                                                                            \
+                TPainterContext< ULIS_REG[ n ] >::DrawQuadraticBezier( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, iCtrlPt0, iCtrlPt1, iCtrlPt2, iWeight, iColor, iPerformanceOptions, callInvalidCB );      \
+                break;                                                                                                                                                                                   \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+    
+    
+//static
+void FPainterContext::DrawQuadraticBezierAA( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, const float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool callInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                                         \
+            case ULIS_REG[ n ]:                                                                                                                                                            \
+            {                                                                                                                                                                                            \
+                TPainterContext< ULIS_REG[ n ] >::DrawQuadraticBezierAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, iCtrlPt0, iCtrlPt1, iCtrlPt2, iWeight, iColor, iPerformanceOptions, callInvalidCB );      \
+                break;                                                                                                                                                                                   \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+
 
 
 } // namespace ULIS
