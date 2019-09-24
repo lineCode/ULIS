@@ -1,11 +1,11 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Base.MD5.cpp
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Base.MD5.cpp
+* @author   Clement Berthaud
+* @brief    This file provides the definition for the FCPUConfig struct.
 */
 
 #include "ULIS/Base/ULIS.Base.MD5.h"
@@ -40,41 +40,41 @@ FMD5::FMD5()
 }
 
 
-FMD5::FMD5( const std::string &text )
+FMD5::FMD5( const  std::string&  iText )
 {
     Init();
-    Update( text.c_str(), text.length() );
+    Update( (const uint8*)iText.c_str(), iText.length() );
     Finalize();
 }
 
 
-FMD5::FMD5( const uint8* data, int length )
+FMD5::FMD5( const uint8* iData, uint32 iLen )
 {
     Init();
-    Update( data, length );
+    Update( iData, iLen );
     Finalize();
 }
 
 
 //--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------- Private Internals
+//-------------------------------------------------------------------------- Private API
 void
 FMD5::Init()
 {
-    finalized=false;
-    count[0] = 0;
-    count[1] = 0;
-    state[0] = 0x67452301;
-    state[1] = 0xefcdab89;
-    state[2] = 0x98badcfe;
-    state[3] = 0x10325476;
+    mFinalized=false;
+    mCount[0] = 0;
+    mCount[1] = 0;
+    mState[0] = 0x67452301;
+    mState[1] = 0xefcdab89;
+    mState[2] = 0x98badcfe;
+    mState[3] = 0x10325476;
 }
 
 
 void
-FMD5::Transform( const unsigned char block[64] )
+FMD5::Transform( const uint8 block[64] )
 {
-    uint32 a = state[0], b = state[1], c = state[2], d = state[3], x[16];
+    uint32 a = mState[0], b = mState[1], c = mState[2], d = mState[3], x[16];
     Decode( x, block, 64 );
 
     FF( a, b, c, d, x[ 0], S11, 0xd76aa478 );
@@ -141,10 +141,10 @@ FMD5::Transform( const unsigned char block[64] )
     II( d, a, b, c, x[11], S42, 0xbd3af235 );
     II( c, d, a, b, x[ 2], S43, 0x2ad7d2bb );
     II( b, c, d, a, x[ 9], S44, 0xeb86d391 );
-    state[0] += a;
-    state[1] += b;
-    state[2] += c;
-    state[3] += d;
+    mState[0] += a;
+    mState[1] += b;
+    mState[2] += c;
+    mState[3] += d;
     memset( x, 0, sizeof x );
 }
 
@@ -152,24 +152,24 @@ FMD5::Transform( const unsigned char block[64] )
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 void
-FMD5::Update( const unsigned char input[], uint32 length )
+FMD5::Update( const uint8 iInput[], uint32 iLen )
 {
-    uint32 index = count[0] / 8 % 64;
+    uint32 index = mCount[0] / 8 % 64;
 
-    if( ( count[0] += ( length << 3 ) ) < ( length << 3 ) )
-        count[1]++;
-    count[1] += ( length >> 29 );
+    if( ( mCount[0] += ( iLen << 3 ) ) < ( iLen << 3 ) )
+        mCount[1]++;
+    mCount[1] += ( iLen >> 29 );
 
     uint32 firstpart = 64 - index;
     uint32 i;
 
-    if( length >= firstpart )
+    if( iLen >= firstpart )
     {
-        memcpy( &buffer[index], input, firstpart );
-        Transform( buffer );
+        memcpy( &mBuffer[index], iInput, firstpart );
+        Transform( mBuffer );
 
-        for( i = firstpart; i + 64 <= length; i += 64 )
-            Transform(&input [i] );
+        for( i = firstpart; i + 64 <= iLen; i += 64 )
+            Transform(&iInput [i] );
 
     index = 0;
     }
@@ -178,39 +178,32 @@ FMD5::Update( const unsigned char input[], uint32 length )
         i = 0;
     }
 
-    memcpy( &buffer[index], &input[i], length-i );
-}
-
-
-void
-FMD5::Update( const char input[], uint32 length )
-{
-    Update( (const unsigned char*)input, length );
+    memcpy( &mBuffer[index], &iInput[i], iLen-i );
 }
 
 
 FMD5&
 FMD5::Finalize()
 {
-    static unsigned char padding[64] = {
+    static uint8 padding[64] = {
         0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
 
-    if( !finalized ) {
-        unsigned char bits[8];
-        Encode( bits, count, 8 );
+    if( !mFinalized ) {
+        uint8 bits[8];
+        Encode( bits, mCount, 8 );
 
-        uint32 index = count[0] / 8 % 64;
+        uint32 index = mCount[0] / 8 % 64;
         uint32 padLen = ( index < 56 ) ? ( 56 - index ) : ( 120 - index );
         Update( padding, padLen );
         Update( bits, 8 );
 
-        Encode(digest, state, 16);
-        memset(buffer, 0, sizeof buffer);
-        memset(count, 0, sizeof count);
-        finalized=true;
+        Encode(mDigest, mState, 16);
+        memset(mBuffer, 0, sizeof mBuffer);
+        memset(mCount, 0, sizeof mCount);
+        mFinalized=true;
     }
 
     return  *this;
@@ -220,12 +213,12 @@ FMD5::Finalize()
 std::string
 FMD5::Hexdigest() const
 {
-    if( !finalized )
+    if( !mFinalized )
         return  "";
 
     char buf[33];
     for( int i=0; i < 16; i++ )
-        sprintf( buf+i*2, "%02x", digest[i] );
+        sprintf( buf+i*2, "%02x", mDigest[i] );
     buf[32]=0;
 
     return  std::string( buf );
@@ -236,24 +229,24 @@ FMD5::Hexdigest() const
 //------------------------------------------------------------------------ Private logic
 //static
 void
-FMD5::Decode( uint32 output[], const unsigned char input[], uint32 len )
+FMD5::Decode( uint32 oOutput[], const uint8 iInput[], uint32 iLen )
 {
-    for( unsigned int i = 0, j = 0; j < len; i++, j += 4 )
-        output[i] = ((uint32)input[j]) | (((uint32)input[j+1]) << 8) |
-                    (((uint32)input[j+2]) << 16) | (((uint32)input[j+3]) << 24);
+    for( unsigned int i = 0, j = 0; j < iLen; i++, j += 4 )
+        oOutput[i] = ((uint32)iInput[j]) | (((uint32)iInput[j+1]) << 8) |
+                    (((uint32)iInput[j+2]) << 16) | (((uint32)iInput[j+3]) << 24);
 }
 
 
 //static
 void
-FMD5::Encode( unsigned char output[], const uint32 input[], uint32 len )
+FMD5::Encode( uint8 oOutput[], const uint32 iInput[], uint32 iLen )
 {
-    for( uint32 i = 0, j = 0; j < len; i++, j += 4 )
+    for( uint32 i = 0, j = 0; j < iLen; i++, j += 4 )
     {
-        output[j] = input[i] & 0xff;
-        output[j+1] = (input[i] >> 8) & 0xff;
-        output[j+2] = (input[i] >> 16) & 0xff;
-        output[j+3] = (input[i] >> 24) & 0xff;
+        oOutput[j] = iInput[i] & 0xff;
+        oOutput[j+1] = (iInput[i] >> 8) & 0xff;
+        oOutput[j+2] = (iInput[i] >> 16) & 0xff;
+        oOutput[j+3] = (iInput[i] >> 24) & 0xff;
     }
 }
 
@@ -340,19 +333,22 @@ FMD5::II( uint32 &a, uint32 b, uint32 c, uint32 d, uint32 x, uint32 s, uint32 ac
 
 
 /////////////////////////////////////////////////////
-// Accessibility util
-std::string MD5(const std::string str)
+// Accessibility utility functions
+std::string
+MD5( const std::string iStr )
 {
-    FMD5 m = FMD5(str);
+    FMD5 m = FMD5( iStr );
     return  m.Hexdigest();
 }
 
 
-std::string MD5( const uint8* data, int length )
+std::string
+MD5( const uint8* iData, int iLen )
 {
-    FMD5 m = FMD5(data, length);
+    FMD5 m = FMD5( iData, iLen );
     return  m.Hexdigest();
 }
+
 
 } // namespace ULIS
 

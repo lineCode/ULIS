@@ -11,7 +11,10 @@ file(
 
 add_library( ULIS ${source_list} )
 
-target_compile_definitions(ULIS PUBLIC UNICODE)
+target_compile_definitions( ULIS PUBLIC UNICODE )
+target_compile_definitions( ULIS PRIVATE ULIS_EXT_VERSION_MAJOR=${ULIS_VERSION_MAJOR} )
+target_compile_definitions( ULIS PRIVATE ULIS_EXT_VERSION_MINOR=${ULIS_VERSION_MINOR} )
+set_target_properties( ULIS PROPERTIES OUTPUT_NAME "ULIS${ULIS_VERSION_MAJOR}.${ULIS_VERSION_MINOR}" )
 
 target_link_libraries (
     ULIS

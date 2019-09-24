@@ -10,6 +10,7 @@
 
 #pragma once
 
+// Warning ! The include order does matter !
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
 #include "ULIS/Interface/ULIS.Interface.Access.h"
 #include "ULIS/Interface/ULIS.Interface.Make.h"

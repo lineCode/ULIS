@@ -1,15 +1,13 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Base.BaseTypes.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Base.BaseTypes.h
+* @author   Clement Berthaud
+* @brief    This file provides some usefull shorthand typedefs.
 */
-
 #pragma once
-
 #include <stdint.h>
 
 namespace ULIS {
@@ -23,5 +21,6 @@ typedef  int8_t     int8;
 typedef  int16_t    int16;
 typedef  int32_t    int32;
 typedef  int64_t    int64;
+
 } // namespace ULIS
 

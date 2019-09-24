@@ -127,20 +127,20 @@ ULIS_DECLSPEC(uint32,XYZ,hasAlpha,XYZA,typeLimits)
 ULIS_DECLSPEC(float,XYZ,hasAlpha,XYZA,normalized)
 ULIS_DECLSPEC(float,XYZ,hasAlpha,XYZA,typeLimits)
 
-namespace rubbish {
+namespace generated {
 /////////////////////////////////////////////////////
 // Reg assign
 /* we assign the result reg */
 ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
 /* we spec the name of the result reg for easy usage */
-#define ULIS_REG ::ULIS::rubbish::ulis_types_reg
+#define ULIS_REG ::ULIS::generated::ulis_types_reg
 /////////////////////////////////////////////////////
 // Reg Size
 /* temp assign reg size ( workaround ) */
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 /* Reg size macro for usage during preprocessor ( workaround ) */
 #define ULIS_REG_SIZE 59
-} // namespace rubbish
+} // namespace generated
 /////////////////////////////////////////////////////
 // Extern template declarations
 /*
@@ -193,13 +193,19 @@ template<> constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  ::UL
 #define ULIS_LCMS_DTYPE_CMYKA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(4))
 #define ULIS_LCMS_DTYPE_LabA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
 #define ULIS_LCMS_DTYPE_XYZA_FLT    (FLOAT_SH(1)|COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))
+
+#define ULIS_LCMS_DTYPE_GRAYA_U16   (COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(2))
+#define ULIS_LCMS_DTYPE_RGBA_U16    (COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))
+#define ULIS_LCMS_DTYPE_CMYKA_U16   (COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(2))
+#define ULIS_LCMS_DTYPE_LabA_U16    (COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))
+#define ULIS_LCMS_DTYPE_XYZA_U16    (COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))
 /////////////////////////////////////////////////////
 // TCMSConnectionFormat Specialization
 template<> constexpr uint32 TCMSConnectionType< e_cm::kG >()     { return  ULIS_LCMS_DTYPE_GRAYA_FLT; }
 template<> constexpr uint32 TCMSConnectionType< e_cm::kRGB >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
 template<> constexpr uint32 TCMSConnectionType< e_cm::kHSL >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
 template<> constexpr uint32 TCMSConnectionType< e_cm::kHSV >()   { return  ULIS_LCMS_DTYPE_RGBA_FLT;  }
-template<> constexpr uint32 TCMSConnectionType< e_cm::kCMYK >()  { return  ULIS_LCMS_DTYPE_CMYKA_FLT; }
+template<> constexpr uint32 TCMSConnectionType< e_cm::kCMYK >()  { return  ULIS_LCMS_DTYPE_CMYKA_U16; }
 template<> constexpr uint32 TCMSConnectionType< e_cm::kLab >()   { return  ULIS_LCMS_DTYPE_LabA_FLT;  }
 template<> constexpr uint32 TCMSConnectionType< e_cm::kXYZ >()   { return  ULIS_LCMS_DTYPE_XYZA_FLT;  }
 /////////////////////////////////////////////////////
@@ -208,7 +214,7 @@ template<> constexpr uint32 TModelConnectionFormat< e_cm::kG >()     { return  :
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kRGB >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kHSL >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kHSV >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
-template<> constexpr uint32 TModelConnectionFormat< e_cm::kCMYK >()  { return  ::ULIS::Format::Format_floatCMYKhasAlphaCMYKAnormalized; }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kCMYK >()  { return  ::ULIS::Format::Format_uint16CMYKhasAlphaCMYKAtypeLimits; }
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kLab >()   { return  ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits;   }
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kXYZ >()   { return  ::ULIS::Format::Format_floatXYZhasAlphaXYZAtypeLimits;   }
 

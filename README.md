@@ -1,5 +1,4 @@
 # ULIS
-![alt text](http://clementberthaud.com/dev/dep/ULIS/media/com/Banner.png "ULIS")
 Unlimited Library for Imaging Systems
 
 ## Description

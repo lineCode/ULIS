@@ -1,19 +1,20 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Base.CRC32.cpp
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Base.CRC32.cpp
+* @author   Clement Berthaud
+* @brief    This file provides the definition for the CRC32 function.
 */
-
 #include "ULIS/Base/ULIS.Base.CRC32.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
 // CRC32
-uint32 CRC32( const unsigned char *data, int length ) {
+uint32
+CRC32( const uint8*iData, int iLen )
+{
    int i = 0;
    int j = 0;
    unsigned int byte = 0;
@@ -22,18 +23,20 @@ uint32 CRC32( const unsigned char *data, int length ) {
 
    i = 0;
    crc = 0xFFFFFFFF;
-   while( i < length ) {
-      byte = data[i];
+   while( i < iLen )
+   {
+      byte = iData[i];
       crc = crc ^ byte;
-      for (j = 7; j >= 0; j--) {
-         mask = -(crc & 1);
-         crc = (crc >> 1) ^ (0xEDB88320 & mask);
+      for( j = 7; j >= 0; j-- )
+      {
+         mask = -( crc & 1 );
+         crc = ( crc >> 1 ) ^ ( 0xEDB88320 & mask );
       }
       i = i + 1;
    }
-   return ~crc;
-}
 
+   return  ~crc;
+}
 
 } // namespace ULIS
 

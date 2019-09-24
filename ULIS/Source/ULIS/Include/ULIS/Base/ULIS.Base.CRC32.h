@@ -1,21 +1,24 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Base.CRC32.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Base.CRC32.h
+* @author   Clement Berthaud
+* @brief    This file provides the declaration for the CRC32 function.
 */
-
 #pragma once
-
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// CRC32
-// Simple CRC32 computation for hashing purposes
-uint32 CRC32( const unsigned char *data, int length );
+/// @fn         CRC32( const uint8* iData, int iLen )
+/// @brief      Simple CRC32 computation for hashing purposes.
+/// @details    Hashes the data of with specified size in bytes. The implementation is not optimal in terms of efficiency, but is simple and straightforward.
+/// @param      iData The data to hash, cast as pointer to const uint8.
+/// @param      iLen The size of the data to hash in bytes.
+/// @return     An uint32 representing the CRC32 hash.
+uint32 CRC32( const uint8* iData, int iLen );
+
 } // namespace ULIS
 

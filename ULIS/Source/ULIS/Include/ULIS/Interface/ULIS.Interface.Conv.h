@@ -13,7 +13,6 @@
 
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerfStrat.h"
-#include "ULIS/Data/ULIS.Data.Block.h"
 
 namespace ULIS { class IBlock; }
 

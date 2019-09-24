@@ -1,0 +1,28 @@
+var _u_l_i_s_8_spec_8_spec_8h =
+[
+    [ "FSpec", "struct_u_l_i_s_1_1_f_spec.html", "struct_u_l_i_s_1_1_f_spec" ],
+    [ "TBlockInfo", "struct_u_l_i_s_1_1_t_block_info.html", null ],
+    [ "ULIS_DECLSPEC", "_u_l_i_s_8_spec_8_spec_8h.html#a112ae75eb873b0b93a6ef23cc80300e2", null ],
+    [ "ULIS_DECLSPEC_IMP", "_u_l_i_s_8_spec_8_spec_8h.html#a97546ba0201341a3b647e836475fcbe0", null ],
+    [ "ULIS_GETSPEC", "_u_l_i_s_8_spec_8_spec_8h.html#aac190b80fbd5a537e4c64d2197298ea0", null ],
+    [ "ULIS_KEYS_CM", "_u_l_i_s_8_spec_8_spec_8h.html#a033de3978d413be29fc52455fd4c48cd", null ],
+    [ "ULIS_KEYS_EA", "_u_l_i_s_8_spec_8_spec_8h.html#a1f1fde77bebddf50111ffa5e3aafb9d8", null ],
+    [ "ULIS_KEYS_NM", "_u_l_i_s_8_spec_8_spec_8h.html#acb9e66921ab0eb0adb45f36291f0109a", null ],
+    [ "ULIS_KEYS_TP", "_u_l_i_s_8_spec_8_spec_8h.html#a775dfbc2140ddef0b13c80106441511e", null ],
+    [ "ULIS_PARSE_FSPEC", "_u_l_i_s_8_spec_8_spec_8h.html#a1948fdf037cf7263a70e75350292d1f4", null ],
+    [ "ULIS_SEQ_CM", "_u_l_i_s_8_spec_8_spec_8h.html#ac61b98e9db5a8a08ee2eaef5dbd915e5", null ],
+    [ "ULIS_SEQ_EA", "_u_l_i_s_8_spec_8_spec_8h.html#a42e25679bbddeced5a4a2940e9586e43", null ],
+    [ "ULIS_SEQ_NM", "_u_l_i_s_8_spec_8_spec_8h.html#a7659aa369ab8c0659b40777f07bfc1c3", null ],
+    [ "ULIS_SEQ_TP", "_u_l_i_s_8_spec_8_spec_8h.html#aa43b494f8f3c38c55c0eb38adf9d74c3", null ],
+    [ "ULIS_TYPE_MAX_REPEAT", "_u_l_i_s_8_spec_8_spec_8h.html#a04f284ce4ba1326f005e938f15cbc4b5", null ],
+    [ "ULIS_TYPE_SIZE_REPEAT", "_u_l_i_s_8_spec_8_spec_8h.html#adae95b928fe5ec9a8f2d82159b2081c1", null ],
+    [ "is_decimal", "_u_l_i_s_8_spec_8_spec_8h.html#a635636b9267fbea32971170a1570350d", null ],
+    [ "parseSpec", "_u_l_i_s_8_spec_8_spec_8h.html#a58e1a3105b2964537df228087cc3d04c", null ],
+    [ "TCMSConnectionType", "_u_l_i_s_8_spec_8_spec_8h.html#a1fad273073e8fb028ae6c7600b9e2c58", null ],
+    [ "TDefaultModelFormat", "_u_l_i_s_8_spec_8_spec_8h.html#a955220feb7c0a21f07a3c2631a9a8f28", null ],
+    [ "TModelConnectionFormat", "_u_l_i_s_8_spec_8_spec_8h.html#a0a80ca478210028c8eec3162f5510aa2", null ],
+    [ "type_max", "_u_l_i_s_8_spec_8_spec_8h.html#a82a2437d325266b2ce0fde2c10249ced", null ],
+    [ "type_size", "_u_l_i_s_8_spec_8_spec_8h.html#affbb83072b0863cd1ba053dc63b17622", null ],
+    [ "ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS", "_u_l_i_s_8_spec_8_spec_8h.html#a3cc83e6efadf5b4403d1d351b034f6cc", null ],
+    [ "ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS", "_u_l_i_s_8_spec_8_spec_8h.html#a61c3751782dd9f44fe19da916f28f680", null ]
+];

@@ -1,27 +1,37 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Base.CPUConfig.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Base.CPUConfig.h
+* @author   Clement Berthaud
+* @brief    This file provides the definition for the FCPUConfig struct.
 */
-
+#pragma once
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/FeatureDetector/cpu_x86.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FCPUConfig
+/// @struct     FCPUConfig
+/// @brief      The FCPUConfig struct provides a small wrapper around the FeatureDetector interface.
 struct FCPUConfig
 {
+public:
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------- Construction
+    /// @fn         FCPUConfig()
+    /// @brief      Default Constructor.
+    /// @details    Initializes members by calling the appropriate functions in FeatureDetector.
     FCPUConfig()
     {
         info.detect_host();
     }
 
-    ::FeatureDetector::cpu_x86 info;
+public:
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------------- Public Data Members
+    ::FeatureDetector::cpu_x86 info;    ///< public member info of type ::FeatureDetector::cpu_x86, all fields should be initialized by constructor.
 };
 
 } // namespace ULIS

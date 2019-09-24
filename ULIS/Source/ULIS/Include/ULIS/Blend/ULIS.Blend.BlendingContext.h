@@ -46,7 +46,7 @@ public:
 
         FPoint shift( -ix, -iy );
 
-        ResetPRNGSeed();
+        ResetWeakPRNGSeed();
         #define ULIS_SWITCH_OP( iMode )  TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerfStrat )
         ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, ULIS_SWITCH_OP )
         #undef ULIS_SWITCH_OP
@@ -71,7 +71,7 @@ public:
         if( !intersects ) return;
         FPoint shift( 0, 0 );
 
-        ResetPRNGSeed();
+        ResetWeakPRNGSeed();
         #define ULIS_SWITCH_OP( iMode ) TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerfStrat )
         ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, ULIS_SWITCH_OP )
         #undef ULIS_SWITCH_OP

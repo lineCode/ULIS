@@ -1,13 +1,12 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Base.WeakUUID.cpp
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Base.WeakUUID.cpp
+* @author   Clement Berthaud
+* @brief    This file provides the definitions for the Weak UUID utility functions.
 */
-
 #include "ULIS/Base/ULIS.Base.WeakUUID.h"
 #include <iostream>
 #include <sstream>
@@ -20,6 +19,8 @@ namespace ULIS {
 //----------------------------------------------------- Private Unit Forward Declaration
 unsigned char random_char();
 std::string generate_hex( const  unsigned  int  len );
+
+
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------- Private Unit Implementation
 unsigned char random_char() {
@@ -42,7 +43,7 @@ std::string generate_hex( const  unsigned  int  len ) {
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------- Public Implementation
-std::string generate_weak_uuid( const unsigned int len )
+std::string GenerateWeakUUID( const unsigned int len )
 {
     return  generate_hex( len );
 }

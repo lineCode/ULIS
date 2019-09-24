@@ -11,6 +11,7 @@
 
 #include "ULIS/Interface/ULIS.Interface.Conv.h"
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
+#include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Conv/ULIS.Conv.ConversionContext.h"
 
 namespace ULIS {

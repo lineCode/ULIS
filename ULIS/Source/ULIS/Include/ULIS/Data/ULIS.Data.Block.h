@@ -193,7 +193,7 @@ public:
            virtual CColor                       PixelColor          ( int x, int y )                                                            = 0;
            virtual CColor                       PixelColor          ( int x, int y )                                const                       = 0;
            virtual void                         SetPixelColor       ( int x, int y, const CColor& iColor )                                      = 0;
-           virtual void                         Clear               ()                                                                          = 0;
+           virtual void                         DirectClear         ()                                                                          = 0;
                    void                         Invalidate          ()                                                                          { if( mInvCb ) mInvCb( this, mInvInfo, { 0, 0, Width(), Height() } );   }
                    void                         Invalidate          ( const FRect& iRect )                                                      { if( mInvCb ) mInvCb( this, mInvInfo, iRect );                         }
                    void                         SetInvalidateCB     ( fpInvalidateFunction iCb, void* iInfo )                                   { mInvCb = iCb; mInvInfo = iInfo;                                       }
@@ -227,7 +227,7 @@ public:
     TBlock( int iWidth, int iHeight )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight )  )
-        , id    ( generate_weak_uuid( 16 )                  )
+        , id    ( GenerateWeakUUID( 16 )                  )
     {
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
@@ -237,7 +237,7 @@ public:
     TBlock( int iWidth, int iHeight, uint8* iData )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight, iData )   )
-        , id    ( generate_weak_uuid( 16 )                          )
+        , id    ( GenerateWeakUUID( 16 )                          )
     {
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
@@ -247,7 +247,7 @@ public:
     TBlock( int iWidth, int iHeight, const std::string& iProfileTag )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight, iProfileTag )  )
-        , id    ( generate_weak_uuid( 16 )                  )
+        , id    ( GenerateWeakUUID( 16 )                  )
     {
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
@@ -257,7 +257,7 @@ public:
     TBlock( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight, iData, iProfileTag )   )
-        , id    ( generate_weak_uuid( 16 )                          )
+        , id    ( GenerateWeakUUID( 16 )                          )
     {
 #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
         debug_str = tSpec::_nf._ss;
@@ -321,7 +321,7 @@ public:
     inline         tPixelProxy                  PixelProxy          ( int x, int y )                                const                       { return  d->PixelProxy( x, y );                                        }
     inline         void                         SetPixelValue       ( int x, int y, const tPixelValue& iValue )                                 { d->SetPixelValue( x, y, iValue );                                     }
     inline         void                         SetPixelProxy       ( int x, int y, const tPixelProxy& iValue )                                 { d->SetPixelProxy( x, y, iValue );                                     }
-    inline virtual void                         Clear               ()                                                      override    final   { memset( DataPtr(), 0, BytesTotal() );                                 }
+    inline virtual void                         DirectClear         ()                                                      override    final   { memset( DataPtr(), 0, BytesTotal() );                                 }
     inline virtual FColorProfile*               ColorProfile        ()                                              const   override    final   { return  d->ColorProfile();                                            }
     inline virtual void                         AssignColorProfile  ( const std::string& iProfileTag )                      override    final   { d->AssignColorProfile( iProfileTag );                                 }
 

@@ -1,32 +1,36 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Base.WeakPRNG.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Base.WeakPRNG.h
+* @author   Clement Berthaud
+* @brief    This file provides the definition for the Weak PRNG utility functions.
 */
-
 #pragma once
-
-
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-
 
 namespace ULIS {
 /////////////////////////////////////////////////////
 // Weak PRNG
-static uint32 weakprngseed = 5323;
-static inline void ResetPRNGSeed()
+static uint32 sWeakPRNGSeed = 5323;  ///< An arbitrary base seed for Weak PRNG.
+
+
+/// @fn         ResetWeakPRNGSeed()
+/// @brief      Reset the PRNG seed.
+static inline void ResetWeakPRNGSeed()
 {
-    weakprngseed = 5323;
+    sWeakPRNGSeed = 5323;
 }
 
-static inline uint32 PRNG()
+
+/// @fn         GenerateWeakPRNG()
+/// @brief      Reset the PRNG seed.
+/// @return     An uint32 representing a pseudo random number beetween 0 and 65537.
+static inline uint32 GenerateWeakPRNG()
 {
-    weakprngseed = 8253729 * weakprngseed + 2396403;
-    return weakprngseed % 65537;
+    sWeakPRNGSeed = 8253729 * sWeakPRNGSeed + 2396403;
+    return sWeakPRNGSeed % 65537;
 }
 
 } // ULIS

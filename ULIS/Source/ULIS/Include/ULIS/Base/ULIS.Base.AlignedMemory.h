@@ -1,71 +1,105 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Base.AlignedMemory.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Base.AlignedMemory.h
+* @author   Clement Berthaud
+* @brief    This file provides the definition for the template class TAlignedMemory.
 */
-
 #pragma once
-
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include <cstdlib>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// TAlignedMemory
-template< typename T, size_t alignement >
+/// @class      TAlignedMemory
+/// @brief      [Deprecated] The TAlignedMemory template class provides a mean of managing arbitrary alignement for data in memory.
+/// @details    There are two template parameters:
+///                 - The template type parameter \a T is the type of the data to allocate in an aligned fashion.
+///                 - The template value parameter \a _Align of type size_t is the requested alignement ( any unsigned integer value, but more likely
+///                 a power of 2, e.g: 8, 16, 32, 64, ... ).
+template< typename T, size_t _Align >
 class TAlignedMemory
 {
 public:
-    // Construction / Destruction
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------- Construction / Destruction
+    /// @fn         TAlignedMemory()
+    /// @brief      Default Constructor.
+    /// @details    Initializes all members to 0 or nullmPtr.
     TAlignedMemory()
-        : raw               ( nullptr )
-        , ptr               ( nullptr )
-        , allocated_size    ( 0 )
-        , pad_left          ( 0 )
-        , pad_right         ( 0 )
+        : mRaw              ( nullmPtr  )
+        , mPtr              ( nullmPtr  )
+        , mAllocatedSize    ( 0         )
+        , mPadLeft          ( 0         )
+        , mPadRight         ( 0         )
     {}
 
+
+    /// @fn         ~TAlignedMemory()
+    /// @brief      Default Destructor.
+    /// @details    Deletes the underlying data if it was allocated in the first place with \e Allocate.
     ~TAlignedMemory()
     {
-        if( raw ) delete[] raw;
+        if( mRaw ) delete[] mRaw;
     }
 
 public:
-    // Public API
-    void Allocate( size_t size_bytes )
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- Public API
+    /// @fn         Allocate( size_t iSizeBytes )
+    /// @brief      Allocate a certain number of bytes of aligned data based on parameter.
+    /// @details    The method allocates paddings around the data to ensure it is complies on both bounds to the specified template alignment.
+    /// @param      iSizeBytes      The size of the data to allocate in bytes.
+    void  Allocate( size_t iSizeBytes )
     {
-        size_t offset       = alignement - 1;
-        allocated_size      = size_bytes;
-        pad_right           = ( alignement - ( size_bytes & offset ) ) & offset;
-        size_t total        = offset + size_bytes + pad_right;
-        raw = new uint8[ total ];
+        size_t offset = _Align - 1;
+        mAllocatedSize = iSizeBytes;
+        mPadRight = ( _Align - ( iSizeBytes & offset ) ) & offset;
+        size_t total = offset + iSizeBytes + mPadRight;
+        mRaw = new uint8[ total ];
 
-        size_t memloc_raw_start = (size_t)raw;
-        pad_left = ( alignement - ( memloc_raw_start & offset ) ) & offset;
-        ptr = raw + pad_left;
+        size_t memloc_mRaw_start = (size_t)mRaw;
+        mPadLeft = ( _Align - ( memloc_mRaw_start & offset ) ) & offset;
+        mPtr = mRaw + mPadLeft;
     }
 
-    size_t  Alignment   () const { return  alignement;              }
-    size_t  Waste       () const { return  pad_left + pad_right;    }
-    T*      Ptr         () const { return  ptr;                     }
-    size_t  RawStart    () const { return  (size_t)raw;             }
-    size_t  RawEnd      () const { return  (size_t)raw;             }
-    size_t  DataStart   () const { return  (size_t)raw + pad_left;  }
-    size_t  DataEnd     () const { return  (size_t)raw - pad_right; }
+
+    /// @fn         AllocatedSize()  const
+    /// @brief      Query the requested allocated size in bytes.
+    /// @return     A size_t representing the requested allocated size in bytes.
+    size_t  AllocatedSize()  const  { return  mAllocatedSize; }
+
+
+    /// @fn         Alignment()  const
+    /// @brief      Query the requested template alignment.
+    /// @return     A size_t representing the requested template alignment.
+    size_t  Alignment()  const  { return  _Align; }
+
+
+    /// @fn         Waste()  const
+    /// @brief      Query the wasted size in bytes of data that has been allocated to ensure alignment.
+    /// @details    The wasted size is computed as the sum of the paddings.
+    /// @return     A size_t representing the wasted size in bytes to ensure alignment.
+    size_t  Waste()  const  { return  mPadLeft + mPadRight; }
+
+
+    /// @fn         Ptr()  const
+    /// @brief      Query the base adress of the aligned data.
+    /// @return     A pointer representing the aligned data.
+    T*  Ptr()  const  { return  mPtr; }
+
 
 private:
-    // Private Data
-    T*      raw;
-    T*      ptr;
-    size_t  allocated_size;
-    size_t  pad_left;
-    size_t  pad_right;
-};
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------------- Private Data Members
+    T*      mRaw;               ///< Pointer to \a T, if Allocated, points to the base address ( before left padding ) of the unaligned allocated data.
+    T*      mPtr;               ///< Pointer to \a T, if Allocated, points to the base address ( after left padding ) of the aligned allocated data.
+    size_t  mAllocatedSize;     ///< Size in bytes of the requested size, the actual allocation can be greater.
+    size_t  mPadLeft;           ///< Left padding in bytes of the aligned data, can be zero.
+    size_t  mPadRight;          ///< Right padding in bytes of the aligned data, can be zero.
 
+};
 
 } // namespace ULIS
 

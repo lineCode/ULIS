@@ -140,14 +140,14 @@ constexpr  FSpec parseSpec( const char* iSs, uint32_t iSh, const char* iCl )
 // TBlockInfo Specialization
 /* build a specialization of TBlockInfo from token and compute string and hash equivalents */
 #define ULIS_DECLSPEC_IMP( tp, cm, ea, cl, nm, spec )                                                   \
-    namespace rubbish {                                                                                 \
+    namespace generated {                                                                               \
     coal                ULIS_SPEC_SS( spec ) = ULIS_SPEC_TO_STR( spec );                                \
-    } /* namespace rubbish */                                                                           \
+    } /* namespace generated */                                                                         \
     namespace Format {                                                                                  \
-    constexpr uint32_t  ULIS_SPEC_SH( spec ) = ::ULIS::rubbish:: ULIS_SPEC_SS( spec ).hash();           \
+    constexpr uint32_t  ULIS_SPEC_SH( spec ) = ::ULIS::generated:: ULIS_SPEC_SS( spec ).hash();         \
     } /* namespace Format */                                                                            \
     template<> struct TBlockInfo< Format:: ULIS_SPEC_SH( spec ) > {                                     \
-        ULIS_PREDECL_NF static constexpr FSpec _nf = ULIS_PARSE_FSPEC( rubbish:: ULIS_SPEC_SS( spec )   \
+        ULIS_PREDECL_NF static constexpr FSpec _nf = ULIS_PARSE_FSPEC( generated:: ULIS_SPEC_SS( spec ) \
                                                                      , Format:: ULIS_SPEC_SH( spec )    \
                                                                      , tp, cm, ea, cl, nm )             \
     };                                                                                                  \
