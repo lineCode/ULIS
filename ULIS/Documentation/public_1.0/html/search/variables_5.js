@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['epsilon_901',['epsilon',['../struct_u_l_i_s_1_1_f_math.html#a0de533927130292cace755447c70e9fe',1,'ULIS::FMath']]]
+  ['m128i_232',['m128i',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#af3ffb590610755097da019c7666b7599',1,'ULIS::FVectorSIMD128_8bit']]]
 ];

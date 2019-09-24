@@ -1,25 +1,4 @@
 var searchData=
 [
-  ['dataptr_647',['DataPtr',['../class_u_l_i_s_1_1_t_block_data.html#ae3deb550aa0499fd889d1553d377a402',1,'ULIS::TBlockData::DataPtr()'],['../class_u_l_i_s_1_1_t_block_data.html#aa7605b90f4a73cabd92ebf0120e5181c',1,'ULIS::TBlockData::DataPtr() const'],['../class_u_l_i_s_1_1_i_block.html#a03daa780703e3f068dc2e3472886f375',1,'ULIS::IBlock::DataPtr()=0'],['../class_u_l_i_s_1_1_i_block.html#a17f3bcf2fe5b958f1c87a5288cc05f55',1,'ULIS::IBlock::DataPtr() const =0'],['../class_u_l_i_s_1_1_t_block.html#a5be40cf367e4e98021cdce0fd799e8f7',1,'ULIS::TBlock::DataPtr() override final'],['../class_u_l_i_s_1_1_t_block.html#a80f0b7a6c5461f799dc9cddc5c0f439e',1,'ULIS::TBlock::DataPtr() const override final']]],
-  ['defaultprofilenameformodel_648',['DefaultProfileNameForModel',['../class_u_l_i_s_1_1_f_profile_registry.html#a15caf5fd03125e9fdf5dc62163e467ce',1,'ULIS::FProfileRegistry']]],
-  ['degtorad_649',['DegToRad',['../struct_u_l_i_s_1_1_f_math.html#a7014ea2bf14feac8d0d746deecf2e8b8',1,'ULIS::FMath']]],
-  ['depth_650',['Depth',['../class_u_l_i_s_1_1_t_block_data.html#ae6a170b5e350874996291ccf759f1d3d',1,'ULIS::TBlockData::Depth()'],['../class_u_l_i_s_1_1_i_block.html#ad8db8ed0eaeff8ab9cbd7aa344406223',1,'ULIS::IBlock::Depth()'],['../class_u_l_i_s_1_1_t_block.html#a64b5cfbb120ec78673d6374cb759d893',1,'ULIS::TBlock::Depth()'],['../class_u_l_i_s_1_1_t_pixel_info.html#a8d648e452cd297f2548a33b329ea4c1f',1,'ULIS::TPixelInfo::Depth()']]],
-  ['directclear_651',['DirectClear',['../class_u_l_i_s_1_1_i_block.html#a8b459cc0612d3d56154e760e9e35c4ac',1,'ULIS::IBlock::DirectClear()'],['../class_u_l_i_s_1_1_t_block.html#a276e171ded063e961a475c150d6a417a',1,'ULIS::TBlock::DirectClear()']]],
-  ['downscale_652',['DownScale',['../namespace_u_l_i_s_1_1_s_i_m_d.html#a19f2c4b8a355f1e28ecc4f47c3ff9360',1,'ULIS::SIMD']]],
-  ['drawarcandres_653',['DrawArcAndres',['../class_u_l_i_s_1_1_f_painter_context.html#aae748681dff6e7a92aa998228c835395',1,'ULIS::FPainterContext']]],
-  ['drawarcandresaa_654',['DrawArcAndresAA',['../class_u_l_i_s_1_1_f_painter_context.html#a5cc36b240e3e5ab69846a4b0e6d00c2b',1,'ULIS::FPainterContext']]],
-  ['drawarcbresenham_655',['DrawArcBresenham',['../class_u_l_i_s_1_1_f_painter_context.html#a90ac437ee086327e723d2224113bec6c',1,'ULIS::FPainterContext']]],
-  ['drawarcbresenhamaa_656',['DrawArcBresenhamAA',['../class_u_l_i_s_1_1_f_painter_context.html#a61e614ee575283d88f9bac90f734d527',1,'ULIS::FPainterContext']]],
-  ['drawcircleandres_657',['DrawCircleAndres',['../class_u_l_i_s_1_1_f_painter_context.html#a8d965717cd2acc8ca28940de72863d53',1,'ULIS::FPainterContext']]],
-  ['drawcircleandresaa_658',['DrawCircleAndresAA',['../class_u_l_i_s_1_1_f_painter_context.html#a4c91395658f3d161d49a51bebd585636',1,'ULIS::FPainterContext']]],
-  ['drawcirclebresenham_659',['DrawCircleBresenham',['../class_u_l_i_s_1_1_f_painter_context.html#a72370abcb880e292fad857d8cc4d5a85',1,'ULIS::FPainterContext']]],
-  ['drawcirclebresenhamaa_660',['DrawCircleBresenhamAA',['../class_u_l_i_s_1_1_f_painter_context.html#a1cfd9119b486d3657e5edd83aaf35448',1,'ULIS::FPainterContext']]],
-  ['drawellipse_661',['DrawEllipse',['../class_u_l_i_s_1_1_f_painter_context.html#a36b3aa77048dac9225af08057e9319f6',1,'ULIS::FPainterContext']]],
-  ['drawellipseaa_662',['DrawEllipseAA',['../class_u_l_i_s_1_1_f_painter_context.html#aca6cb3cdc3b2ebbcbd118cf7d7755d91',1,'ULIS::FPainterContext']]],
-  ['drawgradientline_663',['DrawGradientLine',['../class_u_l_i_s_1_1_f_painter_context.html#ad0e9094ba73c123a14b2524ca6f040f7',1,'ULIS::FPainterContext']]],
-  ['drawline_664',['DrawLine',['../class_u_l_i_s_1_1_f_painter_context.html#abde3e3313bdc72ac5bcbb29c8deb61f9',1,'ULIS::FPainterContext']]],
-  ['drawlineaa_665',['DrawLineAA',['../class_u_l_i_s_1_1_f_painter_context.html#acf019901249c17fbf3e5e048d145c2ac',1,'ULIS::FPainterContext']]],
-  ['drawpolygon_666',['DrawPolygon',['../class_u_l_i_s_1_1_f_painter_context.html#a2a81e05d7d3632fbbab281a80cba63f5',1,'ULIS::FPainterContext']]],
-  ['drawrectangle_667',['DrawRectangle',['../class_u_l_i_s_1_1_f_painter_context.html#ac8f5581479d14c6346ff96c9de795344',1,'ULIS::FPainterContext']]],
-  ['drawrotatedellipse_668',['DrawRotatedEllipse',['../class_u_l_i_s_1_1_f_painter_context.html#a0d5039594822f92a3a445b67d47f610b',1,'ULIS::FPainterContext']]]
+  ['downscale_190',['DownScale',['../_u_l_i_s_8_base_8_vector_s_i_m_d_8h.html#a19f2c4b8a355f1e28ecc4f47c3ff9360',1,'ULIS::SIMD']]]
 ];

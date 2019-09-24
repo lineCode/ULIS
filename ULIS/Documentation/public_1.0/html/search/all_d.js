@@ -1,7 +1,24 @@
 var searchData=
 [
-  ['name_243',['Name',['../class_u_l_i_s_1_1_f_color_profile.html#a96fde21c28a582be06f36bb5f85aa300',1,'ULIS::FColorProfile::Name()'],['../class_u_l_i_s_1_1_i_block.html#afcb10f75e078ee9ccff3a42319c13843',1,'ULIS::IBlock::Name()'],['../class_u_l_i_s_1_1_t_block.html#a980dad26191755ce3a42da1b1039c8da',1,'ULIS::TBlock::Name()']]],
-  ['normalmode_244',['NormalMode',['../class_u_l_i_s_1_1_i_block.html#ad2230b047eb6310ec02420cc16a52125',1,'ULIS::IBlock::NormalMode()'],['../class_u_l_i_s_1_1_t_block.html#a7aafd4db8e35b2bae0cc7dcc526eab5b',1,'ULIS::TBlock::NormalMode()'],['../class_u_l_i_s_1_1_t_pixel_info.html#a7c08bbd04557c008b5b5cdd9b9579f54',1,'ULIS::TPixelInfo::NormalMode()']]],
-  ['numchannels_245',['NumChannels',['../class_u_l_i_s_1_1_i_block.html#a6b085403e8010a15516aa61849b87f00',1,'ULIS::IBlock::NumChannels()'],['../class_u_l_i_s_1_1_t_block.html#a660a4e39d68a7d14e737b6a4e13863cd',1,'ULIS::TBlock::NumChannels()'],['../class_u_l_i_s_1_1_t_pixel_info.html#aeb51c5ee94a3d865ffac09567b3e13bc',1,'ULIS::TPixelInfo::NumChannels()']]],
-  ['numcolorchannels_246',['NumColorChannels',['../class_u_l_i_s_1_1_i_block.html#a96c8d43ec5e2561c5566d305315520e3',1,'ULIS::IBlock::NumColorChannels()'],['../class_u_l_i_s_1_1_t_block.html#a2de27b3bca3196c2a11062c353480f71',1,'ULIS::TBlock::NumColorChannels()'],['../class_u_l_i_s_1_1_t_pixel_info.html#a1c6bc9dc3031ed398e04231186882880',1,'ULIS::TPixelInfo::NumColorChannels()']]]
+  ['ulis_92',['ULIS',['../index.html',1,'']]],
+  ['u16_93',['u16',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#a2ae274e1861a40f73efbd47e20ea5da2',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['u32_94',['u32',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#a22a6c5dee78041bbeee10aec9eb5ba30',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['u8_95',['u8',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#adf63e70fd859c694c63a94fe13b2ecb5',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['ulis_2ebase_2ealignedmemory_2eh_96',['ULIS.Base.AlignedMemory.h',['../_u_l_i_s_8_base_8_aligned_memory_8h.html',1,'']]],
+  ['ulis_2ebase_2ebasetypes_2eh_97',['ULIS.Base.BaseTypes.h',['../_u_l_i_s_8_base_8_base_types_8h.html',1,'']]],
+  ['ulis_2ebase_2ecpuconfig_2eh_98',['ULIS.Base.CPUConfig.h',['../_u_l_i_s_8_base_8_c_p_u_config_8h.html',1,'']]],
+  ['ulis_2ebase_2ecrc32_2eh_99',['ULIS.Base.CRC32.h',['../_u_l_i_s_8_base_8_c_r_c32_8h.html',1,'']]],
+  ['ulis_2ebase_2emd5_2eh_100',['ULIS.Base.MD5.h',['../_u_l_i_s_8_base_8_m_d5_8h.html',1,'']]],
+  ['ulis_2ebase_2eperformanceoptions_2eh_101',['ULIS.Base.PerformanceOptions.h',['../_u_l_i_s_8_base_8_performance_options_8h.html',1,'']]],
+  ['ulis_2ebase_2eregistry_2eh_102',['ULIS.Base.Registry.h',['../_u_l_i_s_8_base_8_registry_8h.html',1,'']]],
+  ['ulis_2ebase_2evectorsimd_2eh_103',['ULIS.Base.VectorSIMD.h',['../_u_l_i_s_8_base_8_vector_s_i_m_d_8h.html',1,'']]],
+  ['ulis_2ebase_2eweakprng_2eh_104',['ULIS.Base.WeakPRNG.h',['../_u_l_i_s_8_base_8_weak_p_r_n_g_8h.html',1,'']]],
+  ['ulis_2ebase_2eweakuuid_2eh_105',['ULIS.Base.WeakUUID.h',['../_u_l_i_s_8_base_8_weak_u_u_i_d_8h.html',1,'']]],
+  ['ulis_2einterface_2eaccess_2eh_106',['ULIS.Interface.Access.h',['../_u_l_i_s_8_interface_8_access_8h.html',1,'']]],
+  ['ulis_2einterface_2eblend_2eh_107',['ULIS.Interface.Blend.h',['../_u_l_i_s_8_interface_8_blend_8h.html',1,'']]],
+  ['ulis_2einterface_2eclearfill_2eh_108',['ULIS.Interface.ClearFill.h',['../_u_l_i_s_8_interface_8_clear_fill_8h.html',1,'']]],
+  ['update_109',['Update',['../class_u_l_i_s_1_1_f_m_d5.html#ac821b16f3f00040d5805c60a32f111f2',1,'ULIS::FMD5']]],
+  ['upscale_110',['UpScale',['../_u_l_i_s_8_base_8_vector_s_i_m_d_8h.html#ae949f43044437114bd4c98a4f85f0dbe',1,'ULIS::SIMD']]],
+  ['use_5fmem_5fif_5favailable_111',['use_mem_if_available',['../struct_u_l_i_s_1_1_f_performance_options.html#ac079da6f304f56d0ac7ee4ee0d87f47b',1,'ULIS::FPerformanceOptions']]],
+  ['use_5fsse_5fif_5favailable_112',['use_sse_if_available',['../struct_u_l_i_s_1_1_f_performance_options.html#af56338bb113fef0aa2fef716705dc2c6',1,'ULIS::FPerformanceOptions']]]
 ];

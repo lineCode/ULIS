@@ -1,25 +1,26 @@
-
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Interface.Spec.cpp
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Interface.Spec.cpp
+* @author   Clement Berthaud
+* @brief    This file provides the definitions for the FSpecContext class.
 */
-
-#include <iostream>
-#include "ULIS/Interface/ULIS.Interface.Decl.h"
 #include "ULIS/Interface/ULIS.Interface.Spec.h"
+#include "ULIS/Interface/ULIS.Interface.Decl.h"
+#include <iostream>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FSpecContext
-::ULIS::FSpec
-FSpecContext::BlockInfo( uint32_t i )
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------- Public Static API
+//static
+FSpec
+FSpecContext::BlockSpecAtIndex( uint32 iIndex )
 {
-    switch( i )
+    switch( iIndex )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data ) case n: return  ::ULIS::TBlockInfo< ULIS_REG[ n ] >:: data;
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, _nf )
@@ -28,10 +29,12 @@ FSpecContext::BlockInfo( uint32_t i )
     }
 }
 
-::ULIS::FSpec
-FSpecContext::BlockSpec( uint32_t i )
+
+//static
+FSpec
+FSpecContext::BlockSpecFromHash( uint32 iHash )
 {
-    switch( i )
+    switch( iHash )
     {
         #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  ::ULIS::TBlockInfo< ULIS_REG[ n ] >:: data;
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, _nf )
@@ -40,12 +43,14 @@ FSpecContext::BlockSpec( uint32_t i )
     }
 }
 
+
+//static
 void
 FSpecContext::PrintSpecs()
 {
     for( int i = 0; i < ULIS_REG_SIZE; ++i )
     {
-        auto spec = BlockInfo( i );
+        auto spec = BlockSpecAtIndex( i );
         std::cout << "======================================"                   << std::endl;
         std::cout << "spec-str          :   " << spec._ss                       << std::endl;
         std::cout << "spec-hash         :   " << (uint32_t)spec._sh             << std::endl;
@@ -64,16 +69,16 @@ FSpecContext::PrintSpecs()
 }
 
 
+//static
 void
 FSpecContext::PrintShortSpecs()
 {
     for( int i = 0; i < ULIS_REG_SIZE; ++i )
     {
-        auto spec = BlockInfo( i );
+        auto spec = BlockSpecAtIndex( i );
         std::cout << (uint32_t)spec._sh << "    " << spec._ss << std::endl;
     }
 }
-
 
 } // namespace ULIS
 

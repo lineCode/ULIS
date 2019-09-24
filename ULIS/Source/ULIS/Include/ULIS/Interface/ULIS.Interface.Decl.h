@@ -1,69 +1,24 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Interface.Decl.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Interface.Decl.h
+* @author   Clement Berthaud
+* @brief    This file provides the specialisations related to block types.
 */
-
 #pragma once
-
-
-#include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Base/ULIS.Base.Registry.h"
-
+#include "ULIS/Data/ULIS.Data.Block.h"
 
 namespace ULIS {
-/////////////////////////////////////////////////////
-// Embedded python program for combination generation
-/*
-    tp = [ "uint8", "uint16", "uint32", "float", "double" ]
-    cm = [ "G", "RGB", "HSL", "HSV", "CMYK", "YUV", "Lab", "XYZ" ]
-    ea = [ "hasAlpha", "noAlpha" ]
-    nm = [ "normalized", "typeLimits" ]
-
-    variants =    {
-        ( "G", "noAlpha"        )   : [ "G" ],
-        ( "G", "hasAlpha"       )   : [ "GA", "AG" ],
-        ( "RGB", "noAlpha"      )   : [ "RGB", "BGR" ],
-        ( "RGB", "hasAlpha"     )   : [ "ARGB", "ABGR", "RGBA", "BGRA" ],
-        ( "HSL", "noAlpha"      )   : [ "HSL" ],
-        ( "HSL", "hasAlpha"     )   : [ "HSLA", "AHSL" ],
-        ( "HSV", "noAlpha"      )   : [ "HSV" ],
-        ( "HSV", "hasAlpha"     )   : [ "HSVA", "AHSV" ],
-        ( "CMYK", "noAlpha"     )   : [ "CMYK", "KCMY" ],
-        ( "CMYK", "hasAlpha"    )   : [ "CMYKA", "KCMYA", "ACMYK", "AKCMY" ],
-        ( "YUV", "noAlpha"      )   : [ "YUV" ],
-        ( "YUV", "hasAlpha"     )   : [ "YUVA", "AYUV" ],
-        ( "Lab", "noAlpha"      )   : [ "Lab" ],
-        ( "Lab", "hasAlpha"     )   : [ "LabA", "ALab" ],
-        ( "XYZ", "noAlpha"      )   : [ "XYZ" ],
-        ( "XYZ", "hasAlpha"     )   : [ "XYZA", "AXYZ" ],
-    }
-
-    def is_decimal( iType ):
-        return  iType == "float" or iType == "double"
-
-    for icm in cm:
-        for itp in tp: 
-            for iea in ea:
-                for inm in nm:
-                    if( not is_decimal( itp ) and inm == "normalized" ):
-                        continue
-                        
-                    var = ( icm, iea )
-                    for ivar in variants[var]:
-                        print( "ULIS_DECLSPEC(" + itp + "," + icm + "," + iea + "," + ivar + "," + inm + ")" )
-*/
-
 /////////////////////////////////////////////////////
 // Reg baking
 /* we spec the name of the build reg */
 #define ULIS_REG_BUILDER ulis_reg_builder
 /* we create the reg with a first invalid entry (0) */
 ULIS_CREATE_REG( ULIS_REG_BUILDER, 0 )
+
 
 /////////////////////////////////////////////////////
 // Types declspec
@@ -127,6 +82,7 @@ ULIS_DECLSPEC(uint32,XYZ,hasAlpha,XYZA,typeLimits)
 ULIS_DECLSPEC(float,XYZ,hasAlpha,XYZA,normalized)
 ULIS_DECLSPEC(float,XYZ,hasAlpha,XYZA,typeLimits)
 
+
 namespace generated {
 /////////////////////////////////////////////////////
 // Reg assign
@@ -134,13 +90,18 @@ namespace generated {
 ULIS_REG_TYPE ulis_types_reg = ULIS_ASSIGN_REG( ULIS_REG_BUILDER );
 /* we spec the name of the result reg for easy usage */
 #define ULIS_REG ::ULIS::generated::ulis_types_reg
+
+
 /////////////////////////////////////////////////////
 // Reg Size
 /* temp assign reg size ( workaround ) */
 constexpr auto temp_reg_size = ulis_types_reg.Size();
 /* Reg size macro for usage during preprocessor ( workaround ) */
 #define ULIS_REG_SIZE 59
+
 } // namespace generated
+
+
 /////////////////////////////////////////////////////
 // Extern template declarations
 /*
@@ -148,6 +109,7 @@ constexpr auto temp_reg_size = ulis_types_reg.Size();
 ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_OP, void )
 #undef ULIS_REG_OP
 */
+
 
 /////////////////////////////////////////////////////
 // Mainstream typedefs
@@ -177,6 +139,7 @@ typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatRGBhasAlphaARGBnormaliz
 typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatRGBhasAlphaABGRnormalized > FValueABGRfn;
 typedef ::ULIS::TPixelValue< ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits > FValueLabAfn;
 
+
 /////////////////////////////////////////////////////
 // TDefaultModelFormat Specialization
 template<> constexpr uint32 TDefaultModelFormat< e_cm::kG >()     { return  ::ULIS::Format::Format_floatGhasAlphaGAnormalized;       }
@@ -186,6 +149,8 @@ template<> constexpr uint32 TDefaultModelFormat< e_cm::kHSV >()   { return  ::UL
 template<> constexpr uint32 TDefaultModelFormat< e_cm::kCMYK >()  { return  ::ULIS::Format::Format_floatCMYKhasAlphaCMYKAnormalized; }
 template<> constexpr uint32 TDefaultModelFormat< e_cm::kLab >()   { return  ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits;   }
 template<> constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  ::ULIS::Format::Format_floatXYZhasAlphaXYZAtypeLimits;   }
+
+
 /////////////////////////////////////////////////////
 // CMS extra formats for connection
 #define ULIS_LCMS_DTYPE_GRAYA_FLT   (FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))
@@ -199,6 +164,8 @@ template<> constexpr uint32 TDefaultModelFormat< e_cm::kXYZ >()   { return  ::UL
 #define ULIS_LCMS_DTYPE_CMYKA_U16   (COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(2))
 #define ULIS_LCMS_DTYPE_LabA_U16    (COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))
 #define ULIS_LCMS_DTYPE_XYZA_U16    (COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))
+
+
 /////////////////////////////////////////////////////
 // TCMSConnectionFormat Specialization
 template<> constexpr uint32 TCMSConnectionType< e_cm::kG >()     { return  ULIS_LCMS_DTYPE_GRAYA_FLT; }
@@ -208,14 +175,17 @@ template<> constexpr uint32 TCMSConnectionType< e_cm::kHSV >()   { return  ULIS_
 template<> constexpr uint32 TCMSConnectionType< e_cm::kCMYK >()  { return  ULIS_LCMS_DTYPE_CMYKA_U16; }
 template<> constexpr uint32 TCMSConnectionType< e_cm::kLab >()   { return  ULIS_LCMS_DTYPE_LabA_FLT;  }
 template<> constexpr uint32 TCMSConnectionType< e_cm::kXYZ >()   { return  ULIS_LCMS_DTYPE_XYZA_FLT;  }
+
+
 /////////////////////////////////////////////////////
 // TModelConnectionFormat Specialization
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kG >()     { return  ::ULIS::Format::Format_floatGhasAlphaGAnormalized;       }
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kRGB >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kHSL >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kHSV >()   { return  ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized;   }
-template<> constexpr uint32 TModelConnectionFormat< e_cm::kCMYK >()  { return  ::ULIS::Format::Format_uint16CMYKhasAlphaCMYKAtypeLimits; }
+template<> constexpr uint32 TModelConnectionFormat< e_cm::kCMYK >()  { return  ::ULIS::Format::Format_uint16CMYKhasAlphaCMYKAtypeLimits;}
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kLab >()   { return  ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits;   }
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kXYZ >()   { return  ::ULIS::Format::Format_floatXYZhasAlphaXYZAtypeLimits;   }
 
 } // namespace ULIS
+

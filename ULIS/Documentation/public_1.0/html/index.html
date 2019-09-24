@@ -65,7 +65,7 @@ $(function() {
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title"><a class="el" href="namespace_u_l_i_s.html">ULIS</a> </div>  </div>
+<div class="title">ULIS </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Unlimited Library for Imaging Systems</p>
@@ -131,7 +131,7 @@ Officially Supported IDEs</h1>
 Getting Started</h1>
 <ul>
 <li>git clone <a href="https://github.com/Robot-Fromage/ULIS">https://github.com/Robot-Fromage/ULIS</a></li>
-<li>cd <a class="el" href="namespace_u_l_i_s.html">ULIS</a></li>
+<li>cd ULIS</li>
 <li>#Windows: call Setup.bat</li>
 <li>#macOS / Linux : sh Setup.sh</li>
 </ul>
@@ -152,7 +152,7 @@ Getting Started</h1>
     SET( ULIS_LCMS2_INCLUDE_PATH        "default" )
     SET( ULIS_LCMS2_DEBUG_LIB_PATH      "default" )
     SET( ULIS_LCMS2_RELEASE_LIB_PATH    "default" )
-</pre><p>Make sure you cloned the dependencies and built them if needed. You can then copy the path for the requested components. All paths should use forward slashes on all OS, even Windows macOS and Linux. All paths should have a trailing forward slash too. <code>ULIS_QT_CMAKE_PATH</code> is optional and can remain to <code>"default"</code>, in that case <code>ULIS_BUILD_GUIS</code> should remain <code>OFF</code>too. Make sure you fill the path for the config file of your compiler / IDE of choice, and that components you use were built with the same compiler. The building process of the dependencies will not be detailled here, it is left for the user to figure out, although most dependencies are header-only and i provide a CMakeLists in order to build Little-CMS easily, which can also be found in the Scripts folder of <a class="el" href="namespace_u_l_i_s.html">ULIS</a>.</p>
+</pre><p>Make sure you cloned the dependencies and built them if needed. You can then copy the path for the requested components. All paths should use forward slashes on all OS, even Windows macOS and Linux. All paths should have a trailing forward slash too. <code>ULIS_QT_CMAKE_PATH</code> is optional and can remain to <code>"default"</code>, in that case <code>ULIS_BUILD_GUIS</code> should remain <code>OFF</code>too. Make sure you fill the path for the config file of your compiler / IDE of choice, and that components you use were built with the same compiler. The building process of the dependencies will not be detailled here, it is left for the user to figure out, although most dependencies are header-only and i provide a CMakeLists in order to build Little-CMS easily, which can also be found in the Scripts folder of ULIS.</p>
 <p>There is an example of a fully configured config.cmake file: </p><pre class="fragment">    SET( ULIS_BOOST_INCLUDE_PATH        "C:/Users/WorkStation/work/boost_preprocessor/include/" )
     SET( ULIS_COAL_INCLUDE_PATH         "C:/Users/WorkStation/work/coal/coal/Source/coal/Include/" )
     SET( ULIS_BUILD_SHARED              OFF )

@@ -5,7 +5,7 @@
 *
 * @file     ULIS.Interface.ClearFill.cpp
 * @author   Clement Berthaud
-* @brief    This file provides the declarations for the FClearFillContext class.
+* @brief    This file provides the definitions for the FClearFillContext class.
 */
 
 #include "ULIS/Interface/ULIS.Interface.ClearFill.h"
@@ -16,6 +16,8 @@
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FClearFillContext
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------- Public Static API
 //static
 void
 FClearFillContext::Fill( IBlock* iBlock

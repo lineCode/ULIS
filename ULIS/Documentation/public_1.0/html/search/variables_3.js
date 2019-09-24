@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['c_897',['c',['../class_u_l_i_s_1_1_c_color.html#a492c6d6f152e6add3d3a58db0b97ed6b',1,'ULIS::CColor']]],
-  ['cmyk_898',['cmyk',['../class_u_l_i_s_1_1_c_color.html#a91b3acba7034bc319083aac94defb428',1,'ULIS::CColor']]]
+  ['info_230',['info',['../struct_u_l_i_s_1_1_f_c_p_u_config.html#a973faffd37e23d96ced8b373f4e4d90e',1,'ULIS::FCPUConfig']]]
 ];

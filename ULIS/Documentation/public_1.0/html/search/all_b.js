@@ -1,8 +1,13 @@
 var searchData=
 [
-  ['l_217',['l',['../class_u_l_i_s_1_1_c_color.html#a9cd02629c7abd4914e42333771095bc5',1,'ULIS::CColor']]],
-  ['lightness_218',['Lightness',['../class_u_l_i_s_1_1_c_color.html#ae1cf5477d193c9e6ee9948308a945ab9',1,'ULIS::CColor']]],
-  ['lightnessf_219',['LightnessF',['../class_u_l_i_s_1_1_c_color.html#a65bbe30c83ba0a320513005a13c16f22',1,'ULIS::CColor']]],
-  ['lo_220',['lo',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128___dual8bit.html#acca832dcde542762f4d630c43cd8048c',1,'ULIS::FVectorSIMD128_Dual8bit']]],
-  ['load_221',['Load',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#abcae434cad315e3f06099b282098830f',1,'ULIS::FVectorSIMD128_8bit']]]
+  ['set1_56',['Set1',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#aff5c7d1bb693e6bd8a7e06a2e8179513',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['set16_57',['Set16',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#aceca462e772b9f9bd9765e11c10bbaaa',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['set2_58',['Set2',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#aa57fd284aff5758c8d710663aa80ee51',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['set4_59',['Set4',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#afe3022edb235d6f0c6357b1009cb97d5',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['set8_60',['Set8',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#a123e561bb50d2ab84c1fc3016cb2c7b1',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['setzero_61',['SetZero',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#aa71d01219f4742a8c3eba374f4343e40',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['size_62',['Size',['../struct_u_l_i_s_1_1_t_registry.html#a64dd787ef897b7c192b3698d5f2f9bf8',1,'ULIS::TRegistry']]],
+  ['spread_63',['Spread',['../_u_l_i_s_8_base_8_vector_s_i_m_d_8h.html#a7766e11f7b43a0acb023d3159c1148f9',1,'ULIS::SIMD']]],
+  ['subtractionsafe_64',['SubtractionSafe',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#a4d43c7bd5bbfdc10ec4b34fb969b6074',1,'ULIS::FVectorSIMD128_8bit']]],
+  ['subtractionsat_65',['SubtractionSat',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#ab050f5d8188edc9bbcf246427af7cda7',1,'ULIS::FVectorSIMD128_8bit']]]
 ];

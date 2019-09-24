@@ -70,7 +70,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">ULIS.Base.Registry.h File Reference</div>  </div>
@@ -89,219 +88,39 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_u_l_i_s_1_1_t_registry.html">ULIS::TRegistry&lt; _S &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespace_u_l_i_s"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html">ULIS</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a9e62efd14286b2baae9feec7c1470174"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a9e62efd14286b2baae9feec7c1470174">ULIS_PREVIOUS</a>(i)&#160;&#160;&#160;BOOST_PP_SUB( i, 1 )</td></tr>
+<tr class="memitem:a9e62efd14286b2baae9feec7c1470174"><td class="memItemLeft" align="right" valign="top"><a id="a9e62efd14286b2baae9feec7c1470174"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_PREVIOUS</b>(i)&#160;&#160;&#160;BOOST_PP_SUB( i, 1 )</td></tr>
 <tr class="separator:a9e62efd14286b2baae9feec7c1470174"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adef62f335fb287d3f931f9bd5449a335"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>(iLhs,  iRhs)&#160;&#160;&#160;BOOST_PP_CAT( iLhs, iRhs )</td></tr>
+<tr class="memitem:adef62f335fb287d3f931f9bd5449a335"><td class="memItemLeft" align="right" valign="top"><a id="adef62f335fb287d3f931f9bd5449a335"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_CAT</b>(iLhs,  iRhs)&#160;&#160;&#160;BOOST_PP_CAT( iLhs, iRhs )</td></tr>
 <tr class="separator:adef62f335fb287d3f931f9bd5449a335"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9171f60c54f0b827bcbdf808da8d050"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#ac9171f60c54f0b827bcbdf808da8d050">ULIS_CREATE_REG</a>(iName,  i)&#160;&#160;&#160;namespace generated { constexpr ::<a class="el" href="struct_u_l_i_s_1_1_t_registry.html">ULIS::TRegistry</a>&lt; 1 &gt; <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>( iName,  __COUNTER__ ) = { i }; }</td></tr>
+<tr class="memitem:ac9171f60c54f0b827bcbdf808da8d050"><td class="memItemLeft" align="right" valign="top"><a id="ac9171f60c54f0b827bcbdf808da8d050"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_CREATE_REG</b>(iName,  i)&#160;&#160;&#160;namespace generated { constexpr ::<a class="el" href="struct_u_l_i_s_1_1_t_registry.html">ULIS::TRegistry</a>&lt; 1 &gt; ULIS_CAT( iName,  __COUNTER__ ) = { i }; }</td></tr>
 <tr class="separator:ac9171f60c54f0b827bcbdf808da8d050"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f92a0e656e667f4d465430e07fe960f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a6f92a0e656e667f4d465430e07fe960f">ULIS_APPEND_REG_IMPL</a>(iName,  i,  c)&#160;&#160;&#160;namespace generated { constexpr auto <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>( iName,  c ) = <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>( iName, <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a9e62efd14286b2baae9feec7c1470174">ULIS_PREVIOUS</a>( c ) ).PushBack( i ); }</td></tr>
+<tr class="memitem:a6f92a0e656e667f4d465430e07fe960f"><td class="memItemLeft" align="right" valign="top"><a id="a6f92a0e656e667f4d465430e07fe960f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_APPEND_REG_IMPL</b>(iName,  i,  c)&#160;&#160;&#160;namespace generated { constexpr auto ULIS_CAT( iName,  c ) = ULIS_CAT( iName, ULIS_PREVIOUS( c ) ).PushBack( i ); }</td></tr>
 <tr class="separator:a6f92a0e656e667f4d465430e07fe960f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38314d4709badf550fb98dd1207c6b2f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a38314d4709badf550fb98dd1207c6b2f">ULIS_APPEND_REG</a>(iName,  i)&#160;&#160;&#160;<a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a6f92a0e656e667f4d465430e07fe960f">ULIS_APPEND_REG_IMPL</a>( iName, i, __COUNTER__ )</td></tr>
+<tr class="memitem:a38314d4709badf550fb98dd1207c6b2f"><td class="memItemLeft" align="right" valign="top"><a id="a38314d4709badf550fb98dd1207c6b2f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_APPEND_REG</b>(iName,  i)&#160;&#160;&#160;ULIS_APPEND_REG_IMPL( iName, i, __COUNTER__ )</td></tr>
 <tr class="separator:a38314d4709badf550fb98dd1207c6b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4e664c9dff7a3ac25f27fc30efa9758"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#ae4e664c9dff7a3ac25f27fc30efa9758">ULIS_ASSIGN_REG</a>(iName)&#160;&#160;&#160;generated:: <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>( iName, <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a9e62efd14286b2baae9feec7c1470174">ULIS_PREVIOUS</a>( __COUNTER__ ) )</td></tr>
+<tr class="memitem:ae4e664c9dff7a3ac25f27fc30efa9758"><td class="memItemLeft" align="right" valign="top"><a id="ae4e664c9dff7a3ac25f27fc30efa9758"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_ASSIGN_REG</b>(iName)&#160;&#160;&#160;generated:: ULIS_CAT( iName, ULIS_PREVIOUS( __COUNTER__ ) )</td></tr>
 <tr class="separator:ae4e664c9dff7a3ac25f27fc30efa9758"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d6483419547169a521de9d87f7faf5e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a5d6483419547169a521de9d87f7faf5e">ULIS_REG_TYPE</a>&#160;&#160;&#160;constexpr auto</td></tr>
+<tr class="memitem:a5d6483419547169a521de9d87f7faf5e"><td class="memItemLeft" align="right" valign="top"><a id="a5d6483419547169a521de9d87f7faf5e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_REG_TYPE</b>&#160;&#160;&#160;constexpr auto</td></tr>
 <tr class="separator:a5d6483419547169a521de9d87f7faf5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae408444a8e02a16d5684787c4212601c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#ae408444a8e02a16d5684787c4212601c">ULIS_REPEAT</a>&#160;&#160;&#160;BOOST_PP_REPEAT</td></tr>
+<tr class="memitem:ae408444a8e02a16d5684787c4212601c"><td class="memItemLeft" align="right" valign="top"><a id="ae408444a8e02a16d5684787c4212601c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_REPEAT</b>&#160;&#160;&#160;BOOST_PP_REPEAT</td></tr>
 <tr class="separator:ae408444a8e02a16d5684787c4212601c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file provides the definition for the TRegistry struct. </p>
-<p><a class="el" href="namespace_u_l_i_s.html">ULIS</a></p>
+<p>ULIS</p>
 <hr  />
 <dl class="section author"><dt>Author</dt><dd>Clement Berthaud </dd></dl>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a38314d4709badf550fb98dd1207c6b2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38314d4709badf550fb98dd1207c6b2f">&#9670;&nbsp;</a></span>ULIS_APPEND_REG</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_APPEND_REG</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">iName, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">i&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a6f92a0e656e667f4d465430e07fe960f">ULIS_APPEND_REG_IMPL</a>( iName, i, __COUNTER__ )</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6f92a0e656e667f4d465430e07fe960f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f92a0e656e667f4d465430e07fe960f">&#9670;&nbsp;</a></span>ULIS_APPEND_REG_IMPL</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_APPEND_REG_IMPL</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">iName, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">i, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">c&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;namespace generated { constexpr auto <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>( iName,  c ) = <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>( iName, <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a9e62efd14286b2baae9feec7c1470174">ULIS_PREVIOUS</a>( c ) ).PushBack( i ); }</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae4e664c9dff7a3ac25f27fc30efa9758"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4e664c9dff7a3ac25f27fc30efa9758">&#9670;&nbsp;</a></span>ULIS_ASSIGN_REG</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_ASSIGN_REG</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">iName</td><td>)</td>
-          <td>&#160;&#160;&#160;generated:: <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>( iName, <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a9e62efd14286b2baae9feec7c1470174">ULIS_PREVIOUS</a>( __COUNTER__ ) )</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="adef62f335fb287d3f931f9bd5449a335"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adef62f335fb287d3f931f9bd5449a335">&#9670;&nbsp;</a></span>ULIS_CAT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_CAT</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">iLhs, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">iRhs&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;BOOST_PP_CAT( iLhs, iRhs )</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac9171f60c54f0b827bcbdf808da8d050"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9171f60c54f0b827bcbdf808da8d050">&#9670;&nbsp;</a></span>ULIS_CREATE_REG</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_CREATE_REG</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">iName, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">i&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;namespace generated { constexpr ::<a class="el" href="struct_u_l_i_s_1_1_t_registry.html">ULIS::TRegistry</a>&lt; 1 &gt; <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#adef62f335fb287d3f931f9bd5449a335">ULIS_CAT</a>( iName,  __COUNTER__ ) = { i }; }</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9e62efd14286b2baae9feec7c1470174"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e62efd14286b2baae9feec7c1470174">&#9670;&nbsp;</a></span>ULIS_PREVIOUS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_PREVIOUS</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">i</td><td>)</td>
-          <td>&#160;&#160;&#160;BOOST_PP_SUB( i, 1 )</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5d6483419547169a521de9d87f7faf5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d6483419547169a521de9d87f7faf5e">&#9670;&nbsp;</a></span>ULIS_REG_TYPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_REG_TYPE&#160;&#160;&#160;constexpr auto</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae408444a8e02a16d5684787c4212601c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae408444a8e02a16d5684787c4212601c">&#9670;&nbsp;</a></span>ULIS_REPEAT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_REPEAT&#160;&#160;&#160;BOOST_PP_REPEAT</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
