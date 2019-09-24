@@ -20,7 +20,7 @@ namespace ULIS {
 
 
 template< uint32 _SHSrc >
-void  ConvTypeAndLayoutInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat )
+void  ConvTypeAndLayoutInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlockDst, const FPerformanceOptions& iPerformanceOptions)
 {
     switch( iBlockDst->Id() )
     {
@@ -30,7 +30,7 @@ void  ConvTypeAndLayoutInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlo
                 TConversionContext::ConvertTypeAndLayoutInto< _SHSrc, ULIS_REG[ n ] >(                                    \
                                                                  iBlockSrc,                                                             \
                                                                  (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockDst,             \
-                                                                 iPerfStrat );                                                          \
+                                                                 iPerformanceOptions);                                                          \
                 break;                                                                                                                  \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -41,7 +41,7 @@ void  ConvTypeAndLayoutInto_Imp( const TBlock< _SHSrc >* iBlockSrc, IBlock* iBlo
 
 //static
 void
-FConversionContext::ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat )
+FConversionContext::ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerformanceOptions& iPerformanceOptions)
 {
     switch( iBlockSrc->Id() )
     {
@@ -50,7 +50,7 @@ FConversionContext::ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlo
             {                                                                                                                           \
                 ConvTypeAndLayoutInto_Imp< ULIS_REG[ n ] >( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockSrc,    \
                                                                           iBlockDst,                                                    \
-                                                                          iPerfStrat );                                                 \
+                                                                          iPerformanceOptions);                                                 \
                 break;                                                                                                                  \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )

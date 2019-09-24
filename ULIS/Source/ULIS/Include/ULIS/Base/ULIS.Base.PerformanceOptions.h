@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* @file     ULIS.Base.PerfStrat.h
+* @file     ULIS.Base.PerformanceOptions.h
 * @author   Clement Berthaud
 * @brief    This file provides the definition for the FPerfStart struct.
 */
@@ -12,19 +12,19 @@
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-/// @struct     FPerfStrat
-/// @brief      The FPerfStrat struct is user for holding performance options.
+/// @struct     FPerformanceOptions
+/// @brief      The FPerformanceOptionsstruct is user for holding performance options.
 /// @details    Used for specification and forwarding of options in multi threaded / SSE pipelines.
 ///             These flags are juste hints, they can be overriden in some pipelines.
-struct FPerfStrat
+struct FPerformanceOptions
 {
 public:
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------- Construction
-    /// @fn         FPerfStrat()
+    /// @fn         FPerformanceOptions()
     /// @brief      Default Constructor.
     /// @details    Initializes members with default values
-    FPerfStrat()
+    FPerformanceOptions()
         : use_sse_if_available  ( false                               )
         , use_mem_if_available  ( true                                )
         , desired_workers       ( std::thread::hardware_concurrency() )

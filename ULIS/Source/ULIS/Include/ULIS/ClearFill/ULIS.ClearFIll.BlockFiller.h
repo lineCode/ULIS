@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 
@@ -123,9 +123,9 @@ public:
     static inline void Run( TBlock< _SH >*                      iBlock
                           , const typename TBlock< _SH >::tPixelValue&   iValue
                           , const FRect&                        iROI
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        if( iPerfStrat.desired_workers > 1 )
+        if( iPerformanceOptions.desired_workers > 1 )
         {
             TBlockFiller_Default_ScanLine< _SH >::Run( iBlock, iValue, iROI );
         }
@@ -146,9 +146,9 @@ public:
     static inline void Run( TBlock< _SH >*                      iBlock
                           , const typename TBlock< _SH >::tPixelValue&   iValue
                           , const FRect&                        iROI
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockFiller_Default< _SH >::Run( iBlock, iValue, iROI, iPerfStrat );
+        TBlockFiller_Default< _SH >::Run( iBlock, iValue, iROI, iPerformanceOptions);
     }
 };
 
@@ -161,9 +161,9 @@ public:
     static inline void Run( TBlock< _SH >*                      iBlock
                           , const typename TBlock< _SH >::tPixelValue&   iValue
                           , const FRect&                        iROI
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockFiller_Imp< _SH >::Run( iBlock, iValue, iROI, iPerfStrat );
+        TBlockFiller_Imp< _SH >::Run( iBlock, iValue, iROI, iPerformanceOptions);
     }
 };
 

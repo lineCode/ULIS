@@ -1,51 +1,75 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Interface.Blend.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Interface.Blend.h
+* @author   Clement Berthaud
+* @brief    This file provides the declarations for the FBlendingContext class.
 */
-
 #pragma once
-
+#include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Blend/ULIS.Blend.BlendingModes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Maths/ULIS.Maths.Geometry.h"
 
-namespace ULIS { class IBlock; }
+ULIS_CLASS_FORWARD_DECLARATION( IBlock )
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FBlendingContext
+/// @class      FBlendingContext
+/// @brief      The FBlendingContext class provides a context for all Blending operations on Blocks.
 class FBlendingContext
 {
 public:
-    // Blend
-    // Blends two Blocks
-    // Result is stored in-place in iBlockBack
-    // Params:
-    // iBlockTop: the block on top
-    // iBlockBack: the block that receives the blend ( in-place )
-    // iMode: the mode
-    // iOpacity: the opcaity of iBlockTop
-    // x: where is iBlockTop blended on x axis
-    // y: where is iBlockTop blended on y axis
-    // callInvalidCB: should we call the invalid callback once done ( default true )
-    static void Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, float iOpacity = 1.f, int ix = 0, int iy = 0, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------- Public Static API
+    /// @fn         Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, int ix = 0, int iy = 0, float iOpacity = 1.f, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true )
+    /// @brief      Blend two block together.
+    /// @details    The block on top will be blended on the back block, according to the specified parameters.
+    ///                 - Warning ! Both blocks should be the same underlying format in order for the function to succeed.
+    ///                 - If the two blocks do not have the same type, the function will fail with an assertion in debug builds.
+    ///                 - In a release build, nothing prevents the function to run but it will end up corrupting memory and doing all sorts of crazy things.
+    /// @param      iBlockTop               The pointer to the \e IBlock on top ( remains untouched ).
+    /// @param      iBlockBack              The pointer to the \e IBlock on back ( receives the blend ).
+    /// @param      iMode                   The blending mode ( see \e eBlendingMode ).
+    /// @param      iOpacity                The opacity used to perform the blend, beetween 0 and 1.
+    /// @param      iX                      x coordinate of the position to blend in the back block.
+    /// @param      iY                      y coordinate of the position to blend in the back block.
+    /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
+    /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
+    static  void  Blend( IBlock* iBlockTop
+                       , IBlock* iBlockBack
+                       , eBlendingMode iMode
+                       , int iX = 0
+                       , int iY = 0
+                       , float iOpacity = 1.f
+                       , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
+                       , bool iCallInvalidCB = true );
 
-    // Blend
-    // Blends two Blocks
-    // Result is stored in-place in iBlockBack
-    // Params:
-    // iBlockTop: the block on top
-    // iBlockBack: the block that receives the blend ( in-place )
-    // iMode: the mode
-    // iOpacity: the opcaity of iBlockTop
-    // iArea: the area to blend
-    // callInvalidCB: should we call the invalid callback once done ( default true )
-    static void Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, const FPerfStrat& iPerfStrat = FPerfStrat(), bool callInvalidCB = true );
+
+    /// @fn         Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @details    The block on top will be blended on the back block, according to the specified parameters.
+    ///                 - Warning ! Both blocks should be the same underlying format in order for the function to succeed.
+    ///                 - If the two blocks do not have the same type, the function will fail with an assertion in debug builds.
+    ///                 - In a release build, nothing prevents the function to run but it will end up corrupting memory and doing all sorts of crazy things.
+    /// @details    The block on top will be blended on the back block, according to the specified parameters.
+    /// @param      iBlockTop               The pointer to the \e IBlock on top ( remains untouched ).
+    /// @param      iBlockBack              The pointer to the \e IBlock on back ( receives the blend ).
+    /// @param      iMode                   The blending mode ( see \e eBlendingMode ).
+    /// @param      iArea                   The area to blend in the back block.
+    /// @param      iOpacity                The opacity used to perform the blend, beetween 0 and 1.
+    /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
+    /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
+    static  void  Blend( IBlock* iBlockTop
+                       , IBlock* iBlockBack
+                       , eBlendingMode iMode
+                       , const FRect& iArea
+                       , float iOpacity = 1.f
+                       , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
+                       , bool iCallInvalidCB = true );
+
 };
 
 } // namespace ULIS

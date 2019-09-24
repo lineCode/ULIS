@@ -86,7 +86,7 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;assert.h&gt;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_base_8_base_types_8h.html">ULIS/Base/ULIS.Base.BaseTypes.h</a>&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_base_8_perf_strat_8h.html">ULIS/Base/ULIS.Base.PerfStrat.h</a>&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_base_8_performance_options_8h.html">ULIS/Base/ULIS.Base.PerformanceOptions.h</a>&quot;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_transform_8_block_transformer_8h.html">ULIS/Transform/ULIS.Transform.BlockTransformer.h</a>&quot;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_data_8_block_8h.html">ULIS/Data/ULIS.Data.Block.h</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_make_8_make_context_8h.html">ULIS/Make/ULIS.Make.MakeContext.h</a>&quot;</span></div>
@@ -97,7 +97,7 @@ $(function() {
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">template</span>&lt; u<span class="keywordtype">int</span>32 _SH &gt;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_u_l_i_s_1_1_t_transform_context.html#a3e6620d6ab7021492f96a38e3a4b6d67">ConvertTypeAndLayoutInto</a>( <span class="keyword">const</span> TBlock&lt; _SH &gt;* iBlock, <span class="keyword">const</span> FPerfStrat&amp; iPerfStrat = FPerfStrat() )</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_u_l_i_s_1_1_t_transform_context.html#a839e50e207bbf63b411b5efe86a0e5a6">ConvertTypeAndLayoutInto</a>( <span class="keyword">const</span> TBlock&lt; _SH &gt;* iBlock, <span class="keyword">const</span> FPerformanceOptions&amp; iPerformanceOptions= FPerformanceOptions() )</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
 <div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="class_u_l_i_s_1_1_t_transform_context.html">   29</a></span>&#160;    }</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
@@ -106,12 +106,12 @@ $(function() {
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;} <span class="comment">// namespace ULIS</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_u_l_i_s_1_1_t_transform_context_html_a3e6620d6ab7021492f96a38e3a4b6d67"><div class="ttname"><a href="class_u_l_i_s_1_1_t_transform_context.html#a3e6620d6ab7021492f96a38e3a4b6d67">ULIS::TTransformContext::ConvertTypeAndLayoutInto</a></div><div class="ttdeci">static void ConvertTypeAndLayoutInto(const TBlock&lt; _SH &gt; *iBlock, const FPerfStrat &amp;iPerfStrat=FPerfStrat())</div><div class="ttdef"><b>Definition:</b> ULIS.Transform.TransformContext.h:40</div></div>
+<div class="ttc" id="a_u_l_i_s_8_base_8_performance_options_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_performance_options_8h.html">ULIS.Base.PerformanceOptions.h</a></div><div class="ttdoc">This file provides the definition for the FPerfStart struct.</div></div>
 <div class="ttc" id="anamespace_u_l_i_s_html"><div class="ttname"><a href="namespace_u_l_i_s.html">ULIS</a></div><div class="ttdef"><b>Definition:</b> ULIS.Base.AlignedMemory.h:13</div></div>
 <div class="ttc" id="a_u_l_i_s_8_make_8_make_context_8h_html"><div class="ttname"><a href="_u_l_i_s_8_make_8_make_context_8h.html">ULIS.Make.MakeContext.h</a></div></div>
+<div class="ttc" id="aclass_u_l_i_s_1_1_t_transform_context_html_a839e50e207bbf63b411b5efe86a0e5a6"><div class="ttname"><a href="class_u_l_i_s_1_1_t_transform_context.html#a839e50e207bbf63b411b5efe86a0e5a6">ULIS::TTransformContext::ConvertTypeAndLayoutInto</a></div><div class="ttdeci">static void ConvertTypeAndLayoutInto(const TBlock&lt; _SH &gt; *iBlock, const FPerformanceOptions &amp;iPerformanceOptions=FPerformanceOptions())</div><div class="ttdef"><b>Definition:</b> ULIS.Transform.TransformContext.h:40</div></div>
 <div class="ttc" id="a_u_l_i_s_8_data_8_block_8h_html"><div class="ttname"><a href="_u_l_i_s_8_data_8_block_8h.html">ULIS.Data.Block.h</a></div></div>
 <div class="ttc" id="a_u_l_i_s_8_base_8_base_types_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_base_types_8h.html">ULIS.Base.BaseTypes.h</a></div><div class="ttdoc">This file provides some usefull shorthand typedefs.</div></div>
-<div class="ttc" id="a_u_l_i_s_8_base_8_perf_strat_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_perf_strat_8h.html">ULIS.Base.PerfStrat.h</a></div><div class="ttdoc">This file provides the definition for the FPerfStart struct.</div></div>
 <div class="ttc" id="a_u_l_i_s_8_transform_8_block_transformer_8h_html"><div class="ttname"><a href="_u_l_i_s_8_transform_8_block_transformer_8h.html">ULIS.Transform.BlockTransformer.h</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

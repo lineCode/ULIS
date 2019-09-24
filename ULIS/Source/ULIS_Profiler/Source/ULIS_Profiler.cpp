@@ -184,7 +184,7 @@ int clear( int argc, char *argv[] )
 
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
 
-    ::ULIS::FPerfStrat strat;
+    ::ULIS::FPerformanceOptions strat;
     if( opt == "mem" ) strat.use_mem_if_available;
     if( opt == "sse" ) strat.use_sse_if_available;
 
@@ -257,7 +257,7 @@ int fill( int argc, char *argv[] )
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
     ::ULIS::CColor color( 0, 0, 0 );
 
-    ::ULIS::FPerfStrat strat;
+    ::ULIS::FPerformanceOptions strat;
     if( opt == "mem" ) strat.use_mem_if_available;
     if( opt == "sse" ) strat.use_sse_if_available;
 
@@ -335,7 +335,7 @@ int blend( int argc, char *argv[] )
     ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
     ::ULIS::eBlendingMode bm = (::ULIS::eBlendingMode)mode;
 
-    ::ULIS::FPerfStrat strat;
+    ::ULIS::FPerformanceOptions strat;
     if( opt == "mem" ) strat.use_mem_if_available;
     if( opt == "sse" ) strat.use_sse_if_available;
 
@@ -409,7 +409,7 @@ int copy( int argc, char *argv[] )
     ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
     ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( size, size, fmt );
 
-    ::ULIS::FPerfStrat strat;
+    ::ULIS::FPerformanceOptions strat;
     if( opt == "mem" ) strat.use_mem_if_available;
     if( opt == "sse" ) strat.use_sse_if_available;
 

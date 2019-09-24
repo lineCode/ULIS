@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Blend/ULIS.Blend.BlendingModes.h"
 #include "ULIS/Blend/ULIS.Blend.PixelBlender.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
@@ -54,7 +54,7 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerfStrat&                  iPerfStrat = FPerfStrat() )
+                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
     {
         const int x1 = iROI.x;
         const int y1 = iROI.y;
@@ -87,7 +87,7 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerfStrat&                  iPerfStrat = FPerfStrat() )
+                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
     {
         const int x1 = iROI.x;
         const int y1 = iROI.y;
@@ -118,9 +118,9 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerfStrat&                  iPerfStrat = FPerfStrat() )
+                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
     {
-        if( iPerfStrat.desired_workers > 1 )
+        if( iPerformanceOptions.desired_workers > 1 )
         {
             TBlockBlender_Default_ScanLine< _SH
                                             , _BM
@@ -135,7 +135,7 @@ public:
                                                 , iOpacity
                                                 , iROI
                                                 , iShift
-                                                , iPerfStrat );
+                                                , iPerformanceOptions);
         }
         else
         {
@@ -152,7 +152,7 @@ public:
                                                 , iOpacity
                                                 , iROI
                                                 , iShift
-                                                , iPerfStrat );
+                                                , iPerformanceOptions);
         }
     }
 };
@@ -176,7 +176,7 @@ public:
                           , typename TBlock< _SH >::tPixelType  iOpacity
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
         TBlockBlender_Default< _SH
                              , _BM
@@ -191,7 +191,7 @@ public:
                                   , iOpacity
                                   , iROI
                                   , iShift
-                                  , iPerfStrat );
+                                  , iPerformanceOptions);
     }
 };
 
@@ -207,7 +207,7 @@ public:
                           , typename TBlock< _SH >::tPixelType  iOpacity
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
         TBlockBlender_Imp< _SH
                          , _BM
@@ -222,7 +222,7 @@ public:
                               , iOpacity
                               , iROI
                               , iShift
-                              , iPerfStrat );
+                              , iPerformanceOptions);
     }
 };
 

@@ -78,7 +78,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;assert.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="_u_l_i_s_8_base_8_base_types_8h_source.html">ULIS/Base/ULIS.Base.BaseTypes.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_u_l_i_s_8_base_8_perf_strat_8h_source.html">ULIS/Base/ULIS.Base.PerfStrat.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_u_l_i_s_8_base_8_performance_options_8h_source.html">ULIS/Base/ULIS.Base.PerformanceOptions.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_u_l_i_s_8_base_8_weak_p_r_n_g_8h_source.html">ULIS/Base/ULIS.Base.WeakPRNG.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_u_l_i_s_8_blend_8_blending_modes_8h_source.html">ULIS/Blend/ULIS.Blend.BlendingModes.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_u_l_i_s_8_data_8_block_8h_source.html">ULIS/Data/ULIS.Data.Block.h</a>&quot;</code><br />
@@ -101,9 +101,9 @@ Namespaces</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a4f4764913e7d9e1bd97cd2dcd131b388"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_blend_8_blending_context_8h.html#a4f4764913e7d9e1bd97cd2dcd131b388">tSpec</a>&#160;&#160;&#160;TBlockInfo&lt; _SH &gt;</td></tr>
 <tr class="separator:a4f4764913e7d9e1bd97cd2dcd131b388"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2eff3787f2d6cc4d0e86b9f7c74dfad5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_blend_8_blending_context_8h.html#a2eff3787f2d6cc4d0e86b9f7c74dfad5">ULIS_SWITCH_OP</a>(iMode)&#160;&#160;&#160;TBlockBlender&lt; _SH, iMode &gt;::Run( iBlockTop, iBlockBack, ConvType&lt; float, typename TBlock&lt; _SH &gt;::tPixelType &gt;( iOpacity ), inter_bb, shift, iPerfStrat )</td></tr>
+<tr class="memitem:a2eff3787f2d6cc4d0e86b9f7c74dfad5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_blend_8_blending_context_8h.html#a2eff3787f2d6cc4d0e86b9f7c74dfad5">ULIS_SWITCH_OP</a>(iMode)&#160;&#160;&#160;TBlockBlender&lt; _SH, iMode &gt;::Run( iBlockTop, iBlockBack, ConvType&lt; float, typename TBlock&lt; _SH &gt;::tPixelType &gt;( iOpacity ), inter_bb, shift, iPerformanceOptions)</td></tr>
 <tr class="separator:a2eff3787f2d6cc4d0e86b9f7c74dfad5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2eff3787f2d6cc4d0e86b9f7c74dfad5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_blend_8_blending_context_8h.html#a2eff3787f2d6cc4d0e86b9f7c74dfad5">ULIS_SWITCH_OP</a>(iMode)&#160;&#160;&#160;TBlockBlender&lt; _SH, iMode &gt;::Run( iBlockTop, iBlockBack, ConvType&lt; float, typename TBlock&lt; _SH &gt;::tPixelType &gt;( iOpacity ), inter_bb, shift, iPerfStrat )</td></tr>
+<tr class="memitem:a2eff3787f2d6cc4d0e86b9f7c74dfad5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_blend_8_blending_context_8h.html#a2eff3787f2d6cc4d0e86b9f7c74dfad5">ULIS_SWITCH_OP</a>(iMode)&#160;&#160;&#160;TBlockBlender&lt; _SH, iMode &gt;::Run( iBlockTop, iBlockBack, ConvType&lt; float, typename TBlock&lt; _SH &gt;::tPixelType &gt;( iOpacity ), inter_bb, shift, iPerformanceOptions)</td></tr>
 <tr class="separator:a2eff3787f2d6cc4d0e86b9f7c74dfad5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -132,7 +132,7 @@ Macros</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">iMode</td><td>)</td>
-          <td>&#160;&#160;&#160;TBlockBlender&lt; _SH, iMode &gt;::Run( iBlockTop, iBlockBack, ConvType&lt; float, typename TBlock&lt; _SH &gt;::tPixelType &gt;( iOpacity ), inter_bb, shift, iPerfStrat )</td>
+          <td>&#160;&#160;&#160;TBlockBlender&lt; _SH, iMode &gt;::Run( iBlockTop, iBlockBack, ConvType&lt; float, typename TBlock&lt; _SH &gt;::tPixelType &gt;( iOpacity ), inter_bb, shift, iPerformanceOptions)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -150,7 +150,7 @@ Macros</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">iMode</td><td>)</td>
-          <td>&#160;&#160;&#160;TBlockBlender&lt; _SH, iMode &gt;::Run( iBlockTop, iBlockBack, ConvType&lt; float, typename TBlock&lt; _SH &gt;::tPixelType &gt;( iOpacity ), inter_bb, shift, iPerfStrat )</td>
+          <td>&#160;&#160;&#160;TBlockBlender&lt; _SH, iMode &gt;::Run( iBlockTop, iBlockBack, ConvType&lt; float, typename TBlock&lt; _SH &gt;::tPixelType &gt;( iOpacity ), inter_bb, shift, iPerformanceOptions)</td>
         </tr>
       </table>
 </div><div class="memdoc">

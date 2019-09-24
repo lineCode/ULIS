@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 
@@ -118,9 +118,9 @@ class TBlockClearer_Default
 public:
     static inline void Run( TBlock< _SH >*                      iBlock
                           , const FRect&                        iROI
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        if( iPerfStrat.desired_workers > 1 )
+        if( iPerformanceOptions.desired_workers > 1 )
         {
             TBlockClearer_Default_ScanLine< _SH >::Run( iBlock, iROI );
         }
@@ -140,9 +140,9 @@ class TBlockClearer_Imp
 public:
     static inline void Run( TBlock< _SH >*                      iBlock
                           , const FRect&                        iROI
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockClearer_Default< _SH >::Run( iBlock, iROI, iPerfStrat );
+        TBlockClearer_Default< _SH >::Run( iBlock, iROI, iPerformanceOptions);
     }
 };
 
@@ -154,9 +154,9 @@ class TBlockClearer
 public:
     static inline void Run( TBlock< _SH >*                      iBlock
                           , const FRect&                        iROI
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockClearer_Imp< _SH >::Run( iBlock, iROI, iPerfStrat );
+        TBlockClearer_Imp< _SH >::Run( iBlock, iROI, iPerformanceOptions);
     }
 };
 

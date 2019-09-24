@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Conv/ULIS.Conv.BlockTypeConverter.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Make/ULIS.Make.MakeContext.h"
@@ -25,7 +25,7 @@ class TConversionContext
 {
 public:
     template< uint32 _SHSrc, uint32 _SHDst >
-    static void ConvertTypeAndLayoutInto( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static void ConvertTypeAndLayoutInto( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
         // For:
         // Any Types
@@ -40,9 +40,9 @@ public:
         using dst_info = TBlockInfo< _SHDst >;
         assert( src_info::_nf._cm == dst_info::_nf._cm ); // Color Model
         if( _SHSrc == _SHDst )
-            TMakeContext< _SHSrc >::CopyBlockInto( (const TBlock< _SHSrc >*)iBlockSrc, (TBlock< _SHSrc >*)iBlockDst, iPerfStrat );
+            TMakeContext< _SHSrc >::CopyBlockInto( (const TBlock< _SHSrc >*)iBlockSrc, (TBlock< _SHSrc >*)iBlockDst, iPerformanceOptions);
         else
-            TBlockTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Run( iBlockSrc, iBlockDst, iPerfStrat );
+            TBlockTypeConverter< _SHSrc, _SHDst, ( (int)src_info::_nf._cm - (int)dst_info::_nf._cm ) >::Run( iBlockSrc, iBlockDst, iPerformanceOptions);
     }
 
     template< uint32 _SHSrc, uint32 _SHDst >

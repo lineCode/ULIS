@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 
@@ -91,9 +91,9 @@ template< uint32 _SHSrc, uint32 _SHDst >
 class TBlockTypeConverter_Imp
 {
 public:
-    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
-        if( iPerfStrat.desired_workers > 1 )
+        if( iPerformanceOptions.desired_workers > 1 )
         {
             TBlockTypeConverter_ScanLine< _SHSrc, _SHDst >::Run( iBlockSrc, iBlockDst );
         }
@@ -111,7 +111,7 @@ template< uint32 _SHSrc, uint32 _SHDst, int _MODEL_DIFF >
 class TBlockTypeConverter
 {
 public:
-    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
     }
 };
@@ -122,9 +122,9 @@ template< uint32 _SHSrc, uint32 _SHDst >
 class TBlockTypeConverter< _SHSrc, _SHDst, 0 >
 {
 public:
-    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() )
+    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockTypeConverter_Imp< _SHSrc, _SHDst >::Run( iBlockSrc, iBlockDst, iPerfStrat );
+        TBlockTypeConverter_Imp< _SHSrc, _SHDst >::Run( iBlockSrc, iBlockDst, iPerformanceOptions);
     }
 };
 

@@ -12,7 +12,7 @@
 #pragma once
 
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 
 namespace ULIS { class IBlock; }
 
@@ -22,7 +22,7 @@ namespace ULIS {
 class FConversionContext
 {
 public:
-    static void ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerfStrat& iPerfStrat = FPerfStrat() );
+    static void ConvTypeAndLayoutInto( const IBlock* iBlockSrc, IBlock* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 };
 
 } // namespace ULIS

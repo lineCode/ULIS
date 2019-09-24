@@ -86,7 +86,10 @@ Public Functions</h2></td></tr>
 <tr class="memitem:ab0a2a759b04e223161e1d8f6aab166f5"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_pixel_proxy_auto_cast_checked.html#ab0a2a759b04e223161e1d8f6aab166f5">operator T</a> ()</td></tr>
 <tr class="separator:ab0a2a759b04e223161e1d8f6aab166f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_pixel_proxy_auto_cast_checked.html" title="The PixelProxyAutoCastChecked class provides a mean of auto-casting PixelProxy.">PixelProxyAutoCastChecked</a> class provides a mean of auto-casting PixelProxy. </p>
+<p>By overloading the call operator(), a PixelProxy can be retrieved automatically without explicit cast from the caller. The cast is checked with an assert which will fail if you try to assign the wrong type. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0f0f41a6eb3f45991d2ccdebab5fbc89"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0f0f41a6eb3f45991d2ccdebab5fbc89">&#9670;&nbsp;</a></span>PixelProxyAutoCastChecked()</h2>
 
@@ -127,6 +130,16 @@ Public Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Constructor from block and coordinates. </p>
+<p>Initializes all members with the supplied values. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iBlock</td><td>The block to cast from. </td></tr>
+    <tr><td class="paramname">iX</td><td>The X coordinate. </td></tr>
+    <tr><td class="paramname">iY</td><td>The Y coordinate. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -154,6 +167,9 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Call operator overload. </p>
+<dl class="section return"><dt>Returns</dt><dd>The value cast to the caller appropriate type ( likely in an assignment operation ). </dd></dl>
 
 </div>
 </div>

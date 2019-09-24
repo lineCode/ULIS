@@ -12,7 +12,7 @@
 #pragma once
 
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 
 #include <glm/matrix.hpp>
 
@@ -34,7 +34,7 @@ public:
 
 public:
     // Public API, static functions for image transforms
-    static IBlock* GetTransformed( const IBlock* iBlockSrc, const  glm::mat3& imat, const FPerfStrat& iPerfStrat = FPerfStrat() );
+    static IBlock* GetTransformed( const IBlock* iBlockSrc, const  glm::mat3& imat, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 };
 
 } // namespace ULIS

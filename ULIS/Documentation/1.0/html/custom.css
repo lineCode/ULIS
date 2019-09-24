@@ -97,6 +97,8 @@ table.memberdecls {
 
     border-spacing: 0px;
     padding: 0px;
+    width:80%;
+    margin:auto;
 }
 
 h2.groupheader {

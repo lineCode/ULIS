@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['tnextpixeltype_818',['tNextPixelType',['../class_u_l_i_s_1_1_t_block.html#a09851c729694ff1a119659651e3f6fd4',1,'ULIS::TBlock']]],
-  ['tpixelproxy_819',['tPixelProxy',['../class_u_l_i_s_1_1_t_block.html#a7db70065c61754c11bca9930e673ea3e',1,'ULIS::TBlock']]],
-  ['tpixeltype_820',['tPixelType',['../class_u_l_i_s_1_1_t_block.html#a2212f9e0a9d0fa17df647c45e108dc49',1,'ULIS::TBlock']]],
-  ['tpixelvalue_821',['tPixelValue',['../class_u_l_i_s_1_1_t_block.html#ad512f5c04a085b303e0eba5d62eb34f0',1,'ULIS::TBlock']]],
-  ['tprevpixeltype_822',['tPrevPixelType',['../class_u_l_i_s_1_1_t_block.html#aedc9f2824f013fbb471c48f3c8d79b3f',1,'ULIS::TBlock']]]
+  ['int16_959',['int16',['../namespace_u_l_i_s.html#aa81cded44dc845e3cbb3892757534f47',1,'ULIS']]],
+  ['int32_960',['int32',['../namespace_u_l_i_s.html#a630232c9b279c84cbf256fe97184e38d',1,'ULIS']]],
+  ['int64_961',['int64',['../namespace_u_l_i_s.html#af22ae0ec7b4c1eeaa95f2394f647520f',1,'ULIS']]],
+  ['int8_962',['int8',['../namespace_u_l_i_s.html#afa2c947a12b60367cf51310f0c8c6be2',1,'ULIS']]]
 ];

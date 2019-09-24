@@ -84,7 +84,7 @@
 #define ULIS_NAMESPACE_NAME     ULIS
 #define ULIS_NAMESPACE_BEGIN    namespace ULIS_NAMESPACE_NAME {
 #define ULIS_NAMESPACE_END      }
-#define ULIS_FDECL( i ) ULIS_NAMESPACE_BEGIN i ULIS_NAMESPACE_END
+#define ULIS_CLASS_FORWARD_DECLARATION( i ) ULIS_NAMESPACE_BEGIN class i ; ULIS_NAMESPACE_END
 
 /////////////////////////////////////////////////////
 // Version Specification

@@ -86,7 +86,7 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;assert.h&gt;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_base_8_base_types_8h.html">ULIS/Base/ULIS.Base.BaseTypes.h</a>&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_base_8_perf_strat_8h.html">ULIS/Base/ULIS.Base.PerfStrat.h</a>&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_base_8_performance_options_8h.html">ULIS/Base/ULIS.Base.PerformanceOptions.h</a>&quot;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_data_8_block_8h.html">ULIS/Data/ULIS.Data.Block.h</a>&quot;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_global_8_global_thread_pool_8h.html">ULIS/Global/ULIS.Global.GlobalThreadPool.h</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
@@ -162,9 +162,9 @@ $(function() {
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">class TBlockTypeConverter_Imp</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">{</span></div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">public:</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">    static inline void Run( const TBlock&lt; _SHSrc &gt;* iBlockSrc, TBlock&lt; _SHDst &gt;* iBlockDst, const FPerfStrat&amp; iPerfStrat = FPerfStrat() )</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">    static inline void Run( const TBlock&lt; _SHSrc &gt;* iBlockSrc, TBlock&lt; _SHDst &gt;* iBlockDst, const FPerformanceOptions&amp; iPerformanceOptions= FPerformanceOptions() )</span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">    {</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">        if( iPerfStrat.desired_workers &gt; 1 )</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">        if( iPerformanceOptions.desired_workers &gt; 1 )</span></div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">        {</span></div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">            TBlockTypeConverter_ScanLine&lt; _SHSrc, _SHDst &gt;::Run( iBlockSrc, iBlockDst );</span></div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">        }</span></div>
@@ -181,7 +181,7 @@ $(function() {
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">class TBlockTypeConverter</span></div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">{</span></div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">public:</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">    static inline void Run( const TBlock&lt; _SHSrc &gt;* iBlockSrc, TBlock&lt; _SHDst &gt;* iBlockDst, const FPerfStrat&amp; iPerfStrat = FPerfStrat() )</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">    static inline void Run( const TBlock&lt; _SHSrc &gt;* iBlockSrc, TBlock&lt; _SHDst &gt;* iBlockDst, const FPerformanceOptions&amp; iPerformanceOptions= FPerformanceOptions() )</span></div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">    {</span></div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">    }</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment">};</span></div>
@@ -191,9 +191,9 @@ $(function() {
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">class TBlockTypeConverter&lt; _SHSrc, _SHDst, 0 &gt;</span></div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment">{</span></div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">public:</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">    static inline void Run( const TBlock&lt; _SHSrc &gt;* iBlockSrc, TBlock&lt; _SHDst &gt;* iBlockDst, const FPerfStrat&amp; iPerfStrat = FPerfStrat() )</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">    static inline void Run( const TBlock&lt; _SHSrc &gt;* iBlockSrc, TBlock&lt; _SHDst &gt;* iBlockDst, const FPerformanceOptions&amp; iPerformanceOptions= FPerformanceOptions() )</span></div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">    {</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment">        TBlockTypeConverter_Imp&lt; _SHSrc, _SHDst &gt;::Run( iBlockSrc, iBlockDst, iPerfStrat );</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment">        TBlockTypeConverter_Imp&lt; _SHSrc, _SHDst &gt;::Run( iBlockSrc, iBlockDst, iPerformanceOptions);</span></div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment">    }</span></div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">};</span></div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment"></span> </div>
@@ -229,11 +229,11 @@ $(function() {
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;} <span class="comment">// namespace ULIS</span></div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="a_u_l_i_s_8_base_8_performance_options_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_performance_options_8h.html">ULIS.Base.PerformanceOptions.h</a></div><div class="ttdoc">This file provides the definition for the FPerfStart struct.</div></div>
 <div class="ttc" id="a_u_l_i_s_8_global_8_global_thread_pool_8h_html"><div class="ttname"><a href="_u_l_i_s_8_global_8_global_thread_pool_8h.html">ULIS.Global.GlobalThreadPool.h</a></div></div>
 <div class="ttc" id="anamespace_u_l_i_s_html"><div class="ttname"><a href="namespace_u_l_i_s.html">ULIS</a></div><div class="ttdef"><b>Definition:</b> ULIS.Base.AlignedMemory.h:13</div></div>
 <div class="ttc" id="a_u_l_i_s_8_data_8_block_8h_html"><div class="ttname"><a href="_u_l_i_s_8_data_8_block_8h.html">ULIS.Data.Block.h</a></div></div>
 <div class="ttc" id="a_u_l_i_s_8_base_8_base_types_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_base_types_8h.html">ULIS.Base.BaseTypes.h</a></div><div class="ttdoc">This file provides some usefull shorthand typedefs.</div></div>
-<div class="ttc" id="a_u_l_i_s_8_base_8_perf_strat_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_perf_strat_8h.html">ULIS.Base.PerfStrat.h</a></div><div class="ttdoc">This file provides the definition for the FPerfStart struct.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

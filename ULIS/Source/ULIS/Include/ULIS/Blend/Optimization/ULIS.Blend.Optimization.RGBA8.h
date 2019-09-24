@@ -137,7 +137,7 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerfStrat&                  iPerfStrat = FPerfStrat() )
+                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
     {
         const int x1 = iROI.x;
         const int y1 = iROI.y;
@@ -174,17 +174,17 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerfStrat&                  iPerfStrat = FPerfStrat() )
+                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
     {
         /*
-        if( iPerfStrat.use_sse_if_available && FGlobalCPUConfig::Get().info.HW_SSSE3 )
+        if( iPerformanceOptions.use_sse_if_available && FGlobalCPUConfig::Get().info.HW_SSSE3 )
         {
             TBlockBlender_RGBA8_SSE< _SH >::Run( iBlockTop
                                                , iBlockBack
                                                , iOpacity
                                                , iROI
                                                , iShift
-                                               , iPerfStrat );
+                                               , iPerformanceOptions);
         }
         else
         {
@@ -202,7 +202,7 @@ public:
                                   , iOpacity
                                   , iROI
                                   , iShift
-                                  , iPerfStrat );
+                                  , iPerformanceOptions);
         //}
     }
 };

@@ -65,7 +65,7 @@ FTransformContext::GetShearMatrix( float iX, float iY )
 //------------------------------------ Public API, static functions for image transforms
 //static
 IBlock*
-FTransformContext::GetTransformed( const IBlock* iBlockSrc, const  glm::mat3& imat, const FPerfStrat& iPerfStrat )
+FTransformContext::GetTransformed( const IBlock* iBlockSrc, const  glm::mat3& imat, const FPerformanceOptions& iPerformanceOptions)
 {
     return  nullptr;
 }

@@ -46,7 +46,7 @@ FMakeContext::MakeBlockFromExternalData( int width, int height, uint8* iData, ui
 
 //static
 ::ULIS::IBlock*
-FMakeContext::MakeBlockFromDataPerformCopy( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag, const FPerfStrat& iPerfStrat )
+FMakeContext::MakeBlockFromDataPerformCopy( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag, const FPerformanceOptions& iPerformanceOptions)
 {
     ::ULIS::IBlock* src = MakeBlockFromExternalData( width, height, iData, ID, iProfileTag );
     ::ULIS::IBlock* ret = MakeBlock( width, height, ID, iProfileTag );
@@ -58,33 +58,33 @@ FMakeContext::MakeBlockFromDataPerformCopy( int width, int height, uint8* iData,
 
 //static
 ::ULIS::IBlock*
-FMakeContext::CopyBlock( ::ULIS::IBlock* iBlock, const FPerfStrat& iPerfStrat )
+FMakeContext::CopyBlock( ::ULIS::IBlock* iBlock, const FPerformanceOptions& iPerformanceOptions)
 {
-    return  CopyBlockRect( iBlock, FRect( 0, 0, iBlock->Width(), iBlock->Height() ), iPerfStrat );
+    return  CopyBlockRect( iBlock, FRect( 0, 0, iBlock->Width(), iBlock->Height() ), iPerformanceOptions);
 }
 
 
 //static
 void
-FMakeContext::CopyBlockInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FPerfStrat& iPerfStrat )
+FMakeContext::CopyBlockInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FPerformanceOptions& iPerformanceOptions)
 {
-    CopyBlockRectInto( iSrc, iDst, FRect( 0, 0, iDst->Width(), iDst->Height() ), iPerfStrat );
+    CopyBlockRectInto( iSrc, iDst, FRect( 0, 0, iDst->Width(), iDst->Height() ), iPerformanceOptions);
 }
 
 
 //static
 ::ULIS::IBlock*
-FMakeContext::CopyBlockRect( ::ULIS::IBlock* iBlock, const FRect& iRect, const FPerfStrat& iPerfStrat )
+FMakeContext::CopyBlockRect( ::ULIS::IBlock* iBlock, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions)
 {
     ::ULIS::IBlock* ret = MakeBlock( iRect.w, iRect.h, iBlock->Id() );
-    CopyBlockRectInto( iBlock, ret, iRect, iPerfStrat );
+    CopyBlockRectInto( iBlock, ret, iRect, iPerformanceOptions);
     return  ret;
 }
 
 
 //static
 void
-FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FRect& iRect, const FPerfStrat& iPerfStrat )
+FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions)
 {
     assert( iSrc->Id() == iDst->Id() );
 
@@ -96,7 +96,7 @@ FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, con
                         ::ULIS::TMakeContext< ULIS_REG[ n ] >                         \
                         ::CopyBlockRectInto( (::ULIS::TBlock< ULIS_REG[ n ] >*)iSrc   \
                                            , (::ULIS::TBlock< ULIS_REG[ n ] >*)iDst   \
-                                           , iRect, iPerfStrat );                                   \
+                                           , iRect, iPerformanceOptions);                                   \
                         break;                                                                      \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )

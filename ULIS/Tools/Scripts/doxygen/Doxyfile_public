@@ -915,7 +915,6 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE                =    ./ULIS/Include/ULIS/Base/FeatureDetector/.                  \
-                            ./ULIS/Include/ULIS/Base/.                                  \
                             ./ULIS/Include/ULIS/Blend/.                                 \
                             ./ULIS/Include/ULIS/ClearFill/.                             \
                             ./ULIS/Include/ULIS/Conv/.                                  \

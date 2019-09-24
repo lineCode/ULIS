@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 
@@ -130,9 +130,9 @@ public:
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        if( iPerfStrat.desired_workers > 1 )
+        if( iPerformanceOptions.desired_workers > 1 )
         {
             TBlockCopier_Default_ScanLine< _SH >::Run( iSrc, iDst, iROI, iShift );
         }
@@ -154,9 +154,9 @@ public:
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockCopier_Default< _SH >::Run( iSrc, iDst, iROI, iShift, iPerfStrat );
+        TBlockCopier_Default< _SH >::Run( iSrc, iDst, iROI, iShift, iPerformanceOptions);
     }
 };
 
@@ -170,9 +170,9 @@ public:
                           , TBlock< _SH >*                      iDst
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
-                          , const FPerfStrat&                   iPerfStrat = FPerfStrat() )
+                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockCopier_Imp< _SH >::Run( iSrc, iDst, iROI, iShift, iPerfStrat );
+        TBlockCopier_Imp< _SH >::Run( iSrc, iDst, iROI, iShift, iPerformanceOptions);
     }
 };
 

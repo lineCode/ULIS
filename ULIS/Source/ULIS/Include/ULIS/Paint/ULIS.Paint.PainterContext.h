@@ -18,7 +18,7 @@
 #include <ctime>
 #include "ULIS/Interface/ULIS.Interface.ClearFill.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerfStrat.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 
 namespace ULIS {
@@ -36,7 +36,7 @@ public:
                          , const FPoint             iP0
                          , const FPoint             iP1
                          , const CColor&            iColor
-                         , const FPerfStrat&        iPerfStrat
+                         , const FPerformanceOptions&        iPerformanceOptions
                          , bool                     callInvalidCB )
     {
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
@@ -130,7 +130,7 @@ public:
                            , const FPoint             iP0
                            , const FPoint             iP1
                            , const CColor&            iColor
-                           , const FPerfStrat&        iPerfStrat
+                           , const FPerformanceOptions&        iPerformanceOptions
                            , bool                     callInvalidCB )
     {
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
@@ -244,7 +244,7 @@ public:
                                  , const int                iRadius
                                  , const CColor&            iColor
                                  , const bool               iFilled
-                                 , const FPerfStrat&        iPerfStrat
+                                 , const FPerformanceOptions&        iPerformanceOptions
                                  , bool                     callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -274,10 +274,10 @@ public:
             {
                 if( iFilled )
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
                 }
                 diff -= ( 2 * x + 1 );
                 x++;
@@ -291,10 +291,10 @@ public:
             {
                 if( iFilled )
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
                 }
                 diff += (2 * ( y - x - 1 ) );
                 y--;
@@ -322,7 +322,7 @@ public:
                                   , const int                iRadius
                                   , const CColor&            iColor
                                   , const bool               iFilled
-                                  , const FPerfStrat&        iPerfStrat
+                                  , const FPerformanceOptions&        iPerformanceOptions
                                   , bool                     callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -373,10 +373,10 @@ public:
             {
                 if( iFilled )
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
                 }
                 diff -= ( 2 * x + 1 );
                 x++;
@@ -390,10 +390,10 @@ public:
             {
                 if( iFilled )
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
                 }
                 diff += (2 * ( y - x - 1 ) );
                 y--;
@@ -420,7 +420,7 @@ public:
                                     , const int                iRadius
                                     , const CColor&            iColor
                                     , const bool               iFilled
-                                    , const FPerfStrat&        iPerfStrat
+                                    , const FPerformanceOptions&        iPerformanceOptions
                                     , bool                     callInvalidCB )
     {
         
@@ -449,10 +449,10 @@ public:
             
             if( iFilled )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
             }
             
             if( diff > 0 )
@@ -484,7 +484,7 @@ public:
                                       , const int                iRadius
                                       , const CColor&            iColor
                                       , const bool               iFilled
-                                      , const FPerfStrat&        iPerfStrat
+                                      , const FPerformanceOptions&        iPerformanceOptions
                                       , bool                     callInvalidCB )
     {
         
@@ -539,10 +539,10 @@ public:
             
             if( iFilled )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerfStrat, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, callInvalidCB );
             }
             
             if( diff > 0 )
@@ -575,7 +575,7 @@ public:
                               , const int                 iStartDegree
                               , const int                 iEndDegree
                               , const CColor&             iColor
-                              , const FPerfStrat&         iPerfStrat
+                              , const FPerformanceOptions&         iPerformanceOptions
                               , bool                      callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -725,7 +725,7 @@ public:
                                 , const int                 iStartDegree
                                 , const int                 iEndDegree
                                 , const CColor&             iColor
-                                , const FPerfStrat&         iPerfStrat
+                                , const FPerformanceOptions&         iPerformanceOptions
                                 , bool                      callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -950,7 +950,7 @@ public:
                                 , const int                 iStartDegree
                                 , const int                 iEndDegree
                                 , const CColor&             iColor
-                                , const FPerfStrat&         iPerfStrat
+                                , const FPerformanceOptions&         iPerformanceOptions
                                 , bool                      callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -1089,7 +1089,7 @@ public:
                                 , const int                 iStartDegree
                                 , const int                 iEndDegree
                                 , const CColor&             iColor
-                                , const FPerfStrat&         iPerfStrat
+                                , const FPerformanceOptions&         iPerformanceOptions
                                 , bool                      callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -1320,7 +1320,7 @@ public:
                                    , const int                iRotationDegrees
                                    , const CColor&            iColor
                                    , const bool               iFilled
-                                   , const FPerfStrat&        iPerfStrat
+                                   , const FPerformanceOptions&        iPerformanceOptions
                                    , bool                     callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -1624,7 +1624,7 @@ public:
             for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
             {
                 if( it->second.size() == 2 )
-                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerformanceOptions, callInvalidCB );
             }
         }
 
@@ -1648,7 +1648,7 @@ public:
                             , const int                iB
                             , const CColor&            iColor
                             , const bool               iFilled
-                            , const FPerfStrat&        iPerfStrat
+                            , const FPerformanceOptions&        iPerformanceOptions
                             , bool                     callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -1669,8 +1669,8 @@ public:
         {
             if( iFilled )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
             }
             
             iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
@@ -1697,8 +1697,8 @@ public:
             {
                 if( iFilled )
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
                 }
                 sigma += fb2 * (1 - x);
                 x--;
@@ -1725,7 +1725,7 @@ public:
                             , const int                iB
                             , const CColor&            iColor
                             , const bool               iFilled
-                            , const FPerfStrat&        iPerfStrat
+                            , const FPerformanceOptions&        iPerformanceOptions
                             , bool                     callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -1774,13 +1774,13 @@ public:
                 {
                     if( step == 1 )
                     {
-                        DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                        DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                        DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                        DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
                     }
                     else //step = -1, we draw the aliasing on the inside of the ellipse, so we colorize one pixel less
                     {
-                        DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iPerfStrat, callInvalidCB );
-                        DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iPerfStrat, callInvalidCB );
+                        DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iPerformanceOptions, callInvalidCB );
+                        DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iPerformanceOptions, callInvalidCB );
                     }
                 }
                 sigma += fb2 * (1 - x);
@@ -1816,13 +1816,13 @@ public:
             {
                 if( step == 1 )
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, callInvalidCB );
                 }
                 else //step = -1, we draw the aliasing on the inside of the ellipse, so we colorize one pixel less
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iPerfStrat, callInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iPerfStrat, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iPerformanceOptions, callInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iPerformanceOptions, callInvalidCB );
                 }
             }
             
@@ -1856,7 +1856,7 @@ public:
                                 , const FPoint             iBottomRight
                                 , const CColor&            iColor
                                 , const bool               iFilled
-                                , const FPerfStrat&        iPerfStrat
+                                , const FPerformanceOptions&        iPerformanceOptions
                                 , bool                     callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -1900,7 +1900,7 @@ public:
                                 , std::vector< FPoint >&       iPoints
                                 , const CColor&                iColor
                                 , const bool                   iFilled
-                                , const FPerfStrat&            iPerfStrat
+                                , const FPerformanceOptions&            iPerformanceOptions
                                 , bool                         callInvalidCB )
     {
         std::chrono::time_point<std::chrono::system_clock> start;
@@ -1915,7 +1915,7 @@ public:
         int j = iPoints.size() - 1;
         for( int i = 0; i < iPoints.size(); i++ )
         {
-            DrawLine( iBlock, iPoints.at( i ), iPoints.at( j ), iColor, iPerfStrat, callInvalidCB );
+            DrawLine( iBlock, iPoints.at( i ), iPoints.at( j ), iColor, iPerformanceOptions, callInvalidCB );
             j = i;
         }
         
@@ -1985,7 +1985,7 @@ public:
                         if( nodesX[i+1] > maxX )
                             nodesX[i+1] = maxX;
                         
-                        DrawLine( iBlock, FPoint( nodesX[i], y), FPoint( nodesX[i+1], y ), iColor, iPerfStrat, callInvalidCB );
+                        DrawLine( iBlock, FPoint( nodesX[i], y), FPoint( nodesX[i+1], y ), iColor, iPerformanceOptions, callInvalidCB );
                     }
                 }
             }
