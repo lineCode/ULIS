@@ -75,22 +75,122 @@ $(function() {
 <div class="title">ULIS::FSpecContext Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_u_l_i_s_8_interface_8_spec_8h_source.html">ULIS.Interface.Spec.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a7a557a97f239ec7f44c277e42700f3ad"><td class="memItemLeft" align="right" valign="top"><a id="a7a557a97f239ec7f44c277e42700f3ad"></a>
-::ULIS::FSpec&#160;</td><td class="memItemRight" valign="bottom"><b>BlockInfo</b> (uint32_t i)</td></tr>
-<tr class="separator:a7a557a97f239ec7f44c277e42700f3ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a51c3eb19e93582054dfdec3a7d87b0"><td class="memItemLeft" align="right" valign="top"><a id="a5a51c3eb19e93582054dfdec3a7d87b0"></a>
-::ULIS::FSpec&#160;</td><td class="memItemRight" valign="bottom"><b>BlockSpec</b> (uint32_t i)</td></tr>
-<tr class="separator:a5a51c3eb19e93582054dfdec3a7d87b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b5a8d89b01e208b506f6c19dc566e91"><td class="memItemLeft" align="right" valign="top"><a id="a1b5a8d89b01e208b506f6c19dc566e91"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>PrintSpecs</b> ()</td></tr>
+<tr class="memitem:ab25669fcbe59d3cb45fc3770ac603f9c"><td class="memItemLeft" align="right" valign="top">static FSpec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#ab25669fcbe59d3cb45fc3770ac603f9c">BlockSpecAtIndex</a> (uint32 iIndex)</td></tr>
+<tr class="separator:ab25669fcbe59d3cb45fc3770ac603f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0e0430afcc16b4d9c582bd7ef95a865"><td class="memItemLeft" align="right" valign="top">static FSpec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#ae0e0430afcc16b4d9c582bd7ef95a865">BlockSpecFromHash</a> (uint32 iHash)</td></tr>
+<tr class="separator:ae0e0430afcc16b4d9c582bd7ef95a865"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b5a8d89b01e208b506f6c19dc566e91"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#a1b5a8d89b01e208b506f6c19dc566e91">PrintSpecs</a> ()</td></tr>
 <tr class="separator:a1b5a8d89b01e208b506f6c19dc566e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a586732b5d6ba6f268c99be64f8e5a94c"><td class="memItemLeft" align="right" valign="top"><a id="a586732b5d6ba6f268c99be64f8e5a94c"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>PrintShortSpecs</b> ()</td></tr>
 <tr class="separator:a586732b5d6ba6f268c99be64f8e5a94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_f_spec_context.html" title="The FSpecContext class provides a context for gathering informations on block specifications at runti...">FSpecContext</a> class provides a context for gathering informations on block specifications at runtime. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab25669fcbe59d3cb45fc3770ac603f9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab25669fcbe59d3cb45fc3770ac603f9c">&#9670;&nbsp;</a></span>BlockSpecAtIndex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static FSpec ULIS::FSpecContext::BlockSpecAtIndex </td>
+          <td>(</td>
+          <td class="paramtype">uint32&#160;</td>
+          <td class="paramname"><em>iIndex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query block specification object. @detail Get block FSpec specification object at index iIndex from registry. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iIndex</td><td>The index to gather from the type registry. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>FSpec object representing the specification information for a given block type. </dd></dl>
+
+</div>
+</div>
+<a id="ae0e0430afcc16b4d9c582bd7ef95a865"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0e0430afcc16b4d9c582bd7ef95a865">&#9670;&nbsp;</a></span>BlockSpecFromHash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static FSpec ULIS::FSpecContext::BlockSpecFromHash </td>
+          <td>(</td>
+          <td class="paramtype">uint32&#160;</td>
+          <td class="paramname"><em>iHash</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query block specification object. @detail Get block FSpec specification object with the provided hash. If the hash doesn't match any existing type, a default FSpec is returned. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iHash</td><td>The hash to query. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>FSpec object representing the specification information for a given block type. </dd></dl>
+
+</div>
+</div>
+<a id="a1b5a8d89b01e208b506f6c19dc566e91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b5a8d89b01e208b506f6c19dc566e91">&#9670;&nbsp;</a></span>PrintSpecs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ULIS::FSpecContext::PrintSpecs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Print all specs for all existing block types to std out. </p>
+<p>Print short specs ( hash and string ) for all existing block types to std out. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>ULIS/Include/ULIS/Interface/<a class="el" href="_u_l_i_s_8_interface_8_spec_8h_source.html">ULIS.Interface.Spec.h</a></li>
 </ul>

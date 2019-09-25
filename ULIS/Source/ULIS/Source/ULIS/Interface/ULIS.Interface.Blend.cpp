@@ -8,9 +8,9 @@
 * @brief    This file provides the definitions for the FBlendingContext class.
 */
 #include "ULIS/Interface/ULIS.Interface.Blend.h"
-#include "ULIS/Blend/ULIS.Blend.BlendingContext.h"
-#include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
+#include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Blend/ULIS.Blend.BlendingContext.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////

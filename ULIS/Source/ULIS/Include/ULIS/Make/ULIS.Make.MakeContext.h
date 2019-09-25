@@ -28,7 +28,6 @@ class TMakeContext
 {
 public:
     // Copy
-    // Copy
     static void CopyBlockInto( const TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
         CopyBlockRectInto( iSrc, iDst, FRect( 0, 0, iSrc->Width(), iSrc->Height() ), iPerformanceOptions);

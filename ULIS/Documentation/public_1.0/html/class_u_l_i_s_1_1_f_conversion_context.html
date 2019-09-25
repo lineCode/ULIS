@@ -75,13 +75,73 @@ $(function() {
 <div class="title">ULIS::FConversionContext Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_u_l_i_s_8_interface_8_conv_8h_source.html">ULIS.Interface.Conv.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ab41036b5dae057dee043b5fd62dc236d"><td class="memItemLeft" align="right" valign="top"><a id="ab41036b5dae057dee043b5fd62dc236d"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>ConvTypeAndLayoutInto</b> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockSrc, <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockDst, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
-<tr class="separator:ab41036b5dae057dee043b5fd62dc236d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28ef25532c329b1bf7764d16c09538d9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_conversion_context.html#a28ef25532c329b1bf7764d16c09538d9">ConvTypeAndLayoutInto</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockSrc, <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockDst, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
+<tr class="separator:a28ef25532c329b1bf7764d16c09538d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_f_conversion_context.html" title="The FConversionContext class provides a context for Converting layout, types and colorspaces on Block...">FConversionContext</a> class provides a context for Converting layout, types and colorspaces on Blocks. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a28ef25532c329b1bf7764d16c09538d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28ef25532c329b1bf7764d16c09538d9">&#9670;&nbsp;</a></span>ConvTypeAndLayoutInto()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ULIS::FConversionContext::ConvTypeAndLayoutInto </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td>
+          <td class="paramname"><em>iBlockSrc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td>
+          <td class="paramname"><em>iBlockDst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;&#160;</td>
+          <td class="paramname"><em>iPerformanceOptions</em> = <code><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert a block from source format and layout to the destination format and layout. </p>
+<p>The source and destination can be any layout and type but they must share the same underlying color model.</p><ul>
+<li>Warning ! Source and destination must share the same width and height.</li>
+<li>If the source and destination are the exact same type and layout, a copy of source into destination is performed instead. <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iBlockSrc</td><td>The pointer to the source <em><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a></em>, const, it will not be modified. </td></tr>
+    <tr><td class="paramname">iBlockDst</td><td>The pointer to the destination <em><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a></em>, it will receive the conversion result. </td></tr>
+    <tr><td class="paramname">iPerformanceOptions</td><td>The Performance Options for this operation, see <em><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html" title="The FPerformanceOptionsstruct is user for holding performance options.">FPerformanceOptions</a></em>. </td></tr>
+  </table>
+  </dd>
+</dl>
+</li>
+</ul>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>ULIS/Include/ULIS/Interface/<a class="el" href="_u_l_i_s_8_interface_8_conv_8h_source.html">ULIS.Interface.Conv.h</a></li>
 </ul>

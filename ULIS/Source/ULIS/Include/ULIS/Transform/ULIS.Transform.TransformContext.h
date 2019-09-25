@@ -16,6 +16,9 @@
 #include "ULIS/Transform/ULIS.Transform.BlockTransformer.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Make/ULIS.Make.MakeContext.h"
+#include "ULIS/Maths/ULIS.Maths.Geometry.h"
+#include "ULIS/Maths/ULIS.Maths.Utility.h"
+#include <glm/matrix.hpp>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -24,8 +27,16 @@ class TTransformContext
 {
 public:
     template< uint32 _SH >
-    static void ConvertTypeAndLayoutInto( const TBlock< _SH >* iBlock, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    static  TBlock< _SH >*  GetTransformedBlock( const TBlock< _SH >* iSrc, const  glm::mat3& iMat, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
     {
+        FTransformBoundingBox aabb( 0, 0, iSrc->Width(), iSrc->Height() );
+        aabb.Transform( iMat );
+        glm::vec2 shift( -aabb.x1, -aabb.y1 );
+        TBlock< _SH >* dst = new TBlock< _SH >( aabb.Width(), aabb.Height() );
+        glm::mat3 inverseTransform = glm::inverse( iMat );
+
+        TBlockTransformer< _SH >::Run( iSrc, dst, inverseTransform, shift, iPerformanceOptions );
+        return  dst;
     }
 };
 

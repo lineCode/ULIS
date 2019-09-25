@@ -90,10 +90,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a77e74c2805ee17c7efc8540f4a51cdff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15aa6bf3454c8fde396d7d2cecc13171"><td class="memItemLeft" align="right" valign="top">static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a15aa6bf3454c8fde396d7d2cecc13171">GetShearMatrix</a> (float iX, float iY)</td></tr>
 <tr class="separator:a15aa6bf3454c8fde396d7d2cecc13171"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f46c913010a5e32b6152b28f4870667"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a7f46c913010a5e32b6152b28f4870667">GetTransformed</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockSrc, const glm::mat3 &amp;imat, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
-<tr class="separator:a7f46c913010a5e32b6152b28f4870667"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86bedb910e1fdeb4d9a5e611f5bd3850"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a86bedb910e1fdeb4d9a5e611f5bd3850">GetTransformed</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlock, const glm::mat3 &amp;iMat, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
+<tr class="separator:a86bedb910e1fdeb4d9a5e611f5bd3850"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_f_transform_context.html" title="The FTransformContext class provides a context for all Transform operations on Blocks.">FTransformContext</a> class provides a context for all Transform operations on Blocks. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aba545fcb15c625daa350008aaa7eedd5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba545fcb15c625daa350008aaa7eedd5">&#9670;&nbsp;</a></span>GetIdentityMatrix()</h2>
 
@@ -116,6 +118,9 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Get the identity 3x3 matrix. </p>
+<dl class="section return"><dt>Returns</dt><dd>A fresh identity matrix representing a no-op transform. </dd></dl>
 
 </div>
 </div>
@@ -142,6 +147,15 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Get a 2D rotation transformation as 3x3 matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iAngleRad</td><td>The angle of the rotation in radians. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh pure rotation matrix representing a 2D rotation. </dd></dl>
 
 </div>
 </div>
@@ -179,6 +193,16 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Get a 2D scale transformation as 3x3 matrix. </p>
+<p>The scale values are not percentage, but normalized: 1 is no scale, 2 is twice. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iX</td><td>The amount of scale on the x axis. </td></tr>
+    <tr><td class="paramname">iY</td><td>The amount of scale on the y axis. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh pure scale matrix representing a 2D scale. </dd></dl>
+
 </div>
 </div>
 <a id="a15aa6bf3454c8fde396d7d2cecc13171"></a>
@@ -215,10 +239,20 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Get a 2D shear transformation as 3x3 matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iX</td><td>The amount of shear on the x axis. </td></tr>
+    <tr><td class="paramname">iY</td><td>The amount of shear on the y axis. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh pure shear matrix representing a 2D shear. </dd></dl>
+
 </div>
 </div>
-<a id="a7f46c913010a5e32b6152b28f4870667"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f46c913010a5e32b6152b28f4870667">&#9670;&nbsp;</a></span>GetTransformed()</h2>
+<a id="a86bedb910e1fdeb4d9a5e611f5bd3850"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86bedb910e1fdeb4d9a5e611f5bd3850">&#9670;&nbsp;</a></span>GetTransformed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,6 +291,17 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Get the result of the block transformed by the input transform. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iBlock</td><td>The source block to transform ( remains untouched ). </td></tr>
+    <tr><td class="paramname">iMat</td><td>The transform to apply. </td></tr>
+    <tr><td class="paramname">iPerformanceOptions</td><td>The performance preferences. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh newly allocated block, with contents transformed from source, with size deduced from input block and transform. </dd></dl>
+
 </div>
 </div>
 <a id="a5b8f7982567295517bb996ecc030275c"></a>
@@ -292,6 +337,16 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Get a 2D translation transformation as 3x3 matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iX</td><td>The amount of translation on the x axis in pixels. </td></tr>
+    <tr><td class="paramname">iY</td><td>The amount of translation on the y axis in pixels. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh pure translation matrix representing a 2D translation. </dd></dl>
 
 </div>
 </div>

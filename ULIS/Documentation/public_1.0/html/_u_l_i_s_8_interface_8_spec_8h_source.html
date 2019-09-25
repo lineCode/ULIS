@@ -72,37 +72,38 @@ $(function() {
 <div class="title">ULIS.Interface.Spec.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*************************************************************************</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">*</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">*   ULIS</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">*__________________</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">*</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">* ULIS.Interface.Spec.h</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">* Clement Berthaud - Layl</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">* Please refer to LICENSE.md</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_base_8_base_types_8h.html">ULIS/Base/ULIS.Base.BaseTypes.h</a>&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;ULIS/Spec/ULIS.Spec.Spec.h&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>ULIS {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// FSpecContext</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">class </span>FSpecContext</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    static ::ULIS::FSpec BlockInfo( uint32_t i );</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    static ::ULIS::FSpec BlockSpec( uint32_t i );</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> PrintSpecs();</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="class_u_l_i_s_1_1_f_spec_context.html">   26</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> PrintShortSpecs();</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;} <span class="comment">// namespace ULIS</span></div>
+<a href="_u_l_i_s_8_interface_8_spec_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_base_8_base_types_8h.html">ULIS/Base/ULIS.Base.BaseTypes.h</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;ULIS/Spec/ULIS.Spec.Spec.h&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>ULIS {</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="class_u_l_i_s_1_1_f_spec_context.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_u_l_i_s_1_1_f_spec_context.html">FSpecContext</a></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">//--------------------------------------------------------------------------------------</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">//-------------------------------------------------------------------- Public Static API</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span>    <span class="keyword">static</span>  FSpec  <a class="code" href="class_u_l_i_s_1_1_f_spec_context.html#ab25669fcbe59d3cb45fc3770ac603f9c">BlockSpecAtIndex</a>( uint32 iIndex );</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">static</span>  FSpec  <a class="code" href="class_u_l_i_s_1_1_f_spec_context.html#ae0e0430afcc16b4d9c582bd7ef95a865">BlockSpecFromHash</a>( uint32 iHash );</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">static</span>  <span class="keywordtype">void</span>  <a class="code" href="class_u_l_i_s_1_1_f_spec_context.html#a1b5a8d89b01e208b506f6c19dc566e91">PrintSpecs</a>();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">static</span>  <span class="keywordtype">void</span>  PrintShortSpecs();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;} <span class="comment">// namespace ULIS</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclass_u_l_i_s_1_1_f_spec_context_html"><div class="ttname"><a href="class_u_l_i_s_1_1_f_spec_context.html">ULIS::FSpecContext</a></div><div class="ttdoc">The FSpecContext class provides a context for gathering informations on block specifications at runti...</div><div class="ttdef"><b>Definition:</b> ULIS.Interface.Spec.h:18</div></div>
+<div class="ttc" id="aclass_u_l_i_s_1_1_f_spec_context_html_a1b5a8d89b01e208b506f6c19dc566e91"><div class="ttname"><a href="class_u_l_i_s_1_1_f_spec_context.html#a1b5a8d89b01e208b506f6c19dc566e91">ULIS::FSpecContext::PrintSpecs</a></div><div class="ttdeci">static void PrintSpecs()</div><div class="ttdoc">Print all specs for all existing block types to std out.</div></div>
+<div class="ttc" id="aclass_u_l_i_s_1_1_f_spec_context_html_ab25669fcbe59d3cb45fc3770ac603f9c"><div class="ttname"><a href="class_u_l_i_s_1_1_f_spec_context.html#ab25669fcbe59d3cb45fc3770ac603f9c">ULIS::FSpecContext::BlockSpecAtIndex</a></div><div class="ttdeci">static FSpec BlockSpecAtIndex(uint32 iIndex)</div><div class="ttdoc">Query block specification object. @detail Get block FSpec specification object at index iIndex from r...</div></div>
 <div class="ttc" id="a_u_l_i_s_8_base_8_base_types_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_base_types_8h.html">ULIS.Base.BaseTypes.h</a></div><div class="ttdoc">This file provides some usefull shorthand typedefs.</div></div>
+<div class="ttc" id="aclass_u_l_i_s_1_1_f_spec_context_html_ae0e0430afcc16b4d9c582bd7ef95a865"><div class="ttname"><a href="class_u_l_i_s_1_1_f_spec_context.html#ae0e0430afcc16b4d9c582bd7ef95a865">ULIS::FSpecContext::BlockSpecFromHash</a></div><div class="ttdeci">static FSpec BlockSpecFromHash(uint32 iHash)</div><div class="ttdoc">Query block specification object. @detail Get block FSpec specification object with the provided hash...</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

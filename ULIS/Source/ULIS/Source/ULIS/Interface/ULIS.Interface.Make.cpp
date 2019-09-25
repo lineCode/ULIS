@@ -1,42 +1,32 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Interface.Make.cpp
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Interface.Make.cpp
+* @author   Clement Berthaud
+* @brief    This file provides the definitions for the FMakeContext class.
 */
-
-#include "ULIS/Data/ULIS.Data.Block.h"
-#include "ULIS/Make/ULIS.Make.MakeContext.h"
 #include "ULIS/Interface/ULIS.Interface.Make.h"
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
+#include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Make/ULIS.Make.MakeContext.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FMakeContext
-
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------- Public Static API
 //static
 ::ULIS::IBlock*
-FMakeContext::MakeBlock( int width, int height, uint32_t ID, const std::string& iProfileTag )
+FMakeContext::MakeBlock( int iWidth
+                       , int iHeight
+                       , uint32_t iFormat
+                       , const std::string& iProfileTag )
 {
-    switch( ID )
+    switch( iFormat )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  new ::ULIS::TBlock< ULIS_REG[ n ] >( width, height, iProfileTag );
-        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
-        #undef ULIS_REG_SWITCH_OP
-        default: return  nullptr;
-    }
-}
-
-//static
-::ULIS::IBlock*
-FMakeContext::MakeBlockFromExternalData( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag )
-{
-    switch( ID )
-    {
-        #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  new ::ULIS::TBlock< ULIS_REG[ n ] >( width, height, iData, iProfileTag );
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  new ::ULIS::TBlock< ULIS_REG[ n ] >( iWidth, iHeight, iProfileTag );
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
         default: return  nullptr;
@@ -46,19 +36,43 @@ FMakeContext::MakeBlockFromExternalData( int width, int height, uint8* iData, ui
 
 //static
 ::ULIS::IBlock*
-FMakeContext::MakeBlockFromDataPerformCopy( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag, const FPerformanceOptions& iPerformanceOptions)
+FMakeContext::MakeBlockFromExternalData( int iWidth
+                                       , int iHeight
+                                       , uint8* iData
+                                       , uint32_t iFormat
+                                       , const std::string& iProfileTag )
 {
-    ::ULIS::IBlock* src = MakeBlockFromExternalData( width, height, iData, ID, iProfileTag );
-    ::ULIS::IBlock* ret = MakeBlock( width, height, ID, iProfileTag );
+    switch( iFormat )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  new ::ULIS::TBlock< ULIS_REG[ n ] >( iWidth, iHeight, iData, iProfileTag );
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+        default: return  nullptr;
+    }
+}
+
+
+//static
+::ULIS::IBlock*
+FMakeContext::MakeBlockFromDataPerformCopy( int iWidth
+                                          , int iHeight
+                                          , uint8* iData
+                                          , uint32_t iFormat
+                                          , const FPerformanceOptions& iPerformanceOptions
+                                          , const std::string& iProfileTag )
+{
+    ::ULIS::IBlock* src = MakeBlockFromExternalData( iWidth, iHeight, iData, iFormat, iProfileTag );
+    ::ULIS::IBlock* ret = MakeBlock( iWidth, iHeight, iFormat, iProfileTag );
     CopyBlockInto( src, ret );
-    delete src;
+    delete  src;
     return  ret;
 }
 
 
 //static
 ::ULIS::IBlock*
-FMakeContext::CopyBlock( ::ULIS::IBlock* iBlock, const FPerformanceOptions& iPerformanceOptions)
+FMakeContext::CopyBlock( ::ULIS::IBlock* iBlock
+                       , const FPerformanceOptions& iPerformanceOptions)
 {
     return  CopyBlockRect( iBlock, FRect( 0, 0, iBlock->Width(), iBlock->Height() ), iPerformanceOptions);
 }
@@ -66,42 +80,49 @@ FMakeContext::CopyBlock( ::ULIS::IBlock* iBlock, const FPerformanceOptions& iPer
 
 //static
 void
-FMakeContext::CopyBlockInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FPerformanceOptions& iPerformanceOptions)
+FMakeContext::CopyBlockInto( ::ULIS::IBlock* iSrc
+                           , ::ULIS::IBlock* iDst
+                           , const FPerformanceOptions& iPerformanceOptions)
 {
-    CopyBlockRectInto( iSrc, iDst, FRect( 0, 0, iDst->Width(), iDst->Height() ), iPerformanceOptions);
+    CopyBlockRectInto( iSrc, iDst, FRect( 0, 0, iDst->Width(), iDst->Height() ), iPerformanceOptions );
 }
 
 
 //static
 ::ULIS::IBlock*
-FMakeContext::CopyBlockRect( ::ULIS::IBlock* iBlock, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions)
+FMakeContext::CopyBlockRect( ::ULIS::IBlock* iBlock
+                           , const FRect& iRect
+                           , const FPerformanceOptions& iPerformanceOptions)
 {
     ::ULIS::IBlock* ret = MakeBlock( iRect.w, iRect.h, iBlock->Id() );
-    CopyBlockRectInto( iBlock, ret, iRect, iPerformanceOptions);
+    CopyBlockRectInto( iBlock, ret, iRect, iPerformanceOptions );
     return  ret;
 }
 
 
 //static
 void
-FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions)
+FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc
+                               , ::ULIS::IBlock* iDst
+                               , const FRect& iRect
+                               , const FPerformanceOptions& iPerformanceOptions)
 {
     assert( iSrc->Id() == iDst->Id() );
-
     switch( iSrc->Id() )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data )                                                    \
-            case ULIS_REG[ n ]:                                                       \
-            {                                                                                       \
-                        ::ULIS::TMakeContext< ULIS_REG[ n ] >                         \
-                        ::CopyBlockRectInto( (::ULIS::TBlock< ULIS_REG[ n ] >*)iSrc   \
-                                           , (::ULIS::TBlock< ULIS_REG[ n ] >*)iDst   \
-                                           , iRect, iPerformanceOptions);                                   \
-                        break;                                                                      \
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                            \
+            case ULIS_REG[ n ]:                                                                                                             \
+            {                                                                                                                               \
+                        ::ULIS::TMakeContext< ULIS_REG[ n ] >                                                                               \
+                        ::CopyBlockRectInto( (::ULIS::TBlock< ULIS_REG[ n ] >*)iSrc                                                         \
+                                           , (::ULIS::TBlock< ULIS_REG[ n ] >*)iDst                                                         \
+                                           , iRect, iPerformanceOptions);                                                                   \
+                        break;                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
     }
+
     if( iSrc->ColorProfile() )
         iDst->AssignColorProfile( iSrc->ColorProfile()->Name() );
 }

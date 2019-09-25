@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7etalignedmemory_226',['~TAlignedMemory',['../class_u_l_i_s_1_1_t_aligned_memory.html#a0dfc53857456d5eb5206efe496702d70',1,'ULIS::TAlignedMemory']]]
+  ['zero_269',['Zero',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#a856ad6aa95ab360ab3776cdb79534f8f',1,'ULIS::FVectorSIMD128_8bit']]]
 ];

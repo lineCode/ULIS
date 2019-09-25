@@ -1,13 +1,8 @@
 var searchData=
 [
-  ['set1_211',['Set1',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#aff5c7d1bb693e6bd8a7e06a2e8179513',1,'ULIS::FVectorSIMD128_8bit']]],
-  ['set16_212',['Set16',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#aceca462e772b9f9bd9765e11c10bbaaa',1,'ULIS::FVectorSIMD128_8bit']]],
-  ['set2_213',['Set2',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#aa57fd284aff5758c8d710663aa80ee51',1,'ULIS::FVectorSIMD128_8bit']]],
-  ['set4_214',['Set4',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#afe3022edb235d6f0c6357b1009cb97d5',1,'ULIS::FVectorSIMD128_8bit']]],
-  ['set8_215',['Set8',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#a123e561bb50d2ab84c1fc3016cb2c7b1',1,'ULIS::FVectorSIMD128_8bit']]],
-  ['setzero_216',['SetZero',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#aa71d01219f4742a8c3eba374f4343e40',1,'ULIS::FVectorSIMD128_8bit']]],
-  ['size_217',['Size',['../struct_u_l_i_s_1_1_t_registry.html#a64dd787ef897b7c192b3698d5f2f9bf8',1,'ULIS::TRegistry']]],
-  ['spread_218',['Spread',['../_u_l_i_s_8_base_8_vector_s_i_m_d_8h.html#a7766e11f7b43a0acb023d3159c1148f9',1,'ULIS::SIMD']]],
-  ['subtractionsafe_219',['SubtractionSafe',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#a4d43c7bd5bbfdc10ec4b34fb969b6074',1,'ULIS::FVectorSIMD128_8bit']]],
-  ['subtractionsat_220',['SubtractionSat',['../struct_u_l_i_s_1_1_f_vector_s_i_m_d128__8bit.html#ab050f5d8188edc9bbcf246427af7cda7',1,'ULIS::FVectorSIMD128_8bit']]]
+  ['pixelproxyautocastchecked_250',['PixelProxyAutoCastChecked',['../class_u_l_i_s_1_1_pixel_proxy_auto_cast_checked.html#a0f0f41a6eb3f45991d2ccdebab5fbc89',1,'ULIS::PixelProxyAutoCastChecked']]],
+  ['pixelvalueautocastchecked_251',['PixelValueAutoCastChecked',['../class_u_l_i_s_1_1_pixel_value_auto_cast_checked.html#a41771f9f05f2c3ebde63c6f9f6584bc4',1,'ULIS::PixelValueAutoCastChecked']]],
+  ['printspecs_252',['PrintSpecs',['../class_u_l_i_s_1_1_f_spec_context.html#a1b5a8d89b01e208b506f6c19dc566e91',1,'ULIS::FSpecContext']]],
+  ['ptr_253',['Ptr',['../class_u_l_i_s_1_1_t_aligned_memory.html#a83308eacd6e11fb3c12f694bdca128ea',1,'ULIS::TAlignedMemory']]],
+  ['pushback_254',['PushBack',['../struct_u_l_i_s_1_1_t_registry.html#ae9da6c8ba51add22e6b6ecd85030f20f',1,'ULIS::TRegistry']]]
 ];

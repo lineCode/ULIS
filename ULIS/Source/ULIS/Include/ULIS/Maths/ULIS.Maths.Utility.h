@@ -77,7 +77,13 @@ struct FMath
     {
         return (int)(iNumber + 0.5) ;
     }
-    
+
+    template< typename T >
+    static  inline T RoundAwayFromZero( T iValue )
+    {
+      return iValue < 0 ? (T)floor( iValue ) : (T)ceil( iValue );
+    }
+
 }; // struct FMath
 
 

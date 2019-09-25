@@ -9,10 +9,10 @@
 * Please refer to LICENSE.md
 */
 
-#include "ULIS/Data/ULIS.Data.Block.h"
-#include "ULIS/Paint/ULIS.Paint.PainterContext.h"
 #include "ULIS/Interface/ULIS.Interface.Paint.h"
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
+#include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Paint/ULIS.Paint.PainterContext.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////

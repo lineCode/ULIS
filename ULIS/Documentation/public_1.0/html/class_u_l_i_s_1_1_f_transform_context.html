@@ -75,28 +75,281 @@ $(function() {
 <div class="title">ULIS::FTransformContext Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_u_l_i_s_8_interface_8_transform_8h_source.html">ULIS.Interface.Transform.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a83dc0647fac4ff93f5baff03a4355bab"><td class="memItemLeft" align="right" valign="top"><a id="a83dc0647fac4ff93f5baff03a4355bab"></a>
-static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><b>GetIdentityMatrix</b> ()</td></tr>
+<tr class="memitem:a83dc0647fac4ff93f5baff03a4355bab"><td class="memItemLeft" align="right" valign="top">static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a83dc0647fac4ff93f5baff03a4355bab">GetIdentityMatrix</a> ()</td></tr>
 <tr class="separator:a83dc0647fac4ff93f5baff03a4355bab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b9cfe65fc899b31edac64f65b09c2e8"><td class="memItemLeft" align="right" valign="top"><a id="a4b9cfe65fc899b31edac64f65b09c2e8"></a>
-static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><b>GetTranslationMatrix</b> (float iX, float iY)</td></tr>
+<tr class="memitem:a4b9cfe65fc899b31edac64f65b09c2e8"><td class="memItemLeft" align="right" valign="top">static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a4b9cfe65fc899b31edac64f65b09c2e8">GetTranslationMatrix</a> (float iX, float iY)</td></tr>
 <tr class="separator:a4b9cfe65fc899b31edac64f65b09c2e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eed32f5cd3d3d5b02ff6a26d62b8b95"><td class="memItemLeft" align="right" valign="top"><a id="a0eed32f5cd3d3d5b02ff6a26d62b8b95"></a>
-static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><b>GetRotationMatrix</b> (float iAngleRad)</td></tr>
+<tr class="memitem:a0eed32f5cd3d3d5b02ff6a26d62b8b95"><td class="memItemLeft" align="right" valign="top">static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a0eed32f5cd3d3d5b02ff6a26d62b8b95">GetRotationMatrix</a> (float iAngleRad)</td></tr>
 <tr class="separator:a0eed32f5cd3d3d5b02ff6a26d62b8b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3d76d2ea2b59c77fdec10248c9620ee"><td class="memItemLeft" align="right" valign="top"><a id="aa3d76d2ea2b59c77fdec10248c9620ee"></a>
-static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><b>GetScaleMatrix</b> (float iX, float iY)</td></tr>
+<tr class="memitem:aa3d76d2ea2b59c77fdec10248c9620ee"><td class="memItemLeft" align="right" valign="top">static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#aa3d76d2ea2b59c77fdec10248c9620ee">GetScaleMatrix</a> (float iX, float iY)</td></tr>
 <tr class="separator:aa3d76d2ea2b59c77fdec10248c9620ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7367fe4fe674c62f8f12173b43f1fedc"><td class="memItemLeft" align="right" valign="top"><a id="a7367fe4fe674c62f8f12173b43f1fedc"></a>
-static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><b>GetShearMatrix</b> (float iX, float iY)</td></tr>
+<tr class="memitem:a7367fe4fe674c62f8f12173b43f1fedc"><td class="memItemLeft" align="right" valign="top">static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a7367fe4fe674c62f8f12173b43f1fedc">GetShearMatrix</a> (float iX, float iY)</td></tr>
 <tr class="separator:a7367fe4fe674c62f8f12173b43f1fedc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29adf8dfc14696a559e61b4bc19039cd"><td class="memItemLeft" align="right" valign="top"><a id="a29adf8dfc14696a559e61b4bc19039cd"></a>
-static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>GetTransformed</b> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockSrc, const glm::mat3 &amp;imat, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
-<tr class="separator:a29adf8dfc14696a559e61b4bc19039cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef9355a2c77db6d4840ae9a0f225a1fc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#aef9355a2c77db6d4840ae9a0f225a1fc">GetTransformed</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlock, const glm::mat3 &amp;iMat, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
+<tr class="separator:aef9355a2c77db6d4840ae9a0f225a1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_f_transform_context.html" title="The FTransformContext class provides a context for all Transform operations on Blocks.">FTransformContext</a> class provides a context for all Transform operations on Blocks. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a83dc0647fac4ff93f5baff03a4355bab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83dc0647fac4ff93f5baff03a4355bab">&#9670;&nbsp;</a></span>GetIdentityMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static glm::mat3 ULIS::FTransformContext::GetIdentityMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the identity 3x3 matrix. </p>
+<dl class="section return"><dt>Returns</dt><dd>A fresh identity matrix representing a no-op transform. </dd></dl>
+
+</div>
+</div>
+<a id="a0eed32f5cd3d3d5b02ff6a26d62b8b95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eed32f5cd3d3d5b02ff6a26d62b8b95">&#9670;&nbsp;</a></span>GetRotationMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static glm::mat3 ULIS::FTransformContext::GetRotationMatrix </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>iAngleRad</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a 2D rotation transformation as 3x3 matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iAngleRad</td><td>The angle of the rotation in radians. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh pure rotation matrix representing a 2D rotation. </dd></dl>
+
+</div>
+</div>
+<a id="aa3d76d2ea2b59c77fdec10248c9620ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3d76d2ea2b59c77fdec10248c9620ee">&#9670;&nbsp;</a></span>GetScaleMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static glm::mat3 ULIS::FTransformContext::GetScaleMatrix </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>iX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>iY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a 2D scale transformation as 3x3 matrix. </p>
+<p>The scale values are not percentage, but normalized: 1 is no scale, 2 is twice. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iX</td><td>The amount of scale on the x axis. </td></tr>
+    <tr><td class="paramname">iY</td><td>The amount of scale on the y axis. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh pure scale matrix representing a 2D scale. </dd></dl>
+
+</div>
+</div>
+<a id="a7367fe4fe674c62f8f12173b43f1fedc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7367fe4fe674c62f8f12173b43f1fedc">&#9670;&nbsp;</a></span>GetShearMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static glm::mat3 ULIS::FTransformContext::GetShearMatrix </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>iX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>iY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a 2D shear transformation as 3x3 matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iX</td><td>The amount of shear on the x axis. </td></tr>
+    <tr><td class="paramname">iY</td><td>The amount of shear on the y axis. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh pure shear matrix representing a 2D shear. </dd></dl>
+
+</div>
+</div>
+<a id="aef9355a2c77db6d4840ae9a0f225a1fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef9355a2c77db6d4840ae9a0f225a1fc">&#9670;&nbsp;</a></span>GetTransformed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> * ULIS::FTransformContext::GetTransformed </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td>
+          <td class="paramname"><em>iBlockSrc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat3 &amp;&#160;</td>
+          <td class="paramname"><em>imat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;&#160;</td>
+          <td class="paramname"><em>iPerformanceOptions</em> = <code><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the result of the block transformed by the input transform. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iBlock</td><td>The source block to transform ( remains untouched ). </td></tr>
+    <tr><td class="paramname">iMat</td><td>The transform to apply. </td></tr>
+    <tr><td class="paramname">iPerformanceOptions</td><td>The performance preferences. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh newly allocated block, with contents transformed from source, with size deduced from input block and transform. </dd></dl>
+
+</div>
+</div>
+<a id="a4b9cfe65fc899b31edac64f65b09c2e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b9cfe65fc899b31edac64f65b09c2e8">&#9670;&nbsp;</a></span>GetTranslationMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static glm::mat3 ULIS::FTransformContext::GetTranslationMatrix </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>iX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>iY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a 2D translation transformation as 3x3 matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iX</td><td>The amount of translation on the x axis in pixels. </td></tr>
+    <tr><td class="paramname">iY</td><td>The amount of translation on the y axis in pixels. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh pure translation matrix representing a 2D translation. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>ULIS/Include/ULIS/Interface/<a class="el" href="_u_l_i_s_8_interface_8_transform_8h_source.html">ULIS.Interface.Transform.h</a></li>
 </ul>

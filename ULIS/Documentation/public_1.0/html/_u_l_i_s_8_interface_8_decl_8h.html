@@ -69,7 +69,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
@@ -78,355 +77,230 @@ $(function() {
 <div class="title">ULIS.Interface.Decl.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_u_l_i_s_8_data_8_block_8h_source.html">ULIS/Data/ULIS.Data.Block.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_u_l_i_s_8_base_8_registry_8h_source.html">ULIS/Base/ULIS.Base.Registry.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_u_l_i_s_8_base_8_registry_8h_source.html">ULIS/Base/ULIS.Base.Registry.h</a>&quot;</code><br />
+<code>#include &quot;ULIS/Data/ULIS.Data.Block.h&quot;</code><br />
 </div>
 <p><a href="_u_l_i_s_8_interface_8_decl_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespace_u_l_i_s"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html">ULIS</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespace_u_l_i_s_1_1generated"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s_1_1generated.html">ULIS::generated</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a65ecd210b90e4c44f2db0ce142395066"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a65ecd210b90e4c44f2db0ce142395066">ULIS_REG_BUILDER</a>&#160;&#160;&#160;ulis_reg_builder</td></tr>
+<tr class="memitem:a65ecd210b90e4c44f2db0ce142395066"><td class="memItemLeft" align="right" valign="top"><a id="a65ecd210b90e4c44f2db0ce142395066"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_REG_BUILDER</b>&#160;&#160;&#160;ulis_reg_builder</td></tr>
 <tr class="separator:a65ecd210b90e4c44f2db0ce142395066"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0db5d268fdf478127730da4a0297024c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c">ULIS_REG</a>&#160;&#160;&#160;::<a class="el" href="namespace_u_l_i_s_1_1generated.html#a608e117211a0ac9c8adfe0fdbdab42b0">ULIS::generated::ulis_types_reg</a></td></tr>
+<tr class="memitem:a0db5d268fdf478127730da4a0297024c"><td class="memItemLeft" align="right" valign="top"><a id="a0db5d268fdf478127730da4a0297024c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_REG</b>&#160;&#160;&#160;::ULIS::generated::ulis_types_reg</td></tr>
 <tr class="separator:a0db5d268fdf478127730da4a0297024c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2815061f995c4d2c618b4105d7c16a31"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a2815061f995c4d2c618b4105d7c16a31">ULIS_REG_SIZE</a>&#160;&#160;&#160;59</td></tr>
+<tr class="memitem:a2815061f995c4d2c618b4105d7c16a31"><td class="memItemLeft" align="right" valign="top"><a id="a2815061f995c4d2c618b4105d7c16a31"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_REG_SIZE</b>&#160;&#160;&#160;59</td></tr>
 <tr class="separator:a2815061f995c4d2c618b4105d7c16a31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b4d774e38f4807838eb2e40a01a1ea4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a0b4d774e38f4807838eb2e40a01a1ea4">ULIS_LCMS_DTYPE_GRAYA_FLT</a>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))</td></tr>
+<tr class="memitem:a0b4d774e38f4807838eb2e40a01a1ea4"><td class="memItemLeft" align="right" valign="top"><a id="a0b4d774e38f4807838eb2e40a01a1ea4"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_GRAYA_FLT</b>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))</td></tr>
 <tr class="separator:a0b4d774e38f4807838eb2e40a01a1ea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04a653b3ab80fec7f69b1a534169f63c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a04a653b3ab80fec7f69b1a534169f63c">ULIS_LCMS_DTYPE_RGBA_FLT</a>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td></tr>
+<tr class="memitem:a04a653b3ab80fec7f69b1a534169f63c"><td class="memItemLeft" align="right" valign="top"><a id="a04a653b3ab80fec7f69b1a534169f63c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_RGBA_FLT</b>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td></tr>
 <tr class="separator:a04a653b3ab80fec7f69b1a534169f63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c7a6f905a2e4c9fcf0da24ea7b0d9c5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a9c7a6f905a2e4c9fcf0da24ea7b0d9c5">ULIS_LCMS_DTYPE_CMYKA_FLT</a>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(4))</td></tr>
+<tr class="memitem:a9c7a6f905a2e4c9fcf0da24ea7b0d9c5"><td class="memItemLeft" align="right" valign="top"><a id="a9c7a6f905a2e4c9fcf0da24ea7b0d9c5"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_CMYKA_FLT</b>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(4))</td></tr>
 <tr class="separator:a9c7a6f905a2e4c9fcf0da24ea7b0d9c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a159386d2de35f1688042ba443a12d384"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a159386d2de35f1688042ba443a12d384">ULIS_LCMS_DTYPE_LabA_FLT</a>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td></tr>
+<tr class="memitem:a159386d2de35f1688042ba443a12d384"><td class="memItemLeft" align="right" valign="top"><a id="a159386d2de35f1688042ba443a12d384"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_LabA_FLT</b>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td></tr>
 <tr class="separator:a159386d2de35f1688042ba443a12d384"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a611978c95711a5ce7ed883f17d533f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a3a611978c95711a5ce7ed883f17d533f">ULIS_LCMS_DTYPE_XYZA_FLT</a>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td></tr>
+<tr class="memitem:a3a611978c95711a5ce7ed883f17d533f"><td class="memItemLeft" align="right" valign="top"><a id="a3a611978c95711a5ce7ed883f17d533f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_XYZA_FLT</b>&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td></tr>
 <tr class="separator:a3a611978c95711a5ce7ed883f17d533f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36eafddef8fa398c790f75cb8eb374f0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a36eafddef8fa398c790f75cb8eb374f0">ULIS_LCMS_DTYPE_GRAYA_U16</a>&#160;&#160;&#160;(COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(2))</td></tr>
+<tr class="memitem:a36eafddef8fa398c790f75cb8eb374f0"><td class="memItemLeft" align="right" valign="top"><a id="a36eafddef8fa398c790f75cb8eb374f0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_GRAYA_U16</b>&#160;&#160;&#160;(COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(2))</td></tr>
 <tr class="separator:a36eafddef8fa398c790f75cb8eb374f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa1165134afec1ed876c6851c3c6b00d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#afa1165134afec1ed876c6851c3c6b00d">ULIS_LCMS_DTYPE_RGBA_U16</a>&#160;&#160;&#160;(COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td></tr>
+<tr class="memitem:afa1165134afec1ed876c6851c3c6b00d"><td class="memItemLeft" align="right" valign="top"><a id="afa1165134afec1ed876c6851c3c6b00d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_RGBA_U16</b>&#160;&#160;&#160;(COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td></tr>
 <tr class="separator:afa1165134afec1ed876c6851c3c6b00d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a034b7fb7387d92ffb1933b99d43ff0a1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a034b7fb7387d92ffb1933b99d43ff0a1">ULIS_LCMS_DTYPE_CMYKA_U16</a>&#160;&#160;&#160;(COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(2))</td></tr>
+<tr class="memitem:a034b7fb7387d92ffb1933b99d43ff0a1"><td class="memItemLeft" align="right" valign="top"><a id="a034b7fb7387d92ffb1933b99d43ff0a1"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_CMYKA_U16</b>&#160;&#160;&#160;(COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(2))</td></tr>
 <tr class="separator:a034b7fb7387d92ffb1933b99d43ff0a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6934b30f1c40d5fa515d08997eb1a9dc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a6934b30f1c40d5fa515d08997eb1a9dc">ULIS_LCMS_DTYPE_LabA_U16</a>&#160;&#160;&#160;(COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td></tr>
+<tr class="memitem:a6934b30f1c40d5fa515d08997eb1a9dc"><td class="memItemLeft" align="right" valign="top"><a id="a6934b30f1c40d5fa515d08997eb1a9dc"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_LabA_U16</b>&#160;&#160;&#160;(COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td></tr>
 <tr class="separator:a6934b30f1c40d5fa515d08997eb1a9dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a995ea59139397b0d2b2aa49d9730fb94"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a995ea59139397b0d2b2aa49d9730fb94">ULIS_LCMS_DTYPE_XYZA_U16</a>&#160;&#160;&#160;(COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td></tr>
+<tr class="memitem:a995ea59139397b0d2b2aa49d9730fb94"><td class="memItemLeft" align="right" valign="top"><a id="a995ea59139397b0d2b2aa49d9730fb94"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_LCMS_DTYPE_XYZA_U16</b>&#160;&#160;&#160;(COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td></tr>
 <tr class="separator:a995ea59139397b0d2b2aa49d9730fb94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a864421877639a7b5456c2ce9db527850"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockuint8GnoAlphaGtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a864421877639a7b5456c2ce9db527850">ULIS::FBlockG8</a></td></tr>
+<tr class="memitem:a864421877639a7b5456c2ce9db527850"><td class="memItemLeft" align="right" valign="top"><a id="a864421877639a7b5456c2ce9db527850"></a>
+typedef ::ULIS::Format::FBlockuint8GnoAlphaGtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockG8</b></td></tr>
 <tr class="separator:a864421877639a7b5456c2ce9db527850"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32912364c56a2dbf33a7b78fcf895054"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockfloatGnoAlphaGnormalized&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a32912364c56a2dbf33a7b78fcf895054">ULIS::FBlockGf</a></td></tr>
+<tr class="memitem:a32912364c56a2dbf33a7b78fcf895054"><td class="memItemLeft" align="right" valign="top"><a id="a32912364c56a2dbf33a7b78fcf895054"></a>
+typedef ::ULIS::Format::FBlockfloatGnoAlphaGnormalized&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockGf</b></td></tr>
 <tr class="separator:a32912364c56a2dbf33a7b78fcf895054"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64cd461e7837eae7f3d33c96b979fd3e"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockuint32HSLhasAlphaHSLAtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a64cd461e7837eae7f3d33c96b979fd3e">ULIS::FBlockHSLA32</a></td></tr>
+<tr class="memitem:a64cd461e7837eae7f3d33c96b979fd3e"><td class="memItemLeft" align="right" valign="top"><a id="a64cd461e7837eae7f3d33c96b979fd3e"></a>
+typedef ::ULIS::Format::FBlockuint32HSLhasAlphaHSLAtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockHSLA32</b></td></tr>
 <tr class="separator:a64cd461e7837eae7f3d33c96b979fd3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad435f1b26e4fd27d9231da6c0fd87cc3"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockuint8RGBhasAlphaRGBAtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#ad435f1b26e4fd27d9231da6c0fd87cc3">ULIS::FBlockRGBA8</a></td></tr>
+<tr class="memitem:ad435f1b26e4fd27d9231da6c0fd87cc3"><td class="memItemLeft" align="right" valign="top"><a id="ad435f1b26e4fd27d9231da6c0fd87cc3"></a>
+typedef ::ULIS::Format::FBlockuint8RGBhasAlphaRGBAtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockRGBA8</b></td></tr>
 <tr class="separator:ad435f1b26e4fd27d9231da6c0fd87cc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2de1153a6d69d24cfb9ccd9de16d3e39"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockuint8RGBhasAlphaBGRAtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a2de1153a6d69d24cfb9ccd9de16d3e39">ULIS::FBlockBGRA8</a></td></tr>
+<tr class="memitem:a2de1153a6d69d24cfb9ccd9de16d3e39"><td class="memItemLeft" align="right" valign="top"><a id="a2de1153a6d69d24cfb9ccd9de16d3e39"></a>
+typedef ::ULIS::Format::FBlockuint8RGBhasAlphaBGRAtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockBGRA8</b></td></tr>
 <tr class="separator:a2de1153a6d69d24cfb9ccd9de16d3e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2137f63ea3df00920ab8b0d5c727dd64"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockuint8RGBhasAlphaARGBtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a2137f63ea3df00920ab8b0d5c727dd64">ULIS::FBlockARGB8</a></td></tr>
+<tr class="memitem:a2137f63ea3df00920ab8b0d5c727dd64"><td class="memItemLeft" align="right" valign="top"><a id="a2137f63ea3df00920ab8b0d5c727dd64"></a>
+typedef ::ULIS::Format::FBlockuint8RGBhasAlphaARGBtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockARGB8</b></td></tr>
 <tr class="separator:a2137f63ea3df00920ab8b0d5c727dd64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc51a95f0850b341b884d8a39975ba19"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockuint8RGBhasAlphaABGRtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#afc51a95f0850b341b884d8a39975ba19">ULIS::FBlockABGR8</a></td></tr>
+<tr class="memitem:afc51a95f0850b341b884d8a39975ba19"><td class="memItemLeft" align="right" valign="top"><a id="afc51a95f0850b341b884d8a39975ba19"></a>
+typedef ::ULIS::Format::FBlockuint8RGBhasAlphaABGRtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockABGR8</b></td></tr>
 <tr class="separator:afc51a95f0850b341b884d8a39975ba19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a370c37cee165be828c45bb18c053d7"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockfloatRGBhasAlphaRGBAnormalized&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a3a370c37cee165be828c45bb18c053d7">ULIS::FBlockRGBAfn</a></td></tr>
+<tr class="memitem:a3a370c37cee165be828c45bb18c053d7"><td class="memItemLeft" align="right" valign="top"><a id="a3a370c37cee165be828c45bb18c053d7"></a>
+typedef ::ULIS::Format::FBlockfloatRGBhasAlphaRGBAnormalized&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockRGBAfn</b></td></tr>
 <tr class="separator:a3a370c37cee165be828c45bb18c053d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac45580aacbec1e7ce64607a740eda4fe"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockfloatRGBhasAlphaBGRAnormalized&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#ac45580aacbec1e7ce64607a740eda4fe">ULIS::FBlockBGRAfn</a></td></tr>
+<tr class="memitem:ac45580aacbec1e7ce64607a740eda4fe"><td class="memItemLeft" align="right" valign="top"><a id="ac45580aacbec1e7ce64607a740eda4fe"></a>
+typedef ::ULIS::Format::FBlockfloatRGBhasAlphaBGRAnormalized&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockBGRAfn</b></td></tr>
 <tr class="separator:ac45580aacbec1e7ce64607a740eda4fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b03584d1247356f16cb6c2b6457afc7"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockfloatRGBhasAlphaARGBnormalized&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a9b03584d1247356f16cb6c2b6457afc7">ULIS::FBlockARGBfn</a></td></tr>
+<tr class="memitem:a9b03584d1247356f16cb6c2b6457afc7"><td class="memItemLeft" align="right" valign="top"><a id="a9b03584d1247356f16cb6c2b6457afc7"></a>
+typedef ::ULIS::Format::FBlockfloatRGBhasAlphaARGBnormalized&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockARGBfn</b></td></tr>
 <tr class="separator:a9b03584d1247356f16cb6c2b6457afc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cd3354773405abebc6153781d5502b9"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockfloatRGBhasAlphaABGRnormalized&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a6cd3354773405abebc6153781d5502b9">ULIS::FBlockABGRfn</a></td></tr>
+<tr class="memitem:a6cd3354773405abebc6153781d5502b9"><td class="memItemLeft" align="right" valign="top"><a id="a6cd3354773405abebc6153781d5502b9"></a>
+typedef ::ULIS::Format::FBlockfloatRGBhasAlphaABGRnormalized&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockABGRfn</b></td></tr>
 <tr class="separator:a6cd3354773405abebc6153781d5502b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0719e7a96436186531bf3f1ddc5b7470"><td class="memItemLeft" align="right" valign="top">typedef ::ULIS::Format::FBlockfloatLabhasAlphaLabAtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a0719e7a96436186531bf3f1ddc5b7470">ULIS::FBlockLabAfn</a></td></tr>
+<tr class="memitem:a0719e7a96436186531bf3f1ddc5b7470"><td class="memItemLeft" align="right" valign="top"><a id="a0719e7a96436186531bf3f1ddc5b7470"></a>
+typedef ::ULIS::Format::FBlockfloatLabhasAlphaLabAtypeLimits&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FBlockLabAfn</b></td></tr>
 <tr class="separator:a0719e7a96436186531bf3f1ddc5b7470"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c3c12c87d2c7f8999eb11dd11984e84"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8GnoAlphaGtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a4c3c12c87d2c7f8999eb11dd11984e84">ULIS::FValueG8</a></td></tr>
+<tr class="memitem:a4c3c12c87d2c7f8999eb11dd11984e84"><td class="memItemLeft" align="right" valign="top"><a id="a4c3c12c87d2c7f8999eb11dd11984e84"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8GnoAlphaGtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueG8</b></td></tr>
 <tr class="separator:a4c3c12c87d2c7f8999eb11dd11984e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad925dd42418cd3d19e6cb7a31b8abe7a"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatGnoAlphaGnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#ad925dd42418cd3d19e6cb7a31b8abe7a">ULIS::FValueGf</a></td></tr>
+<tr class="memitem:ad925dd42418cd3d19e6cb7a31b8abe7a"><td class="memItemLeft" align="right" valign="top"><a id="ad925dd42418cd3d19e6cb7a31b8abe7a"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatGnoAlphaGnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueGf</b></td></tr>
 <tr class="separator:ad925dd42418cd3d19e6cb7a31b8abe7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b2d30e01078bf6add0b08adddc5380f"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint32HSLhasAlphaHSLAtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a3b2d30e01078bf6add0b08adddc5380f">ULIS::FValueHSLA32</a></td></tr>
+<tr class="memitem:a3b2d30e01078bf6add0b08adddc5380f"><td class="memItemLeft" align="right" valign="top"><a id="a3b2d30e01078bf6add0b08adddc5380f"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint32HSLhasAlphaHSLAtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueHSLA32</b></td></tr>
 <tr class="separator:a3b2d30e01078bf6add0b08adddc5380f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c8a745759540894b0988dab0054ecba"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8RGBhasAlphaRGBAtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a3c8a745759540894b0988dab0054ecba">ULIS::FValueRGBA8</a></td></tr>
+<tr class="memitem:a3c8a745759540894b0988dab0054ecba"><td class="memItemLeft" align="right" valign="top"><a id="a3c8a745759540894b0988dab0054ecba"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8RGBhasAlphaRGBAtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueRGBA8</b></td></tr>
 <tr class="separator:a3c8a745759540894b0988dab0054ecba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a912600d924a36fe9e87fef54de15f9f4"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8RGBhasAlphaBGRAtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a912600d924a36fe9e87fef54de15f9f4">ULIS::FValueBGRA8</a></td></tr>
+<tr class="memitem:a912600d924a36fe9e87fef54de15f9f4"><td class="memItemLeft" align="right" valign="top"><a id="a912600d924a36fe9e87fef54de15f9f4"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8RGBhasAlphaBGRAtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueBGRA8</b></td></tr>
 <tr class="separator:a912600d924a36fe9e87fef54de15f9f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa364ef25ffacc7f6d9534fae5f1cdc68"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8RGBhasAlphaARGBtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#aa364ef25ffacc7f6d9534fae5f1cdc68">ULIS::FValueARGB8</a></td></tr>
+<tr class="memitem:aa364ef25ffacc7f6d9534fae5f1cdc68"><td class="memItemLeft" align="right" valign="top"><a id="aa364ef25ffacc7f6d9534fae5f1cdc68"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8RGBhasAlphaARGBtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueARGB8</b></td></tr>
 <tr class="separator:aa364ef25ffacc7f6d9534fae5f1cdc68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80d1bde694862d4f3cd1146d36851d42"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8RGBhasAlphaABGRtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a80d1bde694862d4f3cd1146d36851d42">ULIS::FValueABGR8</a></td></tr>
+<tr class="memitem:a80d1bde694862d4f3cd1146d36851d42"><td class="memItemLeft" align="right" valign="top"><a id="a80d1bde694862d4f3cd1146d36851d42"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_uint8RGBhasAlphaABGRtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueABGR8</b></td></tr>
 <tr class="separator:a80d1bde694862d4f3cd1146d36851d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2706d1b9838eb126529cb56ec02e0412"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a2706d1b9838eb126529cb56ec02e0412">ULIS::FValueRGBAfn</a></td></tr>
+<tr class="memitem:a2706d1b9838eb126529cb56ec02e0412"><td class="memItemLeft" align="right" valign="top"><a id="a2706d1b9838eb126529cb56ec02e0412"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatRGBhasAlphaRGBAnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueRGBAfn</b></td></tr>
 <tr class="separator:a2706d1b9838eb126529cb56ec02e0412"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90be12519729e5fa40078b4fc385490e"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatRGBhasAlphaBGRAnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a90be12519729e5fa40078b4fc385490e">ULIS::FValueBGRAfn</a></td></tr>
+<tr class="memitem:a90be12519729e5fa40078b4fc385490e"><td class="memItemLeft" align="right" valign="top"><a id="a90be12519729e5fa40078b4fc385490e"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatRGBhasAlphaBGRAnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueBGRAfn</b></td></tr>
 <tr class="separator:a90be12519729e5fa40078b4fc385490e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d683e7212fb80238a4acd0524c3f1cf"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatRGBhasAlphaARGBnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a7d683e7212fb80238a4acd0524c3f1cf">ULIS::FValueARGBfn</a></td></tr>
+<tr class="memitem:a7d683e7212fb80238a4acd0524c3f1cf"><td class="memItemLeft" align="right" valign="top"><a id="a7d683e7212fb80238a4acd0524c3f1cf"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatRGBhasAlphaARGBnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueARGBfn</b></td></tr>
 <tr class="separator:a7d683e7212fb80238a4acd0524c3f1cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf066cee3f1e6d463b53c96c629e4587"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatRGBhasAlphaABGRnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#abf066cee3f1e6d463b53c96c629e4587">ULIS::FValueABGRfn</a></td></tr>
+<tr class="memitem:abf066cee3f1e6d463b53c96c629e4587"><td class="memItemLeft" align="right" valign="top"><a id="abf066cee3f1e6d463b53c96c629e4587"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatRGBhasAlphaABGRnormalized &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueABGRfn</b></td></tr>
 <tr class="separator:abf066cee3f1e6d463b53c96c629e4587"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85a816713c753bb36c83a84b90c94df5"><td class="memItemLeft" align="right" valign="top">typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a85a816713c753bb36c83a84b90c94df5">ULIS::FValueLabAfn</a></td></tr>
+<tr class="memitem:a85a816713c753bb36c83a84b90c94df5"><td class="memItemLeft" align="right" valign="top"><a id="a85a816713c753bb36c83a84b90c94df5"></a>
+typedef ::<a class="el" href="class_u_l_i_s_1_1_t_pixel_value.html">ULIS::TPixelValue</a>&lt; ::ULIS::Format::Format_floatLabhasAlphaLabAtypeLimits &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::FValueLabAfn</b></td></tr>
 <tr class="separator:a85a816713c753bb36c83a84b90c94df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acfcccf30de693375e3d72fe270539698"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:acfcccf30de693375e3d72fe270539698"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#acfcccf30de693375e3d72fe270539698">ULIS::TDefaultModelFormat&lt; e_cm::kG &gt;</a> ()</td></tr>
+<tr class="memitem:acfcccf30de693375e3d72fe270539698"><td class="memTemplParams" colspan="2"><a id="acfcccf30de693375e3d72fe270539698"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:acfcccf30de693375e3d72fe270539698"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TDefaultModelFormat&lt; e_cm::kG &gt;</b> ()</td></tr>
 <tr class="separator:acfcccf30de693375e3d72fe270539698"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a791afb102689af23dfea9dace288c5c2"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a791afb102689af23dfea9dace288c5c2"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a791afb102689af23dfea9dace288c5c2">ULIS::TDefaultModelFormat&lt; e_cm::kRGB &gt;</a> ()</td></tr>
+<tr class="memitem:a791afb102689af23dfea9dace288c5c2"><td class="memTemplParams" colspan="2"><a id="a791afb102689af23dfea9dace288c5c2"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a791afb102689af23dfea9dace288c5c2"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TDefaultModelFormat&lt; e_cm::kRGB &gt;</b> ()</td></tr>
 <tr class="separator:a791afb102689af23dfea9dace288c5c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27ec52f95b970c1687361f31b74b8bae"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a27ec52f95b970c1687361f31b74b8bae"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a27ec52f95b970c1687361f31b74b8bae">ULIS::TDefaultModelFormat&lt; e_cm::kHSL &gt;</a> ()</td></tr>
+<tr class="memitem:a27ec52f95b970c1687361f31b74b8bae"><td class="memTemplParams" colspan="2"><a id="a27ec52f95b970c1687361f31b74b8bae"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a27ec52f95b970c1687361f31b74b8bae"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TDefaultModelFormat&lt; e_cm::kHSL &gt;</b> ()</td></tr>
 <tr class="separator:a27ec52f95b970c1687361f31b74b8bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad33ad631a21f7a1fc0e208ec520ab56b"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ad33ad631a21f7a1fc0e208ec520ab56b"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#ad33ad631a21f7a1fc0e208ec520ab56b">ULIS::TDefaultModelFormat&lt; e_cm::kHSV &gt;</a> ()</td></tr>
+<tr class="memitem:ad33ad631a21f7a1fc0e208ec520ab56b"><td class="memTemplParams" colspan="2"><a id="ad33ad631a21f7a1fc0e208ec520ab56b"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:ad33ad631a21f7a1fc0e208ec520ab56b"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TDefaultModelFormat&lt; e_cm::kHSV &gt;</b> ()</td></tr>
 <tr class="separator:ad33ad631a21f7a1fc0e208ec520ab56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3d762af0aa20532e1501e39d2117c10"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ad3d762af0aa20532e1501e39d2117c10"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#ad3d762af0aa20532e1501e39d2117c10">ULIS::TDefaultModelFormat&lt; e_cm::kCMYK &gt;</a> ()</td></tr>
+<tr class="memitem:ad3d762af0aa20532e1501e39d2117c10"><td class="memTemplParams" colspan="2"><a id="ad3d762af0aa20532e1501e39d2117c10"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:ad3d762af0aa20532e1501e39d2117c10"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TDefaultModelFormat&lt; e_cm::kCMYK &gt;</b> ()</td></tr>
 <tr class="separator:ad3d762af0aa20532e1501e39d2117c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1de4c65aa4ded0ef6e7ebbdb47d9ec58"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a1de4c65aa4ded0ef6e7ebbdb47d9ec58"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a1de4c65aa4ded0ef6e7ebbdb47d9ec58">ULIS::TDefaultModelFormat&lt; e_cm::kLab &gt;</a> ()</td></tr>
+<tr class="memitem:a1de4c65aa4ded0ef6e7ebbdb47d9ec58"><td class="memTemplParams" colspan="2"><a id="a1de4c65aa4ded0ef6e7ebbdb47d9ec58"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a1de4c65aa4ded0ef6e7ebbdb47d9ec58"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TDefaultModelFormat&lt; e_cm::kLab &gt;</b> ()</td></tr>
 <tr class="separator:a1de4c65aa4ded0ef6e7ebbdb47d9ec58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afeda023abbeee42968fd30e15b95dda8"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:afeda023abbeee42968fd30e15b95dda8"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#afeda023abbeee42968fd30e15b95dda8">ULIS::TDefaultModelFormat&lt; e_cm::kXYZ &gt;</a> ()</td></tr>
+<tr class="memitem:afeda023abbeee42968fd30e15b95dda8"><td class="memTemplParams" colspan="2"><a id="afeda023abbeee42968fd30e15b95dda8"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:afeda023abbeee42968fd30e15b95dda8"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TDefaultModelFormat&lt; e_cm::kXYZ &gt;</b> ()</td></tr>
 <tr class="separator:afeda023abbeee42968fd30e15b95dda8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a639b3c2fe4570b6320b48729810c670a"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a639b3c2fe4570b6320b48729810c670a"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a639b3c2fe4570b6320b48729810c670a">ULIS::TCMSConnectionType&lt; e_cm::kG &gt;</a> ()</td></tr>
+<tr class="memitem:a639b3c2fe4570b6320b48729810c670a"><td class="memTemplParams" colspan="2"><a id="a639b3c2fe4570b6320b48729810c670a"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a639b3c2fe4570b6320b48729810c670a"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TCMSConnectionType&lt; e_cm::kG &gt;</b> ()</td></tr>
 <tr class="separator:a639b3c2fe4570b6320b48729810c670a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f6b400b14e57c3d021be1753ecdc24c"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a6f6b400b14e57c3d021be1753ecdc24c"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a6f6b400b14e57c3d021be1753ecdc24c">ULIS::TCMSConnectionType&lt; e_cm::kRGB &gt;</a> ()</td></tr>
+<tr class="memitem:a6f6b400b14e57c3d021be1753ecdc24c"><td class="memTemplParams" colspan="2"><a id="a6f6b400b14e57c3d021be1753ecdc24c"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a6f6b400b14e57c3d021be1753ecdc24c"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TCMSConnectionType&lt; e_cm::kRGB &gt;</b> ()</td></tr>
 <tr class="separator:a6f6b400b14e57c3d021be1753ecdc24c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d5dcf7ce187698c0241160996c67bce"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a2d5dcf7ce187698c0241160996c67bce"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a2d5dcf7ce187698c0241160996c67bce">ULIS::TCMSConnectionType&lt; e_cm::kHSL &gt;</a> ()</td></tr>
+<tr class="memitem:a2d5dcf7ce187698c0241160996c67bce"><td class="memTemplParams" colspan="2"><a id="a2d5dcf7ce187698c0241160996c67bce"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a2d5dcf7ce187698c0241160996c67bce"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TCMSConnectionType&lt; e_cm::kHSL &gt;</b> ()</td></tr>
 <tr class="separator:a2d5dcf7ce187698c0241160996c67bce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d1092aa8627d6ff9dcb65de3a4d0448"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a2d1092aa8627d6ff9dcb65de3a4d0448"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a2d1092aa8627d6ff9dcb65de3a4d0448">ULIS::TCMSConnectionType&lt; e_cm::kHSV &gt;</a> ()</td></tr>
+<tr class="memitem:a2d1092aa8627d6ff9dcb65de3a4d0448"><td class="memTemplParams" colspan="2"><a id="a2d1092aa8627d6ff9dcb65de3a4d0448"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a2d1092aa8627d6ff9dcb65de3a4d0448"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TCMSConnectionType&lt; e_cm::kHSV &gt;</b> ()</td></tr>
 <tr class="separator:a2d1092aa8627d6ff9dcb65de3a4d0448"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75dd5b687157c1d1feea646b8439754f"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a75dd5b687157c1d1feea646b8439754f"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a75dd5b687157c1d1feea646b8439754f">ULIS::TCMSConnectionType&lt; e_cm::kCMYK &gt;</a> ()</td></tr>
+<tr class="memitem:a75dd5b687157c1d1feea646b8439754f"><td class="memTemplParams" colspan="2"><a id="a75dd5b687157c1d1feea646b8439754f"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a75dd5b687157c1d1feea646b8439754f"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TCMSConnectionType&lt; e_cm::kCMYK &gt;</b> ()</td></tr>
 <tr class="separator:a75dd5b687157c1d1feea646b8439754f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6ad9c5a7fc349c8266d22be49dd543d"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ab6ad9c5a7fc349c8266d22be49dd543d"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#ab6ad9c5a7fc349c8266d22be49dd543d">ULIS::TCMSConnectionType&lt; e_cm::kLab &gt;</a> ()</td></tr>
+<tr class="memitem:ab6ad9c5a7fc349c8266d22be49dd543d"><td class="memTemplParams" colspan="2"><a id="ab6ad9c5a7fc349c8266d22be49dd543d"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:ab6ad9c5a7fc349c8266d22be49dd543d"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TCMSConnectionType&lt; e_cm::kLab &gt;</b> ()</td></tr>
 <tr class="separator:ab6ad9c5a7fc349c8266d22be49dd543d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7326f4ac3f1451c414fcbc0986124ed9"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a7326f4ac3f1451c414fcbc0986124ed9"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a7326f4ac3f1451c414fcbc0986124ed9">ULIS::TCMSConnectionType&lt; e_cm::kXYZ &gt;</a> ()</td></tr>
+<tr class="memitem:a7326f4ac3f1451c414fcbc0986124ed9"><td class="memTemplParams" colspan="2"><a id="a7326f4ac3f1451c414fcbc0986124ed9"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a7326f4ac3f1451c414fcbc0986124ed9"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TCMSConnectionType&lt; e_cm::kXYZ &gt;</b> ()</td></tr>
 <tr class="separator:a7326f4ac3f1451c414fcbc0986124ed9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5f56338ff389d5ed1eaca00f0d42bec"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ac5f56338ff389d5ed1eaca00f0d42bec"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#ac5f56338ff389d5ed1eaca00f0d42bec">ULIS::TModelConnectionFormat&lt; e_cm::kG &gt;</a> ()</td></tr>
+<tr class="memitem:ac5f56338ff389d5ed1eaca00f0d42bec"><td class="memTemplParams" colspan="2"><a id="ac5f56338ff389d5ed1eaca00f0d42bec"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:ac5f56338ff389d5ed1eaca00f0d42bec"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TModelConnectionFormat&lt; e_cm::kG &gt;</b> ()</td></tr>
 <tr class="separator:ac5f56338ff389d5ed1eaca00f0d42bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83ee05fbd807a36975021c5fff178411"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a83ee05fbd807a36975021c5fff178411"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a83ee05fbd807a36975021c5fff178411">ULIS::TModelConnectionFormat&lt; e_cm::kRGB &gt;</a> ()</td></tr>
+<tr class="memitem:a83ee05fbd807a36975021c5fff178411"><td class="memTemplParams" colspan="2"><a id="a83ee05fbd807a36975021c5fff178411"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a83ee05fbd807a36975021c5fff178411"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TModelConnectionFormat&lt; e_cm::kRGB &gt;</b> ()</td></tr>
 <tr class="separator:a83ee05fbd807a36975021c5fff178411"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b23e20aa794ca63484b770331f79549"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a8b23e20aa794ca63484b770331f79549"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a8b23e20aa794ca63484b770331f79549">ULIS::TModelConnectionFormat&lt; e_cm::kHSL &gt;</a> ()</td></tr>
+<tr class="memitem:a8b23e20aa794ca63484b770331f79549"><td class="memTemplParams" colspan="2"><a id="a8b23e20aa794ca63484b770331f79549"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a8b23e20aa794ca63484b770331f79549"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TModelConnectionFormat&lt; e_cm::kHSL &gt;</b> ()</td></tr>
 <tr class="separator:a8b23e20aa794ca63484b770331f79549"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fe936a8608d6d342a221cc5768a3ccb"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a3fe936a8608d6d342a221cc5768a3ccb"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a3fe936a8608d6d342a221cc5768a3ccb">ULIS::TModelConnectionFormat&lt; e_cm::kHSV &gt;</a> ()</td></tr>
+<tr class="memitem:a3fe936a8608d6d342a221cc5768a3ccb"><td class="memTemplParams" colspan="2"><a id="a3fe936a8608d6d342a221cc5768a3ccb"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a3fe936a8608d6d342a221cc5768a3ccb"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TModelConnectionFormat&lt; e_cm::kHSV &gt;</b> ()</td></tr>
 <tr class="separator:a3fe936a8608d6d342a221cc5768a3ccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abaa10e3c49ad4e78e72d9c07afa80895"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:abaa10e3c49ad4e78e72d9c07afa80895"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#abaa10e3c49ad4e78e72d9c07afa80895">ULIS::TModelConnectionFormat&lt; e_cm::kCMYK &gt;</a> ()</td></tr>
+<tr class="memitem:abaa10e3c49ad4e78e72d9c07afa80895"><td class="memTemplParams" colspan="2"><a id="abaa10e3c49ad4e78e72d9c07afa80895"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:abaa10e3c49ad4e78e72d9c07afa80895"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TModelConnectionFormat&lt; e_cm::kCMYK &gt;</b> ()</td></tr>
 <tr class="separator:abaa10e3c49ad4e78e72d9c07afa80895"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c93a72f8c176536f2d682126c032867"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a2c93a72f8c176536f2d682126c032867"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a2c93a72f8c176536f2d682126c032867">ULIS::TModelConnectionFormat&lt; e_cm::kLab &gt;</a> ()</td></tr>
+<tr class="memitem:a2c93a72f8c176536f2d682126c032867"><td class="memTemplParams" colspan="2"><a id="a2c93a72f8c176536f2d682126c032867"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a2c93a72f8c176536f2d682126c032867"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TModelConnectionFormat&lt; e_cm::kLab &gt;</b> ()</td></tr>
 <tr class="separator:a2c93a72f8c176536f2d682126c032867"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7eeb24e2eac0d155488708f974164af9"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a7eeb24e2eac0d155488708f974164af9"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s.html#a7eeb24e2eac0d155488708f974164af9">ULIS::TModelConnectionFormat&lt; e_cm::kXYZ &gt;</a> ()</td></tr>
+<tr class="memitem:a7eeb24e2eac0d155488708f974164af9"><td class="memTemplParams" colspan="2"><a id="a7eeb24e2eac0d155488708f974164af9"></a>
+template&lt;&gt; </td></tr>
+<tr class="memitem:a7eeb24e2eac0d155488708f974164af9"><td class="memTemplItemLeft" align="right" valign="top">constexpr uint32&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ULIS::TModelConnectionFormat&lt; e_cm::kXYZ &gt;</b> ()</td></tr>
 <tr class="separator:a7eeb24e2eac0d155488708f974164af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a608e117211a0ac9c8adfe0fdbdab42b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#a5d6483419547169a521de9d87f7faf5e">ULIS_REG_TYPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s_1_1generated.html#a608e117211a0ac9c8adfe0fdbdab42b0">ULIS::generated::ulis_types_reg</a> = <a class="el" href="_u_l_i_s_8_base_8_registry_8h.html#ae4e664c9dff7a3ac25f27fc30efa9758">ULIS_ASSIGN_REG</a>( <a class="el" href="_u_l_i_s_8_interface_8_decl_8h.html#a65ecd210b90e4c44f2db0ce142395066">ULIS_REG_BUILDER</a> )</td></tr>
+<tr class="memitem:a608e117211a0ac9c8adfe0fdbdab42b0"><td class="memItemLeft" align="right" valign="top"><a id="a608e117211a0ac9c8adfe0fdbdab42b0"></a>
+ULIS_REG_TYPE&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::generated::ulis_types_reg</b> = ULIS_ASSIGN_REG( ULIS_REG_BUILDER )</td></tr>
 <tr class="separator:a608e117211a0ac9c8adfe0fdbdab42b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19d79934d730f0b6ead0d562eff41ca9"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_u_l_i_s_1_1generated.html#a19d79934d730f0b6ead0d562eff41ca9">ULIS::generated::temp_reg_size</a> = ulis_types_reg.Size()</td></tr>
+<tr class="memitem:a19d79934d730f0b6ead0d562eff41ca9"><td class="memItemLeft" align="right" valign="top"><a id="a19d79934d730f0b6ead0d562eff41ca9"></a>
+constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS::generated::temp_reg_size</b> = ulis_types_reg.Size()</td></tr>
 <tr class="separator:a19d79934d730f0b6ead0d562eff41ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a9c7a6f905a2e4c9fcf0da24ea7b0d9c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c7a6f905a2e4c9fcf0da24ea7b0d9c5">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_CMYKA_FLT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_CMYKA_FLT&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(4))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a034b7fb7387d92ffb1933b99d43ff0a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a034b7fb7387d92ffb1933b99d43ff0a1">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_CMYKA_U16</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_CMYKA_U16&#160;&#160;&#160;(COLORSPACE_SH(PT_CMYK)|EXTRA_SH(1)|CHANNELS_SH(4)|BYTES_SH(2))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0b4d774e38f4807838eb2e40a01a1ea4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b4d774e38f4807838eb2e40a01a1ea4">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_GRAYA_FLT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_GRAYA_FLT&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(4))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a36eafddef8fa398c790f75cb8eb374f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36eafddef8fa398c790f75cb8eb374f0">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_GRAYA_U16</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_GRAYA_U16&#160;&#160;&#160;(COLORSPACE_SH(PT_GRAY)|EXTRA_SH(1)|CHANNELS_SH(1)|BYTES_SH(2))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a159386d2de35f1688042ba443a12d384"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a159386d2de35f1688042ba443a12d384">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_LabA_FLT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_LabA_FLT&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6934b30f1c40d5fa515d08997eb1a9dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6934b30f1c40d5fa515d08997eb1a9dc">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_LabA_U16</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_LabA_U16&#160;&#160;&#160;(COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a04a653b3ab80fec7f69b1a534169f63c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04a653b3ab80fec7f69b1a534169f63c">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_RGBA_FLT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_RGBA_FLT&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afa1165134afec1ed876c6851c3c6b00d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa1165134afec1ed876c6851c3c6b00d">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_RGBA_U16</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_RGBA_U16&#160;&#160;&#160;(COLORSPACE_SH(PT_RGB)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3a611978c95711a5ce7ed883f17d533f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a611978c95711a5ce7ed883f17d533f">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_XYZA_FLT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_XYZA_FLT&#160;&#160;&#160;(FLOAT_SH(1)|COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(4))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a995ea59139397b0d2b2aa49d9730fb94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a995ea59139397b0d2b2aa49d9730fb94">&#9670;&nbsp;</a></span>ULIS_LCMS_DTYPE_XYZA_U16</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_LCMS_DTYPE_XYZA_U16&#160;&#160;&#160;(COLORSPACE_SH(PT_XYZ)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(2))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0db5d268fdf478127730da4a0297024c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0db5d268fdf478127730da4a0297024c">&#9670;&nbsp;</a></span>ULIS_REG</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_REG&#160;&#160;&#160;::<a class="el" href="namespace_u_l_i_s_1_1generated.html#a608e117211a0ac9c8adfe0fdbdab42b0">ULIS::generated::ulis_types_reg</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a65ecd210b90e4c44f2db0ce142395066"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65ecd210b90e4c44f2db0ce142395066">&#9670;&nbsp;</a></span>ULIS_REG_BUILDER</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_REG_BUILDER&#160;&#160;&#160;ulis_reg_builder</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2815061f995c4d2c618b4105d7c16a31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2815061f995c4d2c618b4105d7c16a31">&#9670;&nbsp;</a></span>ULIS_REG_SIZE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ULIS_REG_SIZE&#160;&#160;&#160;59</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This file provides the specialisations related to block types. </p>
+<p>ULIS</p>
+<hr  />
+<dl class="section author"><dt>Author</dt><dd>Clement Berthaud </dd></dl>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

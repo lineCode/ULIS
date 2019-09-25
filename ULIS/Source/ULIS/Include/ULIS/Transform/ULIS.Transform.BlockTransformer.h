@@ -17,68 +17,72 @@
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 
 namespace ULIS {
-    /*
 /////////////////////////////////////////////////////
-// TBlockTypeConverter_ScanLine
-template< uint32 _SHSrc, uint32 _SHDst >
-class TBlockTypeConverter_ScanLine
+// TBlockTransformer_Default_ScanLine
+template< uint32 _SH >
+class TBlockTransformer_Default_ScanLine
 {
 public:
-    static void ProcessScanLine( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, int iLine, int iX1, int iX2 )
+    static void Run( const TBlock< _SH >*   iSrcBlock
+                   , TBlock< _SH >*         iDstBlock
+                   , const glm::mat3&       iInverseTransform
+                   , const int              iLine
+                   , const int              iX1
+                   , const int              iX2 )
     {
-        using tPixelProxySrc = typename TBlock< _SHSrc >::tPixelProxy;
-        using tPixelProxyDst = typename TBlock< _SHDst >::tPixelProxy;
-        using src_info = TBlockInfo< _SHSrc >;
-        using dst_info = TBlockInfo< _SHDst >;
-
-        for( int x = iX1; x < iX2; ++x )
-        {
-            tPixelProxySrc srcProxy = iBlockSrc->PixelProxy( x, iLine );
-            tPixelProxyDst dstProxy = iBlockDst->PixelProxy( x, iLine );
-
-            for( int i = 0; i < src_info::_nf._nc; ++i )
-                dstProxy.SetComponent( i, ConvType< typename tPixelProxySrc::tPixelType, typename tPixelProxyDst::tPixelType >( srcProxy.GetComponent( i ) ) );
-
-            dstProxy.SetAlpha( ConvType< typename tPixelProxySrc::tPixelType, typename tPixelProxyDst::tPixelType >( srcProxy.GetAlpha() ) );
-        }
+        ULIS_CRASH_TODO;
     }
 
-    static void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst )
+    static void Run( const TBlock< _SH >*        iSrcBlock
+                   , TBlock< _SH >*              iDstBlock
+                   , const glm::mat3&            iInverseTransform )
     {
-        const int x1 = 0;
-        const int y1 = 0;
-        const int x2 = iBlockSrc->Width();
-        const int y2 = iBlockSrc->Height();
+        ULIS_CRASH_TODO;
+        /*
+        const int x1 = iROI.x;
+        const int y1 = iROI.y;
+        const int x2 = x1 + iROI.w;
+        const int y2 = y1 + iROI.h;
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( ProcessScanLine, iBlockSrc, iBlockDst, y, x1, x2 );
+            global_pool.ScheduleJob( ProcessScanLine, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift );
 
         global_pool.WaitForCompletion();
+        */
     }
 };
 
+
 /////////////////////////////////////////////////////
-// TBlockTypeConverter_MonoThread
-template< uint32 _SHSrc, uint32 _SHDst >
-class TBlockTypeConverter_MonoThread
+// TBlockTransformer_Default_MonoThread
+template< uint32 _SH >
+class TBlockTransformer_Default_MonoThread
 {
 public:
-    static void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst )
+    static void Run( const TBlock< _SH >*        iSrcBlock
+                   , TBlock< _SH >*              iDstBlock
+                   , const glm::mat3&            iInverseTransform
+                   , const glm::vec2&            iShift )
     {
-        using tPixelProxySrc = typename TBlock< _SHSrc >::tPixelProxy;
-        using tPixelProxyDst = typename TBlock< _SHDst >::tPixelProxy;
-        using src_info = TBlockInfo< _SHSrc >;
-        using dst_info = TBlockInfo< _SHDst >;
-
-        for( int y = 0; y < iBlockSrc->Height(); ++y )
+        const int x1 = -iShift.x;
+        const int y1 = -iShift.y;
+        const int x2 = iDstBlock->Width() + x1;
+        const int y2 = iDstBlock->Height() + y1;
+        const int maxx = iSrcBlock->Width();
+        const int maxy = iSrcBlock->Height();
+        TBlock< _SH >::tPixelValue fallback = TBlock< _SH >::tPixelValue();
+        for( int y = y1; y < y2; ++y )
         {
-            for( int x = 0; x < iBlockSrc->Width(); ++x )
+            for( int x = x1; x < x2; ++x )
             {
-                tPixelProxySrc srcProxy = iBlockSrc->PixelProxy( x, y );
-                tPixelProxyDst dstProxy = iBlockDst->PixelProxy( x, y );
-                for( int i = 0; i < src_info::_nf._nc; ++i )
-                    dstProxy.SetComponent( i, ConvType< typename tPixelProxySrc::tPixelType, typename tPixelProxyDst::tPixelType >( srcProxy.GetComponent( i ) ) );
-                dstProxy.SetAlpha( ConvType< typename tPixelProxySrc::tPixelType, typename tPixelProxyDst::tPixelType >( srcProxy.GetAlpha() ) );
+                glm::vec3 point_in_dst( x, y, 1.f );
+                glm::vec2 point_in_src = ( iInverseTransform * point_in_dst );
+                int src_x = point_in_src.x;
+                int src_y = point_in_src.y;
+                if( src_x < 0 || src_y < 0 || src_x >= maxx || src_y >= maxy )
+                    iDstBlock->SetPixelValue( x + iShift.x, y + iShift.y, fallback );
+                else
+                    iDstBlock->SetPixelProxy( x + iShift.x, y + iShift.y, iSrcBlock->PixelProxy( src_x, src_y ) );
             }
         }
     }
@@ -86,78 +90,64 @@ public:
 
 
 /////////////////////////////////////////////////////
-// TBlockTypeConverter_Imp
-template< uint32 _SHSrc, uint32 _SHDst >
-class TBlockTypeConverter_Imp
+// TBlockTransformer_Default
+template< uint32 _SH >
+class TBlockTransformer_Default
 {
 public:
-    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    static void Run( const TBlock< _SH >*        iSrcBlock
+                   , TBlock< _SH >*              iDstBlock
+                   , const glm::mat3&            iInverseTransform
+                   , const glm::vec2&            iShift
+                   , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
+        TBlockTransformer_Default_MonoThread< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iShift );
+        /*
         if( iPerformanceOptions.desired_workers > 1 )
         {
-            TBlockTypeConverter_ScanLine< _SHSrc, _SHDst >::Run( iBlockSrc, iBlockDst );
+            TBlockTransformer_Default_ScanLine< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform );
         }
         else
         {
-            TBlockTypeConverter_MonoThread< _SHSrc, _SHDst >::Run( iBlockSrc, iBlockDst );
+            TBlockTransformer_Default_MonoThread< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform );
         }
+        */
     }
 };
 
 
 /////////////////////////////////////////////////////
-// TBlockTypeConverter
-template< uint32 _SHSrc, uint32 _SHDst, int _MODEL_DIFF >
-class TBlockTypeConverter
+// TBlockTransformer_Imp
+template< uint32 _SH >
+class TBlockTransformer_Imp
 {
 public:
-    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    static inline void Run( const TBlock< _SH >*        iSrcBlock
+                          , TBlock< _SH >*              iDstBlock
+                          , const glm::mat3&            iInverseTransform
+                          , const glm::vec2&            iShift
+                          , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-    }
-};
-
-/////////////////////////////////////////////////////
-// TBlockTypeConverter
-template< uint32 _SHSrc, uint32 _SHDst >
-class TBlockTypeConverter< _SHSrc, _SHDst, 0 >
-{
-public:
-    static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
-    {
-        TBlockTypeConverter_Imp< _SHSrc, _SHDst >::Run( iBlockSrc, iBlockDst, iPerformanceOptions);
+        TBlockTransformer_Default< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iShift, iPerformanceOptions );
     }
 };
 
 
 /////////////////////////////////////////////////////
-// TPixelTypeConverter
-template< uint32 _SHSrc, uint32 _SHDst, int _MODEL_DIFF >
-class TPixelTypeConverter
+// TBlockTransformer
+template< uint32 _SH >
+class TBlockTransformer
 {
 public:
-    static inline void Apply( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst )
+    static inline void Run( const TBlock< _SH >*        iSrcBlock
+                          , TBlock< _SH >*              iDstBlock
+                          , const glm::mat3&            iInverseTransform
+                          , const glm::vec2&            iShift
+                          , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
+        TBlockTransformer_Imp< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iShift, iPerformanceOptions );
     }
 };
-
-/////////////////////////////////////////////////////
-// TPixelTypeConverter
-template< uint32 _SHSrc, uint32 _SHDst >
-class TPixelTypeConverter< _SHSrc, _SHDst, 0 >
-{
-public:
-    static inline void Apply( const TPixelBase< _SHSrc >& iSrc, TPixelBase< _SHDst >& iDst )
-    {
-        using src_info = TBlockInfo< _SHSrc >;
-        using dst_info = TBlockInfo< _SHDst >;
-        using tSrcType = typename TPixelBase< _SHSrc >::tPixelType;
-        using tDstType = typename TPixelBase< _SHDst >::tPixelType;
-        for( int i = 0; i < src_info::_nf._nc; ++i )
-            iDst.SetComponent( i, ConvType< tSrcType, tDstType >( iSrc.GetComponent( i ) ) );
-        iDst.SetAlpha( ConvType< tSrcType, tDstType >( iSrc.GetAlpha() ) );
-    }
-};
-*/
 
 } // namespace ULIS
 

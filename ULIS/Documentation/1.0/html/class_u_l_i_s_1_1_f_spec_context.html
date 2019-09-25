@@ -80,18 +80,20 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aac95d3050306cfef2ecb912348cc7328"><td class="memItemLeft" align="right" valign="top">::<a class="el" href="struct_u_l_i_s_1_1_f_spec.html">ULIS::FSpec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#aac95d3050306cfef2ecb912348cc7328">BlockInfo</a> (uint32_t i)</td></tr>
-<tr class="separator:aac95d3050306cfef2ecb912348cc7328"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8188ec896f067a28926476f9320fd61f"><td class="memItemLeft" align="right" valign="top">::<a class="el" href="struct_u_l_i_s_1_1_f_spec.html">ULIS::FSpec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#a8188ec896f067a28926476f9320fd61f">BlockSpec</a> (uint32_t i)</td></tr>
-<tr class="separator:a8188ec896f067a28926476f9320fd61f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a547b3a3f485afe3770bbbbe966451858"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#a547b3a3f485afe3770bbbbe966451858">BlockSpecAtIndex</a> (<a class="el" href="namespace_u_l_i_s.html#ae9fb8c6d16567204d482b9b1189a305b">uint32</a> iIndex)</td></tr>
+<tr class="separator:a547b3a3f485afe3770bbbbe966451858"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f72691e7e172251c917d60fab08c4dc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#a5f72691e7e172251c917d60fab08c4dc">BlockSpecFromHash</a> (<a class="el" href="namespace_u_l_i_s.html#ae9fb8c6d16567204d482b9b1189a305b">uint32</a> iHash)</td></tr>
+<tr class="separator:a5f72691e7e172251c917d60fab08c4dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2d406da9524a93585c56959f84a130f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#ac2d406da9524a93585c56959f84a130f">PrintSpecs</a> ()</td></tr>
 <tr class="separator:ac2d406da9524a93585c56959f84a130f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abca78c733f24d3af61730a96886ef3fd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_spec_context.html#abca78c733f24d3af61730a96886ef3fd">PrintShortSpecs</a> ()</td></tr>
 <tr class="separator:abca78c733f24d3af61730a96886ef3fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="aac95d3050306cfef2ecb912348cc7328"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac95d3050306cfef2ecb912348cc7328">&#9670;&nbsp;</a></span>BlockInfo()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_f_spec_context.html" title="The FSpecContext class provides a context for gathering informations on block specifications at runti...">FSpecContext</a> class provides a context for gathering informations on block specifications at runtime. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a547b3a3f485afe3770bbbbe966451858"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a547b3a3f485afe3770bbbbe966451858">&#9670;&nbsp;</a></span>BlockSpecAtIndex()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -100,10 +102,10 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct_u_l_i_s_1_1_f_spec.html">ULIS::FSpec</a> ULIS::FSpecContext::BlockInfo </td>
+          <td class="memname"><a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a> ULIS::FSpecContext::BlockSpecAtIndex </td>
           <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>i</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_u_l_i_s.html#ae9fb8c6d16567204d482b9b1189a305b">uint32</a>&#160;</td>
+          <td class="paramname"><em>iIndex</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -114,10 +116,19 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Query block specification object. @detail Get block <a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a> specification object at index iIndex from registry. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iIndex</td><td>The index to gather from the type registry. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a> object representing the specification information for a given block type. </dd></dl>
+
 </div>
 </div>
-<a id="a8188ec896f067a28926476f9320fd61f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8188ec896f067a28926476f9320fd61f">&#9670;&nbsp;</a></span>BlockSpec()</h2>
+<a id="a5f72691e7e172251c917d60fab08c4dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f72691e7e172251c917d60fab08c4dc">&#9670;&nbsp;</a></span>BlockSpecFromHash()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -126,10 +137,10 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct_u_l_i_s_1_1_f_spec.html">ULIS::FSpec</a> ULIS::FSpecContext::BlockSpec </td>
+          <td class="memname"><a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a> ULIS::FSpecContext::BlockSpecFromHash </td>
           <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>i</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_u_l_i_s.html#ae9fb8c6d16567204d482b9b1189a305b">uint32</a>&#160;</td>
+          <td class="paramname"><em>iHash</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -139,6 +150,15 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Query block specification object. @detail Get block <a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a> specification object with the provided hash. If the hash doesn't match any existing type, a default <a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a> is returned. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iHash</td><td>The hash to query. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_u_l_i_s_1_1_f_spec.html">FSpec</a> object representing the specification information for a given block type. </dd></dl>
 
 </div>
 </div>
@@ -189,6 +209,9 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Print all specs for all existing block types to std out. </p>
+<p>Print short specs ( hash and string ) for all existing block types to std out. </p>
 
 </div>
 </div>

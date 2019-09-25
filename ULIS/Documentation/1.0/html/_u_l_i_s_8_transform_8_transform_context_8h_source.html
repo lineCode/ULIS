@@ -90,29 +90,53 @@ $(function() {
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_transform_8_block_transformer_8h.html">ULIS/Transform/ULIS.Transform.BlockTransformer.h</a>&quot;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_data_8_block_8h.html">ULIS/Data/ULIS.Data.Block.h</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_make_8_make_context_8h.html">ULIS/Make/ULIS.Make.MakeContext.h</a>&quot;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_u_l_i_s.html">ULIS</a> {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// TTransformContext</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">class </span>TTransformContext</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">template</span>&lt; u<span class="keywordtype">int</span>32 _SH &gt;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_u_l_i_s_1_1_t_transform_context.html#a839e50e207bbf63b411b5efe86a0e5a6">ConvertTypeAndLayoutInto</a>( <span class="keyword">const</span> TBlock&lt; _SH &gt;* iBlock, <span class="keyword">const</span> FPerformanceOptions&amp; iPerformanceOptions= FPerformanceOptions() )</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="class_u_l_i_s_1_1_t_transform_context.html">   29</a></span>&#160;    }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;} <span class="comment">// namespace ULIS</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_maths_8_geometry_8h.html">ULIS/Maths/ULIS.Maths.Geometry.h</a>&quot;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_u_l_i_s_8_maths_8_utility_8h.html">ULIS/Maths/ULIS.Maths.Utility.h</a>&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;glm/matrix.hpp&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_u_l_i_s.html">ULIS</a> {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// TTransformContext</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">class </span>TTransformContext</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">template</span>&lt; u<span class="keywordtype">int</span>32 _SH &gt;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">static</span>  <span class="keywordtype">void</span>  <a class="code" href="class_u_l_i_s_1_1_t_transform_context.html#adc722c95d7226d2bc7e86f3110576dd2">TransformBlockInto</a>( <span class="keyword">const</span> TBlock&lt; _SH &gt;* iSrc, TBlock&lt; _SH &gt;* iDst, <span class="keyword">const</span>  glm::mat3&amp; iMat, <span class="keyword">const</span> FPerformanceOptions&amp; iPerformanceOptions = FPerformanceOptions() )</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    {</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="class_u_l_i_s_1_1_t_transform_context.html">   32</a></span>&#160;        <span class="comment">// Bake Bounding Box for Block</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="struct_u_l_i_s_1_1_f_transform_bounding_box.html">FTransformBoundingBox</a> aabb( 0, 0, iSrc-&gt;Width(), iSrc-&gt;Height() );</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="comment">// Transform Bounding Box with Transform to compute the result size in advance</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        aabb.<a class="code" href="struct_u_l_i_s_1_1_f_transform_bounding_box.html#a9cef1d32e7a9b741fb46fb1bea122133">Transform</a>( imat );</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="comment">// Bake the translation Matrix to fit the result in positive range, based on computed AABB</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        glm::mat3 positiveRangeFittingTranslation = glm::translate( glm::identity&lt; glm::mat3 &gt;(), glm::vec2( -aabb.x1, -aabb.y1 ) );</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="comment">// Compute result transform: input transform composed with fit-translation</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="comment">// order is t * imat because imat happens first, t happens second</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        glm::mat3 transform = positiveRangeFittingTranslation * iMat;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="struct_u_l_i_s_1_1_f_rect.html">FRect</a> result_bb( 0, 0, aabb.Width(), aabb.Height() );</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="class_u_l_i_s_1_1_t_transform_context.html#adc722c95d7226d2bc7e86f3110576dd2">   43</a></span>&#160;        <span class="keywordflow">if</span>( result_bb.Area() &lt;= 0 )</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <a class="code" href="_u_l_i_s_8_config_8h.html#a96a4fe88d1efc04f4eeac6e7585c08c0">ULIS_CRASH_CHECK</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        glm::mat3 inverseTransform = glm::inverse( transform );</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;} <span class="comment">// namespace ULIS</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="astruct_u_l_i_s_1_1_f_transform_bounding_box_html_a9cef1d32e7a9b741fb46fb1bea122133"><div class="ttname"><a href="struct_u_l_i_s_1_1_f_transform_bounding_box.html#a9cef1d32e7a9b741fb46fb1bea122133">ULIS::FTransformBoundingBox::Transform</a></div><div class="ttdeci">void Transform(const glm::mat3 &amp;mat)</div><div class="ttdef"><b>Definition:</b> ULIS.Maths.Geometry.h:220</div></div>
+<div class="ttc" id="aclass_u_l_i_s_1_1_t_transform_context_html_adc722c95d7226d2bc7e86f3110576dd2"><div class="ttname"><a href="class_u_l_i_s_1_1_t_transform_context.html#adc722c95d7226d2bc7e86f3110576dd2">ULIS::TTransformContext::TransformBlockInto</a></div><div class="ttdeci">static void TransformBlockInto(const TBlock&lt; _SH &gt; *iSrc, TBlock&lt; _SH &gt; *iDst, const glm::mat3 &amp;iMat, const FPerformanceOptions &amp;iPerformanceOptions=FPerformanceOptions())</div><div class="ttdef"><b>Definition:</b> ULIS.Transform.TransformContext.h:43</div></div>
+<div class="ttc" id="a_u_l_i_s_8_maths_8_geometry_8h_html"><div class="ttname"><a href="_u_l_i_s_8_maths_8_geometry_8h.html">ULIS.Maths.Geometry.h</a></div></div>
 <div class="ttc" id="a_u_l_i_s_8_base_8_performance_options_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_performance_options_8h.html">ULIS.Base.PerformanceOptions.h</a></div><div class="ttdoc">This file provides the definition for the FPerfStart struct.</div></div>
 <div class="ttc" id="anamespace_u_l_i_s_html"><div class="ttname"><a href="namespace_u_l_i_s.html">ULIS</a></div><div class="ttdef"><b>Definition:</b> ULIS.Base.AlignedMemory.h:13</div></div>
 <div class="ttc" id="a_u_l_i_s_8_make_8_make_context_8h_html"><div class="ttname"><a href="_u_l_i_s_8_make_8_make_context_8h.html">ULIS.Make.MakeContext.h</a></div></div>
-<div class="ttc" id="aclass_u_l_i_s_1_1_t_transform_context_html_a839e50e207bbf63b411b5efe86a0e5a6"><div class="ttname"><a href="class_u_l_i_s_1_1_t_transform_context.html#a839e50e207bbf63b411b5efe86a0e5a6">ULIS::TTransformContext::ConvertTypeAndLayoutInto</a></div><div class="ttdeci">static void ConvertTypeAndLayoutInto(const TBlock&lt; _SH &gt; *iBlock, const FPerformanceOptions &amp;iPerformanceOptions=FPerformanceOptions())</div><div class="ttdef"><b>Definition:</b> ULIS.Transform.TransformContext.h:40</div></div>
+<div class="ttc" id="a_u_l_i_s_8_config_8h_html_a96a4fe88d1efc04f4eeac6e7585c08c0"><div class="ttname"><a href="_u_l_i_s_8_config_8h.html#a96a4fe88d1efc04f4eeac6e7585c08c0">ULIS_CRASH_CHECK</a></div><div class="ttdeci">#define ULIS_CRASH_CHECK</div><div class="ttdef"><b>Definition:</b> ULIS.Config.h:101</div></div>
 <div class="ttc" id="a_u_l_i_s_8_data_8_block_8h_html"><div class="ttname"><a href="_u_l_i_s_8_data_8_block_8h.html">ULIS.Data.Block.h</a></div></div>
 <div class="ttc" id="a_u_l_i_s_8_base_8_base_types_8h_html"><div class="ttname"><a href="_u_l_i_s_8_base_8_base_types_8h.html">ULIS.Base.BaseTypes.h</a></div><div class="ttdoc">This file provides some usefull shorthand typedefs.</div></div>
+<div class="ttc" id="astruct_u_l_i_s_1_1_f_rect_html"><div class="ttname"><a href="struct_u_l_i_s_1_1_f_rect.html">ULIS::FRect</a></div><div class="ttdef"><b>Definition:</b> ULIS.Maths.Geometry.h:25</div></div>
 <div class="ttc" id="a_u_l_i_s_8_transform_8_block_transformer_8h_html"><div class="ttname"><a href="_u_l_i_s_8_transform_8_block_transformer_8h.html">ULIS.Transform.BlockTransformer.h</a></div></div>
+<div class="ttc" id="astruct_u_l_i_s_1_1_f_transform_bounding_box_html"><div class="ttname"><a href="struct_u_l_i_s_1_1_f_transform_bounding_box.html">ULIS::FTransformBoundingBox</a></div><div class="ttdef"><b>Definition:</b> ULIS.Maths.Geometry.h:158</div></div>
+<div class="ttc" id="a_u_l_i_s_8_maths_8_utility_8h_html"><div class="ttname"><a href="_u_l_i_s_8_maths_8_utility_8h.html">ULIS.Maths.Utility.h</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

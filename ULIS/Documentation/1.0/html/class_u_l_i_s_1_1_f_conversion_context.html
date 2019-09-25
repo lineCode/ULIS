@@ -83,7 +83,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:af678b2c301c7b9708273ee23b0719b64"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_conversion_context.html#af678b2c301c7b9708273ee23b0719b64">ConvTypeAndLayoutInto</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockSrc, <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockDst, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
 <tr class="separator:af678b2c301c7b9708273ee23b0719b64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_f_conversion_context.html" title="The FConversionContext class provides a context for Converting layout, types and colorspaces on Block...">FConversionContext</a> class provides a context for Converting layout, types and colorspaces on Blocks. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="af678b2c301c7b9708273ee23b0719b64"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af678b2c301c7b9708273ee23b0719b64">&#9670;&nbsp;</a></span>ConvTypeAndLayoutInto()</h2>
 
@@ -123,6 +125,20 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Convert a block from source format and layout to the destination format and layout. </p>
+<p>The source and destination can be any layout and type but they must share the same underlying color model.</p><ul>
+<li>Warning ! Source and destination must share the same width and height.</li>
+<li>If the source and destination are the exact same type and layout, a copy of source into destination is performed instead. <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iBlockSrc</td><td>The pointer to the source <em><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a></em>, const, it will not be modified. </td></tr>
+    <tr><td class="paramname">iBlockDst</td><td>The pointer to the destination <em><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a></em>, it will receive the conversion result. </td></tr>
+    <tr><td class="paramname">iPerformanceOptions</td><td>The Performance Options for this operation, see <em><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html" title="The FPerformanceOptionsstruct is user for holding performance options.">FPerformanceOptions</a></em>. </td></tr>
+  </table>
+  </dd>
+</dl>
+</li>
+</ul>
 
 </div>
 </div>

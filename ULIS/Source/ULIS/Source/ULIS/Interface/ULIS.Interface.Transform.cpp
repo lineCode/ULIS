@@ -1,28 +1,25 @@
-
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Interface.Conv.cpp
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Interface.Spec.h
+* @author   Clement Berthaud
+* @brief    This file provides the definitions for the FTransformContext class.
 */
-
 #include "ULIS/Interface/ULIS.Interface.Transform.h"
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
-#include "ULIS/Transform/ULIS.Transform.TransformContext.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
-
-#include <glm/vec2.hpp>
+#include "ULIS/Transform/ULIS.Transform.TransformContext.h"
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/vec2.hpp>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FTransformContext
 //--------------------------------------------------------------------------------------
-//---------------------------------- Public API, static functions for matrix computation
+//------------------------------------------------------------- Public Static Matrix API
 //static
 glm::mat3
 FTransformContext::GetIdentityMatrix()
@@ -62,11 +59,25 @@ FTransformContext::GetShearMatrix( float iX, float iY )
 
 
 //--------------------------------------------------------------------------------------
-//------------------------------------ Public API, static functions for image transforms
+//-------------------------------------------------------------------- Public Static API
 //static
 IBlock*
-FTransformContext::GetTransformed( const IBlock* iBlockSrc, const  glm::mat3& imat, const FPerformanceOptions& iPerformanceOptions)
+FTransformContext::GetTransformed( const IBlock* iBlockSrc
+                                 , const  glm::mat3& iMat
+                                 , const FPerformanceOptions& iPerformanceOptions )
 {
+    switch( iBlockSrc->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                            \
+            case ULIS_REG[ n ]:                                                                                                             \
+            {                                                                                                                               \
+                return  TTransformContext::GetTransformedBlock< ULIS_REG[ n ] >( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockSrc                \
+                                                                               , iMat, iPerformanceOptions );                               \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+
     return  nullptr;
 }
 

@@ -1,34 +1,123 @@
-/*************************************************************************
+/**
 *
 *   ULIS
 *__________________
 *
-* ULIS.Interface.Make.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
+* @file     ULIS.Interface.Make.h
+* @author   Clement Berthaud
+* @brief    This file provides the declarations for the FMakeContext class.
 */
-
 #pragma once
-
+#include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
+#include <string>
 
-namespace ULIS { class IBlock; }
+ULIS_CLASS_FORWARD_DECLARATION( IBlock )
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// FMakeContext
+/// @class      FMakeContext
+/// @brief      The FMakeContext class provides a context for all Copy and Make operations on Blocks.
 class FMakeContext
 {
 public:
-    static ::ULIS::IBlock* MakeBlock( int width, int height, uint32_t ID, const std::string& iProfileTag = "default" );
-    static ::ULIS::IBlock* MakeBlockFromExternalData( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag = "default" );
-    static ::ULIS::IBlock* MakeBlockFromDataPerformCopy( int width, int height, uint8* iData, uint32_t ID, const std::string& iProfileTag = "default", const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
-    static ::ULIS::IBlock* CopyBlock( ::ULIS::IBlock* iBlock, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
-    static void CopyBlockInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
-    static ::ULIS::IBlock* CopyBlockRect( ::ULIS::IBlock* iBlock, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
-    static void CopyBlockRectInto( ::ULIS::IBlock* iSrc, ::ULIS::IBlock* iDst, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------- Public Static API
+    /// @fn         static  IBlock*  MakeBlock( int iWidth, int iHeight, uint32_t iFormat, const std::string& iProfileTag = "default" )
+    /// @brief      Make a block with dynamic type deduction at runtime.
+    /// @details    Use an existing hash from profile registry or available from the ULIS::Format namespace for the iFormat param.
+    /// @param      iWidth          The width of the block to allocate.
+    /// @param      iHeight         The height of the block to allocate.
+    /// @param      iFormat         The hash of the type.
+    /// @param      iProfileTag     The name of the requested profile, leave default if unneeded.
+    /// @return     A new allocated IBlock with specified format, width, height and profile.
+    static  IBlock*  MakeBlock( int iWidth
+                              , int iHeight
+                              , uint32_t iFormat
+                              , const std::string& iProfileTag = "default" );
+
+
+    /// @fn         static  IBlock*  MakeBlockFromExternalData( int iWidth, int iHeight, uint8* iData, uint32_t iFormat, const std::string& iProfileTag = "default" )
+    /// @brief      Make a block with dynamic type deduction at runtime, from existing raw data.
+    /// @details    The block takes doesn't take ownership of the raw data, so the data shouldn't be deleted during the block lifetime.
+    /// @param      iWidth          The width of the block to allocate.
+    /// @param      iHeight         The height of the block to allocate.
+    /// @param      iData           The external data to read from.
+    /// @param      iFormat         The hash of the type.
+    /// @param      iProfileTag     The name of the requested profile, leave default if unneeded.
+    /// @return     A new allocated IBlock with specified format, width, height and profile, with the specified data.
+    static  IBlock*  MakeBlockFromExternalData( int iWidth
+                                              , int iHeight
+                                              , uint8* iData
+                                              , uint32_t iFormat
+                                              , const std::string& iProfileTag = "default" );
+
+
+    /// @fn         static  IBlock*  MakeBlockFromDataPerformCopy( int iWidth, int iHeight, uint8* iData, uint32_t iFormat, const std::string& iProfileTag = "default", const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    /// @brief      Make a block with dynamic type deduction at runtime, from existing raw data.
+    /// @details    The block performs a full copy of the data, so the data can be safely destroyed afterwards.
+    /// @param      iWidth                  The width of the block to allocate.
+    /// @param      iHeight                 The height of the block to allocate.
+    /// @param      iData                   The external data to copy from.
+    /// @param      iFormat                 The hash of the type.
+    /// @param      iProfileTag             The name of the requested profile, leave default if unneeded.
+    /// @param      iPerformanceOptions     The performance preferences.
+    /// @return     A new allocated IBlock with specified format, width, height and profile, with the specified data.
+    static  IBlock*  MakeBlockFromDataPerformCopy( int iWidth
+                                                 , int iHeight
+                                                 , uint8* iData
+                                                 , uint32_t iFormat
+                                                 , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
+                                                 , const std::string& iProfileTag = "default" );
+
+
+    /// @fn         static  IBlock*  CopyBlock( IBlock* iBlock, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    /// @brief      Make a copy of the input block with same format, same layout, same profile.
+    /// @details    A new block with same format is allocated, then a copy is performed.
+    /// @param      iBlock                  The source.
+    /// @param      iPerformanceOptions     The performance preferences.
+    /// @return     A new allocated IBlock copied from the source.
+    static  IBlock*  CopyBlock( IBlock* iBlock
+                              , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() );
+
+
+    /// @fn         static  void  CopyBlockInto( IBlock* iSrc, IBlock* iDst, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    /// @brief      Make a copy of the source block into the destination block.
+    /// @details    A copy is performed into the destination block. Blocks should have the same format and size.
+    /// @param      iSrc                    The source.
+    /// @param      iDst                    The destination.
+    /// @param      iPerformanceOptions     The performance preferences.
+    static  void  CopyBlockInto( IBlock* iSrc
+                               , IBlock* iDst
+                               , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() );
+
+
+    /// @fn         static  IBlock*  CopyBlockRect( IBlock* iBlock, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    /// @brief      Make a copy of the input block rect with same format, same layout, same profile.
+    /// @details    A new block with same format is allocated, then a copy is performed.
+    /// @param      iBlock                  The source.
+    /// @param      iRect                   The area to copy.
+    /// @param      iPerformanceOptions     The performance preferences.
+    /// @return     A new allocated IBlock copied from the source.
+    static  IBlock*  CopyBlockRect( IBlock* iBlock
+                                  , const FRect& iRect
+                                  , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() );
+
+
+    /// @fn         static  void  CopyBlockRectInto( IBlock* iSrc, IBlock* iDst, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    /// @brief      Make a copy of the source block into the destination block, copying the specified rect only.
+    /// @details    A copy is performed into the destination block.
+    /// @param      iSrc                    The source.
+    /// @param      iDst                    The destination.
+    /// @param      iRect                   The area to copy.
+    /// @param      iPerformanceOptions     The performance preferences.
+    static  void  CopyBlockRectInto( IBlock* iSrc
+                                   , IBlock* iDst
+                                   , const FRect& iRect
+                                   , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() );
+
 };
 
 } // namespace ULIS
