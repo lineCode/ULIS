@@ -99,11 +99,11 @@ Macros</h2></td></tr>
 <tr class="memitem:ac9171f60c54f0b827bcbdf808da8d050"><td class="memItemLeft" align="right" valign="top"><a id="ac9171f60c54f0b827bcbdf808da8d050"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_CREATE_REG</b>(iName,  i)&#160;&#160;&#160;namespace generated { constexpr ::<a class="el" href="struct_u_l_i_s_1_1_t_registry.html">ULIS::TRegistry</a>&lt; 1 &gt; ULIS_CAT( iName,  __COUNTER__ ) = { i }; }</td></tr>
 <tr class="separator:ac9171f60c54f0b827bcbdf808da8d050"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f92a0e656e667f4d465430e07fe960f"><td class="memItemLeft" align="right" valign="top"><a id="a6f92a0e656e667f4d465430e07fe960f"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_APPEND_REG_IMPL</b>(iName,  i,  c)&#160;&#160;&#160;namespace generated { constexpr auto ULIS_CAT( iName,  c ) = ULIS_CAT( iName, ULIS_PREVIOUS( c ) ).PushBack( i ); }</td></tr>
-<tr class="separator:a6f92a0e656e667f4d465430e07fe960f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc6cd82a91cc016b1b70374e935f47ce"><td class="memItemLeft" align="right" valign="top"><a id="acc6cd82a91cc016b1b70374e935f47ce"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_APPEND_REG_IMP</b>(iName,  i,  c)&#160;&#160;&#160;namespace generated { constexpr auto ULIS_CAT( iName,  c ) = ULIS_CAT( iName, ULIS_PREVIOUS( c ) ).PushBack( i ); }</td></tr>
+<tr class="separator:acc6cd82a91cc016b1b70374e935f47ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38314d4709badf550fb98dd1207c6b2f"><td class="memItemLeft" align="right" valign="top"><a id="a38314d4709badf550fb98dd1207c6b2f"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_APPEND_REG</b>(iName,  i)&#160;&#160;&#160;ULIS_APPEND_REG_IMPL( iName, i, __COUNTER__ )</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_APPEND_REG</b>(iName,  i)&#160;&#160;&#160;ULIS_APPEND_REG_IMP( iName, i, __COUNTER__ )</td></tr>
 <tr class="separator:a38314d4709badf550fb98dd1207c6b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4e664c9dff7a3ac25f27fc30efa9758"><td class="memItemLeft" align="right" valign="top"><a id="ae4e664c9dff7a3ac25f27fc30efa9758"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ULIS_ASSIGN_REG</b>(iName)&#160;&#160;&#160;generated:: ULIS_CAT( iName, ULIS_PREVIOUS( __COUNTER__ ) )</td></tr>

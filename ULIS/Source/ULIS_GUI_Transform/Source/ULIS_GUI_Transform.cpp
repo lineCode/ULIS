@@ -24,7 +24,6 @@ int main( int argc, char *argv[] )
     glm::mat3 transform = ::ULIS::FTransformContext::GetShearMatrix( 0.5, 0 );
     ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform );
 
-
     QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
     QWidget* w      = new QWidget();

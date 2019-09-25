@@ -19,9 +19,10 @@ var searchData=
   ['getscalematrix_228',['GetScaleMatrix',['../class_u_l_i_s_1_1_f_transform_context.html#a77e74c2805ee17c7efc8540f4a51cdff',1,'ULIS::FTransformContext']]],
   ['getshearmatrix_229',['GetShearMatrix',['../class_u_l_i_s_1_1_f_transform_context.html#a15aa6bf3454c8fde396d7d2cecc13171',1,'ULIS::FTransformContext']]],
   ['gettransformed_230',['GetTransformed',['../class_u_l_i_s_1_1_f_transform_context.html#a86bedb910e1fdeb4d9a5e611f5bd3850',1,'ULIS::FTransformContext']]],
-  ['gettranslationmatrix_231',['GetTranslationMatrix',['../class_u_l_i_s_1_1_f_transform_context.html#a5b8f7982567295517bb996ecc030275c',1,'ULIS::FTransformContext']]],
-  ['green_232',['Green',['../class_u_l_i_s_1_1_c_color.html#aa2a595f2e0dc17cee401628ed1de223a',1,'ULIS::CColor']]],
-  ['greenf_233',['GreenF',['../class_u_l_i_s_1_1_c_color.html#abce59724af64068c7f09534708dec102',1,'ULIS::CColor']]],
-  ['grey_234',['Grey',['../class_u_l_i_s_1_1_c_color.html#a48fe92d7e9cc2c2da33056178c1d98e2',1,'ULIS::CColor::Grey() const'],['../class_u_l_i_s_1_1_c_color.html#a7854466ebf25cf3dca43fe5308973216',1,'ULIS::CColor::grey()']]],
-  ['greyf_235',['GreyF',['../class_u_l_i_s_1_1_c_color.html#a8e22c0b4827ed48d11e329681467ca3e',1,'ULIS::CColor']]]
+  ['gettransformedblock_231',['GetTransformedBlock',['../class_u_l_i_s_1_1_t_transform_context.html#afad1c2b59fa1e7601e1efc6dbfe66640',1,'ULIS::TTransformContext']]],
+  ['gettranslationmatrix_232',['GetTranslationMatrix',['../class_u_l_i_s_1_1_f_transform_context.html#a5b8f7982567295517bb996ecc030275c',1,'ULIS::FTransformContext']]],
+  ['green_233',['Green',['../class_u_l_i_s_1_1_c_color.html#aa2a595f2e0dc17cee401628ed1de223a',1,'ULIS::CColor']]],
+  ['greenf_234',['GreenF',['../class_u_l_i_s_1_1_c_color.html#abce59724af64068c7f09534708dec102',1,'ULIS::CColor']]],
+  ['grey_235',['Grey',['../class_u_l_i_s_1_1_c_color.html#a48fe92d7e9cc2c2da33056178c1d98e2',1,'ULIS::CColor::Grey() const'],['../class_u_l_i_s_1_1_c_color.html#a7854466ebf25cf3dca43fe5308973216',1,'ULIS::CColor::grey()']]],
+  ['greyf_236',['GreyF',['../class_u_l_i_s_1_1_c_color.html#a8e22c0b4827ed48d11e329681467ca3e',1,'ULIS::CColor']]]
 ];
