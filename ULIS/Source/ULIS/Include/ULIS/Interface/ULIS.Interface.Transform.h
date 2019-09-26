@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* @file     ULIS.Interface.Spec.h
+* @file     ULIS.Interface.Transform.h
 * @author   Clement Berthaud
 * @brief    This file provides the declarations for the FTransformContext class.
 */

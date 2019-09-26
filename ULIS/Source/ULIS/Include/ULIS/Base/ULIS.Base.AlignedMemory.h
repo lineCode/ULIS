@@ -28,8 +28,8 @@ public:
     /// @brief      Default Constructor.
     /// @details    Initializes all members to 0 or nullmPtr.
     TAlignedMemory()
-        : mRaw              ( nullmPtr  )
-        , mPtr              ( nullmPtr  )
+        : mRaw              ( nullptr   )
+        , mPtr              ( nullptr   )
         , mAllocatedSize    ( 0         )
         , mPadLeft          ( 0         )
         , mPadRight         ( 0         )

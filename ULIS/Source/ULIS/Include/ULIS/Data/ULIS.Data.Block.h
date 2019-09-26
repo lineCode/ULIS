@@ -94,7 +94,8 @@ public:
 
     ~TBlockData()
     {
-        if( owned && data ) delete [] data;
+        if( owned && data )
+            delete [] data;
         profile = nullptr;
     }
 

@@ -23,32 +23,41 @@ template< uint32 _SH >
 class TBlockTransformer_Default_ScanLine
 {
 public:
-    static void Run( const TBlock< _SH >*   iSrcBlock
+    static void ProcessScanLine( const TBlock< _SH >*   iSrcBlock
                    , TBlock< _SH >*         iDstBlock
                    , const glm::mat3&       iInverseTransform
                    , const int              iLine
                    , const int              iX1
                    , const int              iX2 )
     {
-        ULIS_CRASH_TODO;
+        const int maxx = iSrcBlock->Width();
+        const int maxy = iSrcBlock->Height();
+        const typename TBlock< _SH >::tPixelValue fallback = typename TBlock< _SH >::tPixelValue();
+        for( int x = iX1; x < iX2; ++x )
+            {
+                glm::vec3 point_in_dst( x, iLine, 1.f );
+                glm::vec2 point_in_src = ( iInverseTransform * point_in_dst );
+                int src_x = floor( point_in_src.x );
+                int src_y = floor( point_in_src.y );
+                if( src_x < 0 || src_y < 0 || src_x >= maxx || src_y >= maxy )
+                    iDstBlock->SetPixelValue( x, iLine, fallback );
+                else
+                    iDstBlock->SetPixelProxy( x, iLine, iSrcBlock->PixelProxy( src_x, src_y ) );
+            }
     }
 
     static void Run( const TBlock< _SH >*        iSrcBlock
                    , TBlock< _SH >*              iDstBlock
                    , const glm::mat3&            iInverseTransform )
     {
-        ULIS_CRASH_TODO;
-        /*
-        const int x1 = iROI.x;
-        const int y1 = iROI.y;
-        const int x2 = x1 + iROI.w;
-        const int y2 = y1 + iROI.h;
+        const int x1 = 0;
+        const int y1 = 0;
+        const int x2 = iDstBlock->Width();
+        const int y2 = iDstBlock->Height();
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( ProcessScanLine, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift );
-
+            global_pool.ScheduleJob( ProcessScanLine, iSrcBlock, iDstBlock, iInverseTransform, y, x1, x2 );
         global_pool.WaitForCompletion();
-        */
     }
 };
 
@@ -61,28 +70,27 @@ class TBlockTransformer_Default_MonoThread
 public:
     static void Run( const TBlock< _SH >*        iSrcBlock
                    , TBlock< _SH >*              iDstBlock
-                   , const glm::mat3&            iInverseTransform
-                   , const glm::vec2&            iShift )
+                   , const glm::mat3&            iInverseTransform )
     {
-        const int x1 = -iShift.x;
-        const int y1 = -iShift.y;
-        const int x2 = iDstBlock->Width() + x1;
-        const int y2 = iDstBlock->Height() + y1;
+        const int x1 = 0;
+        const int y1 = 0;
+        const int x2 = iDstBlock->Width();
+        const int y2 = iDstBlock->Height();
         const int maxx = iSrcBlock->Width();
         const int maxy = iSrcBlock->Height();
-        TBlock< _SH >::tPixelValue fallback = TBlock< _SH >::tPixelValue();
+        const typename TBlock< _SH >::tPixelValue fallback = typename TBlock< _SH >::tPixelValue();
         for( int y = y1; y < y2; ++y )
         {
             for( int x = x1; x < x2; ++x )
             {
                 glm::vec3 point_in_dst( x, y, 1.f );
                 glm::vec2 point_in_src = ( iInverseTransform * point_in_dst );
-                int src_x = point_in_src.x;
-                int src_y = point_in_src.y;
+                int src_x = floor( point_in_src.x );
+                int src_y = floor( point_in_src.y );
                 if( src_x < 0 || src_y < 0 || src_x >= maxx || src_y >= maxy )
-                    iDstBlock->SetPixelValue( x + iShift.x, y + iShift.y, fallback );
+                    iDstBlock->SetPixelValue( x, y, fallback );
                 else
-                    iDstBlock->SetPixelProxy( x + iShift.x, y + iShift.y, iSrcBlock->PixelProxy( src_x, src_y ) );
+                    iDstBlock->SetPixelProxy( x, y, iSrcBlock->PixelProxy( src_x, src_y ) );
             }
         }
     }
@@ -101,8 +109,6 @@ public:
                    , const glm::vec2&            iShift
                    , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockTransformer_Default_MonoThread< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iShift );
-        /*
         if( iPerformanceOptions.desired_workers > 1 )
         {
             TBlockTransformer_Default_ScanLine< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform );
@@ -111,7 +117,6 @@ public:
         {
             TBlockTransformer_Default_MonoThread< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform );
         }
-        */
     }
 };
 

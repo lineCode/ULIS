@@ -112,6 +112,8 @@ class TBlockTypeConverter
 public:
     static inline void Run( const TBlock< _SHSrc >* iBlockSrc, TBlock< _SHDst >* iBlockDst, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
+        static_assert( true, "Cannot convert type in different models" );
+        assert( true );
     }
 };
 

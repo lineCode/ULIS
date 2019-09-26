@@ -18,10 +18,18 @@
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
-    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 500, 500, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::FClearFillContext::Fill( blockA, ::ULIS::CColor( 255, 0, 0 ) );
+    float size = 16;
+    float scale = 50;
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( size, size, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::FClearFillContext::Clear( blockA );
 
-    glm::mat3 transform = ::ULIS::FTransformContext::GetShearMatrix( 0.5, 0 );
+    for( int y = 0; y < size; ++y ) {
+        for( int x = 0; x < size; ++x ) {
+            blockA->SetPixelColor( x, y, ::ULIS::CColor::FromHSVF( float( x / size ), 1.f, float( y / size ), 1.f ) );
+        }
+    }
+
+    glm::mat3 transform = ::ULIS::FTransformContext::GetScaleMatrix( scale, scale );
     ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform );
 
     QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

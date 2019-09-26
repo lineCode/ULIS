@@ -84,6 +84,12 @@ struct FMath
       return iValue < 0 ? (T)floor( iValue ) : (T)ceil( iValue );
     }
 
+    template< typename T >
+    static  inline T RoundTowardsZero( T iValue )
+    {
+      return iValue < 0 ? (T)ceil( iValue ) : (T)floor( iValue );
+    }
+
 }; // struct FMath
 
 
