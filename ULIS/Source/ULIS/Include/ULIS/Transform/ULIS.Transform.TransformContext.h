@@ -19,6 +19,8 @@
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
 #include "ULIS/Maths/ULIS.Maths.Utility.h"
 #include <glm/matrix.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 namespace ULIS {
 /////////////////////////////////////////////////////

@@ -8,6 +8,8 @@
 * Please refer to LICENSE.md
 */
 
+#include "math.h"
+
 #pragma once
 
 # define PI           3.14159265358979323846  /* pi */
