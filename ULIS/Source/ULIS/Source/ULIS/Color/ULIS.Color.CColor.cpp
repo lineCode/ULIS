@@ -218,7 +218,7 @@ CColor::ToHSL()  const
 
     l = ( deltaAdd ) / 2.0;
 
-    if ( delta < FMath::epsilon ){
+    if ( delta < FMath::kEpsilonf ){
         h = 0.0;
         s = 0.0;
     }
@@ -230,9 +230,9 @@ CColor::ToHSL()  const
         float deltaG = ( ( ( cmax - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
         float deltaB = ( ( ( cmax - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
 
-             if( fabs( r - cmax ) < FMath::epsilon )   h = deltaB - deltaG;
-        else if( fabs( g - cmax ) < FMath::epsilon )   h = (1.0 / 3.0) + deltaR - deltaB;
-        else if( fabs( b - cmax ) < FMath::epsilon )   h = (2.0 / 3.0) + deltaG - deltaR;
+             if( fabs( r - cmax ) < FMath::kEpsilonf )   h = deltaB - deltaG;
+        else if( fabs( g - cmax ) < FMath::kEpsilonf )   h = (1.0 / 3.0) + deltaR - deltaB;
+        else if( fabs( b - cmax ) < FMath::kEpsilonf )   h = (2.0 / 3.0) + deltaG - deltaR;
 
         if( h < 0.0 ) h += 1.0;
         if( h > 1.0 ) h -= 1.0;
@@ -265,7 +265,7 @@ CColor::ToHSV()  const
 
     v = cmax;
 
-    if ( delta < FMath::epsilon ){
+    if ( delta < FMath::kEpsilonf ){
         h = 0.0;
         s = 0.0;
     }
@@ -277,9 +277,9 @@ CColor::ToHSV()  const
         float deltaG = ( ( ( cmax - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
         float deltaB = ( ( ( cmax - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
 
-        if( fabs( r - cmax ) < FMath::epsilon )        h = deltaB - deltaG;
-        else if( fabs( g - cmax ) < FMath::epsilon )   h = (1.0 / 3.0) + deltaR - deltaB;
-        else if( fabs( b - cmax ) < FMath::epsilon )   h = (2.0 / 3.0) + deltaG - deltaR;
+        if( fabs( r - cmax ) < FMath::kEpsilonf )        h = deltaB - deltaG;
+        else if( fabs( g - cmax ) < FMath::kEpsilonf )   h = (1.0 / 3.0) + deltaR - deltaB;
+        else if( fabs( b - cmax ) < FMath::kEpsilonf )   h = (2.0 / 3.0) + deltaG - deltaR;
 
         if( h < 0.0 ) h += 1.0;
 

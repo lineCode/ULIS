@@ -627,7 +627,7 @@ public:
         int diff = iRadius - 1;
         while (y >= x) //We draw 8 octants
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (PI / 2) );
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (FMath::kPId / 2) );
             
             //If 0° is on top and we turn clockwise // Simple cases
             if( octantsToDraw[0] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
@@ -787,7 +787,7 @@ public:
 
             val.SetAlpha( MaxAlpha * alphaTop );
             
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (PI / 2) );
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (FMath::kPId / 2) );
             
             //If 0° is on top and we turn clockwise // Simple cases
             if( octantsToDraw[0] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
@@ -1002,7 +1002,7 @@ public:
         int diff = 5 - 4 * iRadius;
         while ( x <= y ) //We draw 8 octants
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (PI / 2) );
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (FMath::kPId / 2) );
             
             //If 0° is on top and we turn clockwise // Simple cases
             if( octantsToDraw[0] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
@@ -1154,7 +1154,7 @@ public:
 
             val.SetAlpha( MaxAlpha * alphaTop );
             
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (PI / 2) );
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg( std::acos( double(x) / double(iRadius) ) - (FMath::kPId / 2) );
             
             //If 0° is on top and we turn clockwise // Simple cases
             if( octantsToDraw[0] == 1 ) iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
@@ -1303,13 +1303,13 @@ public:
                                              , FPoint64* ptA
                                              , FPoint64* ptB )
     {
-        iRotationRadians = std::fmod( iRotationRadians, PI / 2); // We want ptA in the first quadrant, et ptB in the second. This enables it
+        iRotationRadians = std::fmod( iRotationRadians, FMath::kPId / 2); // We want ptA in the first quadrant, et ptB in the second. This enables it
         
         ptA->x = std::cos( iRotationRadians ) * iA;
         ptA->y = std::sin( iRotationRadians ) * iA;
         
-        ptB->x = std::cos( iRotationRadians + PI / 2 ) * iB;
-        ptB->y = std::sin( iRotationRadians + PI / 2 ) * iB;
+        ptB->x = std::cos( iRotationRadians + FMath::kPId / 2 ) * iB;
+        ptB->y = std::sin( iRotationRadians + FMath::kPId / 2 ) * iB;
     }
 
     

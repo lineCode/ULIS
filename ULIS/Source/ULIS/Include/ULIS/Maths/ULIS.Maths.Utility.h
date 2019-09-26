@@ -10,15 +10,16 @@
 #pragma once
 #include <cmath>
 
-# define PI           3.14159265358979323846  /* pi */
 
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FMath
 struct FMath
 {
-
-    static constexpr float epsilon = .000001;
+    // Do not change this value !
+    static constexpr float kEpsilonf = .000001;
+    static constexpr double FMath::kPId = 3.1415926535897932;
+    static constexpr float  kPIf = 3.14159265;
 
     template< typename T >
     static inline T Min( T iA, T iB ) {
@@ -52,12 +53,12 @@ struct FMath
     
     static inline double RadToDeg( double iRad )
     {
-        return ( iRad * 180 / PI );
+        return ( iRad * 180 / FMath::kPId );
     }
     
     static inline double DegToRad( double iDeg )
     {
-        return ( iDeg * PI / 180 );
+        return ( iDeg * FMath::kPId / 180 );
     }
     
     static inline int IntegerPartOfNumber( float iNumber )
