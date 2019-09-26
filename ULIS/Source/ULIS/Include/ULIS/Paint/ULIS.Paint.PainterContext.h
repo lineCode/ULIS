@@ -1337,8 +1337,8 @@ public:
                                                            //               x  y
         std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
                                                            //                 [1]
-        storagePoints[0].push_back( iCenter.x );          // In order to only pass storagePoints in parameter to InternalDrawQuadRationalBezierSeg
-        storagePoints[0].push_back( iCenter.y );          // we store the center (useful in this function) at index 0 (we'll know it's there)
+        storagePoints[0].push_back( iCenter.x );           // In order to only pass storagePoints in parameter to InternalDrawQuadRationalBezierSeg
+        storagePoints[0].push_back( iCenter.y );           // we store the center (useful in this function) at index 0 (we'll know it's there)
 
         
         int a = iA;
@@ -1380,7 +1380,7 @@ public:
         
         if( iFilled ) //We fill the ellipse by drawing vertical lines
         {
-            //We delete the values we stored for the center position
+            //We delete the values we stored for the center position (two times pop_front)
             storagePoints[0].erase( storagePoints[0].begin() );
             storagePoints[0].erase( storagePoints[0].begin() );
 
