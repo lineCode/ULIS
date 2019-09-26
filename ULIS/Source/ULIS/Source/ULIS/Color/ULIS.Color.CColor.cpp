@@ -12,7 +12,6 @@
 #include "ULIS/Maths/ULIS.Maths.Utility.h"
 #include <cstdlib>
 #include <cmath>
-#include <math.h>
 
 namespace ULIS {
 /////////////////////////////////////////////////////

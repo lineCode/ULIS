@@ -2465,8 +2465,8 @@ public:
             err = dx+dy-xy;
             do
             {
-                cur = std::min( dx - xy, xy - dy );
-                ed = std::max( dx - xy, xy - dy );
+                cur = FMath::Min( dx - xy, xy - dy );
+                ed = FMath::Max( dx - xy, xy - dy );
                 ed += ( 2 * ed * cur * cur / (4.0 * ed * ed + cur * cur ) );
                 x1 = MaxAlpha * ( 1 - FMath::Abs( err - dx - dy + xy ) / ed );
                 f = (2 * err + dy) < 0;
