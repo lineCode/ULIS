@@ -9,6 +9,7 @@
 */
 
 #include "ULIS/Base/ULIS.Base.MD5.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////
 // Utility Macro
