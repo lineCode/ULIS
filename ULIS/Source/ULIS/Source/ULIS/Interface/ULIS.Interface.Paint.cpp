@@ -52,25 +52,6 @@ FPainterContext::DrawLineAA( IBlock* iBlock, const FPoint p0, const FPoint p1, c
     }
 }
 
-
-//static
-void
-FPainterContext::DrawGradientLine( IBlock* iBlock, const FPoint p0, const FPoint p1, const CColor& iColor1, const CColor& iColor2, const FPerformanceOptions& iPerformanceOptions, bool callInvalidCB )
-{
-    switch( iBlock->Id() )
-    {
-        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                                                   \
-            case ULIS_REG[ n ]:                                                                                                                                      \
-            {                                                                                                                                                                      \
-                TPainterContext< ULIS_REG[ n ] >::DrawLine( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock, p0, p1, iColor1, iPerformanceOptions, callInvalidCB );     \
-                break;                                                                                                                                                             \
-            }
-        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
-        #undef ULIS_REG_SWITCH_OP
-    }
-}
-
-
 //static
 void
 FPainterContext::DrawCircleAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool callInvalidCB )
