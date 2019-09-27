@@ -163,11 +163,11 @@ int main( int argc, char *argv[] )
     */
     
     
-    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 100, 200, 20, ::ULIS::CColor( 255, 0 ,0 ), true );
-    
-    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 750), 100, 200, 42, ::ULIS::CColor( 0, 0 ,255 ), true );
+    ::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 500), 300, 400, 30, ::ULIS::CColor( 255, 0 ,0 ), false );
 
-    ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ), true );
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 750), 100, 200, 42, ::ULIS::CColor( 0, 0 ,255 ), true );
+
+    //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ), true );
     
 
     //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 750), 200, 100, 0, ::ULIS::CColor( 255, 0 ,0 ) );
@@ -181,11 +181,11 @@ int main( int argc, char *argv[] )
     
     // Beziers
     
-    ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 500, 500 ), ::ULIS::FPoint( 1000, 250 ), ::ULIS::FPoint( 800, 100 ), 1.0, ::ULIS::CColor( 255, 0 ,0 ) );
+    //ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 500, 500 ), ::ULIS::FPoint( 1000, 250 ), ::ULIS::FPoint( 800, 100 ), 1.0, ::ULIS::CColor( 255, 0 ,0 ) );
     
-    ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 100, 200 ), ::ULIS::FPoint( 400, 50 ), ::ULIS::FPoint( 800, 700 ), 1.0, ::ULIS::CColor( 255, 255 ,0 ) );
+    //ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 100, 200 ), ::ULIS::FPoint( 400, 50 ), ::ULIS::FPoint( 800, 700 ), 1.0, ::ULIS::CColor( 255, 255 ,0 ) );
     
-    ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 200, 800 ), ::ULIS::FPoint( 50, 50 ), ::ULIS::FPoint( 500, 300 ), 1.0, ::ULIS::CColor( 0, 255 ,0 ) );
+    //ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 200, 800 ), ::ULIS::FPoint( 50, 50 ), ::ULIS::FPoint( 500, 300 ), 1.0, ::ULIS::CColor( 0, 255 ,0 ) );
     
 
     // Qt Windowing

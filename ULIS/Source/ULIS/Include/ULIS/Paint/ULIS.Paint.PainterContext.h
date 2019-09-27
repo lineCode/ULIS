@@ -1297,556 +1297,6 @@ public:
     
     // ---
     
-    static void InternalGetEllipseAxesPoints(  const int iA
-                                             , const int iB
-                                             , double iRotationRadians
-                                             , FPoint64* ptA
-                                             , FPoint64* ptB )
-    {
-        iRotationRadians = std::fmod( iRotationRadians, FMath::kPId / 2); // We want ptA in the first quadrant, et ptB in the second. This enables it
-        
-        ptA->x = std::cos( iRotationRadians ) * iA;
-        ptA->y = std::sin( iRotationRadians ) * iA;
-        
-        ptB->x = std::cos( iRotationRadians + FMath::kPId / 2 ) * iB;
-        ptB->y = std::sin( iRotationRadians + FMath::kPId / 2 ) * iB;
-    }
-
-    
-    static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
-                                   , const FPoint             iCenter
-                                   , const int                iA
-                                   , const int                iB
-                                   , const int                iRotationDegrees
-                                   , const CColor&            iColor
-                                   , const bool               iFilled
-                                   , const FPerformanceOptions&        iPerformanceOptions
-                                   , bool                     callInvalidCB )
-    {
-        if( iRotationDegrees % 180 == 0 )
-        {
-            DrawEllipse( iBlock, iCenter, iA, iB, iColor, iFilled, iPerformanceOptions, callInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
-            return;
-        }
-        if( iRotationDegrees % 90 == 0 )
-        {
-            DrawEllipse( iBlock, iCenter, iB, iA, iColor, iFilled, iPerformanceOptions, callInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
-            return;
-        }
-        
-                                                           //               x  y
-        std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
-                                                           //                 [1]
-        storagePoints[0].push_back( iCenter.x );           // In order to only pass storagePoints in parameter to InternalDrawQuadRationalBezierSeg
-        storagePoints[0].push_back( iCenter.y );           // we store the center (useful in this function) at index 0 (we'll know it's there)
-
-        
-        int a = iA;
-        int b = iB;
-        
-        float dx = (long)iA*iA;
-        float dy = (long)iB*iB;
-        float s = std::sin( FMath::DegToRad( iRotationDegrees + 90 ) );
-        float dz = (dx - dy) * s;
-        dx = std::sqrt( dx - dz * s );
-        dy = std::sqrt( dy + dz * s );
-        a = dx + 0.5;
-        b = dy + 0.5;
-        dz = dz * a * b / (dx * dy );
-        
-        int x0 = iCenter.x - a;
-        int y0 = iCenter.y - b;
-        int x1 = iCenter.x + a;
-        int y1 = iCenter.y + b;
-        dz = (4 * dz * cos( FMath::DegToRad( iRotationDegrees + 90 ) ) );
-        
-        
-        dx = x1 - x0;
-        dy = y1 - y0;
-        float w = dx * dy;
-        if( w != 0.0 )
-            w = ( w - dz ) / (w + w);
-        
-        if( w > 1 || w < 0 )
-            return;
-        
-        dx = std::floor( dx * w + 0.5 );
-        dy = std::floor( dy * w + 0.5 );
-        
-        InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
-        InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
-        InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
-        InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
-        
-        if( iFilled ) //We fill the ellipse by drawing vertical lines
-        {
-            //We delete the values we stored for the center position (two times pop_front)
-            storagePoints[0].erase( storagePoints[0].begin() );
-            storagePoints[0].erase( storagePoints[0].begin() );
-
-            for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
-            {
-                if( it->second.size() == 2 )
-                {
-                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y + it->second[1] ), iColor, iPerformanceOptions, callInvalidCB );
-                }
-                if( it->second.size() > 2 ) // where we draw more than 2 pixels for a said y
-                {
-                    int minY = it->second[0];
-                    int maxY = it->second[0];
-                    for( int i = 1; i < it->second.size(); i++)
-                    {
-                        if( minY > it->second[i] )
-                            minY = it->second[i];
-
-                        if( maxY < it->second[i] )
-                            maxY = it->second[i];
-                    }
-                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + minY ), FPoint( iCenter.x + it->first, iCenter.y + maxY ), iColor, iPerformanceOptions, callInvalidCB );
-                }
-            }
-        }
-    }
-    
-
-    static void DrawRotatedEllipseAA(  TBlock< _SH >*           iBlock
-                                     , const FPoint             iCenter
-                                     , const int                iA
-                                     , const int                iB
-                                     , const int                iRotationDegrees
-                                     , const CColor&            iColor
-                                     , const bool               iFilled
-                                     , const FPerformanceOptions&        iPerformanceOptions
-                                     , bool                     callInvalidCB )
-    {
-        std::chrono::time_point<std::chrono::system_clock> start;
-        std::chrono::time_point<std::chrono::system_clock> end;
-        
-        if( BENCHMARKMODE )
-            start = std::chrono::system_clock::now();
-        
-        TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
-        
-        auto MaxAlpha = val.GetAlpha();
-        
-        FPoint64 p1;
-        FPoint64 p2;
-        
-        InternalGetEllipseAxesPoints( iA, iB, ::ULIS::FMath::DegToRad( iRotationDegrees ), &p1, &p2);
-        
-                                                           //               x  y
-        std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
-                                                           //                 [1]
-        
-        int64 p1Coeff = (p1.x * p1.x + p1.y * p1.y) * (p1.x * p1.x + p1.y * p1.y);
-        int64 p2Coeff = (p2.x * p2.x + p2.y * p2.y) * (p2.x * p2.x + p2.y * p2.y);
-        
-        int64 A = (p1.x * p1.x) * p2Coeff +
-                     (p2.x * p2.x) * p1Coeff;
-        
-        int64 B = ( p1.x * p1.y ) * p2Coeff +
-                     ( p2.x * p2.y ) * p1Coeff;
-       
-        int64 C = (p1.y * p1.y) * p2Coeff +
-                     (p2.y * p2.y) * p1Coeff;
-        
-        int64 D = p1Coeff *
-                     p2Coeff;
-
-        int64 x = -p1.x;
-        int64 y = -p1.y;
-        
-        int64 dx = -(B * p1.x + C * p1.y);
-        int64 dy =  A * p1.x + B * p1.y;
-        
-        int64 errMax = 0;
-        int64 errMin = 2 * (A * x * x + 2 * B * x * (y + 1) + C * (y + 1) * (y + 1) - D);
-        
-        std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
-
-        //Case 1 ----------------------------
-        if( dx == 0 || ::ULIS::FMath::Abs( dy / dx ) >= 1 )
-        {
-            //Slope = dy/dx //Initial slope to infinite
-            while( dx < 0 )
-            {
-                int64 sigma = A * x * x + 2 * B * x * (y + 1) + C * (y + 1) * (y + 1) - D;
-                int step = sigma < 0 ? 1 : -1;
-                
-                float alphaTop = FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
-
-                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
-                
-                val.SetAlpha( MaxAlpha * alphaTop );
-                
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
-
-                iBlock->SetPixelValue( iCenter.x + x - step, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x + step, iCenter.y + y, val );
-                
-                y++;
-                
-                if( sigma < 0)
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-                    dx -= B;
-                    dy += A;
-                    x--;
-                }
-                dx += C;
-                dy -= B;
-            };
-            
-            errMax = 0;
-            errMin = 2 * (A * x * x + 2 * B * x * (y + 1) + C * (y + 1) * (y + 1) - D);
-            
-            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
-
-            
-            //Slope = dy/dx //Infinite to 1
-            while( dx < dy )
-            {
-                int64 sigma = A * x * x + 2 * B * x * (y + 1) + C * (y + 1) * (y + 1) - D;
-                int step = sigma < 0 ? 1 : -1;
-
-                float alphaTop = FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
-                
-                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
-                
-                val.SetAlpha( MaxAlpha * alphaTop );
-                
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
-
-                iBlock->SetPixelValue( iCenter.x + x - step, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x + step, iCenter.y + y, val );
-                
-                y++;
-                
-                if( sigma > 0 )
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-                    dx += B;
-                    dy -= A;
-                    x++;
-                }
-                dx += C;
-                dy -= B;
-            };
-            
-            errMax = 0;
-            errMin = 2 * (A * (x + 1) * (x + 1) + 2 * B * (x + 1) * y + C * y * y - D);
-            
-            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
-            
-            //Slope = dy/dx //1 to 0
-            while( dy > 0 )
-            {
-                int64 sigma = A * (x + 1) * (x + 1) + 2 * B * (x + 1) * y + C * y * y - D;
-                int step = sigma < 0 ? 1 : -1;
-                
-                float alphaTop =  FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
-                
-                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
-                
-                val.SetAlpha( MaxAlpha * alphaTop );
-                
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
-
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - step, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + step, val );
-
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-                
-                x++;
-                
-                if( sigma < 0 )
-                {
-                    dx += C;
-                    dy -= B;
-                    y++;
-                }
-                dx += B;
-                dy -= A;
-            };
-            
-            errMax = 0;
-            errMin = 2 * (A * (x + 1) * (x + 1) + 2 * B * (x + 1) * y + C * y * y - D);
-            
-            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
-            
-            //Slope = dy/dx //0 to -1
-            while( dx > -dy )
-            {
-                int64 sigma = A * (x + 1) * (x + 1) + 2 * B * (x + 1) * y + C * y * y - D;
-                int step = sigma < 0 ? 1 : -1;
-                
-                float alphaTop =  FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
-                
-                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
-                
-                val.SetAlpha( MaxAlpha * alphaTop );
-                
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
-
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - step, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + step, val );
-
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-
-                x++;
-                
-                if( sigma > 0 )
-                {
-                    dx -= C;
-                    dy += B;
-                    y--;
-                }
-                dx += B;
-                dy -= A;
-            };
-            
-            errMax = 0;
-            errMin = 2 * (A * x * x + 2 * B * x * (y - 1) + C * (y - 1) * (y - 1) - D);
-            
-            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
-            
-            //Slope = dy/dx //Continue until y == p1.y, slope always < -1
-            while( y > p1.y )
-            {
-                int64 sigma = A * x * x + 2 * B * x * (y - 1) + C * (y - 1) * (y - 1) - D;
-                int step = sigma < 0 ? 1 : -1;
-                
-                float alphaTop =  FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
-                
-                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
-                
-                val.SetAlpha( MaxAlpha * alphaTop );
-                
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
-
-                iBlock->SetPixelValue( iCenter.x + x - step, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x + step, iCenter.y + y, val );
-                
-                y--;
-                
-                if( sigma < 0 )
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-
-                    dx += B;
-                    dy -= A;
-                    x++;
-                }
-                dx -= C;
-                dy += B;
-            };
-        }
-        //Case 2 -------------------------------
-        else
-        {
-            errMax = 0;
-            errMin = 2 * (A * (x - 1) * (x - 1) + 2 * B * (x - 1) * y + C * y * y - D);
-            
-            std::cout << "errMin: " << errMin << " errMax: " << errMax << std::endl;
-            
-            //Slope = dy/dx //Initial slope to -1
-            while( -dx > dy )
-            {
-                int64 sigma = A * (x - 1) * (x - 1) + 2 * B * (x - 1) * y + C * y * y - D;
-                int step = sigma < 0 ? 1 : -1;
-                
-                float alphaTop =  FMath::Abs( 1 - FMath::Abs( ( float( sigma - errMax ) / float( errMin - errMax ) ) ) ); //Interpolation of slopedifferential between errMin and errMax
-
-                //std::cout << "sigma: " << sigma << " alphaTop: " << alphaTop << std::endl;
-                
-                val.SetAlpha( MaxAlpha * alphaTop );
-                
-                iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                val.SetAlpha( MaxAlpha * ( 1 - alphaTop ) );
-
-                iBlock->SetPixelValue( iCenter.x + x - step, iCenter.y - y, val );
-                iBlock->SetPixelValue( iCenter.x - x + step, iCenter.y + y, val );
-                
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-                
-                x--;
-
-                if( sigma > 0)
-                {
-                    dx += C;
-                    dy -= B;
-                    y++;
-                }
-                dx -= B;
-                dy += A;
-            };
-            
-            //Slope = dy/dx //-1 to infinite
-            while( dx < 0 )
-            {
-                //iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                //iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                y++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma < 0)
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-                    
-                    dx -= B;
-                    dy += A;
-                    x--;
-                }
-                dx += C;
-                dy -= B;
-            };
-
-            //Slope = dy/dx //Infinite to 1
-            while( dx < dy )
-            {
-                //iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                //iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                y++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma > 0 )
-                {
-                    if( iFilled )
-                    {
-                        storagePoints[x].push_back(y);
-                        storagePoints[-x].push_back(-y);
-                    }
-                    
-                    dx += B;
-                    dy -= A;
-                    x++;
-                }
-                dx += C;
-                dy -= B;
-            };
-            
-            //Slope = dy/dx //1 to 0
-            while( dy > 0 )
-            {
-                //iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                //iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-        
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-                
-                x++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma < 0 )
-                {
-                    dx += C;
-                    dy -= B;
-                    y++;
-                }
-                dx += B;
-                dy -= A;
-            };
-            
-            //Slope = dy/dx //Continue until x == p1.x, slope always > -1
-            while( x < p1.x )
-            {
-                //iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-                //iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-                
-                if( iFilled )
-                {
-                    storagePoints[x].push_back(y);
-                    storagePoints[-x].push_back(-y);
-                }
-                
-                x++;
-                int64 sigma = A * x * x + 2 * B * x * y + C * y * y - D;
-                
-                if( sigma > 0 )
-                {
-                    dx -= C;
-                    dy += B;
-                    y--;
-                }
-                dx += B;
-                dy -= A;
-
-            };
-        }
-        
-        if( iFilled ) //We fill the ellipse by drawing vertical lines
-        {
-            for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
-            {
-                if( it->second.size() == 2 )
-                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y - it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y - it->second[1] ), iColor, iPerformanceOptions, callInvalidCB );
-            }
-        }
-
-        if( BENCHMARKMODE )
-        {
-            end = std::chrono::system_clock::now();
-            std::chrono::duration<double> elapsed_seconds = end-start;
-            if( iFilled )
-                std::cout << "FilledRotatedEllipseAA: elapsed time: " << elapsed_seconds.count() << "s\n";
-            else
-                std::cout << "RotatedEllipseAA: elapsed time: " << elapsed_seconds.count() << "s\n";
-            std::cout << "----------------------------- \n";
-        }
-    }
-    
-    
-    
     static void DrawEllipse(  TBlock< _SH >*           iBlock
                             , const FPoint             iCenter
                             , const int                iA
@@ -2052,6 +1502,292 @@ public:
         }
     }
     
+
+    static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
+                                   , const FPoint             iCenter
+                                   , const int                iA
+                                   , const int                iB
+                                   , const int                iRotationDegrees
+                                   , const CColor&            iColor
+                                   , const bool               iFilled
+                                   , const FPerformanceOptions&        iPerformanceOptions
+                                   , bool                     callInvalidCB )
+    {
+        
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
+        if( iRotationDegrees % 180 == 0 )
+        {
+            DrawEllipse( iBlock, iCenter, iA, iB, iColor, iFilled, iPerformanceOptions, callInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+            return;
+        }
+        if( iRotationDegrees % 90 == 0 )
+        {
+            DrawEllipse( iBlock, iCenter, iB, iA, iColor, iFilled, iPerformanceOptions, callInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+            return;
+        }
+        
+                                                           //               x  y
+        std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
+                                                           //                 [1]
+        storagePoints[0].push_back( iCenter.x );           // In order to only pass storagePoints in parameter to InternalDrawQuadRationalBezierSeg
+        storagePoints[0].push_back( iCenter.y );           // we store the center (useful in this function) at index 0 (we'll know it's there)
+
+        
+        int a = iA;
+        int b = iB;
+        
+        float dx = (long)iA*iA;
+        float dy = (long)iB*iB;
+        float s = std::sin( FMath::DegToRad( iRotationDegrees + 90 ) );
+        float dz = (dx - dy) * s;
+        dx = std::sqrt( dx - dz * s );
+        dy = std::sqrt( dy + dz * s );
+        a = dx + 0.5;
+        b = dy + 0.5;
+        dz = dz * a * b / (dx * dy );
+        
+        int x0 = iCenter.x - a;
+        int y0 = iCenter.y - b;
+        int x1 = iCenter.x + a;
+        int y1 = iCenter.y + b;
+        dz = (4 * dz * std::cos( FMath::DegToRad( iRotationDegrees + 90 ) ) );
+        
+        
+        dx = x1 - x0;
+        dy = y1 - y0;
+        float w = dx * dy;
+        if( w != 0.0 )
+            w = ( w - dz ) / (w + w);
+        
+        if( w > 1 || w < 0 )
+            return;
+        
+        dx = std::floor( dx * w + 0.5 );
+        dy = std::floor( dy * w + 0.5 );
+        
+        InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
+        InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
+        InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
+        InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints );
+        
+        if( iFilled ) //We fill the ellipse by drawing vertical lines
+        {
+            //We delete the values we stored for the center position (two times pop_front)
+            storagePoints[0].erase( storagePoints[0].begin() );
+            storagePoints[0].erase( storagePoints[0].begin() );
+
+            for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
+            {
+                if( it->second.size() == 2 )
+                {
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y + it->second[1] ), iColor, iPerformanceOptions, callInvalidCB );
+                }
+                if( it->second.size() > 2 ) // where we draw more than 2 pixels for a said y
+                {
+                    int minY = it->second[0];
+                    int maxY = it->second[0];
+                    for( int i = 1; i < it->second.size(); i++)
+                    {
+                        if( minY > it->second[i] )
+                            minY = it->second[i];
+
+                        if( maxY < it->second[i] )
+                            maxY = it->second[i];
+                    }
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + minY ), FPoint( iCenter.x + it->first, iCenter.y + maxY ), iColor, iPerformanceOptions, callInvalidCB );
+                }
+            }
+        }
+        
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledRotatedEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "RotatedEllipse: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
+    }
+    
+
+    static void DrawRotatedEllipseAA(  TBlock< _SH >*           iBlock
+                                     , const FPoint             iCenter
+                                     , const int                iA
+                                     , const int                iB
+                                     , const int                iRotationDegrees
+                                     , const CColor&            iColor
+                                     , const bool               iFilled
+                                     , const FPerformanceOptions&        iPerformanceOptions
+                                     , bool                     callInvalidCB )
+    {
+        
+        std::chrono::time_point<std::chrono::system_clock> start;
+        std::chrono::time_point<std::chrono::system_clock> end;
+        
+        if( BENCHMARKMODE )
+            start = std::chrono::system_clock::now();
+        
+        if( iRotationDegrees % 180 == 0 )
+        {
+            DrawEllipseAA( iBlock, iCenter, iA, iB, iColor, iFilled, iPerformanceOptions, callInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+            return;
+        }
+        if( iRotationDegrees % 90 == 0 )
+        {
+            DrawEllipseAA( iBlock, iCenter, iB, iA, iColor, iFilled, iPerformanceOptions, callInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+            return;
+        }
+        
+        int a = iA;
+        int b = iB;
+        int rotation = ( ( iRotationDegrees % 180 ) + 180 ) % 180; //Positive modulo
+        
+        float dx = (long)a*a;
+        float dy = (long)b*b;
+        float s = std::sin( FMath::DegToRad( rotation + 90 ) );
+        float dz = (dx - dy) * s;
+        dx = std::sqrt( dx - dz * s );
+        dy = std::sqrt( dy + dz * s );
+        a = dx + 0.5;
+        b = dy + 0.5;
+        dz = dz * a * b / (dx * dy );
+        
+        int x0 = iCenter.x - a;
+        int y0 = iCenter.y - b;
+        int x1 = iCenter.x + a;
+        int y1 = iCenter.y + b;
+        dz = (4 * dz * std::cos( FMath::DegToRad( rotation + 90 ) ) );
+        
+        
+        dx = x1 - x0;
+        dy = y1 - y0;
+        float w = dx * dy;
+        if( w != 0.0 )
+            w = ( w - dz ) / (w + w);
+        
+        if( w > 1 || w < 0 )
+            return;
+        
+        dx = std::floor( dx * w + 0.5 );
+        dy = std::floor( dy * w + 0.5 );
+        
+        
+        
+        if( !iFilled )
+        {
+            InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iPerformanceOptions, callInvalidCB ); //top left
+            InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iPerformanceOptions, callInvalidCB ); //bottom left
+            InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iPerformanceOptions, callInvalidCB ); //bottom right
+            InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iPerformanceOptions, callInvalidCB ); //top right
+        }
+        else //Filled Ellipse
+        {
+                                                               //               x  y
+            std::map< int, std::vector< int > > storagePoints; // storagePoints[x][0]  We have n points for each x on the ellipse: p1(x, y0), p2(x, y1) ... pn(x, yn)
+                                                               //                 [1]
+                                                               //                 [...]
+                                                               //                 [n]
+            storagePoints[0].push_back( iCenter.x );           // In order to only pass storagePoints in parameter to InternalDrawQuadRationalBezierSeg
+            storagePoints[0].push_back( iCenter.y );           // we store the center (useful in this function) at index 0 (we'll know it's there)
+            
+            std::map< int, std::vector< int > > pointsForFill; // same structure, but with only the top and bottom points to draw a line on each x to fill the ellipse
+            
+            
+            // Lambda ---
+            auto fillPointsForFill = [&] ( bool isTop, int shift )
+            {
+                //Removing the coordinates of the center we stored
+                storagePoints[0].erase(storagePoints[0].begin());
+                storagePoints[0].erase(storagePoints[0].begin());
+
+                for (std::map< int, std::vector< int > >::iterator it=storagePoints.begin(); it!=storagePoints.end(); ++it)
+                {
+                    if( it->second.size() > 0 )
+                    {
+                        int extremum = it->second[0];
+                        for (int i = 1; i < it->second.size() ; i++ )
+                        {
+                            if( (isTop && shift == 0) || ( shift == 1 && !isTop ) ) //We get the minimum of it->second
+                            {
+                                if( extremum > it->second[i] )
+                                    extremum = it->second[i];
+                            }
+                            else //We get the maximum of it->second
+                            {
+                                if( extremum < it->second[i] )
+                                    extremum = it->second[i];
+                            }
+                        }
+                        pointsForFill[ it->first ].push_back( extremum + shift * (isTop ? 1 : -1 ) );
+                    }
+                }
+                
+                storagePoints.clear();
+                storagePoints[0].push_back( iCenter.x );
+                storagePoints[0].push_back( iCenter.y );
+            };
+            //Lambda end ----
+            
+            
+            // Depending of the angle of the ellipse, we either get the outer antialiased pixels or the inner antialiased pixels of the ellipse. If we get the outer pixels, we need to draw from the less outer one on top to the less outer one on bottom, and shift them one pixel inwards so we don't draw on outer pixels at all
+            // If we get the inner pixels, we draw from the less inner one on top to the less inner one on bottom, no need to shift the pixels, we're already inside the ellipse, so we can fill from there.
+            
+            int shift = ( ( ( ( iRotationDegrees + 45 ) % 180 ) + 180 ) % 180 ) < 90 ? 0 : 1;
+                                                             
+            InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints ); //top left
+            fillPointsForFill( true, shift );
+            
+            InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints ); //bottom left
+            fillPointsForFill( false, shift );
+            
+            InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints ); //bottom right
+            fillPointsForFill( false, shift );
+            
+            InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iPerformanceOptions, callInvalidCB, &storagePoints ); //top right
+            fillPointsForFill( true, shift );
+
+            for (std::map< int, std::vector< int > >::iterator it=pointsForFill.begin(); it!=pointsForFill.end(); ++it)
+            {
+                if( it->second.size() == 2 )
+                {
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y + it->second[1] ), iColor, iPerformanceOptions, callInvalidCB );
+                }
+                if( it->second.size() > 2 ) // where we draw more than 2 pixels for a said y (it happens at the junctions between beziers)
+                {
+                    int minY = it->second[0];
+                    int maxY = it->second[0];
+                    for( int i = 1; i < it->second.size(); i++)
+                    {
+                        if( minY > it->second[i] )
+                            minY = it->second[i];
+
+                        if( maxY < it->second[i] )
+                            maxY = it->second[i];
+                    }
+                    DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + minY ), FPoint( iCenter.x + it->first, iCenter.y + maxY ), iColor, iPerformanceOptions, callInvalidCB );
+                }
+            }
+        }
+        
+        if( BENCHMARKMODE )
+        {
+            end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            if( iFilled )
+                std::cout << "FilledRotatedEllipseAA: elapsed time: " << elapsed_seconds.count() << "s\n";
+            else
+                std::cout << "RotatedEllipseAA: elapsed time: " << elapsed_seconds.count() << "s\n";
+            std::cout << "----------------------------- \n";
+        }
+    }
+    
     
     // ---
     
@@ -2229,7 +1965,6 @@ public:
         
         if( xx*sx > 0.0 || yy*sy > 0.0 )
         {
-            std::cout << "OUT" << std::endl;
             return;
         }
         
@@ -2360,7 +2095,6 @@ public:
             pt0.x = pt1.x = x;
             pt0.y = y;
             
-            std::cout << "1: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
         }
         
         if( ( pt0.y - pt1.y ) * (long)( pt2.y - pt1.y ) > 0 )
@@ -2388,14 +2122,12 @@ public:
             y = std::floor( dy + 0.5 );
             dx = ( pt1.x - pt0.x ) * ( dy - pt0.y ) / ( pt1.y - pt0.y ) + pt0.x;
             InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerformanceOptions, callInvalidCB  );
-            std::cout << "2Before: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y << " x: " << x << " y " << y <<   std::endl;
 
             dx = ( pt1.x - pt2.x ) * ( dy - pt2.y ) / ( pt1.y - pt2.y ) + pt2.x;
             pt1.x = std::floor( dx + 0.5 );
             pt0.x = x;
             pt0.y = pt1.y = y;
             
-            std::cout << "2: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
         }
         InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerformanceOptions, callInvalidCB  );
     }
@@ -2412,7 +2144,8 @@ public:
                                                    , float w
                                                    , const CColor& iColor
                                                    , const FPerformanceOptions& iPerformanceOptions
-                                                   , bool callInvalidCB)
+                                                   , bool callInvalidCB
+                                                   , std::map< int, std::vector< int > >* iStoragePoints = NULL )
     {
         TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
         auto MaxAlpha = val.GetAlpha();
@@ -2456,10 +2189,10 @@ public:
                 sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
                 dx = floor((w*x1+x0)*xy+0.5);
                 dy = floor((y1*w+y0)*xy+0.5);
-                InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerformanceOptions, callInvalidCB );
+                InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerformanceOptions, callInvalidCB, iStoragePoints );
                 dx = floor((w*x1+x2)*xy+0.5);
                 dy = floor((y1*w+y2)*xy+0.5);
-                InternalDrawQuadRationalBezierSegAA( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerformanceOptions, callInvalidCB );
+                InternalDrawQuadRationalBezierSegAA( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerformanceOptions, callInvalidCB, iStoragePoints );
                 return;
             }
             err = dx+dy-xy;
@@ -2468,16 +2201,21 @@ public:
                 cur = FMath::Min( dx - xy, xy - dy );
                 ed = FMath::Max( dx - xy, xy - dy );
                 ed += ( 2 * ed * cur * cur / (4.0 * ed * ed + cur * cur ) );
-                x1 = MaxAlpha * ( 1 - FMath::Abs( err - dx - dy + xy ) / ed );
+                
+                float errorRatio = ( err - dx - dy + xy ) / ed;
+                
+                x1 = MaxAlpha * ( 1 - FMath::Abs( errorRatio ) );
                 f = (2 * err + dy) < 0;
                 
-                if( x1 > MaxAlpha || x1 < 0 )
-                    std::cout << "x1: " << x1 << std::endl;
-
                 if( x1 <= MaxAlpha )
                 {
                     val.SetAlpha( x1 );
                     iBlock->SetPixelValue( x0, y0, val );
+
+                    if( iStoragePoints && errorRatio >= 0 )
+                    {
+                        (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                    }
                 }
 
                 if( f )
@@ -2486,13 +2224,16 @@ public:
                         return;
                     if( ( dx - err ) < ed )
                     {
-                        float alpha = FMath::Abs( 1 - ( dx - err ) / ed );
-                        
-                        if( alpha > 1 || alpha < 0 )
-                            std::cout << "1: " << alpha << std::endl;
+                        float errorRatio = 1 - ( dx - err ) / ed ;
+                        float alpha = FMath::Abs( errorRatio );
                         
                         val.SetAlpha( MaxAlpha * alpha );
                         iBlock->SetPixelValue( x0 + sx, y0, val );
+                        
+                        if( iStoragePoints && errorRatio <= 0 )
+                        {
+                            (*iStoragePoints)[ x0 + sx - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                        }
                     }
                 }
             
@@ -2502,15 +2243,16 @@ public:
                         return;
                     if( ( err - dy ) < ed )
                     {
-                        float alpha = FMath::Abs( 1 - ( err - dy ) / ed );
-                        
-                        if( alpha > 1 || alpha < 0 )
-                        {
-                            std::cout << "2: " << alpha << " x: " << x0 << std::endl;
-                        }
+                        float errorRatio = 1 - ( err - dy ) / ed;
+                        float alpha = FMath::Abs( errorRatio );
                         
                         val.SetAlpha( MaxAlpha * alpha );
                         iBlock->SetPixelValue( x0, y0 + sy, val );
+                        
+                        if( iStoragePoints && errorRatio >= 0 )
+                        {
+                            (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 + sy - (*iStoragePoints)[0][1] );
+                        }
                     }
                     x0 += sx;
                     dx += xy;
@@ -2527,6 +2269,20 @@ public:
             } while (dy < dx);
         }
         DrawLineAA( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerformanceOptions, callInvalidCB );
+        
+        if( iStoragePoints )
+        {
+            if( x0 == x2 && y0 == y2 ) //Corners where we draw a single pixel
+            {
+                (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+            }
+            else if( y0 == y2 ) //Horizontal lines
+            {
+                for( int i = x0; i < x2; i++ )
+                    (*iStoragePoints)[ i - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+            }
+            //We don't need to take care of vertical lines, since storagePoints is used to fill an ellipse using the exact same type of vertical lines
+        }
     }
     
     static void DrawQuadraticBezierAA( TBlock< _SH>*                   iBlock
@@ -2594,8 +2350,6 @@ public:
             pt1.y = std::floor( dy + 0.5 );
             pt0.x = pt1.x = x;
             pt0.y = y;
-            
-            std::cout << "1: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
         }
         
         if( ( pt0.y - pt1.y ) * (long)( pt2.y - pt1.y ) > 0 )
@@ -2623,14 +2377,12 @@ public:
             y = std::floor( dy + 0.5 );
             dx = ( pt1.x - pt0.x ) * ( dy - pt0.y ) / ( pt1.y - pt0.y ) + pt0.x;
             InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerformanceOptions, callInvalidCB  );
-            std::cout << "2Before: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y << " x: " << x << " y " << y <<   std::endl;
 
             dx = ( pt1.x - pt2.x ) * ( dy - pt2.y ) / ( pt1.y - pt2.y ) + pt2.x;
             pt1.x = std::floor( dx + 0.5 );
             pt0.x = x;
             pt0.y = pt1.y = y;
             
-            std::cout << "2: dx: " << dx << " dy: " << dy << " x0: " << pt0.x << " y0 : " << pt0.y << " x1: " << pt1.x << " y1 : " << pt1.y << " x2: " << pt2.x << " y2 : " << pt2.y <<   std::endl;
         }
         InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerformanceOptions, callInvalidCB  );
     }
