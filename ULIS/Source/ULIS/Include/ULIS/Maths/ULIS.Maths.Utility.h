@@ -18,7 +18,7 @@ struct FMath
 {
     // Do not change this value !
     static constexpr float kEpsilonf = .000001;
-    static constexpr double FMath::kPId = 3.1415926535897932;
+    static constexpr double kPId = 3.1415926535897932;
     static constexpr float  kPIf = 3.14159265;
 
     template< typename T >
