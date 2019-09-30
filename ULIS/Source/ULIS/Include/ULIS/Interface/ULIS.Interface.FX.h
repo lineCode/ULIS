@@ -25,6 +25,7 @@ class FFXContext
 public:
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------- Public Static API
+    static  void  ValueNoise( IBlock* iBlock, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
 
 };
 

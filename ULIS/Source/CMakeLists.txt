@@ -163,6 +163,7 @@ if( ${ULIS_BUILD_TESTS} )
         include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Chromaticity/CMakeLists.txt)
         include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Conv/CMakeLists.txt)
         include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Transform/CMakeLists.txt)
+        include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_FX/CMakeLists.txt)
     endif()
 endif()
 

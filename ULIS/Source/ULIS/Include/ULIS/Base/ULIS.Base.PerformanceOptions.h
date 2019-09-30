@@ -33,9 +33,9 @@ public:
 public:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------- Public Data Members
-    const bool          use_sse_if_available;   ///< boolean flag specifying if sse optimisations should be used if available.
-    const bool          use_mem_if_available;   ///< boolean flag specifying if memory optimisations should be used if available.
-    const unsigned int  desired_workers;        ///< integer representing the desired worker counts for multithreaded processing.
+    bool          use_sse_if_available;   ///< boolean flag specifying if sse optimisations should be used if available.
+    bool          use_mem_if_available;   ///< boolean flag specifying if memory optimisations should be used if available.
+    unsigned int  desired_workers;        ///< integer representing the desired worker counts for multithreaded processing.
 };
 
 } // namespace ULIS

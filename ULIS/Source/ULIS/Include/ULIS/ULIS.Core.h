@@ -20,6 +20,7 @@
 #include "ULIS/Interface/ULIS.Interface.Conv.h"
 #include "ULIS/Interface/ULIS.Interface.Paint.h"
 #include "ULIS/Interface/ULIS.Interface.Transform.h"
+#include "ULIS/Interface/ULIS.Interface.FX.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 #include "ULIS/Global/ULIS.Global.GlobalCPUConfig.h"
 #include "ULIS/Global/ULIS.Global.GlobalPalettes.h"
