@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* @file     ULIS.Interface.Blend.h
+* @file     ULIS.Interface.Paint.h
 * @author   Clement Berthaud
 * @brief    This file provides the declarations for the FPainterContext class.
 */
