@@ -58,7 +58,7 @@ FPainterContext::DrawLineAA( IBlock* iBlock, const FPoint& iP0, const FPoint& iP
 
 //static
 void
-FPainterContext::DrawCircleAndres( IBlock* iBlock, const FPoint& iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawCircleAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -75,7 +75,7 @@ FPainterContext::DrawCircleAndres( IBlock* iBlock, const FPoint& iCenter, const 
     
 //static
 void
-FPainterContext::DrawCircleAndresAA( IBlock* iBlock, const FPoint& iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawCircleAndresAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -93,7 +93,7 @@ FPainterContext::DrawCircleAndresAA( IBlock* iBlock, const FPoint& iCenter, cons
 
 //static
 void
-FPainterContext::DrawCircleBresenham( IBlock* iBlock, const FPoint& iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawCircleBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -111,7 +111,7 @@ FPainterContext::DrawCircleBresenham( IBlock* iBlock, const FPoint& iCenter, con
     
 //static
 void
-FPainterContext::DrawCircleBresenhamAA( IBlock* iBlock, const FPoint& iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawCircleBresenhamAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -129,7 +129,7 @@ FPainterContext::DrawCircleBresenhamAA( IBlock* iBlock, const FPoint& iCenter, c
 
 //static
 void
-FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint& iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -147,7 +147,7 @@ FPainterContext::DrawEllipse( IBlock* iBlock, const FPoint& iCenter, const int i
 
 //static
 void
-FPainterContext::DrawEllipseAA( IBlock* iBlock, const FPoint& iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawEllipseAA( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -165,7 +165,7 @@ FPainterContext::DrawEllipseAA( IBlock* iBlock, const FPoint& iCenter, const int
 
 //static
 void
-FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint& iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled,const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled,const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -183,7 +183,7 @@ FPainterContext::DrawRotatedEllipse( IBlock* iBlock, const FPoint& iCenter, cons
     
 //static
 void
-FPainterContext::DrawRotatedEllipseAA( IBlock* iBlock, const FPoint& iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled,const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawRotatedEllipseAA( IBlock* iBlock, const FPoint iCenter, const int iA, const int iB, const int iRotationDegrees, const CColor& iColor, const bool iFilled,const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -201,7 +201,7 @@ FPainterContext::DrawRotatedEllipseAA( IBlock* iBlock, const FPoint& iCenter, co
 
 //static
 void
-FPainterContext::DrawArcAndres( IBlock* iBlock, const FPoint& iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawArcAndres( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -219,7 +219,7 @@ FPainterContext::DrawArcAndres( IBlock* iBlock, const FPoint& iCenter, const int
 
 //static
 void
-FPainterContext::DrawArcAndresAA( IBlock* iBlock, const FPoint& iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawArcAndresAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -237,7 +237,7 @@ FPainterContext::DrawArcAndresAA( IBlock* iBlock, const FPoint& iCenter, const i
 
 //static
 void
-FPainterContext::DrawArcBresenham( IBlock* iBlock, const FPoint& iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawArcBresenham( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -255,7 +255,7 @@ FPainterContext::DrawArcBresenham( IBlock* iBlock, const FPoint& iCenter, const 
 
 //static
 void
-FPainterContext::DrawArcBresenhamAA( IBlock* iBlock, const FPoint& iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawArcBresenhamAA( IBlock* iBlock, const FPoint iCenter, const int iRadius, const int iStartDegree, const int iEndDegree, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -273,7 +273,7 @@ FPainterContext::DrawArcBresenhamAA( IBlock* iBlock, const FPoint& iCenter, cons
 
 //static
 void
-FPainterContext::DrawRectangle( IBlock* iBlock, const FPoint& iTopLeft, const FPoint& iBottomRight, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FPainterContext::DrawRectangle( IBlock* iBlock, const FPoint iTopLeft, const FPoint iBottomRight, const CColor& iColor, const bool iFilled, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
