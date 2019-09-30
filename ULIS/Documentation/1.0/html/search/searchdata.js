@@ -5,11 +5,11 @@ var indexSectionsWithContent =
   2: "u",
   3: "ru",
   4: "abcdefghiklmnoprstuvwyz~",
-  5: "_abcdeghiklmoprstuvwxy",
+  5: "_abcdghiklmoprstuvwxy",
   6: "_fitu",
   7: "e",
   8: "k",
-  9: "bpstu",
+  9: "stu",
   10: "u"
 };
 
