@@ -34,5 +34,23 @@ FFXContext::ValueNoise( IBlock* iBlock, const FPerformanceOptions& iPerformanceO
     }
 }
 
+
+//static
+void
+FFXContext::VoronoiNoise( IBlock* iBlock, uint32 iCount, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                \
+            case ULIS_REG[ n ]:                                                                                 \
+            {                                                                                                   \
+                return  TFXContext< ULIS_REG[ n ] >::VoronoiNoise( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock     \
+                                                               , iCount, iPerformanceOptions );                 \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+
 } // namespace ULIS
 

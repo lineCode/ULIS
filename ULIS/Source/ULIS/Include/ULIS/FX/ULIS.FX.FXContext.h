@@ -11,7 +11,8 @@
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
-#include "ULIS/FX/Noise/ULIS.FX.Noise.h"
+#include "ULIS/FX/Noise/ULIS.FX.Noise.ValueNoise.h"
+#include "ULIS/FX/Noise/ULIS.FX.Noise.VoronoiNoise.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -25,6 +26,13 @@ public:
     {
         assert( iBlock );
         TValueNoiseGenerator< _SH >::Run( iBlock, iPerformanceOptions );
+    }
+
+    template< uint32 _SH >
+    static void VoronoiNoise( TBlock< _SH >* iBlock, uint32 iCount, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    {
+        assert( iBlock );
+        TVoronoiNoiseGenerator< _SH >::Run( iBlock, iCount, iPerformanceOptions );
     }
 
 };

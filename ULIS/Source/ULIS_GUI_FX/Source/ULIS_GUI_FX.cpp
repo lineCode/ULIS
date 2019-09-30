@@ -20,8 +20,7 @@ int main( int argc, char *argv[] )
     QApplication app( argc, argv );
     ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
     ::ULIS::FPerformanceOptions opt;
-    opt.desired_workers = 2;
-    ::ULIS::FFXContext::ValueNoise( blockA, opt );
+    ::ULIS::FFXContext::VoronoiNoise( blockA, 200, opt );
 
     QImage* image   = new QImage( blockA->DataPtr(), blockA->Width(), blockA->Height(), blockA->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
