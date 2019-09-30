@@ -10,7 +10,6 @@
 #pragma once
 #include <cmath>
 
-
 namespace ULIS {
 /////////////////////////////////////////////////////
 // FMath
@@ -45,27 +44,32 @@ struct FMath
     static inline T Clamp( T iValue, T iMin, T iMax ) {
         return  Max( iMin, Min( iValue, iMax ) );
     }
-    
+
     template< typename T >
     static inline T Abs( T iA ) {
         return ( iA < 0 ? -iA : iA );
     }
-    
+
+    template< typename T >
+    static inline T Sign( T iValue ) {
+        return  iValue < T(0) ? T(-1) : T(1);
+    }
+
     static inline double RadToDeg( double iRad )
     {
         return ( iRad * 180 / FMath::kPId );
     }
-    
+
     static inline double DegToRad( double iDeg )
     {
         return ( iDeg * FMath::kPId / 180 );
     }
-    
+
     static inline int IntegerPartOfNumber( float iNumber )
     {
         return (int)iNumber;
     }
-    
+
     float FloatingPartOfNumber( float iNumber )
     {
         if ( iNumber > 0 )
@@ -73,7 +77,7 @@ struct FMath
         else
             return iNumber - ( IntegerPartOfNumber( iNumber ) + 1 );
     }
-    
+
     static inline int RoundNumber( float iNumber )
     {
         return (int)(iNumber + 0.5) ;
