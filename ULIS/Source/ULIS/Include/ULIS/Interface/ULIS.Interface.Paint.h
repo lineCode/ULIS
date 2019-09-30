@@ -60,7 +60,7 @@ public:
                             , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawCircleAndres( IBlock* iBlock, const FPoint& iCenter, int iRadius, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawCircleAndres( IBlock* iBlock, const FPoint& iCenter, int iRadius, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a circle without AA.
     /// @details    A circle will be drawn in the block.
     ///                 - Using Andres method.
@@ -77,12 +77,12 @@ public:
                                   , const FPoint& iCenter
                                   , int iRadius
                                   , const CColor& iColor
-                                  , const bool iFilled = false
+                                  , bool iFilled = false
                                   , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                   , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawCircleAndresAA( IBlock* iBlock, const FPoint& iCenter, int iRadius, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawCircleAndresAA( IBlock* iBlock, const FPoint& iCenter, int iRadius, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a circle with AA.
     /// @details    A circle will be drawn in the block.
     ///                 - Using Andres method.
@@ -99,12 +99,12 @@ public:
                                     , const FPoint& iCenter
                                     , int iRadius
                                     , const CColor& iColor
-                                    , const bool iFilled = false
+                                    , bool iFilled = false
                                     , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                     , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawCircleBresenham( IBlock* iBlock, const FPoint& iCenter, int iRadius, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawCircleBresenham( IBlock* iBlock, const FPoint& iCenter, int iRadius, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a circle without AA.
     /// @details    A circle will be drawn in the block.
     ///                 - Using Bresenham method.
@@ -121,12 +121,12 @@ public:
                                      , const FPoint& iCenter
                                      , int iRadius
                                      , const CColor& iColor
-                                     , const bool iFilled = false
+                                     , bool iFilled = false
                                      , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                      , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawCircleBresenhamAA( IBlock* iBlock, const FPoint& iCenter, int iRadius, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawCircleBresenhamAA( IBlock* iBlock, const FPoint& iCenter, int iRadius, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a circle with AA.
     /// @details    A circle will be drawn in the block.
     ///                 - Using Bresenham method.
@@ -143,12 +143,12 @@ public:
                                        , const FPoint& iCenter
                                        , int iRadius
                                        , const CColor& iColor
-                                       , const bool iFilled = false
+                                       , bool iFilled = false
                                        , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                        , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawRotatedEllipse( IBlock* iBlock, const FPoint& iCenter, int iA, int iB, int iRotationDegrees, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawRotatedEllipse( IBlock* iBlock, const FPoint& iCenter, int iA, int iB, int iRotationDegrees, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a rotated ellipse without AA.
     /// @details    A rotated ellipse will be drawn.
     ///                 - Without anti-aliasing.
@@ -168,12 +168,12 @@ public:
                                     , int iB
                                     , int iRotationDegrees
                                     , const CColor& iColor
-                                    , const bool iFilled = false
+                                    , bool iFilled = false
                                     , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                     , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawRotatedEllipseAA( IBlock* iBlock, const FPoint& iCenter, int iA, int iB, int iRotationDegrees, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawRotatedEllipseAA( IBlock* iBlock, const FPoint& iCenter, int iA, int iB, int iRotationDegrees, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a rotated ellipse with AA.
     /// @details    A rotated ellipse will be drawn.
     ///                 - With anti-aliasing.
@@ -193,12 +193,12 @@ public:
                                       , int iB
                                       , int iRotationDegrees
                                       , const CColor& iColor
-                                      , const bool iFilled = false
+                                      , bool iFilled = false
                                       , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
                                       , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawEllipse( IBlock* iBlock, const FPoint& iCenter, int iA, int iB, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true  )
+    /// @fn         static  void  DrawEllipse( IBlock* iBlock, const FPoint& iCenter, int iA, int iB, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true  )
     /// @brief      Draw an ellipse without AA.
     /// @details    An ellipse will be drawn.
     ///                 - Without anti-aliasing.
@@ -216,12 +216,12 @@ public:
                              , int iA
                              , int iB
                              , const CColor& iColor
-                             , const bool iFilled = false
+                             , bool iFilled = false
                              , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                              , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawEllipseAA( IBlock* iBlock, const FPoint& iCenter, int iA, int iB, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawEllipseAA( IBlock* iBlock, const FPoint& iCenter, int iA, int iB, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw an ellipse with AA.
     /// @details    An ellipse will be drawn.
     ///                 - with anti-aliasing.
@@ -239,7 +239,7 @@ public:
                                , int iA
                                , int iB
                                , const CColor& iColor
-                               , const bool iFilled = false
+                               , bool iFilled = false
                                , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                , bool iCallInvalidCB = true );
 
@@ -328,7 +328,7 @@ public:
                                     , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawRectangle( IBlock* iBlock, const FPoint& iTopLeft, const FPoint& iBottomRight, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawRectangle( IBlock* iBlock, const FPoint& iTopLeft, const FPoint& iBottomRight, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a rectangle.
     /// @details    An rectangle optionally filled will be drawn.
     /// @param      iBlock                  The pointer to the \e IBlock to draw on.
@@ -341,12 +341,12 @@ public:
                                , const FPoint& iTopLeft
                                , const FPoint& iBottomRight
                                , const CColor& iColor
-                               , const bool iFilled = false
+                               , bool iFilled = false
                                , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, const bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawPolygon( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw an arbitrary convex or concave polygon without anti-aliasing.
     /// @details    The polygon can have any number of points, works for any polygon.
     ///             The polygon is filled, and the fill rule follows the even-odd rule.
@@ -358,12 +358,12 @@ public:
     static  void  DrawPolygon( IBlock* iBlock
                              , std::vector< FPoint >& iPoints
                              , const CColor& iColor
-                             , const bool iFilled = false
+                             , bool iFilled = false
                              , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                              , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawQuadraticBezier( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, const float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawQuadraticBezier( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a quadratic bezier curve without AA;
     /// @details    A quadratic bezier curve will be drawn without anti-aliasing.
     /// @param      iBlock                  The pointer to the \e IBlock to draw on.
@@ -374,10 +374,17 @@ public:
     /// @param      iColor                  The color to use for drawing.
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
-    static  void  DrawQuadraticBezier( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, const float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true );
+    static  void  DrawQuadraticBezier( IBlock* iBlock
+                                     , const FPoint& iCtrlPt0
+                                     , const FPoint& iCtrlPt1
+                                     , const FPoint& iCtrlPt2
+                                     , float iWeight
+                                     , const CColor& iColor
+                                     , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
+                                     , bool iCallInvalidCB = true );
 
 
-    /// @fn         static  void  DrawQuadraticBezierAA( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, const float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @fn         static  void  DrawQuadraticBezierAA( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a quadratic bezier curve with AA;
     /// @details    A quadratic bezier curve will be drawn with anti-aliasing.
     /// @param      iBlock                  The pointer to the \e IBlock to draw on.
@@ -388,7 +395,14 @@ public:
     /// @param      iColor                  The color to use for drawing.
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
-    static  void  DrawQuadraticBezierAA( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, const float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true );
+    static  void  DrawQuadraticBezierAA( IBlock* iBlock
+                                       , const FPoint& iCtrlPt0
+                                       , const FPoint& iCtrlPt1
+                                       , const FPoint& iCtrlPt2
+                                       , float iWeight
+                                       , const CColor& iColor
+                                       , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
+                                       , bool iCallInvalidCB = true );
 
 };
 
