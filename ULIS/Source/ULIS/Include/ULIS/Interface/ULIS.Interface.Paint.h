@@ -28,7 +28,7 @@ public:
 //-------------------------------------------------------------------- Public Static API
     /// @fn         static void DrawLine( IBlock* iBlock, const FPoint& iP0, const FPoint& iP1, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a line.
-    /// @details    An aliased line of width 1px will be draw in the block
+    /// @details    An aliased line of width 1px will be drawn in the block.
     /// @param      iBlock                  The pointer to the \e IBlock to draw on.
     /// @param      iP0                     The start point of the line.
     /// @param      iP1                     The end point of the line.
