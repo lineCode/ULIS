@@ -180,7 +180,9 @@ private:
         }
 
         float scale = (float)mBlock->Width() / (float)mMiniBlock->Width();
-        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kNearestNeighbour );
+        FPerformanceOptions opt;
+        opt.desired_workers = 1;
+        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kLinear, opt );
         mPixmap.convertFromImage( *mImage );
         mLabel->setPixmap( mPixmap );
     }

@@ -73,51 +73,60 @@ public:
                    , TBlock< _SH >*              iDstBlock
                    , const glm::mat3&            iInverseTransform )
     {
+        using tPixelType = typename TBlock< _SH >::tPixelType;
+        using tPixelValue = typename TBlock< _SH >::tPixelValue;
+        using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
+        using tPixelBase = typename TPixelBase< _SH >;
+        using info = TBlockInfo< _SH >;
+
         const int x1 = 0;
         const int y1 = 0;
         const int x2 = iDstBlock->Width();
         const int y2 = iDstBlock->Height();
         const int maxx = iSrcBlock->Width();
         const int maxy = iSrcBlock->Height();
-        const typename TBlock< _SH >::tPixelValue fallback = typename TBlock< _SH >::tPixelValue();
+        tPixelValue fallback = tPixelValue();
+        fallback.SetAlpha( 0 );
         for( int y = y1; y < y2; ++y )
         {
             for( int x = x1; x < x2; ++x )
             {
                 glm::vec3 point_in_dst( x, y, 1.f );
                 glm::vec2 point_in_src = ( iInverseTransform * point_in_dst );
-                glm::vec2 c00 = point_in_src + glm::vec2( -0.5, -0.5 );
-                glm::vec2 c10 = point_in_src + glm::vec2( +0.5, -0.5 );
-                glm::vec2 c11 = point_in_src + glm::vec2( +0.5, +0.5 );
-                glm::vec2 c01 = point_in_src + glm::vec2( -0.5, +0.5 );
+                point_in_src -= glm::vec2( 0.5, 0.5 );
+                int left    = floor( point_in_src.x );
+                int up      = floor( point_in_src.y );
+                int right   = left + 1;
+                int bot     = up + 1;
+                float tx = point_in_src.x - float( left );
+                float ty = point_in_src.y - float( up );
 
-                float src_x     = point_in_src.x;
-                float src_y     = point_in_src.y;
-                float left_x    = src_x - 0.5f;
-                float up_y      = src_y - 0.5f;
-                float right_x   = src_x + 0.5f;
-                float bot_y     = src_y + 0.5f;
-                float tx        = left_x - src_x;
-                float ty        = up_y - src_y;
-                auto GetSample = [&]( float iX, float iY ) {
-                    if( iX < 0 || iY < 0 || iY >= maxx || iY >= maxy )
-                        return  (const typename TBlock< _SH >::tPixelValue)fallback;
-                    else
-                        return  (const typename TBlock< _SH >::tPixelValue)iSrcBlock->PixelProxy( iX, iY );
+                if( tx < 0.f || tx > 1.f ) ULIS_CRASH_CHECK;
+                if( ty < 0.f || ty > 1.f ) ULIS_CRASH_CHECK;
+
+                auto lerp = [&]( const tPixelBase& iA, const tPixelBase& iB, float t ) {
+                    tPixelValue ret;
+                    float al_a = ConvType< tPixelType, float >( iA.GetAlpha() );
+                    float al_b = ConvType< tPixelType, float >( iB.GetAlpha() );
+                    float al_c = ( al_a * ( 1.f - t ) + al_b * ( t ) );
+                    ret.SetAlpha( ConvType< float, tPixelType >( al_c ) );
+                    for( int i = 0; i < info::_nf._nc; ++i ) {
+                        tPixelType el_a = iA.GetComponent( i ) * al_a;
+                        tPixelType el_b = iB.GetComponent( i ) * al_b;
+                        tPixelType el_r = static_cast< tPixelType >( ( el_a * ( 1.f - t ) + el_b * ( t ) ) / al_c );
+                        ret.SetComponent( i, el_r );
+                    }
+                    return  ret;
                 };
-                auto sample_left    = GetSample( left_x, src_y );
-                auto sample_up      = GetSample( src_x, up_y );
-                auto sample_right   = GetSample( right_x, src_y );
-                auto sample_bot     = GetSample( src_x, bot_y );
-
-                if( src_x < 0 || src_y < 0 || src_x >= maxx || src_y >= maxy )
-                {
-                    iDstBlock->SetPixelValue( x, y, fallback );
-                }
-                else
-                {
-                    iDstBlock->SetPixelProxy( x, y, iSrcBlock->PixelProxy( src_x, src_y ) );
-                }
+                #define TEMP( iX, iY ) ( iX < 0 || iY < 0 || iX >= maxx || iY >= maxy ) ? fallback : iSrcBlock->PixelValue( iX, iY );
+                const tPixelValue c00   = TEMP( left, up );
+                const tPixelValue c10   = TEMP( right, up );
+                const tPixelValue c11   = TEMP( right, bot );
+                const tPixelValue c01   = TEMP( left, bot );
+                const tPixelValue a = lerp( c00, c10, tx );
+                const tPixelValue b = lerp( c01, c11, tx );
+                const tPixelValue c = lerp( a, b, ty );
+                iDstBlock->SetPixelValue( x, y, c );
             }
         }
     }

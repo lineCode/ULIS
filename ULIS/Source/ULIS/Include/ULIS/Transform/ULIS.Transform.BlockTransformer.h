@@ -36,13 +36,13 @@ public:
         {
             case eResamplingMethod::kNearestNeighbour:
             {
-                TBlockTransformer_NearestNeighbour< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform );
+                TBlockTransformer_NearestNeighbour< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iPerformanceOptions );
                 break;
             }
 
             case eResamplingMethod::kLinear:
             {
-                TBlockTransformer_Linear< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform );
+                TBlockTransformer_Linear< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iPerformanceOptions );
                 break;
             }
 
