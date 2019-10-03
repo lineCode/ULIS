@@ -830,7 +830,7 @@ CColor::SetGrey( int g )
 void
 CColor::SetGreyF( float g )
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eCColorModel::kG )
         SetGreyF( g, AlphaF() );
     else
         mRepr.grey.g = floor( FMath::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
@@ -976,7 +976,7 @@ CColor::SetCMYK( int c, int m, int y, int k, int alpha )
 void
 CColor::SetGreyF( float g, float alpha )
 {
-    mMode = eCColorModel::kRGB;
+    mMode = eCColorModel::kG;
     mRepr.grey.alpha = floor( FMath::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
     mRepr.grey.g     = floor( FMath::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
     mRepr.grey._0    = 0;

@@ -38,8 +38,20 @@ public:
         TBlock< _SH >* dst = new TBlock< _SH >( aabb.Width(), aabb.Height() );
         glm::mat3 inverseTransform = glm::inverse( translated );
 
-        TBlockTransformer< _SH >::Run( iSrc, dst, inverseTransform, shift, iPerformanceOptions );
+        TBlockTransformer< _SH >::Run( iSrc, dst, inverseTransform, iPerformanceOptions );
         return  dst;
+    }
+
+    template< uint32 _SH >
+    static  void  TransformBlockInto( const TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const  glm::mat3& iMat, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    {
+        FTransformBoundingBox aabb( 0, 0, iSrc->Width(), iSrc->Height() );
+        aabb.Transform( iMat );
+        glm::vec2 shift( -aabb.x1, -aabb.y1 );
+        glm::mat3 translated = glm::translate( glm::identity< glm::mat3 >(), glm::vec2( shift ) ) * iMat;
+        glm::mat3 inverseTransform = glm::inverse( translated );
+
+        TBlockTransformer< _SH >::Run( iSrc, iDst, inverseTransform, iPerformanceOptions );
     }
 };
 

@@ -75,6 +75,19 @@ public:
                                  , const  glm::mat3& iMat
                                  , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 
+
+    /// @fn         static IBlock* TransformInto( const IBlock* iBlockSrc, IBlock* iDst, const  glm::mat3& imat, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    /// @brief      Transform source block into preallocatod destination.
+    /// @param      iBlockSrc               The source block to transform ( remains untouched ).
+    /// @param      iBlockDst               The destination block to transform ( receives the result ).
+    /// @param      iMat                    The transform to apply.
+    /// @param      iPerformanceOptions     The performance preferences.
+    /// @return     A fresh newly allocated block, with contents transformed from source, with size deduced from input block and transform.
+    static IBlock* TransformInto( const IBlock* iBlockSrc
+                                , IBlock* iBlockDst
+                                , const  glm::mat3& iMat
+                                , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
+
 };
 
 } // namespace ULIS

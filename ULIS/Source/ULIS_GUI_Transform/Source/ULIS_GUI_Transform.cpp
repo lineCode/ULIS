@@ -21,6 +21,7 @@ int main( int argc, char *argv[] )
     float size = 16;
     float scale = 50;
     ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( size, size, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( size * scale, size * scale, ::ULIS::FBlockRGBA8::TypeId() );
     ::ULIS::FClearFillContext::Clear( blockA );
 
     for( int y = 0; y < size; ++y ) {
@@ -30,7 +31,7 @@ int main( int argc, char *argv[] )
     }
 
     glm::mat3 transform = ::ULIS::FTransformContext::GetScaleMatrix( scale, scale );
-    ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform );
+    ::ULIS::FTransformContext::TransformInto( blockA, blockB, transform );
 
     QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

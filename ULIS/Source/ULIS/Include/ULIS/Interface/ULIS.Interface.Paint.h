@@ -363,6 +363,23 @@ public:
                              , bool iCallInvalidCB = true );
 
 
+    /// @fn         static  void  DrawPolygonAA( IBlock* iBlock, std::vector< FPoint >& iPoints, const CColor& iColor, bool iFilled = false, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @brief      Draw an arbitrary convex or concave polygon with anti-aliasing.
+    /// @details    The polygon can have any number of points, works for any polygon.
+    ///             The polygon is filled, and the fill rule follows the even-odd rule.
+    /// @param      iBlock                  The pointer to the \e IBlock to draw on.
+    /// @param      iPoints                 A vector of points.
+    /// @param      iColor                  The color to use for drawing.
+    /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
+    /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
+    static  void  DrawPolygonAA( IBlock* iBlock
+                               , std::vector< FPoint >& iPoints
+                               , const CColor& iColor
+                               , bool iFilled = false
+                               , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
+                               , bool iCallInvalidCB = true );
+
+
     /// @fn         static  void  DrawQuadraticBezier( IBlock* iBlock, const FPoint& iCtrlPt0, const FPoint& iCtrlPt1, const FPoint& iCtrlPt2, float iWeight, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Draw a quadratic bezier curve without AA;
     /// @details    A quadratic bezier curve will be drawn without anti-aliasing.

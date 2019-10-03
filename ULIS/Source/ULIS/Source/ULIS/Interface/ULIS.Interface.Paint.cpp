@@ -426,6 +426,30 @@ FPainterContext::DrawPolygon( IBlock* iBlock
 
 //static
 void
+FPainterContext::DrawPolygonAA( IBlock* iBlock
+                              , std::vector< FPoint >& iPoints
+                              , const CColor& iColor
+                              , bool iFilled
+                              , const FPerformanceOptions& iPerformanceOptions
+                              , bool iCallInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                    \
+            case ULIS_REG[ n ]:                                                                                                     \
+            {                                                                                                                       \
+                TPainterContext< ULIS_REG[ n ] >::DrawPolygonAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                           \
+                                                               , iPoints, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );   \
+                break;                                                                                                              \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+
+
+//static
+void
 FPainterContext::DrawQuadraticBezier( IBlock* iBlock
                                     , const FPoint& iCtrlPt0
                                     , const FPoint& iCtrlPt1

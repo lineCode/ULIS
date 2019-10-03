@@ -111,7 +111,6 @@ int main( int argc, char *argv[] )
     */
 
     //Polygons
-    /*
     std::vector< ::ULIS::FPoint > star;
     
     star.push_back( ::ULIS::FPoint( 500, 200 ) );
@@ -140,9 +139,8 @@ int main( int argc, char *argv[] )
     }
     
     
-    ::ULIS::FPainterContext::DrawPolygon( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );
-    ::ULIS::FPainterContext::DrawPolygon( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
-     */
+    ::ULIS::FPainterContext::DrawPolygonAA( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawPolygon( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
     
     //Ellipses
     
@@ -163,7 +161,7 @@ int main( int argc, char *argv[] )
     */
     
     
-    ::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 500), 300, 400, 30, ::ULIS::CColor( 255, 0 ,0 ), false );
+    //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 500), 300, 400, 30, ::ULIS::CColor( 255, 0 ,0 ), false );
 
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 750), 100, 200, 42, ::ULIS::CColor( 0, 0 ,255 ), true );
 

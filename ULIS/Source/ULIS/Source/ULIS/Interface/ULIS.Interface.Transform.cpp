@@ -81,5 +81,30 @@ FTransformContext::GetTransformed( const IBlock* iBlockSrc
     return  nullptr;
 }
 
+
+//static
+IBlock*
+FTransformContext::TransformInto( const IBlock* iBlockSrc
+                                , IBlock* iBlockDst
+                                , const  glm::mat3& iMat
+                                , const FPerformanceOptions& iPerformanceOptions )
+{
+    switch( iBlockSrc->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                            \
+            case ULIS_REG[ n ]:                                                                                                             \
+            {                                                                                                                               \
+                TTransformContext::TransformBlockInto< ULIS_REG[ n ] >( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockSrc                         \
+                                                                      , (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockDst                         \
+                                                                      , iMat, iPerformanceOptions );                                        \
+                break;                                                                                                                      \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+
+    return  nullptr;
+}
+
 } // namespace ULIS
 

@@ -35,6 +35,7 @@ ULIS_DECLSPEC(uint32,G,noAlpha,G,typeLimits)
 ULIS_DECLSPEC(float,G,hasAlpha,GA,normalized)
 ULIS_DECLSPEC(float,G,hasAlpha,AG,normalized)
 ULIS_DECLSPEC(float,G,noAlpha,G,normalized)
+ULIS_DECLSPEC(float,G,noAlpha,G,typeLimits)
 ULIS_DECLSPEC(uint8,RGB,hasAlpha,ARGB,typeLimits)
 ULIS_DECLSPEC(uint8,RGB,hasAlpha,ABGR,typeLimits)
 ULIS_DECLSPEC(uint8,RGB,hasAlpha,RGBA,typeLimits)
@@ -114,6 +115,10 @@ ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_OP, void )
 /////////////////////////////////////////////////////
 // Mainstream typedefs
 /* easy typedefs for the most common block types defined earlier */
+namespace Format {
+static uint32 Format_RGBA8 = ::ULIS::Format::Format_uint8RGBhasAlphaRGBAtypeLimits;
+} // namespace Format
+
 typedef ::ULIS::Format::FBlockuint8GnoAlphaGtypeLimits          FBlockG8;
 typedef ::ULIS::Format::FBlockfloatGnoAlphaGnormalized          FBlockGf;
 typedef ::ULIS::Format::FBlockuint32HSLhasAlphaHSLAtypeLimits   FBlockHSLA32;

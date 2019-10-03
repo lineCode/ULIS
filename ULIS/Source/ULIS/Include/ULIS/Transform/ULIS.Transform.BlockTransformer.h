@@ -88,9 +88,13 @@ public:
                 int src_x = floor( point_in_src.x );
                 int src_y = floor( point_in_src.y );
                 if( src_x < 0 || src_y < 0 || src_x >= maxx || src_y >= maxy )
+                {
                     iDstBlock->SetPixelValue( x, y, fallback );
+                }
                 else
+                {
                     iDstBlock->SetPixelProxy( x, y, iSrcBlock->PixelProxy( src_x, src_y ) );
+                }
             }
         }
     }
@@ -106,7 +110,6 @@ public:
     static void Run( const TBlock< _SH >*        iSrcBlock
                    , TBlock< _SH >*              iDstBlock
                    , const glm::mat3&            iInverseTransform
-                   , const glm::vec2&            iShift
                    , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
         if( iPerformanceOptions.desired_workers > 1 )
@@ -130,10 +133,9 @@ public:
     static inline void Run( const TBlock< _SH >*        iSrcBlock
                           , TBlock< _SH >*              iDstBlock
                           , const glm::mat3&            iInverseTransform
-                          , const glm::vec2&            iShift
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockTransformer_Default< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iShift, iPerformanceOptions );
+        TBlockTransformer_Default< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iPerformanceOptions );
     }
 };
 
@@ -147,10 +149,9 @@ public:
     static inline void Run( const TBlock< _SH >*        iSrcBlock
                           , TBlock< _SH >*              iDstBlock
                           , const glm::mat3&            iInverseTransform
-                          , const glm::vec2&            iShift
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockTransformer_Imp< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iShift, iPerformanceOptions );
+        TBlockTransformer_Imp< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iPerformanceOptions );
     }
 };
 

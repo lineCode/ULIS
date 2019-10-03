@@ -76,8 +76,8 @@ public:
             points[i] = glm::vec2( generator() % fw + 1, generator() % fh + 1 );
 
         float sqrcount = std::sqrt( (float)iCount );
-        float cellsizew = 1.5 * ( fw / sqrcount );
-        float cellsizeh = 1.5 * ( fh / sqrcount );
+        float cellsizew = 1 * ( fw / sqrcount );
+        float cellsizeh = 1 * ( fh / sqrcount );
         float normalisation_factor = std::sqrt( cellsizew * cellsizew + cellsizeh * cellsizeh );
 
         const int x1 = 0;
@@ -114,8 +114,8 @@ public:
             points[i] = glm::vec2( generator() % fw + 1, generator() % fh + 1 );
 
         float sqrcount = std::sqrt( (float)iCount );
-        float cellsizew = 1.5 * ( fw / sqrcount );
-        float cellsizeh = 1.5 * ( fh / sqrcount );
+        float cellsizew = 1 * ( fw / sqrcount );
+        float cellsizeh = 1 * ( fh / sqrcount );
         float normalisation_factor = std::sqrt( cellsizew * cellsizew + cellsizeh * cellsizeh );
 
         const int x1 = 0;
