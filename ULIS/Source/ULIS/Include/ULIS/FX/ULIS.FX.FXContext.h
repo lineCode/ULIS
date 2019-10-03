@@ -22,17 +22,17 @@ class TFXContext
 {
 public:
     template< uint32 _SH >
-    static void ValueNoise( TBlock< _SH >* iBlock, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    static void ValueNoise( TBlock< _SH >* iBlock, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
         assert( iBlock );
-        TValueNoiseGenerator< _SH >::Run( iBlock, iPerformanceOptions );
+        TValueNoiseGenerator< _SH >::Run( iBlock, iSeed, iPerformanceOptions );
     }
 
     template< uint32 _SH >
-    static void VoronoiNoise( TBlock< _SH >* iBlock, uint32 iCount, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    static void VoronoiNoise( TBlock< _SH >* iBlock, uint32 iCount, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
         assert( iBlock );
-        TVoronoiNoiseGenerator< _SH >::Run( iBlock, iCount, iPerformanceOptions );
+        TVoronoiNoiseGenerator< _SH >::Run( iBlock, iCount, iSeed, iPerformanceOptions );
     }
 
 };

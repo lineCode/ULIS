@@ -25,8 +25,8 @@ class FFXContext
 public:
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------- Public Static API
-    static  void  ValueNoise( IBlock* iBlock, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
-    static  void  VoronoiNoise( IBlock* iBlock, uint32 iCount, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
+    static  void  ValueNoise( IBlock* iBlock, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
+    static  void  VoronoiNoise( IBlock* iBlock, uint32 iCount, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
 
 };
 

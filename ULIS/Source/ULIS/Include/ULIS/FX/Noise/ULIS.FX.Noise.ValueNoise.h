@@ -27,12 +27,14 @@ public:
     static void ProcessScanLine( TBlock< _SH >* iBlock
                                , const int      iLine
                                , const int      iX1
-                               , const int      iX2 )
+                               , const int      iX2
+                               , const int      iSeed )
     {
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
-        uint32 seed = (int)std::pow( iLine + 1, 3 ) % 65537;
+        uint32 base = iSeed < 0 ? time( NULL ) : iSeed;
+        uint32 seed = (int)std::pow( base + iLine + 1, 3 ) % 65537;
         std::minstd_rand generator( seed );
         const float maxrand = static_cast< float >( generator.max() );
 
@@ -49,7 +51,7 @@ public:
         }
     }
 
-    static inline void Run( TBlock< _SH >* iBlock )
+    static inline void Run( TBlock< _SH >* iBlock, int iSeed )
     {
         const int x1 = 0;
         const int y1 = 0;
@@ -57,7 +59,7 @@ public:
         const int y2 = iBlock->Height();
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( ProcessScanLine, iBlock, y, x1, x2 );
+            global_pool.ScheduleJob( ProcessScanLine, iBlock, y, x1, x2, iSeed );
 
         global_pool.WaitForCompletion();
     }
@@ -70,12 +72,12 @@ template< uint32 _SH >
 class TValueNoiseGenerator_Default_MonoThread
 {
 public:
-    static void Run( TBlock< _SH >* iBlock )
+    static void Run( TBlock< _SH >* iBlock, int iSeed )
     {
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
-        uint32 seed = 0;
+        uint32 seed = iSeed < 0 ? time( NULL ) : iSeed;
         std::minstd_rand generator( seed );
         const float maxrand = static_cast< float >( generator.max() );
 
@@ -108,15 +110,16 @@ class TValueNoiseGenerator
 {
 public:
     static inline void Run( TBlock< _SH >*              iBlock
+                          , int iSeed
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
         if( iPerformanceOptions.desired_workers > 1 )
         {
-            TValueNoiseGenerator_Default_ScanLine< _SH >::Run( iBlock );
+            TValueNoiseGenerator_Default_ScanLine< _SH >::Run( iBlock, iSeed );
         }
         else
         {
-            TValueNoiseGenerator_Default_MonoThread< _SH >::Run( iBlock );
+            TValueNoiseGenerator_Default_MonoThread< _SH >::Run( iBlock, iSeed );
         }
     }
 };

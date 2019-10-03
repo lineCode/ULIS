@@ -19,7 +19,7 @@ int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
     ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::FFXContext::VoronoiNoise( blockA, 1000 );
+    ::ULIS::FFXContext::VoronoiNoise( blockA, 1000, 49 );
 
     ::ULIS::ParallelFor( 1024
                        ,    [&]( ::ULIS::int32 iLine ) { 

@@ -61,12 +61,12 @@ public:
         }
     }
 
-    static inline void Run( TBlock< _SH >* iBlock, uint32 iCount )
+    static inline void Run( TBlock< _SH >* iBlock, uint32 iCount, int iSeed )
     {
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
-        uint32 seed = time( NULL );
+        uint32 seed = iSeed < 0 ? time( NULL ) : iSeed;
         std::minstd_rand generator( seed );
 
         const int fw = iBlock->Width() - 2;
@@ -99,12 +99,12 @@ template< uint32 _SH >
 class TVoronoiNoiseGenerator_Default_MonoThread
 {
 public:
-    static void Run( TBlock< _SH >* iBlock, uint32 iCount )
+    static void Run( TBlock< _SH >* iBlock, uint32 iCount, int iSeed )
     {
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
-        uint32 seed = time( NULL );
+        uint32 seed = iSeed < 0 ? time( NULL ) : iSeed;
         std::minstd_rand generator( seed );
 
         const int fw = iBlock->Width() - 2;
@@ -160,15 +160,16 @@ class TVoronoiNoiseGenerator
 public:
     static inline void Run( TBlock< _SH >*              iBlock
                           , uint32 iCount
+                          , int iSeed
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
         if( iPerformanceOptions.desired_workers > 1 )
         {
-            TVoronoiNoiseGenerator_Default_ScanLine< _SH >::Run( iBlock, iCount );
+            TVoronoiNoiseGenerator_Default_ScanLine< _SH >::Run( iBlock, iCount, iSeed );
         }
         else
         {
-            TVoronoiNoiseGenerator_Default_MonoThread< _SH >::Run( iBlock, iCount );
+            TVoronoiNoiseGenerator_Default_MonoThread< _SH >::Run( iBlock, iCount, iSeed );
         }
     }
 };

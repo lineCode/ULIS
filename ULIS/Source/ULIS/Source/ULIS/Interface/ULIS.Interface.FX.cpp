@@ -19,7 +19,7 @@ namespace ULIS {
 //-------------------------------------------------------------------- Public Static API
 //static
 void
-FFXContext::ValueNoise( IBlock* iBlock, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FFXContext::ValueNoise( IBlock* iBlock, int iSeed, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -27,7 +27,7 @@ FFXContext::ValueNoise( IBlock* iBlock, const FPerformanceOptions& iPerformanceO
             case ULIS_REG[ n ]:                                                                                 \
             {                                                                                                   \
                 return  TFXContext< ULIS_REG[ n ] >::ValueNoise( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock       \
-                                                               , iPerformanceOptions );                         \
+                                                               , iSeed, iPerformanceOptions );                  \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
@@ -37,7 +37,7 @@ FFXContext::ValueNoise( IBlock* iBlock, const FPerformanceOptions& iPerformanceO
 
 //static
 void
-FFXContext::VoronoiNoise( IBlock* iBlock, uint32 iCount, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+FFXContext::VoronoiNoise( IBlock* iBlock, uint32 iCount, int iSeed, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
     {
@@ -45,7 +45,7 @@ FFXContext::VoronoiNoise( IBlock* iBlock, uint32 iCount, const FPerformanceOptio
             case ULIS_REG[ n ]:                                                                                 \
             {                                                                                                   \
                 return  TFXContext< ULIS_REG[ n ] >::VoronoiNoise( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock     \
-                                                               , iCount, iPerformanceOptions );                 \
+                                                               , iCount, iSeed, iPerformanceOptions );          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
