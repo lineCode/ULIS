@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "ULIS/Base/ULIS.Base.BaseTypes.h"
+#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include <iostream>
 #include <deque>
 #include <functional>

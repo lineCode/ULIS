@@ -66,7 +66,7 @@ public:
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
-        int seed = time( NULL );
+        uint32 seed = time( NULL );
         std::minstd_rand generator( seed );
 
         const int fw = iBlock->Width() - 2;
@@ -104,7 +104,7 @@ public:
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
-        int seed = time( NULL );
+        uint32 seed = time( NULL );
         std::minstd_rand generator( seed );
 
         const int fw = iBlock->Width() - 2;

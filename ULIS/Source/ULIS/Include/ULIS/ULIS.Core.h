@@ -25,4 +25,5 @@
 #include "ULIS/Global/ULIS.Global.GlobalCPUConfig.h"
 #include "ULIS/Global/ULIS.Global.GlobalPalettes.h"
 #include "ULIS/Global/ULIS.Global.GlobalProfileRegistry.h"
+#include "ULIS/Thread/ULIS.Thread.ParallelFor.h"
 

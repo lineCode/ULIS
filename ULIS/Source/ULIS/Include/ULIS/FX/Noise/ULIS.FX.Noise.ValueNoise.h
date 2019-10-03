@@ -32,7 +32,7 @@ public:
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
-        int seed = (int)std::pow( iLine + 1, 3 ) % 65537;
+        uint32 seed = (int)std::pow( iLine + 1, 3 ) % 65537;
         std::minstd_rand generator( seed );
         const float maxrand = static_cast< float >( generator.max() );
 
@@ -75,7 +75,7 @@ public:
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
-        int seed = 0;
+        uint32 seed = 0;
         std::minstd_rand generator( seed );
         const float maxrand = static_cast< float >( generator.max() );
 
