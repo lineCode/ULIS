@@ -91,8 +91,8 @@ static const char* kwBlendingMode[] =
     , "Invalid"
 };
 
-#define ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, X )                                              \
-    switch( iMode ) {                                                                           \
+#define ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, X )                                                  \
+    switch( iMode ) {                                                                               \
         case eBlendingMode::kNormal             :   X( eBlendingMode::kNormal           );  break;  \
         case eBlendingMode::kBehind             :   X( eBlendingMode::kBehind           );  break;  \
         case eBlendingMode::kDissolve           :   X( eBlendingMode::kDissolve         );  break;  \

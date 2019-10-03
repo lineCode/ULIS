@@ -35,7 +35,7 @@ public:
         , mLabel( nullptr )
         , mTimer( nullptr )
     {
-        mN          = 128;
+        mN          = 64;
         int size    = ( mN + 2 ) * ( mN + 2 );
         mU          = (float*)malloc( size * sizeof( float ) );
         mV          = (float*)malloc( size * sizeof( float ) );
@@ -51,7 +51,7 @@ public:
         memset( mDensPrev, 0, size * sizeof( float ) );
 
         mDt = 0.01f;
-        mDiff = 0.01f;
+        mDiff = 0.001f;
         mVisc = 0.f;
         mForce = 20.f;
         mSource = 100.0f;
@@ -166,6 +166,10 @@ private:
                 {
                     value = 1.f;
                 }
+                else if( value > 0.25f )
+                {
+                    value = 0.5f;
+                }
                 else
                 {
                     value = 0.f;
@@ -176,7 +180,7 @@ private:
         }
 
         float scale = (float)mBlock->Width() / (float)mMiniBlock->Width();
-        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ) );
+        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kNearestNeighbour );
         mPixmap.convertFromImage( *mImage );
         mLabel->setPixmap( mPixmap );
     }

@@ -9,6 +9,8 @@
 */
 #pragma once
 #include <cmath>
+#include <glm/vec2.hpp>
+
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -80,19 +82,25 @@ struct FMath
 
     static inline int RoundNumber( float iNumber )
     {
-        return (int)(iNumber + 0.5) ;
+        return  (int)( iNumber + 0.5f );
     }
 
     template< typename T >
     static  inline T RoundAwayFromZero( T iValue )
     {
-      return iValue < 0 ? (T)floor( iValue ) : (T)ceil( iValue );
+        return  iValue < 0 ? (T)floor( iValue ) : (T)ceil( iValue );
     }
 
     template< typename T >
     static  inline T RoundTowardsZero( T iValue )
     {
-      return iValue < 0 ? (T)ceil( iValue ) : (T)floor( iValue );
+        return  iValue < 0 ? (T)ceil( iValue ) : (T)floor( iValue );
+    }
+
+    template<>
+    static  inline glm::vec2 RoundTowardsZero< glm::vec2 >( glm::vec2 iValue )
+    {
+        return  glm::vec2( RoundTowardsZero( iValue.x ), RoundTowardsZero( iValue.y ) );
     }
 
 }; // struct FMath

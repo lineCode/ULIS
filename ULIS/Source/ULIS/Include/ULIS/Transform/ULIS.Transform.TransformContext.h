@@ -13,6 +13,7 @@
 #include <assert.h>
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
+#include "ULIS/Transform/ULIS.Transform.ResamplingMethods.h"
 #include "ULIS/Transform/ULIS.Transform.BlockTransformer.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Make/ULIS.Make.MakeContext.h"
@@ -29,7 +30,7 @@ class TTransformContext
 {
 public:
     template< uint32 _SH >
-    static  TBlock< _SH >*  GetTransformedBlock( const TBlock< _SH >* iSrc, const  glm::mat3& iMat, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    static  TBlock< _SH >*  GetTransformedBlock( const TBlock< _SH >* iSrc, const  glm::mat3& iMat, eResamplingMethod iResamplingMethod = eResamplingMethod::kLinear, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
     {
         FTransformBoundingBox aabb( 0, 0, iSrc->Width(), iSrc->Height() );
         aabb.Transform( iMat );
@@ -38,12 +39,12 @@ public:
         TBlock< _SH >* dst = new TBlock< _SH >( aabb.Width(), aabb.Height() );
         glm::mat3 inverseTransform = glm::inverse( translated );
 
-        TBlockTransformer< _SH >::Run( iSrc, dst, inverseTransform, iPerformanceOptions );
+        TBlockTransformer< _SH >::Run( iSrc, dst, inverseTransform, iResamplingMethod, iPerformanceOptions );
         return  dst;
     }
 
     template< uint32 _SH >
-    static  void  TransformBlockInto( const TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const  glm::mat3& iMat, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    static  void  TransformBlockInto( const TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const  glm::mat3& iMat, eResamplingMethod iResamplingMethod = eResamplingMethod::kLinear , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
     {
         FTransformBoundingBox aabb( 0, 0, iSrc->Width(), iSrc->Height() );
         aabb.Transform( iMat );
@@ -51,7 +52,7 @@ public:
         glm::mat3 translated = glm::translate( glm::identity< glm::mat3 >(), glm::vec2( shift ) ) * iMat;
         glm::mat3 inverseTransform = glm::inverse( translated );
 
-        TBlockTransformer< _SH >::Run( iSrc, iDst, inverseTransform, iPerformanceOptions );
+        TBlockTransformer< _SH >::Run( iSrc, iDst, inverseTransform, iResamplingMethod, iPerformanceOptions );
     }
 };
 

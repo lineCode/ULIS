@@ -64,6 +64,7 @@ FTransformContext::GetShearMatrix( float iX, float iY )
 IBlock*
 FTransformContext::GetTransformed( const IBlock* iBlockSrc
                                  , const  glm::mat3& iMat
+                                 , eResamplingMethod iResamplingMethod
                                  , const FPerformanceOptions& iPerformanceOptions )
 {
     switch( iBlockSrc->Id() )
@@ -72,7 +73,7 @@ FTransformContext::GetTransformed( const IBlock* iBlockSrc
             case ULIS_REG[ n ]:                                                                                                             \
             {                                                                                                                               \
                 return  TTransformContext::GetTransformedBlock< ULIS_REG[ n ] >( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockSrc                \
-                                                                               , iMat, iPerformanceOptions );                               \
+                                                                               , iMat, iResamplingMethod, iPerformanceOptions );            \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
@@ -87,6 +88,7 @@ IBlock*
 FTransformContext::TransformInto( const IBlock* iBlockSrc
                                 , IBlock* iBlockDst
                                 , const  glm::mat3& iMat
+                                , eResamplingMethod iResamplingMethod
                                 , const FPerformanceOptions& iPerformanceOptions )
 {
     switch( iBlockSrc->Id() )
@@ -96,7 +98,7 @@ FTransformContext::TransformInto( const IBlock* iBlockSrc
             {                                                                                                                               \
                 TTransformContext::TransformBlockInto< ULIS_REG[ n ] >( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockSrc                         \
                                                                       , (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockDst                         \
-                                                                      , iMat, iPerformanceOptions );                                        \
+                                                                      , iMat, iResamplingMethod, iPerformanceOptions );                     \
                 break;                                                                                                                      \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )

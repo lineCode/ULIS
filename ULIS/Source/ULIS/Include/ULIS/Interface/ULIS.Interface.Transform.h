@@ -11,6 +11,7 @@
 #include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
+#include "ULIS/Transform/ULIS.Transform.ResamplingMethods.h"
 #include <glm/matrix.hpp>
 
 ULIS_CLASS_FORWARD_DECLARATION( IBlock )
@@ -73,6 +74,7 @@ public:
     /// @return     A fresh newly allocated block, with contents transformed from source, with size deduced from input block and transform.
     static IBlock* GetTransformed( const IBlock* iBlock
                                  , const  glm::mat3& iMat
+                                 , eResamplingMethod iResamplingMethod = eResamplingMethod::kLinear
                                  , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 
 
@@ -86,6 +88,7 @@ public:
     static IBlock* TransformInto( const IBlock* iBlockSrc
                                 , IBlock* iBlockDst
                                 , const  glm::mat3& iMat
+                                , eResamplingMethod iResamplingMethod = eResamplingMethod::kLinear
                                 , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 
 };
