@@ -101,5 +101,14 @@ FFXContext::VoronoiNoise( IBlock* iBlock, uint32 iCount, int iSeed, const FPerfo
     }
 }
 
+
+//static
+void
+FFXContext::Clouds( IBlock* iBlock, int iSeed, const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
+{
+    BrownianNoise( iBlock, 0.02f, 2.f, 0.5f, 5, iSeed, iPerformanceOptions, iCallInvalidCB );
+}
+
+
 } // namespace ULIS
 

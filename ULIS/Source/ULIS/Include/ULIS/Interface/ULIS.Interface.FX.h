@@ -29,6 +29,7 @@ public:
     static  void  ValueNoise( IBlock* iBlock, float iFrequency, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
     static  void  BrownianNoise( IBlock* iBlock, float iFrequency = 0.22f, float iFrequencyMult = 1.8f, float iAmplitudeMult = 0.35f, uint8 iNumLayers = 5, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
     static  void  VoronoiNoise( IBlock* iBlock, uint32 iCount, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
+    static  void  Clouds( IBlock* iBlock, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
 
 };
 
