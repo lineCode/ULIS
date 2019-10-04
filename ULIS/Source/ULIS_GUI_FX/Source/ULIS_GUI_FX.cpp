@@ -19,23 +19,11 @@ int main( int argc, char *argv[] )
 {
     using namespace ::ULIS;
     QApplication app( argc, argv );
-    IBlock* block_background = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
-    IBlock* block_circle = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
-    IBlock* block_translated = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
-    FClearFillContext::Fill( block_background, PaletteMSWindows::white );
-    FClearFillContext::Clear( block_circle );
-    FClearFillContext::Fill( block_translated, PaletteMSWindows::white );
-    FPainterContext::DrawCircleBresenham( block_circle, FPoint( 512, 512 ), 400, PaletteMSWindows::darkCyan, true );
-    glm::mat3 transform = FTransformContext::GetTranslationMatrix( 0.5, 0.5 );
-    FPerformanceOptions opt;
-    opt.desired_workers = 1;
-    FTransformContext::TransformInto( block_circle, block_translated, transform, eResamplingMethod::kLinear, opt );
-    FBlendingContext::Blend( block_translated, block_background, eBlendingMode::kNormal );
+    IBlock* block = FMakeContext::MakeBlock( 512, 512, Format::Format_RGBA8 );
 
-    FRect transp = FMakeContext::GetTrimmedTransparencyRect( block_circle );
-    IBlock* trim = FMakeContext::CopyBlockRect( block_circle, transp );
+    FFXContext::BrownianNoise( block, 0.02f, 2.f, 0.5f, 5, 0 );
 
-    QImage* image   = new QImage( trim->DataPtr(), trim->Width(), trim->Height(), trim->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
     QWidget* w      = new QWidget();
     QLabel* label   = new QLabel( w );
@@ -49,9 +37,7 @@ int main( int argc, char *argv[] )
     delete label;
     delete image;
     delete w;
-    delete block_background;
-    delete block_circle;
-    delete block_translated;
+    delete block;
 
     return  exit_code;
 }

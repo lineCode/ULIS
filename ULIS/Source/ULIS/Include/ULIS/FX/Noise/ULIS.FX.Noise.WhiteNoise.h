@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.FX.Noise.ValueNoise.h
+* ULIS.FX.Noise.WhiteNoise.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
@@ -12,29 +12,36 @@
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
-#include "ULIS/FX/Noise/ULIS.FX.Noise.NoiseUtils.h"
+
+#include <cassert>
+#include <vector>
+#include <random>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// TValueNoiseGenerator_Default_ScanLine
+// TWhiteNoiseGenerator_Default_ScanLine
 template< uint32 _SH >
-class TValueNoiseGenerator_Default_ScanLine
+class TWhiteNoiseGenerator_Default_ScanLine
 {
 public:
-    static void ProcessScanLine( TBlock< _SH >*     iBlock
-                               , const int          iLine
-                               , const int          iX1
-                               , const int          iX2
-                               , const float        iFrequency
-                               , const ValueNoise&  iGen )
+    static void ProcessScanLine( TBlock< _SH >* iBlock
+                               , const int      iLine
+                               , const int      iX1
+                               , const int      iX2
+                               , const int      iSeed )
     {
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
+        uint32 base = iSeed < 0 ? time( NULL ) : iSeed;
+        uint32 seed = int( base + pow( iLine + 1, 3 ) ) % 65537;
+        std::minstd_rand generator( seed );
+        const float maxrand = static_cast< float >( generator.max() );
+
         for( int x = iX1; x < iX2; ++x )
         {
             tPixelProxy proxy = iBlock->PixelProxy( x, iLine );
-            float floatvalue = iGen.eval( Vec2f( x, iLine ) * iFrequency );
+            float floatvalue = generator() / maxrand;
             tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
             for( int i = 0; i < info::_nf._nc; ++i )
@@ -44,18 +51,15 @@ public:
         }
     }
 
-    static inline void Run( TBlock< _SH >* iBlock, float iFrequency, int iSeed )
+    static inline void Run( TBlock< _SH >* iBlock, int iSeed )
     {
-        uint32 seed = iSeed < 0 ? time( NULL ) : iSeed;
-        ValueNoise noise( seed );
-
         const int x1 = 0;
         const int y1 = 0;
         const int x2 = iBlock->Width();
         const int y2 = iBlock->Height();
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( ProcessScanLine, iBlock, y, x1, x2, iFrequency, noise );
+            global_pool.ScheduleJob( ProcessScanLine, iBlock, y, x1, x2, iSeed );
 
         global_pool.WaitForCompletion();
     }
@@ -63,18 +67,19 @@ public:
 
 
 /////////////////////////////////////////////////////
-// TValueNoiseGenerator_Default_MonoThread
+// TWhiteNoiseGenerator_Default_MonoThread
 template< uint32 _SH >
-class TValueNoiseGenerator_Default_MonoThread
+class TWhiteNoiseGenerator_Default_MonoThread
 {
 public:
-    static void Run( TBlock< _SH >* iBlock, float iFrequency, int iSeed )
+    static void Run( TBlock< _SH >* iBlock, int iSeed )
     {
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
         uint32 seed = iSeed < 0 ? time( NULL ) : iSeed;
-        ValueNoise noise( seed );
+        std::minstd_rand generator( seed );
+        const float maxrand = static_cast< float >( generator.max() );
 
         const int x1 = 0;
         const int y1 = 0;
@@ -85,7 +90,7 @@ public:
             for( int x = x1; x < x2; ++x )
             {
                 tPixelProxy proxy = iBlock->PixelProxy( x, y );
-                float floatvalue = noise.eval( Vec2f( x, y ) * iFrequency );
+                float floatvalue = generator() / maxrand;
                 tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
                 for( int i = 0; i < info::_nf._nc; ++i )
@@ -99,23 +104,22 @@ public:
 
 
 /////////////////////////////////////////////////////
-// TValueNoiseGenerator
+// TWhiteNoiseGenerator
 template< uint32 _SH >
-class TValueNoiseGenerator
+class TWhiteNoiseGenerator
 {
 public:
     static inline void Run( TBlock< _SH >*              iBlock
-                          , float iFrequency
                           , int iSeed
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
         if( iPerformanceOptions.desired_workers > 1 )
         {
-            TValueNoiseGenerator_Default_ScanLine< _SH >::Run( iBlock, iFrequency, iSeed );
+            TWhiteNoiseGenerator_Default_ScanLine< _SH >::Run( iBlock, iSeed );
         }
         else
         {
-            TValueNoiseGenerator_Default_MonoThread< _SH >::Run( iBlock, iFrequency, iSeed );
+            TWhiteNoiseGenerator_Default_MonoThread< _SH >::Run( iBlock, iSeed );
         }
     }
 };

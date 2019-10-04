@@ -12,6 +12,8 @@
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/FX/Noise/ULIS.FX.Noise.ValueNoise.h"
+#include "ULIS/FX/Noise/ULIS.FX.Noise.WhiteNoise.h"
+#include "ULIS/FX/Noise/ULIS.FX.Noise.BrownianNoise.h"
 #include "ULIS/FX/Noise/ULIS.FX.Noise.VoronoiNoise.h"
 
 namespace ULIS {
@@ -22,10 +24,24 @@ class TFXContext
 {
 public:
     template< uint32 _SH >
-    static void ValueNoise( TBlock< _SH >* iBlock, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    static void WhiteNoise( TBlock< _SH >* iBlock, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
         assert( iBlock );
-        TValueNoiseGenerator< _SH >::Run( iBlock, iSeed, iPerformanceOptions );
+        TWhiteNoiseGenerator< _SH >::Run( iBlock, iSeed, iPerformanceOptions );
+    }
+
+    template< uint32 _SH >
+    static void ValueNoise( TBlock< _SH >* iBlock, float iFrequency, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    {
+        assert( iBlock );
+        TValueNoiseGenerator< _SH >::Run( iBlock, iFrequency, iSeed, iPerformanceOptions );
+    }
+
+    template< uint32 _SH >
+    static  void  BrownianNoise( TBlock< _SH >* iBlock, float iFrequency = 0.22f, float iFrequencyMult = 1.8f, float iAmplitudeMult = 0.35f, uint8 iNumLayers = 5, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    {
+        assert( iBlock );
+        TBrownianNoiseGenerator< _SH >::Run( iBlock, iFrequency, iFrequencyMult, iAmplitudeMult, iNumLayers, iSeed, iPerformanceOptions );
     }
 
     template< uint32 _SH >

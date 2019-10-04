@@ -3,7 +3,7 @@
 *   ULIS
 *__________________
 *
-* ULIS.FX.Noise.ValueNoise.h
+* ULIS.FX.Noise.VoronoiNoise.h
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */

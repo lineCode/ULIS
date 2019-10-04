@@ -16,9 +16,9 @@
 
 namespace ULIS {
 /////////////////////////////////////////////////////
-// TValueNoiseGenerator_Default_ScanLine
+// TBrownianNoiseGenerator_Default_ScanLine
 template< uint32 _SH >
-class TValueNoiseGenerator_Default_ScanLine
+class TBrownianNoiseGenerator_Default_ScanLine
 {
 public:
     static void ProcessScanLine( TBlock< _SH >*     iBlock
@@ -26,6 +26,10 @@ public:
                                , const int          iX1
                                , const int          iX2
                                , const float        iFrequency
+                               , float              iFrequencyMult
+                               , float              iAmplitudeMult
+                               , uint8              iNumLayers
+                               , float              iAmplitudeMax
                                , const ValueNoise&  iGen )
     {
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
@@ -34,7 +38,18 @@ public:
         for( int x = iX1; x < iX2; ++x )
         {
             tPixelProxy proxy = iBlock->PixelProxy( x, iLine );
-            float floatvalue = iGen.eval( Vec2f( x, iLine ) * iFrequency );
+            Vec2f pointNoise = Vec2f( x, iLine ) * iFrequency;
+            float amplitude = 1.f;
+            float floatvalue = 0;
+
+            for( int i = 0; i < iNumLayers; ++i )
+            {
+                floatvalue  += iGen.eval( pointNoise ) * amplitude;
+                pointNoise  *= iFrequencyMult;
+                amplitude   *= iAmplitudeMult;
+            }
+
+            floatvalue /= iAmplitudeMax;
             tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
             for( int i = 0; i < info::_nf._nc; ++i )
@@ -44,10 +59,20 @@ public:
         }
     }
 
-    static inline void Run( TBlock< _SH >* iBlock, float iFrequency, int iSeed )
+    static inline void Run( TBlock< _SH >* iBlock, float iFrequency, float iFrequencyMult, float iAmplitudeMult, uint8 iNumLayers, int iSeed )
     {
         uint32 seed = iSeed < 0 ? time( NULL ) : iSeed;
         ValueNoise noise( seed );
+
+        float ampMax = 0;
+        {
+            float amplitude = 1.0f;
+            for( int i = 0; i < iNumLayers; ++i )
+            {
+                ampMax += amplitude;
+                amplitude *= iAmplitudeMult;
+            }
+        }
 
         const int x1 = 0;
         const int y1 = 0;
@@ -55,7 +80,7 @@ public:
         const int y2 = iBlock->Height();
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( ProcessScanLine, iBlock, y, x1, x2, iFrequency, noise );
+            global_pool.ScheduleJob( ProcessScanLine, iBlock, y, x1, x2, iFrequency, iFrequencyMult, iAmplitudeMult, iNumLayers, ampMax, noise );
 
         global_pool.WaitForCompletion();
     }
@@ -63,18 +88,28 @@ public:
 
 
 /////////////////////////////////////////////////////
-// TValueNoiseGenerator_Default_MonoThread
+// TBrownianNoiseGenerator_Default_MonoThread
 template< uint32 _SH >
-class TValueNoiseGenerator_Default_MonoThread
+class TBrownianNoiseGenerator_Default_MonoThread
 {
 public:
-    static void Run( TBlock< _SH >* iBlock, float iFrequency, int iSeed )
+    static void Run( TBlock< _SH >* iBlock, float iFrequency, float iFrequencyMult, float iAmplitudeMult, uint8 iNumLayers, int iSeed )
     {
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
         using info = TBlockInfo< _SH >;
 
         uint32 seed = iSeed < 0 ? time( NULL ) : iSeed;
         ValueNoise noise( seed );
+
+        float ampMax = 0;
+        {
+            float amplitude = 1.0f;
+            for( int i = 0; i < iNumLayers; ++i )
+            {
+                ampMax += amplitude;
+                amplitude *= iAmplitudeMult;
+            }
+        }
 
         const int x1 = 0;
         const int y1 = 0;
@@ -85,7 +120,18 @@ public:
             for( int x = x1; x < x2; ++x )
             {
                 tPixelProxy proxy = iBlock->PixelProxy( x, y );
-                float floatvalue = noise.eval( Vec2f( x, y ) * iFrequency );
+                Vec2f pointNoise = Vec2f( x, y ) * iFrequency;
+                float amplitude = 1.f;
+                float floatvalue = 0;
+
+                for( int i = 0; i < iNumLayers; ++i )
+                {
+                    floatvalue  += noise.eval( pointNoise ) * amplitude;
+                    pointNoise  *= iFrequencyMult;
+                    amplitude   *= iAmplitudeMult;
+                }
+
+                floatvalue /= ampMax;
                 tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
                 for( int i = 0; i < info::_nf._nc; ++i )
@@ -99,23 +145,26 @@ public:
 
 
 /////////////////////////////////////////////////////
-// TValueNoiseGenerator
+// TBrownianNoiseGenerator
 template< uint32 _SH >
-class TValueNoiseGenerator
+class TBrownianNoiseGenerator
 {
 public:
     static inline void Run( TBlock< _SH >*              iBlock
                           , float iFrequency
+                          , float iFrequencyMult
+                          , float iAmplitudeMult
+                          , uint8 iNumLayers
                           , int iSeed
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
         if( iPerformanceOptions.desired_workers > 1 )
         {
-            TValueNoiseGenerator_Default_ScanLine< _SH >::Run( iBlock, iFrequency, iSeed );
+            TBrownianNoiseGenerator_Default_ScanLine< _SH >::Run( iBlock, iFrequency, iFrequencyMult, iAmplitudeMult, iNumLayers, iSeed );
         }
         else
         {
-            TValueNoiseGenerator_Default_MonoThread< _SH >::Run( iBlock, iFrequency, iSeed );
+            TBrownianNoiseGenerator_Default_MonoThread< _SH >::Run( iBlock, iFrequency, iFrequencyMult, iAmplitudeMult, iNumLayers, iSeed );
         }
     }
 };
