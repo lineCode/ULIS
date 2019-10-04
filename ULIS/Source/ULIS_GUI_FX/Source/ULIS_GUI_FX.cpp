@@ -18,13 +18,13 @@
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
-    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 64, 64, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 128, 128, ::ULIS::FBlockRGBA8::TypeId() );
     for( int i = 0; i < blockA->Height(); ++i )
         for( int j = 0; j < blockA->Width(); ++j )
             blockA->SetPixelColor( j, i, ::ULIS::CColor::FromHSLF( j / (float)blockA->Width(), 1.f, 0.5f ) );
     ::ULIS::FPerformanceOptions opt;
     opt.desired_workers = 1;
-    glm::mat3 transform = ::ULIS::FTransformContext::GetRotationMatrix( 3.14 / 2 ) * ::ULIS::FTransformContext::GetScaleMatrix( 10, 10 );
+    glm::mat3 transform = ::ULIS::FTransformContext::GetRotationMatrix( 3.14 / 4 ) * ::ULIS::FTransformContext::GetScaleMatrix( 2, 2 );
     ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform, ::ULIS::eResamplingMethod::kLinear, opt );
 
     QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

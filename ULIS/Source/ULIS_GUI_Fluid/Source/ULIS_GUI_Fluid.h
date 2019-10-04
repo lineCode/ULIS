@@ -35,7 +35,7 @@ public:
         , mLabel( nullptr )
         , mTimer( nullptr )
     {
-        mN          = 64;
+        mN          = 256;
         int size    = ( mN + 2 ) * ( mN + 2 );
         mU          = (float*)malloc( size * sizeof( float ) );
         mV          = (float*)malloc( size * sizeof( float ) );
@@ -182,7 +182,7 @@ private:
         float scale = (float)mBlock->Width() / (float)mMiniBlock->Width();
         FPerformanceOptions opt;
         opt.desired_workers = 1;
-        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kLinear, opt );
+        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kNearestNeighbour, opt );
         mPixmap.convertFromImage( *mImage );
         mLabel->setPixmap( mPixmap );
     }

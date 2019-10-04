@@ -91,18 +91,13 @@ public:
         {
             for( int x = x1; x < x2; ++x )
             {
-                glm::vec3 point_in_dst( x, y, 1.f );
-                glm::vec2 point_in_src = ( iInverseTransform * point_in_dst );
-                point_in_src -= glm::vec2( 0.5, 0.5 );
+                glm::vec2 point_in_src = glm::vec2( iInverseTransform * glm::vec3( x, y, 1.f ) ) - glm::vec2( 0.5, 0.5 );
                 int left    = floor( point_in_src.x );
                 int up      = floor( point_in_src.y );
                 int right   = left + 1;
                 int bot     = up + 1;
                 float tx = point_in_src.x - float( left );
                 float ty = point_in_src.y - float( up );
-
-                if( tx < 0.f || tx > 1.f ) ULIS_CRASH_CHECK;
-                if( ty < 0.f || ty > 1.f ) ULIS_CRASH_CHECK;
 
                 auto lerp = [&]( const tPixelBase& iA, const tPixelBase& iB, float t ) {
                     tPixelValue ret;
