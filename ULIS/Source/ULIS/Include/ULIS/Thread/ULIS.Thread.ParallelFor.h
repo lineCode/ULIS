@@ -18,7 +18,7 @@
 namespace ULIS {
 /////////////////////////////////////////////////////
 // ParallelFor
-inline  void  ParallelFor_Imp( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+inline  void  ParallelFor_Imp( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
 {
     if( iPerformanceOptions.desired_workers > 1 )
     {
@@ -36,13 +36,13 @@ inline  void  ParallelFor_Imp( FThreadPool& iPool, int32 iNum, std::function< vo
 }
 
 
-inline  void  ParallelFor( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) > iFun, FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+inline  void  ParallelForPool( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) > iFun, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
 {
     ParallelFor_Imp( iPool, iNum, iFun, iPerformanceOptions );
 }
 
 
-inline  void  ParallelFor( int32 iNum, std::function< void( int32 ) > iFun, FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+inline  void  ParallelFor( int32 iNum, std::function< void( int32 ) > iFun, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
 {
     ParallelFor_Imp( FGlobalThreadPool::Get(), iNum, iFun, iPerformanceOptions );
 }

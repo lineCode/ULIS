@@ -17,17 +17,25 @@
 
 int main( int argc, char *argv[] )
 {
+    using namespace ::ULIS;
     QApplication app( argc, argv );
-    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 128, 128, ::ULIS::FBlockRGBA8::TypeId() );
-    for( int i = 0; i < blockA->Height(); ++i )
-        for( int j = 0; j < blockA->Width(); ++j )
-            blockA->SetPixelColor( j, i, ::ULIS::CColor::FromHSLF( j / (float)blockA->Width(), 1.f, 0.5f ) );
-    ::ULIS::FPerformanceOptions opt;
+    IBlock* block_background = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
+    IBlock* block_circle = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
+    IBlock* block_translated = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
+    FClearFillContext::Fill( block_background, PaletteMSWindows::white );
+    FClearFillContext::Clear( block_circle );
+    FClearFillContext::Fill( block_translated, PaletteMSWindows::white );
+    FPainterContext::DrawCircleBresenham( block_circle, FPoint( 512, 512 ), 400, PaletteMSWindows::darkCyan, true );
+    glm::mat3 transform = FTransformContext::GetTranslationMatrix( 0.5, 0.5 );
+    FPerformanceOptions opt;
     opt.desired_workers = 1;
-    glm::mat3 transform = ::ULIS::FTransformContext::GetRotationMatrix( 3.14 / 4 ) * ::ULIS::FTransformContext::GetScaleMatrix( 2, 2 );
-    ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform, ::ULIS::eResamplingMethod::kLinear, opt );
+    FTransformContext::TransformInto( block_circle, block_translated, transform, eResamplingMethod::kLinear, opt );
+    FBlendingContext::Blend( block_translated, block_background, eBlendingMode::kNormal );
 
-    QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    FRect transp = FMakeContext::GetTrimmedTransparencyRect( block_circle );
+    IBlock* trim = FMakeContext::CopyBlockRect( block_circle, transp );
+
+    QImage* image   = new QImage( trim->DataPtr(), trim->Width(), trim->Height(), trim->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
     QWidget* w      = new QWidget();
     QLabel* label   = new QLabel( w );
@@ -41,8 +49,9 @@ int main( int argc, char *argv[] )
     delete label;
     delete image;
     delete w;
-    delete blockA;
-    delete blockB;
+    delete block_background;
+    delete block_circle;
+    delete block_translated;
 
     return  exit_code;
 }

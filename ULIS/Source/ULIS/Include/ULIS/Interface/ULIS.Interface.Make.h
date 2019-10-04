@@ -118,6 +118,14 @@ public:
                                    , const FRect& iRect
                                    , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() );
 
+    /// @fn         static  FRect  GetTrimmedTransparencyRect( const IBlock* iSrc, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    /// @brief      Get the rect corresponding to the minimal rectangular area in the block that is non transparent.
+    /// @details    THis effectively leaves empty spaces out.
+    /// @param      iSrc                    The source.
+    /// @param      iPerformanceOptions     The performance preferences.
+    static  FRect  GetTrimmedTransparencyRect( const IBlock* iSrc
+                                             , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() );
+
 };
 
 } // namespace ULIS

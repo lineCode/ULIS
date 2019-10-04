@@ -15,6 +15,8 @@
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Make/ULIS.Make.BlockCopier.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Thread/ULIS.Thread.ParallelFor.h"
+#include <atomic>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -42,6 +44,40 @@ public:
         FPoint shift( -iRect.x, -iRect.y );
 
         TBlockCopier< _SH >::Run( iSrc, iDst, inter_bb, shift, iPerformanceOptions);
+    }
+
+    static  FRect  GetTrimmedTransparencyRect( const TBlock< _SH >* iSrc, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    {
+        using tPixelType = typename TBlock< _SH >::tPixelType;
+        using tPixelValue = typename TBlock< _SH >::tPixelValue;
+        using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
+        using tPixelBase = typename TPixelBase< _SH >;
+        using info = TBlockInfo< _SH >;
+
+        if( !tPixelBase::HasAlpha() )
+            return  FRect( 0, 0, iSrc->Width(), iSrc->Height() );
+
+        std::atomic_int left    = INT_MAX;
+        std::atomic_int top     = INT_MAX;
+        std::atomic_int right   = 0;
+        std::atomic_int bot     = 0;
+        const int minx = 0;
+        const int miny = 0;
+        const int maxx = iSrc->Width();
+        const int maxy = iSrc->Height();
+        ParallelFor( (int32)maxy
+                   , [&]( int32 iLine ) {
+                        for( int i = minx; i < maxx; ++i ) {
+                            if( iSrc->PixelProxy( i, iLine ).GetAlpha() > tPixelType( 0 ) ) {
+                                if( iLine < top.load() )    top.store( iLine );
+                                if( i < left.load() )       left.store( i );
+                                if( iLine > bot.load() )    bot.store( iLine );
+                                if( i > right.load() )      right.store( i );
+                            }
+                        }
+                   }
+                   , iPerformanceOptions );
+        return  FRect( left, top, ( right - left ) + 1, ( bot - top ) + 1 );
     }
 };
 

@@ -127,5 +127,27 @@ FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc
         iDst->AssignColorProfile( iSrc->ColorProfile()->Name() );
 }
 
+
+//static
+FRect
+FMakeContext::GetTrimmedTransparencyRect( const IBlock* iSrc
+                                        , const FPerformanceOptions& iPerformanceOptions )
+{
+    switch( iSrc->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                            \
+            case ULIS_REG[ n ]:                                                                                                             \
+            {                                                                                                                               \
+                return  ::ULIS::TMakeContext< ULIS_REG[ n ] >::GetTrimmedTransparencyRect( (::ULIS::TBlock< ULIS_REG[ n ] >*)iSrc           \
+                                                                                         , iPerformanceOptions );                           \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+            default: return  FRect( 0, 0, iSrc->Width(), iSrc->Height() );
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+
+
+
 } // namespace ULIS
 
