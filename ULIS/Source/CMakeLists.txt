@@ -140,11 +140,11 @@ if( NOT "${ULIS_QT_CMAKE_PATH}" STREQUAL "default")
 endif()
 
 #--------------------------------------------
-
 # Read Global Preferences
 include(${CMAKE_CURRENT_SOURCE_DIR}/../Tools/GlobalConfig.cmake)
-message( "${ULIS_EXT_VERSION_MAJOR}" )
+message( "${ULIS_EXT_VERSION_MAJOR}.${ULIS_EXT_VERSION_MINOR}" )
 
+#--------------------------------------------
 # Add projects
 include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS/CMakeLists.txt)
 
@@ -168,4 +168,7 @@ if( ${ULIS_BUILD_TESTS} )
     endif()
 endif()
 
+#--------------------------------------------
+# Set default startup project
 set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ULIS )
+
