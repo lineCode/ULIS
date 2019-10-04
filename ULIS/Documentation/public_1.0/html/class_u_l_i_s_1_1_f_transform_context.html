@@ -90,8 +90,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:aa3d76d2ea2b59c77fdec10248c9620ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7367fe4fe674c62f8f12173b43f1fedc"><td class="memItemLeft" align="right" valign="top">static glm::mat3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a7367fe4fe674c62f8f12173b43f1fedc">GetShearMatrix</a> (float iX, float iY)</td></tr>
 <tr class="separator:a7367fe4fe674c62f8f12173b43f1fedc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef9355a2c77db6d4840ae9a0f225a1fc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#aef9355a2c77db6d4840ae9a0f225a1fc">GetTransformed</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlock, const glm::mat3 &amp;iMat, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
-<tr class="separator:aef9355a2c77db6d4840ae9a0f225a1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29c9b74d46c639b948b1af904b52c120"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#a29c9b74d46c639b948b1af904b52c120">GetTransformed</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlock, const glm::mat3 &amp;iMat, eResamplingMethod iResamplingMethod=eResamplingMethod::kLinear, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
+<tr class="separator:a29c9b74d46c639b948b1af904b52c120"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5f0dd4142e05011ad830b806d9f73eb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_transform_context.html#aa5f0dd4142e05011ad830b806d9f73eb">TransformInto</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockSrc, <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlockDst, const glm::mat3 &amp;iMat, eResamplingMethod iResamplingMethod=eResamplingMethod::kLinear, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
+<tr class="separator:aa5f0dd4142e05011ad830b806d9f73eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_f_transform_context.html" title="The FTransformContext class provides a context for all Transform operations on Blocks.">FTransformContext</a> class provides a context for all Transform operations on Blocks. </p>
@@ -251,8 +253,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aef9355a2c77db6d4840ae9a0f225a1fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef9355a2c77db6d4840ae9a0f225a1fc">&#9670;&nbsp;</a></span>GetTransformed()</h2>
+<a id="a29c9b74d46c639b948b1af904b52c120"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29c9b74d46c639b948b1af904b52c120">&#9670;&nbsp;</a></span>GetTransformed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -264,13 +266,19 @@ Static Public Member Functions</h2></td></tr>
           <td class="memname">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> * ULIS::FTransformContext::GetTransformed </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td>
-          <td class="paramname"><em>iBlockSrc</em>, </td>
+          <td class="paramname"><em>iBlock</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const glm::mat3 &amp;&#160;</td>
-          <td class="paramname"><em>imat</em>, </td>
+          <td class="paramname"><em>iMat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">eResamplingMethod&#160;</td>
+          <td class="paramname"><em>iResamplingMethod</em> = <code>eResamplingMethod::kLinear</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -347,6 +355,72 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A fresh pure translation matrix representing a 2D translation. </dd></dl>
+
+</div>
+</div>
+<a id="aa5f0dd4142e05011ad830b806d9f73eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5f0dd4142e05011ad830b806d9f73eb">&#9670;&nbsp;</a></span>TransformInto()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> * ULIS::FTransformContext::TransformInto </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td>
+          <td class="paramname"><em>iBlockSrc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td>
+          <td class="paramname"><em>iBlockDst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat3 &amp;&#160;</td>
+          <td class="paramname"><em>iMat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">eResamplingMethod&#160;</td>
+          <td class="paramname"><em>iResamplingMethod</em> = <code>eResamplingMethod::kLinear</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;&#160;</td>
+          <td class="paramname"><em>iPerformanceOptions</em> = <code><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Transform source block into preallocatod destination. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iBlockSrc</td><td>The source block to transform ( remains untouched ). </td></tr>
+    <tr><td class="paramname">iBlockDst</td><td>The destination block to transform ( receives the result ). </td></tr>
+    <tr><td class="paramname">iMat</td><td>The transform to apply. </td></tr>
+    <tr><td class="paramname">iPerformanceOptions</td><td>The performance preferences. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A fresh newly allocated block, with contents transformed from source, with size deduced from input block and transform. </dd></dl>
 
 </div>
 </div>

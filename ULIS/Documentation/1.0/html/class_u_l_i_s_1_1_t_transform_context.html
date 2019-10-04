@@ -80,13 +80,16 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:afad1c2b59fa1e7601e1efc6dbfe66640"><td class="memTemplParams" colspan="2">template&lt;uint32 _SH&gt; </td></tr>
-<tr class="memitem:afad1c2b59fa1e7601e1efc6dbfe66640"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="class_u_l_i_s_1_1_t_block.html">TBlock</a>&lt; _SH &gt; *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_t_transform_context.html#afad1c2b59fa1e7601e1efc6dbfe66640">GetTransformedBlock</a> (const <a class="el" href="class_u_l_i_s_1_1_t_block.html">TBlock</a>&lt; _SH &gt; *iSrc, const glm::mat3 &amp;iMat, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
-<tr class="separator:afad1c2b59fa1e7601e1efc6dbfe66640"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3595d462852af5b8671e84a6b5cee5e"><td class="memTemplParams" colspan="2">template&lt;uint32 _SH&gt; </td></tr>
+<tr class="memitem:aa3595d462852af5b8671e84a6b5cee5e"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="class_u_l_i_s_1_1_t_block.html">TBlock</a>&lt; _SH &gt; *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_t_transform_context.html#aa3595d462852af5b8671e84a6b5cee5e">GetTransformedBlock</a> (const <a class="el" href="class_u_l_i_s_1_1_t_block.html">TBlock</a>&lt; _SH &gt; *iSrc, const glm::mat3 &amp;iMat, <a class="el" href="namespace_u_l_i_s.html#ae18e3d035216e38401823142a3b2f2cd">eResamplingMethod</a> iResamplingMethod=<a class="el" href="namespace_u_l_i_s.html#ae18e3d035216e38401823142a3b2f2cdaac97f0008bcf7c7fe4f2ff94160e1385">eResamplingMethod::kLinear</a>, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
+<tr class="separator:aa3595d462852af5b8671e84a6b5cee5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b0fc39186f500adc6da50480038ba4b"><td class="memTemplParams" colspan="2">template&lt;uint32 _SH&gt; </td></tr>
+<tr class="memitem:a4b0fc39186f500adc6da50480038ba4b"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_t_transform_context.html#a4b0fc39186f500adc6da50480038ba4b">TransformBlockInto</a> (const <a class="el" href="class_u_l_i_s_1_1_t_block.html">TBlock</a>&lt; _SH &gt; *iSrc, <a class="el" href="class_u_l_i_s_1_1_t_block.html">TBlock</a>&lt; _SH &gt; *iDst, const glm::mat3 &amp;iMat, <a class="el" href="namespace_u_l_i_s.html#ae18e3d035216e38401823142a3b2f2cd">eResamplingMethod</a> iResamplingMethod=<a class="el" href="namespace_u_l_i_s.html#ae18e3d035216e38401823142a3b2f2cdaac97f0008bcf7c7fe4f2ff94160e1385">eResamplingMethod::kLinear</a>, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
+<tr class="separator:a4b0fc39186f500adc6da50480038ba4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="afad1c2b59fa1e7601e1efc6dbfe66640"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afad1c2b59fa1e7601e1efc6dbfe66640">&#9670;&nbsp;</a></span>GetTransformedBlock()</h2>
+<a id="aa3595d462852af5b8671e84a6b5cee5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3595d462852af5b8671e84a6b5cee5e">&#9670;&nbsp;</a></span>GetTransformedBlock()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -107,6 +110,68 @@ template&lt;uint32 _SH&gt; </div>
           <td></td>
           <td class="paramtype">const glm::mat3 &amp;&#160;</td>
           <td class="paramname"><em>iMat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_u_l_i_s.html#ae18e3d035216e38401823142a3b2f2cd">eResamplingMethod</a>&#160;</td>
+          <td class="paramname"><em>iResamplingMethod</em> = <code><a class="el" href="namespace_u_l_i_s.html#ae18e3d035216e38401823142a3b2f2cdaac97f0008bcf7c7fe4f2ff94160e1385">eResamplingMethod::kLinear</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;&#160;</td>
+          <td class="paramname"><em>iPerformanceOptions</em> = <code><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4b0fc39186f500adc6da50480038ba4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b0fc39186f500adc6da50480038ba4b">&#9670;&nbsp;</a></span>TransformBlockInto()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32 _SH&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ULIS::TTransformContext::TransformBlockInto </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_u_l_i_s_1_1_t_block.html">TBlock</a>&lt; _SH &gt; *&#160;</td>
+          <td class="paramname"><em>iSrc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_u_l_i_s_1_1_t_block.html">TBlock</a>&lt; _SH &gt; *&#160;</td>
+          <td class="paramname"><em>iDst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat3 &amp;&#160;</td>
+          <td class="paramname"><em>iMat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_u_l_i_s.html#ae18e3d035216e38401823142a3b2f2cd">eResamplingMethod</a>&#160;</td>
+          <td class="paramname"><em>iResamplingMethod</em> = <code><a class="el" href="namespace_u_l_i_s.html#ae18e3d035216e38401823142a3b2f2cdaac97f0008bcf7c7fe4f2ff94160e1385">eResamplingMethod::kLinear</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

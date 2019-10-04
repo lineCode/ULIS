@@ -92,6 +92,8 @@ Namespaces</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:aa9689f54f42cba1e2648988c83bf6af4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_transform_8cpp.html#aa9689f54f42cba1e2648988c83bf6af4">ULIS_REG_SWITCH_OP</a>(z,  n,  data)</td></tr>
 <tr class="separator:aa9689f54f42cba1e2648988c83bf6af4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9689f54f42cba1e2648988c83bf6af4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_u_l_i_s_8_interface_8_transform_8cpp.html#aa9689f54f42cba1e2648988c83bf6af4">ULIS_REG_SWITCH_OP</a>(z,  n,  data)</td></tr>
+<tr class="separator:aa9689f54f42cba1e2648988c83bf6af4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file provides the definitions for the FTransformContext class. </p>
@@ -100,7 +102,7 @@ Macros</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Clement Berthaud </dd></dl>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="aa9689f54f42cba1e2648988c83bf6af4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9689f54f42cba1e2648988c83bf6af4">&#9670;&nbsp;</a></span>ULIS_REG_SWITCH_OP</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9689f54f42cba1e2648988c83bf6af4">&#9670;&nbsp;</a></span>ULIS_REG_SWITCH_OP <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -133,13 +135,54 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">case</span> <a class="code" href="_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c">ULIS_REG</a>[ n ]:                                                                                                             \</div>
 <div class="line">            {                                                                                                                               \</div>
 <div class="line">                return  TTransformContext::GetTransformedBlock&lt; ULIS_REG[ n ] &gt;( (::<a class="code" href="class_u_l_i_s_1_1_t_block.html">ULIS::TBlock</a>&lt; <a class="code" href="_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c">ULIS_REG</a>[ n ] &gt;*)iBlockSrc                \</div>
-<div class="line">                                                                               , iMat, iPerformanceOptions );                               \</div>
+<div class="line">                                                                               , iMat, iResamplingMethod, iPerformanceOptions );            \</div>
+<div class="line">            }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aa9689f54f42cba1e2648988c83bf6af4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9689f54f42cba1e2648988c83bf6af4">&#9670;&nbsp;</a></span>ULIS_REG_SWITCH_OP <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ULIS_REG_SWITCH_OP</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">z, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">data&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">case</span> <a class="code" href="_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c">ULIS_REG</a>[ n ]:                                                                                                             \</div>
+<div class="line">            {                                                                                                                               \</div>
+<div class="line">                TTransformContext::TransformBlockInto&lt; ULIS_REG[ n ] &gt;( (::<a class="code" href="class_u_l_i_s_1_1_t_block.html">ULIS::TBlock</a>&lt; <a class="code" href="_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c">ULIS_REG</a>[ n ] &gt;*)iBlockSrc                         \</div>
+<div class="line">                                                                      , (::<a class="code" href="class_u_l_i_s_1_1_t_block.html">ULIS::TBlock</a>&lt; <a class="code" href="_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c">ULIS_REG</a>[ n ] &gt;*)iBlockDst                         \</div>
+<div class="line">                                                                      , iMat, iResamplingMethod, iPerformanceOptions );                     \</div>
+<div class="line">                break;                                                                                                                      \</div>
 <div class="line">            }</div>
 </div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->
-<div class="ttc" id="a_u_l_i_s_8_interface_8_decl_8h_html_a0db5d268fdf478127730da4a0297024c"><div class="ttname"><a href="_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c">ULIS_REG</a></div><div class="ttdeci">#define ULIS_REG</div><div class="ttdef"><b>Definition:</b> ULIS.Interface.Decl.h:92</div></div>
+<div class="ttc" id="a_u_l_i_s_8_interface_8_decl_8h_html_a0db5d268fdf478127730da4a0297024c"><div class="ttname"><a href="_u_l_i_s_8_interface_8_decl_8h.html#a0db5d268fdf478127730da4a0297024c">ULIS_REG</a></div><div class="ttdeci">#define ULIS_REG</div><div class="ttdef"><b>Definition:</b> ULIS.Interface.Decl.h:93</div></div>
 <div class="ttc" id="aclass_u_l_i_s_1_1_t_block_html"><div class="ttname"><a href="class_u_l_i_s_1_1_t_block.html">ULIS::TBlock</a></div><div class="ttdef"><b>Definition:</b> ULIS.Data.Block.h:220</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

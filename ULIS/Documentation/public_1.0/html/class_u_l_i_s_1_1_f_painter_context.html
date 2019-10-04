@@ -112,6 +112,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:aed0493025fc721373a6905ddc405cd60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50436959847904d3a22119bd9cffc189"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_painter_context.html#a50436959847904d3a22119bd9cffc189">DrawPolygon</a> (<a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlock, std::vector&lt; <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &gt; &amp;iPoints, const <a class="el" href="class_u_l_i_s_1_1_c_color.html">CColor</a> &amp;iColor, bool iFilled=false, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>(), bool iCallInvalidCB=true)</td></tr>
 <tr class="separator:a50436959847904d3a22119bd9cffc189"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab050a2527f0321e25d4399f1fc562eba"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_painter_context.html#ab050a2527f0321e25d4399f1fc562eba">DrawPolygonAA</a> (<a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlock, std::vector&lt; <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &gt; &amp;iPoints, const <a class="el" href="class_u_l_i_s_1_1_c_color.html">CColor</a> &amp;iColor, bool iFilled=false, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>(), bool iCallInvalidCB=true)</td></tr>
+<tr class="separator:ab050a2527f0321e25d4399f1fc562eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe09c5d401a89fff71745766d0b1ab09"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_painter_context.html#afe09c5d401a89fff71745766d0b1ab09">DrawQuadraticBezier</a> (<a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlock, const <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &amp;iCtrlPt0, const <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &amp;iCtrlPt1, const <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &amp;iCtrlPt2, float iWeight, const <a class="el" href="class_u_l_i_s_1_1_c_color.html">CColor</a> &amp;iColor, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>(), bool iCallInvalidCB=true)</td></tr>
 <tr class="separator:afe09c5d401a89fff71745766d0b1ab09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac919a143b12829e01dfbdd614680eddd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_painter_context.html#ac919a143b12829e01dfbdd614680eddd">DrawQuadraticBezierAA</a> (<a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iBlock, const <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &amp;iCtrlPt0, const <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &amp;iCtrlPt1, const <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &amp;iCtrlPt2, float iWeight, const <a class="el" href="class_u_l_i_s_1_1_c_color.html">CColor</a> &amp;iColor, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>(), bool iCallInvalidCB=true)</td></tr>
@@ -1195,6 +1197,78 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Draw an arbitrary convex or concave polygon without anti-aliasing. </p>
+<p>The polygon can have any number of points, works for any polygon. The polygon is filled, and the fill rule follows the even-odd rule. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iBlock</td><td>The pointer to the <em><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a></em> to draw on. </td></tr>
+    <tr><td class="paramname">iPoints</td><td>A vector of points. </td></tr>
+    <tr><td class="paramname">iColor</td><td>The color to use for drawing. </td></tr>
+    <tr><td class="paramname">iPerformanceOptions</td><td>The Performance Options for this operation, see <em><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html" title="The FPerformanceOptionsstruct is user for holding performance options.">FPerformanceOptions</a></em>. </td></tr>
+    <tr><td class="paramname">iCallInvalidCB</td><td>Whether or not the function should call the invalid call back in the back block after the operation finished. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab050a2527f0321e25d4399f1fc562eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab050a2527f0321e25d4399f1fc562eba">&#9670;&nbsp;</a></span>DrawPolygonAA()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ULIS::FPainterContext::DrawPolygonAA </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td>
+          <td class="paramname"><em>iBlock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="struct_u_l_i_s_1_1_f_point.html">FPoint</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>iPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_u_l_i_s_1_1_c_color.html">CColor</a> &amp;&#160;</td>
+          <td class="paramname"><em>iColor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>iFilled</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;&#160;</td>
+          <td class="paramname"><em>iPerformanceOptions</em> = <code><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>iCallInvalidCB</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Draw an arbitrary convex or concave polygon with anti-aliasing. </p>
 <p>The polygon can have any number of points, works for any polygon. The polygon is filled, and the fill rule follows the even-odd rule. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">iBlock</td><td>The pointer to the <em><a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a></em> to draw on. </td></tr>

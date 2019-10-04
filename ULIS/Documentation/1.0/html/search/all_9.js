@@ -1,18 +1,18 @@
 var searchData=
 [
-  ['iblock_255',['IBlock',['../class_u_l_i_s_1_1_i_block.html',1,'ULIS::IBlock'],['../class_u_l_i_s_1_1_i_block.html#aedbe669aecee5870f9df67f136655c07',1,'ULIS::IBlock::IBlock()']]],
-  ['id_256',['Id',['../class_u_l_i_s_1_1_i_block.html#a27b4e87c57839ee6f7d2bc0308d9a433',1,'ULIS::IBlock::Id()'],['../class_u_l_i_s_1_1_t_block.html#a49f3a7d66cc4f8c307f130595f7b5351',1,'ULIS::TBlock::Id()']]],
-  ['info_257',['info',['../struct_u_l_i_s_1_1_f_c_p_u_config.html#a973faffd37e23d96ced8b373f4e4d90e',1,'ULIS::FCPUConfig']]],
-  ['int16_258',['int16',['../namespace_u_l_i_s.html#aa81cded44dc845e3cbb3892757534f47',1,'ULIS']]],
-  ['int32_259',['int32',['../namespace_u_l_i_s.html#a630232c9b279c84cbf256fe97184e38d',1,'ULIS']]],
-  ['int64_260',['int64',['../namespace_u_l_i_s.html#af22ae0ec7b4c1eeaa95f2394f647520f',1,'ULIS']]],
-  ['int8_261',['int8',['../namespace_u_l_i_s.html#afa2c947a12b60367cf51310f0c8c6be2',1,'ULIS']]],
-  ['integerpartofnumber_262',['IntegerPartOfNumber',['../struct_u_l_i_s_1_1_f_math.html#ad4645895136d509369f7060dc384d8eb',1,'ULIS::FMath']]],
-  ['internaldrawquadrationalbezierseg_263',['InternalDrawQuadRationalBezierSeg',['../class_u_l_i_s_1_1_t_painter_context.html#a6611555a1cdb1d9455493dc50c0aefe2',1,'ULIS::TPainterContext::InternalDrawQuadRationalBezierSeg(TBlock&lt; _SH &gt; *iBlock, int x0, int y0, int x1, int y1, int x2, int y2, float w, const CColor &amp;iColor, const FPerformanceOptions &amp;iPerformanceOptions, bool callInvalidCB, std::map&lt; int, std::vector&lt; int &gt; &gt; *iStoragePoints=NULL)'],['../class_u_l_i_s_1_1_t_painter_context.html#a6611555a1cdb1d9455493dc50c0aefe2',1,'ULIS::TPainterContext::InternalDrawQuadRationalBezierSeg(TBlock&lt; _SH &gt; *iBlock, int x0, int y0, int x1, int y1, int x2, int y2, float w, const CColor &amp;iColor, const FPerformanceOptions &amp;iPerformanceOptions, bool callInvalidCB, std::map&lt; int, std::vector&lt; int &gt; &gt; *iStoragePoints=NULL)']]],
-  ['internaldrawquadrationalbeziersegaa_264',['InternalDrawQuadRationalBezierSegAA',['../class_u_l_i_s_1_1_t_painter_context.html#acd6134261d5bd2cf6c31d4a7853b4cbd',1,'ULIS::TPainterContext::InternalDrawQuadRationalBezierSegAA(TBlock&lt; _SH &gt; *iBlock, int x0, int y0, int x1, int y1, int x2, int y2, float w, const CColor &amp;iColor, const FPerformanceOptions &amp;iPerformanceOptions, bool callInvalidCB, std::map&lt; int, std::vector&lt; int &gt; &gt; *iStoragePoints=NULL)'],['../class_u_l_i_s_1_1_t_painter_context.html#acd6134261d5bd2cf6c31d4a7853b4cbd',1,'ULIS::TPainterContext::InternalDrawQuadRationalBezierSegAA(TBlock&lt; _SH &gt; *iBlock, int x0, int y0, int x1, int y1, int x2, int y2, float w, const CColor &amp;iColor, const FPerformanceOptions &amp;iPerformanceOptions, bool callInvalidCB, std::map&lt; int, std::vector&lt; int &gt; &gt; *iStoragePoints=NULL)']]],
-  ['invalidate_265',['Invalidate',['../class_u_l_i_s_1_1_i_block.html#a543b250a50d2481b2f01a5913f95f761',1,'ULIS::IBlock::Invalidate()'],['../class_u_l_i_s_1_1_i_block.html#a5236f4581dfc0726f8d96ef078189b04',1,'ULIS::IBlock::Invalidate(const FRect &amp;iRect)']]],
-  ['is_5fdecimal_266',['is_decimal',['../namespace_u_l_i_s.html#a635636b9267fbea32971170a1570350d',1,'ULIS']]],
-  ['isdecimal_267',['IsDecimal',['../class_u_l_i_s_1_1_i_block.html#ab4d2aa1447c20bf2099fe39e9c714113',1,'ULIS::IBlock::IsDecimal()'],['../class_u_l_i_s_1_1_t_block.html#a8c4a1118c9fbe75ece6545e428db2594',1,'ULIS::TBlock::IsDecimal()'],['../class_u_l_i_s_1_1_t_pixel_info.html#a930ffaafb83c6a649bec7a1f8f098167',1,'ULIS::TPixelInfo::IsDecimal()']]],
-  ['isnormalized_268',['IsNormalized',['../class_u_l_i_s_1_1_i_block.html#a75d18bcafef439a90c79671a6bb875ed',1,'ULIS::IBlock::IsNormalized()'],['../class_u_l_i_s_1_1_t_block.html#a9a30605ed409b10ddf48f326b357a848',1,'ULIS::TBlock::IsNormalized()'],['../class_u_l_i_s_1_1_t_pixel_info.html#ac85a0b7807c67d7ce314682bf3223c59',1,'ULIS::TPixelInfo::IsNormalized()']]],
-  ['issimilar_269',['IsSimilar',['../class_u_l_i_s_1_1_c_color.html#a0c7fd847c4a5ae83ea97e00c8e7d58e8',1,'ULIS::CColor']]]
+  ['iblock_258',['IBlock',['../class_u_l_i_s_1_1_i_block.html',1,'ULIS::IBlock'],['../class_u_l_i_s_1_1_i_block.html#aedbe669aecee5870f9df67f136655c07',1,'ULIS::IBlock::IBlock()']]],
+  ['id_259',['Id',['../class_u_l_i_s_1_1_i_block.html#a27b4e87c57839ee6f7d2bc0308d9a433',1,'ULIS::IBlock::Id()'],['../class_u_l_i_s_1_1_t_block.html#a49f3a7d66cc4f8c307f130595f7b5351',1,'ULIS::TBlock::Id()']]],
+  ['info_260',['info',['../struct_u_l_i_s_1_1_f_c_p_u_config.html#a973faffd37e23d96ced8b373f4e4d90e',1,'ULIS::FCPUConfig']]],
+  ['int16_261',['int16',['../namespace_u_l_i_s.html#aa81cded44dc845e3cbb3892757534f47',1,'ULIS']]],
+  ['int32_262',['int32',['../namespace_u_l_i_s.html#a630232c9b279c84cbf256fe97184e38d',1,'ULIS']]],
+  ['int64_263',['int64',['../namespace_u_l_i_s.html#af22ae0ec7b4c1eeaa95f2394f647520f',1,'ULIS']]],
+  ['int8_264',['int8',['../namespace_u_l_i_s.html#afa2c947a12b60367cf51310f0c8c6be2',1,'ULIS']]],
+  ['integerpartofnumber_265',['IntegerPartOfNumber',['../struct_u_l_i_s_1_1_f_math.html#ad4645895136d509369f7060dc384d8eb',1,'ULIS::FMath']]],
+  ['internaldrawquadrationalbezierseg_266',['InternalDrawQuadRationalBezierSeg',['../class_u_l_i_s_1_1_t_painter_context.html#a799b2a63e189fb9cd8f2e5fc7974548d',1,'ULIS::TPainterContext']]],
+  ['internaldrawquadrationalbeziersegaa_267',['InternalDrawQuadRationalBezierSegAA',['../class_u_l_i_s_1_1_t_painter_context.html#a35f27376b4c5b770e1055dd065d31fed',1,'ULIS::TPainterContext']]],
+  ['invalidate_268',['Invalidate',['../class_u_l_i_s_1_1_i_block.html#a543b250a50d2481b2f01a5913f95f761',1,'ULIS::IBlock::Invalidate()'],['../class_u_l_i_s_1_1_i_block.html#a5236f4581dfc0726f8d96ef078189b04',1,'ULIS::IBlock::Invalidate(const FRect &amp;iRect)']]],
+  ['is_5fdecimal_269',['is_decimal',['../namespace_u_l_i_s.html#a635636b9267fbea32971170a1570350d',1,'ULIS']]],
+  ['isdecimal_270',['IsDecimal',['../class_u_l_i_s_1_1_i_block.html#ab4d2aa1447c20bf2099fe39e9c714113',1,'ULIS::IBlock::IsDecimal()'],['../class_u_l_i_s_1_1_t_block.html#a8c4a1118c9fbe75ece6545e428db2594',1,'ULIS::TBlock::IsDecimal()'],['../class_u_l_i_s_1_1_t_pixel_info.html#a930ffaafb83c6a649bec7a1f8f098167',1,'ULIS::TPixelInfo::IsDecimal()']]],
+  ['isnormalized_271',['IsNormalized',['../class_u_l_i_s_1_1_i_block.html#a75d18bcafef439a90c79671a6bb875ed',1,'ULIS::IBlock::IsNormalized()'],['../class_u_l_i_s_1_1_t_block.html#a9a30605ed409b10ddf48f326b357a848',1,'ULIS::TBlock::IsNormalized()'],['../class_u_l_i_s_1_1_t_pixel_info.html#ac85a0b7807c67d7ce314682bf3223c59',1,'ULIS::TPixelInfo::IsNormalized()']]],
+  ['issimilar_272',['IsSimilar',['../class_u_l_i_s_1_1_c_color.html#a0c7fd847c4a5ae83ea97e00c8e7d58e8',1,'ULIS::CColor']]]
 ];

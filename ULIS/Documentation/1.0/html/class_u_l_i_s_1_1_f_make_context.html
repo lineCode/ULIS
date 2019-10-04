@@ -94,6 +94,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:ab014f354f08fa1c36bcb2427fd9c13f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49e04be75de28c1fd8c2bee767909138"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_make_context.html#a49e04be75de28c1fd8c2bee767909138">CopyBlockRectInto</a> (<a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iSrc, <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iDst, const <a class="el" href="struct_u_l_i_s_1_1_f_rect.html">FRect</a> &amp;iRect, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
 <tr class="separator:a49e04be75de28c1fd8c2bee767909138"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55f7df255a48f783f867f1b71a820005"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct_u_l_i_s_1_1_f_rect.html">FRect</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_l_i_s_1_1_f_make_context.html#a55f7df255a48f783f867f1b71a820005">GetTrimmedTransparencyRect</a> (const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *iSrc, const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;iPerformanceOptions=<a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>())</td></tr>
+<tr class="separator:a55f7df255a48f783f867f1b71a820005"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_u_l_i_s_1_1_f_make_context.html" title="The FMakeContext class provides a context for all Copy and Make operations on Blocks.">FMakeContext</a> class provides a context for all Copy and Make operations on Blocks. </p>
@@ -308,6 +310,51 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a55f7df255a48f783f867f1b71a820005"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55f7df255a48f783f867f1b71a820005">&#9670;&nbsp;</a></span>GetTrimmedTransparencyRect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_u_l_i_s_1_1_f_rect.html">FRect</a> ULIS::FMakeContext::GetTrimmedTransparencyRect </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_u_l_i_s_1_1_i_block.html">IBlock</a> *&#160;</td>
+          <td class="paramname"><em>iSrc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a> &amp;&#160;</td>
+          <td class="paramname"><em>iPerformanceOptions</em> = <code><a class="el" href="struct_u_l_i_s_1_1_f_performance_options.html">FPerformanceOptions</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the rect corresponding to the minimal rectangular area in the block that is non transparent. </p>
+<p>THis effectively leaves empty spaces out. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iSrc</td><td>The source. </td></tr>
+    <tr><td class="paramname">iPerformanceOptions</td><td>The performance preferences. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aa539ac42ef4c4d5a89c4c23be8b72306"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa539ac42ef4c4d5a89c4c23be8b72306">&#9670;&nbsp;</a></span>MakeBlock()</h2>
 
@@ -355,7 +402,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Make a block with dynamic type deduction at runtime. </p>
-<p>Use an existing hash from profile registry or available from the ULIS::Format namespace for the iFormat param. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Use an existing hash from profile registry or available from the <a class="el" href="namespace_u_l_i_s_1_1_format.html">ULIS::Format</a> namespace for the iFormat param. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">iWidth</td><td>The width of the block to allocate. </td></tr>
     <tr><td class="paramname">iHeight</td><td>The height of the block to allocate. </td></tr>
