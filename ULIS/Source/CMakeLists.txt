@@ -93,7 +93,6 @@ if( ${ULIS_USE_CONFIG} )
     # IF USING CLANG ON MAC WITH XCODE
     if( ${CMAKE_GENERATOR} STREQUAL "Xcode" )
         if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../Xcode_Config.cmake)
-                message( "ouiouioui")
                 include(${CMAKE_CURRENT_SOURCE_DIR}/../../Xcode_Config.cmake)
         endif()
     endif()
