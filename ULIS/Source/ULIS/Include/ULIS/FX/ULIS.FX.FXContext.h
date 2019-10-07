@@ -23,28 +23,24 @@ template< uint32 _SH >
 class TFXContext
 {
 public:
-    template< uint32 _SH >
     static void WhiteNoise( TBlock< _SH >* iBlock, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
         assert( iBlock );
         TWhiteNoiseGenerator< _SH >::Run( iBlock, iSeed, iPerformanceOptions );
     }
 
-    template< uint32 _SH >
     static void ValueNoise( TBlock< _SH >* iBlock, float iFrequency, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
         assert( iBlock );
         TValueNoiseGenerator< _SH >::Run( iBlock, iFrequency, iSeed, iPerformanceOptions );
     }
 
-    template< uint32 _SH >
     static  void  BrownianNoise( TBlock< _SH >* iBlock, float iFrequency = 0.22f, float iFrequencyMult = 1.8f, float iAmplitudeMult = 0.35f, uint8 iNumLayers = 5, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     {
         assert( iBlock );
         TBrownianNoiseGenerator< _SH >::Run( iBlock, iFrequency, iFrequencyMult, iAmplitudeMult, iNumLayers, iSeed, iPerformanceOptions );
     }
 
-    template< uint32 _SH >
     static void VoronoiNoise( TBlock< _SH >* iBlock, uint32 iCount, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
     {
         assert( iBlock );
