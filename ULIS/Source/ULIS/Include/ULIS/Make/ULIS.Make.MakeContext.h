@@ -57,10 +57,10 @@ public:
         if( !tPixelBase::HasAlpha() )
             return  FRect( 0, 0, iSrc->Width(), iSrc->Height() );
 
-        std::atomic_int left    = INT_MAX;
-        std::atomic_int top     = INT_MAX;
-        std::atomic_int right   = 0;
-        std::atomic_int bot     = 0;
+        std::atomic_int left( INT_MAX );
+        std::atomic_int top( INT_MAX );
+        std::atomic_int right( 0 );
+        std::atomic_int bot( 0 );
         const int minx = 0;
         const int miny = 0;
         const int maxx = iSrc->Width();

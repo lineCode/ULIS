@@ -50,7 +50,7 @@ public:
             }
 
             floatvalue /= iAmplitudeMax;
-            tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
+            typename tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
             for( int i = 0; i < info::_nf._nc; ++i )
                 proxy.SetComponent( i, value );
@@ -132,7 +132,7 @@ public:
                 }
 
                 floatvalue /= ampMax;
-                tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
+                typename tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
                 for( int i = 0; i < info::_nf._nc; ++i )
                     proxy.SetComponent( i, value );

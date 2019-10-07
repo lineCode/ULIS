@@ -96,13 +96,6 @@ struct FMath
     {
         return  iValue < 0 ? (T)ceil( iValue ) : (T)floor( iValue );
     }
-
-    template<>
-    static  inline glm::vec2 RoundTowardsZero< glm::vec2 >( glm::vec2 iValue )
-    {
-        return  glm::vec2( RoundTowardsZero( iValue.x ), RoundTowardsZero( iValue.y ) );
-    }
-
 }; // struct FMath
 
 

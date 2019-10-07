@@ -42,7 +42,7 @@ public:
         {
             tPixelProxy proxy = iBlock->PixelProxy( x, iLine );
             float floatvalue = generator() / maxrand;
-            tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
+            typename tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
             for( int i = 0; i < info::_nf._nc; ++i )
                 proxy.SetComponent( i, value );
@@ -91,7 +91,7 @@ public:
             {
                 tPixelProxy proxy = iBlock->PixelProxy( x, y );
                 float floatvalue = generator() / maxrand;
-                tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
+                typename tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
                 for( int i = 0; i < info::_nf._nc; ++i )
                     proxy.SetComponent( i, value );

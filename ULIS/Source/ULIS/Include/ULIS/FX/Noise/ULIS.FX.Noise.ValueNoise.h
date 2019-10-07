@@ -34,8 +34,9 @@ public:
         for( int x = iX1; x < iX2; ++x )
         {
             tPixelProxy proxy = iBlock->PixelProxy( x, iLine );
-            float floatvalue = iGen.eval( Vec2f( x, iLine ) * iFrequency );
-            tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
+            Vec2f vec = Vec2f( x, iLine ) * iFrequency;
+            float floatvalue = iGen.eval( vec );
+            typename tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
             for( int i = 0; i < info::_nf._nc; ++i )
                 proxy.SetComponent( i, value );
@@ -85,8 +86,9 @@ public:
             for( int x = x1; x < x2; ++x )
             {
                 tPixelProxy proxy = iBlock->PixelProxy( x, y );
-                float floatvalue = noise.eval( Vec2f( x, y ) * iFrequency );
-                tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
+                Vec2f vec = Vec2f( x, y ) * iFrequency;
+                float floatvalue = noise.eval( vec );
+                typename tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
                 for( int i = 0; i < info::_nf._nc; ++i )
                     proxy.SetComponent( i, value );

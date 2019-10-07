@@ -28,8 +28,8 @@ class Vec2
 public:
     Vec2() : x(T(0)), y(T(0)) {}
     Vec2(T xx, T yy) : x(xx), y(yy) {}
-    Vec2 operator * (const T &r) const { return Vec2(x * r, y * r); }
-    Vec2& operator *= (const T &r) { x *= r, y *= r; return *this; }
+    Vec2 operator * (T r) const { return Vec2(x * r, y * r); }
+    Vec2& operator *= (T r) { x *= r, y *= r; return *this; }
     T x, y;
 };
 

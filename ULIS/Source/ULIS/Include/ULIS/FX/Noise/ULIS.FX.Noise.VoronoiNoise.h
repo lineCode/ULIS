@@ -52,7 +52,7 @@ public:
 
             tPixelProxy proxy = iBlock->PixelProxy( x, iLine );
             float floatvalue = FMath::Clamp( std::sqrt( max_distance_squared ) / iNormalizationFactor, 0.f, 1.f );
-            tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
+            typename tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
             for( int i = 0; i < info::_nf._nc; ++i )
                 proxy.SetComponent( i, value );
@@ -140,7 +140,7 @@ public:
 
                 tPixelProxy proxy = iBlock->PixelProxy( x, y );
                 float floatvalue = FMath::Clamp( std::sqrt( max_distance_squared ) / normalisation_factor, 0.f, 1.f );
-                tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
+                typename tPixelProxy::tPixelType value = ConvType< float, typename tPixelProxy::tPixelType >( floatvalue );
 
                 for( int i = 0; i < info::_nf._nc; ++i )
                     proxy.SetComponent( i, value );
