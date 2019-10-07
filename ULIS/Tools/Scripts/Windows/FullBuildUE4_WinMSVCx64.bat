@@ -40,7 +40,7 @@ cd ..
 cd ..
 cd ..
 XCOPY /E /C /I /Q /H /K /Y /B "%ROOT%\ULIS\Tools\EmbeddedDependencies\Coal\coal\Source\coal\Include" "%ROOT%\Redist\Include\coal"
-XCOPY /E /C /I /Q /H /K /Y /B "%ROOT%\ULIS\Tools\EmbeddedDependencies\glm\glm" "%ROOT%\Redist\Include\glm"
+XCOPY /E /C /I /Q /H /K /Y /B "%ROOT%\ULIS\Tools\EmbeddedDependencies\glm" "%ROOT%\Redist\Include\glm"
 XCOPY /E /C /I /Q /H /K /Y /B "%ROOT%\ULIS\Tools\EmbeddedDependencies\preprocessor\include" "%ROOT%\Redist\Include\boost_preprocessor"
 XCOPY /E /C /I /Q /H /K /Y /B "%ROOT%\ULIS\Tools\EmbeddedDependencies\Little-CMS\include" "%ROOT%\Redist\Include\Little-CMS"
 XCOPY /E /C /I /Q /H /K /Y /B "%ROOT%\ULIS\Source\ULIS\Include" "%ROOT%\Redist\Include\ULIS"

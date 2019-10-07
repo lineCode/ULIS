@@ -46,7 +46,7 @@ cd ..
 cd ..
 
 cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/Coal/coal/Source/coal/Include ${ROOT}/Redist/Include/coal
-cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/glm/glm ${ROOT}/Redist/Include/glm
+cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/glm ${ROOT}/Redist/Include/glm
 cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/preprocessor/include ${ROOT}/Redist/Include/boost_preprocessor
 cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/Little-CMS/include ${ROOT}/Redist/Include/Little-CMS
 cp -R ${ROOT}/ULIS/Source/ULIS/Include ${ROOT}/Redist/Include/ULIS
