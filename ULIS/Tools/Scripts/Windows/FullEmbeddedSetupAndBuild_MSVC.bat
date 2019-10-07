@@ -14,7 +14,9 @@ call setup.bat
 :: set utility variables
 set ROOT=%CD%
 set EMB=%ROOT%\ULIS\Tools\EmbeddedDependencies\
-echo %ROOT%
+
+:: convert backslash to forward slash for cmake
+set "EMB=%EMB:\=/%"
 
 :: cd to Tools and make EmbeddedDependencies dir
 cd ULIS/Tools/
@@ -43,7 +45,7 @@ call :writeConfig >VisualStudio_Solution_MSVC_Config.cmake
 call Generate_VisualStudio_Solution_MSVC.bat
 
 :: build msvc
-cd ULIS/Generate_VisualStudio_Solution_MSVC
+cd ULIS/Generated_VisualStudio_Solution_MSVC
 cmake --build . --config Debug
 cmake --build . --config Release
 
@@ -62,3 +64,4 @@ echo SET( ULIS_GLM_INCLUDE_PATH          "%EMB%glm/" )
 echo SET( ULIS_LCMS2_INCLUDE_PATH        "%EMB%Little-CMS/include/" )
 echo SET( ULIS_LCMS2_DEBUG_LIB_PATH      "%EMB%Little-CMS_VisualStudio_Solution_MSVC/Debug/lcms2d.lib" )
 echo SET( ULIS_LCMS2_RELEASE_LIB_PATH    "%EMB%Little-CMS_VisualStudio_Solution_MSVC/Release/lcms2.lib" )
+exit /B 0

@@ -28,8 +28,12 @@ public class ULIS : ModuleRules
                 }
             );
 
-            string LibBase = Path.Combine( ModuleDirectory, "Redist", "Lib" );
-            PublicLibraryPaths.Add( LibBase );
+            string LibBase          = Path.Combine( ModuleDirectory, "Redist", "Lib", "Win", "MSVC", "x64" );
+            string LibBaseRelease   = Path.Combine( LibBase, "Release" );
+            string LibBaseDebug     = Path.Combine( LibBase, "Debug" );
+            PublicLibraryPaths.Add( LibBaseRelease );
+            PublicLibraryPaths.Add( LibBaseDebug );
+            
             string ULIS_LibName         = "ULIS1.0";
             string LittleCMS_LibName    = "lcms2";
 
