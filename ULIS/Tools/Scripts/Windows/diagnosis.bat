@@ -27,7 +27,7 @@ call::checkExe CLANG
 call::checkExe G++
 call::checkExe GIT
 call::checkExe PYTHON3
-PAUSE
+
 goto:EOF
 
 :::::::::::::::

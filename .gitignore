@@ -33,3 +33,7 @@ SublimeText_Project_GNU_GCC_Config.cmake
 # Shortcuts
 *.lnk
 
+# Distro
+Redist/*
+ULIS.Build.cs
+!**/Unreal/ULIS.Build.cs
