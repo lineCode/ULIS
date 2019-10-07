@@ -35,8 +35,6 @@ SublimeText_Project_GNU_GCC_Config.cmake
 
 # Distro
 Redist/*
-ULIS.Build.cs
-!**/Unreal/ULIS.Build.cs
 
 # Doc
 ULIS/Documentation/1.0/*
