@@ -1,13 +1,13 @@
 set -e
 cd "`dirname "$0"`"
-
+CURR=$PWD
 ## Call full setup & build for Xcode
 if [ -f FullEmbeddedSetupAndBuild_Xcode.sh ]; then
     sh FullEmbeddedSetupAndBuild_Xcode.sh
 fi
 
 ## cd to current script dir
-cd "$0"
+cd $CURR
 
 ## cd to root
 cd ../../../../
