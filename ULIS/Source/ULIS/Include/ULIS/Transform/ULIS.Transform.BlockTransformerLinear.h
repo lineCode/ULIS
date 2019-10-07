@@ -76,7 +76,7 @@ public:
         using tPixelType = typename TBlock< _SH >::tPixelType;
         using tPixelValue = typename TBlock< _SH >::tPixelValue;
         using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
-        using tPixelBase = typename TPixelBase< _SH >;
+        using tPixelBase = TPixelBase< _SH >;
         using info = TBlockInfo< _SH >;
 
         const int x1 = 0;
