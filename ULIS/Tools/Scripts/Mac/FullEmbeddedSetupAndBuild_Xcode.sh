@@ -44,8 +44,8 @@ echo "SET( ULIS_BUILD_GUIS                OFF )"
 echo "SET( ULIS_QT_CMAKE_PATH             \"default\" )"
 echo "SET( ULIS_GLM_INCLUDE_PATH          \"$EMBglm/\" )"
 echo "SET( ULIS_LCMS2_INCLUDE_PATH        \"$EMBLittle-CMS/include/\" )"
-echo "SET( ULIS_LCMS2_DEBUG_LIB_PATH      \"$EMBLittle-CMS_Xcode/Debug/lcms2d.dylib\" )"
-echo "SET( ULIS_LCMS2_RELEASE_LIB_PATH    \"$EMBLittle-CMS_Xcode/Release/lcms2.dylib\" )"
+echo "SET( ULIS_LCMS2_DEBUG_LIB_PATH      \"$EMBLittle-CMS_Xcode/Debug/lcms2d.a\" )"
+echo "SET( ULIS_LCMS2_RELEASE_LIB_PATH    \"$EMBLittle-CMS_Xcode/Release/lcms2.a\" )"
 
 ## generate project files for Xcode
 if [ -f Generate_Xcode.sh ]; then

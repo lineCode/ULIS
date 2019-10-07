@@ -16,28 +16,28 @@ cd ../../../../
 ROOT=$PWD
 
 ## bake distro directories
-mkdir Redist
+mkdir -p Redist
 cd Redist
 
-mkdir Include
+mkdir -p Include
 cd Include
-mkdir ULIS
-mkdir boost_preprocessor
-mkdir Little-CMS
-mkdir glm
-mkdir coal
+mkdir -p ULIS
+mkdir -p boost_preprocessor
+mkdir -p Little-CMS
+mkdir -p glm
+mkdir -p coal
 
 cd ..
-mkdir Lib
+mkdir -p Lib
 cd Lib
-mkdir Mac
+mkdir -p Mac
 cd Mac
-mkdir Xcode
+mkdir -p Xcode
 cd Xcode
-mkdir x64
+mkdir -p x64
 cd x64
-mkdir Release
-mkdir Debug
+mkdir -p Release
+mkdir -p Debug
 
 cd ..
 cd ..
@@ -51,10 +51,10 @@ cp $ROOT\ULIS\Tools\EmbeddedDependencies\preprocessor\include $ROOT\Redist\Inclu
 cp $ROOT\ULIS\Tools\EmbeddedDependencies\Little-CMS\include $ROOT\Redist\Include\Little-CMS
 cp $ROOT\ULIS\Source\ULIS\Include $ROOT\Redist\Include\ULIS
 
-cp $ROOT\ULIS\Generated_Xcode\Debug\ULIS1.0d.lib $ROOT\Redist\Lib\Mac\Xcode\x64\Debug\ULIS1.0d.dylib
-cp $ROOT\ULIS\Generated_Xcode\Release\ULIS1.0.lib $ROOT\Redist\Lib\Mac\Xcode\x64\Release\ULIS1.0.dylib
-cp $ROOT\ULIS\Tools\EmbeddedDependencies\Little-CMS_Xcode\Debug\lcms2d.lib $ROOT\Redist\Lib\Mac\Xcode\x64\Debug\lcms2d.dylib
-cp $ROOT\ULIS\Tools\EmbeddedDependencies\Little-CMS_Xcode\Release\lcms2.lib $ROOT\Redist\Lib\Mac\Xcode\x64\Release\lcms2.dylib
+cp $ROOT\ULIS\Generated_Xcode\Debug\ULIS1.0d.lib $ROOT\Redist\Lib\Mac\Xcode\x64\Debug\ULIS1.0d.a
+cp $ROOT\ULIS\Generated_Xcode\Release\ULIS1.0.lib $ROOT\Redist\Lib\Mac\Xcode\x64\Release\ULIS1.0.a
+cp $ROOT\ULIS\Tools\EmbeddedDependencies\Little-CMS_Xcode\Debug\lcms2d.lib $ROOT\Redist\Lib\Mac\Xcode\x64\Debug\lcms2d.a
+cp $ROOT\ULIS\Tools\EmbeddedDependencies\Little-CMS_Xcode\Release\lcms2.lib $ROOT\Redist\Lib\Mac\Xcode\x64\Release\lcms2.a
 
 cp $ROOT\ULIS\Tools\Scripts\Unreal\ULIS.Build.cs $ROOT\ULIS.Build.cs
 
