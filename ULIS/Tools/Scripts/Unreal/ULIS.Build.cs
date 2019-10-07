@@ -44,8 +44,8 @@ public class ULIS : ModuleRules
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                      ULIS_LibName
-                    , LittleCMS_LibName,
+                      ULIS_LibName + ".lib"
+                    , LittleCMS_LibName + ".lib"
                 }
             );
 
@@ -86,8 +86,8 @@ public class ULIS : ModuleRules
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                      ULIS_LibName
-                    , LittleCMS_LibName,
+                      ULIS_LibName + ".a"
+                    , LittleCMS_LibName + ".a"
                 }
             );
 
