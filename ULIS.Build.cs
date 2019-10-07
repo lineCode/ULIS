@@ -12,7 +12,7 @@ public class ULIS : ModuleRules
             Target.Platform == UnrealTargetPlatform.Win32 )
         {
             string PlatformDir                      = Target.Platform.ToString();
-            string IncludeBase                      = Path.Combine( ModuleDirectory, "Redist", "Include" )
+            string IncludeBase                      = Path.Combine( ModuleDirectory, "Redist", "Include" );
             string ULIS_IncludePath                 = Path.Combine( IncludeBase, "ULIS" );
             string LittleCMS_IncludePath            = Path.Combine( IncludeBase, "Little-CMS" );
             string glm_IncludePath                  = Path.Combine( IncludeBase, "glm" );
@@ -54,7 +54,7 @@ public class ULIS : ModuleRules
         else if ( Target.Platform == UnrealTargetPlatform.Mac )
         {
             string PlatformDir                      = Target.Platform.ToString();
-            string IncludeBase                      = Path.Combine( ModuleDirectory, "Redist", "Include" )
+            string IncludeBase                      = Path.Combine( ModuleDirectory, "Redist", "Include" );
             string ULIS_IncludePath                 = Path.Combine( IncludeBase, "ULIS" );
             string LittleCMS_IncludePath            = Path.Combine( IncludeBase, "Little-CMS" );
             string glm_IncludePath                  = Path.Combine( IncludeBase, "glm" );

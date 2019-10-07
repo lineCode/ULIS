@@ -50,5 +50,5 @@ COPY /Y "%ROOT%\ULIS\Generated_VisualStudio_Solution_MSVC\Release\ULIS1.0.lib" "
 COPY /Y "%ROOT%\ULIS\Tools\EmbeddedDependencies\Little-CMS_VisualStudio_Solution_MSVC\Debug\lcms2d.lib" "%ROOT%\Redist\Lib\Win\MSVC\x64\Debug\lcms2d.lib"
 COPY /Y "%ROOT%\ULIS\Tools\EmbeddedDependencies\Little-CMS_VisualStudio_Solution_MSVC\Release\lcms2.lib" "%ROOT%\Redist\Lib\Win\MSVC\x64\Release\lcms2.lib"
 
+::COPY /Y "%ROOT%\ULIS\Tools\Scripts\Unreal\ULIS.Build.cs" "%ROOT%\ULIS.Build.cs"
 
-COPY /Y "%ROOT%\ULIS\Tools\Scripts\Unreal\ULIS.Build.cs" "%ROOT%\ULIS.Build.cs"

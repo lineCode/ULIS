@@ -56,5 +56,5 @@ cp ${ROOT}/ULIS/Generated_Xcode/Release/libULIS1.0.a ${ROOT}/Redist/Lib/Mac/Xcod
 cp ${ROOT}/ULIS/Tools/EmbeddedDependencies/Little-CMS_Xcode/Debug/liblcms2d.a ${ROOT}/Redist/Lib/Mac/Xcode/x64/Debug/liblcms2d.a
 cp ${ROOT}/ULIS/Tools/EmbeddedDependencies/Little-CMS_Xcode/Release/liblcms2.a ${ROOT}/Redist/Lib/Mac/Xcode/x64/Release/liblcms2.a
 
-cp ${ROOT}/ULIS/Tools/Scripts/Unreal/ULIS.Build.cs ${ROOT}/ULIS.Build.cs
+##cp ${ROOT}/ULIS/Tools/Scripts/Unreal/ULIS.Build.cs ${ROOT}/ULIS.Build.cs
 
