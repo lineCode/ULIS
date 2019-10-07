@@ -7,7 +7,7 @@ if [ -f FullEmbeddedSetupAndBuild_Xcode.sh ]; then
 fi
 
 ## cd to current script dir
-cd "`dirname "$0"`"
+cd "$0"
 
 ## cd to root
 cd ../../../../
