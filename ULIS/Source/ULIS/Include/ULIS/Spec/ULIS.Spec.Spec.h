@@ -16,6 +16,11 @@
 #include "ULIS/Spec/ULIS.Spec.PreprocessorFramework.h"
 #include "lcms2.h"
 
+#ifdef ULIS_CLANG
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wc++17-extensions"
+#endif
+
 namespace ULIS {
 /////////////////////////////////////////////////////
 // Enum and Keyword Declaration
@@ -167,4 +172,8 @@ template< e_cm _CM > constexpr uint32 TCMSConnectionType() { return  0; }
 template< e_cm _CM > constexpr uint32 TModelConnectionFormat() { return  0; }
 
 } // namespace ULIS
+
+#ifdef ULIS_CLANG
+#pragma GCC diagnostic pop
+#endif
 

@@ -11,6 +11,11 @@
 #include "ULIS/Base/ULIS.Base.Registry.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 
+#ifdef ULIS_CLANG
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wc++17-extensions"
+#endif
+
 namespace ULIS {
 /////////////////////////////////////////////////////
 // Reg baking
@@ -193,4 +198,8 @@ template<> constexpr uint32 TModelConnectionFormat< e_cm::kLab >()   { return  :
 template<> constexpr uint32 TModelConnectionFormat< e_cm::kXYZ >()   { return  ::ULIS::Format::Format_floatXYZhasAlphaXYZAtypeLimits;   }
 
 } // namespace ULIS
+
+#ifdef ULIS_CLANG
+#pragma GCC diagnostic pop
+#endif
 
