@@ -19,6 +19,7 @@ namespace ULIS {
 namespace PaletteMSWindows {
 /////////////////////////////////////////////////////
 // eMSWindows
+/*
 static const CColor white       ( 255, 255, 255 );
 static const CColor black       ( 0,   0,   0   );
 static const CColor red         ( 255, 0,   0   );
@@ -36,6 +37,7 @@ static const CColor darkYellow  ( 128, 128, 0   );
 static const CColor gray        ( 160, 160, 164 );
 static const CColor darkGray    ( 128, 128, 128 );
 static const CColor lightGray   ( 192, 192, 192 );
+*/
 } // namespace PaletteMSWindows
 namespace PaletteMSPaintDebug {
 /////////////////////////////////////////////////////
