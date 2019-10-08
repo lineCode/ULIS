@@ -39,3 +39,6 @@ Redist/*
 # Doc
 ULIS/Documentation/1.0/*
 ULIS/Documentation/public_1.0/*
+
+# ipp
+!*.ipp
