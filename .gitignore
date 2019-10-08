@@ -42,3 +42,6 @@ ULIS/Documentation/public_1.0/*
 
 # ipp
 !*.ipp
+
+#ULIS_CORE
+!ULIS_CORE

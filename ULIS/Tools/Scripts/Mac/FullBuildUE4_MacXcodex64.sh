@@ -45,11 +45,11 @@ cd ..
 cd ..
 cd ..
 
-cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/Coal/coal/Source/coal/Include ${ROOT}/Redist/Include/coal
-cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/glm ${ROOT}/Redist/Include/glm
-cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/preprocessor/include ${ROOT}/Redist/Include/boost_preprocessor
-cp -R ${ROOT}/ULIS/Tools/EmbeddedDependencies/Little-CMS/include ${ROOT}/Redist/Include/Little-CMS
-cp -R ${ROOT}/ULIS/Source/ULIS/Include ${ROOT}/Redist/Include/ULIS
+cp -a ${ROOT}/ULIS/Tools/EmbeddedDependencies/Coal/coal/Source/coal/Include/. ${ROOT}/Redist/Include/coal
+cp -a ${ROOT}/ULIS/Tools/EmbeddedDependencies/glm/. ${ROOT}/Redist/Include/glm
+cp -a ${ROOT}/ULIS/Tools/EmbeddedDependencies/preprocessor/include/. ${ROOT}/Redist/Include/boost_preprocessor
+cp -a ${ROOT}/ULIS/Tools/EmbeddedDependencies/Little-CMS/include/. ${ROOT}/Redist/Include/Little-CMS
+cp -a ${ROOT}/ULIS/Source/ULIS/Include/. ${ROOT}/Redist/Include/ULIS
 
 cp ${ROOT}/ULIS/Generated_Xcode/Debug/libULIS1.0d.a ${ROOT}/Redist/Lib/Mac/Xcode/x64/Debug/libULIS1.0d.a
 cp ${ROOT}/ULIS/Generated_Xcode/Release/libULIS1.0.a ${ROOT}/Redist/Lib/Mac/Xcode/x64/Release/libULIS1.0.a
