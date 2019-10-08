@@ -13,7 +13,7 @@
 #include "ULIS/Base/ULIS.Base.AlignedMemory.h"
 #include "ULIS/Base/ULIS.Base.CRC32.h"
 #include "ULIS/Base/ULIS.Base.MD5.h"
-#include "ULIS/Base/ULIS.Base.VectorSIMD.h"
+//#include "ULIS/Base/ULIS.Base.VectorSIMD.h"
 #include "ULIS/Base/ULIS.Base.WeakUUID.h"
 #include "ULIS/Data/ULIS.Data.Pixel.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
