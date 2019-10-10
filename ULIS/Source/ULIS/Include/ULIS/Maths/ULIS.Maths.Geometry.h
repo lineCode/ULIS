@@ -40,6 +40,17 @@ struct FRect
         , h( iH )
     {}
 
+    inline static FRect FromXYWH( int iX, int iY, int iW, int iH )
+    {
+        return  FRect( iX, iY, iW, iH );
+    }
+
+
+    inline static FRect FromMinMax( int iXMin, int iYMin, int iXMax, int iYMax )
+    {
+        return  FRect( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
+    }
+
 
     FRect operator&( const FRect& iOther ) const
     {
@@ -47,7 +58,17 @@ struct FRect
         int y1 = FMath::Max( y, iOther.y );
         int x2 = FMath::Min( x + w, iOther.x + iOther.w );
         int y2 = FMath::Min( y + h, iOther.y + iOther.h );
-        return  FRect( x1, y1, x2 - x1, y2 - y1 );
+        return  FromMinMax( x1, y1, x2, y2 );
+    }
+
+
+    FRect operator|( const FRect& iOther ) const
+    {
+        int x1 = FMath::Min( x, iOther.x );
+        int y1 = FMath::Min( y, iOther.y );
+        int x2 = FMath::Max( x + w, iOther.x + iOther.w );
+        int y2 = FMath::Max( y + h, iOther.y + iOther.h );
+        return  FromMinMax( x1, y1, x2, y2 );
     }
 
 

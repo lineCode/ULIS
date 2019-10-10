@@ -22,5 +22,10 @@ typedef  int16_t    int16;
 typedef  int32_t    int32;
 typedef  int64_t    int64;
 
+/////////////////////////////////////////////////////
+// Callback Typedefs
+class IBlock;
+typedef void (*fpInvalidateFunction)( IBlock* /*data*/, void* /*info*/, const FRect& /*rect*/ );
+
 } // namespace ULIS
 
