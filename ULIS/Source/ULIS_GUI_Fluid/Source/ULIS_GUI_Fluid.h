@@ -35,7 +35,7 @@ public:
         , mLabel( nullptr )
         , mTimer( nullptr )
     {
-        mN          = 256;
+        mN          = 64;
         int size    = ( mN + 2 ) * ( mN + 2 );
         mU          = (float*)malloc( size * sizeof( float ) );
         mV          = (float*)malloc( size * sizeof( float ) );
@@ -60,7 +60,7 @@ public:
         mMousePos = QPoint();
         mOldPos = QPoint();
 
-        mBlock = FMakeContext::MakeBlock( 512, 512, Format::Format_RGBA8 );
+        mBlock = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
         mMiniBlock = FMakeContext::MakeBlock( mN + 2, mN + 2, Format::Format_RGBA8 );
         ::ULIS::FClearFillContext::Fill( mBlock, ::ULIS::CColor( 0, 255, 0 ) );
         mImage = new QImage( mBlock->DataPtr(), mBlock->Width(), mBlock->Height(), mBlock->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
@@ -116,8 +116,8 @@ private:
 
         if( mLeftMouseDown )
         {
-            const int x = ( mMousePos.x() / 512.f ) * ( mN + 2 );
-            const int y = ( mMousePos.y() / 512.f ) * ( mN + 2 );
+            const int x = ( mMousePos.x() / 1024.f ) * ( mN + 2 );
+            const int y = ( mMousePos.y() / 1024.f ) * ( mN + 2 );
             const int rad = 5;
             const int xmin = FMath::Max( 0, x - rad );
             const int xmax = FMath::Min( mN + 2, x + rad );
@@ -135,8 +135,8 @@ private:
 
         if( mRightMouseDown )
         {
-            const int x = ( mMousePos.x() / 512.f ) * ( mN + 2 );
-            const int y = ( mMousePos.y() / 512.f ) * ( mN + 2 );
+            const int x = ( mMousePos.x() / 1024.f ) * ( mN + 2 );
+            const int y = ( mMousePos.y() / 1024.f ) * ( mN + 2 );
             const int rad = 10;
             const int xmin = FMath::Max( 0, x - rad );
             const int xmax = FMath::Min( mN + 2, x + rad );
@@ -162,6 +162,7 @@ private:
                 int index = ( ( i ) + ( mN + 2 ) * ( j ) );
                 float value = mDens[ index ];
                 value = FMath::Clamp( value, 0.f, 1.f );
+                /*
                 if( value > 0.5f )
                 {
                     value = 1.f;
@@ -174,6 +175,7 @@ private:
                 {
                     value = 0.f;
                 }
+                */
                 mMiniBlock->SetPixelColor( i, j, CColor::FromGreyF( value ) );
                 //mMiniBlock->SetPixelColor( i, j, CColor::FromRGBF( ( 1.f- value ), 0.5f, value ) );
             }
@@ -181,8 +183,8 @@ private:
 
         float scale = (float)mBlock->Width() / (float)mMiniBlock->Width();
         FPerformanceOptions opt;
-        opt.desired_workers = 1;
-        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kNearestNeighbour, opt );
+        opt.desired_workers = 64;
+        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kLinear, opt );
         mPixmap.convertFromImage( *mImage );
         mLabel->setPixmap( mPixmap );
     }
