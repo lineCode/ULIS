@@ -9,10 +9,6 @@ __pycache__/
 *.sln
 *.vcxproj.*
 
-# Generated
-*/Generated/*
-*/Generated*/*
-
 # EmbeddedDependencies
 ULIS/Tools/EmbeddedDependencies*/*
 
@@ -43,5 +39,10 @@ ULIS/Documentation/public_1.0/*
 # ipp
 !*.ipp
 
-#ULIS_CORE
-!ULIS_CORE
+#ULIS_ minimal includes
+!ULIS_*
+
+# Generated
+*/Generated/*
+*/Generated*/*
+

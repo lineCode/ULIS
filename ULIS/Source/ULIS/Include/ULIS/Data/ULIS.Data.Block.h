@@ -9,7 +9,8 @@
 */
 
 #pragma once
-
+#include "ULIS/ULIS.Config.h"
+#include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.AlignedMemory.h"
 #include "ULIS/Base/ULIS.Base.CRC32.h"
 #include "ULIS/Base/ULIS.Base.MD5.h"
@@ -146,10 +147,6 @@ private:
 // IBlock
 class IBlock
 {
-public:
-    // Typedef
-    typedef void (*fpInvalidateFunction)( IBlock* /*data*/, void* /*info*/, const FRect& /*rect*/ );
-
 public:
     // Construction / Destruction
     IBlock()

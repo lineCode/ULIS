@@ -12,6 +12,7 @@
 
 #include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Maths/ULIS.Maths.Geometry.h"
-ULIS_CLASS_FORWARD_DECLARATION( IBlock )
-
+namespace ULIS {
+struct  FRect;
+class   CColor;
+} // namespace ULIS
