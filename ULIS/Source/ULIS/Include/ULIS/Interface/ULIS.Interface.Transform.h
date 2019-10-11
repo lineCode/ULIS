@@ -91,6 +91,16 @@ public:
                                 , eResamplingMethod iResamplingMethod = eResamplingMethod::kLinear
                                 , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 
+
+    /// @fn         static FRect  GetTransformPreviewRect( const IBlock* iBlockSrc, const  glm::mat3& iMat )
+    /// @brief      Get the Rect corresponding to the size after the transform, for previewing purpose.
+    /// @details    No transform is actually computed, just the bounding box.
+    /// @param      iBlockSrc               The source block to transform ( remains untouched ).
+    /// @param      iMat                    The transform to apply.
+    /// @return     A FRect with the preview location and size of the transformed input.
+    static FRect  GetTransformPreviewRect( const IBlock* iBlockSrc
+                                         , const  glm::mat3& iMat );
+
 };
 
 } // namespace ULIS
