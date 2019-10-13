@@ -35,7 +35,7 @@ public:
         , mLabel( nullptr )
         , mTimer( nullptr )
     {
-        mN          = 64;
+        mN          = 128;
         int size    = ( mN + 2 ) * ( mN + 2 );
         mU          = (float*)malloc( size * sizeof( float ) );
         mV          = (float*)malloc( size * sizeof( float ) );
@@ -50,11 +50,11 @@ public:
         memset( mDens, 0, size * sizeof( float ) );
         memset( mDensPrev, 0, size * sizeof( float ) );
 
-        mDt = 0.01f;
+        mDt = 0.1f;
         mDiff = 0.001f;
         mVisc = 0.f;
-        mForce = 20.f;
-        mSource = 100.0f;
+        mForce = 0.3f;
+        mSource = 2.0f;
         mLeftMouseDown = false;
         mRightMouseDown = false;
         mMousePos = QPoint();
@@ -70,7 +70,7 @@ public:
         this->setFixedSize( mPixmap.size() );
 
         mTimer = new QTimer();
-        mTimer->setInterval( 1000.0 / 60.0 );
+        mTimer->setInterval( 1000.0 / 24.0 );
         QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
         mTimer->start();
     }
@@ -157,33 +157,19 @@ private:
         vel_step( mN, mU, mV, mUPrev, mVPrev, mVisc, mDt );
         dens_step( mN, mDens, mDensPrev, mU, mV, mDiff, mDt );
 
-        for( int i = 0; i < mN + 2; ++i ) {
-            for( int j = 0; j < mN + 2; ++j ) {
-                int index = ( ( i ) + ( mN + 2 ) * ( j ) );
-                float value = mDens[ index ];
-                value = FMath::Clamp( value, 0.f, 1.f );
-                /*
-                if( value > 0.5f )
-                {
-                    value = 1.f;
-                }
-                else if( value > 0.25f )
-                {
-                    value = 0.5f;
-                }
-                else
-                {
-                    value = 0.f;
-                }
-                */
-                mMiniBlock->SetPixelColor( i, j, CColor::FromGreyF( value ) );
-                //mMiniBlock->SetPixelColor( i, j, CColor::FromRGBF( ( 1.f- value ), 0.5f, value ) );
-            }
-        }
+        ::ULIS::ParallelFor( mN + 2
+                           , [&]( int iLine ) {
+                                for( int j = 0; j < mN + 2; ++j ) {
+                                    int index = ( ( j ) + ( mN + 2 ) * ( iLine ) );
+                                    float value = mDens[ index ];
+                                    value = FMath::Clamp( value, 0.f, 1.f );
+                                    mMiniBlock->SetPixelColor( j, iLine, CColor::FromGreyF( value ) );
+                                }
+                            } );
 
         float scale = (float)mBlock->Width() / (float)mMiniBlock->Width();
         FPerformanceOptions opt;
-        opt.desired_workers = 64;
+        opt.desired_workers = 20;
         FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kLinear, opt );
         mPixmap.convertFromImage( *mImage );
         mLabel->setPixmap( mPixmap );
