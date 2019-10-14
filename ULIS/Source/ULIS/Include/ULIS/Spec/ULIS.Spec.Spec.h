@@ -12,6 +12,7 @@
 
 #include <coal_core>
 #include <limits>
+#include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Spec/ULIS.Spec.PreprocessorFramework.h"
 #include "lcms2.h"

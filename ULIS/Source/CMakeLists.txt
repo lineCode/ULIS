@@ -20,6 +20,8 @@ SET( ULIS_VERSION_MINOR             "unset"     CACHE STRING    "Indicate ULIS v
 # Display host & compiler
 message( "Generating: ${ULIS_EXPLICIT_HOST_ID} ${ULIS_EXPLICIT_COMPILER_ID}")
 
+set( CMAKE_OSX_DEPLOYMENT_TARGET "10.13" )
+
 # Generate only Debug and Release configurations for all projects
 set( CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE )
 

@@ -8,6 +8,7 @@
 * @brief    This file provides the specialisations related to block types.
 */
 #pragma once
+#include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.Registry.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 

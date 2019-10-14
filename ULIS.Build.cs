@@ -11,7 +11,7 @@ public class ULIS : ModuleRules
         if (Target.Platform == UnrealTargetPlatform.Win64 ||
             Target.Platform == UnrealTargetPlatform.Win32 )
         {
-            string PlatformDir                      = Target.Platform.ToString();
+            // string PlatformDir                      = Target.Platform.ToString();
             string IncludeBase                      = Path.Combine( ModuleDirectory, "Redist", "Include" );
             string ULIS_IncludePath                 = Path.Combine( IncludeBase, "ULIS" );
             string LittleCMS_IncludePath            = Path.Combine( IncludeBase, "Little-CMS" );
@@ -33,7 +33,7 @@ public class ULIS : ModuleRules
             string LibBaseDebug     = Path.Combine( LibBase, "Debug" );
             PublicLibraryPaths.Add( LibBaseRelease );
             PublicLibraryPaths.Add( LibBaseDebug );
-            
+
             string ULIS_LibName         = "ULIS1.0";
             string LittleCMS_LibName    = "lcms2";
 
@@ -53,7 +53,7 @@ public class ULIS : ModuleRules
         }
         else if ( Target.Platform == UnrealTargetPlatform.Mac )
         {
-            string PlatformDir                      = Target.Platform.ToString();
+            // string PlatformDir                      = Target.Platform.ToString();
             string IncludeBase                      = Path.Combine( ModuleDirectory, "Redist", "Include" );
             string ULIS_IncludePath                 = Path.Combine( IncludeBase, "ULIS" );
             string LittleCMS_IncludePath            = Path.Combine( IncludeBase, "Little-CMS" );
@@ -75,7 +75,7 @@ public class ULIS : ModuleRules
             string LibBaseDebug     = Path.Combine( LibBase, "Debug" );
             PublicLibraryPaths.Add( LibBaseRelease );
             PublicLibraryPaths.Add( LibBaseDebug );
-            
+
             string ULIS_LibName         = "libULIS1.0";
             string LittleCMS_LibName    = "liblcms2";
 
