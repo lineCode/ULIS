@@ -129,6 +129,32 @@ FMakeContext::CopyBlockRectInto( ::ULIS::IBlock* iSrc
 
 
 //static
+void
+FMakeContext::CopyBlockRectInto( IBlock* iSrc
+                               , IBlock* iDst
+                               , const FRect& iSrcRect
+                               , const FPoint& iDstPos
+                               , const FPerformanceOptions& iPerformanceOptions )
+{
+    assert( iSrc->Id() == iDst->Id() );
+    switch( iSrc->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                            \
+            case ULIS_REG[ n ]:                                                                                                             \
+            {                                                                                                                               \
+                        ::ULIS::TMakeContext< ULIS_REG[ n ] >                                                                               \
+                        ::CopyBlockRectInto( (::ULIS::TBlock< ULIS_REG[ n ] >*)iSrc                                                         \
+                                           , (::ULIS::TBlock< ULIS_REG[ n ] >*)iDst                                                         \
+                                           , iSrcRect, iDstPos, iPerformanceOptions);                                                       \
+                        break;                                                                                                              \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+
+
+//static
 FRect
 FMakeContext::GetTrimmedTransparencyRect( const IBlock* iSrc
                                         , const FPerformanceOptions& iPerformanceOptions )

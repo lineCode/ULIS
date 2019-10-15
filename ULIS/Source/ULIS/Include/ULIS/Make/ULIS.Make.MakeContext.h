@@ -46,6 +46,17 @@ public:
         TBlockCopier< _SH >::Run( iSrc, iDst, inter_bb, shift, iPerformanceOptions);
     }
 
+    static void CopyBlockRectInto( const TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const FRect& iSrcRect, const FPoint& iDstPos, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    {
+        FRect src_bb = FRect( 0, 0, iSrc->Width(), iSrc->Height() );
+        FRect rect_bb = FRect( iSrcRect.x, iSrcRect.y, FMath::Min( iDst->Width(), iSrcRect.w ), FMath::Min( iDst->Height(), iSrcRect.h ) );
+        FRect inter_bb  = src_bb & rect_bb;
+        if( inter_bb.Area() <= 0 ) return;
+        FPoint shift( -iSrcRect.x + iDstPos.x, -iSrcRect.y + iDstPos.y );
+
+        TBlockCopier< _SH >::Run( iSrc, iDst, inter_bb, shift, iPerformanceOptions);
+    }
+
     static  FRect  GetTrimmedTransparencyRect( const TBlock< _SH >* iSrc, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
     {
         using tPixelType = typename TBlock< _SH >::tPixelType;

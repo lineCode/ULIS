@@ -118,6 +118,22 @@ public:
                                    , const FRect& iRect
                                    , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() );
 
+
+    /// @fn         static  void  CopyBlockRectInto( IBlock* iSrc, IBlock* iDst, const FRect& iRect, const FPoint& iDstPos, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+    /// @brief      Make a copy of the source block into the destination block, copying the specified rect only at specified pos.
+    /// @details    A copy is performed into the destination block.
+    /// @param      iSrc                    The source.
+    /// @param      iDst                    The destination.
+    /// @param      iSrcRect                The area to copy.
+    /// @param      iDstPos                 The position to copy to.
+    /// @param      iPerformanceOptions     The performance preferences.
+    static  void  CopyBlockRectInto( IBlock* iSrc
+                                   , IBlock* iDst
+                                   , const FRect& iSrcRect
+                                   , const FPoint& iDstPos
+                                   , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() );
+
+
     /// @fn         static  FRect  GetTrimmedTransparencyRect( const IBlock* iSrc, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
     /// @brief      Get the rect corresponding to the minimal rectangular area in the block that is non transparent.
     /// @details    THis effectively leaves empty spaces out.
