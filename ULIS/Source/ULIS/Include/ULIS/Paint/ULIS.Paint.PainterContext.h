@@ -166,9 +166,6 @@ static void DrawLine( TBlock< _SH >*                        iBlock
     if( !accept )
         return; //Nothing to draw
     
-    std::cout << "x: " << p0.x << " y: " << p0.y << " x2: " << p1.x << " y2: "  << p1.y << std::endl;
-    
-    
     //Drawing ----
     TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
 
@@ -253,25 +250,149 @@ static void DrawLineAA( TBlock< _SH >*            iBlock
                         , const FPerformanceOptions&        iPerformanceOptions
                         , bool                     iCallInvalidCB )
 {
+    //Clipping ----
+    FPoint p0 = iP0;
+    FPoint p1 = iP1;
+    
+    //Regions of the clipping rectangle
+    const int INSIDE = 0; // 0000
+    const int LEFT = 1;   // 0001
+    const int RIGHT = 2;  // 0010
+    const int BOTTOM = 4; // 0100
+    const int TOP = 8;    // 1000
+    
+    int xMax;
+    int yMax;
+    int xMin;
+    int yMin;
+    
+    if( iClippingRect.Area() != 0 )
+    {
+        xMax = iClippingRect.x + iClippingRect.w;
+        yMax = iClippingRect.y + iClippingRect.h;
+        xMin = iClippingRect.x;
+        yMin = iClippingRect.y;
+    }
+    else
+    {
+        xMax = iBlock->Width() - 1;
+        yMax = iBlock->Height() - 1;
+        xMin = 0;
+        yMin = 0;
+    }
+    
+    
+    auto ComputeCodeForPoint = [&xMax, &yMax, &xMin, &yMin] (const FPoint iPoint)
+    {
+        // initialized as being inside
+        int code = INSIDE;
+      
+        if (iPoint.x < xMin)       // to the left of rectangle
+            code |= LEFT;
+        else if (iPoint.x > xMax)  // to the right of rectangle
+            code |= RIGHT;
+        if (iPoint.y < yMin)       // above the rectangle
+            code |= TOP;
+        else if (iPoint.y > yMax)  // below the rectangle
+            code |= BOTTOM;
+      
+        return code;
+    };
+    
+    int codeP0 = ComputeCodeForPoint( p0 );
+    int codeP1 = ComputeCodeForPoint( p1 );
+    
+    bool accept = false;
+
+    while (true)
+    {
+        if ((codeP0 == 0) && (codeP1 == 0))
+        {
+            // If both endpoints lie within rectangle
+            accept = true;
+            break;
+        }
+        else if (codeP0 & codeP1)
+        {
+            // If both endpoints are outside rectangle,
+            // in same region
+            break;
+        }
+        else
+        {
+            // Some segment of line lies within the
+            // rectangle
+            int code_out;
+            double x, y;
+  
+            // At least one endpoint is outside the
+            // rectangle, pick it.
+            if (codeP0 != 0)
+                code_out = codeP0;
+            else
+                code_out = codeP1;
+  
+            // Find intersection point;
+            // using formulas y = y1 + slope * (x - x1),
+            // x = x1 + (1 / slope) * (y - y1)
+            if (code_out & BOTTOM)
+            {
+                // point is above the clip rectangle
+                x = p0.x + (p1.x - p0.x) * (yMax - p0.y) / (p1.y - p0.y);
+                y = yMax;
+            }
+            else if (code_out & TOP)
+            {
+                // point is below the rectangle
+                x = p0.x + (p1.x - p0.x) * (yMin - p0.y) / (p1.y - p0.y);
+                y = yMin;
+            }
+            else if (code_out & RIGHT)
+            {
+                // point is to the right of rectangle
+                y = p0.y + (p1.y - p0.y) * (xMax - p0.x) / (p1.x - p0.x);
+                x = xMax;
+            }
+            else if (code_out & LEFT)
+            {
+                // point is to the left of rectangle
+                y = p0.y + (p1.y - p0.y) * (xMin - p0.x) / (p1.x - p0.x);
+                x = xMin;
+            }
+  
+            // Now intersection point x,y is found
+            // We replace point outside rectangle
+            // by intersection point
+            if (code_out == codeP0)
+            {
+                p0.x = x;
+                p0.y = y;
+                codeP0 = ComputeCodeForPoint(p0);
+            }
+            else
+            {
+                p1.x = x;
+                p1.y = y;
+                codeP1 = ComputeCodeForPoint(p1);
+            }
+        }
+    }
+    
+    if( !accept )
+        return; //Nothing to draw
+    
+    //Drawing
     TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
 
     auto MaxAlpha = val.GetAlpha();
 
-    FPoint p0;
-    FPoint p1;
-
-
-    if( ::ULIS::FMath::Abs( iP1.y - iP0.y ) < ::ULIS::FMath::Abs( iP1.x - iP0.x )) //x slope > y slope
+    if( ::ULIS::FMath::Abs( p1.y - p0.y ) < ::ULIS::FMath::Abs( p1.x - p0.x )) //x slope > y slope
     {
-        if( iP1.x > iP0.x )
+        if( p1.x < p0.x )
         {
-            p0 = iP0;
-            p1 = iP1;
-        }
-        else
-        {
-            p0 = iP1;
-            p1 = iP0;
+            ULIS::FPoint temp = p0;
+            p0 = p1;
+            p1 = temp;
         }
 
         int dx = p1.x - p0.x;
@@ -309,15 +430,11 @@ static void DrawLineAA( TBlock< _SH >*            iBlock
     }
     else //y slope > x slope
     {
-        if( iP1.y > iP0.y )
+        if( p1.y < p0.y )
         {
-            p0 = iP0;
-            p1 = iP1;
-        }
-        else
-        {
-            p0 = iP1;
-            p1 = iP0;
+            ULIS::FPoint temp = p0;
+            p0 = p1;
+            p1 = temp;
         }
 
         int dx = p1.x - p0.x;
