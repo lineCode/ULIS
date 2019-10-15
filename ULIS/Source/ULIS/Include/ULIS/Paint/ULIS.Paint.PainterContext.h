@@ -22,29 +22,160 @@ template< uint32 _SH >
 class TPainterContext
 {
 public:
-static void DrawLine( TBlock< _SH >*            iBlock
-                        , const FPoint             iP0
-                        , const FPoint             iP1
-                        , const CColor&            iColor
+static void DrawLine( TBlock< _SH >*                        iBlock
+                        , const FPoint                      iP0
+                        , const FPoint                      iP1
+                        , const CColor&                     iColor
+                        , const FRect&                      iClippingRect
                         , const FPerformanceOptions&        iPerformanceOptions
-                        , bool                     iCallInvalidCB )
+                        , bool                              iCallInvalidCB )
 {
-    TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
-
-    FPoint p0;
-    FPoint p1;
-
-    if( ::ULIS::FMath::Abs( iP1.y - iP0.y ) < ::ULIS::FMath::Abs( iP1.x - iP0.x )) // x slope > y slope
+    //Clipping ----
+    
+    
+    FPoint p0 = iP0;
+    FPoint p1 = iP1;
+    
+    //Regions of the clipping rectangle
+    const int INSIDE = 0; // 0000
+    const int LEFT = 1;   // 0001
+    const int RIGHT = 2;  // 0010
+    const int BOTTOM = 4; // 0100
+    const int TOP = 8;    // 1000
+    
+    int xMax;
+    int yMax;
+    int xMin;
+    int yMin;
+    
+    if( iClippingRect.Area() != 0 )
     {
-        if( iP1.x > iP0.x )
+        xMax = iClippingRect.x + iClippingRect.w;
+        yMax = iClippingRect.y + iClippingRect.h;
+        xMin = iClippingRect.x;
+        yMin = iClippingRect.y;
+    }
+    else
+    {
+        xMax = iBlock->Width() - 1;
+        yMax = iBlock->Height() - 1;
+        xMin = 0;
+        yMin = 0;
+    }
+    
+    
+    auto ComputeCodeForPoint = [&xMax, &yMax, &xMin, &yMin] (const FPoint iPoint)
+    {
+        // initialized as being inside
+        int code = INSIDE;
+      
+        if (iPoint.x < xMin)       // to the left of rectangle
+            code |= LEFT;
+        else if (iPoint.x > xMax)  // to the right of rectangle
+            code |= RIGHT;
+        if (iPoint.y < yMin)       // above the rectangle
+            code |= TOP;
+        else if (iPoint.y > yMax)  // below the rectangle
+            code |= BOTTOM;
+      
+        return code;
+    };
+    
+    int codeP0 = ComputeCodeForPoint( p0 );
+    int codeP1 = ComputeCodeForPoint( p1 );
+    
+    bool accept = false;
+
+    while (true)
+    {
+        if ((codeP0 == 0) && (codeP1 == 0))
         {
-            p0 = iP0;
-            p1 = iP1;
+            // If both endpoints lie within rectangle
+            accept = true;
+            break;
+        }
+        else if (codeP0 & codeP1)
+        {
+            // If both endpoints are outside rectangle,
+            // in same region
+            break;
         }
         else
         {
-            p0 = iP1;
-            p1 = iP0;
+            // Some segment of line lies within the
+            // rectangle
+            int code_out;
+            double x, y;
+  
+            // At least one endpoint is outside the
+            // rectangle, pick it.
+            if (codeP0 != 0)
+                code_out = codeP0;
+            else
+                code_out = codeP1;
+  
+            // Find intersection point;
+            // using formulas y = y1 + slope * (x - x1),
+            // x = x1 + (1 / slope) * (y - y1)
+            if (code_out & BOTTOM)
+            {
+                // point is above the clip rectangle
+                x = p0.x + (p1.x - p0.x) * (yMax - p0.y) / (p1.y - p0.y);
+                y = yMax;
+            }
+            else if (code_out & TOP)
+            {
+                // point is below the rectangle
+                x = p0.x + (p1.x - p0.x) * (yMin - p0.y) / (p1.y - p0.y);
+                y = yMin;
+            }
+            else if (code_out & RIGHT)
+            {
+                // point is to the right of rectangle
+                y = p0.y + (p1.y - p0.y) * (xMax - p0.x) / (p1.x - p0.x);
+                x = xMax;
+            }
+            else if (code_out & LEFT)
+            {
+                // point is to the left of rectangle
+                y = p0.y + (p1.y - p0.y) * (xMin - p0.x) / (p1.x - p0.x);
+                x = xMin;
+            }
+  
+            // Now intersection point x,y is found
+            // We replace point outside rectangle
+            // by intersection point
+            if (code_out == codeP0)
+            {
+                p0.x = x;
+                p0.y = y;
+                codeP0 = ComputeCodeForPoint(p0);
+            }
+            else
+            {
+                p1.x = x;
+                p1.y = y;
+                codeP1 = ComputeCodeForPoint(p1);
+            }
+        }
+    }
+    
+    if( !accept )
+        return; //Nothing to draw
+    
+    std::cout << "x: " << p0.x << " y: " << p0.y << " x2: " << p1.x << " y2: "  << p1.y << std::endl;
+    
+    
+    //Drawing ----
+    TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+
+    if( ::ULIS::FMath::Abs( p1.y - p0.y ) < ::ULIS::FMath::Abs( p1.x - p0.x )) // x slope > y slope
+    {
+        if( p1.x < p0.x )
+        {
+            ULIS::FPoint temp = p0;
+            p0 = p1;
+            p1 = temp;
         }
 
         int dx = p1.x - p0.x;
@@ -74,15 +205,11 @@ static void DrawLine( TBlock< _SH >*            iBlock
     }
     else //y slope > x slope
     {
-        if( iP1.y > iP0.y )
+        if( p1.y < p0.y )
         {
-            p0 = iP0;
-            p1 = iP1;
-        }
-        else
-        {
-            p0 = iP1;
-            p1 = iP0;
+            ULIS::FPoint temp = p0;
+            p0 = p1;
+            p1 = temp;
         }
 
         int dx = p1.x - p0.x;
@@ -119,6 +246,7 @@ static void DrawLineAA( TBlock< _SH >*            iBlock
                         , const FPoint             iP0
                         , const FPoint             iP1
                         , const CColor&            iColor
+                        , const FRect&                      iClippingRect
                         , const FPerformanceOptions&        iPerformanceOptions
                         , bool                     iCallInvalidCB )
 {
@@ -233,6 +361,7 @@ static void DrawCircleAndres( TBlock< _SH >*            iBlock
                                 , const int                iRadius
                                 , const CColor&            iColor
                                 , const bool               iFilled
+                                , const FRect&                      iClippingRect
                                 , const FPerformanceOptions&        iPerformanceOptions
                                 , bool                     iCallInvalidCB )
 {
@@ -257,10 +386,10 @@ static void DrawCircleAndres( TBlock< _SH >*            iBlock
         {
             if( iFilled )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
             diff -= ( 2 * x + 1 );
             x++;
@@ -274,10 +403,10 @@ static void DrawCircleAndres( TBlock< _SH >*            iBlock
         {
             if( iFilled )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
             diff += (2 * ( y - x - 1 ) );
             y--;
@@ -294,6 +423,7 @@ static void DrawCircleAndresAA( TBlock< _SH >*            iBlock
                                 , const int                iRadius
                                 , const CColor&            iColor
                                 , const bool               iFilled
+                                , const FRect&                      iClippingRect
                                 , const FPerformanceOptions&        iPerformanceOptions
                                 , bool                     iCallInvalidCB )
 {
@@ -339,10 +469,10 @@ static void DrawCircleAndresAA( TBlock< _SH >*            iBlock
         {
             if( iFilled )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
             diff -= ( 2 * x + 1 );
             x++;
@@ -356,10 +486,10 @@ static void DrawCircleAndresAA( TBlock< _SH >*            iBlock
         {
             if( iFilled )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
             diff += (2 * ( y - x - 1 ) );
             y--;
@@ -375,6 +505,7 @@ static void DrawCircleBresenham(  TBlock< _SH >*           iBlock
                                 , const int                iRadius
                                 , const CColor&            iColor
                                 , const bool               iFilled
+                                , const FRect&                      iClippingRect
                                 , const FPerformanceOptions&        iPerformanceOptions
                                 , bool                     iCallInvalidCB )
 {
@@ -397,10 +528,10 @@ static void DrawCircleBresenham(  TBlock< _SH >*           iBlock
 
         if( iFilled )
         {
-            DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-            DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-            DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
-            DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
         }
 
         if( diff > 0 )
@@ -421,6 +552,7 @@ static void DrawCircleBresenhamAA(  TBlock< _SH >*           iBlock
                                     , const int                iRadius
                                     , const CColor&            iColor
                                     , const bool               iFilled
+                                    , const FRect&                      iClippingRect
                                     , const FPerformanceOptions&        iPerformanceOptions
                                     , bool                     iCallInvalidCB )
 {
@@ -469,10 +601,10 @@ static void DrawCircleBresenhamAA(  TBlock< _SH >*           iBlock
 
         if( iFilled )
         {
-            DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-            DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-            DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
-            DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
         }
 
         if( diff > 0 )
@@ -494,6 +626,7 @@ static void DrawArcAndres(  TBlock< _SH >*            iBlock
                             , const int                 iStartDegree
                             , const int                 iEndDegree
                             , const CColor&             iColor
+                            , const FRect&                      iClippingRect
                             , const FPerformanceOptions&         iPerformanceOptions
                             , bool                      iCallInvalidCB )
 {
@@ -631,6 +764,7 @@ static void DrawArcAndresAA(  TBlock< _SH >*            iBlock
                             , const int                 iStartDegree
                             , const int                 iEndDegree
                             , const CColor&             iColor
+                            , const FRect&                      iClippingRect
                             , const FPerformanceOptions&         iPerformanceOptions
                             , bool                      iCallInvalidCB )
 {
@@ -843,6 +977,7 @@ static void DrawArcBresenham( TBlock< _SH >*            iBlock
                             , const int                 iStartDegree
                             , const int                 iEndDegree
                             , const CColor&             iColor
+                            , const FRect&                      iClippingRect
                             , const FPerformanceOptions&         iPerformanceOptions
                             , bool                      iCallInvalidCB )
 {
@@ -969,6 +1104,7 @@ static void DrawArcBresenhamAA( TBlock< _SH >*            iBlock
                             , const int                 iStartDegree
                             , const int                 iEndDegree
                             , const CColor&             iColor
+                            , const FRect&                      iClippingRect
                             , const FPerformanceOptions&         iPerformanceOptions
                             , bool                      iCallInvalidCB )
 {
@@ -1170,6 +1306,7 @@ static void DrawEllipse(  TBlock< _SH >*           iBlock
                         , const int                iB
                         , const CColor&            iColor
                         , const bool               iFilled
+                        , const FRect&                      iClippingRect
                         , const FPerformanceOptions&        iPerformanceOptions
                         , bool                     iCallInvalidCB )
 {
@@ -1185,8 +1322,8 @@ static void DrawEllipse(  TBlock< _SH >*           iBlock
     {
         if( iFilled )
         {
-            DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-            DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
         }
 
         iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
@@ -1213,8 +1350,8 @@ static void DrawEllipse(  TBlock< _SH >*           iBlock
         {
             if( iFilled )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
             sigma += fb2 * (1 - x);
             x--;
@@ -1231,6 +1368,7 @@ static void DrawEllipseAA(  TBlock< _SH >*           iBlock
                         , const int                iB
                         , const CColor&            iColor
                         , const bool               iFilled
+                        , const FRect&                      iClippingRect
                         , const FPerformanceOptions&        iPerformanceOptions
                         , bool                     iCallInvalidCB )
 {
@@ -1274,13 +1412,13 @@ static void DrawEllipseAA(  TBlock< _SH >*           iBlock
             {
                 if( step == 1 )
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
                 }
                 else //step = -1, we draw the aliasing on the inside of the ellipse, so we colorize one pixel less
                 {
-                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iPerformanceOptions, iCallInvalidCB );
-                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iPerformanceOptions, iCallInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                    DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
                 }
             }
             sigma += fb2 * (1 - x);
@@ -1316,13 +1454,13 @@ static void DrawEllipseAA(  TBlock< _SH >*           iBlock
         {
             if( step == 1 )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
             else //step = -1, we draw the aliasing on the inside of the ellipse, so we colorize one pixel less
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y + 1 ), FPoint( iCenter.x + x, iCenter.y + y - 1 ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y + 1 ), FPoint( iCenter.x - x, iCenter.y + y - 1 ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
         }
 
@@ -1343,17 +1481,18 @@ static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
                                 , const int                iRotationDegrees
                                 , const CColor&            iColor
                                 , const bool               iFilled
+                                , const FRect&                      iClippingRect
                                 , const FPerformanceOptions&        iPerformanceOptions
                                 , bool                     iCallInvalidCB )
 {
     if( iRotationDegrees % 180 == 0 )
     {
-        DrawEllipse( iBlock, iCenter, iA, iB, iColor, iFilled, iPerformanceOptions, iCallInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+        DrawEllipse( iBlock, iCenter, iA, iB, iColor, iFilled, iClippingRect, iPerformanceOptions, iCallInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
         return;
     }
     if( iRotationDegrees % 90 == 0 )
     {
-        DrawEllipse( iBlock, iCenter, iB, iA, iColor, iFilled, iPerformanceOptions, iCallInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+        DrawEllipse( iBlock, iCenter, iB, iA, iColor, iFilled, iClippingRect, iPerformanceOptions, iCallInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
         return;
     }
 
@@ -1396,10 +1535,10 @@ static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
     dx = std::floor( dx * w + 0.5 );
     dy = std::floor( dy * w + 0.5 );
 
-    InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iPerformanceOptions, iCallInvalidCB, &storagePoints );
-    InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iPerformanceOptions, iCallInvalidCB, &storagePoints );
-    InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iPerformanceOptions, iCallInvalidCB, &storagePoints );
-    InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iPerformanceOptions, iCallInvalidCB, &storagePoints );
+    InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, &storagePoints );
+    InternalDrawQuadRationalBezierSeg( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, &storagePoints );
+    InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, &storagePoints );
+    InternalDrawQuadRationalBezierSeg( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, &storagePoints );
 
     if( iFilled ) //We fill the ellipse by drawing vertical lines
     {
@@ -1411,7 +1550,7 @@ static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
         {
             if( it->second.size() == 2 )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y + it->second[1] ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y + it->second[1] ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
             if( it->second.size() > 2 ) // where we draw more than 2 pixels for a said y
             {
@@ -1425,7 +1564,7 @@ static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
                     if( maxY < it->second[i] )
                         maxY = it->second[i];
                 }
-                DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + minY ), FPoint( iCenter.x + it->first, iCenter.y + maxY ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + minY ), FPoint( iCenter.x + it->first, iCenter.y + maxY ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
         }
     }
@@ -1439,17 +1578,18 @@ static void DrawRotatedEllipseAA(  TBlock< _SH >*           iBlock
                                     , const int                iRotationDegrees
                                     , const CColor&            iColor
                                     , const bool               iFilled
+                                    , const FRect&                      iClippingRect
                                     , const FPerformanceOptions&        iPerformanceOptions
                                     , bool                     iCallInvalidCB )
 {
     if( iRotationDegrees % 180 == 0 )
     {
-        DrawEllipseAA( iBlock, iCenter, iA, iB, iColor, iFilled, iPerformanceOptions, iCallInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+        DrawEllipseAA( iBlock, iCenter, iA, iB, iColor, iFilled, iClippingRect, iPerformanceOptions, iCallInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
         return;
     }
     if( iRotationDegrees % 90 == 0 )
     {
-        DrawEllipseAA( iBlock, iCenter, iB, iA, iColor, iFilled, iPerformanceOptions, iCallInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
+        DrawEllipseAA( iBlock, iCenter, iB, iA, iColor, iFilled, iClippingRect, iPerformanceOptions, iCallInvalidCB ); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
         return;
     }
 
@@ -1490,10 +1630,10 @@ static void DrawRotatedEllipseAA(  TBlock< _SH >*           iBlock
 
     if( !iFilled )
     {
-        InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iPerformanceOptions, iCallInvalidCB ); //top left
-        InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iPerformanceOptions, iCallInvalidCB ); //bottom left
-        InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iPerformanceOptions, iCallInvalidCB ); //bottom right
-        InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iPerformanceOptions, iCallInvalidCB ); //top right
+        InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB ); //top left
+        InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB ); //bottom left
+        InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB ); //bottom right
+        InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB ); //top right
     }
     else //Filled Ellipse
     {
@@ -1549,23 +1689,23 @@ static void DrawRotatedEllipseAA(  TBlock< _SH >*           iBlock
 
         int shift = ( ( ( ( iRotationDegrees + 45 ) % 180 ) + 180 ) % 180 ) < 90 ? 0 : 1;
 
-        InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iPerformanceOptions, iCallInvalidCB, &storagePoints ); //top left
+        InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, &storagePoints ); //top left
         fillPointsForFill( true, shift );
 
-        InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iPerformanceOptions, iCallInvalidCB, &storagePoints ); //bottom left
+        InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, &storagePoints ); //bottom left
         fillPointsForFill( false, shift );
 
-        InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iPerformanceOptions, iCallInvalidCB, &storagePoints ); //bottom right
+        InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, &storagePoints ); //bottom right
         fillPointsForFill( false, shift );
 
-        InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iPerformanceOptions, iCallInvalidCB, &storagePoints ); //top right
+        InternalDrawQuadRationalBezierSegAA( iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, &storagePoints ); //top right
         fillPointsForFill( true, shift );
 
         for (std::map< int, std::vector< int > >::iterator it=pointsForFill.begin(); it!=pointsForFill.end(); ++it)
         {
             if( it->second.size() == 2 )
             {
-                DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y + it->second[1] ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + it->second[0] ), FPoint( iCenter.x + it->first, iCenter.y + it->second[1] ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
             if( it->second.size() > 2 ) // where we draw more than 2 pixels for a said y (it happens at the junctions between beziers)
             {
@@ -1579,7 +1719,7 @@ static void DrawRotatedEllipseAA(  TBlock< _SH >*           iBlock
                     if( maxY < it->second[i] )
                         maxY = it->second[i];
                 }
-                DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + minY ), FPoint( iCenter.x + it->first, iCenter.y + maxY ), iColor, iPerformanceOptions, iCallInvalidCB );
+                DrawLine( iBlock, FPoint( iCenter.x + it->first, iCenter.y + minY ), FPoint( iCenter.x + it->first, iCenter.y + maxY ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             }
         }
     }
@@ -1594,6 +1734,7 @@ static void DrawRectangle( TBlock< _SH >*                   iBlock
                             , const FPoint                  iBottomRight
                             , const CColor&                 iColor
                             , const bool                    iFilled
+                            , const FRect&                  iClippingRect
                             , const FPerformanceOptions&    iPerformanceOptions
                             , bool                          iCallInvalidCB )
 {
@@ -1610,10 +1751,10 @@ static void DrawRectangle( TBlock< _SH >*                   iBlock
     }
     else
     {
-        DrawLine( iBlock, FPoint( xmin, ymin ), FPoint( xmax, ymin ), iColor, iPerformanceOptions, iCallInvalidCB ); // Top
-        DrawLine( iBlock, FPoint( xmax, ymin ), FPoint( xmax, ymax ), iColor, iPerformanceOptions, iCallInvalidCB ); // Right
-        DrawLine( iBlock, FPoint( xmin, ymax ), FPoint( xmax, ymax ), iColor, iPerformanceOptions, iCallInvalidCB ); // Bot
-        DrawLine( iBlock, FPoint( xmin, ymin ), FPoint( xmin, ymax ), iColor, iPerformanceOptions, iCallInvalidCB ); // Left
+        DrawLine( iBlock, FPoint( xmin, ymin ), FPoint( xmax, ymin ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB ); // Top
+        DrawLine( iBlock, FPoint( xmax, ymin ), FPoint( xmax, ymax ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB ); // Right
+        DrawLine( iBlock, FPoint( xmin, ymax ), FPoint( xmax, ymax ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB ); // Bot
+        DrawLine( iBlock, FPoint( xmin, ymin ), FPoint( xmin, ymax ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB ); // Left
     }
 }
 
@@ -1622,6 +1763,7 @@ static void DrawPolygon( TBlock< _SH >*                    iBlock
                         , std::vector< FPoint >&       iPoints
                         , const CColor&                iColor
                         , const bool                   iFilled
+                        , const FRect&                  iClippingRect
                         , const FPerformanceOptions&            iPerformanceOptions
                         , bool                         iCallInvalidCB )
 {
@@ -1631,7 +1773,7 @@ static void DrawPolygon( TBlock< _SH >*                    iBlock
     int j = iPoints.size() - 1;
     for( int i = 0; i < iPoints.size(); i++ )
     {
-        DrawLine( iBlock, iPoints.at( i ), iPoints.at( j ), iColor, iPerformanceOptions, iCallInvalidCB );
+        DrawLine( iBlock, iPoints.at( i ), iPoints.at( j ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
         j = i;
     }
 
@@ -1701,7 +1843,7 @@ static void DrawPolygon( TBlock< _SH >*                    iBlock
                     if( nodesX[i+1] > maxX )
                         nodesX[i+1] = maxX;
 
-                    DrawLine( iBlock, FPoint( nodesX[i], y), FPoint( nodesX[i+1], y ), iColor, iPerformanceOptions, iCallInvalidCB );
+                    DrawLine( iBlock, FPoint( nodesX[i], y), FPoint( nodesX[i+1], y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
                 }
             }
         }
@@ -1713,6 +1855,7 @@ static void DrawPolygonAA( TBlock< _SH >*               iBlock
                             , std::vector< FPoint >&       iPoints
                             , const CColor&                iColor
                             , const bool                   iFilled
+                            , const FRect&                  iClippingRect
                             , const FPerformanceOptions&   iPerformanceOptions
                             , bool                         iCallInvalidCB )
 {
@@ -1722,7 +1865,7 @@ static void DrawPolygonAA( TBlock< _SH >*               iBlock
     int j = iPoints.size() - 1;
     for( int i = 0; i < iPoints.size(); i++ )
     {
-        DrawLineAA( iBlock, iPoints.at( i ), iPoints.at( j ), iColor, iPerformanceOptions, iCallInvalidCB );
+        DrawLineAA( iBlock, iPoints.at( i ), iPoints.at( j ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
         j = i;
     }
 
@@ -1791,7 +1934,7 @@ static void DrawPolygonAA( TBlock< _SH >*               iBlock
                     if( nodesX[i+1] > maxX )
                         nodesX[i+1] = maxX;
 
-                    DrawLine( iBlock, FPoint( nodesX[i], y), FPoint( nodesX[i+1], y ), iColor, iPerformanceOptions, iCallInvalidCB );
+                    DrawLine( iBlock, FPoint( nodesX[i], y), FPoint( nodesX[i+1], y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
                 }
             }
         }
@@ -1807,8 +1950,9 @@ static void InternalDrawQuadRationalBezierSeg( TBlock< _SH>* iBlock
                                                 , int x2
                                                 , int y2
                                                 , float w
-                                                , const CColor& iColor
-                                                , const FPerformanceOptions& iPerformanceOptions
+                                                , const CColor&                 iColor
+                                                , const FRect&                  iClippingRect
+                                                , const FPerformanceOptions&    iPerformanceOptions
                                                 , bool iCallInvalidCB
                                                 , std::map< int, std::vector< int > >* iStoragePoints = NULL)
 {
@@ -1847,10 +1991,10 @@ static void InternalDrawQuadRationalBezierSeg( TBlock< _SH>* iBlock
             sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
             dx = floor((w*x1+x0)*xy+0.5);
             dy = floor((y1*w+y0)*xy+0.5);
-            InternalDrawQuadRationalBezierSeg( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerformanceOptions, iCallInvalidCB, iStoragePoints );
+            InternalDrawQuadRationalBezierSeg( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, iStoragePoints );
             dx = floor((w*x1+x2)*xy+0.5);
             dy = floor((y1*w+y2)*xy+0.5);
-            InternalDrawQuadRationalBezierSeg( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerformanceOptions, iCallInvalidCB, iStoragePoints );
+            InternalDrawQuadRationalBezierSeg( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, iStoragePoints );
             return;
         }
         err = dx+dy-xy;
@@ -1867,7 +2011,7 @@ static void InternalDrawQuadRationalBezierSeg( TBlock< _SH>* iBlock
             if (2 * err > dx || x1) { x0 += sx; dx += xy; err += dy += yy; }
         } while (dy <= xy && dx >= xy);
     }
-    DrawLine( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerformanceOptions, iCallInvalidCB );
+    DrawLine( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
 
     if( iStoragePoints )
     {
@@ -1890,6 +2034,7 @@ static void DrawQuadraticBezier( TBlock< _SH>*                   iBlock
                                 , const FPoint&                   iCtrlPt2
                                 , const float                     iWeight
                                 , const CColor&                   iColor
+                                , const FRect&                    iClippingRect
                                 , const FPerformanceOptions&      iPerformanceOptions
                                 , bool                            iCallInvalidCB )
 {
@@ -1944,7 +2089,7 @@ static void DrawQuadraticBezier( TBlock< _SH>*                   iBlock
         x = std::floor( dx + 0.5 );
         y = std::floor( dy + 0.5 );
         dy = ( dx - pt0.x ) * ( pt1.y - pt0.y ) / ( pt1.x - pt0.x ) + pt0.y;
-        InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iPerformanceOptions, iCallInvalidCB  );
+        InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB  );
         dy = ( dx - pt2.x ) * ( pt1.y - pt2.y ) / ( pt1.x - pt2.x ) + pt2.y;
         pt1.y = std::floor( dy + 0.5 );
         pt0.x = pt1.x = x;
@@ -1976,7 +2121,7 @@ static void DrawQuadraticBezier( TBlock< _SH>*                   iBlock
         x = std::floor( dx + 0.5 );
         y = std::floor( dy + 0.5 );
         dx = ( pt1.x - pt0.x ) * ( dy - pt0.y ) / ( pt1.y - pt0.y ) + pt0.x;
-        InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerformanceOptions, iCallInvalidCB  );
+        InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB  );
 
         dx = ( pt1.x - pt2.x ) * ( dy - pt2.y ) / ( pt1.y - pt2.y ) + pt2.x;
         pt1.x = std::floor( dx + 0.5 );
@@ -1984,7 +2129,7 @@ static void DrawQuadraticBezier( TBlock< _SH>*                   iBlock
         pt0.y = pt1.y = y;
 
     }
-    InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerformanceOptions, iCallInvalidCB  );
+    InternalDrawQuadRationalBezierSeg( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB  );
 }
 
 
@@ -1998,6 +2143,7 @@ static void InternalDrawQuadRationalBezierSegAA( TBlock< _SH>* iBlock
                                                 , int y2
                                                 , float w
                                                 , const CColor& iColor
+                                                , const FRect&                  iClippingRect
                                                 , const FPerformanceOptions& iPerformanceOptions
                                                 , bool iCallInvalidCB
                                                 , std::map< int, std::vector< int > >* iStoragePoints = NULL )
@@ -2044,10 +2190,10 @@ static void InternalDrawQuadRationalBezierSegAA( TBlock< _SH>* iBlock
             sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
             dx = floor((w*x1+x0)*xy+0.5);
             dy = floor((y1*w+y0)*xy+0.5);
-            InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iPerformanceOptions, iCallInvalidCB, iStoragePoints );
+            InternalDrawQuadRationalBezierSegAA( iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, iStoragePoints );
             dx = floor((w*x1+x2)*xy+0.5);
             dy = floor((y1*w+y2)*xy+0.5);
-            InternalDrawQuadRationalBezierSegAA( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iPerformanceOptions, iCallInvalidCB, iStoragePoints );
+            InternalDrawQuadRationalBezierSegAA( iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB, iStoragePoints );
             return;
         }
         err = dx+dy-xy;
@@ -2123,7 +2269,7 @@ static void InternalDrawQuadRationalBezierSegAA( TBlock< _SH>* iBlock
 
         } while (dy < dx);
     }
-    DrawLineAA( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iPerformanceOptions, iCallInvalidCB );
+    DrawLineAA( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
 
     if( iStoragePoints )
     {
@@ -2146,6 +2292,7 @@ static void DrawQuadraticBezierAA( TBlock< _SH>*                   iBlock
                                     , const FPoint&                   iCtrlPt2
                                     , const float                     iWeight
                                     , const CColor&                   iColor
+                                    , const FRect&                    iClippingRect
                                     , const FPerformanceOptions&      iPerformanceOptions
                                     , bool                            iCallInvalidCB )
 {
@@ -2200,7 +2347,7 @@ static void DrawQuadraticBezierAA( TBlock< _SH>*                   iBlock
         x = std::floor( dx + 0.5 );
         y = std::floor( dy + 0.5 );
         dy = ( dx - pt0.x ) * ( pt1.y - pt0.y ) / ( pt1.x - pt0.x ) + pt0.y;
-        InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iPerformanceOptions, iCallInvalidCB  );
+        InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, x, std::floor( dy + 0.5 ), x, y, dWeight, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB  );
         dy = ( dx - pt2.x ) * ( pt1.y - pt2.y ) / ( pt1.x - pt2.x ) + pt2.y;
         pt1.y = std::floor( dy + 0.5 );
         pt0.x = pt1.x = x;
@@ -2231,7 +2378,7 @@ static void DrawQuadraticBezierAA( TBlock< _SH>*                   iBlock
         x = std::floor( dx + 0.5 );
         y = std::floor( dy + 0.5 );
         dx = ( pt1.x - pt0.x ) * ( dy - pt0.y ) / ( pt1.y - pt0.y ) + pt0.x;
-        InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iPerformanceOptions, iCallInvalidCB  );
+        InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, std::floor( dx + 0.5 ), y, x, y, dWeight, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB  );
 
         dx = ( pt1.x - pt2.x ) * ( dy - pt2.y ) / ( pt1.y - pt2.y ) + pt2.x;
         pt1.x = std::floor( dx + 0.5 );
@@ -2239,7 +2386,7 @@ static void DrawQuadraticBezierAA( TBlock< _SH>*                   iBlock
         pt0.y = pt1.y = y;
 
     }
-    InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iPerformanceOptions, iCallInvalidCB  );
+    InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB  );
 }
 
 

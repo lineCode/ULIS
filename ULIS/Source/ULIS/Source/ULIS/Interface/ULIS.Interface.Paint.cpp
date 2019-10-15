@@ -23,6 +23,7 @@ FPainterContext::DrawLine( IBlock* iBlock
                          , const FPoint& iP0
                          , const FPoint& iP1
                          , const CColor& iColor
+                         , const FRect& iClippingRect
                          , const FPerformanceOptions& iPerformanceOptions
                          , bool iCallInvalidCB )
 {
@@ -32,7 +33,7 @@ FPainterContext::DrawLine( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                 \
             {                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawLine( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                            \
-                                                          , iP0, iP1, iColor, iPerformanceOptions, iCallInvalidCB );                            \
+                                                          , iP0, iP1, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );             \
                 break;                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -47,6 +48,7 @@ FPainterContext::DrawLineAA( IBlock* iBlock
                            , const FPoint& iP0
                            , const FPoint& iP1
                            , const CColor& iColor
+                           , const FRect& iClippingRect
                            , const FPerformanceOptions& iPerformanceOptions
                            , bool iCallInvalidCB )
 {
@@ -56,7 +58,7 @@ FPainterContext::DrawLineAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                 \
             {                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawLineAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                          \
-                                                            , iP0, iP1, iColor, iPerformanceOptions, iCallInvalidCB );                          \
+                                                            , iP0, iP1, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );           \
                 break;                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -72,6 +74,7 @@ FPainterContext::DrawCircleAndres( IBlock* iBlock
                                  , int iRadius
                                  , const CColor& iColor
                                  , bool iFilled
+                                 , const FRect& iClippingRect
                                  , const FPerformanceOptions& iPerformanceOptions
                                  , bool iCallInvalidCB )
 {
@@ -81,7 +84,8 @@ FPainterContext::DrawCircleAndres( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                 \
             {                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawCircleAndres( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                    \
-                                                                  , iCenter, iRadius, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );   \
+                                                                  , iCenter, iRadius, iColor, iFilled, iClippingRect                            \
+                                                                  , iPerformanceOptions, iCallInvalidCB );                                      \
                 break;                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -97,6 +101,7 @@ FPainterContext::DrawCircleAndresAA( IBlock* iBlock
                                    , int iRadius
                                    , const CColor& iColor
                                    , bool iFilled
+                                   , const FRect& iClippingRect
                                    , const FPerformanceOptions& iPerformanceOptions
                                    , bool iCallInvalidCB )
 {
@@ -106,7 +111,8 @@ FPainterContext::DrawCircleAndresAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                 \
             {                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawCircleAndresAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                  \
-                                                                    , iCenter, iRadius, iColor, iFilled, iPerformanceOptions, iCallInvalidCB ); \
+                                                                    , iCenter, iRadius, iColor, iFilled, iClippingRect                          \
+                                                                    , iPerformanceOptions, iCallInvalidCB );                                    \
                 break;                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -122,6 +128,7 @@ FPainterContext::DrawCircleBresenham( IBlock* iBlock
                                     , int iRadius
                                     , const CColor& iColor
                                     , bool iFilled
+                                    , const FRect& iClippingRect
                                     , const FPerformanceOptions& iPerformanceOptions
                                     , bool iCallInvalidCB )
 {
@@ -131,7 +138,8 @@ FPainterContext::DrawCircleBresenham( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                     \
             {                                                                                                                                       \
                 TPainterContext< ULIS_REG[ n ] >::DrawCircleBresenham( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                     \
-                                                                     , iCenter, iRadius, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );    \
+                                                                     , iCenter, iRadius, iColor, iFilled, iClippingRect                             \
+                                                                     , iPerformanceOptions, iCallInvalidCB );                                       \
                 break;                                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -147,6 +155,7 @@ FPainterContext::DrawCircleBresenhamAA( IBlock* iBlock
                                       , int iRadius
                                       , const CColor& iColor
                                       , bool iFilled
+                                      , const FRect& iClippingRect
                                       , const FPerformanceOptions& iPerformanceOptions
                                       , bool iCallInvalidCB )
 {
@@ -156,7 +165,8 @@ FPainterContext::DrawCircleBresenhamAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                     \
             {                                                                                                                                       \
                 TPainterContext< ULIS_REG[ n ] >::DrawCircleBresenhamAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                   \
-                                                                       , iCenter, iRadius, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );  \
+                                                                       , iCenter, iRadius, iColor, iFilled, iClippingRect                           \
+                                                                       , iPerformanceOptions, iCallInvalidCB );                                     \
                 break;                                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -173,6 +183,7 @@ FPainterContext::DrawEllipse( IBlock* iBlock
                             , int iB
                             , const CColor& iColor
                             , bool iFilled
+                            , const FRect& iClippingRect
                             , const FPerformanceOptions& iPerformanceOptions
                             , bool iCallInvalidCB )
 {
@@ -182,7 +193,8 @@ FPainterContext::DrawEllipse( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                             \
             {                                                                                                                               \
                 TPainterContext< ULIS_REG[ n ] >::DrawEllipse( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                     \
-                                                             , iCenter, iA, iB, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );     \
+                                                             , iCenter, iA, iB, iColor, iFilled, iClippingRect                              \
+                                                             , iPerformanceOptions, iCallInvalidCB );                                       \
                 break;                                                                                                                      \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -199,6 +211,7 @@ FPainterContext::DrawEllipseAA( IBlock* iBlock
                               , int iB
                               , const CColor& iColor
                               , bool iFilled
+                              , const FRect& iClippingRect
                               , const FPerformanceOptions& iPerformanceOptions
                               , bool iCallInvalidCB )
 {
@@ -208,7 +221,8 @@ FPainterContext::DrawEllipseAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                             \
             {                                                                                                                               \
                 TPainterContext< ULIS_REG[ n ] >::DrawEllipseAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                   \
-                                                               , iCenter, iA, iB, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );   \
+                                                               , iCenter, iA, iB, iColor, iFilled, iClippingRect                            \
+                                                               , iPerformanceOptions, iCallInvalidCB );                                     \
                 break;                                                                                                                      \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -226,6 +240,7 @@ FPainterContext::DrawRotatedEllipse( IBlock* iBlock
                                    , int iRotationDegrees
                                    , const CColor& iColor
                                    , bool iFilled
+                                   , const FRect& iClippingRect
                                    , const FPerformanceOptions& iPerformanceOptions
                                    , bool iCallInvalidCB )
 {
@@ -235,7 +250,8 @@ FPainterContext::DrawRotatedEllipse( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                                     \
             {                                                                                                                                                       \
                 TPainterContext< ULIS_REG[ n ] >::DrawRotatedEllipse( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                                      \
-                                                                    , iCenter, iA, iB, iRotationDegrees, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );    \
+                                                                    , iCenter, iA, iB, iRotationDegrees, iColor, iFilled                                            \
+                                                                    , iClippingRect, iPerformanceOptions, iCallInvalidCB );                                         \
                 break;                                                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -253,7 +269,8 @@ FPainterContext::DrawRotatedEllipseAA( IBlock* iBlock
                                      , int iRotationDegrees
                                      , const CColor& iColor
                                      , bool iFilled
-                                     ,const FPerformanceOptions& iPerformanceOptions
+                                     , const FRect& iClippingRect
+                                     , const FPerformanceOptions& iPerformanceOptions
                                      , bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
@@ -262,7 +279,8 @@ FPainterContext::DrawRotatedEllipseAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                                     \
             {                                                                                                                                                       \
                 TPainterContext< ULIS_REG[ n ] >::DrawRotatedEllipseAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                                    \
-                                                                      , iCenter, iA, iB, iRotationDegrees, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );  \
+                                                                      , iCenter, iA, iB, iRotationDegrees, iColor, iFilled                                          \
+                                                                      , iClippingRect, iPerformanceOptions, iCallInvalidCB );                                       \
                 break;                                                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -279,6 +297,7 @@ FPainterContext::DrawArcAndres( IBlock* iBlock
                               , int iStartDegree
                               , int iEndDegree
                               , const CColor& iColor
+                              , const FRect& iClippingRect
                               , const FPerformanceOptions& iPerformanceOptions
                               , bool iCallInvalidCB )
 {
@@ -288,7 +307,8 @@ FPainterContext::DrawArcAndres( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                                 \
             {                                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawArcAndres( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                                       \
-                                                               , iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerformanceOptions, iCallInvalidCB );     \
+                                                               , iCenter, iRadius, iStartDegree, iEndDegree, iColor                                             \
+                                                               , iClippingRect, iPerformanceOptions, iCallInvalidCB );                                          \
                 break;                                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -305,6 +325,7 @@ FPainterContext::DrawArcAndresAA( IBlock* iBlock
                                 , int iStartDegree
                                 , int iEndDegree
                                 , const CColor& iColor
+                                , const FRect& iClippingRect
                                 , const FPerformanceOptions& iPerformanceOptions
                                 , bool iCallInvalidCB )
 {
@@ -314,7 +335,8 @@ FPainterContext::DrawArcAndresAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                                 \
             {                                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawArcAndresAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                                     \
-                                                                 , iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerformanceOptions, iCallInvalidCB );   \
+                                                                 , iCenter, iRadius, iStartDegree, iEndDegree, iColor                                           \
+                                                                 , iClippingRect, iPerformanceOptions, iCallInvalidCB );                                        \
                 break;                                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -331,6 +353,7 @@ FPainterContext::DrawArcBresenham( IBlock* iBlock
                                  , int iStartDegree
                                  , int iEndDegree
                                  , const CColor& iColor
+                                 , const FRect& iClippingRect
                                  , const FPerformanceOptions& iPerformanceOptions
                                  , bool iCallInvalidCB )
 {
@@ -340,7 +363,8 @@ FPainterContext::DrawArcBresenham( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                                 \
             {                                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawArcBresenham( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                                    \
-                                                                  , iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerformanceOptions, iCallInvalidCB );  \
+                                                                  , iCenter, iRadius, iStartDegree, iEndDegree, iColor                                          \
+                                                                  , iClippingRect, iPerformanceOptions, iCallInvalidCB );                                       \
                 break;                                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -357,6 +381,7 @@ FPainterContext::DrawArcBresenhamAA( IBlock* iBlock
                                    , int iStartDegree
                                    , int iEndDegree
                                    , const CColor& iColor
+                                   , const FRect& iClippingRect
                                    , const FPerformanceOptions& iPerformanceOptions
                                    , bool iCallInvalidCB )
 {
@@ -366,7 +391,8 @@ FPainterContext::DrawArcBresenhamAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                                     \
             {                                                                                                                                                       \
                 TPainterContext< ULIS_REG[ n ] >::DrawArcBresenhamAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                                      \
-                                                                    , iCenter, iRadius, iStartDegree, iEndDegree, iColor, iPerformanceOptions, iCallInvalidCB );    \
+                                                                    , iCenter, iRadius, iStartDegree, iEndDegree, iColor                                            \
+                                                                    , iClippingRect, iPerformanceOptions, iCallInvalidCB );                                         \
                 break;                                                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -382,6 +408,7 @@ FPainterContext::DrawRectangle( IBlock* iBlock
                               , const FPoint& iBottomRight
                               , const CColor& iColor
                               , bool iFilled
+                              , const FRect& iClippingRect
                               , const FPerformanceOptions& iPerformanceOptions
                               , bool iCallInvalidCB )
 {
@@ -391,7 +418,8 @@ FPainterContext::DrawRectangle( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                     \
             {                                                                                                                                       \
                 TPainterContext< ULIS_REG[ n ] >::DrawRectangle( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                           \
-                                                               , iTopLeft, iBottomRight, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );    \
+                                                               , iTopLeft, iBottomRight, iColor, iFilled                                            \
+                                                               , iClippingRect, iPerformanceOptions, iCallInvalidCB );                              \
                 break;                                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -406,6 +434,7 @@ FPainterContext::DrawPolygon( IBlock* iBlock
                             , std::vector< FPoint >& iPoints
                             , const CColor& iColor
                             , bool iFilled
+                            , const FRect& iClippingRect
                             , const FPerformanceOptions& iPerformanceOptions
                             , bool iCallInvalidCB )
 {
@@ -415,7 +444,8 @@ FPainterContext::DrawPolygon( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                     \
             {                                                                                                                       \
                 TPainterContext< ULIS_REG[ n ] >::DrawPolygon( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                             \
-                                                             , iPoints, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );     \
+                                                             , iPoints, iColor, iFilled                                            \
+                                                             , iClippingRect, iPerformanceOptions, iCallInvalidCB );                \
                 break;                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -430,6 +460,7 @@ FPainterContext::DrawPolygonAA( IBlock* iBlock
                               , std::vector< FPoint >& iPoints
                               , const CColor& iColor
                               , bool iFilled
+                              , const FRect& iClippingRect
                               , const FPerformanceOptions& iPerformanceOptions
                               , bool iCallInvalidCB )
 {
@@ -439,7 +470,8 @@ FPainterContext::DrawPolygonAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                     \
             {                                                                                                                       \
                 TPainterContext< ULIS_REG[ n ] >::DrawPolygonAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                           \
-                                                               , iPoints, iColor, iFilled, iPerformanceOptions, iCallInvalidCB );   \
+                                                               , iPoints, iColor, iFilled                                           \
+                                                               , iClippingRect, iPerformanceOptions, iCallInvalidCB );              \
                 break;                                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -456,6 +488,7 @@ FPainterContext::DrawQuadraticBezier( IBlock* iBlock
                                     , const FPoint& iCtrlPt2
                                     , float iWeight
                                     , const CColor& iColor
+                                    , const FRect& iClippingRect
                                     , const FPerformanceOptions& iPerformanceOptions, bool iCallInvalidCB )
 {
     switch( iBlock->Id() )
@@ -464,7 +497,8 @@ FPainterContext::DrawQuadraticBezier( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                                 \
             {                                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawQuadraticBezier( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                                 \
-                                                                     , iCtrlPt0, iCtrlPt1, iCtrlPt2, iWeight, iColor, iPerformanceOptions, iCallInvalidCB );    \
+                                                                     , iCtrlPt0, iCtrlPt1, iCtrlPt2, iWeight, iColor                                            \
+                                                                     , iClippingRect, iPerformanceOptions, iCallInvalidCB );                                    \
                 break;                                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
@@ -480,6 +514,7 @@ void FPainterContext::DrawQuadraticBezierAA( IBlock* iBlock
                                            , const FPoint& iCtrlPt2
                                            , float iWeight
                                            , const CColor& iColor
+                                           , const FRect& iClippingRect
                                            , const FPerformanceOptions& iPerformanceOptions
                                            , bool iCallInvalidCB )
 {
@@ -489,7 +524,8 @@ void FPainterContext::DrawQuadraticBezierAA( IBlock* iBlock
             case ULIS_REG[ n ]:                                                                                                                                 \
             {                                                                                                                                                   \
                 TPainterContext< ULIS_REG[ n ] >::DrawQuadraticBezierAA( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                                               \
-                                                                       , iCtrlPt0, iCtrlPt1, iCtrlPt2, iWeight, iColor, iPerformanceOptions, iCallInvalidCB );  \
+                                                                       , iCtrlPt0, iCtrlPt1, iCtrlPt2, iWeight, iColor                                          \
+                                                                       , iClippingRect, iPerformanceOptions, iCallInvalidCB );                                  \
                 break;                                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )

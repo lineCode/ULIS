@@ -33,12 +33,14 @@ public:
     /// @param      iP0                     The start point of the line.
     /// @param      iP1                     The end point of the line.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static void DrawLine( IBlock* iBlock
                         , const FPoint& iP0
                         , const FPoint& iP1
                         , const CColor& iColor
+                        , const FRect& iClippingRect = FRect()
                         , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                         , bool iCallInvalidCB = true );
 
@@ -50,12 +52,14 @@ public:
     /// @param      iP0                     The start point of the line.
     /// @param      iP1                     The end point of the line.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawLineAA( IBlock* iBlock
                             , const FPoint& iP0
                             , const FPoint& iP1
                             , const CColor& iColor
+                            , const FRect& iClippingRect = FRect()
                             , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                             , bool iCallInvalidCB = true );
 
@@ -71,6 +75,7 @@ public:
     /// @param      iRadius                 The radius of the circle.
     /// @param      iColor                  The color to use for drawing.
     /// @param      iFilled                 Wether the circle is filled or not.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawCircleAndres( IBlock* iBlock
@@ -78,6 +83,7 @@ public:
                                   , int iRadius
                                   , const CColor& iColor
                                   , bool iFilled = false
+                                  , const FRect& iClippingRect = FRect()
                                   , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                   , bool iCallInvalidCB = true );
 
@@ -93,6 +99,7 @@ public:
     /// @param      iRadius                 The radius of the circle.
     /// @param      iColor                  The color to use for drawing.
     /// @param      iFilled                 Wether the circle is filled or not.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawCircleAndresAA( IBlock* iBlock
@@ -100,6 +107,7 @@ public:
                                     , int iRadius
                                     , const CColor& iColor
                                     , bool iFilled = false
+                                    , const FRect& iClippingRect = FRect()
                                     , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                     , bool iCallInvalidCB = true );
 
@@ -115,6 +123,7 @@ public:
     /// @param      iRadius                 The radius of the circle.
     /// @param      iColor                  The color to use for drawing.
     /// @param      iFilled                 Wether the circle is filled or not.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawCircleBresenham( IBlock* iBlock
@@ -122,6 +131,7 @@ public:
                                      , int iRadius
                                      , const CColor& iColor
                                      , bool iFilled = false
+                                     , const FRect& iClippingRect = FRect()
                                      , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                      , bool iCallInvalidCB = true );
 
@@ -137,6 +147,7 @@ public:
     /// @param      iRadius                 The radius of the circle.
     /// @param      iColor                  The color to use for drawing.
     /// @param      iFilled                 Wether the circle is filled or not.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawCircleBresenhamAA( IBlock* iBlock
@@ -144,6 +155,7 @@ public:
                                        , int iRadius
                                        , const CColor& iColor
                                        , bool iFilled = false
+                                       , const FRect& iClippingRect = FRect()
                                        , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                        , bool iCallInvalidCB = true );
 
@@ -160,6 +172,7 @@ public:
     /// @param      iRotationDegrees        The rotation of the ellipse.
     /// @param      iColor                  The color to use for drawing.
     /// @param      iFilled                 Wether the ellipse is filled or not.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawRotatedEllipse( IBlock* iBlock
@@ -169,6 +182,7 @@ public:
                                     , int iRotationDegrees
                                     , const CColor& iColor
                                     , bool iFilled = false
+                                    , const FRect& iClippingRect = FRect()
                                     , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                     , bool iCallInvalidCB = true );
 
@@ -185,6 +199,7 @@ public:
     /// @param      iRotationDegrees        The rotation of the ellipse.
     /// @param      iColor                  The color to use for drawing.
     /// @param      iFilled                 Wether the ellipse is filled or not.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawRotatedEllipseAA( IBlock* iBlock
@@ -194,6 +209,7 @@ public:
                                       , int iRotationDegrees
                                       , const CColor& iColor
                                       , bool iFilled = false
+                                      , const FRect& iClippingRect = FRect()
                                       , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
                                       , bool iCallInvalidCB = true );
 
@@ -209,6 +225,7 @@ public:
     /// @param      iB                      The second radius of the ellipse.
     /// @param      iColor                  The color to use for drawing.
     /// @param      iFilled                 Wether the ellipse is filled or not.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawEllipse( IBlock* iBlock
@@ -217,6 +234,7 @@ public:
                              , int iB
                              , const CColor& iColor
                              , bool iFilled = false
+                             , const FRect& iClippingRect = FRect()
                              , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                              , bool iCallInvalidCB = true );
 
@@ -232,6 +250,7 @@ public:
     /// @param      iB                      The second radius of the ellipse.
     /// @param      iColor                  The color to use for drawing.
     /// @param      iFilled                 Wether the ellipse is filled or not.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawEllipseAA( IBlock* iBlock
@@ -240,6 +259,7 @@ public:
                                , int iB
                                , const CColor& iColor
                                , bool iFilled = false
+                               , const FRect& iClippingRect = FRect()
                                , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                , bool iCallInvalidCB = true );
 
@@ -253,6 +273,7 @@ public:
     /// @param      iStartDegree            The angular start of the arc in degrees.
     /// @param      iEndDegree              The angular end of the arc in degrees.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawArcAndres( IBlock* iBlock
@@ -261,6 +282,7 @@ public:
                                , int iStartDegree
                                , int iEndDegree
                                , const CColor& iColor
+                               , const FRect& iClippingRect = FRect()
                                , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                , bool iCallInvalidCB = true );
 
@@ -274,6 +296,7 @@ public:
     /// @param      iStartDegree            The angular start of the arc in degrees.
     /// @param      iEndDegree              The angular end of the arc in degrees.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawArcAndresAA( IBlock* iBlock
@@ -282,6 +305,7 @@ public:
                                  , int iStartDegree
                                  , int iEndDegree
                                  , const CColor& iColor
+                                 , const FRect& iClippingRect = FRect()
                                  , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                  , bool iCallInvalidCB = true );
 
@@ -295,6 +319,7 @@ public:
     /// @param      iStartDegree            The angular start of the arc in degrees.
     /// @param      iEndDegree              The angular end of the arc in degrees.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawArcBresenham( IBlock* iBlock
@@ -303,6 +328,7 @@ public:
                                   , int iStartDegree
                                   , int iEndDegree
                                   , const CColor& iColor
+                                  , const FRect& iClippingRect = FRect()
                                   , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                   , bool iCallInvalidCB = true );
 
@@ -316,6 +342,7 @@ public:
     /// @param      iStartDegree            The angular start of the arc in degrees.
     /// @param      iEndDegree              The angular end of the arc in degrees.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawArcBresenhamAA( IBlock* iBlock
@@ -324,6 +351,7 @@ public:
                                     , int iStartDegree
                                     , int iEndDegree
                                     , const CColor& iColor
+                                    , const FRect& iClippingRect = FRect()
                                     , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                     , bool iCallInvalidCB = true );
 
@@ -335,6 +363,7 @@ public:
     /// @param      iTopLeft                The top left corner.
     /// @param      iBottomRight            The bottom right corner.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawRectangle( IBlock* iBlock
@@ -342,6 +371,7 @@ public:
                                , const FPoint& iBottomRight
                                , const CColor& iColor
                                , bool iFilled = false
+                               , const FRect& iClippingRect = FRect()
                                , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                , bool iCallInvalidCB = true );
 
@@ -353,12 +383,14 @@ public:
     /// @param      iBlock                  The pointer to the \e IBlock to draw on.
     /// @param      iPoints                 A vector of points.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawPolygon( IBlock* iBlock
                              , std::vector< FPoint >& iPoints
                              , const CColor& iColor
                              , bool iFilled = false
+                             , const FRect& iClippingRect = FRect()
                              , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                              , bool iCallInvalidCB = true );
 
@@ -370,12 +402,14 @@ public:
     /// @param      iBlock                  The pointer to the \e IBlock to draw on.
     /// @param      iPoints                 A vector of points.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawPolygonAA( IBlock* iBlock
                                , std::vector< FPoint >& iPoints
                                , const CColor& iColor
                                , bool iFilled = false
+                               , const FRect& iClippingRect = FRect()
                                , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
                                , bool iCallInvalidCB = true );
 
@@ -389,6 +423,7 @@ public:
     /// @param      iCtrlPt2                The control point 2 of the quadratic bezier.
     /// @param      iWeight                 The weight of the control points of the quadratic bezier.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawQuadraticBezier( IBlock* iBlock
@@ -397,6 +432,7 @@ public:
                                      , const FPoint& iCtrlPt2
                                      , float iWeight
                                      , const CColor& iColor
+                                     , const FRect& iClippingRect = FRect()
                                      , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
                                      , bool iCallInvalidCB = true );
 
@@ -410,6 +446,7 @@ public:
     /// @param      iCtrlPt2                The control point 2 of the quadratic bezier.
     /// @param      iWeight                 The weight of the control points of the quadratic bezier.
     /// @param      iColor                  The color to use for drawing.
+    /// @param      iClippingRect           The clipping rectangle to draw the form in
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
     static  void  DrawQuadraticBezierAA( IBlock* iBlock
@@ -418,6 +455,7 @@ public:
                                        , const FPoint& iCtrlPt2
                                        , float iWeight
                                        , const CColor& iColor
+                                       , const FRect& iClippingRect = FRect()
                                        , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
                                        , bool iCallInvalidCB = true );
 

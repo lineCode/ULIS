@@ -51,11 +51,15 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(247, 950), ::ULIS::CColor( 255, 0 ,0 ), true );
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(250, 947), ::ULIS::CColor( 255, 0 ,0 ), true );*/
 
-    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(3,2), ::ULIS::FPoint(30, 4), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(300,1500), ::ULIS::FPoint(30, 80), ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(-20,2), ::ULIS::FPoint(600, 1500), ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(600, -500), ::ULIS::FPoint(900, 800), ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(-500,500), ::ULIS::FPoint(1500, 600), ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,1100), ::ULIS::FPoint(1100, 500), ::ULIS::CColor( 255, 0 ,0 ) );
 
-    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(3,6), ::ULIS::FPoint(30, 8), ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(3,6), ::ULIS::FPoint(30, 8), ::ULIS::CColor( 255, 0 ,0 ) );
     
-    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(50,50), ::ULIS::FPoint(50, 55), ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(50,50), ::ULIS::FPoint(50, 55), ::ULIS::CColor( 255, 0 ,0 ) );
     
     /*::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(51,64), ::ULIS::FPoint(750, 354), ::ULIS::CColor( 255, 0 ,0 ) );
     
@@ -111,7 +115,7 @@ int main( int argc, char *argv[] )
     */
 
     //Polygons
-    std::vector< ::ULIS::FPoint > star;
+    /*std::vector< ::ULIS::FPoint > star;
     
     star.push_back( ::ULIS::FPoint( 500, 200 ) );
     star.push_back( ::ULIS::FPoint( 666, 750 ) );
@@ -139,7 +143,7 @@ int main( int argc, char *argv[] )
     }
     
     
-    ::ULIS::FPainterContext::DrawPolygonAA( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawPolygonAA( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );*/
     //::ULIS::FPainterContext::DrawPolygon( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
     
     //Ellipses
