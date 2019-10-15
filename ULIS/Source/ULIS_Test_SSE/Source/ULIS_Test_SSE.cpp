@@ -9,63 +9,52 @@
 */
 
 #include <ULIS_CORE>
+#include <immintrin.h>
 using namespace ::ULIS;
-#define PRINTV( i ) printv( #i, i )
 
-inline __m128i _mm_mullo_epi8(__m128i a, __m128i b)
+struct alignas( 16 ) FVectorSIMD128
 {
-    __m128i zero    = _mm_setzero_si128();
-    __m128i Alo     = _mm_unpacklo_epi8(a, zero);
-    __m128i Ahi     = _mm_unpackhi_epi8(a, zero);
-    __m128i Blo     = _mm_unpacklo_epi8(b, zero);
-    __m128i Bhi     = _mm_unpackhi_epi8(b, zero);
-    __m128i Clo     = _mm_mullo_epi16(Alo, Blo);
-    __m128i Chi     = _mm_mullo_epi16(Ahi, Bhi);
-    __m128i maskLo  = _mm_set_epi8(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 14, 12, 10, 8, 6, 4, 2, 0);
-    __m128i maskHi  = _mm_set_epi8(14, 12, 10, 8, 6, 4, 2, 0, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80);
-    __m128i C       = _mm_or_si128(_mm_shuffle_epi8(Clo, maskLo), _mm_shuffle_epi8(Chi, maskHi));
-     return C;
-}
+    union {
+        uint8   u8[16];
+        uint16  u16[8];
+        uint32  u32[4];
+        float   f32[4];
+        __m128i m128i;
+        __m128  m128;
+    };
+};
 
-
-void printv( const char* title, const ::ULIS::FVectorSIMD128_8bit& iVec )
+struct alignas( 32 ) FVectorSIMD256
 {
-    std::cout << title << ": [";
-    for( int i = 0; i < 16; ++i )
-        std::cout << (int)iVec.u8[i] << (i == 15 ? "" : ",");
-    std::cout << "]" << std::endl;
-}
-
-void printv16( const char* title, const ::ULIS::FVectorSIMD128_8bit& iVec )
-{
-    std::cout << title << ": [";
-    for( int i = 0; i < 8; ++i )
-        std::cout << (int)iVec.u16[i] << (i == 7 ? "" : ",");
-    std::cout << "]" << std::endl;
-}
-
-
-void printv( const char* title, const ::ULIS::FVectorSIMD128_Dual8bit& iVec )
-{
-    std::cout << "Dual " << title << std::endl;
-    printv( "lo", iVec.lo );
-    printv16( "lo", iVec.lo );
-    printv( "hi", iVec.hi );
-    printv16( "hi", iVec.hi );
-}
+    union {
+        uint8   u8[32];
+        uint16  u16[16];
+        uint32  u32[8];
+        float   f32[8];
+        __m256i m256i;
+        __m256  m256;
+    };
+};
 
 
 int main()
 {
-    FVectorSIMD128_8bit vecA;
-    vecA.Set16( 0, 4, 8, 12, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 );
+    uint8 values[] = { 0, 1, 2, 3, 4, 5, 6, 7 ,8, 9, 10, 11, 12, 13, 14, 15 };
+    FVectorSIMD128 T8;
+    FVectorSIMD128 T32;
+    FVectorSIMD128 F32;
+    T8.m128i    = _mm_loadu_si128( (const __m128i*)values );
+    T32.m128i   = _mm_cvtepu8_epi32( T8.m128i );
+    F32.m128    = _mm_cvtepi32_ps( T32.m128i );
 
-    FVectorSIMD128_8bit ext;
-    ext.m128i = _mm_cvtepu8_epi32 ( vecA.m128i );
+    FVectorSIMD256 T25632;
+    FVectorSIMD256 F25632;
+    T25632.m256i    = _mm256_cvtepu8_epi32( T8.m128i );
+    F25632.m256     = _mm256_cvtepi32_ps( T25632.m256i );
+    //F25632.m256     = _mm256_mul_ps( F25632.m256, _mm256_set1_ps( 0.5 ) );
 
-    for( int i = 0; i < 4; ++i )
-        std::cout << (int)ext.u32[i] << ",";
-
+    for( int i = 0; i < 8; ++i )
+        std::cout << (float)F25632.f32[i] << ",";
 
     return 0;
 }

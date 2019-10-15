@@ -16,6 +16,7 @@ namespace ULIS {
 enum class eBlendingMode : uint8
 {
       kNormal
+    , kErase
     , kBehind
     , kDissolve
 
@@ -55,6 +56,7 @@ enum class eBlendingMode : uint8
 static const char* kwBlendingMode[] =
 {
       "Normal"
+    , "Erase"
     , "Behind"
     , "Dissolve"
 
@@ -94,6 +96,7 @@ static const char* kwBlendingMode[] =
 #define ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, X )                                                  \
     switch( iMode ) {                                                                               \
         case eBlendingMode::kNormal             :   X( eBlendingMode::kNormal           );  break;  \
+        case eBlendingMode::kErase              :   X( eBlendingMode::kErase            );  break;  \
         case eBlendingMode::kBehind             :   X( eBlendingMode::kBehind           );  break;  \
         case eBlendingMode::kDissolve           :   X( eBlendingMode::kDissolve         );  break;  \
         case eBlendingMode::kDarken             :   X( eBlendingMode::kDarken           );  break;  \
