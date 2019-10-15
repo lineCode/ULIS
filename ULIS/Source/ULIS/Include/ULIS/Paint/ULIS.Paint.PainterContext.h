@@ -16,6 +16,17 @@
 #include "ULIS/Data/ULIS.Data.Block.h"
 
 namespace ULIS {
+
+namespace eClippingZone
+{
+    const uint8 kInside   = 0b0000;
+    const uint8 kLeft     = 0b0001;
+    const uint8 kRight    = 0b0010;
+    const uint8 kBot      = 0b0100;
+    const uint8 kTop      = 0b1000;
+};
+typedef uint8 tClippingCode;
+
 /////////////////////////////////////////////////////
 // TPainterContext
 template< uint32 _SH >
@@ -35,13 +46,7 @@ static void DrawLine( TBlock< _SH >*                        iBlock
     
     FPoint p0 = iP0;
     FPoint p1 = iP1;
-    
-    //Regions of the clipping rectangle
-    const int INSIDE = 0; // 0000
-    const int LEFT = 1;   // 0001
-    const int RIGHT = 2;  // 0010
-    const int BOTTOM = 4; // 0100
-    const int TOP = 8;    // 1000
+
     
     int xMax;
     int yMax;
@@ -67,22 +72,20 @@ static void DrawLine( TBlock< _SH >*                        iBlock
     auto ComputeCodeForPoint = [&xMax, &yMax, &xMin, &yMin] (const FPoint iPoint)
     {
         // initialized as being inside
-        int code = INSIDE;
-      
+        tClippingCode code = eClippingZone::kInside;
         if (iPoint.x < xMin)       // to the left of rectangle
-            code |= LEFT;
+            code |= eClippingZone::kLeft;
         else if (iPoint.x > xMax)  // to the right of rectangle
-            code |= RIGHT;
+            code |= eClippingZone::kRight;
         if (iPoint.y < yMin)       // above the rectangle
-            code |= TOP;
+            code |= eClippingZone::kTop;
         else if (iPoint.y > yMax)  // below the rectangle
-            code |= BOTTOM;
-      
+            code |= eClippingZone::kBot;
         return code;
     };
     
-    int codeP0 = ComputeCodeForPoint( p0 );
-    int codeP1 = ComputeCodeForPoint( p1 );
+    tClippingCode codeP0 = ComputeCodeForPoint( p0 );
+    tClippingCode codeP1 = ComputeCodeForPoint( p1 );
     
     bool accept = false;
 
@@ -104,7 +107,7 @@ static void DrawLine( TBlock< _SH >*                        iBlock
         {
             // Some segment of line lies within the
             // rectangle
-            int code_out;
+            tClippingCode code_out;
             double x, y;
   
             // At least one endpoint is outside the
@@ -117,25 +120,25 @@ static void DrawLine( TBlock< _SH >*                        iBlock
             // Find intersection point;
             // using formulas y = y1 + slope * (x - x1),
             // x = x1 + (1 / slope) * (y - y1)
-            if (code_out & BOTTOM)
+            if (code_out & eClippingZone::kBot)
             {
                 // point is above the clip rectangle
                 x = p0.x + (p1.x - p0.x) * (yMax - p0.y) / (p1.y - p0.y);
                 y = yMax;
             }
-            else if (code_out & TOP)
+            else if (code_out & eClippingZone::kTop)
             {
                 // point is below the rectangle
                 x = p0.x + (p1.x - p0.x) * (yMin - p0.y) / (p1.y - p0.y);
                 y = yMin;
             }
-            else if (code_out & RIGHT)
+            else if (code_out & eClippingZone::kRight)
             {
                 // point is to the right of rectangle
                 y = p0.y + (p1.y - p0.y) * (xMax - p0.x) / (p1.x - p0.x);
                 x = xMax;
             }
-            else if (code_out & LEFT)
+            else if (code_out & eClippingZone::kLeft)
             {
                 // point is to the left of rectangle
                 y = p0.y + (p1.y - p0.y) * (xMin - p0.x) / (p1.x - p0.x);

@@ -30,7 +30,7 @@ int main( int argc, char *argv[] )
         }
     }
 
-    glm::mat3 transform = ::ULIS::FTransformContext::GetScaleMatrix( scale, scale );
+    glm::mat3 transform = ::ULIS::FTransformContext::GetShearMatrix( 1, 1 );
     ::ULIS::FTransformContext::TransformInto( blockA, blockB, transform );
 
     QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
