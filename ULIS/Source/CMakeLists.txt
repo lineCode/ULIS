@@ -80,7 +80,7 @@ elseif( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "GCC" )
     
 elseif( "${ULIS_EXPLICIT_COMPILER_ID}" STREQUAL "MSVC" )
     # Flags for MSVC
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Zi -Gm- -Od -Ob0 -RTC1 -MDd")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Z7 -Gm- -Od -Ob0 -RTC1 -MDd")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -bigobj -EHsc")
 endif()
 

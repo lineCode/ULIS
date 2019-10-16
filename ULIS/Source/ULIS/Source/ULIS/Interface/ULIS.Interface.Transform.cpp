@@ -7,6 +7,7 @@
 * @author   Clement Berthaud
 * @brief    This file provides the definitions for the FTransformContext class.
 */
+#include "ULIS/ULIS.Config.h"
 #include "ULIS/Interface/ULIS.Interface.Transform.h"
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
@@ -50,6 +51,8 @@ FTransformContext::GetScaleMatrix( float iX, float iY )
 {
     return  glm::scale( GetIdentityMatrix(), glm::vec2( iX, iY ) );
 }
+
+
 //static
 glm::mat3
 FTransformContext::GetShearMatrix( float iX, float iY )
@@ -114,7 +117,7 @@ FRect
 FTransformContext::GetTransformPreviewRect( const IBlock* iBlockSrc
                                           , const  glm::mat3& iMat )
 {
-    FTransformBoundingBox aabb( 0, 0, iBlockSrc->Width(), iBlockSrc->Height() );
+    FTransformAABB aabb( 0, 0, iBlockSrc->Width(), iBlockSrc->Height() );
     aabb.Transform( iMat );
     FRect result( aabb.x1, aabb.x2, aabb.Width(), aabb.Height() );
     return  result;

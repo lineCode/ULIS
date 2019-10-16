@@ -8,6 +8,8 @@
 * Please refer to LICENSE.md
 */
 #pragma once
+#include "ULIS/ULIS.Config.h"
+#include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Maths/ULIS.Maths.Utility.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -15,6 +17,14 @@
 #include <vector>
 
 namespace ULIS {
+
+struct FRect;
+struct FPoint;
+struct FPoint64;
+struct FTransformAABB;
+struct FTransformOBB;
+struct FLinef;
+
 /////////////////////////////////////////////////////
 // FRect
 struct FRect
@@ -24,59 +34,13 @@ struct FRect
     int w;
     int h;
 
-
-    FRect()
-        : x( 0 )
-        , y( 0 )
-        , w( 0 )
-        , h( 0 )
-    {}
-
-
-    FRect( int iX, int iY, int iW, int iH )
-        : x( iX )
-        , y( iY )
-        , w( iW )
-        , h( iH )
-    {}
-
-    inline static FRect FromXYWH( int iX, int iY, int iW, int iH )
-    {
-        return  FRect( iX, iY, iW, iH );
-    }
-
-
-    inline static FRect FromMinMax( int iXMin, int iYMin, int iXMax, int iYMax )
-    {
-        return  FRect( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
-    }
-
-
-    FRect operator&( const FRect& iOther ) const
-    {
-        int x1 = FMath::Max( x, iOther.x );
-        int y1 = FMath::Max( y, iOther.y );
-        int x2 = FMath::Min( x + w, iOther.x + iOther.w );
-        int y2 = FMath::Min( y + h, iOther.y + iOther.h );
-        return  FromMinMax( x1, y1, x2, y2 );
-    }
-
-
-    FRect operator|( const FRect& iOther ) const
-    {
-        int x1 = FMath::Min( x, iOther.x );
-        int y1 = FMath::Min( y, iOther.y );
-        int x2 = FMath::Max( x + w, iOther.x + iOther.w );
-        int y2 = FMath::Max( y + h, iOther.y + iOther.h );
-        return  FromMinMax( x1, y1, x2, y2 );
-    }
-
-
-    int Area() const
-    {
-        return  w * h;
-    }
-
+    FRect();
+    FRect( int iX, int iY, int iW, int iH );
+    static FRect FromXYWH( int iX, int iY, int iW, int iH );
+    static FRect FromMinMax( int iXMin, int iYMin, int iXMax, int iYMax );
+    FRect operator&( const FRect& iOther ) const;
+    FRect operator|( const FRect& iOther ) const;
+    int Area() const;
 };
 
 
@@ -87,40 +51,10 @@ struct FPoint
     int x;
     int y;
 
-
-    FPoint()
-        : x( 0 )
-        , y( 0 )
-    {}
-
-
-    FPoint( int iX, int iY )
-        : x( iX )
-        , y( iY )
-    {}
-
-
-    FPoint RotateAround( FPoint pivotPoint, double radianRotation)
-    {
-        //Trigonometric direction
-        double sin = -std::sin(radianRotation);
-        double cos = -std::cos(radianRotation);
-        
-        x -= pivotPoint.x;
-        y -= pivotPoint.y;
-        
-        return FPoint( ( x * cos - y * sin ) + pivotPoint.x, ( x * sin + y * cos ) + pivotPoint.y );
-    }
-
-
-    //Give the symmetric of the point through the axis of equation ax + b = y
-    FPoint AxialSymmetry( float a, float b )
-    {
-        float d = ( x + ( y - b ) * a ) / ( 1 + a * a );
-        return FPoint( 2 * d - x,
-                       2 * d * a - y + 2 * b );
-    }
-
+    FPoint();
+    FPoint( int iX, int iY );
+    FPoint RotateAround( FPoint pivotPoint, double radianRotation);
+    FPoint AxialSymmetry( float a, float b );
 };
 
 
@@ -131,135 +65,67 @@ struct FPoint64
     int64 x;
     int64 y;
 
-
-    FPoint64()
-        : x( 0 )
-        , y( 0 )
-    {}
-
-
-    FPoint64( int64 iX, int64 iY )
-        : x( iX )
-        , y( iY )
-    {}
-
-
-    FPoint64 RotateAround( FPoint pivotPoint, double radianRotation)
-    {
-        //Trigonometric direction
-        double sin = -std::sin(radianRotation);
-        double cos = -std::cos(radianRotation);
-        
-        x -= pivotPoint.x;
-        y -= pivotPoint.y;
-        
-        return FPoint64( ( x * cos - y * sin ) + pivotPoint.x, ( x * sin + y * cos ) + pivotPoint.y );
-    }
-
-
-    //Give the symmetric of the point through the axis of equation ax + b = y
-    FPoint64 AxialSymmetry( float a, float b )
-    {
-        float d = ( x + ( y - b ) * a ) / ( 1 + a * a );
-        return FPoint64( 2 * d - x,
-                         2 * d * a - y + 2 * b );
-    }
-
+    FPoint64();
+    FPoint64( int64 iX, int64 iY );
+    FPoint64 RotateAround( FPoint pivotPoint, double radianRotation);
+    FPoint64 AxialSymmetry( float a, float b );
 };
 
 /////////////////////////////////////////////////////
-// FTransformBoundingBox
+// FTransformAABB
 // A rectangle used to preview the transformation bounding box result
 // Used for precomputation and allocation before actual transforms
-struct FTransformBoundingBox
+struct FTransformAABB
 {
-    FTransformBoundingBox( float iX1, float iY1, float iX2, float iY2 )
-        : x1( iX1 )
-        , y1( iY1 )
-        , x2( iX2 )
-        , y2( iY2 )
-    {
-    }
-
-
-    FTransformBoundingBox( const  std::vector< glm::vec2 >& iPoints )
-    {
-        SetPoints( iPoints );
-    }
-
-
-    void GetPoints( std::vector< glm::vec2 >* oPoints ) const
-    {
-        oPoints->clear();
-        oPoints->push_back( glm::vec2( x1, y1 ) );
-        oPoints->push_back( glm::vec2( x2, y1 ) );
-        oPoints->push_back( glm::vec2( x2, y2 ) );
-        oPoints->push_back( glm::vec2( x1, y2 ) );
-    }
-
-
-    void GetPoints( std::vector< glm::vec3 >* opoints ) const
-    {
-        // For glm mat operations and translation operations, points have to be vec3
-        // because we multiply with mat3
-        // Z is always 1, this is relevant and very important
-        // otherwise translation have no effect
-        // Pretty much like homogeneous coordinates
-        opoints->clear();
-        opoints->push_back( glm::vec3( x1, y1, 1.f ) );
-        opoints->push_back( glm::vec3( x2, y1, 1.f ) );
-        opoints->push_back( glm::vec3( x2, y2, 1.f ) );
-        opoints->push_back( glm::vec3( x1, y2, 1.f ) );
-    }
-
-
-    void SetPoints( const std::vector< glm::vec2 >& points )
-    {
-        assert( points.size() == 4 );
-        x1 = FMath::Min( points[0].x, FMath::Min3( points[1].x, points[2].x, points[3].x ) );
-        y1 = FMath::Min( points[0].y, FMath::Min3( points[1].y, points[2].y, points[3].y ) );
-        x2 = FMath::Max( points[0].x, FMath::Max3( points[1].x, points[2].x, points[3].x ) );
-        y2 = FMath::Max( points[0].y, FMath::Max3( points[1].y, points[2].y, points[3].y ) );
-    }
-
-
-    void SetPoints( const std::vector< glm::vec3 >& points )
-    {
-        assert( points.size() == 4 );
-        x1 = FMath::RoundAwayFromZero( FMath::Min( points[0].x, FMath::Min3( points[1].x, points[2].x, points[3].x ) ) );
-        y1 = FMath::RoundAwayFromZero( FMath::Min( points[0].y, FMath::Min3( points[1].y, points[2].y, points[3].y ) ) );
-        x2 = FMath::RoundAwayFromZero( FMath::Max( points[0].x, FMath::Max3( points[1].x, points[2].x, points[3].x ) ) );
-        y2 = FMath::RoundAwayFromZero( FMath::Max( points[0].y, FMath::Max3( points[1].y, points[2].y, points[3].y ) ) );
-    }
-
-
-    void Transform( const glm::mat3& mat )
-    {
-        std::vector< glm::vec3 > src_points;
-        std::vector< glm::vec3 > dst_points;
-        GetPoints( &src_points );
-        // We compute result points by multiplicating mat with vec3s
-        // It is important that mat is on the left-hand side
-        // because glm mats are column major.
-        dst_points.push_back( mat * src_points[0] );
-        dst_points.push_back( mat * src_points[1] );
-        dst_points.push_back( mat * src_points[2] );
-        dst_points.push_back( mat * src_points[3] );
-        SetPoints( dst_points );
-    }
-
-    float Width() const { return x2 - x1; }
-    float Height() const { return y2 - y1; }
-
-    void FitInPositiveRange()
-    {
-        x2 -= x1;
-        y2 -= y1;
-        x1 = 0;
-        y1 = 0;
-    }
-
     float x1, y1, x2, y2;
+
+    FTransformAABB( float iX1, float iY1, float iX2, float iY2 );
+    FTransformAABB( const  std::vector< glm::vec2 >& iPoints );
+    FTransformAABB( const  FTransformOBB& iOBB );
+    void GetPoints( std::vector< glm::vec2 >* oPoints ) const;
+    void GetPoints( std::vector< glm::vec3 >* opoints ) const;
+    void SetPoints( const std::vector< glm::vec2 >& points );
+    void SetPoints( const std::vector< glm::vec3 >& points );
+    void Transform( const glm::mat3& mat );
+    void FitInPositiveRange();
+    void Shift( const glm::vec2& iVec );
+    glm::vec2 GetShift();
+    float Width() const;
+    float Height() const;
+};
+
+/////////////////////////////////////////////////////
+// Sort
+bool SortCompareLesserX( const glm::vec2& iA, const glm::vec2& iB );
+bool SortCompareLesserY( const glm::vec2& iA, const glm::vec2& iB );
+
+/////////////////////////////////////////////////////
+// FTransformOBB
+// A oriented rectangle used to preview the transformation bounding box result
+// Used for precomputation and allocation before actual transforms
+struct FTransformOBB
+{
+    glm::vec2 m00, m10, m11, m01;
+
+    FTransformOBB( const glm::vec2& iM00, const glm::vec2& iM10, const glm::vec2& iM11, const glm::vec2& iM01 );
+    FTransformOBB( float iX1, float iY1, float iX2, float iY2 );
+    FTransformOBB( const FTransformAABB& iAABB );
+    void Transform( const glm::mat3& mat );
+    void Shift( const glm::vec2& iVec );
+    void GetPoints( std::vector< glm::vec2 >* oPoints ) const;
+};
+
+/////////////////////////////////////////////////////
+// FLinef
+struct FLinef
+{
+    float a, b;
+    FLinef( float iA, float iB );
+    float Eval( float iX );
+};
+
+struct FOBBSlopeExpression
+{
 };
 
 } // namespace ULIS

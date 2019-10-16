@@ -8,6 +8,7 @@
 * Please refer to LICENSE.md
 */
 #pragma once
+#include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
 #include "ULIS/Data/ULIS.Data.Block.h"

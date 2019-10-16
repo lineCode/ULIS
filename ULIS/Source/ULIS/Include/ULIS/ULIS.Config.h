@@ -109,3 +109,15 @@
     //#define ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
 #endif // ULIS_DEBUG
 
+/////////////////////////////////////////////////////
+// GLM BEHAVIOUR
+// User defines: GLM_FORCE_PURE GLM_FORCE_INTRINSICS GLM_FORCE_SSE2 GLM_FORCE_SSE3 GLM_FORCE_AVX GLM_FORCE_AVX2 GLM_FORCE_AVX2
+#define GLM_FORCE_SSE42
+#define GLM_FORCE_SSE41
+#define GLM_FORCE_SSSE3
+#define GLM_FORCE_SSE3
+#define GLM_FORCE_SSE2
+#define GLM_FORCE_SSE
+#define GLM_FORCE_INTRINSICS
+#include <glm/glm.hpp>
+//#define GLM_FORCE_SSE2

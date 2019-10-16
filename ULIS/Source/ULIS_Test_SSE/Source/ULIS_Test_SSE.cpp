@@ -56,6 +56,8 @@ int main()
     for( int i = 0; i < 8; ++i )
         std::cout << (float)F25632.f32[i] << ",";
 
+
+
     return 0;
 }
 

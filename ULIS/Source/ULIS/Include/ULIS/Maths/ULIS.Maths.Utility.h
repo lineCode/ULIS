@@ -8,6 +8,7 @@
 * Please refer to LICENSE.md
 */
 #pragma once
+#include "ULIS/ULIS.Config.h"
 #include <cmath>
 #include <glm/vec2.hpp>
 
@@ -86,6 +87,12 @@ struct FMath
     }
 
     template< typename T >
+    static  inline T Ceil( T iValue )
+    {
+        return  ceil( iValue );
+    }
+
+    template< typename T >
     static  inline T RoundAwayFromZero( T iValue )
     {
         return  iValue < 0 ? (T)floor( iValue ) : (T)ceil( iValue );
@@ -95,6 +102,11 @@ struct FMath
     static  inline T RoundTowardsZero( T iValue )
     {
         return  iValue < 0 ? (T)ceil( iValue ) : (T)floor( iValue );
+    }
+
+    static inline bool EpsilonComp( float iA, float iB )
+    {
+        return  Abs( iA - iB ) <= kEpsilonf;
     }
 
 }; // struct FMath

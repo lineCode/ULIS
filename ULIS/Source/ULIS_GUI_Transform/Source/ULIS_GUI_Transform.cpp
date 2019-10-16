@@ -18,20 +18,21 @@
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
-    float size = 16;
-    float scale = 50;
-    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( size, size, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( size * scale, size * scale, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::FClearFillContext::Clear( blockA );
-
-    for( int y = 0; y < size; ++y ) {
-        for( int x = 0; x < size; ++x ) {
-            blockA->SetPixelColor( x, y, ::ULIS::CColor::FromHSVF( float( x / size ), 1.f, float( y / size ), 1.f ) );
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 16, 16, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::FClearFillContext::Fill( blockA, ::ULIS::CColor( 255, 0, 0 ) );
+    for( int j = 0; j < blockA->Height(); ++j )
+    {
+        for( int i = 0; i < blockA->Width(); ++i )
+        {
+            ::ULIS::CColor col = ::ULIS::CColor::FromHSVF( i / float( blockA->Width() ), 1.f, 1.f );
+            blockA->SetPixelColor( i, j, col );
         }
     }
 
-    glm::mat3 transform = ::ULIS::FTransformContext::GetShearMatrix( 1, 1 );
-    ::ULIS::FTransformContext::TransformInto( blockA, blockB, transform );
+    glm::mat3 transform = ::ULIS::FTransformContext::GetScaleMatrix( 20, 20 );
+    ::ULIS::FPerformanceOptions opt;
+    opt.desired_workers = 64;
+    ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform, ::ULIS::eResamplingMethod::kLinear, opt );
 
     QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

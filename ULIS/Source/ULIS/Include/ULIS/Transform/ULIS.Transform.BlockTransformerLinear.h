@@ -121,7 +121,7 @@ public:
         {
             for( int x = x1; x < x2; ++x )
             {
-                glm::vec2 point_in_src = glm::vec2( iInverseTransform * glm::vec3( x, y, 1.f ) ); // - glm::vec2( 0.5, 0.5 );
+                glm::vec2 point_in_src = glm::vec2( iInverseTransform * glm::vec3( x, y, 1.f ) ) - glm::vec2( 0.5, 0.5 );
                 int left    = floor( point_in_src.x );
                 int up      = floor( point_in_src.y );
                 int right   = left + 1;
