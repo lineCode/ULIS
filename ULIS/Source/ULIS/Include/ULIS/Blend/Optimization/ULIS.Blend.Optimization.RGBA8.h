@@ -17,6 +17,8 @@
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Global/ULIS.Global.GlobalCPUConfig.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
+#include "ULIS/Blend/Optimization/ULIS.Blend.Optimization.BlendFuncSSE.h"
+#include <immintrin.h>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -25,7 +27,7 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // TBlockBlender_RGBA8_SSE
-template< uint32 _SH >
+template< uint32 _SH, eBlendingMode _BM >
 class TBlockBlender_RGBA8_SSE
 {
 public:
@@ -38,97 +40,52 @@ public:
                                   , const FPoint&                      iShift
                                   , uint8                              iAlphaIndex )
     {
-        // Base ptrs for scanlines
-        uint8* bpb = iBlockBack->PixelPtr( iX1, iLine );
-        uint8* bpt  = iBlockTop->PixelPtr( iX1 + iShift.x, iLine + iShift.y );
-        const int delta = iX2 - iX1;
-        const int op    = delta / 4;
+        // Type Info
+        using tPixelType                = typename TBlock< _SH >::tPixelType;
+        using tPixelValue               = TPixelValue< _SH >;
+        using tPixelProxy               = TPixelProxy< _SH >;
+        using tPixelBase                = TPixelBase< _SH >;
+        using tPixelInfo                = TPixelInfo< _SH >;
+        using tBlockInfo                = TBlockInfo< _SH >;
 
-        uint8 asmi[4];
-        asmi[0] = iAlphaIndex;
-        asmi[1] = iAlphaIndex + 4;
-        asmi[2] = iAlphaIndex + 8;
-        asmi[3] = iAlphaIndex + 12;
-        __m128i asmv = _mm_set_epi8( asmi[3], asmi[3], asmi[3], asmi[3]
-                                   , asmi[2], asmi[2], asmi[2], asmi[2]
-                                   , asmi[1], asmi[1], asmi[1], asmi[1]
-                                   , asmi[0], asmi[0], asmi[0], asmi[0] );
-        __m128i opa = _mm_set1_epi8( iOpacity );
-        __m128i max = _mm_set1_epi8( 255 );
-        
+
+        // Base ptrs for scanlines
+        tPixelType* backPixelPtr    = iBlockBack->PixelPtr( iX1, iLine );
+        tPixelType* topPixelPtr     = iBlockTop->PixelPtr( iX1 + iShift.x, iLine + iShift.y );
+        uint8 alpha_index           = (uint8)tPixelInfo::RedirectedIndex( 3 );
+        __m128  opacityf            = _mm_set_ps1( (float)iOpacity );
+        __m128 max255f             = _mm_set_ps1( 255.f );
+        const int op = iX2 - iX1;
+
         for( int i = 0; i < op; ++i )
         {
-            __m128i pb = _mm_loadu_si128( (const __m128i*)bpb );
-            __m128i pt = _mm_loadu_si128( (const __m128i*)bpt );
-            __m128i ab = _mm_shuffle_epi8( pb, asmv );
-            __m128i at = _mm_shuffle_epi8( pt, asmv );
-            __m128i zero = _mm_setzero_si128();
-            __m128i atmullo = _mm_mullo_epi16( _mm_unpacklo_epi8( at, zero), _mm_unpacklo_epi8( opa, zero));
-            __m128i atmulhi = _mm_mullo_epi16( _mm_unpackhi_epi8( at, zero), _mm_unpackhi_epi8( opa, zero));
-            __m128i ones = _mm_set1_epi16( 1 );
-            __m128i atmullodown = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( atmullo, ones ), _mm_srli_epi16( atmullo, 8 ) ), 8 );
-            __m128i atmulhidown = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( atmulhi, ones ), _mm_srli_epi16( atmulhi, 8 ) ), 8 );
-            __m128i absplo = _mm_unpacklo_epi8( ab, zero);
-            __m128i absphi = _mm_unpackhi_epi8( ab, zero);
-            __m128i addabatsplo = _mm_add_epi16( absplo, atmullodown );
-            __m128i addabatsphi = _mm_add_epi16( absphi, atmulhidown );
-            __m128i mulabatlo = _mm_mullo_epi16( absplo, atmullodown );
-            __m128i mulabathi = _mm_mullo_epi16( absphi, atmulhidown );
-            __m128i mulanatlodown = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( mulabatlo, ones ), _mm_srli_epi16( mulabatlo, 8 ) ), 8 );
-            __m128i mulanathidown = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( mulabathi, ones ), _mm_srli_epi16( mulabathi, 8 ) ), 8 );
-            __m128i resabatlosp = _mm_sub_epi16( addabatsplo, mulanatlodown );
-            __m128i resabathisp = _mm_sub_epi16( addabatsphi, mulanathidown );
-            __m128i resmasklo = _mm_set_epi8(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 14, 12, 10, 8, 6, 4, 2, 0);
-            __m128i resmaskhi = _mm_set_epi8(14, 12, 10, 8, 6, 4, 2, 0, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80);
-            __m128i ar = _mm_or_si128( _mm_shuffle_epi8( resabatlosp, resmasklo ), _mm_shuffle_epi8( resabathisp, resmaskhi ) );
-            __m128i ex32psm = _mm_set_epi8( 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 12, 8, 4, 0 );
-            __m128i arshpr32 = _mm_shuffle_epi8( ar, ex32psm );
-            __m128i atcat = _mm_or_si128( _mm_shuffle_epi8( atmullodown, resmasklo ), _mm_shuffle_epi8( atmulhidown, resmaskhi ) );
-            __m128i atshpr32 = _mm_shuffle_epi8( atcat, ex32psm );
-            __m128i ar32 = _mm_cvtepu8_epi32( arshpr32 );
-            __m128i at32 = _mm_cvtepu8_epi32( atshpr32 );
-            __m128 arps = _mm_cvtepi32_ps( ar32 );
-            __m128 atps = _mm_cvtepi32_ps( at32 );
-            __m128 maxps = _mm_set1_ps( 255.f );
-            __m128 avarpsuns = _mm_mul_ps( _mm_div_ps( atps, arps ), maxps ) ;
-            __m128 zerops = _mm_setzero_ps();
-            __m128 atzerom = _mm_cmpeq_ps( atps, zerops );
-            __m128 avarps = _mm_blendv_ps( atps, avarpsuns, atzerom );
-            __m128i avarsh32 = _mm_cvtps_epi32( avarps );
-            __m128i shv = _mm_set_epi8( 12, 12, 12, 12, 8, 8, 8, 8, 4, 4, 4, 4, 0, 0, 0, 0 );
-            __m128i avar = _mm_shuffle_epi8( avarsh32, shv );
-            __m128i invavar = _mm_sub_epi8( max, avar );
-            __m128i invavarlo = _mm_unpacklo_epi8( invavar, zero);
-            __m128i invavarhi = _mm_unpackhi_epi8( invavar, zero);
-            __m128i pbsplo = _mm_unpacklo_epi8( pb, zero);
-            __m128i pbsphi = _mm_unpackhi_epi8( pb, zero);
-            __m128i mulinvavarpbsplo = _mm_mullo_epi16( invavarlo, pbsplo);
-            __m128i mulinvavarpbsphi = _mm_mullo_epi16( invavarhi, pbsphi );
-            __m128i invab = _mm_sub_epi8( max, ab );
-            __m128i invablo = _mm_unpacklo_epi8( invab, zero );
-            __m128i invabhi = _mm_unpackhi_epi8( invab, zero );
-            __m128i ptsplo = _mm_unpacklo_epi8( pt, zero);
-            __m128i ptsphi = _mm_unpackhi_epi8( pt, zero);
-            __m128i mulinvabptlo = _mm_mullo_epi16( invablo, ptsplo);
-            __m128i mulinvabpthi = _mm_mullo_epi16( invabhi, ptsphi );
-            __m128i mulabbllo = _mm_mullo_epi16( absplo, ptsplo); // BLEND
-            __m128i mulabblhi = _mm_mullo_epi16( absphi, ptsphi); // BLEND
-            __m128i rmlo = _mm_add_epi16( mulinvabptlo, mulabbllo );
-            __m128i rmhi = _mm_add_epi16( mulinvabpthi, mulabblhi );
-            __m128i rmlodown = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( rmlo, ones ), _mm_srli_epi16( rmlo, 8 ) ), 8 );
-            __m128i rmhidown = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( rmhi, ones ), _mm_srli_epi16( rmhi, 8 ) ), 8 );
-            __m128i avarlo = _mm_unpacklo_epi8( avar, zero);
-            __m128i avarhi = _mm_unpackhi_epi8( avar, zero);
-            __m128i rrlo = _mm_mullo_epi16( avarlo, rmlodown );
-            __m128i rrhi = _mm_mullo_epi16( avarhi, rmhidown );
-            __m128i cenlo = _mm_add_epi16( mulinvavarpbsplo, rrlo );
-            __m128i cenhi = _mm_add_epi16( mulinvavarpbsphi, rrhi );
-            __m128i cenlodown = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( cenlo, ones ), _mm_srli_epi16( cenlo, 8 ) ), 8 );
-            __m128i cenhidown = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( cenhi, ones ), _mm_srli_epi16( cenhi, 8 ) ), 8 );
-            __m128i res = _mm_or_si128( _mm_shuffle_epi8( cenlodown, resmasklo ), _mm_shuffle_epi8( cenhidown, resmaskhi ) );
-            _mm_storeu_si128( (__m128i*)bpb, res );
-            bpb += 16;
-            bpt += 16;
+            __m128 backElementsf    = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)backPixelPtr ) ) );
+            __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)topPixelPtr ) ) );
+            __m128 backAlphaf = _mm_set_ps1( float( *( backPixelPtr + alpha_index ) ) );
+            __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( topPixelPtr + alpha_index ) ) ), opacityf ), max255f );
+            __m128 alphaResultf = BlendAlphaSSE< _BM >::Compute( backAlphaf, topAlphaf );
+            __m128 vcmp = _mm_cmpeq_ps( alphaResultf, _mm_setzero_ps());
+            int mask = _mm_movemask_ps (vcmp);
+            bool result = (mask == 0xf);
+            __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, max255f ), alphaResultf );
+
+            __m128 compute = BlendFuncSSE< _BM >::Compute( backElementsf, topElementsf );
+            __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), max255f ) ) ), max255f );
+
+
+            __m128i y = _mm_cvtps_epi32( elementsResult );                     // Convert them to 32-bit ints
+            y = _mm_packus_epi32(y, y);                                     // Pack down to 16 bits
+            y = _mm_packus_epi16(y, y);                                     // Pack down to 8 bits
+            *(uint32*)backPixelPtr = (uint32)_mm_cvtsi128_si32(y);           // Store the lower 32 bits
+            __m128i alpha_result = _mm_cvtps_epi32( alphaResultf );             // Convert them to 32-bit ints
+            alpha_result = _mm_packus_epi32(alpha_result, alpha_result);    // Pack down to 16 bits
+            alpha_result = _mm_packus_epi16(alpha_result, alpha_result);    // Pack down to 8 bits
+            uint32 alpha = (uint32)_mm_cvtsi128_si32(alpha_result);         // Store the lower 32 bits
+            memcpy( backPixelPtr + alpha_index, &alpha, 1 );
+
+
+            backPixelPtr    += tBlockInfo::_nf._pd;
+            topPixelPtr     += tBlockInfo::_nf._pd;
         }
     }
 
@@ -146,7 +103,7 @@ public:
         uint8 alpha_index     = (uint8) TBlock< _SH >::tPixelProxy::RedirectedIndex( 3 );
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( TBlockBlender_RGBA8_SSE< _SH >::ProcessScanLineSSE, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift, alpha_index );
+            global_pool.ScheduleJob( TBlockBlender_RGBA8_SSE< _SH, _BM >::ProcessScanLineSSE, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift, alpha_index );
 
         global_pool.WaitForCompletion();
     }
@@ -176,34 +133,12 @@ public:
                    , const FPoint&                      iShift
                    , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
     {
-        /*
-        if( iPerformanceOptions.use_sse_if_available && FGlobalCPUConfig::Get().info.HW_SSSE3 )
-        {
-            TBlockBlender_RGBA8_SSE< _SH >::Run( iBlockTop
-                                               , iBlockBack
-                                               , iOpacity
-                                               , iROI
-                                               , iShift
-                                               , iPerformanceOptions);
-        }
-        else
-        {
-        */
-            TBlockBlender_Default< _SH
-                             , _BM
-                             , tSpec::_nf._tp
-                             , tSpec::_nf._cm
-                             , tSpec::_nf._ea
-                             , tSpec::_nf._lh
-                             , tSpec::_nf._nm
-                             , tSpec::_nf._dm >
-                             ::Run( iBlockTop
-                                  , iBlockBack
-                                  , iOpacity
-                                  , iROI
-                                  , iShift
-                                  , iPerformanceOptions);
-        //}
+        TBlockBlender_RGBA8_SSE< _SH, _BM >::Run( iBlockTop
+                                                , iBlockBack
+                                                , iOpacity
+                                                , iROI
+                                                , iShift
+                                                , iPerformanceOptions);
     }
 };
 

@@ -110,9 +110,9 @@ public:
             ULIS_TMP_LOAD_SSE( right, up, c10f, c10_alphaf, c10p )
             ULIS_TMP_LOAD_SSE( right, bot, c11f, c11_alphaf, c11p )
             ULIS_TMP_LOAD_SSE( left, bot, c01f, c01_alphaf, c01p )
-            __m128 txf = _mm_set_ps1( tx );
+            __m128 txf  = _mm_set_ps1( tx );
             __m128 txfi = _mm_sub_ps( _mm_set_ps1( 1.f ), txf );
-            __m128 tyf = _mm_set_ps1( ty );
+            __m128 tyf  = _mm_set_ps1( ty );
             __m128 tyfi = _mm_sub_ps( _mm_set_ps1( 1.f ), tyf );
 
             __m128 a_elementsf;
@@ -137,7 +137,7 @@ public:
 
             // Increment Walker in src
             pointInSrc += iSrdDeltaX;
-            dstPixelPtr+=tBlockInfo::_nf._pd;
+            dstPixelPtr += tBlockInfo::_nf._pd;
         }
     }
 

@@ -19,7 +19,7 @@
 #include "ULIS/Blend/ULIS.Blend.BlockBlender.h"
 
 // Load optimizations
-//#include "ULIS/Blend/Optimization/ULIS.Blend.Optimization.RGBA8.h"
+#include "ULIS/Blend/Optimization/ULIS.Blend.Optimization.RGBA8.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
