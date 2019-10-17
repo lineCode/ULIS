@@ -18,7 +18,7 @@
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
-    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 160, 160, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 16, 16, ::ULIS::FBlockRGBA8::TypeId() );
     ::ULIS::FClearFillContext::Fill( blockA, ::ULIS::CColor( 255, 0, 0 ) );
     for( int j = 0; j < blockA->Height(); ++j )
     {
@@ -29,9 +29,10 @@ int main( int argc, char *argv[] )
         }
     }
 
-    glm::mat3 transform = ::ULIS::FTransformContext::GetRotationMatrix( ::ULIS::FMath::DegToRad( 20 ) );
+    ::ULIS::FGlobalThreadPool::Get().SetNumWorkers( 1 );
+    glm::mat3 transform = ::ULIS::FTransformContext::GetScaleMatrix( 20, 20 );
     ::ULIS::FPerformanceOptions opt;
-    opt.desired_workers = 64;
+    opt.desired_workers = 1;
     ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform, ::ULIS::eResamplingMethod::kBilinear, opt );
 
     QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

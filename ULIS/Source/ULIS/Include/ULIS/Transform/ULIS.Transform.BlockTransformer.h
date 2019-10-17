@@ -21,6 +21,10 @@
 
 namespace ULIS {
 /////////////////////////////////////////////////////
+// Defines
+#define tSpec TBlockInfo< _SH >
+
+/////////////////////////////////////////////////////
 // TBlockTransformer_Default
 template< uint32 _SH >
 class TBlockTransformer_Default
@@ -54,7 +58,10 @@ public:
 
 /////////////////////////////////////////////////////
 // TBlockTransformer_Imp
-template< uint32 _SH >
+template< uint32    _SH
+        , e_tp      _TP
+        , e_cm      _CM
+        , e_ea      _EA >
 class TBlockTransformer_Imp
 {
 public:
@@ -85,13 +92,21 @@ public:
                           , eResamplingMethod           iResamplingMethod = eResamplingMethod::kBilinear
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockTransformer_Imp< _SH >::Run( iSrcBlock
-                                         , iDstBlock
-                                         , iInverseTransform
-                                         , iResamplingMethod
-                                         , iPerformanceOptions );
+        TBlockTransformer_Imp< _SH
+                             , tSpec::_nf._tp
+                             , tSpec::_nf._cm
+                             , tSpec::_nf._ea >
+                            ::Run( iSrcBlock
+                                 , iDstBlock
+                                 , iInverseTransform
+                                 , iResamplingMethod
+                                 , iPerformanceOptions );
     }
 };
+
+/////////////////////////////////////////////////////
+// Undefines
+#undef tSpec
 
 } // namespace ULIS
 

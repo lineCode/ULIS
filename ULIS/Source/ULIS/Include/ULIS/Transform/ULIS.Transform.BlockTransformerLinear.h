@@ -54,7 +54,7 @@ public:
             float   tx          = pointInSrc.x - float( left );
             float   ty          = pointInSrc.y - float( up );
 
-            auto lerp = [&]( const tPixelBase& iA, const tPixelBase& iB, float t ) {
+            auto lerp = [&]( const tPixelValue& iA, const tPixelValue& iB, float t ) {
                 tPixelValue ret;
                 float al_a = ConvType< tPixelType, float >( iA.GetAlpha() );
                 float al_b = ConvType< tPixelType, float >( iB.GetAlpha() );

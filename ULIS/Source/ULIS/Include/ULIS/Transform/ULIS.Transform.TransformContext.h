@@ -23,6 +23,9 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <assert.h>
 
+// Load optimizations
+#include "ULIS/Transform/Optimization/ULIS.Transform.Optimization.RGBA8.h"
+
 namespace ULIS {
 /////////////////////////////////////////////////////
 // TTransformContext
