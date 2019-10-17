@@ -93,6 +93,12 @@ struct FMath
     }
 
     template< typename T >
+    static  inline T Floor( T iValue )
+    {
+        return  floor( iValue );
+    }
+
+    template< typename T >
     static  inline T RoundAwayFromZero( T iValue )
     {
         return  iValue < 0 ? (T)floor( iValue ) : (T)ceil( iValue );

@@ -38,6 +38,19 @@ public:
                       , bool iCallInvalidCB = true );
 
 
+    /// @fn         FillPreserveAlpha( IBlock* iBlock, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
+    /// @brief      Fill a block with the specified CColor, but preserves the alpha.
+    /// @details    The block will be entirely filled with a color but the alpha keeps the same.
+    /// @param      iBlock                  The pointer to the \e IBlock to fill top.
+    /// @param      iColor                  The CColor to obtain the color from. A colorspace conversion can occur if filling a block in Lab, for example.
+    /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
+    /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
+    static  void  FillPreserveAlpha( IBlock* iBlock
+                                   , const CColor& iColor
+                                   , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
+                                   , bool iCallInvalidCB = true );
+
+
     /// @fn         FillRect( IBlock* iBlock, const CColor& iColor, const FRect& iRect, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
     /// @brief      Fill a rect in a block with the specified CColor.
     /// @details    The block will be filled in the specifier rect area with a plain color with alpha. If the area is greater than the block, the area is cropped.

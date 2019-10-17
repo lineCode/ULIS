@@ -42,6 +42,28 @@ FClearFillContext::Fill( IBlock* iBlock
 
 //static
 void
+FClearFillContext::FillPreserveAlpha( IBlock* iBlock
+                                    , const CColor& iColor
+                                    , const FPerformanceOptions& iPerformanceOptions
+                                    , bool iCallInvalidCB )
+{
+    switch( iBlock->Id() )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                            \
+            case ULIS_REG[ n ]:                                                                                                             \
+            {                                                                                                                               \
+                TClearFillContext< ULIS_REG[ n ] >::FillPreserveAlpha( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlock                             \
+                                                        , iColor, iPerformanceOptions, iCallInvalidCB );                                    \
+                break;                                                                                                                      \
+            }
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+    }
+}
+
+
+//static
+void
 FClearFillContext::FillRect( IBlock* iBlock
                            , const CColor& iColor
                            , const FRect& iRect

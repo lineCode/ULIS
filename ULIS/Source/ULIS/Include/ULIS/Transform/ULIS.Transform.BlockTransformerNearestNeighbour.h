@@ -113,7 +113,7 @@ public:
                    , const glm::mat3&            iInverseTransform
                    , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-        if( iPerformanceOptions.desired_workers > 1 )
+        if( iPerformanceOptions.desired_workers > 1 && FGlobalThreadPool::Get().GetNumWorkers() > 1 )
         {
             TBlockTransformer_NearestNeighbour_ScanLine< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform );
         }

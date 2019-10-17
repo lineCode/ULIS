@@ -64,7 +64,11 @@ public:
                           , eResamplingMethod           iResamplingMethod = eResamplingMethod::kBilinear
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockTransformer_Default< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iResamplingMethod, iPerformanceOptions );
+        TBlockTransformer_Default< _SH >::Run( iSrcBlock
+                                             , iDstBlock
+                                             , iInverseTransform
+                                             , iResamplingMethod
+                                             , iPerformanceOptions );
     }
 };
 
@@ -81,7 +85,11 @@ public:
                           , eResamplingMethod           iResamplingMethod = eResamplingMethod::kBilinear
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockTransformer_Imp< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iResamplingMethod, iPerformanceOptions );
+        TBlockTransformer_Imp< _SH >::Run( iSrcBlock
+                                         , iDstBlock
+                                         , iInverseTransform
+                                         , iResamplingMethod
+                                         , iPerformanceOptions );
     }
 };
 

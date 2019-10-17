@@ -20,7 +20,7 @@ namespace ULIS {
 // ParallelFor
 inline  void  ParallelFor_Imp( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
 {
-    if( iPerformanceOptions.desired_workers > 1 )
+    if( iPerformanceOptions.desired_workers > 1 && iPool.GetNumWorkers() > 1 )
     {
         for( int i = 0; i < iNum; ++i )
             iPool.ScheduleJob( iFun, i );

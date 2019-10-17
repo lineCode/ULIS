@@ -429,7 +429,7 @@ FLinef::FromPointsVertical( const glm::vec2& iPointA, const glm::vec2& iPointB )
 
 
 float
-FLinef::Eval( float iX )
+FLinef::Eval( float iX ) const
 {
     return  a * iX + b;
 }
@@ -445,9 +445,10 @@ FOBBSlopeExpression::FOBBSlopeExpression()
 
 
 float
-FOBBSlopeExpression::Eval( int iX )
+FOBBSlopeExpression::Eval( int iX ) const
 {
-    return  lines[ iX / indexer ].Eval( iX );
+    int index = indexer == 0 ? 0 : FMath::Min( iX / indexer, 1 );
+    return  lines[ index ].Eval( iX );
 }
 
 

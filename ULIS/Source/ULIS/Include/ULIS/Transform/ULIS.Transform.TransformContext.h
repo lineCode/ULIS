@@ -32,7 +32,6 @@ public:
     template< uint32 _SH >
     static  TBlock< _SH >*  GetTransformedBlock( const TBlock< _SH >* iSrc, const  glm::mat3& iMat, eResamplingMethod iResamplingMethod = eResamplingMethod::kBilinear, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
     {
-        // TEST
         /*
         {
             FTransformOBB obb( 0, 0, iSrc->Width(), iSrc->Height() );
@@ -43,7 +42,8 @@ public:
             glm::mat3 translatedTransformMatrix = glm::translate( glm::identity< glm::mat3 >(), glm::vec2( shift ) ) * iMat;
             glm::mat3 inverseTransform = glm::inverse( translatedTransformMatrix );
             TBlock< _SH >* dst = new TBlock< _SH >( FMath::Ceil( aabb.Width() ), FMath::Ceil( aabb.Height() ) );
-            FOBBHullExpression hull = obb.BuildHullExpression();
+            TBlockTransformer< _SH >::Run( iSrc, dst, inverseTransform, iResamplingMethod, iPerformanceOptions );
+            return  dst;
         }
         */
 
@@ -54,7 +54,6 @@ public:
         glm::mat3 translated = glm::translate( glm::identity< glm::mat3 >(), glm::vec2( shift ) ) * iMat;
         TBlock< _SH >* dst = new TBlock< _SH >( aabb.Width(), aabb.Height() );
         glm::mat3 inverseTransform = glm::inverse( translated );
-
         TBlockTransformer< _SH >::Run( iSrc, dst, inverseTransform, iResamplingMethod, iPerformanceOptions );
         return  dst;
     }
@@ -62,13 +61,26 @@ public:
     template< uint32 _SH >
     static  void  TransformBlockInto( const TBlock< _SH >* iSrc, TBlock< _SH >* iDst, const  glm::mat3& iMat, eResamplingMethod iResamplingMethod = eResamplingMethod::kBilinear , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
     {
+        /*
+        {
+            FTransformOBB obb( 0, 0, iSrc->Width(), iSrc->Height() );
+            obb.Transform( iMat );
+            FTransformAABB aabb( obb );
+            glm::vec2 shift = aabb.GetShift();
+            obb.Shift( shift );
+            glm::mat3 translatedTransformMatrix = glm::translate( glm::identity< glm::mat3 >(), glm::vec2( shift ) ) * iMat;
+            glm::mat3 inverseTransform = glm::inverse( translatedTransformMatrix );
+            FOBBHullExpression hull = obb.BuildHullExpression();
+            TBlockTransformer< _SH >::Run( iSrc, iDst, inverseTransform, iResamplingMethod, iPerformanceOptions );
+        }
+        */
+
         FTransformAABB aabb( 0, 0, iSrc->Width(), iSrc->Height() );
         aabb.Transform( iMat );
         glm::vec2 shift( -aabb.x1, -aabb.y1 );
         aabb.Shift( shift );
         glm::mat3 translated = glm::translate( glm::identity< glm::mat3 >(), glm::vec2( shift ) ) * iMat;
         glm::mat3 inverseTransform = glm::inverse( translated );
-
         TBlockTransformer< _SH >::Run( iSrc, iDst, inverseTransform, iResamplingMethod, iPerformanceOptions );
     }
 };

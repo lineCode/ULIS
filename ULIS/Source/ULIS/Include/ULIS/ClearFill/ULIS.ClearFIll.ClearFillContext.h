@@ -17,6 +17,7 @@
 #include "ULIS/ClearFill/ULIS.ClearFIll.BlockFiller.h"
 #include "ULIS/Color/ULIS.Color.CColor.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
+#include "ULIS/Thread/ULIS.Thread.ParallelFor.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -34,6 +35,28 @@ public:
     static void Fill( TBlock< _SH >* iBlock, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true )
     {
         FillRect( iBlock, iColor, FRect( 0, 0, iBlock->Width(), iBlock->Height() ), iPerformanceOptions, callInvalidCB );
+    }
+
+    static void FillPreserveAlpha( TBlock< _SH >* iBlock, const CColor& iColor, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true )
+    {
+        using tPixelType = typename TBlock< _SH >::tPixelType;
+        using tPixelValue = typename TBlock< _SH >::tPixelValue;
+        using tPixelProxy = typename TBlock< _SH >::tPixelProxy;
+        using tPixelBase = TPixelBase< _SH >;
+        using info = TBlockInfo< _SH >;
+
+        tPixelValue val = iBlock->PixelValueForColor( iColor );
+
+        ::ULIS::ParallelFor( iBlock->Height()
+                           , [&]( int iLine ) {
+                                for( int i = 0; i < iBlock->Width(); ++i )
+                                {
+                                    tPixelProxy prox = iBlock->PixelProxy( i, iLine );
+                                    tPixelType alpha = prox.GetAlpha();
+                                    prox = val;
+                                    prox.SetAlpha( alpha );
+                                }
+                            } );
     }
 
     static void FillRect( TBlock< _SH >* iBlock, const CColor& iColor, const FRect& iArea, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true )

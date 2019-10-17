@@ -24,12 +24,13 @@ template< uint32 _SH >
 class TBlockTransformer_Linear_ScanLine
 {
 public:
-    static void ProcessScanLine( const TBlock< _SH >*   iSrcBlock
-                   , TBlock< _SH >*         iDstBlock
-                   , const glm::mat3&       iInverseTransform
-                   , const int              iLine
-                   , const int              iX1
-                   , const int              iX2 )
+    static void ProcessScanLine( const TBlock< _SH >*       iSrcBlock
+                               , TBlock< _SH >*             iDstBlock
+                               , const glm::mat3&           iInverseTransform
+                               , const int                  iLine
+                               , const int                  iX1
+                               , const int                  iX2
+                               , const glm::vec2&           iSrdDeltaX )
     {
         using tPixelType = typename TBlock< _SH >::tPixelType;
         using tPixelValue = typename TBlock< _SH >::tPixelValue;
@@ -41,15 +42,17 @@ public:
         const int maxy = iSrcBlock->Height();
         tPixelValue fallback = tPixelValue();
         fallback.SetAlpha( 0 );
+
+        glm::vec2 pointInSrc = glm::vec2( iInverseTransform * glm::vec3( iX1, iLine, 1.f ) ) - glm::vec2( 0.5, 0.5 );
+
         for( int x = iX1; x < iX2; ++x )
         {
-            glm::vec2 point_in_src = glm::vec2( iInverseTransform * glm::vec3( x, iLine, 1.f ) ); // - glm::vec2( 0.5, 0.5 );
-            int left    = floor( point_in_src.x );
-            int up      = floor( point_in_src.y );
-            int right   = left + 1;
-            int bot     = up + 1;
-            float tx = point_in_src.x - float( left );
-            float ty = point_in_src.y - float( up );
+            int     left        = FMath::Floor( pointInSrc.x );
+            int     up          = FMath::Floor( pointInSrc.y );
+            int     right       = left + 1;
+            int     bot         = up + 1;
+            float   tx          = pointInSrc.x - float( left );
+            float   ty          = pointInSrc.y - float( up );
 
             auto lerp = [&]( const tPixelBase& iA, const tPixelBase& iB, float t ) {
                 tPixelValue ret;
@@ -65,6 +68,13 @@ public:
                 }
                 return  ret;
             };
+
+            /*
+            const tPixelValue c00   = isInside ? iSrcBlock->PixelValue( left, up )      : fallback;
+            const tPixelValue c10   = isInside ? iSrcBlock->PixelValue( right, up )     : fallback;
+            const tPixelValue c11   = isInside ? iSrcBlock->PixelValue( right, bot )    : fallback;
+            const tPixelValue c01   = isInside ? iSrcBlock->PixelValue( left, bot )     : fallback;
+            */
             #define TEMP( iX, iY ) ( iX < 0 || iY < 0 || iX >= maxx || iY >= maxy ) ? fallback : iSrcBlock->PixelValue( iX, iY );
             const tPixelValue c00   = TEMP( left, up );
             const tPixelValue c10   = TEMP( right, up );
@@ -74,6 +84,8 @@ public:
             const tPixelValue b = lerp( c01, c11, tx );
             const tPixelValue c = lerp( a, b, ty );
             iDstBlock->SetPixelValue( x, iLine, c );
+
+            pointInSrc += iSrdDeltaX;
         }
     }
 
@@ -85,9 +97,12 @@ public:
         const int y1 = 0;
         const int x2 = iDstBlock->Width();
         const int y2 = iDstBlock->Height();
+
+        glm::vec2 src_dx = glm::vec2( iInverseTransform * glm::vec3( 1.f, 0.f, 0.f ) );
+
         FThreadPool& global_pool = FGlobalThreadPool::Get();
         for( int y = y1; y < y2; ++y )
-            global_pool.ScheduleJob( ProcessScanLine, iSrcBlock, iDstBlock, iInverseTransform, y, x1, x2 );
+            global_pool.ScheduleJob( ProcessScanLine, iSrcBlock, iDstBlock, iInverseTransform, y, x1, x2, src_dx );
         global_pool.WaitForCompletion();
     }
 };
@@ -169,7 +184,7 @@ public:
                    , const glm::mat3&            iInverseTransform
                    , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
-        if( iPerformanceOptions.desired_workers > 1 )
+        if( iPerformanceOptions.desired_workers > 1 && FGlobalThreadPool::Get().GetNumWorkers() > 1 )
         {
             TBlockTransformer_Linear_ScanLine< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform );
         }

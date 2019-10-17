@@ -126,7 +126,7 @@ struct FLinef
 
     FLinef( float iA, float iB );
     static FLinef FromPointsVertical( const glm::vec2& iPointA, const glm::vec2& iPointB );
-    float Eval( float iX );
+    float Eval( float iX ) const;
 };
 
 
@@ -138,7 +138,7 @@ struct FOBBSlopeExpression
     int indexer;
 
     FOBBSlopeExpression();
-    float Eval( int iX );
+    float Eval( int iX ) const;
 };
 
 
