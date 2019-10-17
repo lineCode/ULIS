@@ -74,7 +74,7 @@ public:
     /// @return     A fresh newly allocated block, with contents transformed from source, with size deduced from input block and transform.
     static IBlock* GetTransformed( const IBlock* iBlock
                                  , const  glm::mat3& iMat
-                                 , eResamplingMethod iResamplingMethod = eResamplingMethod::kLinear
+                                 , eResamplingMethod iResamplingMethod = eResamplingMethod::kBilinear
                                  , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 
 
@@ -88,7 +88,7 @@ public:
     static IBlock* TransformInto( const IBlock* iBlockSrc
                                 , IBlock* iBlockDst
                                 , const  glm::mat3& iMat
-                                , eResamplingMethod iResamplingMethod = eResamplingMethod::kLinear
+                                , eResamplingMethod iResamplingMethod = eResamplingMethod::kBilinear
                                 , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 
 

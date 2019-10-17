@@ -18,7 +18,7 @@ namespace ULIS {
 enum class eResamplingMethod : uint8
 {
       kNearestNeighbour
-    , kLinear
+    , kBilinear
 };
 
 

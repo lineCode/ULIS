@@ -32,7 +32,7 @@ int main( int argc, char *argv[] )
     glm::mat3 transform = ::ULIS::FTransformContext::GetScaleMatrix( 20, 20 );
     ::ULIS::FPerformanceOptions opt;
     opt.desired_workers = 64;
-    ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform, ::ULIS::eResamplingMethod::kLinear, opt );
+    ::ULIS::IBlock* blockB = ::ULIS::FTransformContext::GetTransformed( blockA, transform, ::ULIS::eResamplingMethod::kBilinear, opt );
 
     QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );

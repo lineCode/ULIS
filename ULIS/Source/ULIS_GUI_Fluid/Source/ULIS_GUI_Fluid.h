@@ -170,7 +170,7 @@ private:
         float scale = (float)mBlock->Width() / (float)mMiniBlock->Width();
         FPerformanceOptions opt;
         opt.desired_workers = 64;
-        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kLinear, opt );
+        FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kBilinear, opt );
         mPixmap.convertFromImage( *mImage );
         mLabel->setPixmap( mPixmap );
     }

@@ -24,6 +24,8 @@ struct FPoint64;
 struct FTransformAABB;
 struct FTransformOBB;
 struct FLinef;
+struct FOBBSlopeExpression;
+struct FOBBHullExpression;
 
 /////////////////////////////////////////////////////
 // FRect
@@ -113,6 +115,7 @@ struct FTransformOBB
     void Transform( const glm::mat3& mat );
     void Shift( const glm::vec2& iVec );
     void GetPoints( std::vector< glm::vec2 >* oPoints ) const;
+    FOBBHullExpression BuildHullExpression() const;
 };
 
 /////////////////////////////////////////////////////
@@ -120,12 +123,33 @@ struct FTransformOBB
 struct FLinef
 {
     float a, b;
+
     FLinef( float iA, float iB );
+    static FLinef FromPointsVertical( const glm::vec2& iPointA, const glm::vec2& iPointB );
     float Eval( float iX );
 };
 
+
+/////////////////////////////////////////////////////
+// FOBBSlopeExpression
 struct FOBBSlopeExpression
 {
+    std::vector< FLinef > lines;
+    int indexer;
+
+    FOBBSlopeExpression();
+    float Eval( int iX );
+};
+
+
+/////////////////////////////////////////////////////
+// FOBBHullExpression
+struct FOBBHullExpression
+{
+    FOBBSlopeExpression left, right;
+
+    FOBBHullExpression();
+    FOBBHullExpression( const FOBBSlopeExpression& iLeft, const FOBBSlopeExpression& iRight );
 };
 
 } // namespace ULIS

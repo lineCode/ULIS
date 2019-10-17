@@ -35,16 +35,16 @@ public:
         const int maxy = iSrcBlock->Height();
         const typename TBlock< _SH >::tPixelValue fallback = typename TBlock< _SH >::tPixelValue();
         for( int x = iX1; x < iX2; ++x )
-            {
-                glm::vec3 point_in_dst( x, iLine, 1.f );
-                glm::vec2 point_in_src = ( iInverseTransform * point_in_dst );
-                int src_x = floor( point_in_src.x );
-                int src_y = floor( point_in_src.y );
-                if( src_x < 0 || src_y < 0 || src_x >= maxx || src_y >= maxy )
-                    iDstBlock->SetPixelValue( x, iLine, fallback );
-                else
-                    iDstBlock->SetPixelProxy( x, iLine, iSrcBlock->PixelProxy( src_x, src_y ) );
-            }
+        {
+            glm::vec3 point_in_dst( x, iLine, 1.f );
+            glm::vec2 point_in_src = ( iInverseTransform * point_in_dst );
+            int src_x = floor( point_in_src.x );
+            int src_y = floor( point_in_src.y );
+            if( src_x < 0 || src_y < 0 || src_x >= maxx || src_y >= maxy )
+                iDstBlock->SetPixelValue( x, iLine, fallback );
+            else
+                iDstBlock->SetPixelProxy( x, iLine, iSrcBlock->PixelProxy( src_x, src_y ) );
+        }
     }
 
     static void Run( const TBlock< _SH >*        iSrcBlock

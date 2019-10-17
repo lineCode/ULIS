@@ -9,6 +9,7 @@
 */
 #pragma once
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"
+#include <algorithm>
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -356,6 +357,45 @@ FTransformOBB::GetPoints( std::vector< glm::vec2 >* oPoints ) const
     oPoints->push_back( m01 );
 }
 
+FOBBHullExpression
+FTransformOBB::BuildHullExpression() const
+{
+    std::vector< glm::vec2 > points;
+    std::vector< glm::vec2 > pointsLeft;
+    std::vector< glm::vec2 > pointsRight;
+    points.reserve( 4 );
+    pointsLeft.reserve( 3 );
+    pointsRight.reserve( 3 );
+    GetPoints( &points );
+    std::sort( points.begin(), points.end(), SortCompareLesserX );
+    pointsLeft.push_back( points[0] );
+    pointsLeft.push_back( points[1] );
+    pointsRight.push_back( points[2] );
+    pointsRight.push_back( points[3] );
+    std::sort( pointsLeft.begin(), pointsLeft.end(), SortCompareLesserY );
+    std::sort( pointsRight.begin(), pointsRight.end(), SortCompareLesserY );
+    if( pointsLeft[0].y > pointsRight[0].y ) pointsLeft.push_back( pointsRight[0] );
+    if( pointsLeft[1].y < pointsRight[1].y ) pointsLeft.push_back( pointsRight[1] );
+    if( pointsRight[0].y > pointsLeft[0].y ) pointsRight.push_back( pointsLeft[0] );
+    if( pointsRight[1].y < pointsLeft[1].y ) pointsRight.push_back( pointsLeft[1] );
+    std::sort( pointsLeft.begin(), pointsLeft.end(), SortCompareLesserY );
+    std::sort( pointsRight.begin(), pointsRight.end(), SortCompareLesserY );
+    assert( pointsLeft.size() >= 2 );
+    assert( pointsRight.size() >= 2 );
+
+    FOBBHullExpression hull;
+    for( int i = 0; i < pointsLeft.size() - 1; ++i )
+        hull.left.lines.push_back( FLinef::FromPointsVertical( pointsLeft[i+1], pointsLeft[i] ) );
+
+    for( int i = 0; i < pointsRight.size() - 1; ++i )
+        hull.right.lines.push_back( FLinef::FromPointsVertical( pointsRight[i+1], pointsRight[i] ) );
+
+    hull.left.indexer = pointsLeft[1].y;
+    hull.right.indexer = pointsRight[1].y;
+
+    return  hull;
+}
+
 
 /////////////////////////////////////////////////////
 // FLinef
@@ -366,10 +406,64 @@ FLinef::FLinef( float iA, float iB )
 }
 
 
+//static
+FLinef
+FLinef::FromPointsVertical( const glm::vec2& iPointA, const glm::vec2& iPointB )
+{
+    float dx = ( iPointB.x - iPointA.x );
+    float slope, add;
+    if( dx == 0 )
+    {
+        slope = 0;
+        add = iPointA.x;
+    }
+    else
+    {
+        float dy = ( iPointB.y - iPointA.y );
+        slope = dx / dy;
+        add = iPointA.x - ( slope * iPointA.y );
+    }
+
+    return  FLinef( slope, add );
+}
+
+
 float
 FLinef::Eval( float iX )
 {
     return  a * iX + b;
+}
+
+
+/////////////////////////////////////////////////////
+// FOBBSlopeExpression
+FOBBSlopeExpression::FOBBSlopeExpression()
+    : lines()
+    , indexer( 0 )
+{
+}
+
+
+float
+FOBBSlopeExpression::Eval( int iX )
+{
+    return  lines[ iX / indexer ].Eval( iX );
+}
+
+
+
+/////////////////////////////////////////////////////
+// FOBBHullExpression
+FOBBHullExpression::FOBBHullExpression()
+    : left()
+    , right()
+{
+}
+
+FOBBHullExpression::FOBBHullExpression( const FOBBSlopeExpression& iLeft, const FOBBSlopeExpression& iRight )
+    : left( iLeft )
+    , right( iRight )
+{
 }
 
 

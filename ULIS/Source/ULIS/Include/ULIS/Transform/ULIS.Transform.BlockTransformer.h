@@ -29,7 +29,7 @@ public:
     static void Run( const TBlock< _SH >*        iSrcBlock
                    , TBlock< _SH >*              iDstBlock
                    , const glm::mat3&            iInverseTransform
-                   , eResamplingMethod           iResamplingMethod = eResamplingMethod::kLinear
+                   , eResamplingMethod           iResamplingMethod = eResamplingMethod::kBilinear
                    , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
         switch( iResamplingMethod )
@@ -40,7 +40,7 @@ public:
                 break;
             }
 
-            case eResamplingMethod::kLinear:
+            case eResamplingMethod::kBilinear:
             {
                 TBlockTransformer_Linear< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iPerformanceOptions );
                 break;
@@ -61,7 +61,7 @@ public:
     static inline void Run( const TBlock< _SH >*        iSrcBlock
                           , TBlock< _SH >*              iDstBlock
                           , const glm::mat3&            iInverseTransform
-                          , eResamplingMethod           iResamplingMethod = eResamplingMethod::kLinear
+                          , eResamplingMethod           iResamplingMethod = eResamplingMethod::kBilinear
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
         TBlockTransformer_Default< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iResamplingMethod, iPerformanceOptions );
@@ -78,7 +78,7 @@ public:
     static inline void Run( const TBlock< _SH >*        iSrcBlock
                           , TBlock< _SH >*              iDstBlock
                           , const glm::mat3&            iInverseTransform
-                          , eResamplingMethod           iResamplingMethod = eResamplingMethod::kLinear
+                          , eResamplingMethod           iResamplingMethod = eResamplingMethod::kBilinear
                           , const FPerformanceOptions&  iPerformanceOptions= FPerformanceOptions() )
     {
         TBlockTransformer_Imp< _SH >::Run( iSrcBlock, iDstBlock, iInverseTransform, iResamplingMethod, iPerformanceOptions );

@@ -165,7 +165,7 @@ int clear( int argc, char *argv[] )
     std::string     opt  = std::string( argv[6] );
     #ifdef ULIS_PROFILER_VERBOSE
     std::cout << "OP:   " << "clear"    << std::endl;
-        if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::FSpecContext::BlockSpec( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
+        if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::FSpecContext::BlockSpecFromHash( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
         if( check_NT(     NT      ) )   { std::cout << "NT:   " << NT         << std::endl; } else { return error( "Bad arg: NT, abort."    ); }
         if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
         if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
@@ -176,7 +176,7 @@ int clear( int argc, char *argv[] )
         if( !check_num(    num     ) )  { return error( "Bad arg: num, abort."   ); }
         if( !check_size(   size    ) )  { return error( "Bad arg: size, abort."  ); }
         if( !check_opt(    opt     ) )  { return error( "Bad arg: opt, abort."   ); }
-        print_short_op( argv[1], ::ULIS::FSpecContext::BlockSpec( fmt )._ss, argv[3], argv[4], argv[5], argv[6], "" );
+        print_short_op( argv[1], ::ULIS::FSpecContext::BlockSpecFromHash( fmt )._ss, argv[3], argv[4], argv[5], argv[6], "" );
     #endif // ULIS_PROFILER_VERBOSE
 
     ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
@@ -237,7 +237,7 @@ int fill( int argc, char *argv[] )
     std::string     opt  = std::string( argv[6] );
     #ifdef ULIS_PROFILER_VERBOSE
     std::cout << "OP:   " << "fill"    << std::endl;
-        if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::FSpecContext::BlockSpec( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
+        if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::FSpecContext::BlockSpecFromHash( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
         if( check_NT(     NT      ) )   { std::cout << "NT:   " << NT         << std::endl; } else { return error( "Bad arg: NT, abort."    ); }
         if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
         if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
@@ -248,7 +248,7 @@ int fill( int argc, char *argv[] )
         if( !check_num(    num     ) )  { return error( "Bad arg: num, abort."   ); }
         if( !check_size(   size    ) )  { return error( "Bad arg: size, abort."  ); }
         if( !check_opt(    opt     ) )  { return error( "Bad arg: opt, abort."   ); }
-        print_short_op( argv[1], ::ULIS::FSpecContext::BlockSpec( fmt )._ss, argv[3], argv[4], argv[5], argv[6], "" );
+        print_short_op( argv[1], ::ULIS::FSpecContext::BlockSpecFromHash( fmt )._ss, argv[3], argv[4], argv[5], argv[6], "" );
     #endif // ULIS_PROFILER_VERBOSE
 
     ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
@@ -312,7 +312,7 @@ int blend( int argc, char *argv[] )
     ::ULIS::uint32  mode = std::atoi( std::string( argv[7] ).c_str() );
     #ifdef ULIS_PROFILER_VERBOSE
         std::cout << "OP:   " << "fill"    << std::endl;
-        if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::FSpecContext::BlockSpec( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
+        if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::FSpecContext::BlockSpecFromHash( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
         if( check_NT(     NT      ) )   { std::cout << "NT:   " << NT         << std::endl; } else { return error( "Bad arg: NT, abort."    ); }
         if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
         if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
@@ -325,7 +325,7 @@ int blend( int argc, char *argv[] )
         if( !check_size(   size    ) ) { return error( "Bad arg: size, abort."  ); }
         if( !check_opt(    opt     ) ) { return error( "Bad arg: opt, abort."   ); }
         if( !check_mode(   mode    ) ) { return error( "Bad arg: opt, abort."   ); }
-        print_short_op( argv[1], ::ULIS::FSpecContext::BlockSpec( fmt )._ss, argv[3], argv[4], argv[5], argv[6], ::ULIS::kwBlendingMode[mode] );
+        print_short_op( argv[1], ::ULIS::FSpecContext::BlockSpecFromHash( fmt )._ss, argv[3], argv[4], argv[5], argv[6], ::ULIS::kwBlendingMode[mode] );
     #endif // ULIS_PROFILER_VERBOSE
 
     ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
@@ -389,7 +389,7 @@ int copy( int argc, char *argv[] )
     std::string     opt  = std::string( argv[6] );
     #ifdef ULIS_PROFILER_VERBOSE
     std::cout << "OP:   " << "copy"    << std::endl;
-        if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::FSpecContext::BlockSpec( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
+        if( check_fmt(    fmt     ) )   { std::cout << "fmt:  " << fmt << " (" << ::ULIS::FSpecContext::BlockSpecFromHash( fmt )._ss << ")" << std::endl; } else { return error( "Bad arg: fmt, abort."   ); }
         if( check_NT(     NT      ) )   { std::cout << "NT:   " << NT         << std::endl; } else { return error( "Bad arg: NT, abort."    ); }
         if( check_num(    num     ) )   { std::cout << "num:  " << num        << std::endl; } else { return error( "Bad arg: num, abort."   ); }
         if( check_size(   size    ) )   { std::cout << "size: " << size       << std::endl; } else { return error( "Bad arg: size, abort."  ); }
@@ -400,7 +400,7 @@ int copy( int argc, char *argv[] )
         if( !check_num(    num     ) )  { return error( "Bad arg: num, abort."   ); }
         if( !check_size(   size    ) )  { return error( "Bad arg: size, abort."  ); }
         if( !check_opt(    opt     ) )  { return error( "Bad arg: opt, abort."   ); }
-        print_short_op( argv[1], ::ULIS::FSpecContext::BlockSpec( fmt )._ss, argv[3], argv[4], argv[5], argv[6], "" );
+        print_short_op( argv[1], ::ULIS::FSpecContext::BlockSpecFromHash( fmt )._ss, argv[3], argv[4], argv[5], argv[6], "" );
     #endif // ULIS_PROFILER_VERBOSE
 
     ::ULIS::FThreadPool& pool = ::ULIS::FGlobalThreadPool::Get();
