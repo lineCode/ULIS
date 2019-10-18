@@ -200,7 +200,7 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
+                   , const FPerformanceOptions&         iPerformanceOptions= FPerformanceOptions() )
     {
         TBlockBlender_RGBA8_SSE< _SH, _BM >::Run( iBlockTop
                                                 , iBlockBack

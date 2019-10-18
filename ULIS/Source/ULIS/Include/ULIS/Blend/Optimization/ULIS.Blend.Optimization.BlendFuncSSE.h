@@ -52,7 +52,7 @@ struct BlendAlphaSSE {
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- Erase
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_START( Erase )
-    return  _mm_min_ps( _mm_setzero_ps(), _mm_sub_ps( AlphaBack, AlphaTop ) );
+    return  _mm_max_ps( _mm_setzero_ps(), _mm_sub_ps( AlphaBack, AlphaTop ) );
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END
 
 // SPEC BLEND
