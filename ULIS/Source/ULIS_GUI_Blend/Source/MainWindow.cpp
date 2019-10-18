@@ -71,7 +71,9 @@ cMainWindow::Init()
     for( int i = 0; i < num_blend_modes; ++i )
     {
         ::ULIS::IBlock* ulis_display = ::ULIS::FMakeContext::CopyBlock( mUnderSource );
-        ::ULIS::FBlendingContext::Blend( mOverSource, ulis_display, ::ULIS::eBlendingMode(i), 1.f );
+        ::ULIS::FPerformanceOptions opt;
+        opt.desired_workers = 1;
+        ::ULIS::FBlendingContext::Blend( mOverSource, ulis_display, ::ULIS::eBlendingMode(i), 0, 0, 1.f, opt, false );
         QString ps_filename( ::ULIS::kwBlendingMode[i] );
         QString path = "Resources/ULIS_GUI_Blend/PhotoshopResults/" + ps_filename + ".png";
         QImage* tmp = new QImage( path );
