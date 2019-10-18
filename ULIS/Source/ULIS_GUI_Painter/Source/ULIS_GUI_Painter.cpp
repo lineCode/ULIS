@@ -51,11 +51,11 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(247, 950), ::ULIS::CColor( 255, 0 ,0 ), true );
     ::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(250,950), ::ULIS::FPoint(250, 947), ::ULIS::CColor( 255, 0 ,0 ), true );*/
 
-    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(300,1500), ::ULIS::FPoint(30, 80), ::ULIS::CColor( 255, 0 ,0 ) );
-    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(-20,2), ::ULIS::FPoint(600, 1500), ::ULIS::CColor( 255, 0 ,0 ) );
-    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(600, -500), ::ULIS::FPoint(900, 800), ::ULIS::CColor( 255, 0 ,0 ) );
-    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(-500,500), ::ULIS::FPoint(1500, 600), ::ULIS::CColor( 255, 0 ,0 ) );
-    //::ULIS::FPainterContext::DrawLine( block, ::ULIS::FPoint(500,1100), ::ULIS::FPoint(1100, 500), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(300,400), ::ULIS::FPoint(750, 600), ::ULIS::CColor( 255, 0 ,0 ), ULIS::FRect(500, 500, 200, 200) );
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(-20,2), ::ULIS::FPoint(600, 1500), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(600, -500), ::ULIS::FPoint(900, 800), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(-500,500), ::ULIS::FPoint(1500, 600), ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(500,1100), ::ULIS::FPoint(1100, 500), ::ULIS::CColor( 255, 0 ,0 ) );
 
     //::ULIS::FPainterContext::DrawLineAA( block, ::ULIS::FPoint(3,6), ::ULIS::FPoint(30, 8), ::ULIS::CColor( 255, 0 ,0 ) );
     
@@ -74,15 +74,15 @@ int main( int argc, char *argv[] )
     for( int i = 0; i < 255; i+=5)
     {
         ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(500,500), i, ::ULIS::CColor( 0, i ,0 ) );
-    }
+    }*/
 
-    ::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(500,500), 200, ::ULIS::CColor( 255, 0 ,0 ), true );
-    ::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(250,300), 78, ::ULIS::CColor( 0, 255 ,0 ), true );
+    ::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(100,100), 200, ::ULIS::CColor( 255, 0 ,0 ), false );
+    /*::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(250,300), 78, ::ULIS::CColor( 0, 255 ,0 ), true );
     ::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(400,200), 25, ::ULIS::CColor( 0, 0 ,255 ), true );
     ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(500,500), 200, ::ULIS::CColor( 255, 0 ,0 ), true );
     ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(250,300), 78, ::ULIS::CColor( 0, 255 ,0 ), true );
-    ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(400,200), 25, ::ULIS::CColor( 0, 0 ,255 ), true );
-    */
+    ::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(400,200), 25, ::ULIS::CColor( 0, 0 ,255 ), true );*/
+    
     
     //::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(500,250), 200, ::ULIS::CColor( 255, 0 ,0 ) );
     //::ULIS::FPainterContext::DrawCircleAndresAA( block, ::ULIS::FPoint(500,750), 195, ::ULIS::CColor( 255, 0 ,0 ) );

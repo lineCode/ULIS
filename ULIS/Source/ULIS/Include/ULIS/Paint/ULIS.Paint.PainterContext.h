@@ -32,6 +32,30 @@ typedef uint8 tClippingCode;
 template< uint32 _SH >
 class TPainterContext
 {
+
+//Functions used for clipping of forms
+private:
+    
+    static const int ComputeCodeForPoint ( const FPoint& iPoint, const FRect& iClippingRect )
+    {
+        // initialized as being inside
+        int code = eClippingZone::kInside;
+      
+        if (iPoint.x < iClippingRect.x)       // to the left of rectangle
+            code |= eClippingZone::kLeft;
+        else if (iPoint.x > (iClippingRect.x + iClippingRect.w) )  // to the right of rectangle
+            code |= eClippingZone::kRight;
+        if (iPoint.y < iClippingRect.y)       // above the rectangle
+            code |= eClippingZone::kTop;
+        else if (iPoint.y > (iClippingRect.y + iClippingRect.h) )  // below the rectangle
+            code |= eClippingZone::kBot;
+      
+        return code;
+    };
+    
+// -----------------------------------------------------------
+    
+    
 public:
 static void DrawLine( TBlock< _SH >*                        iBlock
                         , const FPoint                      iP0
@@ -43,50 +67,23 @@ static void DrawLine( TBlock< _SH >*                        iBlock
 {
     //Clipping ----
     
-    
     FPoint p0 = iP0;
     FPoint p1 = iP1;
 
+    FRect clippingRect = iClippingRect;
     
-    int xMax;
-    int yMax;
-    int xMin;
-    int yMin;
-    
-    if( iClippingRect.Area() != 0 )
+    if( clippingRect.Area() == 0 )
     {
-        xMax = iClippingRect.x + iClippingRect.w;
-        yMax = iClippingRect.y + iClippingRect.h;
-        xMin = iClippingRect.x;
-        yMin = iClippingRect.y;
-    }
-    else
-    {
-        xMax = iBlock->Width() - 1;
-        yMax = iBlock->Height() - 1;
-        xMin = 0;
-        yMin = 0;
+        clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
     }
     
+    int xMax = clippingRect.x + clippingRect.w;
+    int yMax = clippingRect.y + clippingRect.h;
+    int xMin = clippingRect.x;
+    int yMin = clippingRect.y;
     
-    auto ComputeCodeForPoint = [&xMax, &yMax, &xMin, &yMin] (const FPoint iPoint)
-    {
-        // initialized as being inside
-        tClippingCode code = eClippingZone::kInside;
-        if (iPoint.x < xMin)       // to the left of rectangle
-            code |= eClippingZone::kLeft;
-        else if (iPoint.x > xMax)  // to the right of rectangle
-            code |= eClippingZone::kRight;
-        if (iPoint.y < yMin)       // above the rectangle
-            code |= eClippingZone::kTop;
-        else if (iPoint.y > yMax)  // below the rectangle
-            code |= eClippingZone::kBot;
-        return code;
-    };
-    
-    tClippingCode codeP0 = ComputeCodeForPoint( p0 );
-    tClippingCode codeP1 = ComputeCodeForPoint( p1 );
-    
+    tClippingCode codeP0 = ComputeCodeForPoint( p0, clippingRect );
+    tClippingCode codeP1 = ComputeCodeForPoint( p1, clippingRect );
     bool accept = false;
 
     while (true)
@@ -152,13 +149,13 @@ static void DrawLine( TBlock< _SH >*                        iBlock
             {
                 p0.x = x;
                 p0.y = y;
-                codeP0 = ComputeCodeForPoint(p0);
+                codeP0 = ComputeCodeForPoint(p0, clippingRect);
             }
             else
             {
                 p1.x = x;
                 p1.y = y;
-                codeP1 = ComputeCodeForPoint(p1);
+                codeP1 = ComputeCodeForPoint(p1, clippingRect);
             }
         }
     }
@@ -251,56 +248,24 @@ static void DrawLineAA( TBlock< _SH >*            iBlock
                         , bool                     iCallInvalidCB )
 {
     //Clipping ----
+    
     FPoint p0 = iP0;
     FPoint p1 = iP1;
     
-    //Regions of the clipping rectangle
-    const int INSIDE = 0; // 0000
-    const int LEFT = 1;   // 0001
-    const int RIGHT = 2;  // 0010
-    const int BOTTOM = 4; // 0100
-    const int TOP = 8;    // 1000
+    FRect clippingRect = iClippingRect;
     
-    int xMax;
-    int yMax;
-    int xMin;
-    int yMin;
-    
-    if( iClippingRect.Area() != 0 )
+    if( clippingRect.Area() == 0 )
     {
-        xMax = iClippingRect.x + iClippingRect.w;
-        yMax = iClippingRect.y + iClippingRect.h;
-        xMin = iClippingRect.x;
-        yMin = iClippingRect.y;
-    }
-    else
-    {
-        xMax = iBlock->Width() - 1;
-        yMax = iBlock->Height() - 1;
-        xMin = 0;
-        yMin = 0;
+        clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
     }
     
+    int xMax = clippingRect.x + clippingRect.w;
+    int yMax = clippingRect.y + clippingRect.h;
+    int xMin = clippingRect.x;
+    int yMin = clippingRect.y;
     
-    auto ComputeCodeForPoint = [&xMax, &yMax, &xMin, &yMin] (const FPoint iPoint)
-    {
-        // initialized as being inside
-        int code = INSIDE;
-      
-        if (iPoint.x < xMin)       // to the left of rectangle
-            code |= LEFT;
-        else if (iPoint.x > xMax)  // to the right of rectangle
-            code |= RIGHT;
-        if (iPoint.y < yMin)       // above the rectangle
-            code |= TOP;
-        else if (iPoint.y > yMax)  // below the rectangle
-            code |= BOTTOM;
-      
-        return code;
-    };
-    
-    int codeP0 = ComputeCodeForPoint( p0 );
-    int codeP1 = ComputeCodeForPoint( p1 );
+    int codeP0 = ComputeCodeForPoint( p0, clippingRect );
+    int codeP1 = ComputeCodeForPoint( p1, clippingRect );
     
     bool accept = false;
 
@@ -335,25 +300,25 @@ static void DrawLineAA( TBlock< _SH >*            iBlock
             // Find intersection point;
             // using formulas y = y1 + slope * (x - x1),
             // x = x1 + (1 / slope) * (y - y1)
-            if (code_out & BOTTOM)
+            if (code_out & eClippingZone::kBot)
             {
                 // point is above the clip rectangle
                 x = p0.x + (p1.x - p0.x) * (yMax - p0.y) / (p1.y - p0.y);
                 y = yMax;
             }
-            else if (code_out & TOP)
+            else if (code_out & eClippingZone::kTop)
             {
                 // point is below the rectangle
                 x = p0.x + (p1.x - p0.x) * (yMin - p0.y) / (p1.y - p0.y);
                 y = yMin;
             }
-            else if (code_out & RIGHT)
+            else if (code_out & eClippingZone::kRight)
             {
                 // point is to the right of rectangle
                 y = p0.y + (p1.y - p0.y) * (xMax - p0.x) / (p1.x - p0.x);
                 x = xMax;
             }
-            else if (code_out & LEFT)
+            else if (code_out & eClippingZone::kLeft)
             {
                 // point is to the left of rectangle
                 y = p0.y + (p1.y - p0.y) * (xMin - p0.x) / (p1.x - p0.x);
@@ -367,13 +332,13 @@ static void DrawLineAA( TBlock< _SH >*            iBlock
             {
                 p0.x = x;
                 p0.y = y;
-                codeP0 = ComputeCodeForPoint(p0);
+                codeP0 = ComputeCodeForPoint(p0, clippingRect);
             }
             else
             {
                 p1.x = x;
                 p1.y = y;
-                codeP1 = ComputeCodeForPoint(p1);
+                codeP1 = ComputeCodeForPoint(p1, clippingRect);
             }
         }
     }
@@ -485,22 +450,60 @@ static void DrawCircleAndres( TBlock< _SH >*            iBlock
                                 , const FPerformanceOptions&        iPerformanceOptions
                                 , bool                     iCallInvalidCB )
 {
-    TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
-
+    //Clipping
     int x = 0;
     int y = iRadius; //We start from the top of the circle for the first octant
+    
+    FRect clippingRect = iClippingRect;
+    
+    if( clippingRect.Area() == 0 )
+    {
+        clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
+    }
+    
+    int point0 = ComputeCodeForPoint( FPoint( iCenter.x, iCenter.y - iRadius ), clippingRect );
+    int point90 = ComputeCodeForPoint( FPoint( iCenter.x + iRadius, iCenter.y ), clippingRect );
+    int point180 = ComputeCodeForPoint( FPoint( iCenter.x, iCenter.y + iRadius ), clippingRect );
+    int point270 = ComputeCodeForPoint( FPoint( iCenter.x - iRadius, iCenter.y ), clippingRect );
+    
+    bool quarter1 = (point0 | point90) == 0 ;
+    bool quarter2 = (point90 | point180) == 0;
+    bool quarter3 = (point180 | point270) == 0;
+    bool quarter4 = (point270 | point0) == 0;
+
+    std::cout << "quarter1: " << quarter1 << " quarter2 " << quarter2 << " quarter3 " << quarter3 << " quarter4 " << quarter4 << std::endl;
+   
+    
+    //Drawing -----
+    TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+    
     int diff = iRadius - 1;
     while (y >= x) //We draw 8 octants
     {
         //If 0° is on top and we turn clockwise
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
-        iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
-        iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
-        iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
-        iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+        if( quarter1 )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+        }
+        
+        if( quarter2 )
+        {
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+        }
+        
+        if( quarter3 )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+        }
+        
+        if( quarter4 )
+        {
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+        }
 
         if( diff >= ( 2 * x ) )
         {
