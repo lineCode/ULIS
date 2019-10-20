@@ -21,7 +21,8 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 220, 220, ::ULIS::FBlockRGBA8::TypeId() );
     ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
     ::ULIS::FClearFillContext::Fill( blockB, ::ULIS::CColor( 255, 0, 0 ) );
-    ::ULIS::FClearFillContext::Fill( blockA, ::ULIS::CColor( 0, 255, 0 ) );
+    ::ULIS::FClearFillContext::Fill( blockA, ::ULIS::CColor( 0, 0, 0, 0 ) );
+    ::ULIS::FPainterContext::DrawCircleAndres( blockA, ::ULIS::FPoint( 110, 110 ), 80, ::ULIS::CColor( 0, 0, 0, 255 ), true );
 
     ::ULIS::FPerformanceOptions opt;
     opt.desired_workers = 1;

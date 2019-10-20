@@ -688,7 +688,6 @@ static void DrawArcAndres(  TBlock< _SH >*            iBlock
         if( octantsToDraw[6] == 1 ) iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
         if( octantsToDraw[7] == 1 ) iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
 
-
         // Complex cases
         if( octantsToDraw[0] == 2)
         {
@@ -2387,7 +2386,6 @@ static void DrawQuadraticBezierAA( TBlock< _SH>*                   iBlock
         pt1.x = std::floor( dx + 0.5 );
         pt0.x = x;
         pt0.y = pt1.y = y;
-
     }
     InternalDrawQuadRationalBezierSegAA( iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB  );
 }

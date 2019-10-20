@@ -47,7 +47,6 @@ public:
         using tPixelInfo                = TPixelInfo< _SH >;
         using tBlockInfo                = TBlockInfo< _SH >;
 
-
         // Base ptrs for scanlines
         tPixelType* backPixelPtr    = iBlockBack->PixelPtr( iX1, iLine );
         tPixelType* topPixelPtr     = iBlockTop->PixelPtr( iX1 + iShift.x, iLine + iShift.y );

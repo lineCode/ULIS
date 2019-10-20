@@ -61,6 +61,10 @@ public:
         mOldPos = QPoint();
 
         mBlock = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
+        mOverlay = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
+        mOverlay2 = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
+        FFXContext::VoronoiNoise( mOverlay, 200 );
+        FFXContext::Clouds( mOverlay2 );
         mMiniBlock = FMakeContext::MakeBlock( mN + 2, mN + 2, Format::Format_RGBA8 );
         ::ULIS::FClearFillContext::Fill( mBlock, ::ULIS::CColor( 0, 255, 0 ) );
         mImage = new QImage( mBlock->DataPtr(), mBlock->Width(), mBlock->Height(), mBlock->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
@@ -81,6 +85,8 @@ public:
         delete  mLabel;
         delete  mImage;
         delete  mBlock;
+        delete  mOverlay;
+        delete  mOverlay2;
 
         free( mU );
         free( mV );
@@ -171,6 +177,10 @@ private:
         FPerformanceOptions opt;
         opt.desired_workers = 64;
         FTransformContext::TransformInto( mMiniBlock, mBlock, FTransformContext::GetScaleMatrix( scale, scale ), eResamplingMethod::kBilinear, opt );
+        FBlendingContext::Blend( mOverlay, mBlock, eBlendingMode::kColorBurn, 0, 0, 0.5f );
+        FBlendingContext::Blend( mOverlay2, mBlock, eBlendingMode::kDifference, 0, 0, 0.5f );
+        FBlendingContext::Blend( mOverlay, mBlock, eBlendingMode::kDarken, 0, 0, 0.5f );
+        FBlendingContext::Blend( mOverlay2, mBlock, eBlendingMode::kLinearLight, 0, 0, 0.5f );
         mPixmap.convertFromImage( *mImage );
         mLabel->setPixmap( mPixmap );
     }
@@ -223,6 +233,8 @@ private:
     QPoint mMousePos;
     QPoint mOldPos;
     IBlock*     mBlock;
+    IBlock*     mOverlay;
+    IBlock*     mOverlay2;
     IBlock*     mMiniBlock;
     QImage*     mImage;
     QPixmap     mPixmap;
