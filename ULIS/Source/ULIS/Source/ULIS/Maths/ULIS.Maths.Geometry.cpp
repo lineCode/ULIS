@@ -65,6 +65,12 @@ FRect::operator|( const FRect& iOther ) const
     int y2 = FMath::Max( y + h, iOther.y + iOther.h );
     return  FromMinMax( x1, y1, x2, y2 );
 }
+    
+bool
+FRect::operator==( const FRect& iOther ) const
+{
+    return  ( x == iOther.x && y == iOther.y && w == iOther.w && h == iOther.h );
+}
 
 
 int

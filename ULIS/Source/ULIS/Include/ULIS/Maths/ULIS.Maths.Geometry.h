@@ -42,6 +42,7 @@ struct FRect
     static FRect FromMinMax( int iXMin, int iYMin, int iXMax, int iYMax );
     FRect operator&( const FRect& iOther ) const;
     FRect operator|( const FRect& iOther ) const;
+    bool operator==( const FRect& iOther ) const;
     int Area() const;
 };
 
