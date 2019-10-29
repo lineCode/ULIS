@@ -2697,63 +2697,780 @@ static void DrawCircleBresenhamAA(  TBlock< _SH >*           iBlock
                                     , const FPerformanceOptions&        iPerformanceOptions
                                     , bool                     iCallInvalidCB )
 {
-    TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
-
-    auto MaxAlpha = val.GetAlpha();
-
+    //Clipping -----
     int x = 0;
     int y = iRadius;
-    int diff = 5 - 4 * iRadius;
-    int errMax = 2 * ( 4 * iRadius - 5 );
-    int errMin = 0;
-    while( x <= y )
+    
+    FRect clippingRect = iClippingRect;
+    
+    if( clippingRect.Area() == 0 )
     {
-        if( diff > 0 )
+        clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
+    }
+    
+    int shift45 = std::sin( FMath::DegToRad( 45 ) ) * iRadius;
+    FPoint point0 = FPoint( iCenter.x, iCenter.y - iRadius );
+    FPoint point45 = FPoint( iCenter.x + shift45, iCenter.y - shift45 );
+    FPoint point90 = FPoint( iCenter.x + iRadius, iCenter.y );
+    FPoint point135 = FPoint( iCenter.x + shift45, iCenter.y + shift45 );
+    FPoint point180 = FPoint( iCenter.x, iCenter.y + iRadius );
+    FPoint point225 = FPoint( iCenter.x - shift45, iCenter.y + shift45 );
+    FPoint point270 = FPoint( iCenter.x - iRadius, iCenter.y );
+    FPoint point315 = FPoint( iCenter.x - shift45, iCenter.y - shift45 );
+    
+    FRect rectOctant1 = FRect( point0.x, point0.y - 1, point45.x - point0.x, point45.y - point0.y );
+    FRect rectOctant2 = FRect( point45.x + 1, point45.y, point90.x - point45.x, point90.y - point45.y );
+    FRect rectOctant3 = FRect( point135.x + 1, point90.y, point90.x - point135.x, point135.y - point90.y );
+    FRect rectOctant4 = FRect( point180.x, point135.y + 1, point135.x - point180.x, point180.y - point135.y );
+    FRect rectOctant5 = FRect( point225.x, point225.y + 1, point180.x - point225.x, point180.y - point225.y );
+    FRect rectOctant6 = FRect( point270.x - 1, point270.y, point225.x - point270.x, point225.y - point270.y );
+    FRect rectOctant7 = FRect( point270.x - 1, point315.y, point315.x - point270.x, point270.y - point315.y );
+    FRect rectOctant8 = FRect( point315.x, point0.y - 1, point0.x - point315.x, point315.y - point0.y );
+    
+    FRect rectOctant1Clipped = rectOctant1 & clippingRect;
+    FRect rectOctant2Clipped = rectOctant2 & clippingRect;
+    FRect rectOctant3Clipped = rectOctant3 & clippingRect;
+    FRect rectOctant4Clipped = rectOctant4 & clippingRect;
+    FRect rectOctant5Clipped = rectOctant5 & clippingRect;
+    FRect rectOctant6Clipped = rectOctant6 & clippingRect;
+    FRect rectOctant7Clipped = rectOctant7 & clippingRect;
+    FRect rectOctant8Clipped = rectOctant8 & clippingRect;
+
+    // 0 : Don't draw the octant. 1: Draw fully the octant. 2: Partial draw of the octant (complex case)
+    int drawRectOctant1 = rectOctant1Clipped == rectOctant1 ? 1 : rectOctant1Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant2 = rectOctant2Clipped == rectOctant2 ? 1 : rectOctant2Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant3 = rectOctant3Clipped == rectOctant3 ? 1 : rectOctant3Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant4 = rectOctant4Clipped == rectOctant4 ? 1 : rectOctant4Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant5 = rectOctant5Clipped == rectOctant5 ? 1 : rectOctant5Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant6 = rectOctant6Clipped == rectOctant6 ? 1 : rectOctant6Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant7 = rectOctant7Clipped == rectOctant7 ? 1 : rectOctant7Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant8 = rectOctant8Clipped == rectOctant8 ? 1 : rectOctant8Clipped.Area() != 0 ? 2 : 0;
+    
+    // Drawing ------
+    TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+    
+    auto MaxAlpha = val.GetAlpha();
+
+    //0° is on top and we turn clockwise
+    //Octant 1 ------
+    if( drawRectOctant1 == 1)
+    {
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+    
+        while (y >= x)
         {
-            y--;
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
         }
+    }
+    else if( drawRectOctant1 == 2 )
+    {
+        int xx = rectOctant1.x;
+        int yy = rectOctant1.y;
+        int limitX = rectOctant1Clipped.w + rectOctant1Clipped.x;
+        int limitY = rectOctant1Clipped.h + rectOctant1Clipped.y;
 
-        float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
-
-        val.SetAlpha( MaxAlpha * alphaTop );
-
-        //If 0° is on top and we turn clockwise
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
-        iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
-        iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
-        iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
-        iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
-
-
-        val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
-
-        //We anti-aliase towards the exterior of the circle
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
-        iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y - x, val ); // 90° to 45°
-        iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y + x, val ); // 90° to 135°
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
-        iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y + x, val );  // 270° to 225°
-        iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y - x, val ); // 270° to 315°
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
-
-        if( iFilled )
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        
+        while ( xx < rectOctant1Clipped.x || yy < rectOctant1Clipped.y )
         {
+            if( diff > 0 )
+            {
+                y--; yy++;
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            
+            x++; xx++;
+            diff = diff + 8 * x + 4;
+        }
+        
+        while (xx <= limitX && yy <= limitY )
+        {
+           if( diff > 0 )
+            {
+                y--; yy++;
+            }
+
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++; xx++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+
+    //Octant 2 ------
+    x = 0;
+    y = iRadius;
+    if( drawRectOctant2 == 1)
+    {
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+    
+        while (y >= x)
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y - x, val ); // 90° to 45°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    else if( drawRectOctant2 == 2 )
+    {
+        int xx = rectOctant2.x + rectOctant2.w;
+        int yy = rectOctant2.y + rectOctant2.h;
+        int limitX = rectOctant2Clipped.x;
+        int limitY = rectOctant2Clipped.y;
+
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        
+        while ( xx > rectOctant2Clipped.x + rectOctant2Clipped.w || yy > rectOctant2Clipped.y + rectOctant2Clipped.h )
+        {
+            if( diff > 0 )
+            {
+                y--; xx--;
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            
+            x++; yy--;
+            diff = diff + 8 * x + 4;
+        }
+        
+        while (xx >= limitX && yy >= limitY )
+        {
+           if( diff > 0 )
+            {
+                y--; xx--;
+            }
+
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y - x, val ); // 90° to 45°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++; yy--;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    
+    //Octant 3 ------
+    x = 0;
+    y = iRadius;
+    if( drawRectOctant3 == 1)
+    {
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+    
+        while (y >= x)
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y + x, val ); // 90° to 135°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    else if( drawRectOctant3 == 2 )
+    {
+        int xx = rectOctant3.x + rectOctant3.w;
+        int yy = rectOctant3.y;
+        int limitX = rectOctant3Clipped.x;
+        int limitY = rectOctant3Clipped.y + rectOctant3Clipped.h;
+
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        
+        while ( xx > rectOctant3Clipped.x + rectOctant3Clipped.w || yy < rectOctant3Clipped.y )
+        {
+            if( diff > 0 )
+            {
+                y--; xx--;
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            
+            x++; yy++;
+            diff = diff + 8 * x + 4;
+        }
+        
+        while (xx >= limitX && yy <= limitY )
+        {
+           if( diff > 0 )
+            {
+                y--; xx--;
+            }
+
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + y + 1, iCenter.y + x, val ); // 90° to 135°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++; yy++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    
+    //Octant 4 ------
+    x = 0;
+    y = iRadius;
+    if( drawRectOctant4 == 1)
+    {
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+    
+        while (y >= x)
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    else if( drawRectOctant4 == 2 )
+    {
+        int xx = rectOctant4.x;
+        int yy = rectOctant4.y + rectOctant4.h;
+        int limitX = rectOctant4Clipped.x + rectOctant4Clipped.w;
+        int limitY = rectOctant4Clipped.y;
+
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        
+        while ( xx < rectOctant4Clipped.x || yy > rectOctant4Clipped.y + rectOctant4Clipped.h )
+        {
+            if( diff > 0 )
+            {
+                y--; yy--;
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            
+            x++; xx++;
+            diff = diff + 8 * x + 4;
+        }
+        
+        while (xx <= limitX && yy >= limitY )
+        {
+           if( diff > 0 )
+            {
+                y--; yy--;
+            }
+
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++; xx++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    
+    //Octant 5 ------
+    x = 0;
+    y = iRadius;
+    if( drawRectOctant5 == 1)
+    {
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+    
+        while (y >= x)
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    else if( drawRectOctant5 == 2 )
+    {
+        int xx = rectOctant5.x + rectOctant5.w;
+        int yy = rectOctant5.y + rectOctant5.h;
+        int limitX = rectOctant5Clipped.x;
+        int limitY = rectOctant5Clipped.y;
+        
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        
+        while ( xx > rectOctant5Clipped.x + rectOctant5Clipped.w || yy > rectOctant5Clipped.y + rectOctant5Clipped.h )
+        {
+            if( diff > 0 )
+            {
+                y--; yy--;
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            
+            x++; xx--;
+            diff = diff + 8 * x + 4;
+        }
+        
+        while (xx >= limitX && yy >= limitY )
+        {
+           if( diff > 0 )
+            {
+                y--; yy--;
+            }
+
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++; xx--;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    
+    //Octant 6 ------
+    x = 0;
+    y = iRadius;
+    if( drawRectOctant6 == 1)
+    {
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+    
+        while (y >= x)
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y + x, val );  // 270° to 225°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    else if( drawRectOctant6 == 2 )
+    {
+        int xx = rectOctant6.x;
+        int yy = rectOctant6.y;
+        int limitX = rectOctant6Clipped.x + rectOctant6Clipped.w;
+        int limitY = rectOctant6Clipped.y + rectOctant6Clipped.h;
+        
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        
+        while ( xx < rectOctant6Clipped.x || yy < rectOctant6Clipped.y )
+        {
+            if( diff > 0 )
+            {
+                y--; xx++;
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            
+            x++; yy++;
+            diff = diff + 8 * x + 4;
+        }
+        
+        while (xx <= limitX && yy <= limitY )
+        {
+           if( diff > 0 )
+            {
+                y--; xx++;
+            }
+
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y + x, val );  // 270° to 225°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++; yy++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    
+    //Octant 7 ------
+    x = 0;
+    y = iRadius;
+    if( drawRectOctant7 == 1)
+    {
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+    
+        while (y >= x)
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y - x, val ); // 270° to 315°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    else if( drawRectOctant7 == 2 )
+    {
+        int xx = rectOctant7.x;
+        int yy = rectOctant7.y + rectOctant7.h;
+        int limitX = rectOctant7Clipped.x + rectOctant7Clipped.w;
+        int limitY = rectOctant7Clipped.y;
+        
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        
+        while ( xx < rectOctant7Clipped.x || yy > rectOctant7Clipped.y + rectOctant7Clipped.h )
+        {
+            if( diff > 0 )
+            {
+                y--; xx++;
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            
+            x++; yy--;
+            diff = diff + 8 * x + 4;
+        }
+        
+        while (xx <= limitX && yy >= limitY )
+        {
+           if( diff > 0 )
+            {
+                y--; xx++;
+            }
+
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x - y - 1, iCenter.y - x, val ); // 270° to 315°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++; yy--;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    
+    //Octant 8 ------
+    x = 0;
+    y = iRadius;
+    if( drawRectOctant8 == 1)
+    {
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+    
+        while (y >= x)
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    else if( drawRectOctant8 == 2 )
+    {
+        int xx = rectOctant8.x + rectOctant8.w;
+        int yy = rectOctant8.y;
+        int limitX = rectOctant8Clipped.x;
+        int limitY = rectOctant8Clipped.y + rectOctant8Clipped.h;
+        
+        int diff = 5 - 4 * iRadius;
+        int errMax = 2 * ( 4 * iRadius - 5 );
+        int errMin = 0;
+        
+        while ( xx > rectOctant8Clipped.x + rectOctant8Clipped.w || yy < rectOctant8Clipped.y )
+        {
+            if( diff > 0 )
+            {
+                y--; yy++;
+            }
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            
+            x++; xx--;
+            diff = diff + 8 * x + 4;
+        }
+        
+        while (xx >= limitX && yy <= limitY )
+        {
+           if( diff > 0 )
+            {
+                y--; yy++;
+            }
+
+            float alphaTop = 1 - FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
+            
+            val.SetAlpha( MaxAlpha * alphaTop );
+            
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            
+            val.SetAlpha( MaxAlpha * (1 - alphaTop ) );
+            
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++; xx--;
+            diff = diff + 8 * x + 4;
+        }
+    }
+    
+    //Filled
+    if( iFilled )
+    {
+        x = 0;
+        y = iRadius;
+        int diff = 5 - 4 * iRadius;
+        while( x <= y )
+        {
+            if( diff > 0 )
+            {
+                y--;
+            }
+            
             DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             DrawLine( iBlock, FPoint( iCenter.x + y, iCenter.y - x ), FPoint( iCenter.x + y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             DrawLine( iBlock, FPoint( iCenter.x - y, iCenter.y - x ), FPoint( iCenter.x - y, iCenter.y + x ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            
+            if( diff > 0 )
+            {
+                diff = diff - 8 * y;
+            }
+            x++;
+            diff = diff + 8 * x + 4;
         }
-
-        if( diff > 0 )
-        {
-            diff = diff - 8 * y;
-        }
-        x++;
-        diff = diff + 8 * x + 4;
     }
 }
 
