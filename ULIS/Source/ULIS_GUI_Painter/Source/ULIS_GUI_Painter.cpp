@@ -89,10 +89,10 @@ int main( int argc, char *argv[] )
 
     //::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(250,300), 78, ::ULIS::CColor( 0, 255 ,0 ), true );
     //::ULIS::FPainterContext::DrawCircleAndres( block, ::ULIS::FPoint(150,200), 200, ::ULIS::CColor( 255, 0 ,0 ), true );
-    ::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(1000,1000), 180, ::ULIS::CColor( 255, 0 ,0 ), true );
-    ::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(-50,-50), 180, ::ULIS::CColor( 255, 0 ,0 ), true );
-    ::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(-50,1000), 180, ::ULIS::CColor( 255, 0 ,0 ), true );
-    ::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(1000,-50), 180, ::ULIS::CColor( 255, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(1000,1000), 180, ::ULIS::CColor( 255, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(-50,-50), 180, ::ULIS::CColor( 255, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(-50,1000), 180, ::ULIS::CColor( 255, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawCircleBresenhamAA( block, ::ULIS::FPoint(1000,-50), 180, ::ULIS::CColor( 255, 0 ,0 ), true );
 
 
     /*::ULIS::FPainterContext::DrawCircleBresenham( block, ::ULIS::FPoint(250,300), 78, ::ULIS::CColor( 0, 255 ,0 ), true );
@@ -115,7 +115,7 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 50, 301, 28, ::ULIS::CColor( 0, 0 ,0 ) );
     */
     
-    //::ULIS::FPainterContext::DrawArcAndres( block, ::ULIS::FPoint(500,250), 200, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,250), 200, 154, 164, ::ULIS::CColor( 255, 0 ,0 ) );
     //::ULIS::FPainterContext::DrawArcAndresAA( block, ::ULIS::FPoint(500,750), 200, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
     
     //::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,250), 190, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
