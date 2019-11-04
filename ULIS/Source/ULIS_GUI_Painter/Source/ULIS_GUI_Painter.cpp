@@ -123,7 +123,8 @@ int main( int argc, char *argv[] )
 
     ::ULIS::FPainterContext::DrawArcBresenhamAA( block, ::ULIS::FPoint(500,500), 195, 0, 180, ::ULIS::CColor( 255, 0 ,0 ) );
 
-    
+    ::ULIS::FPainterContext::DrawRectangle( block, ::ULIS::FPoint(800,800), ::ULIS::FPoint(1300,1350), ::ULIS::CColor( 255, 0 ,0 ), false );
+
 
     //Rectangles
     /*

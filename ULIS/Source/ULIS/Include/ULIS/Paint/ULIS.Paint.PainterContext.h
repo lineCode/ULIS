@@ -7693,12 +7693,19 @@ static void DrawRectangle( TBlock< _SH >*                   iBlock
                             , const FPerformanceOptions&    iPerformanceOptions
                             , bool                          iCallInvalidCB )
 {
-    const int xmin = FMath::Min( iTopLeft.x, iBottomRight.x );
-    const int ymin = FMath::Min( iTopLeft.y, iBottomRight.y );
-    const int xmax = FMath::Max( iTopLeft.x, iBottomRight.x );
-    const int ymax = FMath::Max( iTopLeft.y, iBottomRight.y );
-    const int width = xmax - xmin;
-    const int height = ymax - ymin;
+    FRect clippingRect = iClippingRect;
+    
+    if( clippingRect.Area() == 0 )
+    {
+        clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
+    }
+    
+    const int xmin = FMath::Min3( iTopLeft.x, iBottomRight.x, clippingRect.x + clippingRect.w );
+    const int ymin = FMath::Min3( iTopLeft.y, iBottomRight.y, clippingRect.y + clippingRect.h );
+    const int xmax = FMath::Max3( iTopLeft.x, iBottomRight.x, clippingRect.x );
+    const int ymax = FMath::Max3( iTopLeft.y, iBottomRight.y, clippingRect.y );
+    const int width = FMath::Max( xmax - xmin, 0 );
+    const int height = FMath::Max( ymax - ymin, 0 );
     if( iFilled )
     {
         const FRect rect = FRect( xmin, ymin, width, height );
