@@ -115,12 +115,15 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 50, 301, 28, ::ULIS::CColor( 0, 0 ,0 ) );
     */
     
-    ::ULIS::FPainterContext::DrawArcAndresAA( block, ::ULIS::FPoint(250,250), 200, 1, 170, ::ULIS::CColor( 255, 0 ,0 ) );
-    //::ULIS::FPainterContext::DrawArcAndresAA( block, ::ULIS::FPoint(500,750), 200, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(-20,-20), 200, 1, 359, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(1000,30), 200, 1, 359, ::ULIS::CColor( 255, 0 ,0 ) );
     
-    //::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,250), 190, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
-    //::ULIS::FPainterContext::DrawArcBresenhamAA( block, ::ULIS::FPoint(500,750), 190, 25, 172, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(1000,1003), 200, 1, 359, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(10,1004), 200, 1, 359, ::ULIS::CColor( 255, 0 ,0 ) );
 
+    ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 200, 1, 324, ::ULIS::CColor( 255, 0 ,0 ) );
+
+    
 
     //Rectangles
     /*
