@@ -76,18 +76,21 @@ public class ULIS : ModuleRules
             PublicLibraryPaths.Add( LibBaseRelease );
             PublicLibraryPaths.Add( LibBaseDebug );
 
+            string LibBaseFull = LibBaseRelease;
+
             string ULIS_LibName         = "libULIS1.0";
             string LittleCMS_LibName    = "liblcms2";
-
+            
             if (Target.Configuration == UnrealTargetConfiguration.Debug && Target.bDebugBuildsActuallyUseDebugCRT) {
                     ULIS_LibName        += "d";
                     LittleCMS_LibName   += "d";
+                    LibBaseFull = LibBaseDebug;
             }
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                      ULIS_LibName + ".a"
-                    , LittleCMS_LibName + ".a"
+                    Path.Combine( LibBaseFull, ULIS_LibName ) + ".a",
+                    Path.Combine( LibBaseFull, LittleCMS_LibName ) + ".a"
                 }
             );
 
