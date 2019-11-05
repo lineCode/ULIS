@@ -36,7 +36,7 @@ class TPainterContext
 //Functions used for clipping of forms
 private:
     
-    static const int ComputeCodeForPoint ( const FPoint& iPoint, const FRect& iClippingRect )
+    static const int InternalComputeCodeForPoint ( const FPoint& iPoint, const FRect& iClippingRect )
     {
         // initialized as being inside
         int code = eClippingZone::kInside;
@@ -51,7 +51,95 @@ private:
             code |= eClippingZone::kBot;
       
         return code;
-    };
+    }
+    
+    // Returns true if ioP0 and ioP1 are different at the end of the algorithm
+    static const bool InternalCropLineToRectangle( FPoint& ioP0, FPoint& ioP1, const FRect& iClippingRect )
+    {
+        int xMax = iClippingRect.x + iClippingRect.w;
+        int yMax = iClippingRect.y + iClippingRect.h;
+        int xMin = iClippingRect.x;
+        int yMin = iClippingRect.y;
+        
+        tClippingCode codeP0 = InternalComputeCodeForPoint( ioP0, iClippingRect );
+        tClippingCode codeP1 = InternalComputeCodeForPoint( ioP1, iClippingRect );
+        bool accept = false;
+
+        while (true)
+        {
+            if ((codeP0 == 0) && (codeP1 == 0))
+            {
+                // If both endpoints lie within rectangle
+                accept = true;
+                break;
+            }
+            else if (codeP0 & codeP1)
+            {
+                // If both endpoints are outside rectangle,
+                // in same region
+                break;
+            }
+            else
+            {
+                // Some segment of line lies within the
+                // rectangle
+                tClippingCode code_out;
+                double x, y;
+      
+                // At least one endpoint is outside the
+                // rectangle, pick it.
+                if (codeP0 != 0)
+                    code_out = codeP0;
+                else
+                    code_out = codeP1;
+      
+                // Find intersection point;
+                // using formulas y = y1 + slope * (x - x1),
+                // x = x1 + (1 / slope) * (y - y1)
+                if (code_out & eClippingZone::kBot)
+                {
+                    // point is above the clip rectangle
+                    x = ioP0.x + (ioP1.x - ioP0.x) * (yMax - ioP0.y) / (ioP1.y - ioP0.y);
+                    y = yMax;
+                }
+                else if (code_out & eClippingZone::kTop)
+                {
+                    // point is below the rectangle
+                    x = ioP0.x + (ioP1.x - ioP0.x) * (yMin - ioP0.y) / (ioP1.y - ioP0.y);
+                    y = yMin;
+                }
+                else if (code_out & eClippingZone::kRight)
+                {
+                    // point is to the right of rectangle
+                    y = ioP0.y + (ioP1.y - ioP0.y) * (xMax - ioP0.x) / (ioP1.x - ioP0.x);
+                    x = xMax;
+                }
+                else if (code_out & eClippingZone::kLeft)
+                {
+                    // point is to the left of rectangle
+                    y = ioP0.y + (ioP1.y - ioP0.y) * (xMin - ioP0.x) / (ioP1.x - ioP0.x);
+                    x = xMin;
+                }
+      
+                // Now intersection point x,y is found
+                // We replace point outside rectangle
+                // by intersection point
+                if (code_out == codeP0)
+                {
+                    ioP0.x = x;
+                    ioP0.y = y;
+                    codeP0 = InternalComputeCodeForPoint(ioP0, iClippingRect);
+                }
+                else
+                {
+                    ioP1.x = x;
+                    ioP1.y = y;
+                    codeP1 = InternalComputeCodeForPoint(ioP1, iClippingRect);
+                }
+            }
+        }
+        return accept;
+    }
     
 // -----------------------------------------------------------
     
@@ -77,90 +165,7 @@ static void DrawLine( TBlock< _SH >*                        iBlock
         clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
     }
     
-    int xMax = clippingRect.x + clippingRect.w;
-    int yMax = clippingRect.y + clippingRect.h;
-    int xMin = clippingRect.x;
-    int yMin = clippingRect.y;
-    
-    tClippingCode codeP0 = ComputeCodeForPoint( p0, clippingRect );
-    tClippingCode codeP1 = ComputeCodeForPoint( p1, clippingRect );
-    bool accept = false;
-
-    while (true)
-    {
-        if ((codeP0 == 0) && (codeP1 == 0))
-        {
-            // If both endpoints lie within rectangle
-            accept = true;
-            break;
-        }
-        else if (codeP0 & codeP1)
-        {
-            // If both endpoints are outside rectangle,
-            // in same region
-            break;
-        }
-        else
-        {
-            // Some segment of line lies within the
-            // rectangle
-            tClippingCode code_out;
-            double x, y;
-  
-            // At least one endpoint is outside the
-            // rectangle, pick it.
-            if (codeP0 != 0)
-                code_out = codeP0;
-            else
-                code_out = codeP1;
-  
-            // Find intersection point;
-            // using formulas y = y1 + slope * (x - x1),
-            // x = x1 + (1 / slope) * (y - y1)
-            if (code_out & eClippingZone::kBot)
-            {
-                // point is above the clip rectangle
-                x = p0.x + (p1.x - p0.x) * (yMax - p0.y) / (p1.y - p0.y);
-                y = yMax;
-            }
-            else if (code_out & eClippingZone::kTop)
-            {
-                // point is below the rectangle
-                x = p0.x + (p1.x - p0.x) * (yMin - p0.y) / (p1.y - p0.y);
-                y = yMin;
-            }
-            else if (code_out & eClippingZone::kRight)
-            {
-                // point is to the right of rectangle
-                y = p0.y + (p1.y - p0.y) * (xMax - p0.x) / (p1.x - p0.x);
-                x = xMax;
-            }
-            else if (code_out & eClippingZone::kLeft)
-            {
-                // point is to the left of rectangle
-                y = p0.y + (p1.y - p0.y) * (xMin - p0.x) / (p1.x - p0.x);
-                x = xMin;
-            }
-  
-            // Now intersection point x,y is found
-            // We replace point outside rectangle
-            // by intersection point
-            if (code_out == codeP0)
-            {
-                p0.x = x;
-                p0.y = y;
-                codeP0 = ComputeCodeForPoint(p0, clippingRect);
-            }
-            else
-            {
-                p1.x = x;
-                p1.y = y;
-                codeP1 = ComputeCodeForPoint(p1, clippingRect);
-            }
-        }
-    }
-    
-    if( !accept )
+    if( !InternalCropLineToRectangle( p0, p1, clippingRect ) )
         return; //Nothing to draw
     
     //Drawing ----
@@ -264,8 +269,8 @@ static void DrawLineAA( TBlock< _SH >*            iBlock
     int xMin = clippingRect.x;
     int yMin = clippingRect.y;
     
-    int codeP0 = ComputeCodeForPoint( p0, clippingRect );
-    int codeP1 = ComputeCodeForPoint( p1, clippingRect );
+    int codeP0 = InternalComputeCodeForPoint( p0, clippingRect );
+    int codeP1 = InternalComputeCodeForPoint( p1, clippingRect );
     
     bool accept = false;
 
@@ -332,13 +337,13 @@ static void DrawLineAA( TBlock< _SH >*            iBlock
             {
                 p0.x = x;
                 p0.y = y;
-                codeP0 = ComputeCodeForPoint(p0, clippingRect);
+                codeP0 = InternalComputeCodeForPoint(p0, clippingRect);
             }
             else
             {
                 p1.x = x;
                 p1.y = y;
-                codeP1 = ComputeCodeForPoint(p1, clippingRect);
+                codeP1 = InternalComputeCodeForPoint(p1, clippingRect);
             }
         }
     }
@@ -7896,7 +7901,7 @@ static void DrawPolygonAA( TBlock< _SH >*               iBlock
                     if( nodesX[i+1] > maxX )
                         nodesX[i+1] = maxX;
 
-                    DrawLine( iBlock, FPoint( nodesX[i], y), FPoint( nodesX[i+1], y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                    DrawLine( iBlock, FPoint( nodesX[i] + 1, y), FPoint( nodesX[i+1], y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
                 }
             }
         }

@@ -134,14 +134,13 @@ int main( int argc, char *argv[] )
     */
 
     //Polygons
-    /*std::vector< ::ULIS::FPoint > star;
+    std::vector< ::ULIS::FPoint > star;
     
-    star.push_back( ::ULIS::FPoint( 500, 200 ) );
-    star.push_back( ::ULIS::FPoint( 666, 750 ) );
-    star.push_back( ::ULIS::FPoint( 250, 333 ) );
-    star.push_back( ::ULIS::FPoint( 750, 333 ) );
-    star.push_back( ::ULIS::FPoint( 333, 750 ) );
-    star.push_back( ::ULIS::FPoint( 333, 750 ) );
+    star.push_back( ::ULIS::FPoint( 500 - 499, 200 ) );
+    star.push_back( ::ULIS::FPoint( 666 - 499, 750 ) );
+    star.push_back( ::ULIS::FPoint( 250 - 499, 333 ) );
+    star.push_back( ::ULIS::FPoint( 750 - 499, 333 ) );
+    star.push_back( ::ULIS::FPoint( 333 - 499, 750 ) );
     
     
     std::vector< ::ULIS::FPoint > pentagon;
@@ -151,19 +150,19 @@ int main( int argc, char *argv[] )
     pentagon.push_back( ::ULIS::FPoint( 333, 750 ) );
     pentagon.push_back( ::ULIS::FPoint( 250, 333 ) );
 
-    for( int i = 0; i < star.size(); i++)
+    /*for( int i = 0; i < star.size(); i++)
     {
         star.at(i) = star.at(i).RotateAround( ::ULIS::FPoint(500, 500), 1.57);
-    }
+    }*/
     
-    for( int i = 0; i < pentagon.size(); i++)
+   /* for( int i = 0; i < pentagon.size(); i++)
     {
         pentagon.at(i) = pentagon.at(i).RotateAround( ::ULIS::FPoint(500, 500), 1.57);
-    }
+    }*/
     
     
-    ::ULIS::FPainterContext::DrawPolygonAA( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );*/
-    //::ULIS::FPainterContext::DrawPolygon( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawPolygonAA( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawPolygonAA( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
     
     //Ellipses
     
