@@ -7468,7 +7468,7 @@ static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
 
     float dx = (long)iA*iA;
     float dy = (long)iB*iB;
-    float s = std::sin( FMath::DegToRad( iRotationDegrees + 90 ) );
+    float s = std::sin( FMath::DegToRad( iRotationDegrees ) );
     float dz = (dx - dy) * s;
     dx = std::sqrt( dx - dz * s );
     dy = std::sqrt( dy + dz * s );
@@ -7480,7 +7480,7 @@ static void DrawRotatedEllipse(  TBlock< _SH >*           iBlock
     int y0 = iCenter.y - b;
     int x1 = iCenter.x + a;
     int y1 = iCenter.y + b;
-    dz = (4 * dz * std::cos( FMath::DegToRad( iRotationDegrees + 90 ) ) );
+    dz = (4 * dz * std::cos( FMath::DegToRad( iRotationDegrees ) ) );
 
 
     dx = x1 - x0;
@@ -7965,7 +7965,36 @@ static void InternalDrawQuadRationalBezierSeg( TBlock< _SH>* iBlock
             return;
         }
         err = dx+dy-xy;
-        do {
+        
+        // Clipping
+        FRect clippingRect = iClippingRect;
+        
+        if( clippingRect.Area() == 0 )
+        {
+            clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
+        }
+        
+        FRect bezierRect = FRect::FromMinMax( FMath::Min3( x0, x1, x2 ), FMath::Min3( y0, y1, y2 ), FMath::Max3( x0, x1, x2 ), FMath::Max3( y0, y1, y2 ) );
+        
+        clippingRect = clippingRect & bezierRect;
+        
+        //Out
+        while( ( x0 < clippingRect.x || x0 > (clippingRect.x + clippingRect.w ) || y0 < clippingRect.y || y0 > (clippingRect.y + clippingRect.h ) ) && ( dy <= xy && dx >= xy ) )
+        {
+            if( iStoragePoints )
+            {
+                (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+            }
+            if (x0 == x2 && y0 == y2)
+                return;
+            x1 = 2 * err > dy; y1 = 2*( err + yy ) < -dy;
+            if (2 * err < dx || y1) { y0 += sy; dy += xy; err += dx += xx; }
+            if (2 * err > dx || x1) { x0 += sx; dx += xy; err += dy += yy; }
+        }
+        
+        //In
+        while ( x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w ) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h ) && ( dy <= xy && dx >= xy ) )
+        {
             iBlock->SetPixelValue( x0, y0, val );
             if( iStoragePoints )
             {
@@ -7976,11 +8005,11 @@ static void InternalDrawQuadRationalBezierSeg( TBlock< _SH>* iBlock
             x1 = 2 * err > dy; y1 = 2*( err + yy ) < -dy;
             if (2 * err < dx || y1) { y0 += sy; dy += xy; err += dx += xx; }
             if (2 * err > dx || x1) { x0 += sx; dx += xy; err += dy += yy; }
-        } while (dy <= xy && dx >= xy);
+        }
     }
     DrawLine( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
 
-    if( iStoragePoints )
+    if( iStoragePoints ) //We go here only when we draw an ellipse with beziers
     {
         if( x0 == x2 && y0 == y2 ) //Corners where we draw a single pixel
         {
@@ -8164,7 +8193,153 @@ static void InternalDrawQuadRationalBezierSegAA( TBlock< _SH>* iBlock
             return;
         }
         err = dx+dy-xy;
-        do
+        
+        // Clipping
+        FRect clippingRect = iClippingRect;
+        
+        if( clippingRect.Area() == 0 )
+        {
+            clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
+        }
+        
+        FRect bezierRect = FRect::FromMinMax( FMath::Min3( x0, x1, x2 ), FMath::Min3( y0, y1, y2 ), FMath::Max3( x0, x1, x2 ), FMath::Max3( y0, y1, y2 ) );
+        
+        clippingRect = clippingRect & bezierRect;
+        
+        if( clippingRect.Area() == 0 )
+            return;
+        
+        //Out
+        while( ( x0 < clippingRect.x || x0 > (clippingRect.x + clippingRect.w ) || y0 < clippingRect.y || y0 > (clippingRect.y + clippingRect.h ) ) && ( dy < dx ) )
+        {
+            cur = FMath::Min( dx - xy, xy - dy );
+            ed = FMath::Max( dx - xy, xy - dy );
+            ed += ( 2 * ed * cur * cur / (4.0 * ed * ed + cur * cur ) );
+
+            float errorRatio = ( err - dx - dy + xy ) / ed;
+
+            x1 = MaxAlpha * ( 1 - FMath::Abs( errorRatio ) );
+            f = (2 * err + dy) < 0;
+
+            if( x1 <= MaxAlpha )
+            {
+                if( iStoragePoints && errorRatio >= 0 )
+                {
+                    (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                }
+            }
+
+            if( f )
+            {
+                if( y0 == y2 )
+                    return;
+                if( ( dx - err ) < ed )
+                {
+                    if( iStoragePoints && errorRatio <= 0 )
+                    {
+                        (*iStoragePoints)[ x0 + sx - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                    }
+                }
+            }
+
+            if( 2 * err + dx > 0 )
+            {
+                if( x0 == x2 )
+                    return;
+                if( ( err - dy ) < ed )
+                {
+                    if( iStoragePoints && errorRatio >= 0 )
+                    {
+                        (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 + sy - (*iStoragePoints)[0][1] );
+                    }
+                }
+                x0 += sx;
+                dx += xy;
+                err += dy += yy;
+            }
+
+            if( f )
+            {
+                y0 += sy;
+                dy += xy;
+                err += dx += xx;
+            }
+        }
+
+        //Border Case
+        while ( ( x0 == clippingRect.x || x0 == (clippingRect.x + clippingRect.w ) || y0 == clippingRect.y || y0 == (clippingRect.y + clippingRect.h ) ) && ( dy < dx ) )
+        {
+            cur = FMath::Min( dx - xy, xy - dy );
+            ed = FMath::Max( dx - xy, xy - dy );
+            ed += ( 2 * ed * cur * cur / (4.0 * ed * ed + cur * cur ) );
+
+            float errorRatio = ( err - dx - dy + xy ) / ed;
+
+            x1 = MaxAlpha * ( 1 - FMath::Abs( errorRatio ) );
+            f = (2 * err + dy) < 0;
+
+            if( x1 <= MaxAlpha )
+            {
+                val.SetAlpha( x1 );
+                iBlock->SetPixelValue( x0, y0, val );
+
+                if( iStoragePoints && errorRatio >= 0 )
+                {
+                    (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                }
+            }
+
+            if( f )
+            {
+                if( y0 == y2 )
+                    return;
+                if( ( dx - err ) < ed )
+                {
+                    //float errorRatio = 1 - ( dx - err ) / ed ;
+                    //float alpha = FMath::Abs( errorRatio );
+
+                    //val.SetAlpha( MaxAlpha * alpha );
+                    //iBlock->SetPixelValue( x0 + sx, y0, val );
+
+                    if( iStoragePoints && errorRatio <= 0 )
+                    {
+                        (*iStoragePoints)[ x0 + sx - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                    }
+                }
+            }
+
+            if( 2 * err + dx > 0 )
+            {
+                if( x0 == x2 )
+                    return;
+                if( ( err - dy ) < ed )
+                {
+                    //float errorRatio = 1 - ( err - dy ) / ed;
+                    //float alpha = FMath::Abs( errorRatio );
+
+                    //val.SetAlpha( MaxAlpha * alpha );
+                    //iBlock->SetPixelValue( x0, y0 + sy, val );
+
+                    if( iStoragePoints && errorRatio >= 0 )
+                    {
+                        (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 + sy - (*iStoragePoints)[0][1] );
+                    }
+                }
+                x0 += sx;
+                dx += xy;
+                err += dy += yy;
+            }
+
+            if( f )
+            {
+                y0 += sy;
+                dy += xy;
+                err += dx += xx;
+            }
+        }
+
+        //In
+        while ( x0 > clippingRect.x && x0 < (clippingRect.x + clippingRect.w ) && y0 > clippingRect.y && y0 < (clippingRect.y + clippingRect.h ) && ( dy < dx ) )
         {
             cur = FMath::Min( dx - xy, xy - dy );
             ed = FMath::Max( dx - xy, xy - dy );
@@ -8233,12 +8408,83 @@ static void InternalDrawQuadRationalBezierSegAA( TBlock< _SH>* iBlock
                 dy += xy;
                 err += dx += xx;
             }
+        }
+        
+        //Border Case
+        while ( ( x0 == clippingRect.x || x0 == (clippingRect.x + clippingRect.w ) || y0 == clippingRect.y || y0 == (clippingRect.y + clippingRect.h ) ) && ( dy < dx ) )
+        {
+            cur = FMath::Min( dx - xy, xy - dy );
+            ed = FMath::Max( dx - xy, xy - dy );
+            ed += ( 2 * ed * cur * cur / (4.0 * ed * ed + cur * cur ) );
 
-        } while (dy < dx);
+            float errorRatio = ( err - dx - dy + xy ) / ed;
+
+            x1 = MaxAlpha * ( 1 - FMath::Abs( errorRatio ) );
+            f = (2 * err + dy) < 0;
+
+            if( x1 <= MaxAlpha )
+            {
+                val.SetAlpha( x1 );
+                iBlock->SetPixelValue( x0, y0, val );
+
+                if( iStoragePoints && errorRatio >= 0 )
+                {
+                    (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                }
+            }
+
+            if( f )
+            {
+                if( y0 == y2 )
+                    return;
+                if( ( dx - err ) < ed )
+                {
+                    //float errorRatio = 1 - ( dx - err ) / ed ;
+                    //float alpha = FMath::Abs( errorRatio );
+
+                    //val.SetAlpha( MaxAlpha * alpha );
+                    //iBlock->SetPixelValue( x0 + sx, y0, val );
+
+                    if( iStoragePoints && errorRatio <= 0 )
+                    {
+                        (*iStoragePoints)[ x0 + sx - (*iStoragePoints)[0][0] ].push_back(y0 - (*iStoragePoints)[0][1] );
+                    }
+                }
+            }
+
+            if( 2 * err + dx > 0 )
+            {
+                if( x0 == x2 )
+                    return;
+                if( ( err - dy ) < ed )
+                {
+                    //float errorRatio = 1 - ( err - dy ) / ed;
+                    //float alpha = FMath::Abs( errorRatio );
+
+                    //val.SetAlpha( MaxAlpha * alpha );
+                    //iBlock->SetPixelValue( x0, y0 + sy, val );
+
+                    if( iStoragePoints && errorRatio >= 0 )
+                    {
+                        (*iStoragePoints)[ x0 - (*iStoragePoints)[0][0] ].push_back(y0 + sy - (*iStoragePoints)[0][1] );
+                    }
+                }
+                x0 += sx;
+                dx += xy;
+                err += dy += yy;
+            }
+
+            if( f )
+            {
+                y0 += sy;
+                dy += xy;
+                err += dx += xx;
+            }
+        }
     }
     DrawLineAA( iBlock, FPoint( x0, y0 ), FPoint( x2, y2 ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
 
-    if( iStoragePoints )
+    if( iStoragePoints ) //We go here only when we draw an ellipse with beziers
     {
         if( x0 == x2 && y0 == y2 ) //Corners where we draw a single pixel
         {

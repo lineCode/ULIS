@@ -115,7 +115,7 @@ int main( int argc, char *argv[] )
     ::ULIS::FPainterContext::DrawArcBresenham( block, ::ULIS::FPoint(500,500), 50, 301, 28, ::ULIS::CColor( 0, 0 ,0 ) );
     */
     
-    ::ULIS::FPainterContext::DrawArcBresenhamAA( block, ::ULIS::FPoint(-20,-20), 200, 1, 359, ::ULIS::CColor( 255, 0 ,0 ) );
+    /*::ULIS::FPainterContext::DrawArcBresenhamAA( block, ::ULIS::FPoint(-20,-20), 200, 1, 359, ::ULIS::CColor( 255, 0 ,0 ) );
     ::ULIS::FPainterContext::DrawArcBresenhamAA( block, ::ULIS::FPoint(1000,30), 200, 1, 359, ::ULIS::CColor( 255, 0 ,0 ) );
     
     ::ULIS::FPainterContext::DrawArcBresenhamAA( block, ::ULIS::FPoint(1000,1003), 200, 1, 359, ::ULIS::CColor( 255, 0 ,0 ) );
@@ -123,7 +123,7 @@ int main( int argc, char *argv[] )
 
     ::ULIS::FPainterContext::DrawArcBresenhamAA( block, ::ULIS::FPoint(500,500), 195, 0, 180, ::ULIS::CColor( 255, 0 ,0 ) );
 
-    ::ULIS::FPainterContext::DrawRectangle( block, ::ULIS::FPoint(800,800), ::ULIS::FPoint(1300,1350), ::ULIS::CColor( 255, 0 ,0 ), false );
+    ::ULIS::FPainterContext::DrawRectangle( block, ::ULIS::FPoint(800,800), ::ULIS::FPoint(1300,1350), ::ULIS::CColor( 255, 0 ,0 ), false );*/
 
 
     //Rectangles
@@ -161,8 +161,8 @@ int main( int argc, char *argv[] )
     }*/
     
     
-    ::ULIS::FPainterContext::DrawPolygonAA( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );
-    ::ULIS::FPainterContext::DrawPolygonAA( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawPolygonAA( block, star, ::ULIS::CColor( 0, 0 ,0 ), true );
+    //::ULIS::FPainterContext::DrawPolygonAA( block, pentagon, ::ULIS::CColor( 0, 0 ,0 ), true );
     
     //Ellipses
     
@@ -190,7 +190,7 @@ int main( int argc, char *argv[] )
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ), true );
     
 
-    //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 750), 200, 100, 0, ::ULIS::CColor( 255, 0 ,0 ) );
+    ::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(200, 750), 400, 100, 45, ::ULIS::CColor( 255, 0 ,0 ) );
     
     //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 750), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ) );
 
@@ -201,11 +201,11 @@ int main( int argc, char *argv[] )
     
     // Beziers
     
-    //ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 500, 500 ), ::ULIS::FPoint( 1000, 250 ), ::ULIS::FPoint( 800, 100 ), 1.0, ::ULIS::CColor( 255, 0 ,0 ) );
+   /* ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 200, 200 ), ::ULIS::FPoint( 400, 200 ), ::ULIS::FPoint( -200, -400 ), 1.0, ::ULIS::CColor( 255, 0 ,0 ) );
     
-    //ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 100, 200 ), ::ULIS::FPoint( 400, 50 ), ::ULIS::FPoint( 800, 700 ), 1.0, ::ULIS::CColor( 255, 255 ,0 ) );
+    ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( -100, -200 ), ::ULIS::FPoint( 400, 50 ), ::ULIS::FPoint( 800, 700 ), 1.0, ::ULIS::CColor( 255, 255 ,0 ) );
     
-    //ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 200, 800 ), ::ULIS::FPoint( 50, 50 ), ::ULIS::FPoint( 500, 300 ), 1.0, ::ULIS::CColor( 0, 255 ,0 ) );
+    ULIS::FPainterContext::DrawQuadraticBezierAA( block, ::ULIS::FPoint( 200, 1200 ), ::ULIS::FPoint( -500, 50 ), ::ULIS::FPoint( 500, 300 ), 1.0, ::ULIS::CColor( 0, 255 ,0 ) );*/
     
 
     // Qt Windowing
