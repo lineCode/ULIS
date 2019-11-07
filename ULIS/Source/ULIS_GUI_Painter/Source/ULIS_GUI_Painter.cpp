@@ -166,13 +166,21 @@ int main( int argc, char *argv[] )
     
     //Ellipses
     
-    /*::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, ::ULIS::CColor( 255, 0 ,0 ), true );
 
-    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, ::ULIS::CColor( 0, 255 ,0 ) );
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(950, 50), 200, 100, ::ULIS::CColor( 0, 255 ,0 ), true );
     
-    ::ULIS::FPainterContext::DrawEllipseAA( block, ::ULIS::FPoint(500, 750), 300, 90, ::ULIS::CColor( 255, 0 ,0 ), true );
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(30, 250), 200, 300, ::ULIS::CColor( 0, 255 ,0 ), true );
+
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(950, 900), 74, 350, ::ULIS::CColor( 0, 255 ,0 ), true );
+
+    ::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(-50, 900), 200, 100, ::ULIS::CColor( 0, 255 ,0 ), true );
+   
+
     
-    ::ULIS::FPainterContext::DrawEllipseAA( block, ::ULIS::FPoint(500, 750), 300, 90, ::ULIS::CColor( 0, 255 ,0 ) );*/
+    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 750), 300, 90, ::ULIS::CColor( 255, 0 ,0 ), true );
+    
+    //::ULIS::FPainterContext::DrawEllipse( block, ::ULIS::FPoint(500, 750), 300, 90, ::ULIS::CColor( 0, 255 ,0 ) );
     
     /*::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 200, 300, 69, ::ULIS::CColor( 0, 0 ,0 ), true );
     ::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 500), 300, 200, 30, ::ULIS::CColor( 0, 0 ,0 ), true );
@@ -190,7 +198,7 @@ int main( int argc, char *argv[] )
     //::ULIS::FPainterContext::DrawRotatedEllipse( block, ::ULIS::FPoint(500, 250), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ), true );
     
 
-    ::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(200, 750), 400, 100, 45, ::ULIS::CColor( 255, 0 ,0 ) );
+    //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(200, 750), 400, 100, 45, ::ULIS::CColor( 255, 0 ,0 ) );
     
     //::ULIS::FPainterContext::DrawRotatedEllipseAA( block, ::ULIS::FPoint(500, 750), 200, 100, 75, ::ULIS::CColor( 0, 255 ,0 ) );
 

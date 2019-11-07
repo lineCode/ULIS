@@ -7270,54 +7270,514 @@ static void DrawEllipse(  TBlock< _SH >*           iBlock
                         , const FPerformanceOptions&        iPerformanceOptions
                         , bool                     iCallInvalidCB )
 {
-    TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+    FRect clippingRect = iClippingRect;
+    
+    if( clippingRect.Area() == 0 )
+    {
+        clippingRect = FRect::FromXYWH(0, 0, iBlock->Width() - 1, iBlock->Height() - 1);
+    }
 
+    float angleTo45 = std::atan( - float(iB) / float(iA) );
+    int shift45x = FMath::Abs( std::cos( angleTo45 ) * iA ) + 1;
+    int shift45y = FMath::Abs( std::sin( angleTo45 ) * iB ) + 1;
+    
+    FPoint point0 = FPoint( iCenter.x, iCenter.y - iB );
+    FPoint point45 = FPoint( iCenter.x + shift45x, iCenter.y - shift45y );
+    FPoint point90 = FPoint( iCenter.x + iA, iCenter.y );
+    FPoint point135 = FPoint( iCenter.x + shift45x, iCenter.y + shift45y );
+    FPoint point180 = FPoint( iCenter.x, iCenter.y + iB );
+    FPoint point225 = FPoint( iCenter.x - shift45x, iCenter.y + shift45y );
+    FPoint point270 = FPoint( iCenter.x - iA, iCenter.y );
+    FPoint point315 = FPoint( iCenter.x - shift45x, iCenter.y - shift45y );
+    
+    FRect rectOctant1 = FRect( point0.x, point0.y, point45.x - point0.x, point45.y - point0.y );
+    FRect rectOctant2 = FRect( point45.x, point45.y, point90.x - point45.x, point90.y - point45.y );
+    FRect rectOctant3 = FRect( point135.x, point90.y, point90.x - point135.x, point135.y - point90.y );
+    FRect rectOctant4 = FRect( point180.x, point135.y, point135.x - point180.x, point180.y - point135.y );
+    FRect rectOctant5 = FRect( point225.x, point225.y, point180.x - point225.x, point180.y - point225.y );
+    FRect rectOctant6 = FRect( point270.x, point270.y, point225.x - point270.x, point225.y - point270.y );
+    FRect rectOctant7 = FRect( point270.x, point315.y, point315.x - point270.x, point270.y - point315.y );
+    FRect rectOctant8 = FRect( point315.x, point0.y, point0.x - point315.x, point315.y - point0.y );
+    
+    FRect rectOctant1Clipped = rectOctant1 & clippingRect;
+    FRect rectOctant2Clipped = rectOctant2 & clippingRect;
+    FRect rectOctant3Clipped = rectOctant3 & clippingRect;
+    FRect rectOctant4Clipped = rectOctant4 & clippingRect;
+    FRect rectOctant5Clipped = rectOctant5 & clippingRect;
+    FRect rectOctant6Clipped = rectOctant6 & clippingRect;
+    FRect rectOctant7Clipped = rectOctant7 & clippingRect;
+    FRect rectOctant8Clipped = rectOctant8 & clippingRect;
+
+    // 0 : Don't draw the octant. 1: Draw fully the octant. 2: Partial draw of the octant (complex case)
+    int drawRectOctant1 = rectOctant1Clipped == rectOctant1 ? 1 : rectOctant1Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant2 = rectOctant2Clipped == rectOctant2 ? 1 : rectOctant2Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant3 = rectOctant3Clipped == rectOctant3 ? 1 : rectOctant3Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant4 = rectOctant4Clipped == rectOctant4 ? 1 : rectOctant4Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant5 = rectOctant5Clipped == rectOctant5 ? 1 : rectOctant5Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant6 = rectOctant6Clipped == rectOctant6 ? 1 : rectOctant6Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant7 = rectOctant7Clipped == rectOctant7 ? 1 : rectOctant7Clipped.Area() != 0 ? 2 : 0;
+    int drawRectOctant8 = rectOctant8Clipped == rectOctant8 ? 1 : rectOctant8Clipped.Area() != 0 ? 2 : 0;
+
+    //Drawing ------
+    TPixelValue< _SH > val = iBlock->PixelValueForColor( iColor );
+    
     int a2 = iA * iA;
     int b2 = iB * iB;
     int fa2 = 4 * a2;
     int fb2 = 4 * b2;
-    int x, y, sigma;
-
-    for( x = 0, y = iB, sigma = 2*b2+a2*(1-2*iB) ; b2 * x <= a2 * y; x++ )
+    int x = 0;
+    int y = iB;
+    int sigma = 2*b2+a2*(1-2*iB);
+    
+    //0° is on top and we turn clockwise
+    //Octant 1 ------
+    if( drawRectOctant1 == 1)
     {
-        if( iFilled )
+        while ( b2 * x <= a2 * y )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--;
+            }
+            sigma += b2*(4 * x + 6);
+            x++;
+        }
+        
+
+    }
+    else if( drawRectOctant1 == 2 )
+    {
+        int xx = rectOctant1.x;
+        int yy = rectOctant1.y;
+        int limitX = rectOctant1Clipped.w + rectOctant1Clipped.x;
+        int limitY = rectOctant1Clipped.h + rectOctant1Clipped.y;
+        
+        while ( xx < rectOctant1Clipped.x || yy < rectOctant1Clipped.y )
+        {
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--; yy++;
+            }
+            sigma += b2*(4 * x + 6);
+            x++; xx++;
+        }
+            
+        while (xx <= limitX && yy <= limitY )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--; yy++;
+            }
+            sigma += b2*(4 * x + 6);
+            x++; xx++;
+        }
+    }
+    
+    //Octant 2 ------
+    x = iA;
+    y = 0;
+    sigma = 2*a2+b2*(1-2*iA);
+    if( drawRectOctant2 == 1)
+    {
+        while ( a2 * y <= b2 * x )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++;
+        }
+    }
+    else if( drawRectOctant2 == 2 )
+    {
+        int xx = rectOctant2.x + rectOctant2.w;
+        int yy = rectOctant2.y + rectOctant2.h;
+        int limitX = rectOctant2Clipped.x;
+        int limitY = rectOctant2Clipped.y;
+    
+        while ( xx > rectOctant2Clipped.x + rectOctant2Clipped.w || yy > rectOctant2Clipped.y + rectOctant2Clipped.h )
+        {
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--; xx--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++; yy--;
+        }
+        
+        while (xx >= limitX && yy >= limitY )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--; xx--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++; yy--;
+        }
+    }
+    
+    //Octant 3 ------
+    x = iA;
+    y = 0;
+    sigma = 2*a2+b2*(1-2*iA);
+    if( drawRectOctant3 == 1)
+    {
+        while ( a2 * y <= b2 * x )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++;
+        }
+    }
+    else if( drawRectOctant3 == 2 )
+    {
+        int xx = rectOctant3.x + rectOctant3.w;
+        int yy = rectOctant3.y;
+        int limitX = rectOctant3Clipped.x;
+        int limitY = rectOctant3Clipped.y + rectOctant3Clipped.h;
+    
+        while ( xx > rectOctant3Clipped.x + rectOctant3Clipped.w || yy < rectOctant3Clipped.y )
+        {
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--; xx--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++; yy++;
+        }
+        
+        while (xx >= limitX && yy <= limitY )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--; xx--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++; yy++;
+        }
+    }
+    
+    //Octant 4 ------
+    x = 0;
+    y = iB;
+    sigma = 2*b2+a2*(1-2*iB);
+    if( drawRectOctant4 == 1)
+    {
+        while ( b2 * x <= a2 * y )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--;
+            }
+            sigma += b2*(4 * x + 6);
+            x++;
+        }
+    }
+    else if( drawRectOctant4 == 2 )
+    {
+        int xx = rectOctant4.x;
+        int yy = rectOctant4.y + rectOctant4.h;
+        int limitX = rectOctant4Clipped.x + rectOctant4Clipped.w;
+        int limitY = rectOctant4Clipped.y;
+    
+        while ( xx < rectOctant4Clipped.x || yy > rectOctant4Clipped.y + rectOctant4Clipped.h )
+        {
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--; yy--;
+            }
+            sigma += b2*(4 * x + 6);
+            x++; xx++;
+        }
+        
+        while (xx <= limitX && yy >= limitY )
+        {
+            iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--; yy--;
+            }
+            sigma += b2*(4 * x + 6);
+            x++; xx++;
+        }
+    }
+    
+    //Octant 5 ------
+    x = 0;
+    y = iB;
+    sigma = 2*b2+a2*(1-2*iB);
+    if( drawRectOctant5 == 1)
+    {
+        while ( b2 * x <= a2 * y )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--;
+            }
+            sigma += b2*(4 * x + 6);
+            x++;
+        }
+    }
+    else if( drawRectOctant5 == 2 )
+    {
+        int xx = rectOctant5.x + rectOctant5.w;
+        int yy = rectOctant5.y + rectOctant5.h;
+        int limitX = rectOctant5Clipped.x;
+        int limitY = rectOctant5Clipped.y;
+    
+        while ( xx > rectOctant5Clipped.x + rectOctant5Clipped.w || yy > rectOctant5Clipped.y + rectOctant5Clipped.h )
+        {
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--; yy--;
+            }
+            sigma += b2*(4 * x + 6);
+            x++; xx--;
+        }
+        
+        while (xx >= limitX && yy >= limitY )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--; yy--;
+            }
+            sigma += b2*(4 * x + 6);
+            x++; xx--;
+        }
+    }
+    
+    //Octant 6 ------
+    x = iA;
+    y = 0;
+    sigma = 2*a2+b2*(1-2*iA);
+    if( drawRectOctant6 == 1)
+    {
+        while ( a2 * y <= b2 * x )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++;
+        }
+    }
+    else if( drawRectOctant6 == 2 )
+    {
+        int xx = rectOctant6.x;
+        int yy = rectOctant6.y;
+        int limitX = rectOctant6Clipped.x + rectOctant6Clipped.w;
+        int limitY = rectOctant6Clipped.y + rectOctant6Clipped.h;
+    
+        while ( xx < rectOctant6Clipped.x || yy < rectOctant6Clipped.y )
+        {
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--; xx++;
+            }
+            sigma += a2*(4 * y + 6);
+            y++; yy++;
+        }
+        
+        while (xx <= limitX && yy <= limitY )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--; xx++;
+            }
+            sigma += a2*(4 * y + 6);
+            y++; yy++;
+        }
+    }
+    
+    //Octant 7 ------
+    x = iA;
+    y = 0;
+    sigma = 2*a2+b2*(1-2*iA);
+    if( drawRectOctant7 == 1)
+    {
+        while ( a2 * y <= b2 * x )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++;
+        }
+    }
+    else if( drawRectOctant7 == 2 )
+    {
+        int xx = rectOctant7.x;
+        int yy = rectOctant7.y + rectOctant7.h;
+        int limitX = rectOctant7Clipped.x + rectOctant7Clipped.w;
+        int limitY = rectOctant7Clipped.y;
+    
+        while ( xx < rectOctant7Clipped.x || yy > rectOctant7Clipped.y + rectOctant7Clipped.h )
+        {
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--; xx++;
+            }
+            sigma += a2*(4 * y + 6);
+            y++; yy--;
+        }
+        
+        while (xx <= limitX && yy >= limitY )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--; xx++;
+            }
+            sigma += a2*(4 * y + 6);
+            y++; yy--;
+        }
+    }
+    
+    
+    //Octant 8 ------
+    x = 0;
+    y = iB;
+    sigma = 2*b2+a2*(1-2*iB);
+    if( drawRectOctant8 == 1)
+    {
+        while ( b2 * x <= a2 * y )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--;
+            }
+            sigma += b2*(4 * x + 6);
+            x++;
+        }
+    }
+    else if( drawRectOctant8 == 2 )
+    {
+        int xx = rectOctant8.x + rectOctant8.w;
+        int yy = rectOctant8.y;
+        int limitX = rectOctant8Clipped.x;
+        int limitY = rectOctant8Clipped.y + rectOctant8Clipped.h;
+    
+        while ( xx > rectOctant8Clipped.x + rectOctant8Clipped.w || yy < rectOctant8Clipped.y )
+        {
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--; yy++;
+            }
+            sigma += b2*(4 * x + 6);
+            x++; xx--;
+        }
+        
+        while (xx >= limitX && yy <= limitY )
+        {
+            iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
+  
+            if( sigma >= 0)
+            {
+                sigma += fa2 * (1 - y);
+                y--; yy++;
+            }
+            sigma += b2*(4 * x + 6);
+            x++; xx--;
+        }
+    }
+    
+    //Fill
+    
+    if( iFilled )
+    {
+        x = 0;
+        y = iB;
+        sigma = 2*b2+a2*(1-2*iB);
+        
+        while ( b2 * x <= a2 * y )
         {
             DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
             DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
-        }
-
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
-
-        if( sigma >= 0)
-        {
-            sigma += fa2 * (1 - y);
-            y--;
-        }
-        sigma += b2*(4 * x + 6);
-    }
-
-    for( x = iA, y = 0, sigma = 2*a2+b2*(1-2*iA) ; a2 * y <= b2 * x; y++ )
-    {
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y + y, val );
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y + y, val );
-        iBlock->SetPixelValue( iCenter.x + x, iCenter.y - y, val );
-        iBlock->SetPixelValue( iCenter.x - x, iCenter.y - y, val );
-
-        if( sigma >= 0)
-        {
-            if( iFilled )
+            
+            if( sigma >= 0)
             {
-                DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
-                DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+                sigma += fa2 * (1 - y);
+                y--;
             }
-            sigma += fb2 * (1 - x);
-            x--;
-
+            sigma += b2*(4 * x + 6);
+            x++;
         }
-        sigma += a2*(4 * y + 6);
+        
+        x = iA;
+        y = 0;
+        sigma = 2*a2+b2*(1-2*iA);
+        
+        while ( a2 * y <= b2 * x )
+        {
+            DrawLine( iBlock, FPoint( iCenter.x + x, iCenter.y - y ), FPoint( iCenter.x + x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            DrawLine( iBlock, FPoint( iCenter.x - x, iCenter.y - y ), FPoint( iCenter.x - x, iCenter.y + y ), iColor, iClippingRect, iPerformanceOptions, iCallInvalidCB );
+            
+            if( sigma >= 0)
+            {
+                sigma += fb2 * (1 - x);
+                x--;
+            }
+            sigma += a2*(4 * y + 6);
+            y++;
+        }
+
     }
 }
 
