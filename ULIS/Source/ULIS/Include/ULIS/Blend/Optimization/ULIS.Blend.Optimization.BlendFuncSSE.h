@@ -147,7 +147,6 @@ ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- VividLight
 ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_START( VividLight )
-    __m128 max255f      = _mm_set_ps1( 255.f );
     __m128 twof         = _mm_set_ps1( 2.f );
     __m128 vcmp         = _mm_cmplt_ps( Cs, _mm_set_ps1( 128.f ) );
     __m128 computedA    = BlendFuncSSE< eBlendingMode::kColorBurn >::Compute( Cb, _mm_mul_ps( twof, Cs ) );
@@ -157,7 +156,6 @@ ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- LinearLight
 ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_START( LinearLight )
-    __m128 max255f      = _mm_set_ps1( 255.f );
     __m128 twof         = _mm_set_ps1( 2.f );
     __m128 vcmp         = _mm_cmplt_ps( Cs, _mm_set_ps1( 128.f ) );
     __m128 computedA    = BlendFuncSSE< eBlendingMode::kLinearBurn >::Compute( Cb, _mm_mul_ps( twof, Cs ) );
@@ -167,7 +165,6 @@ ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- PinLight
 ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_START( PinLight )
-    __m128 max255f      = _mm_set_ps1( 255.f );
     __m128 twof         = _mm_set_ps1( 2.f );
     __m128 vcmp         = _mm_cmplt_ps( Cs, _mm_set_ps1( 128.f ) );
     __m128 computedA    = BlendFuncSSE< eBlendingMode::kDarken >::Compute( Cb, _mm_mul_ps( twof, Cs ) );

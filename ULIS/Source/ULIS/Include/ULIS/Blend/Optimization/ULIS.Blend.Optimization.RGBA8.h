@@ -71,16 +71,15 @@ public:
             __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), max255f ) ) ), max255f );
 
 
-            __m128i y = _mm_cvtps_epi32( elementsResult );                     // Convert them to 32-bit ints
+            __m128i y = _mm_cvtps_epi32( elementsResult );                  // Convert them to 32-bit ints
             y = _mm_packus_epi32(y, y);                                     // Pack down to 16 bits
             y = _mm_packus_epi16(y, y);                                     // Pack down to 8 bits
-            *(uint32*)backPixelPtr = (uint32)_mm_cvtsi128_si32(y);           // Store the lower 32 bits
-            __m128i alpha_result = _mm_cvtps_epi32( alphaResultf );             // Convert them to 32-bit ints
+            *(uint32*)backPixelPtr = (uint32)_mm_cvtsi128_si32(y);          // Store the lower 32 bits
+            __m128i alpha_result = _mm_cvtps_epi32( alphaResultf );         // Convert them to 32-bit ints
             alpha_result = _mm_packus_epi32(alpha_result, alpha_result);    // Pack down to 16 bits
             alpha_result = _mm_packus_epi16(alpha_result, alpha_result);    // Pack down to 8 bits
             uint32 alpha = (uint32)_mm_cvtsi128_si32(alpha_result);         // Store the lower 32 bits
             memcpy( backPixelPtr + alpha_index, &alpha, 1 );
-
 
             backPixelPtr    += tBlockInfo::_nf._pd;
             topPixelPtr     += tBlockInfo::_nf._pd;

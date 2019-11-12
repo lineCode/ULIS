@@ -166,6 +166,8 @@ if( ${ULIS_BUILD_TESTS} )
         include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Transform/CMakeLists.txt)
         include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_FX/CMakeLists.txt)
         include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Fluid/CMakeLists.txt)
+        include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Interp/CMakeLists.txt)
+        include(${CMAKE_CURRENT_SOURCE_DIR}/ULIS_GUI_Interp2/CMakeLists.txt)
     endif()
 endif()
 

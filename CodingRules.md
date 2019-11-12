@@ -45,7 +45,7 @@ The following documents provides the **Coding Rules** for this project.
 - Library includes use brackets:`<>`
 
 ### Member Variables
-- **Member variables** of class should generally be private and start with lowercase prefix "**n**":
+- **Member variables** of class should generally be private and start with lowercase prefix "**m**":
     ```
     uint32 mCount;
     ```
