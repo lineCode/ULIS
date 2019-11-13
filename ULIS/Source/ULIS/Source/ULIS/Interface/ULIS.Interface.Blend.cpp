@@ -19,25 +19,26 @@ namespace ULIS {
 //-------------------------------------------------------------------- Public Static API
 //static
 void
-FBlendingContext::Blend( IBlock* iBlockTop
-                       , IBlock* iBlockBack
-                       , eBlendingMode iMode
-                       , int iX
-                       , int iY
-                       , float iOpacity
+FBlendingContext::Blend( IBlock*                    iBlockTop
+                       , IBlock*                    iBlockBack
+                       , int                        iX
+                       , int                        iY
+                       , eBlendingMode              iBlendingMode
+                       , eAlphaMode                 iAlphaMode
+                       , float                      iOpacity
                        , const FPerformanceOptions& iPerformanceOptions
-                       , bool iCallInvalidCB )
+                       , bool                       iCallInvalidCB )
 {
     assert( iBlockTop->Id() == iBlockBack->Id() );
     switch( iBlockTop->Id() )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                            \
-            case ULIS_REG[ n ]:                                                                                                             \
-            {                                                                                                                               \
-                TBlendingContext< ULIS_REG[ n ] >::Blend( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockTop                                       \
-                                                        , (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockBack                                      \
-                                                        , iMode, iOpacity, iX, iY, iPerformanceOptions, iCallInvalidCB );                   \
-                break;                                                                                                                      \
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                \
+            case ULIS_REG[ n ]:                                                                                                                 \
+            {                                                                                                                                   \
+                TBlendingContext< ULIS_REG[ n ] >::Blend( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockTop                                           \
+                                                        , (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockBack                                          \
+                                                        , iX, iY, iBlendingMode, iAlphaMode, iOpacity, iPerformanceOptions, iCallInvalidCB );   \
+                break;                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP
@@ -47,24 +48,25 @@ FBlendingContext::Blend( IBlock* iBlockTop
 
 //static
 void
-FBlendingContext::Blend( IBlock* iBlockTop
-                       , IBlock* iBlockBack
-                       , eBlendingMode iMode
-                       , const FRect& iArea
-                       , float iOpacity
+FBlendingContext::Blend( IBlock*                    iBlockTop
+                       , IBlock*                    iBlockBack
+                       , const FRect&               iArea
+                       , eBlendingMode              iBlendingMode
+                       , eAlphaMode                 iAlphaMode
+                       , float                      iOpacity
                        , const FPerformanceOptions& iPerformanceOptions
-                       , bool iCallInvalidCB )
+                       , bool                       iCallInvalidCB )
 {
     assert( iBlockTop->Id() == iBlockBack->Id() );
     switch( iBlockTop->Id() )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                            \
-            case ULIS_REG[ n ]:                                                                                                             \
-            {                                                                                                                               \
-                TBlendingContext< ULIS_REG[ n ] >::Blend( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockTop                                       \
-                                                        , (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockBack                                      \
-                                                        , iMode, iArea, iOpacity, iPerformanceOptions, iCallInvalidCB );                    \
-                break;                                                                                                                      \
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                                                \
+            case ULIS_REG[ n ]:                                                                                                                 \
+            {                                                                                                                                   \
+                TBlendingContext< ULIS_REG[ n ] >::Blend( (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockTop                                           \
+                                                        , (::ULIS::TBlock< ULIS_REG[ n ] >*)iBlockBack                                          \
+                                                        , iArea, iBlendingMode, iAlphaMode, iOpacity, iPerformanceOptions, iCallInvalidCB );    \
+                break;                                                                                                                          \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP

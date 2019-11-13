@@ -7,7 +7,6 @@
 * Clement Berthaud - Layl
 * Please refer to LICENSE.md
 */
-
 #pragma once
 
 namespace ULIS {
@@ -53,6 +52,7 @@ enum class eBlendingMode : uint8
     , kNumBlendingModes
 };
 
+
 static const char* kwBlendingMode[] =
 {
       "Normal"
@@ -93,8 +93,9 @@ static const char* kwBlendingMode[] =
     , "Invalid"
 };
 
-#define ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, X )                                                  \
-    switch( iMode ) {                                                                               \
+
+#define ULIS_FOR_ALL_BLENDING_MODES_DO( iSelectedBlendingMode, X )                                  \
+    switch( iSelectedBlendingMode ) {                                                               \
         case eBlendingMode::kNormal             :   X( eBlendingMode::kNormal           );  break;  \
         case eBlendingMode::kErase              :   X( eBlendingMode::kErase            );  break;  \
         case eBlendingMode::kBehind             :   X( eBlendingMode::kBehind           );  break;  \
@@ -126,4 +127,51 @@ static const char* kwBlendingMode[] =
         case eBlendingMode::kLuminosity         :   X( eBlendingMode::kLuminosity       );  break;  \
         case eBlendingMode::kNumBlendingModes   :   X( eBlendingMode::kNumBlendingModes );  break;  \
     }
+
+
+/////////////////////////////////////////////////////
+// eAlphaMode
+enum class eAlphaMode : uint8
+{
+      kNormal
+    , kErase
+    , kTop
+    , kBack
+    , kSub
+    , kAdd
+    , kMin
+    , kMax
+    , kNumAlphaModes
+};
+
+
+static const char* kwAlphaMode[] =
+{
+      "Normal"
+    , "Erase"
+    , "Top"
+    , "Back"
+    , "Sub"
+    , "Add"
+    , "Min"
+    , "Max"
+
+    , "Invalid"
+};
+
+
+#define ULIS_FOR_ALL_ALPHA_MODES_DO( iSelectedAlphaMode, X )                                \
+    switch( iSelectedAlphaMode ) {                                                          \
+        case eAlphaMode::kNormal            :   X( eAlphaMode::kNormal          );  break;  \
+        case eAlphaMode::kErase             :   X( eAlphaMode::kErase           );  break;  \
+        case eAlphaMode::kTop               :   X( eAlphaMode::kTop             );  break;  \
+        case eAlphaMode::kBack              :   X( eAlphaMode::kBack            );  break;  \
+        case eAlphaMode::kSub               :   X( eAlphaMode::kSub             );  break;  \
+        case eAlphaMode::kAdd               :   X( eAlphaMode::kAdd             );  break;  \
+        case eAlphaMode::kMin               :   X( eAlphaMode::kMin             );  break;  \
+        case eAlphaMode::kMax               :   X( eAlphaMode::kMax             );  break;  \
+        case eAlphaMode::kNumAlphaModes     :   X( eAlphaMode::kNumAlphaModes   );  break;  \
+    }
+
+
 } // namespace ULIS

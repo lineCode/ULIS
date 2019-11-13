@@ -28,9 +28,11 @@ int main( int argc, char *argv[] )
                                     , &height
                                     , &channels
                                     , STBI_rgb_alpha );
-    auto breakpoint = 0;
-
-    ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlockFromExternalData( width, height, raw, ::ULIS::FBlockRGBA8::TypeId() );
+    ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlockFromExternalDataTakeOwnership( width, height, raw, ::ULIS::Format::Format_RGBA8 );
+    ::ULIS::IBlock* overlay = ::ULIS::FMakeContext::MakeBlock( width, height, ::ULIS::Format::Format_RGBA8 );
+    ::ULIS::FClearFillContext::Fill( overlay, ::ULIS::CColor( 255, 0, 0 ) );
+    ::ULIS::FBlendingContext::Blend( overlay, block, 0, 0, ::ULIS::eBlendingMode::kNormal, ::ULIS::eAlphaMode::kNormal, 0.5f );
+    raw = nullptr;
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
@@ -47,7 +49,6 @@ int main( int argc, char *argv[] )
     delete image;
     delete w;
     delete block;
-    delete raw;
 
     return  exit_code;
 }

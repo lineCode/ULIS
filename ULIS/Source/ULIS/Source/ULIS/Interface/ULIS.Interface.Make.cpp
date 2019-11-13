@@ -54,6 +54,24 @@ FMakeContext::MakeBlockFromExternalData( int iWidth
 
 //static
 ::ULIS::IBlock*
+FMakeContext::MakeBlockFromExternalDataTakeOwnership( int iWidth
+                                                    , int iHeight
+                                                    , uint8* iData
+                                                    , uint32_t iFormat
+                                                    , const std::string& iProfileTag )
+{
+    switch( iFormat )
+    {
+        #define ULIS_REG_SWITCH_OP( z, n, data ) case ULIS_REG[ n ]: return  new ::ULIS::TBlock< ULIS_REG[ n ] >( iWidth, iHeight, iData, iProfileTag );
+        ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
+        #undef ULIS_REG_SWITCH_OP
+        default: return  nullptr;
+    }
+}
+
+
+//static
+::ULIS::IBlock*
 FMakeContext::MakeBlockFromDataPerformCopy( int iWidth
                                           , int iHeight
                                           , uint8* iData

@@ -31,55 +31,70 @@ namespace ULIS {
 template< uint32 _SH >
 class TBlendingContext
 {
-public:
-    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, float iOpacity = 1.f, int ix = 0, int iy = 0, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true )
+private:
+    template< eBlendingMode _BM >
+    static void Blend_Imp( TBlock< _SH >*                      iBlockTop
+                         , TBlock< _SH >*                      iBlockBack
+                         , eAlphaMode                          iAlphaMode
+                         , typename TBlock< _SH >::tPixelType  iOpacity
+                         , const FRect&                        iROI
+                         , const FPoint&                       iShift
+                         , const FPerformanceOptions&          iPerformanceOptions )
     {
-        if( iOpacity == 0.f )
-            return;
-
-        assert( iOpacity > 0.f && iOpacity <= 1.f );
-
-        FRect back_bb = { 0, 0,     iBlockBack->Width(),    iBlockBack->Height()    };
-        FRect top_bb =  { ix, iy,   iBlockTop->Width(),     iBlockTop->Height()     };
-        FRect inter_bb = back_bb & top_bb;
-        if( inter_bb.Area() <= 0 ) return;
-
-        FPoint shift( -ix, -iy );
-
-        ResetWeakPRNGSeed();
-        #define ULIS_SWITCH_OP( iMode )  TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerformanceOptions)
-        ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, ULIS_SWITCH_OP )
+        #define ULIS_SWITCH_OP( iAM )  TBlockBlender< _SH, _BM, iAM >::Run( iBlockTop, iBlockBack, iOpacity, iROI, iShift, iPerformanceOptions )
+        ULIS_FOR_ALL_ALPHA_MODES_DO( iAlphaMode, ULIS_SWITCH_OP )
         #undef ULIS_SWITCH_OP
-
-        if( !callInvalidCB )
-            return;
-
-        iBlockBack->Invalidate( inter_bb );
     }
 
-    static void Blend( TBlock< _SH >* iBlockTop, TBlock< _SH >* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool callInvalidCB = true )
+public:
+    static void Blend( TBlock< _SH >*               iBlockTop
+                     , TBlock< _SH >*               iBlockBack
+                     , int                          iX                  = 0
+                     , int                          iY                  = 0
+                     , eBlendingMode                iBlendingMode       = eBlendingMode::kNormal
+                     , eAlphaMode                   iAlphaMode          = eAlphaMode::kNormal
+                     , float                        iOpacity            = 1.f
+                     , const FPerformanceOptions&   iPerformanceOptions = FPerformanceOptions()
+                     , bool                         callInvalidCB       = true )
     {
-        if( iOpacity == 0.f )
-            return;
-
         assert( iOpacity > 0.f && iOpacity <= 1.f );
+        FRect back_bb   = { 0, 0,     iBlockBack->Width(),    iBlockBack->Height()    };
+        FRect top_bb    =  { iX, iY,   iBlockTop->Width(),     iBlockTop->Height()     };
+        FRect inter_bb  = back_bb & top_bb;
+        if( inter_bb.Area() <= 0 ) return;
+        FPoint shift( -iX, -iY );
 
+        #define ULIS_SWITCH_OP( iBM )  TBlendingContext< _SH >::Blend_Imp< iBM >( iBlockTop, iBlockBack, iAlphaMode, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerformanceOptions )
+        ULIS_FOR_ALL_BLENDING_MODES_DO( iBlendingMode, ULIS_SWITCH_OP )
+        #undef ULIS_SWITCH_OP
+
+        if( callInvalidCB )
+            iBlockBack->Invalidate( inter_bb );
+    }
+
+    static void Blend( TBlock< _SH >*               iBlockTop
+                     , TBlock< _SH >*               iBlockBack
+                     , const FRect&                 iArea
+                     , eBlendingMode                iBlendingMode       = eBlendingMode::kNormal
+                     , eAlphaMode                   iAlphaMode          = eAlphaMode::kNormal
+                     , float                        iOpacity            = 1.f
+                     , const FPerformanceOptions&   iPerformanceOptions = FPerformanceOptions()
+                     , bool                         callInvalidCB       = true )
+    {
+        assert( iOpacity > 0.f && iOpacity <= 1.f );
         FRect back_bb   = FRect( 0, 0, iBlockBack->Width(), iBlockBack->Height() );
         FRect top_bb    = FRect( iArea.x, iArea.y, iArea.w, iArea.h );
-        FRect inter_bb = back_bb & top_bb;
+        FRect inter_bb  = back_bb & top_bb;
         bool intersects = inter_bb.Area() > 0;
         if( !intersects ) return;
         FPoint shift( 0, 0 );
 
-        ResetWeakPRNGSeed();
-        #define ULIS_SWITCH_OP( iMode ) TBlockBlender< _SH, iMode >::Run( iBlockTop, iBlockBack, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerformanceOptions)
-        ULIS_FOR_ALL_BLENDING_MODES_DO( iMode, ULIS_SWITCH_OP )
+        #define ULIS_SWITCH_OP( iBM )  TBlendingContext< _SH >::Blend_Imp< iBM >( iBlockTop, iBlockBack, iAlphaMode, ConvType< float, typename TBlock< _SH >::tPixelType >( iOpacity ), inter_bb, shift, iPerformanceOptions )
+        ULIS_FOR_ALL_BLENDING_MODES_DO( iBlendingMode, ULIS_SWITCH_OP )
         #undef ULIS_SWITCH_OP
 
-        if( !callInvalidCB )
-            return;
-
-        iBlockBack->Invalidate( inter_bb );
+        if( callInvalidCB )
+            iBlockBack->Invalidate( inter_bb );
     }
 };
 

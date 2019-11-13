@@ -52,11 +52,11 @@ public:
         profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
     }
 
-    TBlockData( int iWidth, int iHeight, uint8* iData )
+    TBlockData( int iWidth, int iHeight, uint8* iData, bool iTakeOwnership = false )
         : width     ( iWidth    )
         , height    ( iHeight   )
         , data      ( iData   )
-        , owned     ( false      )
+        , owned     ( iTakeOwnership )
         , profile   ( nullptr   )
     {
         profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
@@ -78,11 +78,11 @@ public:
             profile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( tSpec::_nf._cm );
     }
 
-    TBlockData( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag )
+    TBlockData( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag, bool iTakeOwnership = false )
         : width     ( iWidth    )
         , height    ( iHeight   )
         , data      ( iData   )
-        , owned     ( false      )
+        , owned     ( iTakeOwnership )
         , profile   ( nullptr   )
     {
         profile = FGlobalProfileRegistry::Get().GetProfile( iProfileTag );
@@ -225,41 +225,41 @@ public:
     TBlock( int iWidth, int iHeight )
         : IBlock()
         , d     ( new TBlockData< _SH >( iWidth, iHeight )  )
-        , id    ( GenerateWeakUUID( 16 )                  )
+        , id    ( GenerateWeakUUID( 16 )                    )
     {
-#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
-        debug_str = tSpec::_nf._ss;
-#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+        #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+            debug_str = tSpec::_nf._ss;
+        #endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
-    TBlock( int iWidth, int iHeight, uint8* iData )
+    TBlock( int iWidth, int iHeight, uint8* iData, bool iTakeOwnership = false )
         : IBlock()
-        , d     ( new TBlockData< _SH >( iWidth, iHeight, iData )   )
-        , id    ( GenerateWeakUUID( 16 )                          )
+        , d     ( new TBlockData< _SH >( iWidth, iHeight, iData, iTakeOwnership )   )
+        , id    ( GenerateWeakUUID( 16 )                                            )
     {
-#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
-        debug_str = tSpec::_nf._ss;
-#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+        #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+            debug_str = tSpec::_nf._ss;
+        #endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
     TBlock( int iWidth, int iHeight, const std::string& iProfileTag )
         : IBlock()
-        , d     ( new TBlockData< _SH >( iWidth, iHeight, iProfileTag )  )
-        , id    ( GenerateWeakUUID( 16 )                  )
+        , d     ( new TBlockData< _SH >( iWidth, iHeight, iProfileTag ) )
+        , id    ( GenerateWeakUUID( 16 )                                )
     {
-#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
-        debug_str = tSpec::_nf._ss;
-#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+        #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+            debug_str = tSpec::_nf._ss;
+        #endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
-    TBlock( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag )
+    TBlock( int iWidth, int iHeight, uint8* iData, const std::string& iProfileTag, bool iTakeOwnership = false )
         : IBlock()
-        , d     ( new TBlockData< _SH >( iWidth, iHeight, iData, iProfileTag )   )
-        , id    ( GenerateWeakUUID( 16 )                          )
+        , d     ( new TBlockData< _SH >( iWidth, iHeight, iData, iProfileTag, iTakeOwnership )  )
+        , id    ( GenerateWeakUUID( 16 )                                                        )
     {
-#ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
-        debug_str = tSpec::_nf._ss;
-#endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+        #ifdef ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
+            debug_str = tSpec::_nf._ss;
+        #endif // ULIS_DEBUG_TYPE_STR_SYMBOL_ENABLED
     }
 
 public:

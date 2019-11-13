@@ -18,6 +18,7 @@
 #include "ULIS/Global/ULIS.Global.GlobalCPUConfig.h"
 #include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
 #include "ULIS/Blend/Optimization/ULIS.Blend.Optimization.BlendFuncSSE.h"
+#include "ULIS/Blend/Optimization/ULIS.Blend.Optimization.BlendAlphaSSE.h"
 #include <immintrin.h>
 
 namespace ULIS {
@@ -27,7 +28,7 @@ namespace ULIS {
 
 /////////////////////////////////////////////////////
 // TBlockBlender_RGBA8_SSE
-template< uint32 _SH, eBlendingMode _BM >
+template< uint32 _SH, eBlendingMode _BM, eAlphaMode _AM >
 class TBlockBlender_RGBA8_SSE
 {
 public:
@@ -61,7 +62,7 @@ public:
             __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)topPixelPtr ) ) );
             __m128 backAlphaf = _mm_set_ps1( float( *( backPixelPtr + alpha_index ) ) );
             __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( topPixelPtr + alpha_index ) ) ), opacityf ), max255f );
-            __m128 alphaResultf = BlendAlphaSSE< _BM >::Compute( backAlphaf, topAlphaf );
+            __m128 alphaResultf = BlendAlphaSSE< _AM >::Compute( backAlphaf, topAlphaf );
             __m128 vcmp = _mm_cmpeq_ps( alphaResultf, _mm_setzero_ps());
             int mask = _mm_movemask_ps (vcmp);
             bool result = (mask == 0xf);
@@ -124,7 +125,7 @@ public:
                 __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)topPixelPtr ) ) );
                 __m128 backAlphaf = _mm_set_ps1( float( *( backPixelPtr + alpha_index ) ) );
                 __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( topPixelPtr + alpha_index ) ) ), opacityf ), max255f );
-                __m128 alphaResultf = BlendAlphaSSE< _BM >::Compute( backAlphaf, topAlphaf );
+                __m128 alphaResultf = BlendAlphaSSE< _AM >::Compute( backAlphaf, topAlphaf );
                 __m128 vcmp = _mm_cmpeq_ps( alphaResultf, _mm_setzero_ps());
                 int mask = _mm_movemask_ps (vcmp);
                 bool result = (mask == 0xf);
@@ -166,7 +167,7 @@ public:
             const int y2 = y1 + iROI.h;
             FThreadPool& global_pool = FGlobalThreadPool::Get();
             for( int y = y1; y < y2; ++y )
-                global_pool.ScheduleJob( TBlockBlender_RGBA8_SSE< _SH, _BM >::ProcessScanLineSSE, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift );
+                global_pool.ScheduleJob( TBlockBlender_RGBA8_SSE< _SH, _BM, _AM >::ProcessScanLineSSE, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift );
             global_pool.WaitForCompletion();
         }
         else
@@ -178,13 +179,15 @@ public:
 
 /////////////////////////////////////////////////////
 // TBlockBlender_Imp
-template< uint32        _SH,    // Format
-          eBlendingMode _BM,    // Blending Mode
-          uint32        _LH,    // Layout
-          e_nm          _NM,    // Normalized
-          bool          _DM >   // Decimal
+template< uint32        _SH     // Format
+        , eBlendingMode _BM     // Blending Mode
+        , eAlphaMode    _AM     // Alpha Mode
+        , uint32        _LH     // Layout
+        , e_nm          _NM     // Normalized
+        , bool          _DM >   // Decimal
 class TBlockBlender_Imp< _SH,                // Format
                          _BM,                // Blending Mode
+                         _AM,                // Alpha Mode
                          e_tp::kuint8,       // uint8
                          e_cm::kRGB,         // RGB
                          e_ea::khasAlpha,    // Alpha
@@ -200,12 +203,12 @@ public:
                    , const FPoint&                      iShift
                    , const FPerformanceOptions&         iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockBlender_RGBA8_SSE< _SH, _BM >::Run( iBlockTop
-                                                , iBlockBack
-                                                , iOpacity
-                                                , iROI
-                                                , iShift
-                                                , iPerformanceOptions);
+        TBlockBlender_RGBA8_SSE< _SH, _BM, _AM >::Run( iBlockTop
+                                                     , iBlockBack
+                                                     , iOpacity
+                                                     , iROI
+                                                     , iShift
+                                                     , iPerformanceOptions);
     }
 };
 

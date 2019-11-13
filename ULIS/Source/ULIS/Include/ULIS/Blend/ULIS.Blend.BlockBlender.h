@@ -27,6 +27,7 @@ namespace ULIS {
 // TBlockBlender_Default_ScanLine
 template< uint32        _SH
         , eBlendingMode _BM
+        , eAlphaMode    _AM
         , e_tp          _TP
         , e_cm          _CM
         , e_ea          _EA
@@ -44,7 +45,7 @@ public:
                                , const int                          iX2
                                , const FPoint&                      iShift )
     {
-        TPixelBlender< _SH, _BM > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
+        TPixelBlender< _SH, _BM, _AM > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
         for( int x = iX1; x < iX2; ++x )
             pixel_blender.Apply( x, iLine );
     }
@@ -73,6 +74,7 @@ public:
 // TBlockBlender_Default_MonoThread
 template< uint32        _SH
         , eBlendingMode _BM
+        , eAlphaMode    _AM
         , e_tp          _TP
         , e_cm          _CM
         , e_ea          _EA
@@ -93,7 +95,7 @@ public:
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;
-        TPixelBlender< _SH, _BM > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
+        TPixelBlender< _SH, _BM, _AM > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
         for( int y = y1; y < y2; ++y )
             for( int x = x1; x < x2; ++x )
                 pixel_blender.Apply( x, y );
@@ -104,6 +106,7 @@ public:
 // TBlockBlender_Default
 template< uint32        _SH
         , eBlendingMode _BM
+        , eAlphaMode    _AM
         , e_tp          _TP
         , e_cm          _CM
         , e_ea          _EA
@@ -124,6 +127,7 @@ public:
         {
             TBlockBlender_Default_ScanLine< _SH
                                             , _BM
+                                            , _AM
                                             , tSpec::_nf._tp
                                             , tSpec::_nf._cm
                                             , tSpec::_nf._ea
@@ -141,6 +145,7 @@ public:
         {
             TBlockBlender_Default_MonoThread< _SH
                                             , _BM
+                                            , _AM
                                             , tSpec::_nf._tp
                                             , tSpec::_nf._cm
                                             , tSpec::_nf._ea
@@ -162,6 +167,7 @@ public:
 // TBlockBlender_Imp
 template< uint32        _SH
         , eBlendingMode _BM
+        , eAlphaMode    _AM
         , e_tp          _TP
         , e_cm          _CM
         , e_ea          _EA
@@ -180,6 +186,7 @@ public:
     {
         TBlockBlender_Default< _SH
                              , _BM
+                             , _AM
                              , tSpec::_nf._tp
                              , tSpec::_nf._cm
                              , tSpec::_nf._ea
@@ -198,7 +205,8 @@ public:
 /////////////////////////////////////////////////////
 // TBlockBlender
 template< uint32        _SH
-        , eBlendingMode _BM >
+        , eBlendingMode _BM
+        , eAlphaMode    _AM >
 class TBlockBlender
 {
 public:
@@ -207,10 +215,11 @@ public:
                           , typename TBlock< _SH >::tPixelType  iOpacity
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
-                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
+                          , const FPerformanceOptions&          iPerformanceOptions= FPerformanceOptions() )
     {
         TBlockBlender_Imp< _SH
                          , _BM
+                         , _AM
                          , tSpec::_nf._tp
                          , tSpec::_nf._cm
                          , tSpec::_nf._ea

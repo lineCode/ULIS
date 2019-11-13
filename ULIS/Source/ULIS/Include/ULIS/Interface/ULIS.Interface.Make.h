@@ -41,7 +41,7 @@ public:
 
     /// @fn         static  IBlock*  MakeBlockFromExternalData( int iWidth, int iHeight, uint8* iData, uint32_t iFormat, const std::string& iProfileTag = "default" )
     /// @brief      Make a block with dynamic type deduction at runtime, from existing raw data.
-    /// @details    The block takes doesn't take ownership of the raw data, so the data shouldn't be deleted during the block lifetime.
+    /// @details    The block doesn't take ownership of the raw data, so the data shouldn't be deleted during the block lifetime.
     /// @param      iWidth          The width of the block to allocate.
     /// @param      iHeight         The height of the block to allocate.
     /// @param      iData           The external data to read from.
@@ -53,6 +53,22 @@ public:
                                               , uint8* iData
                                               , uint32_t iFormat
                                               , const std::string& iProfileTag = "default" );
+
+
+    /// @fn         static  IBlock*  MakeBlockFromExternalDataTakeOwnership( int iWidth, int iHeight, uint8* iData, uint32_t iFormat, const std::string& iProfileTag = "default" )
+    /// @brief      Make a block with dynamic type deduction at runtime, from existing raw data, and take ownership of the raw data pointer.
+    /// @details    The block takes ownership of the raw data, so the data is living in the block now, the source pointer shouldn't be deleted.
+    /// @param      iWidth          The width of the block to allocate.
+    /// @param      iHeight         The height of the block to allocate.
+    /// @param      iData           The external data to read from.
+    /// @param      iFormat         The hash of the type.
+    /// @param      iProfileTag     The name of the requested profile, leave default if unneeded.
+    /// @return     A new allocated IBlock with specified format, width, height and profile, with the specified data.
+    static  IBlock*  MakeBlockFromExternalDataTakeOwnership( int iWidth
+                                                           , int iHeight
+                                                           , uint8* iData
+                                                           , uint32_t iFormat
+                                                           , const std::string& iProfileTag = "default" );
 
 
     /// @fn         static  IBlock*  MakeBlockFromDataPerformCopy( int iWidth, int iHeight, uint8* iData, uint32_t iFormat, const std::string& iProfileTag = "default", const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )

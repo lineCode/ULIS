@@ -29,31 +29,10 @@ struct BlendFuncSSE {
     }
 };
 
-template< eBlendingMode _BM >
-struct BlendAlphaSSE {
-    static inline
-    __m128 Compute( const __m128& AlphaBack, const __m128& AlphaTop )
-    {
-        return  _mm_sub_ps( _mm_add_ps( AlphaBack, AlphaTop ), _mm_div_ps( _mm_mul_ps( AlphaBack, AlphaTop ), _mm_set_ps1( 255.f ) ) );
-    }
-};
-
 #define ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_START( iMode )                          \
     template<> struct BlendFuncSSE< eBlendingMode::k ## iMode > {               \
     static inline __m128 Compute( const __m128& Cb, const __m128& Cs ) {
 #define ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_END }};
-
-#define ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_START( iMode )                         \
-    template<> struct BlendAlphaSSE< eBlendingMode::k ## iMode > {               \
-    static inline __m128 Compute( const __m128& AlphaBack, const __m128& AlphaTop ) {
-#define ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END }};
-
-// SPEC ALPHA
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------- Erase
-ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_START( Erase )
-    return  _mm_max_ps( _mm_setzero_ps(), _mm_sub_ps( AlphaBack, AlphaTop ) );
-ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END
 
 // SPEC BLEND
 //--------------------------------------------------------------------------------------

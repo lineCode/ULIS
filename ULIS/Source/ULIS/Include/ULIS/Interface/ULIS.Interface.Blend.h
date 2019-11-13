@@ -33,20 +33,22 @@ public:
     ///                 - In a release build, nothing prevents the function to run but it will end up corrupting memory and doing all sorts of crazy things.
     /// @param      iBlockTop               The pointer to the \e IBlock on top ( remains untouched ).
     /// @param      iBlockBack              The pointer to the \e IBlock on back ( receives the blend ).
-    /// @param      iMode                   The blending mode ( see \e eBlendingMode ).
-    /// @param      iOpacity                The opacity used to perform the blend, beetween 0 and 1.
     /// @param      iX                      x coordinate of the position to blend in the back block.
     /// @param      iY                      y coordinate of the position to blend in the back block.
+    /// @param      iBlendingMode           The blending mode ( see \e eBlendingMode ).
+    /// @param      iAlphaMode              The alpha mode ( see \e eAlphaMode ).
+    /// @param      iOpacity                The opacity used to perform the blend, beetween 0 and 1.
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
-    static  void  Blend( IBlock* iBlockTop
-                       , IBlock* iBlockBack
-                       , eBlendingMode iMode
-                       , int iX = 0
-                       , int iY = 0
-                       , float iOpacity = 1.f
-                       , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
-                       , bool iCallInvalidCB = true );
+    static  void  Blend( IBlock*                    iBlockTop
+                       , IBlock*                    iBlockBack
+                       , int                        iX                  = 0
+                       , int                        iY                  = 0
+                       , eBlendingMode              iBlendingMode       = eBlendingMode::kNormal
+                       , eAlphaMode                 iAlphaMode          = eAlphaMode::kNormal
+                       , float                      iOpacity            = 1.f
+                       , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
+                       , bool                       iCallInvalidCB      = true );
 
 
     /// @fn         Blend( IBlock* iBlockTop, IBlock* iBlockBack, eBlendingMode iMode, const FRect& iArea, float iOpacity = 1.f, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true )
@@ -57,18 +59,20 @@ public:
     /// @details    The block on top will be blended on the back block, according to the specified parameters.
     /// @param      iBlockTop               The pointer to the \e IBlock on top ( remains untouched ).
     /// @param      iBlockBack              The pointer to the \e IBlock on back ( receives the blend ).
-    /// @param      iMode                   The blending mode ( see \e eBlendingMode ).
     /// @param      iArea                   The area to blend in the back block.
+    /// @param      iBlendingMode           The blending mode ( see \e eBlendingMode ).
+    /// @param      iAlphaMode              The alpha mode ( see \e eAlphaMode ).
     /// @param      iOpacity                The opacity used to perform the blend, beetween 0 and 1.
     /// @param      iPerformanceOptions     The Performance Options for this operation, see \e FPerformanceOptions.
     /// @param      iCallInvalidCB          Whether or not the function should call the invalid call back in the back block after the operation finished.
-    static  void  Blend( IBlock* iBlockTop
-                       , IBlock* iBlockBack
-                       , eBlendingMode iMode
-                       , const FRect& iArea
-                       , float iOpacity = 1.f
-                       , const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions()
-                       , bool iCallInvalidCB = true );
+    static  void  Blend( IBlock*                    iBlockTop
+                       , IBlock*                    iBlockBack
+                       , const FRect&               iArea
+                       , eBlendingMode              iBlendingMode       = eBlendingMode::kNormal
+                       , eAlphaMode                 iAlphaMode          = eAlphaMode::kNormal
+                       , float                      iOpacity            = 1.f
+                       , const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions()
+                       , bool                       iCallInvalidCB      = true );
 
 };
 

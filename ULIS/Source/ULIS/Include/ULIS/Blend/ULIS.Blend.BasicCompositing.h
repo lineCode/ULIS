@@ -15,6 +15,7 @@
 #include "ULIS/Blend/ULIS.Blend.BlendingModes.h"
 #include "ULIS/Data/ULIS.Data.Block.h"
 #include "ULIS/Blend/ULIS.Blend.BlendFunc.h"
+#include "ULIS/Blend/ULIS.Blend.BlendAlpha.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
