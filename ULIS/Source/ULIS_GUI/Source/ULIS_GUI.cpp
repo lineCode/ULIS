@@ -14,21 +14,25 @@
 #include <QPixmap>
 #include <QLabel>
 #include <ULIS_CORE>
+#define STB_IMAGE_IMPLEMENTATION
+#include <ULIS/stb/stb_image.h>
 
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
-    ::ULIS::IBlock* blockA = ::ULIS::FMakeContext::MakeBlock( 220, 220, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::IBlock* blockB = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId() );
-    ::ULIS::FClearFillContext::Fill( blockB, ::ULIS::CColor( 255, 0, 0 ) );
-    ::ULIS::FClearFillContext::Fill( blockA, ::ULIS::CColor( 0, 0, 0, 0 ) );
-    ::ULIS::FPainterContext::DrawCircleAndres( blockA, ::ULIS::FPoint( 110, 110 ), 80, ::ULIS::CColor( 0, 0, 0, 255 ), true );
 
-    ::ULIS::FPerformanceOptions opt;
-    opt.desired_workers = 1;
-    ::ULIS::FBlendingContext::Blend( blockA, blockB, ::ULIS::eBlendingMode::kErase, 0, 0, 0.5f, opt );
+    int width, height, channels;
+    stbi_set_flip_vertically_on_load( false );
+    unsigned char *raw = stbi_load( "C:/Users/PRAXINOS/Documents/work/ULIS/coboi.png"
+                                    , &width
+                                    , &height
+                                    , &channels
+                                    , STBI_rgb_alpha );
+    auto breakpoint = 0;
 
-    QImage* image   = new QImage( blockB->DataPtr(), blockB->Width(), blockB->Height(), blockB->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlockFromExternalData( width, height, raw, ::ULIS::FBlockRGBA8::TypeId() );
+
+    QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap pixmap  = QPixmap::fromImage( *image );
     QWidget* w      = new QWidget();
     QLabel* label   = new QLabel( w );
@@ -42,8 +46,8 @@ int main( int argc, char *argv[] )
     delete label;
     delete image;
     delete w;
-    delete blockA;
-    delete blockB;
+    delete block;
+    delete raw;
 
     return  exit_code;
 }

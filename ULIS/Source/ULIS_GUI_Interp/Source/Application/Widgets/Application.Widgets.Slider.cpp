@@ -32,7 +32,7 @@ SSlider::SSlider( QWidget* iParent )
 {
     mTimer = new QTimer();
     mTimer->setInterval( 1000.0 / 60.0 );
-    //QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( AutoAnimSlider() ) );
+    QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( AutoAnimSlider() ) );
     mTimer->start();
 }
 
