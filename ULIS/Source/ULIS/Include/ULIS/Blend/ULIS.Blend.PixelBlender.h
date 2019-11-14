@@ -44,8 +44,9 @@ struct TPixelBlender
         typename TBlock< _SH >::tPixelProxy         pixelTop    = top->PixelProxy( x + shift.x, y + shift.y );
         const typename TBlock< _SH >::tPixelType    alphaBack   = pixelBack.GetAlpha();
         const typename TBlock< _SH >::tPixelType    alphaTop    = ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( (typename TBlock< _SH >::tNextPixelType)( pixelTop.GetAlpha() * opacity ) );
+        const typename TBlock< _SH >::tPixelType    alphaComp = BlendAlpha< _SH, eAlphaMode::kNormal >::Compute( alphaBack, alphaTop );
         const typename TBlock< _SH >::tPixelType    alphaResult = BlendAlpha< _SH, _AM >::Compute( alphaBack, alphaTop );
-        const typename TBlock< _SH >::tPixelType    var         = alphaResult == 0 ? 0 : ( alphaTop * TBlock< _SH >::StaticMax() ) / alphaResult;
+        const typename TBlock< _SH >::tPixelType    var         = alphaComp == 0 ? 0 : ( alphaTop * TBlock< _SH >::StaticMax() ) / alphaComp;
         const int max_chan = TBlock< _SH >::StaticNumColorChannels();
         for( int i = 0; i < max_chan; ++i )
             pixelBack.SetComponent( i, Composer< _SH, _BM >::BasicCompositing( pixelBack.GetComponent( i ), pixelTop.GetComponent( i ), alphaBack, var ) );

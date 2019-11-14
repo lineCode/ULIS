@@ -23,7 +23,7 @@ int main( int argc, char *argv[] )
 
     int width, height, channels;
     stbi_set_flip_vertically_on_load( false );
-    unsigned char *raw = stbi_load( "C:/Users/PRAXINOS/Documents/work/ULIS/coboi.png"
+    unsigned char *raw = stbi_load( "C:/Users/PRAXINOS/Documents/work/ULIS/coboi_alpha.png"
                                     , &width
                                     , &height
                                     , &channels
@@ -31,7 +31,7 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlockFromExternalDataTakeOwnership( width, height, raw, ::ULIS::Format::Format_RGBA8 );
     ::ULIS::IBlock* overlay = ::ULIS::FMakeContext::MakeBlock( width, height, ::ULIS::Format::Format_RGBA8 );
     ::ULIS::FClearFillContext::Fill( overlay, ::ULIS::CColor( 255, 0, 0 ) );
-    ::ULIS::FBlendingContext::Blend( overlay, block, 0, 0, ::ULIS::eBlendingMode::kNormal, ::ULIS::eAlphaMode::kNormal, 0.5f );
+    ::ULIS::FBlendingContext::Blend( overlay, block, 0, 0, ::ULIS::eBlendingMode::kNormal, ::ULIS::eAlphaMode::kBack, 0.5f );
     raw = nullptr;
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
@@ -49,6 +49,7 @@ int main( int argc, char *argv[] )
     delete image;
     delete w;
     delete block;
+    delete overlay;
 
     return  exit_code;
 }

@@ -62,11 +62,12 @@ public:
             __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)topPixelPtr ) ) );
             __m128 backAlphaf = _mm_set_ps1( float( *( backPixelPtr + alpha_index ) ) );
             __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( topPixelPtr + alpha_index ) ) ), opacityf ), max255f );
+            __m128 alphaComp = BlendAlphaSSE< eAlphaMode::kNormal >::Compute( backAlphaf, topAlphaf );
             __m128 alphaResultf = BlendAlphaSSE< _AM >::Compute( backAlphaf, topAlphaf );
-            __m128 vcmp = _mm_cmpeq_ps( alphaResultf, _mm_setzero_ps());
+            __m128 vcmp = _mm_cmpeq_ps( alphaComp, _mm_setzero_ps());
             int mask = _mm_movemask_ps (vcmp);
             bool result = (mask == 0xf);
-            __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, max255f ), alphaResultf );
+            __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, max255f ), alphaComp );
 
             __m128 compute = BlendFuncSSE< _BM >::Compute( backElementsf, topElementsf );
             __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), max255f ) ) ), max255f );
@@ -125,11 +126,12 @@ public:
                 __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)topPixelPtr ) ) );
                 __m128 backAlphaf = _mm_set_ps1( float( *( backPixelPtr + alpha_index ) ) );
                 __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( topPixelPtr + alpha_index ) ) ), opacityf ), max255f );
+                __m128 alphaComp = BlendAlphaSSE< eAlphaMode::kNormal >::Compute( backAlphaf, topAlphaf );
                 __m128 alphaResultf = BlendAlphaSSE< _AM >::Compute( backAlphaf, topAlphaf );
-                __m128 vcmp = _mm_cmpeq_ps( alphaResultf, _mm_setzero_ps());
+                __m128 vcmp = _mm_cmpeq_ps( alphaComp, _mm_setzero_ps());
                 int mask = _mm_movemask_ps (vcmp);
                 bool result = (mask == 0xf);
-                __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, max255f ), alphaResultf );
+                __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, max255f ), alphaComp );
 
                 __m128 compute = BlendFuncSSE< _BM >::Compute( backElementsf, topElementsf );
                 __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), max255f ) ) ), max255f );

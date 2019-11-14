@@ -48,7 +48,7 @@ ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- Erase
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_START( Erase )
-    return  _mm_div_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), AlphaBack ), AlphaTop ), _mm_set_ps1( 255.f ) );
+    return  _mm_div_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), AlphaTop ), AlphaBack  ), _mm_set_ps1( 255.f ) );
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END
 
 //--------------------------------------------------------------------------------------
