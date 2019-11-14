@@ -43,6 +43,12 @@ struct Composer
     BasicCompositing( typename TBlock< _SH >::tPixelType Cb, typename TBlock< _SH >::tPixelType Cs, typename TBlock< _SH >::tPixelType ab, typename TBlock< _SH >::tPixelType var ) {
         return  ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( ( TBlock< _SH >::StaticMax() - var ) * Cb   +   var * ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( ( TBlock< _SH >::StaticMax() - ab ) * Cs + ab * BlendFunc< _SH, _BM >::Compute( Cb, Cs ) ) );
     }
+
+    static
+    typename TBlock< _SH >::tPixelType
+    NonSeparableCompositing( typename TBlock< _SH >::tPixelType Cb, typename TBlock< _SH >::tPixelType Cs, typename TBlock< _SH >::tPixelType Cr, typename TBlock< _SH >::tPixelType ab, typename TBlock< _SH >::tPixelType var ) {
+        return  ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( ( TBlock< _SH >::StaticMax() - var ) * Cb   +   var * ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( ( TBlock< _SH >::StaticMax() - ab ) * Cs + ab * Cr ) );
+    }
 };
 
 /////////////////////////////////////////////////////

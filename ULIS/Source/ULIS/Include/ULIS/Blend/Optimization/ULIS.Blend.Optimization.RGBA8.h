@@ -179,17 +179,20 @@ public:
     }
 };
 
+/*
 /////////////////////////////////////////////////////
 // TBlockBlender_Imp
 template< uint32        _SH     // Format
         , eBlendingMode _BM     // Blending Mode
         , eAlphaMode    _AM     // Alpha Mode
+        , bool          _NS     // Non Separable
         , uint32        _LH     // Layout
         , e_nm          _NM     // Normalized
         , bool          _DM >   // Decimal
 class TBlockBlender_Imp< _SH,                // Format
                          _BM,                // Blending Mode
                          _AM,                // Alpha Mode
+                         _NS,                // Non Separable
                          e_tp::kuint8,       // uint8
                          e_cm::kRGB,         // RGB
                          e_ea::khasAlpha,    // Alpha
@@ -213,6 +216,7 @@ public:
                                                      , iPerformanceOptions);
     }
 };
+*/
 
 /////////////////////////////////////////////////////
 // Undefines

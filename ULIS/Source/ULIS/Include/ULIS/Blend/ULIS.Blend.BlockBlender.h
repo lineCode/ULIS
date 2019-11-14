@@ -28,6 +28,7 @@ namespace ULIS {
 template< uint32        _SH
         , eBlendingMode _BM
         , eAlphaMode    _AM
+        , bool          _NS
         , e_tp          _TP
         , e_cm          _CM
         , e_ea          _EA
@@ -45,7 +46,7 @@ public:
                                , const int                          iX2
                                , const FPoint&                      iShift )
     {
-        TPixelBlender< _SH, _BM, _AM > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
+        TPixelBlender< _SH, _BM, _AM, _NS > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
         for( int x = iX1; x < iX2; ++x )
             pixel_blender.Apply( x, iLine );
     }
@@ -55,7 +56,7 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
+                   , const FPerformanceOptions&         iPerformanceOptions= FPerformanceOptions() )
     {
         const int x1 = iROI.x;
         const int y1 = iROI.y;
@@ -75,6 +76,7 @@ public:
 template< uint32        _SH
         , eBlendingMode _BM
         , eAlphaMode    _AM
+        , bool          _NS
         , e_tp          _TP
         , e_cm          _CM
         , e_ea          _EA
@@ -89,13 +91,13 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
+                   , const FPerformanceOptions&         iPerformanceOptions= FPerformanceOptions() )
     {
         const int x1 = iROI.x;
         const int y1 = iROI.y;
         const int x2 = x1 + iROI.w;
         const int y2 = y1 + iROI.h;
-        TPixelBlender< _SH, _BM, _AM > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
+        TPixelBlender< _SH, _BM, _AM, _NS > pixel_blender( iBlockTop, iBlockBack, iOpacity, iShift );
         for( int y = y1; y < y2; ++y )
             for( int x = x1; x < x2; ++x )
                 pixel_blender.Apply( x, y );
@@ -107,6 +109,7 @@ public:
 template< uint32        _SH
         , eBlendingMode _BM
         , eAlphaMode    _AM
+        , bool          _NS
         , e_tp          _TP
         , e_cm          _CM
         , e_ea          _EA
@@ -121,31 +124,33 @@ public:
                    , typename TBlock< _SH >::tPixelType iOpacity
                    , const FRect&                       iROI
                    , const FPoint&                      iShift
-                   , const FPerformanceOptions&                  iPerformanceOptions= FPerformanceOptions() )
+                   , const FPerformanceOptions&         iPerformanceOptions= FPerformanceOptions() )
     {
         if( iPerformanceOptions.desired_workers > 1 )
         {
             TBlockBlender_Default_ScanLine< _SH
-                                            , _BM
-                                            , _AM
-                                            , tSpec::_nf._tp
-                                            , tSpec::_nf._cm
-                                            , tSpec::_nf._ea
-                                            , tSpec::_nf._lh
-                                            , tSpec::_nf._nm
-                                            , tSpec::_nf._dm >
-                                            ::Run( iBlockTop
-                                                , iBlockBack
-                                                , iOpacity
-                                                , iROI
-                                                , iShift
-                                                , iPerformanceOptions);
+                                          , _BM
+                                          , _AM
+                                          , _NS
+                                          , tSpec::_nf._tp
+                                          , tSpec::_nf._cm
+                                          , tSpec::_nf._ea
+                                          , tSpec::_nf._lh
+                                          , tSpec::_nf._nm
+                                          , tSpec::_nf._dm >
+                                          ::Run( iBlockTop
+                                               , iBlockBack
+                                               , iOpacity
+                                               , iROI
+                                               , iShift
+                                               , iPerformanceOptions);
         }
         else
         {
             TBlockBlender_Default_MonoThread< _SH
                                             , _BM
                                             , _AM
+                                            , _NS
                                             , tSpec::_nf._tp
                                             , tSpec::_nf._cm
                                             , tSpec::_nf._ea
@@ -153,11 +158,11 @@ public:
                                             , tSpec::_nf._nm
                                             , tSpec::_nf._dm >
                                             ::Run( iBlockTop
-                                                , iBlockBack
-                                                , iOpacity
-                                                , iROI
-                                                , iShift
-                                                , iPerformanceOptions);
+                                                 , iBlockBack
+                                                 , iOpacity
+                                                 , iROI
+                                                 , iShift
+                                                 , iPerformanceOptions);
         }
     }
 };
@@ -168,6 +173,7 @@ public:
 template< uint32        _SH
         , eBlendingMode _BM
         , eAlphaMode    _AM
+        , bool          _NS
         , e_tp          _TP
         , e_cm          _CM
         , e_ea          _EA
@@ -182,11 +188,12 @@ public:
                           , typename TBlock< _SH >::tPixelType  iOpacity
                           , const FRect&                        iROI
                           , const FPoint&                       iShift
-                          , const FPerformanceOptions&                   iPerformanceOptions= FPerformanceOptions() )
+                          , const FPerformanceOptions&          iPerformanceOptions= FPerformanceOptions() )
     {
         TBlockBlender_Default< _SH
                              , _BM
                              , _AM
+                             , _NS
                              , tSpec::_nf._tp
                              , tSpec::_nf._cm
                              , tSpec::_nf._ea
@@ -220,6 +227,7 @@ public:
         TBlockBlender_Imp< _SH
                          , _BM
                          , _AM
+                         , IsNonSeparableBlendingMode( _BM )
                          , tSpec::_nf._tp
                          , tSpec::_nf._cm
                          , tSpec::_nf._ea

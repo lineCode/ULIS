@@ -174,4 +174,20 @@ static const char* kwAlphaMode[] =
     }
 
 
+static inline constexpr bool IsNonSeparableBlendingMode( eBlendingMode iBlendingMode )
+{
+    switch( iBlendingMode )
+    {
+        case eBlendingMode::kDissolve       :   return  true;
+        case eBlendingMode::kDarkerColor    :   return  true;
+        case eBlendingMode::kLighterColor   :   return  true;
+        case eBlendingMode::kHue            :   return  true;
+        case eBlendingMode::kSaturation     :   return  true;
+        case eBlendingMode::kColor          :   return  true;
+        case eBlendingMode::kLuminosity     :   return  true;
+        default:                                return  false;
+    }
+}
+
+
 } // namespace ULIS

@@ -77,7 +77,7 @@ public:
     template< uint32 _SH, e_cm _CM >
     struct TForwardConnector
     {
-        static TPixelValue< TModelConnectionFormat< _CM >() > ConnectionModelFormat( const TPixelValue< _SH >& iValue )
+        static TPixelValue< TModelConnectionFormat< _CM >() > ConnectionModelFormat( const TPixelBase< _SH >& iValue )
         {
             TPixelValue< TModelConnectionFormat< _CM >() > ret;
             ConvertTypeAndLayoutInto< _SH, TModelConnectionFormat< _CM >() >( iValue, ret );
@@ -90,7 +90,7 @@ public:
     template< uint32 _SH >
     struct TForwardConnector< _SH, e_cm::kHSL >
     {
-        static TPixelValue< TModelConnectionFormat< e_cm::kHSL >() > ConnectionModelFormat( const TPixelValue< _SH >& iValue )
+        static TPixelValue< TModelConnectionFormat< e_cm::kHSL >() > ConnectionModelFormat( const TPixelAcessor< _SH, TBlockInfo< _SH >::_nf._cm >& iValue )
         {
             TPixelValue< TModelConnectionFormat< e_cm::kHSL >() > ret;
             ret.SetColor( iValue.GetColor() );
@@ -102,7 +102,7 @@ public:
     template< uint32 _SH >
     struct TForwardConnector< _SH, e_cm::kHSV >
     {
-        static TPixelValue< TModelConnectionFormat< e_cm::kHSV >() > ConnectionModelFormat( const TPixelValue< _SH >& iValue )
+        static TPixelValue< TModelConnectionFormat< e_cm::kHSV >() > ConnectionModelFormat( const TPixelAcessor< _SH, TBlockInfo< _SH >::_nf._cm >& iValue )
         {
             TPixelValue< TModelConnectionFormat< e_cm::kHSV >() > ret;
             ret.SetColor( iValue.GetColor() );
@@ -115,7 +115,7 @@ public:
     template< uint32 _SHR, uint32 _SHCO, e_cm _CM >
     struct TDropConnector
     {
-        static void Apply( TPixelValue< _SHR >& iDst, const TPixelValue< _SHCO >& iConnector )
+        static void Apply( TPixelBase< _SHR >& iDst, const TPixelBase< _SHCO >& iConnector )
         {
             ConvertTypeAndLayoutInto< _SHCO, _SHR >( iConnector, iDst );
         }
@@ -126,7 +126,7 @@ public:
     template< uint32 _SHR, uint32 _SHCO >
     struct TDropConnector< _SHR, _SHCO, e_cm::kHSL >
     {
-        static void Apply( TPixelValue< _SHR >& iDst, const TPixelValue< _SHCO >& iConnector )
+        static void Apply( TPixelAcessor< _SHR, TBlockInfo< _SHR >::_nf._cm >& iDst, const TPixelAcessor< _SHCO, TBlockInfo< _SHCO >::_nf._cm >& iConnector )
         {
             iDst.SetColor( iConnector.GetColor() );
         }
@@ -136,7 +136,7 @@ public:
     template< uint32 _SHR, uint32 _SHCO >
     struct TDropConnector< _SHR, _SHCO, e_cm::kHSV >
     {
-        static void Apply( TPixelValue< _SHR >& iDst, const TPixelValue< _SHCO >& iConnector )
+        static void Apply( TPixelAcessor< _SHR, TBlockInfo< _SHR >::_nf._cm >& iDst, const TPixelAcessor< _SHCO, TBlockInfo< _SHCO >::_nf._cm >& iConnector )
         {
             iDst.SetColor( iConnector.GetColor() );
         }
@@ -145,7 +145,7 @@ public:
     /////////////////////////////////////////////////////
     // General Convert
     template< uint32 _SHSrc, uint32 _SHDst >
-    static void Convert( const TPixelValue< _SHSrc >& iSrc, TPixelValue< _SHDst >& iDst )
+    static void Convert( const TPixelAcessor< _SHSrc, TBlockInfo< _SHSrc >::_nf._cm >& iSrc, TPixelAcessor< _SHDst, TBlockInfo< _SHDst >::_nf._cm >& iDst )
     {
         using src_info = TBlockInfo< _SHSrc >;
         using dst_info = TBlockInfo< _SHDst >;
@@ -193,9 +193,59 @@ public:
 
 
         cmsDoTransform( hTransform, srcConnectionValue.Ptr(), dstConnectionValue.Ptr(), 1 );
+        cmsDeleteTransform( hTransform );
 
         TDropConnector< _SHDst, TModelConnectionFormat< dst_info::_nf._cm >(), dst_info::_nf._cm >::Apply( iDst, dstConnectionValue );
     }
+
+    template< uint32 _SHSrc, uint32 _SHDst >
+    struct TReusableConverter {
+        using src_info = TBlockInfo< _SHSrc >;
+        using dst_info = TBlockInfo< _SHDst >;
+        using tSrcConnectionType = TPixelValue< TModelConnectionFormat< src_info::_nf._cm >() >;
+        using tDstConnectionType = TPixelValue< TModelConnectionFormat< dst_info::_nf._cm >() >;
+        tSrcConnectionType srcConnectionValue;
+        tDstConnectionType dstConnectionValue;
+        FConversionDiagnosis diag;
+        cmsHPROFILE     hInProfile;
+        cmsHPROFILE     hOutProfile;
+        cmsHTRANSFORM   hTransform;
+        void Build( FColorProfile* iSrcProfile, FColorProfile* iDstProfile ) {
+            diag.bSameFormat    = src_info::_nf._sh == dst_info::_nf._sh;
+            diag.bSameType      = src_info::_nf._tp == dst_info::_nf._tp;
+            diag.bSameModel     = src_info::_nf._cm == dst_info::_nf._cm;
+            diag.bSameLayout    = src_info::_nf._lh == dst_info::_nf._lh;
+            diag.bSameProfile   = iSrcProfile == iDstProfile;
+            if( src_info::_nf._cm == dst_info::_nf._cm )
+            {
+                if( iSrcProfile == nullptr ) iSrcProfile = iDstProfile;
+                if( iDstProfile == nullptr ) iDstProfile = iSrcProfile;
+            }
+            else
+            {
+                if( iSrcProfile == nullptr ) iSrcProfile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( src_info::_nf._cm );
+                if( iDstProfile == nullptr ) iDstProfile = FGlobalProfileRegistry::Get().GetDefaultProfileForModel( dst_info::_nf._cm );
+            }
+            hInProfile  = iSrcProfile->ProfileHandle();
+            hOutProfile = iDstProfile->ProfileHandle();
+            hTransform = cmsCreateTransform( hInProfile
+                                           , TCMSConnectionType< tSrcConnectionType::ColorModel() >()
+                                           , hOutProfile
+                                           , TCMSConnectionType< tDstConnectionType::ColorModel() >()
+                                           , INTENT_PERCEPTUAL, 0 );
+        }
+
+        void Destroy() {
+            cmsDeleteTransform( hTransform );
+        }
+
+        void Convert( const TPixelAcessor< _SHSrc, TBlockInfo< _SHSrc >::_nf._cm >& iSrc, TPixelAcessor< _SHDst, TBlockInfo< _SHDst >::_nf._cm >& iDst ) {
+            srcConnectionValue.TPixelBase< TModelConnectionFormat< src_info::_nf._cm >() >::operator=( TForwardConnector< _SHSrc, src_info::_nf._cm >::ConnectionModelFormat( iSrc ) );
+            dstConnectionValue.TPixelBase< TModelConnectionFormat< dst_info::_nf._cm >() >::operator=( TForwardConnector< _SHDst, dst_info::_nf._cm >::ConnectionModelFormat( iDst ) );
+            cmsDoTransform( hTransform, srcConnectionValue.Ptr(), dstConnectionValue.Ptr(), 1 );
+            TDropConnector< _SHDst, TModelConnectionFormat< dst_info::_nf._cm >(), dst_info::_nf._cm >::Apply( iDst, dstConnectionValue );
+        }
+    };
 };
 
 

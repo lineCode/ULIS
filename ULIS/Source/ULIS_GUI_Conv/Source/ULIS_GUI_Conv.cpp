@@ -18,59 +18,61 @@
 
 int main( int argc, char *argv[] )
 {
-    // Qt App
-    QApplication app( argc, argv );
+    ::ULIS::FValueRGBA8 valA;
+    ::ULIS::FValueRGBA8 valB;
+    valA.::ULIS::TPixelBase< ::ULIS::Format::Format_uint8RGBhasAlphaRGBAtypeLimits >::operator=( valB );
 
-    // ULIS Image Conv
-    ::ULIS::IBlock* block8 = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockRGBA8::TypeId(), "AdobeRGB_compat" );
-    ::ULIS::IBlock* blockH = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::Format::FBlockfloatHSLhasAlphaHSLAnormalized::TypeId(), ::ULIS::DefaultProfiles::AdobeRGB_compat );
-    ::ULIS::IBlock* blockf = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockBGRAfn::TypeId() );
-    ::ULIS::IBlock* blockg = ::ULIS::FMakeContext::MakeBlock( 1024, 1024, ::ULIS::FBlockGf::TypeId() );
+    ::ULIS::FValueRGBA8 valRGBA8;
+    valRGBA8.AssignColorProfile( "sRGB" );
+    valRGBA8.SetR( 255 );
+    valRGBA8.SetG( 127 );
+    valRGBA8.SetB( 50 );
+    valRGBA8.SetAlpha( 255 );
 
-    //::ULIS::FClearFillContext::Fill( block8, ::ULIS::CColor( 0, 128, 255 ) );
-    //::ULIS::FClearFillContext::Clear( blockf );
-    //::ULIS::FClearFillContext::Fill( blockg, ::ULIS::CColor::FromGreyF( 0.5f ) );
+    ::ULIS::FValueHSLAf valHSLAf;
+    valHSLAf.AssignColorProfile( "sRGB" );
 
-    ::ULIS::FValueRGBA8 val = ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 );
-    int R = val.R();
-    int G = val.G();
-    int B = val.B();
-    int A = val.GetAlpha();
-    std::string profilename = val.ColorProfile()->Name();
+    using ::ULIS::uint8;
+    ::ULIS::TConversionContext::Convert( valRGBA8, valHSLAf );
+    float H = valHSLAf.H();
+    float S = valHSLAf.S();
+    float L = valHSLAf.L();
+    float A = valHSLAf.GetAlpha();
+
+    ::ULIS::CColor src = valRGBA8.GetColor();
+    ::ULIS::CColor src_transform = src.ToHSL();
+    ::ULIS::CColor dst = valHSLAf.GetColor();
+    ::ULIS::CColor dst_transform = dst.ToRGB();
+    int src_R = src.Red();
+    int src_G = src.Green();
+    int src_B = src.Blue();
+    int src_transform_H = src_transform.HSLHue();
+    int src_transform_S = src_transform.HSLSaturation();
+    int src_transform_L = src_transform.Lightness();
+    int dst_H = dst.HSLHue();
+    int dst_S = dst.HSLSaturation();
+    int dst_L = dst.Lightness();
+    int dst_transform_R = dst_transform.Red();
+    int dst_transform_G = dst_transform.Green();
+    int dst_transform_B = dst_transform.Blue();
+
+    uint8 check = 0.3f * 255 + 0.59f * 127 + 0.11 * 50;
+
     auto dummy = 0;
-    //::ULIS::TConversionContext::ConvertTypeAndLayoutInto< ::ULIS::FBlockRGBA8::TypeId(), ::ULIS::FBlockRGBA8::TypeId() >( ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 ), val );
 
+    /*
+    //::ULIS::TConversionContext::ConvertTypeAndLayoutInto< ::ULIS::FBlockRGBA8::TypeId(), ::ULIS::FBlockRGBA8::TypeId() >( ::ULIS::PixelValueAutoCastChecked( block8, 0, 0 ), val );
     ::ULIS::FValueRGBA8 v1;
     v1.SetR( 255 );
     v1.SetG( 0 );
     v1.SetB( 0 );
     v1.SetAlpha( 255 );
     ::ULIS::FValueLabAfn v2;
-    ::ULIS::TConversionContext::Convert( v1, v2 );
     float lL = v2.L();
     float la = v2.a();
     float lb = v2.b();
     float lA = v2.GetAlpha();
     auto dummyx = 0;
-
-    /*
-    // Qt Window
-    QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
-    QPixmap pixmap  = QPixmap::fromImage( *image );
-    QWidget* w      = new QWidget();
-    QLabel* label   = new QLabel( w );
-    label->setPixmap( pixmap );
-    w->resize( pixmap.size() );
-    w->show();
-
-    int exit_code = app.exec();
-
-    delete label;
-    delete image;
-    delete w;
-    delete block;
-
-    return  exit_code;
     */
 
     return  0;

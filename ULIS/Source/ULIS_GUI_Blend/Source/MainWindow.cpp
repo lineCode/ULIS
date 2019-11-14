@@ -73,9 +73,10 @@ cMainWindow::Init()
         ::ULIS::IBlock* ulis_display = ::ULIS::FMakeContext::CopyBlock( mUnderSource );
         ::ULIS::FPerformanceOptions opt;
         opt.desired_workers = 1;
-        ::ULIS::FBlendingContext::Blend( mOverSource, ulis_display, ::ULIS::eBlendingMode(i), 0, 0, 1.f, opt, false );
+        ::ULIS::FBlendingContext::Blend( mOverSource, ulis_display, 0, 0, ::ULIS::eBlendingMode(i), ::ULIS::eAlphaMode::kNormal, 1.f, opt, false );
         QString ps_filename( ::ULIS::kwBlendingMode[i] );
         QString path = "Resources/ULIS_GUI_Blend/PhotoshopResults/" + ps_filename + ".png";
+        std::cout << ps_filename.toStdString() << std::endl;
         QImage* tmp = new QImage( path );
         ::ULIS::IBlock* ps_display = ::ULIS::FMakeContext::MakeBlockFromDataPerformCopy( tmp->width(), tmp->height(), tmp->bits(), ::ULIS::FBlockRGBA8::TypeId() );
         delete  tmp;
