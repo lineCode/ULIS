@@ -27,10 +27,117 @@ namespace ULIS {
 #define tSpec TBlockInfo< _SH >
 
 /////////////////////////////////////////////////////
+// TPixelBlender_RGBA8_SSE
+template< uint32        _SH
+        , eBlendingMode _BM
+        , eAlphaMode    _AM
+        , bool          _NS >
+struct TPixelBlender_RGBA8_SSE
+{
+     // Type Info
+    using tPixelType                = typename TBlock< _SH >::tPixelType;
+    using tPixelValue               = TPixelValue< _SH >;
+    using tPixelProxy               = TPixelProxy< _SH >;
+    using tPixelBase                = TPixelBase< _SH >;
+    using tPixelInfo                = TPixelInfo< _SH >;
+    using tBlockInfo                = TBlockInfo< _SH >;
+    static constexpr const uint8 mRIndex = tPixelInfo::RedirectedIndex( 0 );
+    static constexpr const uint8 mGIndex = tPixelInfo::RedirectedIndex( 1 );
+    static constexpr const uint8 mBIndex = tPixelInfo::RedirectedIndex( 2 );
+    static constexpr const uint8 mAIndex = tPixelInfo::RedirectedIndex( 3 );
+    static inline void ProcessPixel( tPixelType* iBackPixelPtr, tPixelType* iTopPixelPtr, float iOpacity )
+    {
+        __m128 backElementsf    = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)iBackPixelPtr ) ) );
+        __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)iTopPixelPtr ) ) );
+        __m128 backAlphaf = _mm_set_ps1( float( *( iBackPixelPtr + mAIndex ) ) );
+        __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( iTopPixelPtr + mAIndex ) ) ), _mm_set_ps1( iOpacity ) ), _mm_set_ps1( 255.f ) );
+        __m128 alphaComp = BlendAlphaSSE< eAlphaMode::kNormal >::Compute( backAlphaf, topAlphaf );
+        __m128 alphaResultf = BlendAlphaSSE< _AM >::Compute( backAlphaf, topAlphaf );
+        __m128 vcmp = _mm_cmpeq_ps( alphaComp, _mm_setzero_ps() );
+        int mask = _mm_movemask_ps( vcmp );
+        bool result = ( mask == 0xf );
+        __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, _mm_set_ps1( 255.f ) ), alphaComp );
+        __m128 compute = BlendFuncSSE< _BM >::Compute( backElementsf, topElementsf );
+        __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), _mm_set_ps1( 255.f ) ) ) ), _mm_set_ps1( 255.f ) );
+
+        __m128i y = _mm_cvtps_epi32( elementsResult );                  // Convert them to 32-bit ints
+        y = _mm_packus_epi32(y, y);                                     // Pack down to 16 bits
+        y = _mm_packus_epi16(y, y);                                     // Pack down to 8 bits
+        *(uint32*)iBackPixelPtr = (uint32)_mm_cvtsi128_si32(y);          // Store the lower 32 bits
+        __m128i alpha_result = _mm_cvtps_epi32( alphaResultf );         // Convert them to 32-bit ints
+        alpha_result = _mm_packus_epi32(alpha_result, alpha_result);    // Pack down to 16 bits
+        alpha_result = _mm_packus_epi16(alpha_result, alpha_result);    // Pack down to 8 bits
+        uint32 alpha = (uint32)_mm_cvtsi128_si32(alpha_result);         // Store the lower 32 bits
+        memcpy( iBackPixelPtr + mAIndex, &alpha, 1 );
+    }
+};
+
+/////////////////////////////////////////////////////
+// TPixelBlender_RGBA8_SSE, Specialization for Non Separable blending modes
+template< uint32        _SH
+        , eBlendingMode _BM
+        , eAlphaMode    _AM >
+struct TPixelBlender_RGBA8_SSE< _SH
+                              , _BM
+                              , _AM
+                              , true >
+{
+     // Type Info
+    using tPixelType                = typename TBlock< _SH >::tPixelType;
+    using tPixelValue               = TPixelValue< _SH >;
+    using tPixelProxy               = TPixelProxy< _SH >;
+    using tPixelBase                = TPixelBase< _SH >;
+    using tPixelInfo                = TPixelInfo< _SH >;
+    using tBlockInfo                = TBlockInfo< _SH >;
+    static constexpr const uint8 mRIndex = tPixelInfo::RedirectedIndex( 0 );
+    static constexpr const uint8 mGIndex = tPixelInfo::RedirectedIndex( 1 );
+    static constexpr const uint8 mBIndex = tPixelInfo::RedirectedIndex( 2 );
+    static constexpr const uint8 mAIndex = tPixelInfo::RedirectedIndex( 3 );
+    static inline void ProcessPixel( tPixelType* iBackPixelPtr, tPixelType* iTopPixelPtr, float iOpacity )
+    {
+        tPixelProxy back( iBackPixelPtr );
+        tPixelProxy top( iTopPixelPtr );
+        tPixelValue componentsResult;
+        BlendFuncNS_RGBA8< _SH, _BM >::Compute( back, top, componentsResult );
+
+        __m128 backElementsf    = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)iBackPixelPtr ) ) );
+        __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)iTopPixelPtr ) ) );
+        __m128 backAlphaf = _mm_set_ps1( float( *( iBackPixelPtr + mAIndex ) ) );
+        __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( iTopPixelPtr + mAIndex ) ) ), _mm_set_ps1( iOpacity ) ), _mm_set_ps1( 255.f ) );
+        __m128 alphaComp = BlendAlphaSSE< eAlphaMode::kNormal >::Compute( backAlphaf, topAlphaf );
+        __m128 alphaResultf = BlendAlphaSSE< _AM >::Compute( backAlphaf, topAlphaf );
+        __m128 vcmp = _mm_cmpeq_ps( alphaComp, _mm_setzero_ps() );
+        int mask = _mm_movemask_ps( vcmp );
+        bool result = ( mask == 0xf );
+        __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, _mm_set_ps1( 255.f ) ), alphaComp );
+        __m128 compute = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)componentsResult.Ptr() ) ) );
+        __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), _mm_set_ps1( 255.f ) ) ) ), _mm_set_ps1( 255.f ) );
+
+        __m128i y = _mm_cvtps_epi32( elementsResult );                  // Convert them to 32-bit ints
+        y = _mm_packus_epi32(y, y);                                     // Pack down to 16 bits
+        y = _mm_packus_epi16(y, y);                                     // Pack down to 8 bits
+        *(uint32*)iBackPixelPtr = (uint32)_mm_cvtsi128_si32(y);          // Store the lower 32 bits
+        __m128i alpha_result = _mm_cvtps_epi32( alphaResultf );         // Convert them to 32-bit ints
+        alpha_result = _mm_packus_epi32(alpha_result, alpha_result);    // Pack down to 16 bits
+        alpha_result = _mm_packus_epi16(alpha_result, alpha_result);    // Pack down to 8 bits
+        uint32 alpha = (uint32)_mm_cvtsi128_si32(alpha_result);         // Store the lower 32 bits
+        memcpy( iBackPixelPtr + mAIndex, &alpha, 1 );
+    }
+};
+
+/////////////////////////////////////////////////////
 // TBlockBlender_RGBA8_SSE
-template< uint32 _SH, eBlendingMode _BM, eAlphaMode _AM >
+template< uint32 _SH, eBlendingMode _BM, eAlphaMode _AM, bool _NS >
 class TBlockBlender_RGBA8_SSE
 {
+     // Type Info
+    using tPixelType                = typename TBlock< _SH >::tPixelType;
+    using tPixelValue               = TPixelValue< _SH >;
+    using tPixelProxy               = TPixelProxy< _SH >;
+    using tPixelBase                = TPixelBase< _SH >;
+    using tPixelInfo                = TPixelInfo< _SH >;
+    using tBlockInfo                = TBlockInfo< _SH >;
+
 public:
     static void ProcessScanLineSSE( TBlock< _SH >*                     iBlockTop
                                   , TBlock< _SH >*                     iBlockBack
@@ -40,49 +147,15 @@ public:
                                   , const int                          iX2
                                   , const FPoint&                      iShift )
     {
-        // Type Info
-        using tPixelType                = typename TBlock< _SH >::tPixelType;
-        using tPixelValue               = TPixelValue< _SH >;
-        using tPixelProxy               = TPixelProxy< _SH >;
-        using tPixelBase                = TPixelBase< _SH >;
-        using tPixelInfo                = TPixelInfo< _SH >;
-        using tBlockInfo                = TBlockInfo< _SH >;
-
         // Base ptrs for scanlines
         tPixelType* backPixelPtr    = iBlockBack->PixelPtr( iX1, iLine );
         tPixelType* topPixelPtr     = iBlockTop->PixelPtr( iX1 + iShift.x, iLine + iShift.y );
-        uint8 alpha_index           = (uint8)tPixelInfo::RedirectedIndex( 3 );
-        __m128  opacityf            = _mm_set_ps1( (float)iOpacity );
-        __m128 max255f             = _mm_set_ps1( 255.f );
+        float opacity               = (float)iOpacity;
         const int op = iX2 - iX1;
 
         for( int i = 0; i < op; ++i )
         {
-            __m128 backElementsf    = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)backPixelPtr ) ) );
-            __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)topPixelPtr ) ) );
-            __m128 backAlphaf = _mm_set_ps1( float( *( backPixelPtr + alpha_index ) ) );
-            __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( topPixelPtr + alpha_index ) ) ), opacityf ), max255f );
-            __m128 alphaComp = BlendAlphaSSE< eAlphaMode::kNormal >::Compute( backAlphaf, topAlphaf );
-            __m128 alphaResultf = BlendAlphaSSE< _AM >::Compute( backAlphaf, topAlphaf );
-            __m128 vcmp = _mm_cmpeq_ps( alphaComp, _mm_setzero_ps());
-            int mask = _mm_movemask_ps (vcmp);
-            bool result = (mask == 0xf);
-            __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, max255f ), alphaComp );
-
-            __m128 compute = BlendFuncSSE< _BM >::Compute( backElementsf, topElementsf );
-            __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), max255f ) ) ), max255f );
-
-
-            __m128i y = _mm_cvtps_epi32( elementsResult );                  // Convert them to 32-bit ints
-            y = _mm_packus_epi32(y, y);                                     // Pack down to 16 bits
-            y = _mm_packus_epi16(y, y);                                     // Pack down to 8 bits
-            *(uint32*)backPixelPtr = (uint32)_mm_cvtsi128_si32(y);          // Store the lower 32 bits
-            __m128i alpha_result = _mm_cvtps_epi32( alphaResultf );         // Convert them to 32-bit ints
-            alpha_result = _mm_packus_epi32(alpha_result, alpha_result);    // Pack down to 16 bits
-            alpha_result = _mm_packus_epi16(alpha_result, alpha_result);    // Pack down to 8 bits
-            uint32 alpha = (uint32)_mm_cvtsi128_si32(alpha_result);         // Store the lower 32 bits
-            memcpy( backPixelPtr + alpha_index, &alpha, 1 );
-
+            TPixelBlender_RGBA8_SSE< _SH, _BM, _AM, _NS >::ProcessPixel( backPixelPtr, topPixelPtr, opacity );
             backPixelPtr    += tBlockInfo::_nf._pd;
             topPixelPtr     += tBlockInfo::_nf._pd;
         }
@@ -94,14 +167,6 @@ public:
                                , const FRect&                       iROI
                                , const FPoint&                      iShift )
     {
-        // Type Info
-        using tPixelType                = typename TBlock< _SH >::tPixelType;
-        using tPixelValue               = TPixelValue< _SH >;
-        using tPixelProxy               = TPixelProxy< _SH >;
-        using tPixelBase                = TPixelBase< _SH >;
-        using tPixelInfo                = TPixelInfo< _SH >;
-        using tBlockInfo                = TBlockInfo< _SH >;
-
         // Geom
         const int x1        = iROI.x;
         const int y1        = iROI.y;
@@ -111,9 +176,7 @@ public:
         // Base ptrs for scanlines
         tPixelType* backPixelPtr;//     = iBlockBack->PixelPtr( iX1, iLine );
         tPixelType* topPixelPtr; //     = iBlockTop->PixelPtr( iX1 + iShift.x, iLine + iShift.y );
-        uint8 alpha_index               = (uint8)tPixelInfo::RedirectedIndex( 3 );
-        __m128  opacityf                = _mm_set_ps1( (float)iOpacity );
-        __m128 max255f                  = _mm_set_ps1( 255.f );
+        float opacity               = (float)iOpacity;
         const int opx = x2 - x1;
 
         for( int j = y1; j < y2; ++j )
@@ -122,32 +185,7 @@ public:
             topPixelPtr     = iBlockTop->PixelPtr( x1 + iShift.x, j + iShift.y );
             for( int i = 0; i < opx; ++i )
             {
-                __m128 backElementsf    = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)backPixelPtr ) ) );
-                __m128 topElementsf     = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)topPixelPtr ) ) );
-                __m128 backAlphaf = _mm_set_ps1( float( *( backPixelPtr + alpha_index ) ) );
-                __m128 topAlphaf = _mm_div_ps( _mm_mul_ps( _mm_set_ps1( float( *( topPixelPtr + alpha_index ) ) ), opacityf ), max255f );
-                __m128 alphaComp = BlendAlphaSSE< eAlphaMode::kNormal >::Compute( backAlphaf, topAlphaf );
-                __m128 alphaResultf = BlendAlphaSSE< _AM >::Compute( backAlphaf, topAlphaf );
-                __m128 vcmp = _mm_cmpeq_ps( alphaComp, _mm_setzero_ps());
-                int mask = _mm_movemask_ps (vcmp);
-                bool result = (mask == 0xf);
-                __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, max255f ), alphaComp );
-
-                __m128 compute = BlendFuncSSE< _BM >::Compute( backElementsf, topElementsf );
-                __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( max255f, backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), max255f ) ) ), max255f );
-
-
-                __m128i y = _mm_cvtps_epi32( elementsResult );                  // Convert them to 32-bit ints
-                y = _mm_packus_epi32(y, y);                                     // Pack down to 16 bits
-                y = _mm_packus_epi16(y, y);                                     // Pack down to 8 bits
-                *(uint32*)backPixelPtr = (uint32)_mm_cvtsi128_si32(y);          // Store the lower 32 bits
-                __m128i alpha_result = _mm_cvtps_epi32( alphaResultf );         // Convert them to 32-bit ints
-                alpha_result = _mm_packus_epi32(alpha_result, alpha_result);    // Pack down to 16 bits
-                alpha_result = _mm_packus_epi16(alpha_result, alpha_result);    // Pack down to 8 bits
-                uint32 alpha = (uint32)_mm_cvtsi128_si32(alpha_result);         // Store the lower 32 bits
-                memcpy( backPixelPtr + alpha_index, &alpha, 1 );
-
-
+                TPixelBlender_RGBA8_SSE< _SH, _BM, _AM, _NS >::ProcessPixel( backPixelPtr, topPixelPtr, opacity );
                 backPixelPtr    += tBlockInfo::_nf._pd;
                 topPixelPtr     += tBlockInfo::_nf._pd;
             }
@@ -169,7 +207,7 @@ public:
             const int y2 = y1 + iROI.h;
             FThreadPool& global_pool = FGlobalThreadPool::Get();
             for( int y = y1; y < y2; ++y )
-                global_pool.ScheduleJob( TBlockBlender_RGBA8_SSE< _SH, _BM, _AM >::ProcessScanLineSSE, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift );
+                global_pool.ScheduleJob( TBlockBlender_RGBA8_SSE< _SH, _BM, _AM, _NS >::ProcessScanLineSSE, iBlockTop, iBlockBack, iOpacity, y, x1, x2, iShift );
             global_pool.WaitForCompletion();
         }
         else
@@ -179,7 +217,6 @@ public:
     }
 };
 
-/*
 /////////////////////////////////////////////////////
 // TBlockBlender_Imp
 template< uint32        _SH     // Format
@@ -208,15 +245,14 @@ public:
                    , const FPoint&                      iShift
                    , const FPerformanceOptions&         iPerformanceOptions= FPerformanceOptions() )
     {
-        TBlockBlender_RGBA8_SSE< _SH, _BM, _AM >::Run( iBlockTop
-                                                     , iBlockBack
-                                                     , iOpacity
-                                                     , iROI
-                                                     , iShift
-                                                     , iPerformanceOptions);
+        TBlockBlender_RGBA8_SSE< _SH, _BM, _AM, _NS >::Run( iBlockTop
+                                                          , iBlockBack
+                                                          , iOpacity
+                                                          , iROI
+                                                          , iShift
+                                                          , iPerformanceOptions);
     }
 };
-*/
 
 /////////////////////////////////////////////////////
 // Undefines

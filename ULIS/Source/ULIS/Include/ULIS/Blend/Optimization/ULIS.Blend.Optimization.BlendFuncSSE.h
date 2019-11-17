@@ -185,6 +185,135 @@ ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_START( Divide )
 ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_END
 
 /////////////////////////////////////////////////////
+// Non Separable BlendFunc Functors
+template< uint32 _SH, eBlendingMode _BM >
+struct BlendFuncNS_RGBA8 {
+    static inline
+    void  Compute( const typename TBlock< _SH >::tPixelProxy& Cb
+                 , const typename TBlock< _SH >::tPixelProxy& Cs
+                 , typename TBlock< _SH >::tPixelValue& Cr )
+    {
+    }
+};
+
+#define ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_START( iMode )                                                       \
+    template< uint32 _SH > struct BlendFuncNS_RGBA8< _SH, eBlendingMode::k ## iMode > {                                     \
+    static inline                                                                                                           \
+    void  Compute( const typename TBlock< _SH >::tPixelProxy& Cb                                                            \
+                 , const typename TBlock< _SH >::tPixelProxy& Cs                                                            \
+                 , typename TBlock< _SH >::tPixelValue& Cr ) {
+#define ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END }};
+/////////////////////////////////////////////////////
+// HSL blending modes functions
+template< uint32 _SH >
+static inline uint8
+Lum( const typename TBlock< _SH >::tPixelValue& C )
+{
+    return  uint8( 0.3f * C.R() + 0.59f * C.G() + 0.11f * C.B() );
+}
+
+
+static inline float
+Lum( float R, float G, float B )
+{
+    return  float( 0.3f * R + 0.59f * G + 0.11f * B );
+}
+
+template< uint32 _SH >
+static typename TBlock< _SH >::tPixelValue
+SetLum( const typename TBlock< _SH >::tPixelValue& C, uint8 L )
+{
+    float d = L - Lum< _SH >( C );
+    float R = C.R() + d;
+    float G = C.G() + d;
+    float B = C.B() + d;
+    float backR = R;
+    float backG = G;
+    float backB = B;
+    float l = Lum( R, G, B );
+    float n = FMath::Min3( R, G, B );
+    float x = FMath::Max3( R, G, B );
+    if( n < 0.0f )
+    {
+        float ln = l - n;
+        R = l + ( ( ( R - l ) * l ) / ( ln ) );
+        G = l + ( ( ( G - l ) * l ) / ( ln ) );
+        B = l + ( ( ( B - l ) * l ) / ( ln ) );
+    }
+
+    if( x > 255.0f )
+    {
+        float xl = x - l;
+        float fl255 = 255.f - l;
+        R = l + ( ( ( R - l ) * ( fl255 ) ) / ( xl ) );
+        G = l + ( ( ( G - l ) * ( fl255 ) ) / ( xl ) );
+        B = l + ( ( ( B - l ) * ( fl255 ) ) / ( xl ) );
+    }
+
+    typename TBlock< _SH >::tPixelValue ret;
+    ret.SetR( (uint8)R );
+    ret.SetG( (uint8)G );
+    ret.SetB( (uint8)B );
+    return  ret;
+}
+
+template< uint32 _SH >
+static inline uint8
+Sat( const typename TBlock< _SH >::tPixelValue& C )
+{
+    return  FMath::Max3( C.R(), C.G(), C.B() ) - FMath::Min3( C.R(), C.G(), C.B() );
+}
+
+template< uint32 _SH >
+static typename TBlock< _SH >::tPixelValue
+SetSat( const typename TBlock< _SH >::tPixelValue& C, uint8 s )
+{
+    uint8 maxIndex = C.R() > C.G() ? ( C.R() > C.B() ? 0 : 2 ) : ( C.G() > C.B() ? 1 : 2 );
+    uint8 minIndex = C.R() < C.G() ? ( C.R() < C.B() ? 0 : 2 ) : ( C.G() < C.B() ? 1 : 2 );
+    uint8 midIndex = 3 - maxIndex - minIndex;
+    float Cmax = C.GetComponent( maxIndex );
+    float Cmin = C.GetComponent( minIndex );
+    float Cmid = C.GetComponent( midIndex );
+    if( Cmax > Cmin )
+    {
+        Cmid = ( ( ( Cmid - Cmin ) * s ) / ( Cmax - Cmin ) );
+        Cmax = s;
+    }
+    else
+    {
+        Cmid = Cmax = 0.f;
+    }
+    Cmin = 0.f;
+
+    typename TBlock< _SH >::tPixelValue ret;
+    ret.SetComponent( maxIndex, Cmax );
+    ret.SetComponent( minIndex, Cmin );
+    ret.SetComponent( midIndex, Cmid );
+    return  ret;
+}
+
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- Hue
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_START( Hue )
+    Cr.TPixelBase< _SH >::operator=( SetLum< _SH >( SetSat< _SH >( Cs, Sat< _SH >( Cb ) ), Lum< _SH >( Cb ) ) );
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- Saturation
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_START( Saturation )
+    Cr.TPixelBase< _SH >::operator=( SetLum< _SH >( SetSat< _SH >( Cb, Sat< _SH >( Cs ) ), Lum< _SH >( Cb ) ) );
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- Color
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_START( Color )
+    Cr.TPixelBase< _SH >::operator=( SetLum< _SH >( Cs, Lum< _SH >( Cb ) ) );
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- Luminosity
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_START( Luminosity )
+    Cr.TPixelBase< _SH >::operator=( SetLum< _SH >( Cb, Lum< _SH >( Cs ) ) );
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END
+
+/////////////////////////////////////////////////////
 // Undefines
 #undef tSpec
 #undef ttPixelType
