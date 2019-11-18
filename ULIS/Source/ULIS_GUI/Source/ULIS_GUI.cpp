@@ -31,7 +31,7 @@ int main( int argc, char *argv[] )
     ::ULIS::IBlock* block = ::ULIS::FMakeContext::MakeBlockFromExternalDataTakeOwnership( width, height, raw, ::ULIS::Format::Format_RGBA8 );
     ::ULIS::IBlock* overlay = ::ULIS::FMakeContext::MakeBlock( width, height, ::ULIS::Format::Format_RGBA8 );
     ::ULIS::FClearFillContext::Fill( overlay, ::ULIS::CColor( 255, 0, 0 ) );
-    ::ULIS::FBlendingContext::Blend( overlay, block, 0, 0, ::ULIS::eBlendingMode::kDissolve, ::ULIS::eAlphaMode::kNormal, 0.5f );
+    ::ULIS::FBlendingContext::Blend( overlay, block, 0, 0, ::ULIS::eBlendingMode::kNormal, ::ULIS::eAlphaMode::kBack, 0.1f );
     raw = nullptr;
 
     QImage* image   = new QImage( block->DataPtr(), block->Width(), block->Height(), block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

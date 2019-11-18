@@ -312,7 +312,16 @@ ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END
 ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_START( Luminosity )
     Cr.TPixelBase< _SH >::operator=( SetLum< _SH >( Cb, Lum< _SH >( Cs ) ) );
 ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END
-
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------- DarkerColor
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_START( DarkerColor )
+    Cr.TPixelBase< _SH >::operator=( Lum< _SH >( Cb ) < Lum< _SH >( Cs ) ? Cb : Cs );
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------- LighterColor
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_START( LighterColor )
+    Cr.TPixelBase< _SH >::operator=( Lum< _SH >( Cb ) > Lum< _SH >( Cs ) ? Cb : Cs );
+ULIS_SPEC_NONSEPARABLE_BLENDFUNC_RGBA8_COMPUTE_END
 /////////////////////////////////////////////////////
 // Undefines
 #undef tSpec

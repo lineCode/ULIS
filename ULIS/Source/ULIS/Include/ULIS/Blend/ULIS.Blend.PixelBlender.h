@@ -142,7 +142,6 @@ struct TPixelBlender< _SH
     {
         typename TBlock< _SH >::tPixelProxy         pixelBack   = back->PixelProxy( x, y );
         typename TBlock< _SH >::tPixelProxy         pixelTop    = top->PixelProxy( x + shift.x, y + shift.y );
-        typename TBlock< _SH >::tPixelValue         componentsResult;
 
         float threshold = ConvType< typename TBlock< _SH >::tNextPixelType, float >( (typename TBlock< _SH >::tNextPixelType)( pixelTop.GetAlpha() * opacity ) );
         float toss = 0.f;

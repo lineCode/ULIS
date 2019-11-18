@@ -48,43 +48,41 @@ struct BlendAlpha {
 ULIS_SPEC_BLENDALPHA_COMPUTE_START( Normal )
     return  ( Cb + Cs ) - ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( (typename TBlock< _SH >::tNextPixelType)( Cb * Cs ) );
 ULIS_SPEC_BLENDALPHA_COMPUTE_END
-
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- Erase
 ULIS_SPEC_BLENDALPHA_COMPUTE_START( Erase )
     return  ConvType< typename TBlock< _SH >::tNextPixelType, typename TBlock< _SH >::tPixelType >( (typename TBlock< _SH >::tNextPixelType)( ( ttMax - Cs ) * Cb ) );
 ULIS_SPEC_BLENDALPHA_COMPUTE_END
-
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Top
 ULIS_SPEC_BLENDALPHA_COMPUTE_START( Top )
     return  Cs;
 ULIS_SPEC_BLENDALPHA_COMPUTE_END
-
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------- Back
 ULIS_SPEC_BLENDALPHA_COMPUTE_START( Back )
     return  Cb;
 ULIS_SPEC_BLENDALPHA_COMPUTE_END
-
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------- Sub
 ULIS_SPEC_BLENDALPHA_COMPUTE_START( Sub )
     return  Cb > Cs ? Cb - Cs : 0;
 ULIS_SPEC_BLENDALPHA_COMPUTE_END
-
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Add
 ULIS_SPEC_BLENDALPHA_COMPUTE_START( Add )
     return  ttPixelType( ttMax - Cb ) > Cs ? Cb + Cs : ttMax;
 ULIS_SPEC_BLENDALPHA_COMPUTE_END
-
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- Mul
+ULIS_SPEC_BLENDALPHA_COMPUTE_START( Mul )
+    return  ttDownscale( ttNextPixelType( Cb * Cs ) );
+ULIS_SPEC_BLENDALPHA_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Min
 ULIS_SPEC_BLENDALPHA_COMPUTE_START( Min )
     return  FMath::Min( Cb, Cs );
 ULIS_SPEC_BLENDALPHA_COMPUTE_END
-
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Max
 ULIS_SPEC_BLENDALPHA_COMPUTE_START( Max )

@@ -41,9 +41,6 @@ struct TPixelBlender_RGBA8_SSE
     using tPixelBase                = TPixelBase< _SH >;
     using tPixelInfo                = TPixelInfo< _SH >;
     using tBlockInfo                = TBlockInfo< _SH >;
-    static constexpr const uint8 mRIndex = tPixelInfo::RedirectedIndex( 0 );
-    static constexpr const uint8 mGIndex = tPixelInfo::RedirectedIndex( 1 );
-    static constexpr const uint8 mBIndex = tPixelInfo::RedirectedIndex( 2 );
     static constexpr const uint8 mAIndex = tPixelInfo::RedirectedIndex( 3 );
     static inline void ProcessPixel( tPixelType* iBackPixelPtr, tPixelType* iTopPixelPtr, float iOpacity )
     {
@@ -89,9 +86,6 @@ struct TPixelBlender_RGBA8_SSE< _SH
     using tPixelBase                = TPixelBase< _SH >;
     using tPixelInfo                = TPixelInfo< _SH >;
     using tBlockInfo                = TBlockInfo< _SH >;
-    static constexpr const uint8 mRIndex = tPixelInfo::RedirectedIndex( 0 );
-    static constexpr const uint8 mGIndex = tPixelInfo::RedirectedIndex( 1 );
-    static constexpr const uint8 mBIndex = tPixelInfo::RedirectedIndex( 2 );
     static constexpr const uint8 mAIndex = tPixelInfo::RedirectedIndex( 3 );
     static inline void ProcessPixel( tPixelType* iBackPixelPtr, tPixelType* iTopPixelPtr, float iOpacity )
     {
@@ -122,6 +116,45 @@ struct TPixelBlender_RGBA8_SSE< _SH
         alpha_result = _mm_packus_epi16(alpha_result, alpha_result);    // Pack down to 8 bits
         uint32 alpha = (uint32)_mm_cvtsi128_si32(alpha_result);         // Store the lower 32 bits
         memcpy( iBackPixelPtr + mAIndex, &alpha, 1 );
+    }
+};
+
+/////////////////////////////////////////////////////
+// TPixelBlender_RGBA8_SSE, Specialization for Dissolve blending mode
+template< uint32        _SH
+        , eAlphaMode    _AM >
+struct TPixelBlender_RGBA8_SSE< _SH
+                              , eBlendingMode::kDissolve
+                              , _AM
+                              , true >
+{
+    // Type Info
+    using tPixelType                = typename TBlock< _SH >::tPixelType;
+    using tPixelValue               = TPixelValue< _SH >;
+    using tPixelProxy               = TPixelProxy< _SH >;
+    using tPixelBase                = TPixelBase< _SH >;
+    using tPixelInfo                = TPixelInfo< _SH >;
+    using tBlockInfo                = TBlockInfo< _SH >;
+    static constexpr const uint8 mAIndex = tPixelInfo::RedirectedIndex( 3 );
+    static inline void ProcessPixel( tPixelType* iBackPixelPtr, tPixelType* iTopPixelPtr, float iOpacity )
+    {
+        tPixelProxy back( iBackPixelPtr );
+        tPixelProxy top( iTopPixelPtr );
+
+        float threshold = ConvType< typename TBlock< _SH >::tNextPixelType, float >( (typename TBlock< _SH >::tNextPixelType)( top.GetAlpha() * iOpacity ) );
+        float toss = 0.f;
+        {
+            float sum = uint64( iBackPixelPtr ) * uint64( iTopPixelPtr ) + ( uint64( iBackPixelPtr ) + uint64( iTopPixelPtr ) );
+            toss = float( ( int( 8253729 * ( ( sin( sum ) + cos( sum ) + 2.0f ) / 4.0f ) ) + 2396403 ) % 65537 ) / 65537.f;
+        }
+
+        if( toss < threshold )
+        {
+            const typename TBlock< _SH >::tPixelType alphaBack   = back.GetAlpha();
+            const typename TBlock< _SH >::tPixelType alphaResult = BlendAlpha< _SH, _AM >::Compute( alphaBack, TBlock< _SH >::StaticMax() );
+            back.TPixelBase< _SH >::operator=( top );
+            back.SetAlpha( alphaResult );
+        }
     }
 };
 

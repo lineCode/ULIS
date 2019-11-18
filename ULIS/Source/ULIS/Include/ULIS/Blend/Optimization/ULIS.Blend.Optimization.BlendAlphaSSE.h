@@ -74,19 +74,21 @@ ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_START( Add )
     return  _mm_min_ps( _mm_set1_ps( 255.f ), _mm_add_ps( AlphaBack, AlphaTop ) );
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END
-
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- Mul
+ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_START( Mul )
+    return  _mm_div_ps( _mm_mul_ps( AlphaBack, AlphaTop ), _mm_set_ps1( 255.f ) );
+ULIS_SPEC_BLENDFUNC_SSE_COMPUTE_END
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Min
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_START( Min )
     return  _mm_min_ps( AlphaBack, AlphaTop );
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END
-
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Max
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_START( Max )
     return  _mm_max_ps( AlphaBack, AlphaTop );
 ULIS_SPEC_BLENDALPHA_SSE_COMPUTE_END
-
 /////////////////////////////////////////////////////
 // Undefines
 #undef tSpec

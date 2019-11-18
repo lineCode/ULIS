@@ -180,7 +180,6 @@ struct BlendFuncNS {
                  , TConversionContext::TReusableConverter< _SH, TDefaultModelFormat< e_cm::kHSL >() >* iForwardConnector    \
                  , TConversionContext::TReusableConverter< TDefaultModelFormat< e_cm::kHSL >(), _SH >* iBackwardConnector ) {
 #define ULIS_SPEC_NONSEPARABLE_BLENDFUNC_COMPUTE_END }};
-
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Hue
 ULIS_SPEC_NONSEPARABLE_BLENDFUNC_COMPUTE_START( Hue )
@@ -260,5 +259,5 @@ ULIS_SPEC_NONSEPARABLE_BLENDFUNC_COMPUTE_END
 #undef ttMax
 #undef ttDownscale
 #undef ttUpscale
-
 } // namespace ULIS
+

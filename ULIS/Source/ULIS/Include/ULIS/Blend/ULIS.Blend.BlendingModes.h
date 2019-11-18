@@ -139,6 +139,7 @@ enum class eAlphaMode : uint8
     , kBack
     , kSub
     , kAdd
+    , kMul
     , kMin
     , kMax
     , kNumAlphaModes
@@ -153,9 +154,9 @@ static const char* kwAlphaMode[] =
     , "Back"
     , "Sub"
     , "Add"
+    , "Mul"
     , "Min"
     , "Max"
-
     , "Invalid"
 };
 
