@@ -11,6 +11,7 @@
 #include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
+#include "ULIS/FX/Convolution/ULIS.FX.Convolution.Kernel.h"
 
 ULIS_CLASS_FORWARD_DECLARATION( IBlock )
 
@@ -28,7 +29,7 @@ public:
     static  void  BrownianNoise( IBlock* iBlock, float iFrequency = 0.22f, float iFrequencyMult = 1.8f, float iAmplitudeMult = 0.35f, uint8 iNumLayers = 5, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
     static  void  VoronoiNoise( IBlock* iBlock, uint32 iCount, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
     static  void  Clouds( IBlock* iBlock, int iSeed = -1, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions(), bool iCallInvalidCB = true );
-
+    static  void  Convolution( IBlock* iSrc, IBlock* iDst, const FKernel& iKernel, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() );
 };
 
 } // namespace ULIS

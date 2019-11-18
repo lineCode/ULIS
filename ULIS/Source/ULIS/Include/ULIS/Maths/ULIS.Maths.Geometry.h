@@ -59,6 +59,7 @@ struct FPoint
     FPoint RotateAround( FPoint pivotPoint, double radianRotation);
     FPoint AxialSymmetry( float a, float b );
 };
+typedef FPoint FSize;
 
 
 /////////////////////////////////////////////////////

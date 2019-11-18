@@ -15,6 +15,8 @@
 #include "ULIS/FX/Noise/ULIS.FX.Noise.WhiteNoise.h"
 #include "ULIS/FX/Noise/ULIS.FX.Noise.BrownianNoise.h"
 #include "ULIS/FX/Noise/ULIS.FX.Noise.VoronoiNoise.h"
+#include "ULIS/FX/Convolution/ULIS.FX.Convolution.Kernel.h"
+#include "ULIS/FX/Convolution/ULIS.FX.Convolution.BlockConvolutioner.h"
 
 namespace ULIS {
 /////////////////////////////////////////////////////
@@ -45,6 +47,15 @@ public:
     {
         assert( iBlock );
         TVoronoiNoiseGenerator< _SH >::Run( iBlock, iCount, iSeed, iPerformanceOptions );
+    }
+
+    static void Convolution( TBlock< _SH >* iSrcBlock, TBlock< _SH >* iDstBlock, const FKernel& iKernel, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    {
+        assert( iSrcBlock );
+        assert( iDstBlock );
+        assert( iDstBlock->Width() == iSrcBlock->Width() );
+        assert( iDstBlock->Height() == iSrcBlock->Height() );
+        TBlockConvolutioner< _SH >::Run( iSrcBlock, iDstBlock, iKernel, iPerformanceOptions );
     }
 
 };
