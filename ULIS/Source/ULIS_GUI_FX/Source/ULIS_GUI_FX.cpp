@@ -14,21 +14,30 @@
 #include <QPixmap>
 #include <QLabel>
 #include <ULIS_CORE>
+#define STB_IMAGE_IMPLEMENTATION
+#include <ULIS/stb/stb_image.h>
 
 int main( int argc, char *argv[] )
 {
     using namespace ::ULIS;
     QApplication app( argc, argv );
-    IBlock* src = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
-    IBlock* dst = FMakeContext::MakeBlock( 1024, 1024, Format::Format_RGBA8 );
-    //FFXContext::Clouds( src );
-    FClearFillContext::Clear( src );
-    FPainterContext::DrawCircleAndres( src, FPoint( 512, 512 ), 500, CColor( 255, 0, 0 ), true );
+
+    int width, height, channels;
+    unsigned char *raw = stbi_load( "C:/Users/PRAXINOS/Documents/work/ULIS/Test/coboi_alpha.png", &width, &height, &channels, STBI_rgb_alpha );
+    ::ULIS::IBlock* src = ::ULIS::FMakeContext::MakeBlockFromExternalDataTakeOwnership( width, height, raw, ::ULIS::Format::Format_RGBA8 );
+    IBlock* dst = FMakeContext::MakeBlock( width, height, Format::Format_RGBA8 );
+
+    /*
     FKernel kernel( FSize( 3, 3 )
-                  , { 1,  1,  1
-                    , 1, -8,  1
-                    , 1,  1,  1 } );
-    FFXContext::Convolution( src, dst, kernel );
+                  , {  255,  255,  255
+                    ,  255, -4080,  255
+                    ,  255,  255,  255 } );
+    */
+    FKernel kernel( FSize( 3, 3 )
+                  , {  1,  1,  1
+                    ,  1, -8,  1
+                    ,  1,  1,  1 } );
+    FFXContext::Convolution( src, dst, kernel, true );
 
     QImage*     image   = new QImage( dst->DataPtr()
                                     , dst->Width()

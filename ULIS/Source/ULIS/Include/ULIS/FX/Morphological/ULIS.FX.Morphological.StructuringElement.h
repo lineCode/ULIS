@@ -3,9 +3,9 @@
 *   ULIS
 *__________________
 *
-* @file     ULIS.FX.Convolution.Kernel.h
+* @file     ULIS.FX.Morphological.StructuringElement.h
 * @author   Clement Berthaud
-* @brief    This file provides the declaration for the Kernel tools.
+* @brief    This file provides the declaration for the Structuring Elements tools in a Mathematical Morphological Operator Context.
 */
 #pragma once
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
@@ -18,32 +18,17 @@
 namespace ULIS {
 /////////////////////////////////////////////////////
 // Kernel Edge Handling
-enum class eKernelEdgeMode : uint8
+enum class eStructuringElementValue : uint8
 {
-      kExtend
-    , kConstant
-    , kMirror
-    , kWrap
-    , kTransparent
-    , kSkip
-};
-
-/////////////////////////////////////////////////////
-// Kernel Edge Handling
-enum class eConvolutionOperator : uint8
-{
-      kExtend
-    , kConstant
-    , kMirror
-    , kWrap
-    , kTransparent
-    , kSkip
+      kZero     = 0
+    , kOne      = 1
+    , kEither   = 2
 };
 
 
 /////////////////////////////////////////////////////
 // FKernel
-class  FKernel
+class  FStructuringElement
 {
 public:
     // Construction / Destruction

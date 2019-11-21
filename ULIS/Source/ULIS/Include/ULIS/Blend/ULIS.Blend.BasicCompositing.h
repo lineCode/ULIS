@@ -51,6 +51,16 @@ struct Composer
     }
 };
 
+template< uint32 _SH >
+struct Composer< _SH, eBlendingMode::kErase >
+{
+    static
+    typename TBlock< _SH >::tPixelType
+    BasicCompositing( typename TBlock< _SH >::tPixelType Cb, typename TBlock< _SH >::tPixelType Cs, typename TBlock< _SH >::tPixelType ab, typename TBlock< _SH >::tPixelType var ) {
+        return  Cb;
+    }
+};
+
 /////////////////////////////////////////////////////
 // Undefines
 #undef tSpec

@@ -112,18 +112,18 @@ FFXContext::Clouds( IBlock* iBlock, int iSeed, const FPerformanceOptions& iPerfo
 
 //static
 void
-FFXContext::Convolution( IBlock* iSrc, IBlock* iDst, const FKernel& iKernel, const FPerformanceOptions& iPerformanceOptions )
+FFXContext::Convolution( IBlock* iSrc, IBlock* iDst, const FKernel& iKernel, bool iConvolveAlpha, const FPerformanceOptions& iPerformanceOptions )
 {
     assert( iSrc->Id() == iDst->Id() );
     switch( iSrc->Id() )
     {
-        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                \
-            case ULIS_REG[ n ]:                                                                                 \
-            {                                                                                                   \
-                TFXContext< ULIS_REG[ n ] >::Convolution( (::ULIS::TBlock< ULIS_REG[ n ] >*)iSrc                \
-                                                                , (::ULIS::TBlock< ULIS_REG[ n ] >*)iDst        \
-                                                               , iKernel, iPerformanceOptions );                \
-                break;                                                                                          \
+        #define ULIS_REG_SWITCH_OP( z, n, data )                                                                    \
+            case ULIS_REG[ n ]:                                                                                     \
+            {                                                                                                       \
+                TFXContext< ULIS_REG[ n ] >::Convolution( (::ULIS::TBlock< ULIS_REG[ n ] >*)iSrc                    \
+                                                                , (::ULIS::TBlock< ULIS_REG[ n ] >*)iDst            \
+                                                               , iKernel, iConvolveAlpha, iPerformanceOptions );    \
+                break;                                                                                              \
             }
         ULIS_REPEAT( ULIS_REG_SIZE, ULIS_REG_SWITCH_OP, void )
         #undef ULIS_REG_SWITCH_OP

@@ -26,6 +26,27 @@ namespace ULIS {
 // Defines
 #define tSpec TBlockInfo< _SH >
 
+template< eBlendingMode _BM >
+struct Composer_RGBA8_SSE
+{
+    static
+    __m128
+    BasicCompositing( __m128 Cb, __m128 Cs, __m128 ab, __m128 var ) {
+        __m128 compute = BlendFuncSSE< _BM >::Compute( Cb, Cs );
+        return  _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), var ), Cb ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), ab ), Cs ), _mm_mul_ps( ab, compute ) ), _mm_set_ps1( 255.f ) ) ) ), _mm_set_ps1( 255.f ) );
+    }
+};
+
+template<>
+struct Composer_RGBA8_SSE< eBlendingMode::kErase >
+{
+    static
+    __m128
+    BasicCompositing( __m128 Cb, __m128 Cs, __m128 ab, __m128 var ) {
+        return  Cb;
+    }
+};
+
 /////////////////////////////////////////////////////
 // TPixelBlender_RGBA8_SSE
 template< uint32        _SH
@@ -54,9 +75,11 @@ struct TPixelBlender_RGBA8_SSE
         int mask = _mm_movemask_ps( vcmp );
         bool result = ( mask == 0xf );
         __m128 var = result ? _mm_setzero_ps() : _mm_div_ps( _mm_mul_ps( topAlphaf, _mm_set_ps1( 255.f ) ), alphaComp );
+        /*
         __m128 compute = BlendFuncSSE< _BM >::Compute( backElementsf, topElementsf );
         __m128 elementsResult = _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), var ), backElementsf ), _mm_mul_ps( var, _mm_div_ps( _mm_add_ps( _mm_mul_ps( _mm_sub_ps( _mm_set_ps1( 255.f ), backAlphaf ), topElementsf ), _mm_mul_ps( backAlphaf, compute ) ), _mm_set_ps1( 255.f ) ) ) ), _mm_set_ps1( 255.f ) );
-
+        */
+        __m128 elementsResult = Composer_RGBA8_SSE< _BM >::BasicCompositing( backElementsf, topElementsf, backAlphaf, var );
         __m128i y = _mm_cvtps_epi32( elementsResult );                  // Convert them to 32-bit ints
         y = _mm_packus_epi32(y, y);                                     // Pack down to 16 bits
         y = _mm_packus_epi16(y, y);                                     // Pack down to 8 bits

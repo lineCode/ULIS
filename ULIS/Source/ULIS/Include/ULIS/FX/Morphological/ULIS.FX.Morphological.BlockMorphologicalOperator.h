@@ -3,9 +3,9 @@
 *   ULIS
 *__________________
 *
-* @file     ULIS.FX.Convolution.BlockConvolutioner.h
+* @file     ULIS.FX.Morphological.BlockMorphologicalOperator.h
 * @author   Clement Berthaud
-* @brief    This file provides the declaration for the Block Kernel Convolutioner.
+* @brief    This file provides the declaration for the BlockMorphologicalOperator.
 */
 
 #pragma once

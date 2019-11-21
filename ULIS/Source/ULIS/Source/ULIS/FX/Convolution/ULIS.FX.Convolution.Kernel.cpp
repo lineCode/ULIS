@@ -23,11 +23,10 @@ FKernel::~FKernel()
 
 
 FKernel::FKernel( const FSize& iSize, float iValue, const FPoint& iAnchor, eKernelEdgeMode iKernelEdgeMode )
-    : mSize( iSize )
-    , mAnchor( iAnchor )
-    , mKernelEdgeMode( iKernelEdgeMode )
-    , mData( nullptr )
-    , mOwning( true )
+    : mSize(            iSize           )
+    , mAnchor(          iAnchor         )
+    , mKernelEdgeMode(  iKernelEdgeMode )
+    , mData(            nullptr         )
 {
     Init();
     Fill( iValue );
@@ -35,11 +34,10 @@ FKernel::FKernel( const FSize& iSize, float iValue, const FPoint& iAnchor, eKern
 
 
 FKernel::FKernel( const FSize& iSize, std::initializer_list< float > iNums, const FPoint& iAnchor, eKernelEdgeMode iKernelEdgeMode )
-    : mSize( iSize )
-    , mAnchor( iAnchor )
-    , mKernelEdgeMode( iKernelEdgeMode )
-    , mData( nullptr )
-    , mOwning( true )
+    : mSize(            iSize           )
+    , mAnchor(          iAnchor         )
+    , mKernelEdgeMode(  iKernelEdgeMode )
+    , mData(            nullptr         )
 {
     Init();
     assert( Length() == iNums.size() );
@@ -49,14 +47,13 @@ FKernel::FKernel( const FSize& iSize, std::initializer_list< float > iNums, cons
 
 
 FKernel::FKernel( const FKernel& iRhs )
-    : mSize( iRhs.mSize )
-    , mAnchor( iRhs.mAnchor )
-    , mKernelEdgeMode( iRhs.mKernelEdgeMode )
-    , mData( nullptr )
-    , mOwning( true )
+    : mSize(            iRhs.mSize              )
+    , mAnchor(          iRhs.mAnchor            )
+    , mKernelEdgeMode(  iRhs.mKernelEdgeMode    )
+    , mData(            nullptr                 )
 {
     Init();
-    memcpy( mData, iRhs.mData, Length() * sizeof( float ) );
+    memcpy( mData.get(), iRhs.mData.get(), Length() * sizeof( float ) );
 }
 
 
@@ -64,25 +61,32 @@ FKernel&
 FKernel::operator=( const FKernel& iRhs )
 {
     Deallocate();
-    mSize = iRhs.mSize;
-    mAnchor = iRhs.mAnchor;
+    mSize           = iRhs.mSize;
+    mAnchor         = iRhs.mAnchor;
     mKernelEdgeMode = iRhs.mKernelEdgeMode;
     Init();
-    memcpy( mData, iRhs.mData, Length() * sizeof( float ) );
-    mOwning = true;
+    memcpy( mData.get(), iRhs.mData.get(), Length() * sizeof( float ) );
     return  (*this);
 }
 
 
-FKernel::FKernel( const FKernel&& iRhs )
-    : mSize( iRhs.mSize )
-    , mAnchor( iRhs.mAnchor )
-    , mKernelEdgeMode( iRhs.mKernelEdgeMode )
-    , mData( nullptr )
-    , mOwning( true )
+FKernel::FKernel( FKernel&& iRhs )
+    : mSize(            iRhs.mSize )
+    , mAnchor(          iRhs.mAnchor )
+    , mKernelEdgeMode(  iRhs.mKernelEdgeMode )
+    , mData(            std::move( iRhs.mData ) )
 {
-    Init();
-    memcpy( mData, iRhs.mData, Length() * sizeof( float ) );
+}
+
+
+FKernel&
+FKernel::operator=( FKernel&& iRhs )
+{
+    mSize           = iRhs.mSize;
+    mAnchor         = iRhs.mAnchor;
+    mKernelEdgeMode = iRhs.mKernelEdgeMode;
+    mData           = std::move( iRhs.mData );
+    return  (*this);
 }
 
 
@@ -152,7 +156,7 @@ FKernel::operator[] ( uint iIndex ) const
 void
 FKernel::Clear()
 {
-    memset( mData, 0, Length() * sizeof( float ) );
+    memset( mData.get(), 0, Length() * sizeof( float ) );
 }
 
 
@@ -188,12 +192,113 @@ FKernel::Sum() const
 }
 
 void
+FKernel::Shift( float iValue )
+{
+    for( int i = 0; i < Length(); ++i )
+        mData[i] += iValue;
+}
+
+
+void
+FKernel::Mul( float iValue )
+{
+    for( int i = 0; i < Length(); ++i )
+        mData[i] *= iValue;
+}
+
+
+void
 FKernel::Normalize()
 {
     float sum = Sum();
     for( int i = 0; i < Length(); ++i )
         mData[i] /= sum;
 }
+
+
+bool
+FKernel::IsNormalized() const
+{
+    return  FMath::Abs( Sum() - 1.f ) < FMath::kEpsilonf;
+}
+
+
+void
+FKernel::FlipX()
+{
+    FKernel back = *this;
+    const int w = Width() - 1;
+    const int h = Height() - 1;
+    for( int x = 0; x <= w; ++x )
+        for( int y = 0; y <= h; ++y )
+            SetAt( x, y, back.At( w - x, y ) );
+}
+
+
+void
+FKernel::FlipY()
+{
+    FKernel back = *this;
+    const int w = Width() - 1;
+    const int h = Height() - 1;
+    for( int x = 0; x <= w; ++x )
+        for( int y = 0; y <= h; ++y )
+            SetAt( x, y, back.At( x, h - y ) );
+}
+
+void
+FKernel::Rotate90CW()
+{
+    FKernel back = *this;
+    if( Width() != Height() )
+    {
+        Deallocate();
+        int temp = mSize.x;
+        mSize.x = mSize.y;
+        mSize.y = temp;
+        Init();
+    }
+
+    const int w = Width() - 1;
+    const int h = Height() - 1;
+    for( int x = 0; x <= w; ++x )
+        for( int y = 0; y <= h; ++y )
+            SetAt( x, y, back.At( y, h - x ) );
+}
+
+
+void
+FKernel::Rotate90CCW()
+{
+    FKernel back = *this;
+    if( Width() != Height() )
+    {
+        Deallocate();
+        int temp = mSize.x;
+        mSize.x = mSize.y;
+        mSize.y = temp;
+        Init();
+    }
+
+    const int w = Width() - 1;
+    const int h = Height() - 1;
+    for( int x = 0; x <= w; ++x )
+        for( int y = 0; y <= h; ++y )
+            SetAt( x, y, back.At( w - y, x ) );
+}
+
+
+void
+FKernel::Rotate180()
+{
+    FKernel back = *this;
+    const int w = Width() - 1;
+    const int h = Height() - 1;
+    for( int x = 0; x <= w; ++x )
+        for( int y = 0; y <= h; ++y )
+            SetAt( x, y, back.At( w - x, h - y ) );
+}
+
 
 FKernel
 FKernel::Normalized() const
@@ -204,10 +309,48 @@ FKernel::Normalized() const
 }
 
 
-bool
-FKernel::IsNormalized() const
+FKernel
+FKernel::FlippedX() const
 {
-    return  FMath::Abs( Sum() - 1.f ) < FMath::kEpsilonf;
+    FKernel result( *this );
+    result.FlipX();
+    return  result;
+}
+
+
+FKernel
+FKernel::FlippedY() const
+{
+    FKernel result( *this );
+    result.FlipY();
+    return  result;
+}
+
+
+FKernel
+FKernel::Rotated90CW() const
+{
+    FKernel result( *this );
+    result.Rotate90CW();
+    return  result;
+}
+
+
+FKernel
+FKernel::Rotated90CCW() const
+{
+    FKernel result( *this );
+    result.Rotate90CCW();
+    return  result;
+}
+
+
+FKernel
+FKernel::Rotated180() const
+{
+    FKernel result( *this );
+    result.Rotate180();
+    return  result;
 }
 
 
@@ -287,15 +430,14 @@ FKernel::AssertValid() const
 void
 FKernel::Allocate()
 {
-    mData = new float[ Length() ];
+    mData = std::make_unique<float[]>( Length() );
 }
 
 
 void
 FKernel::Deallocate()
 {
-    if( mOwning )
-        delete [] mData;
+    // Nothing to do ATM
 }
 
 

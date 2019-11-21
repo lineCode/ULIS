@@ -49,13 +49,13 @@ public:
         TVoronoiNoiseGenerator< _SH >::Run( iBlock, iCount, iSeed, iPerformanceOptions );
     }
 
-    static void Convolution( TBlock< _SH >* iSrcBlock, TBlock< _SH >* iDstBlock, const FKernel& iKernel, const FPerformanceOptions& iPerformanceOptions= FPerformanceOptions() )
+    static void Convolution( TBlock< _SH >* iSrcBlock, TBlock< _SH >* iDstBlock, const FKernel& iKernel, bool iConvolveAlpha = true, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
     {
         assert( iSrcBlock );
         assert( iDstBlock );
         assert( iDstBlock->Width() == iSrcBlock->Width() );
         assert( iDstBlock->Height() == iSrcBlock->Height() );
-        TBlockConvolutioner< _SH >::Run( iSrcBlock, iDstBlock, iKernel, iPerformanceOptions );
+        TBlockConvolutioner< _SH >::Run( iSrcBlock, iDstBlock, iKernel, iConvolveAlpha, iPerformanceOptions );
     }
 
 };

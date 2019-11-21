@@ -42,6 +42,15 @@ ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _cm, ULIS_KEYS_CM ) // color_model
 ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _ea, ULIS_KEYS_EA ) // extra_alpha
 ULIS_MAKE_KEYS_ENUM_AND_KEYWORDS( _nm, ULIS_KEYS_NM ) // normal_mode
 
+#define ULIS_CHANNEL_INDEX_RGBA_RED     0
+#define ULIS_CHANNEL_INDEX_RGBA_GREEN   1
+#define ULIS_CHANNEL_INDEX_RGBA_BLUE    2
+#define ULIS_CHANNEL_INDEX_RGBA_ALPHA   3
+#define ULIS_CHANNEL_BIT_RGBA_RED       1
+#define ULIS_CHANNEL_BIT_RGBA_GREEN     2
+#define ULIS_CHANNEL_BIT_RGBA_BLUE      4
+#define ULIS_CHANNEL_BIT_RGBA_ALPHA     8
+
 /////////////////////////////////////////////////////
 // FSpec
 /* Non-template Spec structure */
