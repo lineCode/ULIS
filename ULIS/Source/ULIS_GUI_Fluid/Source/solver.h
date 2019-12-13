@@ -1,3 +1,13 @@
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
+/**
+ * @file        solver.h
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ */
+
 #define IX(i,j) ((i)+(N+2)*(j))
 #define SWAP(x0,x) {float * tmp=x0;x0=x;x=tmp;}
 #define FOR_EACH_CELL for ( i=1 ; i<=N ; i++ ) { for ( j=1 ; j<=N ; j++ ) {

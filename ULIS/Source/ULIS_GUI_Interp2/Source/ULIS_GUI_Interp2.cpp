@@ -1,12 +1,13 @@
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
 /**
-*
-*   ULIS
-*__________________
-*
-* @file     ULIS_GUI_Interp.cpp
-* @author   Clement Berthaud
-* @brief    Main file for project ULIS_GUI_Interp.
-*/
+ * @file        ULIS_GUI_Interp2.cpp
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ * @brief       Main file for project ULIS_GUI_Interp.
+ */
 
 #include <QApplication>
 #include <QWidget>

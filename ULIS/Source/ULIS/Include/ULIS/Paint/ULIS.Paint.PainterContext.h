@@ -1,12 +1,12 @@
-/*************************************************************************
-*
-*   ULIS
-*__________________
-*
-* ULIS.Paint.PainterContext.h
-* Thomas Schmitt
-* Please refer to LICENSE.md
-*/
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
+/**
+ * @file        ULIS.Paint.PainterContext.h
+ * @author      Thomas Schmitt
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ */
 #pragma once
 #include <vector>
 #include <map>

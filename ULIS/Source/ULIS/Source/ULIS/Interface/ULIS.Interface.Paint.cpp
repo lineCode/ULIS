@@ -1,12 +1,13 @@
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
 /**
-*
-*   ULIS
-*__________________
-*
-* @file     ULIS.Interface.Paint.cpp
-* @author   Clement Berthaud
-* @brief    This file provides the definitions for the FPainterContext class.
-*/
+ * @file        ULIS.Interface.Paint.cpp
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ * @brief       This file provides the definitions for the FPainterContext class.
+ */
 #include "ULIS/Interface/ULIS.Interface.Paint.h"
 #include "ULIS/Interface/ULIS.Interface.Decl.h"
 #include "ULIS/Data/ULIS.Data.Block.h"

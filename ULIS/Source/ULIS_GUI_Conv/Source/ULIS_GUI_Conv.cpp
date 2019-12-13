@@ -1,12 +1,12 @@
-/*************************************************************************
-*
-*   ULIS
-*__________________
-*
-* ULIS_GUI_Conv.cpp
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
-*/
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
+/**
+ * @file        ULIS_GUI_Conv.cpp
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ */
 
 #include <QApplication>
 #include <QWidget>

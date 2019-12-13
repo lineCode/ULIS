@@ -1,12 +1,12 @@
-/*************************************************************************
-*
-*   ULIS
-*__________________
-*
-* ULIS.FX.Noise.WhiteNoise.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
-*/
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
+/**
+ * @file        ULIS.FX.Noise.WhiteNoise.h
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ */
 #pragma once
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Base/ULIS.Base.PerformanceOptions.h"

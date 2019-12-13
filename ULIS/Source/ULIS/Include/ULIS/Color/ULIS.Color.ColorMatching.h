@@ -1,12 +1,12 @@
-/*************************************************************************
-*
-*   ULIS
-*__________________
-*
-* ULIS.Color.ColorMatching.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
-*/
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
+/**
+ * @file        ULIS.Color.ColorMatching.h
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ */
 
 #pragma once
 #include "ULIS/ULIS.Config.h"
@@ -18,7 +18,7 @@
 namespace ULIS {
 namespace Chroma {
 /////////////////////////////////////////////////////
-// CIE 2� (1931) Table, XYZ CMFs ( 360nm to 830nm ) 1nm step
+// CIE 2° (1931) Table, XYZ CMFs ( 360nm to 830nm ) 1nm step
 static const cmsCIEXYZ CMF_XYZ_CIE_2_1931_1nm[ 471 ] = {
 /*360*/ { 0.000129900000,0.000003917000,0.000606100000 },
 /*361*/ { 0.000145847000,0.000004393581,0.000680879200 },

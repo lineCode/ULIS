@@ -1,12 +1,13 @@
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
 /**
-*
-*   ULIS
-*__________________
-*
-* @file     ULIS.Interface.Decl.h
-* @author   Clement Berthaud
-* @brief    This file provides the specialisations related to block types.
-*/
+ * @file        ULIS.Interface.Decl.h
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ * @brief       This file provides the specialisations related to block types.
+ */
 #pragma once
 #include "ULIS/ULIS.Config.h"
 #include "ULIS/Base/ULIS.Base.Registry.h"

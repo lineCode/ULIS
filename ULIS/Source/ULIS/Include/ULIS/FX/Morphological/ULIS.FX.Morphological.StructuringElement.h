@@ -1,12 +1,13 @@
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
 /**
-*
-*   ULIS
-*__________________
-*
-* @file     ULIS.FX.Morphological.StructuringElement.h
-* @author   Clement Berthaud
-* @brief    This file provides the declaration for the Structuring Elements tools in a Mathematical Morphological Operator Context.
-*/
+ * @file        ULIS.FX.Morphological.StructuringElement.h
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ * @brief       This file provides the declaration for the Structuring Elements tools in a Mathematical Morphological Operator Context.
+ */
 #pragma once
 #include "ULIS/Base/ULIS.Base.BaseTypes.h"
 #include "ULIS/Maths/ULIS.Maths.Geometry.h"

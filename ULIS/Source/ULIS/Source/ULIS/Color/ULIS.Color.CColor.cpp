@@ -1,12 +1,12 @@
-/*************************************************************************
-*
-*   ULIS
-*__________________
-*
-* ULIS.Color.CColor.cpp
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
-*/
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
+/**
+ * @file        ULIS.Color.CColor.cpp
+ * @author      Clement Berthaud
+ * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ */
 
 #include "ULIS/Color/ULIS.Color.CColor.h"
 #include "ULIS/Maths/ULIS.Maths.Utility.h"

@@ -1,12 +1,12 @@
-/*************************************************************************
-*
-*   ULIS
-*__________________
-*
-* ULIS.Color.Illuminants.h
-* Clement Berthaud - Layl
-* Please refer to LICENSE.md
-*/
+// Copyright Â© 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+
+/**
+ * @file        ULIS.Color.Illuminants.h
+ * @author      Clement Berthaud
+ * @copyright   Copyright Â© 2018-2019 Praxinos, Inc. All Rights Reserved.
+ * @license     Please refer to LICENSE.md
+ */
 
 #pragma once
 #include "ULIS/ULIS.Config.h"
@@ -19,7 +19,7 @@ namespace ULIS {
 namespace Chroma {
 /////////////////////////////////////////////////////
 // Precomputed Chromaticity coordinates pairs
-// Chromaticity coordinates CIE1931 2°, whitepoint
+// Chromaticity coordinates CIE1931 2Â°, whitepoint
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1931_2_A(     0.44757f, 0.40745f  );
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1931_2_B(     0.34842f, 0.35161f  );
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1931_2_C(     0.31006f, 0.31616f  );
@@ -40,7 +40,7 @@ static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1931_2_F9(
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1931_2_F10(   0.34609f, 0.35986f  );
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1931_2_F11(   0.38052f, 0.37713f  );
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1931_2_F12(   0.43695f, 0.40441f  );
-// Chromaticity coordinates CIE1964 10°, whitepoint
+// Chromaticity coordinates CIE1964 10Â°, whitepoint
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1964_10_A(    0.45117f, 0.40594f  );
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1964_10_B(    0.34980f, 0.35270f  );
 static const glm::vec2 standardIlluminant_chromaticityCoordinates_CIE_1964_10_C(    0.31039f, 0.31905f  );
@@ -84,7 +84,7 @@ static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1931_2_F9(      
 static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1931_2_F10(     0.9617f     ,1.f  ,0.8171f  );
 static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1931_2_F11(     1.0089f     ,1.f  ,0.6426f  );
 static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1931_2_F12(     1.0804f     ,1.f  ,0.3922f  );
-// Tristimulus values CIE1964 10°, whitepoint
+// Tristimulus values CIE1964 10Â°, whitepoint
 static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1964_10_A(      1.1114f    ,1.f  ,0.3519f   );
 static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1964_10_B(      0.9917f    ,1.f  ,0.8434f   );
 static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1964_10_C(      0.9728f    ,1.f  ,1.1614f   );
