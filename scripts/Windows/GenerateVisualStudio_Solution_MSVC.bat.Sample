@@ -1,9 +1,8 @@
+REM Put this file in a neighbour directory of ULIS2 repository.
+
 @echo off
 setlocal
 pushd %~dp0
-
-:: Put this file in a neighbour directory of ULIS2 repository.
-:: Replace the -DULIS2_*:STRING="" parameters with the appropriate paths to (re)generate the solution files easily.
 
 :: Make Generated dir for generated project if not exist
 IF NOT EXIST Generated_VisualStudio_Solution_MSVC ( MKDIR Generated_VisualStudio_Solution_MSVC )
@@ -17,4 +16,4 @@ IF EXIST cmake_install.cmake ( del cmake_install.cmake )
 IF EXIST CMakeCache.txt ( del CMakeCache.txt )
 
 :: Rebuild Project
-cmake -G "Visual Studio 15 2017 Win64" -DULIS2_GLM_INCLUDE_PATH:STRING="" -DULIS2_LCMS2_INCLUDE_PATH:STRING="" -DULIS2_LCMS2_DEBUG_LIB_PATH:STRING="" -DULIS2_LCMS2_RELEASE_LIB_PATH:STRING="" ../ULIS2
+cmake -G "Visual Studio 15 2017 Win64" ../ULIS2

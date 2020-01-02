@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 3.11.0)
 
-# Set Cache variables
-SET( ULIS2_GLM_INCLUDE_PATH         "unset"     CACHE STRING    "Indicates the path to glm include dir" )
-SET( ULIS2_LCMS2_INCLUDE_PATH       "unset"     CACHE STRING    "Indicates the path to lcms2 include dir" )
-SET( ULIS2_LCMS2_DEBUG_LIB_PATH     "unset"     CACHE STRING    "Indicates the path to lcms2 debug lib" )
-SET( ULIS2_LCMS2_RELEASE_LIB_PATH   "unset"     CACHE STRING    "Indicates the path to lcms2 release lib" )
-SET( ULIS2_VERSION_MAJOR            "unset"     CACHE STRING    "Indicate ULIS version major" )
-SET( ULIS2_VERSION_MINOR            "unset"     CACHE STRING    "Indicate ULIS version minor" )
-
 # Display host & compiler
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}")
 
@@ -30,7 +22,7 @@ set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_CXX_EXTENSIONS OFF )
 
 # Create global solution
-project( ULIS2 CXX )
+project( ULIS2 )
 
 # Check Endianness
 include( TestBigEndian )
@@ -57,6 +49,9 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
     # Od: Turns off all optimizations in the program and speeds compilation.
 endif()
 
+# Add Dependencies
+include(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/CMakeLists.txt)
+
 # Add project
 file(
     GLOB_RECURSE
@@ -71,20 +66,14 @@ add_library( ULIS2 ${source_list} )
 
 target_compile_definitions( ULIS2 PUBLIC UNICODE )
 set_target_properties( ULIS2 PROPERTIES OUTPUT_NAME "ULIS2.0" )
-
-target_link_libraries(
-    ULIS2
-    PUBLIC
-    debug ${ULIS2_LCMS2_DEBUG_LIB_PATH}
-    optimized ${ULIS2_LCMS2_RELEASE_LIB_PATH}
-)
+target_link_libraries( ULIS2 PUBLIC lcms2 )
 
 target_include_directories(
     ULIS2
     PUBLIC
     "include/"
-    ${ULIS2_GLM_INCLUDE_PATH}
-    ${ULIS2_LCMS2_INCLUDE_PATH}
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     PRIVATE
     "source/"
 )
