@@ -1,0 +1,1 @@
+The profiles.7z archive contains icc files for common Lab, XYZ, RGB, and CMYK profiles.
