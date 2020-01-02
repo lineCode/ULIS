@@ -75,16 +75,16 @@ set_target_properties( ULIS2 PROPERTIES OUTPUT_NAME "ULIS2.0" )
 target_link_libraries(
     ULIS2
     PUBLIC
-    debug ${ULIS_LCMS2_DEBUG_LIB_PATH}
-    optimized ${ULIS_LCMS2_RELEASE_LIB_PATH}
+    debug ${ULIS2_LCMS2_DEBUG_LIB_PATH}
+    optimized ${ULIS2_LCMS2_RELEASE_LIB_PATH}
 )
 
 target_include_directories(
     ULIS2
     PUBLIC
     "include/"
-    ${ULIS_GLM_INCLUDE_PATH}
-    ${ULIS_LCMS2_INCLUDE_PATH}
+    ${ULIS2_GLM_INCLUDE_PATH}
+    ${ULIS2_LCMS2_INCLUDE_PATH}
     PRIVATE
     "source/"
 )
