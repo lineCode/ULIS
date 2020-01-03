@@ -33,7 +33,7 @@ namespace DefaultProfiles
 
 /////////////////////////////////////////////////////
 // FColorProfile
-class FColorProfile
+class ULIS2_API FColorProfile
 {
 public:
     // Construction / Destruction

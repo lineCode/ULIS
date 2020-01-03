@@ -19,7 +19,7 @@
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FProfileRegistry
-class FProfileRegistry
+class ULIS2_API FProfileRegistry
 {
 public:
     // Construction / Destruction

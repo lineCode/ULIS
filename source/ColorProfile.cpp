@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         ColorProfile.h
+* @file         ColorProfile.cpp
 * @author       Clement Berthaud
 * @brief        This file provides definition for the FColorProfile class.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.

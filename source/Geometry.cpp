@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         Geometry.h
+* @file         Geometry.cpp
 * @author       Clement Berthaud
 * @brief        This file provides geometry class definitions.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.

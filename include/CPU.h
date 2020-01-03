@@ -1,13 +1,16 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
- * @file        FCPU.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- * @brief       This file provides the definition for the FCPU struct.
- */
-#pragma once
+*
+*   ULIS2
+*__________________
+*
+* @file         CPU.h
+* @author       Clement Berthaud
+* @brief        This file provides the definition for the FCPU struct.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #include "Core.h"
 #include "cpu_x86.h"
 
@@ -15,7 +18,7 @@ ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @struct     FCPU
 /// @brief      The FCPU struct provides a small wrapper around the FeatureDetector interface.
-struct FCPU
+struct ULIS2_API FCPU
 {
 public:
     // Construction

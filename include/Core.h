@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+#include <iostream>
 #include <functional>
 #include <string>
 #include <cstring>
@@ -123,6 +124,14 @@ namespace ul2 = ULIS2_NAMESPACE_NAME;
 #define ULIS2_CRASH_CHECK        ULIS2_CRASH
 
 /////////////////////////////////////////////////////
+// Assert Behaviours
+#ifdef ULIS2_DEBUG
+    #define ULIS2_ASSERT( cond, log )  if( !( cond ) ) { std::cout << log << std::endl; ULIS2_CRASH; }
+#else
+    #define ULIS2_ASSERT( cond, log )
+#endif
+
+/////////////////////////////////////////////////////
 // glm FORCE extensions, before any glm related includes
 #define GLM_FORCE_SSE42
 #define GLM_FORCE_SSE41
@@ -190,7 +199,6 @@ enum class eType : uint8 {
 #define ULIS2_TYPE_DEPTH_SHIFT  4
 
 ULIS2_NAMESPACE_END
-
 /////////////////////////////////////////////////////
 // Pixel format
 //
@@ -224,3 +232,4 @@ ULIS2_NAMESPACE_END
 
 #define ULIS2_FORMAT_MASK_LO 0x0000FFFF
 #define ULIS2_FORMAT_MASK_HI 0xFFFF0000
+

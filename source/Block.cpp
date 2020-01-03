@@ -26,6 +26,7 @@ void Cleanup_DoNothing_imp( tByte* iData )
 {
 }
 
+
 ULIS2_API FOnCleanup OnCleanup_FreeMemory = Cleanup_FreeMemory_imp;
 ULIS2_API FOnCleanup OnCleanup_DoNothing  = Cleanup_DoNothing_imp;
 
@@ -47,6 +48,8 @@ FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& 
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
 {
+    ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
+    ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
     mData = new tByte[ BytesTotal() ];
 }
 
@@ -59,6 +62,8 @@ FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, cons
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
 {
+    ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
+    ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
 }
 
 
@@ -202,7 +207,6 @@ FBlock::NumColorChannels() const
 {
     return  static_cast< uint8 >( ULIS2_R_CHANNELS( mFormat ) );
 }
-
 
 ULIS2_NAMESPACE_END
 

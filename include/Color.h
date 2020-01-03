@@ -18,7 +18,7 @@
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FColor
-class FColor
+class ULIS2_API FColor
 {
 public:
     // Construction

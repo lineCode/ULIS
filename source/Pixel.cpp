@@ -27,7 +27,6 @@ FPixel::FPixel( tFormat iFormat )
     : mData( nullptr )
     , mFormat( iFormat )
 {
-    mData = new tByte[ Depth() ];
 }
 
 

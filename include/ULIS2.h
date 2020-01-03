@@ -13,4 +13,10 @@
 */
 #pragma once
 #include "Block.h"
+#include "Pixel.h"
+#include "Color.h"
+#include "CPU.h"
+#include "Perf.h"
+#include "Geometry.h"
+#include "Maths.h"
 

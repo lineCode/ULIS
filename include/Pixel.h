@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core.h"
+#include "ColorProfile.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -44,8 +45,8 @@ public:
 
 private:
     // Private Data Members
-    tByte*      mData;
-    tFormat     mFormat;
+    tByte*          mData;
+    tFormat         mFormat;
 };
 
 ULIS2_NAMESPACE_END

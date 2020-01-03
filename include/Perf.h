@@ -17,7 +17,7 @@ ULIS2_NAMESPACE_BEGIN
 /// @brief      The FPerf struct is used for holding performance options.
 /// @details    Used for specification and forwarding of options in multi threaded / SSE pipelines.
 ///             These flags are juste hints, they can be overriden in some pipelines.
-struct FPerf
+struct ULIS2_API FPerf
 {
 public:
     // Construction

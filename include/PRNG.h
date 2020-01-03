@@ -19,13 +19,13 @@ ULIS2_NAMESPACE_BEGIN
 // PRNG
 /// @fn         ResetWeakPRNGSeed()
 /// @brief      Reset the PRNG seed.
-void ResetWeakPRNGSeed();
+ULIS2_API void ResetWeakPRNGSeed();
 
 
 /// @fn         GenerateWeakPRNG()
 /// @brief      Reset the PRNG seed.
 /// @return     An uint32 representing a pseudo random number beetween 0 and 65537.
-uint32 GenerateWeakPRNG();
+ULIS2_API uint32 GenerateWeakPRNG();
 
 ULIS2_NAMESPACE_END
 

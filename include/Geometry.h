@@ -33,7 +33,7 @@ struct FOBBHullExpression;
 
 /////////////////////////////////////////////////////
 // FRect
-struct FRect
+struct ULIS2_API FRect
 {
     int x;
     int y;
@@ -52,7 +52,7 @@ struct FRect
 
 /////////////////////////////////////////////////////
 // FPoint
-struct FPoint
+struct ULIS2_API FPoint
 {
     int x;
     int y;
@@ -67,7 +67,7 @@ typedef FPoint FSize;
 
 /////////////////////////////////////////////////////
 // FPoint64 bits
-struct FPoint64
+struct ULIS2_API FPoint64
 {
     int64 x;
     int64 y;
@@ -82,7 +82,7 @@ struct FPoint64
 // FTransformAABB
 // A rectangle used to preview the transformation bounding box result
 // Used for precomputation and allocation before actual transforms
-struct FTransformAABB
+struct ULIS2_API FTransformAABB
 {
     float x1, y1, x2, y2;
 
@@ -103,14 +103,14 @@ struct FTransformAABB
 
 /////////////////////////////////////////////////////
 // Sort
-bool SortCompareLesserX( const glm::vec2& iA, const glm::vec2& iB );
-bool SortCompareLesserY( const glm::vec2& iA, const glm::vec2& iB );
+ULIS2_API bool SortCompareLesserX( const glm::vec2& iA, const glm::vec2& iB );
+ULIS2_API bool SortCompareLesserY( const glm::vec2& iA, const glm::vec2& iB );
 
 /////////////////////////////////////////////////////
 // FTransformOBB
 // A oriented rectangle used to preview the transformation bounding box result
 // Used for precomputation and allocation before actual transforms
-struct FTransformOBB
+struct ULIS2_API FTransformOBB
 {
     glm::vec2 m00, m10, m11, m01;
 
@@ -125,7 +125,7 @@ struct FTransformOBB
 
 /////////////////////////////////////////////////////
 // FLinef
-struct FLinef
+struct ULIS2_API FLinef
 {
     float a, b;
 
@@ -137,7 +137,7 @@ struct FLinef
 
 /////////////////////////////////////////////////////
 // FOBBSlopeExpression
-struct FOBBSlopeExpression
+struct ULIS2_API FOBBSlopeExpression
 {
     std::vector< FLinef > lines;
     int indexer;
@@ -149,7 +149,7 @@ struct FOBBSlopeExpression
 
 /////////////////////////////////////////////////////
 // FOBBHullExpression
-struct FOBBHullExpression
+struct ULIS2_API FOBBHullExpression
 {
     FOBBSlopeExpression left, right;
 
