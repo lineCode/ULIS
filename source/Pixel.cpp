@@ -5,59 +5,35 @@
 *   ULIS2
 *__________________
 *
-* @file         Block.cpp
+* @file         Pixel.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FBlock class.
+* @brief        This file provides the definition for the FPixel class.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Block.h"
+#include "Pixel.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Default Cleanup Behaviour
-void Cleanup_FreeMemory_imp( tByte* iData )
-{
-    delete [] iData;
-}
-
-
-void Cleanup_DoNothing_imp( tByte* iData )
-{
-}
-
-FOnCleanup OnCleanup_FreeMemory = Cleanup_FreeMemory_imp;
-FOnCleanup OnCleanup_DoNothing  = Cleanup_DoNothing_imp;
-
-/////////////////////////////////////////////////////
-// FBlock
+// FPixel
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FBlock::~FBlock()
+FPixel::~FPixel()
 {
-    mOnCleanup( mData );
 }
 
 
-FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup )
+FPixel::FPixel( tFormat iFormat )
     : mData( nullptr )
-    , mWidth( iWidth )
-    , mHeight( iHeight )
     , mFormat( iFormat )
-    , mOnInvalid( iOnInvalid )
-    , mOnCleanup( iOnCleanup )
 {
-    mData = new tByte[ BytesTotal() ];
+    mData = new tByte[ Depth() ];
 }
 
 
-FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup )
+FPixel::FPixel( tByte* iData, tFormat iFormat )
     : mData( iData )
-    , mWidth( iWidth )
-    , mHeight( iHeight )
     , mFormat( iFormat )
-    , mOnInvalid( iOnInvalid )
-    , mOnCleanup( iOnCleanup )
 {
 }
 
@@ -65,140 +41,84 @@ FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, cons
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 tByte*
-FBlock::DataPtr()
+FPixel::Ptr()
 {
     return  mData;
 }
 
 
 const tByte*
-FBlock::DataPtr() const
+FPixel::Ptr() const
 {
     return  mData;
 }
 
 
-tByte*
-FBlock::PixelPtr( int iX, int iY )
-{
-    return  DataPtr() + ( iX * BytesPerPixel() + iY * BytesPerScanLine() );
-}
-
-
-const tByte*
-FBlock::PixelPtr( int iX, int iY ) const
-{
-    return  DataPtr() + ( iX * BytesPerPixel() + iY * BytesPerScanLine() );
-}
-
-
-tByte*
-FBlock::ScanlinePtr( int iRow )
-{
-    return  DataPtr() + ( iRow * BytesPerScanLine() );
-}
-
-
-const tByte*
-FBlock::ScanlinePtr( int iRow ) const
-{
-    return  DataPtr() + ( iRow * BytesPerScanLine() );
-}
-
-
 tSize
-FBlock::Width() const
-{
-    return  mWidth;
-}
-
-
-tSize
-FBlock::Height() const
-{
-    return  mHeight;
-}
-
-
-tSize
-FBlock::BytesPerSample() const
+FPixel::BytesPerSample() const
 {
     return  ( ( ULIS2_TYPE_DEPTH >> ULIS2_R_TYPE( mFormat ) ) & ULIS2_TYPE_DEPTH_MASK );
 }
 
 
 tSize
-FBlock::BytesPerPixel() const
+FPixel::Depth() const
 {
     return  BytesPerSample() * SamplesPerPixel();
 }
 
 
-tSize
-FBlock::BytesPerScanLine() const
-{
-    return  BytesPerPixel() * mWidth;
-}
-
-
-tSize
-FBlock::BytesTotal() const
-{
-    return  BytesPerScanLine() * mHeight;
-}
-
-
 tFormat
-FBlock::Format() const
+FPixel::Format() const
 {
     return  mFormat;
 }
 
 
-eModel
-FBlock::Model() const
+eModelSig
+FPixel::Model() const
 {
-    return  static_cast< eModel >( ULIS2_R_MODEL( mFormat ) );
+    return  static_cast< eModelSig >( ULIS2_R_MODEL( mFormat ) );
 }
 
 
 eType
-FBlock::Type() const
+FPixel::Type() const
 {
     return  static_cast< eType >( ULIS2_R_TYPE( mFormat ) );
 }
 
 
 bool
-FBlock::HasAlpha() const
+FPixel::HasAlpha() const
 {
     return  static_cast< bool >( ULIS2_R_ALPHA( mFormat ) );
 }
 
 
 bool
-FBlock::Swapped() const
+FPixel::Swapped() const
 {
     return  static_cast< bool >( ULIS2_R_SWAP( mFormat ) );
 }
 
 
 bool
-FBlock::Reversed() const
+FPixel::Reversed() const
 {
     return  static_cast< bool >( ULIS2_R_REVERSE( mFormat ) );
 }
 
 
 uint8
-FBlock::SamplesPerPixel() const
+FPixel::SamplesPerPixel() const
 {
     return  NumColorChannels() + static_cast< uint8 >( HasAlpha() );
 }
 
 
 uint8
-FBlock::NumColorChannels() const
+FPixel::NumColorChannels() const
 {
     return  static_cast< uint8 >( ULIS2_R_CHANNELS( mFormat ) );
 }

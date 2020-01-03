@@ -1,63 +1,66 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Color.ColorProfile.cpp
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
+*
+*   ULIS2
+*__________________
+*
+* @file         ColorProfile.h
+* @author       Clement Berthaud
+* @brief        This file provides definition for the FColorProfile class.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
+#include "ColorProfile.h"
 
-#include "ULIS/Color/ULIS.Color.ColorProfile.h"
-
-namespace ULIS {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FColorProfile
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
 FColorProfile::FColorProfile( const std::string& iName, cmsHPROFILE iProfile )
-    : profile( iProfile )
-    , model( ColorModelFromColorSpaceSignature( cmsGetColorSpace( iProfile ) ) )
-    , name( iName )
+    : mProfile( iProfile )
+    , mModel( ModelSigFromColorSpaceSignature( cmsGetColorSpace( iProfile ) ) )
+    , mName( iName )
 {
 }
 
 
 FColorProfile::~FColorProfile()
 {
-    cmsCloseProfile( profile );
-    profile = nullptr;
+    cmsCloseProfile( mProfile );
+    mProfile = nullptr;
 }
 
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-e_cm
+eModelSig
 FColorProfile::ModelSignature()  const
 {
-    return  model;
+    return  mModel;
 }
 
 
 bool
-FColorProfile::ModelSupported( e_cm iModel ) const
+FColorProfile::ModelSupported( eModelSig iModel ) const
 {
-    return  ColorModelCompatFallback( iModel ) == model;
+    return  ModelSigCompatFallback( iModel ) == mModel;
 }
 
 
 const std::string&
 FColorProfile::Name() const
 {
-    return  name;
+    return  mName;
 }
 
 
 cmsHPROFILE
 FColorProfile::ProfileHandle()
 {
-    return  profile;
+    return  mProfile;
 }
 
+ULIS2_NAMESPACE_END
 
-} // namespace ULIS

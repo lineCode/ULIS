@@ -1,28 +1,30 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Color.ModelSupport.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
+*
+*   ULIS2
+*__________________
+*
+* @file         ModelSupport.h
+* @author       Clement Berthaud
+* @brief        This file provides various model compatibility tools.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
-
-#include "ULIS/Spec/ULIS.Spec.Spec.h"
+#include "Core.h"
 #include "lcms2.h"
 
-namespace ULIS {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Color Enums Info:
 // cmsColorSpaceSignature is the lcms2 way of telling which model is associated to a profile
-// ULIS::e_cm it the enum for data layout, which is a subset of cmsColorSpaceSignature, and must match with lcms2 cmsColorSpaceSignature when a profile is assigned
-// ULIS::eCColorModel it the enum for CColor models, which is a subset of ULIS::e_cm, and is totally profile agnostic
+// eModel it the enum for data layout, which is a subset of cmsColorSpaceSignature, and must match with lcms2 cmsColorSpaceSignature when a profile is assigned
+// eColorModel it the enum for FColor models, which is a subset of eModel, and is totally profile agnostic
 
 /////////////////////////////////////////////////////
-// Supported CColor Models
-enum class eCColorModel : int
+// Supported FColor Models
+enum class eColorModel : int
 {
     kInvalid,
     kG,
@@ -35,104 +37,48 @@ enum class eCColorModel : int
 
 /////////////////////////////////////////////////////
 // Model Correspondance
-static inline e_cm  ColorModelFromCColorModel( eCColorModel iValue )
+static eModelSig ModelSigFromColorModel( eColorModel iValue )
 {
     switch( iValue )
     {
-        case eCColorModel::kInvalid:    return  e_cm::kG;
-        case eCColorModel::kG:          return  e_cm::kG;
-        case eCColorModel::kRGB:        return  e_cm::kRGB;
-        case eCColorModel::kHSL:        return  e_cm::kHSL;
-        case eCColorModel::kHSV:        return  e_cm::kHSV;
-        case eCColorModel::kCMYK:       return  e_cm::kCMYK;
+        case eColorModel::kInvalid:    return  eModelSig::kGrey;
+        case eColorModel::kG:          return  eModelSig::kGrey;
+        case eColorModel::kRGB:        return  eModelSig::kRGB;
+        case eColorModel::kHSL:        return  eModelSig::kHSL;
+        case eColorModel::kHSV:        return  eModelSig::kHSV;
+        case eColorModel::kCMYK:       return  eModelSig::kCMYK;
     }
 }
 
 
-static inline eCColorModel  CColorModelFromColorModel( e_cm iValue )
+static eColorModel  ColorModelFromModelSig( eModelSig iValue )
 {
     switch( iValue )
     {
-        case e_cm::kG:      return  eCColorModel::kG;
-        case e_cm::kRGB:    return  eCColorModel::kRGB;
-        case e_cm::kHSL:    return  eCColorModel::kHSL;
-        case e_cm::kHSV:    return  eCColorModel::kHSV;
-        case e_cm::kCMYK:   return  eCColorModel::kCMYK;
-        default:            return  eCColorModel::kInvalid;
+        case eModelSig::kGrey:      return  eColorModel::kG;
+        case eModelSig::kRGB:       return  eColorModel::kRGB;
+        case eModelSig::kHSL:       return  eColorModel::kHSL;
+        case eModelSig::kHSV:       return  eColorModel::kHSV;
+        case eModelSig::kCMYK:      return  eColorModel::kCMYK;
+        default:                    return  eColorModel::kInvalid;
     }
 }
 
-
-#define ULIS_SWITCH_SUPPORTED_MODELS( iValue, ... )                                                                 \
-    switch( iValue )                                                                                                \
-    {                                                                                                               \
-        BOOST_PP_CAT( ULIS_SWITCH_SUPPORTED_MODELS_, BOOST_PP_TUPLE_SIZE( (__VA_ARGS__) ) )( iValue, __VA_ARGS__ )  \
-    }
-
-#define ULIS_SWITCH_SUPPORTED_MODELS_1( iValue, i0 )                            \
-    case i0: return  true;                                                      \
-    default: return  false;
-
-#define ULIS_SWITCH_SUPPORTED_MODELS_2( iValue, i0, i1 )                        \
-    case i0: return  true;                                                      \
-    case i1: return  true;                                                      \
-    default: return  false;
-
-#define ULIS_SWITCH_SUPPORTED_MODELS_3( iValue, i0, i1, i2 )                    \
-    case i0: return  true;                                                      \
-    case i1: return  true;                                                      \
-    case i2: return  true;                                                      \
-    default: return  false;
-
-#define ULIS_SWITCH_SUPPORTED_MODELS_4( iValue, i0, i1, i2, i3 )                \
-    case i0: return  true;                                                      \
-    case i1: return  true;                                                      \
-    case i2: return  true;                                                      \
-    case i3: return  true;                                                      \
-    default: return  false;
-
-#define ULIS_SWITCH_SUPPORTED_MODELS_5( iValue, i0, i1, i2, i3, i4 )            \
-    case i0: return  true;                                                      \
-    case i1: return  true;                                                      \
-    case i2: return  true;                                                      \
-    case i3: return  true;                                                      \
-    case i4: return  true;                                                      \
-    default: return  false;
-
-#define ULIS_SWITCH_SUPPORTED_MODELS_6( iValue, i0, i1, i2, i3, i4, i5 )        \
-    case i0: return  true;                                                      \
-    case i1: return  true;                                                      \
-    case i2: return  true;                                                      \
-    case i3: return  true;                                                      \
-    case i4: return  true;                                                      \
-    case i5: return  true;                                                      \
-    default: return  false;
-
-#define ULIS_SWITCH_SUPPORTED_MODELS_7( iValue, i0, i1, i2, i3, i4, i5, i6 )    \
-    case i0: return  true;                                                      \
-    case i1: return  true;                                                      \
-    case i2: return  true;                                                      \
-    case i3: return  true;                                                      \
-    case i4: return  true;                                                      \
-    case i5: return  true;                                                      \
-    case i6: return  true;                                                      \
-    default: return  false;
-
-static inline e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
+static eModelSig ModelSigFromColorSpaceSignature( cmsColorSpaceSignature iValue )
 {
-    e_cm default_cm = e_cm::kRGB;
+    eModelSig default_cm = eModelSig::kRGB;
     switch( iValue )
     {
-        case cmsSigXYZData      : return  e_cm::kXYZ;
-        case cmsSigLabData      : return  e_cm::kLab;
-        case cmsSigLuvData      : return  default_cm;
-        case cmsSigYxyData      : return  default_cm;
-        case cmsSigRgbData      : return  e_cm::kRGB;
-        case cmsSigGrayData     : return  e_cm::kG;
-        case cmsSigHsvData      : return  e_cm::kRGB;
-        case cmsSigHlsData      : return  e_cm::kRGB;
-        case cmsSigCmykData     : return  e_cm::kCMYK;
-        case cmsSigCmyData      : return  e_cm::kRGB;
+        case cmsSigXYZData      : return  eModelSig::kXYZ;
+        case cmsSigLabData      : return  eModelSig::kLab;
+        case cmsSigLuvData      : return  eModelSig::kYUV;
+        case cmsSigYxyData      : return  eModelSig::kYxy;
+        case cmsSigRgbData      : return  eModelSig::kRGB;
+        case cmsSigGrayData     : return  eModelSig::kGrey;
+        case cmsSigHsvData      : return  eModelSig::kRGB;
+        case cmsSigHlsData      : return  eModelSig::kRGB;
+        case cmsSigCmykData     : return  eModelSig::kCMYK;
+        case cmsSigCmyData      : return  eModelSig::kRGB;
         case cmsSigMCH1Data     : return  default_cm;
         case cmsSigMCH2Data     : return  default_cm;
         case cmsSigMCH3Data     : return  default_cm;
@@ -164,27 +110,26 @@ static inline e_cm ColorModelFromColorSpaceSignature( cmsColorSpaceSignature iVa
         case cmsSig13colorData  : return  default_cm;
         case cmsSig14colorData  : return  default_cm;
         case cmsSig15colorData  : return  default_cm;
-        case cmsSigLuvKData     : return  default_cm;
+        case cmsSigLuvKData     : return  eModelSig::kYUVK;
         default                 : return  default_cm;
     }
 }
 
 
-static inline constexpr e_cm ColorModelCompatFallback( e_cm iModel )
+static constexpr eModelSig ModelSigCompatFallback( eModelSig iModel )
 {
     switch( iModel )
     {
-        case e_cm::kG:      return  e_cm::kG;
-        case e_cm::kRGB:    return  e_cm::kRGB;
-        case e_cm::kHSL:    return  e_cm::kRGB;
-        case e_cm::kHSV:    return  e_cm::kRGB;
-        case e_cm::kCMYK:   return  e_cm::kCMYK;
-        case e_cm::kLab:    return  e_cm::kLab;
-        case e_cm::kXYZ:    return  e_cm::kXYZ;
-
-        default:            return  e_cm::kRGB;
+        case eModelSig::kGrey:      return  eModelSig::kGrey;
+        case eModelSig::kRGB:       return  eModelSig::kRGB;
+        case eModelSig::kHSL:       return  eModelSig::kRGB;
+        case eModelSig::kHSV:       return  eModelSig::kRGB;
+        case eModelSig::kCMYK:      return  eModelSig::kCMYK;
+        case eModelSig::kLab:       return  eModelSig::kLab;
+        case eModelSig::kXYZ:       return  eModelSig::kXYZ;
+        default:                    return  eModelSig::kRGB;
     }
 }
 
-} // namespace ULIS
+ULIS2_NAMESPACE_END
 

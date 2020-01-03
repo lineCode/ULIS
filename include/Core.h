@@ -84,6 +84,17 @@
     #define ULIS2_FORCEINLINE inline
 #endif // ULIS2_ENABLE_FORCEINLINE
 
+/////////////////////////////////////////////////////
+// Export utility macros
+#ifdef ULIS2_WIN
+    #ifdef ULIS2_SHARED
+        #define ULIS2_API __declspec( dllexport )
+    #else
+        #define ULIS2_API __declspec( dllimport )
+    #endif
+#else
+    #define EXPORTED
+#endif
 
 /////////////////////////////////////////////////////
 // Define Namespaces
@@ -147,7 +158,7 @@ typedef std::function< void( FBlock*, const FRect& ) > FOnInvalid;
 typedef std::function< void( tByte* ) > FOnCleanup;
 
 // Models
-enum class eModel : uint8 {
+enum class eModelSig : uint8 {
       kAny
     , kGrey
     , kRGB

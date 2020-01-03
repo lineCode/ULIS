@@ -1,20 +1,22 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Color.ProfileRegistry.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
+*
+*   ULIS2
+*__________________
+*
+* @file         ProfileRegistry.h
+* @author       Clement Berthaud
+* @brief        This file provides the declaration for the FProfileRegistry class.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
-
-#include "ULIS/Color/ULIS.Color.ColorProfile.h"
+#include "Core.h"
+#include "ColorProfile.h"
 #include <unordered_map>
-#include <string>
 
-namespace ULIS {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FProfileRegistry
 class FProfileRegistry
@@ -27,8 +29,8 @@ public:
 public:
     // Public API
     FColorProfile* GetProfile( const std::string iKey );
-    std::string DefaultProfileNameForModel( e_cm iModel );
-    FColorProfile* GetDefaultProfileForModel( e_cm iModel );
+    std::string DefaultProfileNameForModel( eModelSig iModel );
+    FColorProfile* GetDefaultProfileForModel( eModelSig iModel );
 
 private:
     // Private Data
@@ -36,5 +38,5 @@ private:
     std::unordered_map< std::string, FColorProfile* > mFileBasedProfiles;
 };
 
+ULIS2_NAMESPACE_END
 
-} // namespace ULIS

@@ -1,22 +1,21 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Color.ColorMatching.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
+*
+*   ULIS2
+*__________________
+*
+* @file         ColorMatching.h
+* @author       Clement Berthaud
+* @brief        This file provides the color matching data for certain illuminants.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
-#include "ULIS/ULIS.Config.h"
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat3x3.hpp>
+#include "Core.h"
 #include "lcms2.h"
 
-namespace ULIS {
-namespace Chroma {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // CIE 2° (1931) Table, XYZ CMFs ( 360nm to 830nm ) 1nm step
 static const cmsCIEXYZ CMF_XYZ_CIE_2_1931_1nm[ 471 ] = {
@@ -493,6 +492,5 @@ static const cmsCIEXYZ CMF_XYZ_CIE_2_1931_1nm[ 471 ] = {
 /*830*/ { 0.000001251141,0.000000451810,0.000000000000 }
 };
 
-} // namespace Chroma
-} // namespace ULIS
+ULIS2_NAMESPACE_END
 

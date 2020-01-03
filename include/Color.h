@@ -1,64 +1,66 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Color.CColor.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
+*
+*   ULIS2
+*__________________
+*
+* @file         Color.h
+* @author       Clement Berthaud
+* @brief        This file provides the declaration for the FColor class.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
+#include "Core.h"
+#include "ModelSupport.h"
 
-#include "ULIS/Color/ULIS.Color.ModelSupport.h"
-
-namespace ULIS {
-
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// CColor
-class  CColor
+// FColor
+class FColor
 {
 public:
     // Construction
-    CColor();
-    CColor( int r, int g, int b, int alpha = 255 );
-    CColor( eCColorModel );
-    CColor( uint32 rgbHexValue );
+    FColor();
+    FColor( int r, int g, int b, int alpha = 255 );
+    FColor( eColorModel );
+    FColor( uint32 rgbHexValue );
 
 public:
     // Comparison Operators
-    bool  operator==( const  CColor& Other )  const;
-    bool  operator!=( const  CColor& Other )  const;
+    bool  operator==( const  FColor& Other )  const;
+    bool  operator!=( const  FColor& Other )  const;
 
 public:
     // Instance Conversion API
-    CColor  ToGrey()  const;
-    CColor  ToRGB()  const;
-    CColor  ToHSL()  const;
-    CColor  ToHSV()  const;
-    CColor  ToCMYK()  const;
-    CColor  ToModel( eCColorModel )  const;
+    FColor  ToGrey()  const;
+    FColor  ToRGB()  const;
+    FColor  ToHSL()  const;
+    FColor  ToHSV()  const;
+    FColor  ToCMYK()  const;
+    FColor  ToModel( eColorModel )  const;
 
 public:
     // Static Makers API
-    static  CColor  FromRGBHexValue( uint32 rgbHexValue, int alpha = 255 );
-    static  CColor  FromGrey( int g, int alpha = 255 );
-    static  CColor  FromRGB( int r, int g, int b, int alpha = 255 );
-    static  CColor  FromHSL( int h, int s, int l, int alpha = 255 );
-    static  CColor  FromHSV( int h, int s, int v, int alpha = 255 );
-    static  CColor  FromCMYK( int c, int m, int y, int k, int alpha = 255 );
+    static  FColor  FromRGBHexValue( uint32 rgbHexValue, int alpha = 255 );
+    static  FColor  FromGrey( int g, int alpha = 255 );
+    static  FColor  FromRGB( int r, int g, int b, int alpha = 255 );
+    static  FColor  FromHSL( int h, int s, int l, int alpha = 255 );
+    static  FColor  FromHSV( int h, int s, int v, int alpha = 255 );
+    static  FColor  FromCMYK( int c, int m, int y, int k, int alpha = 255 );
 
-    static  CColor  FromGreyF( float f, float alpha = 1.f );
-    static  CColor  FromRGBF( float r, float g, float b, float alpha = 1.f );
-    static  CColor  FromHSLF( float h, float s, float l, float alpha = 1.f );
-    static  CColor  FromHSVF( float h, float s, float v, float alpha = 1.f );
-    static  CColor  FromCMYKF( float c, float m, float y, float k, float alpha = 1.f );
+    static  FColor  FromGreyF( float f, float alpha = 1.f );
+    static  FColor  FromRGBF( float r, float g, float b, float alpha = 1.f );
+    static  FColor  FromHSLF( float h, float s, float l, float alpha = 1.f );
+    static  FColor  FromHSVF( float h, float s, float v, float alpha = 1.f );
+    static  FColor  FromCMYKF( float c, float m, float y, float k, float alpha = 1.f );
 
-    static bool IsSimilar( const CColor& A, const CColor& B, int threshold = 1 );
+    static bool IsSimilar( const FColor& A, const FColor& B, int threshold = 1 );
 
 public:
     // Instance Representation Access API, Getters
-    eCColorModel    Mode()  const  { return  mMode; }
+    eColorModel     Mode()              const;
     int             Alpha()             const;
     float           AlphaF()            const;
 
@@ -140,7 +142,7 @@ public:
 
 private:
     // Private Data Members
-    eCColorModel  mMode;
+    eColorModel  mMode;
     union { // Union with pad '_', internal repr
         struct { uint16 alpha, g, _0, _1, _; } grey;
         struct { uint16 alpha, r, g, b, _; } rgb;
@@ -151,4 +153,5 @@ private:
     } mRepr;
 };
 
-} // namespace ULIS
+ULIS2_NAMESPACE_END
+

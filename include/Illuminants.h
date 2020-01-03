@@ -1,22 +1,24 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Color.Illuminants.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
+*
+*   ULIS2
+*__________________
+*
+* @file         Illuminants.h
+* @author       Clement Berthaud
+* @brief        This file provides data for standard illuminants.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
-#include "ULIS/ULIS.Config.h"
+#include "Core.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat3x3.hpp>
 #include "lcms2.h"
 
-namespace ULIS {
-namespace Chroma {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Precomputed Chromaticity coordinates pairs
 // Chromaticity coordinates CIE1931 2°, whitepoint
@@ -108,7 +110,7 @@ static const glm::vec3 standardIlluminant_tristimulusValues_CIE_1964_10_F12(    
 /////////////////////////////////////////////////////
 // Standard Illuminant Chromaticity Pairs & Tristimulus Values conversion, xyY <=> XYZ
 // This is equivalent to xyY -> XYZ
-static inline glm::vec3 standardIlluminantTristimulusFromChromaticity( const glm::vec2& iVec )
+static glm::vec3 standardIlluminantTristimulusFromChromaticity( const glm::vec2& iVec )
 {
     float tempY = 1.f / iVec.y;
     float X = tempY * iVec.x;
@@ -118,7 +120,7 @@ static inline glm::vec3 standardIlluminantTristimulusFromChromaticity( const glm
 
 
 // This is equivalent to XYZ -> xyY
-static inline glm::vec2 standardIlluminantChromaticityFromTristimulus( const glm::vec3& iVec )
+static glm::vec2 standardIlluminantChromaticityFromTristimulus( const glm::vec3& iVec )
 {
     float tempSum = iVec.x + iVec.y + iVec.z;
     float x = iVec.x / tempSum;
@@ -140,6 +142,6 @@ static const glm::mat3x3 chromaticAdaptaion_bradfordInverseTransformationMatrix(
 // LCMS API xyY whitepoints
 static const cmsCIExyY whitepoint_D50 = { standardIlluminant_chromaticityCoordinates_CIE_1931_2_D50.x, standardIlluminant_chromaticityCoordinates_CIE_1931_2_D50.y, 1.f };
 static const cmsCIExyY whitepoint_D65 = { standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.x, standardIlluminant_chromaticityCoordinates_CIE_1931_2_D65.y, 1.f };
-} // namespace Chroma
-} // namespace ULIS
+
+ULIS2_NAMESPACE_END
 

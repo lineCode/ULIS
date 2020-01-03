@@ -16,14 +16,14 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-extern FOnCleanup OnCleanup_FreeMemory;
-extern FOnCleanup OnCleanup_DoNothing;
+ULIS2_API extern FOnCleanup OnCleanup_FreeMemory;
+ULIS2_API extern FOnCleanup OnCleanup_DoNothing;
 
 /////////////////////////////////////////////////////
 /// @class      FBlock
 /// @brief      The FBlock class provides a mean of storing and manipulating digital images in various formats.
 /// @details    The block format, type, layout, and other informations can be retrieved in the block format member.
-class FBlock
+class ULIS2_API FBlock
 {
 public:
     // Construction / Destruction
@@ -46,7 +46,7 @@ public:
     tSize               BytesPerScanLine()              const;
     tSize               BytesTotal()                    const;
     tFormat             Format()                        const;
-    eModel              Model()                         const;
+    eModelSig           Model()                         const;
     eType               Type()                          const;
     bool                HasAlpha()                      const;
     bool                Swapped()                       const;

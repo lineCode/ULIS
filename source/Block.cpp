@@ -26,8 +26,8 @@ void Cleanup_DoNothing_imp( tByte* iData )
 {
 }
 
-FOnCleanup OnCleanup_FreeMemory = Cleanup_FreeMemory_imp;
-FOnCleanup OnCleanup_DoNothing  = Cleanup_DoNothing_imp;
+ULIS2_API FOnCleanup OnCleanup_FreeMemory = Cleanup_FreeMemory_imp;
+ULIS2_API FOnCleanup OnCleanup_DoNothing  = Cleanup_DoNothing_imp;
 
 /////////////////////////////////////////////////////
 // FBlock
@@ -155,10 +155,10 @@ FBlock::Format() const
 }
 
 
-eModel
+eModelSig
 FBlock::Model() const
 {
-    return  static_cast< eModel >( ULIS2_R_MODEL( mFormat ) );
+    return  static_cast< eModelSig >( ULIS2_R_MODEL( mFormat ) );
 }
 
 

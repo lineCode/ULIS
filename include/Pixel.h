@@ -5,9 +5,9 @@
 *   ULIS2
 *__________________
 *
-* @file         Block.h
+* @file         Pixel.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FBlock class.
+* @brief        This file provides the declaration for the FPixel class.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -15,38 +15,26 @@
 #include "Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-
-extern FOnCleanup OnCleanup_FreeMemory;
-extern FOnCleanup OnCleanup_DoNothing;
-
 /////////////////////////////////////////////////////
-/// @class      FBlock
-/// @brief      The FBlock class provides a mean of storing and manipulating digital images in various formats.
-/// @details    The block format, type, layout, and other informations can be retrieved in the block format member.
-class FBlock
+/// @class      FPixel
+/// @brief      The FPixel class provides a mean of storing and manipulating pixels in various formats.
+/// @details    The pixel format, type, layout, and other informations can be retrieved in the pixel format member.
+class ULIS2_API FPixel
 {
 public:
     // Construction / Destruction
-    virtual ~FBlock();
-    FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
-    FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
+    virtual ~FPixel();
+    FPixel( uint32 iFormat );
+    FPixel( tByte* iData, tFormat iFormat );
 
 public:
     // Public API
-    tByte*              DataPtr();
-    const tByte*        DataPtr()                       const;
-    tByte*              PixelPtr( int iX, int iY );
-    const tByte*        PixelPtr( int iX, int iY )      const;
-    tByte*              ScanlinePtr( int iRow );
-    const tByte*        ScanlinePtr( int iRow )         const;
-    tSize               Width()                         const;
-    tSize               Height()                        const;
+    tByte*              Ptr();
+    const tByte*        Ptr()                           const;
     tSize               BytesPerSample()                const;
-    tSize               BytesPerPixel()                 const;
-    tSize               BytesPerScanLine()              const;
-    tSize               BytesTotal()                    const;
+    tSize               Depth()                         const;
     tFormat             Format()                        const;
-    eModel              Model()                         const;
+    eModelSig           Model()                         const;
     eType               Type()                          const;
     bool                HasAlpha()                      const;
     bool                Swapped()                       const;
@@ -57,11 +45,7 @@ public:
 private:
     // Private Data Members
     tByte*      mData;
-    tSize       mWidth;
-    tSize       mHeight;
     tFormat     mFormat;
-    FOnInvalid  mOnInvalid;
-    FOnCleanup  mOnCleanup;
 };
 
 ULIS2_NAMESPACE_END

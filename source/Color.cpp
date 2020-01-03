@@ -1,43 +1,46 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Color.CColor.cpp
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
-#include "ULIS/Color/ULIS.Color.CColor.h"
-#include "ULIS/Maths/ULIS.Maths.Utility.h"
+*
+*   ULIS2
+*__________________
+*
+* @file         Color.cpp
+* @author       Clement Berthaud
+* @brief        This file provides the definition for the FColor class.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
+#include "Color.h"
+#include "Maths.h"
 #include <cstdlib>
 #include <cmath>
 
-namespace ULIS {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// CColor
+// FColor
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------- Construction
-CColor::CColor()
+FColor::FColor()
 {
     SetRGB( 0, 0, 0 );
 }
 
 
-CColor::CColor( int r, int g, int b, int alpha )
+FColor::FColor( int r, int g, int b, int alpha )
 {
     SetRGB( r, g, b, alpha );
 }
 
 
-CColor::CColor( eCColorModel iMode ) :
-    mMode( iMode )
+FColor::FColor( eColorModel iMode )
+    : mMode( iMode )
 {
     mRepr.rgb = { 0, 0, 0, 0, 0 };
 }
 
 
-CColor::CColor( uint32 rgbHexValue )
+FColor::FColor( uint32 rgbHexValue )
 {
     SetRGBHexValue( rgbHexValue );
 }
@@ -48,7 +51,7 @@ CColor::CColor( uint32 rgbHexValue )
 
 
 bool
-CColor::operator==( const  CColor& Other )  const
+FColor::operator==( const  FColor& Other )  const
 {
     return mMode == Other.mMode &&
         mRepr.array[0] == Other.mRepr.array[0] &&
@@ -60,7 +63,7 @@ CColor::operator==( const  CColor& Other )  const
 
 
 bool
-CColor::operator!=( const  CColor& Other )  const
+FColor::operator!=( const  FColor& Other )  const
 {
     return !operator==( Other );
 }
@@ -71,16 +74,16 @@ CColor::operator!=( const  CColor& Other )  const
 
 
 
-CColor
-CColor::ToGrey()  const
+FColor
+FColor::ToGrey()  const
 {
-    if( mMode == eCColorModel::kG )
+    if( mMode == eColorModel::kG )
         return  *this;
 
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().ToGrey();
 
-    CColor out;
+    FColor out;
     int r = Red();
     int g = Green();
     int b = Blue();
@@ -91,23 +94,23 @@ CColor::ToGrey()  const
 }
 
 
-CColor
-CColor::ToRGB()  const
+FColor
+FColor::ToRGB()  const
 {
-    if( mMode == eCColorModel::kRGB )
+    if( mMode == eColorModel::kRGB )
         return  *this;
 
-    CColor out;
+    FColor out;
     switch( mMode )
     {
-        case eCColorModel::kG:
+        case eColorModel::kG:
         {
             int grey = Grey();
             out.SetRGB( grey, grey, grey, Alpha() );
             break;
         }
 
-        case eCColorModel::kHSL:
+        case eColorModel::kHSL:
         {
             float h = HSLHueF() * 360;
             float s = HSLSaturationF();
@@ -131,7 +134,7 @@ CColor::ToRGB()  const
         }
 
 
-        case eCColorModel::kHSV:
+        case eColorModel::kHSV:
         {
             float h = HSVHueF();
             float s = HSVSaturationF();
@@ -171,7 +174,7 @@ CColor::ToRGB()  const
         }
 
 
-        case eCColorModel::kCMYK:
+        case eColorModel::kCMYK:
         {
             float c = CyanF();
             float m = MagentaF();
@@ -195,21 +198,21 @@ CColor::ToRGB()  const
 }
 
 
-CColor
-CColor::ToHSL()  const
+FColor
+FColor::ToHSL()  const
 {
-    if( mMode == eCColorModel::kHSL )
+    if( mMode == eColorModel::kHSL )
         return  *this;
 
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().ToHSL();
 
-    CColor out;
+    FColor out;
     float r = RedF();
     float g = GreenF();
     float b = BlueF();
-    float cmin = FMath::Min3( r, g, b );
-    float cmax = FMath::Max3( r, g, b );
+    float cmin = FMaths::Min3( r, g, b );
+    float cmax = FMaths::Max3( r, g, b );
     float delta = cmax - cmin;
     float deltaAdd = cmax + cmin;
     float h = 0.0;
@@ -218,7 +221,7 @@ CColor::ToHSL()  const
 
     l = ( deltaAdd ) / 2.0;
 
-    if ( delta < FMath::kEpsilonf ){
+    if ( delta < FMaths::kEpsilonf ){
         h = 0.0;
         s = 0.0;
     }
@@ -230,9 +233,9 @@ CColor::ToHSL()  const
         float deltaG = ( ( ( cmax - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
         float deltaB = ( ( ( cmax - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
 
-             if( fabs( r - cmax ) < FMath::kEpsilonf )   h = deltaB - deltaG;
-        else if( fabs( g - cmax ) < FMath::kEpsilonf )   h = (1.0 / 3.0) + deltaR - deltaB;
-        else if( fabs( b - cmax ) < FMath::kEpsilonf )   h = (2.0 / 3.0) + deltaG - deltaR;
+             if( fabs( r - cmax ) < FMaths::kEpsilonf )   h = deltaB - deltaG;
+        else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = (1.0 / 3.0) + deltaR - deltaB;
+        else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = (2.0 / 3.0) + deltaG - deltaR;
 
         if( h < 0.0 ) h += 1.0;
         if( h > 1.0 ) h -= 1.0;
@@ -243,21 +246,21 @@ CColor::ToHSL()  const
 }
 
 
-CColor
-CColor::ToHSV()  const
+FColor
+FColor::ToHSV()  const
 {
-    if( mMode == eCColorModel::kHSV )
+    if( mMode == eColorModel::kHSV )
         return  *this;
 
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().ToHSV();
 
-    CColor out;
+    FColor out;
     float r = RedF();
     float g = GreenF();
     float b = BlueF();
-    float cmin = FMath::Min3( r, g, b );
-    float cmax = FMath::Max3( r, g, b );
+    float cmin = FMaths::Min3( r, g, b );
+    float cmax = FMaths::Max3( r, g, b );
     float delta = cmax - cmin;
     float h = 0.0;
     float s = 0.0;
@@ -265,7 +268,7 @@ CColor::ToHSV()  const
 
     v = cmax;
 
-    if ( delta < FMath::kEpsilonf ){
+    if ( delta < FMaths::kEpsilonf ){
         h = 0.0;
         s = 0.0;
     }
@@ -277,9 +280,9 @@ CColor::ToHSV()  const
         float deltaG = ( ( ( cmax - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
         float deltaB = ( ( ( cmax - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
 
-        if( fabs( r - cmax ) < FMath::kEpsilonf )        h = deltaB - deltaG;
-        else if( fabs( g - cmax ) < FMath::kEpsilonf )   h = (1.0 / 3.0) + deltaR - deltaB;
-        else if( fabs( b - cmax ) < FMath::kEpsilonf )   h = (2.0 / 3.0) + deltaG - deltaR;
+        if( fabs( r - cmax ) < FMaths::kEpsilonf )        h = deltaB - deltaG;
+        else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = (1.0 / 3.0) + deltaR - deltaB;
+        else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = (2.0 / 3.0) + deltaG - deltaR;
 
         if( h < 0.0 ) h += 1.0;
 
@@ -291,20 +294,20 @@ CColor::ToHSV()  const
 }
 
 
-CColor
-CColor::ToCMYK()  const
+FColor
+FColor::ToCMYK()  const
 {
-    if( mMode == eCColorModel::kCMYK )
+    if( mMode == eColorModel::kCMYK )
         return  *this;
 
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().ToCMYK();
 
-    CColor out;
+    FColor out;
     float r = RedF();
     float g = GreenF();
     float b = BlueF();
-    float ik = FMath::Max3( r, g, b );
+    float ik = FMaths::Max3( r, g, b );
     float k = 1.f - ik;
 
     if( ik == 0 )
@@ -318,20 +321,20 @@ CColor::ToCMYK()  const
 }
 
 
-CColor
-CColor::ToModel( eCColorModel iModel )  const
+FColor
+FColor::ToModel( eColorModel iModel )  const
 {
     if( mMode == iModel )
         return  *this;
 
     switch( iModel )
     {
-        case eCColorModel::kG:      return  ToGrey();
-        case eCColorModel::kRGB:    return  ToRGB();
-        case eCColorModel::kHSL:    return  ToHSL();
-        case eCColorModel::kHSV:    return  ToHSV();
-        case eCColorModel::kCMYK:   return  ToCMYK();
-        default: return  CColor( eCColorModel::kInvalid );
+        case eColorModel::kG:      return  ToGrey();
+        case eColorModel::kRGB:    return  ToRGB();
+        case eColorModel::kHSL:    return  ToHSL();
+        case eColorModel::kHSV:    return  ToHSV();
+        case eColorModel::kCMYK:   return  ToCMYK();
+        default: return  FColor( eColorModel::kInvalid );
     }
 }
 
@@ -341,110 +344,110 @@ CColor::ToModel( eCColorModel iModel )  const
 
 
 //static
-CColor
-CColor::FromRGBHexValue( uint32 rgbHexValue, int alpha )
+FColor
+FColor::FromRGBHexValue( uint32 rgbHexValue, int alpha )
 {
-    CColor out;
+    FColor out;
     out.SetRGBHexValue( rgbHexValue, alpha );
     return out;
 }
 
 
 //static
-CColor
-CColor::FromGrey( int g, int alpha )
+FColor
+FColor::FromGrey( int g, int alpha )
 {
-    CColor out;
+    FColor out;
     out.SetGrey( g, alpha );
     return out;
 }
 
 
 //static
-CColor
-CColor::FromRGB( int r, int g, int b, int alpha )
+FColor
+FColor::FromRGB( int r, int g, int b, int alpha )
 {
-    CColor out;
+    FColor out;
     out.SetRGB( r, g, b, alpha );
     return out;
 }
 
 
 //static
-CColor
-CColor::FromHSL( int h, int s, int l, int alpha )
+FColor
+FColor::FromHSL( int h, int s, int l, int alpha )
 {
-    CColor out;
+    FColor out;
     out.SetHSL( h, s, l, alpha );
     return out;
 }
 
 
 //static
-CColor
-CColor::FromHSV( int h, int s, int v, int alpha )
+FColor
+FColor::FromHSV( int h, int s, int v, int alpha )
 {
-    CColor out;
+    FColor out;
     out.SetHSV( h, s, v, alpha );
     return out;
 }
 
 
 //static
-CColor
-CColor::FromCMYK( int c, int m, int y, int k, int alpha )
+FColor
+FColor::FromCMYK( int c, int m, int y, int k, int alpha )
 {
-    CColor out;
+    FColor out;
     out.SetCMYK( c, m, y, k );
     return out;
 }
 
 
 //static
-CColor
-CColor::FromGreyF( float g, float alpha )
+FColor
+FColor::FromGreyF( float g, float alpha )
 {
-    CColor out;
+    FColor out;
     out.SetGreyF( g, alpha );
     return  out;
 }
 
 
 //static
-CColor
-CColor::FromRGBF( float r, float g, float b, float alpha )
+FColor
+FColor::FromRGBF( float r, float g, float b, float alpha )
 {
-    CColor out;
+    FColor out;
     out.SetRGBF( r, g, b, alpha );
     return  out;
 }
 
 
 //static
-CColor
-CColor::FromHSLF( float h, float s, float l, float alpha )
+FColor
+FColor::FromHSLF( float h, float s, float l, float alpha )
 {
-    CColor out;
+    FColor out;
     out.SetHSLF( h, s, l, alpha );
     return  out;
 }
 
 
 //static
-CColor
-CColor::FromHSVF( float h, float s, float v, float alpha )
+FColor
+FColor::FromHSVF( float h, float s, float v, float alpha )
 {
-    CColor out;
+    FColor out;
     out.SetHSVF( h, s, v, alpha );
     return  out;
 }
 
 
 //static
-CColor
-CColor::FromCMYKF( float c, float m, float y, float k, float alpha )
+FColor
+FColor::FromCMYKF( float c, float m, float y, float k, float alpha )
 {
-    CColor out;
+    FColor out;
     out.SetCMYKF( c, m, y, k, alpha );
     return  out;
 }
@@ -452,10 +455,10 @@ CColor::FromCMYKF( float c, float m, float y, float k, float alpha )
 
 //static
 bool
-CColor::IsSimilar( const CColor& A, const CColor& B, int threshold )
+FColor::IsSimilar( const FColor& A, const FColor& B, int threshold )
 {
-    CColor Argb = A.ToRGB();
-    CColor Brgb = B.ToRGB();
+    FColor Argb = A.ToRGB();
+    FColor Brgb = B.ToRGB();
     int AR = Argb.Red();
     int AG = Argb.Green();
     int AB = Argb.Blue();
@@ -474,15 +477,22 @@ CColor::IsSimilar( const CColor& A, const CColor& B, int threshold )
 //------------------------------------------ Instance Representation Access API, Getters
 
 
+eColorModel
+FColor::Mode()  const
+{
+    return  mMode;
+}
+
+
 int
-CColor::Alpha()  const
+FColor::Alpha()  const
 {
     return  mRepr.rgb.alpha >> 8;
 }
 
 
 float
-CColor::AlphaF()  const
+FColor::AlphaF()  const
 {
     return  mRepr.rgb.alpha / float( UINT16_MAX );
 }
@@ -490,9 +500,9 @@ CColor::AlphaF()  const
 
 // Hex
 uint32
-CColor::RGBHexValue()  const
+FColor::RGBHexValue()  const
 {
-    CColor rgb = this->ToRGB();
+    FColor rgb = this->ToRGB();
     int r = rgb.Red();
     int g = rgb.Green();
     int b = rgb.Blue();
@@ -502,18 +512,18 @@ CColor::RGBHexValue()  const
 
  // Grey
 int
-CColor::Grey()  const
+FColor::Grey()  const
 {
-    if( mMode != eCColorModel::kG )
+    if( mMode != eColorModel::kG )
         return  ToGrey().Grey();
     return  mRepr.grey.g >> 8;
 }
 
 
 float
-CColor::GreyF()  const
+FColor::GreyF()  const
 {
-    if( mMode != eCColorModel::kG )
+    if( mMode != eColorModel::kG )
         return  ToGrey().GreyF();
     return  mRepr.grey.g / float( UINT16_MAX );
 }
@@ -521,54 +531,54 @@ CColor::GreyF()  const
 
 // RGB
 int
-CColor::Red()  const
+FColor::Red()  const
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().Red();
     return  mRepr.rgb.r >> 8;
 }
 
 
 int
-CColor::Green()  const
+FColor::Green()  const
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().Green();
     return  mRepr.rgb.g >> 8;
 }
 
 
 int
-CColor::Blue()  const
+FColor::Blue()  const
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().Blue();
     return  mRepr.rgb.b >> 8;
 }
 
 
 float
-CColor::RedF()  const
+FColor::RedF()  const
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().RedF();
     return  mRepr.rgb.r / float( UINT16_MAX );
 }
 
 
 float
-CColor::GreenF()  const
+FColor::GreenF()  const
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().GreenF();
     return  mRepr.rgb.g / float( UINT16_MAX );
 }
 
 
 float
-CColor::BlueF()  const
+FColor::BlueF()  const
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         return  ToRGB().BlueF();
     return  mRepr.rgb.b / float( UINT16_MAX );
 }
@@ -576,28 +586,28 @@ CColor::BlueF()  const
 
 // HSV Alias
 int
-CColor::Hue()  const
+FColor::Hue()  const
 {
     return  HSVHue();
 }
 
 
 int
-CColor::Saturation()  const
+FColor::Saturation()  const
 {
     return  HSVSaturation();
 }
 
 
 float
-CColor::HueF()  const
+FColor::HueF()  const
 {
     return  HSVHueF();
 }
 
 
 float
-CColor::SaturationF()  const
+FColor::SaturationF()  const
 {
     return  HSVSaturationF();
 }
@@ -605,54 +615,54 @@ CColor::SaturationF()  const
 
 // HSL
 int
-CColor::HSLHue()  const
+FColor::HSLHue()  const
 {
-    if( mMode != eCColorModel::kHSL )
+    if( mMode != eColorModel::kHSL )
         return  ToHSL().HSLHue();
     return  mRepr.hsl.h / 100;
 }
 
 
 int
-CColor::HSLSaturation()  const
+FColor::HSLSaturation()  const
 {
-    if( mMode != eCColorModel::kHSL )
+    if( mMode != eColorModel::kHSL )
         return  ToHSL().HSLSaturation();
     return  mRepr.hsl.s >> 8;
 }
 
 
 int
-CColor::Lightness()  const
+FColor::Lightness()  const
 {
-    if( mMode != eCColorModel::kHSL )
+    if( mMode != eColorModel::kHSL )
         return  ToHSL().Lightness();
     return  mRepr.hsl.l >> 8;
 }
 
 
 float
-CColor::HSLHueF()  const
+FColor::HSLHueF()  const
 {
-    if( mMode != eCColorModel::kHSL )
+    if( mMode != eColorModel::kHSL )
         return  ToHSL().HSLHueF();
     return  mRepr.hsl.h / 36000.f ;
 }
 
 
 float
-CColor::HSLSaturationF()  const
+FColor::HSLSaturationF()  const
 {
-    if( mMode != eCColorModel::kHSL )
+    if( mMode != eColorModel::kHSL )
         return  ToHSL().HSLSaturationF();
     return  mRepr.hsl.s / float( UINT16_MAX );
 }
 
 
 float
-CColor::LightnessF()  const
+FColor::LightnessF()  const
 {
-    if( mMode != eCColorModel::kHSL )
+    if( mMode != eColorModel::kHSL )
         return  ToHSL().LightnessF();
     return  mRepr.hsl.l / float( UINT16_MAX );
 }
@@ -660,54 +670,54 @@ CColor::LightnessF()  const
 
 // HSV
 int
-CColor::HSVHue()  const
+FColor::HSVHue()  const
 {
-    if( mMode != eCColorModel::kHSV )
+    if( mMode != eColorModel::kHSV )
         return  ToHSV().HSVHue();
     return  mRepr.hsv.h / 100;
 }
 
 
 int
-CColor::HSVSaturation()  const
+FColor::HSVSaturation()  const
 {
-    if( mMode != eCColorModel::kHSV )
+    if( mMode != eColorModel::kHSV )
         return  ToHSV().HSVSaturation();
     return  mRepr.hsv.s >> 8;
 }
 
 
 int
-CColor::Value()  const
+FColor::Value()  const
 {
-    if( mMode != eCColorModel::kHSV )
+    if( mMode != eColorModel::kHSV )
         return  ToHSV().Value();
     return  mRepr.hsv.v >> 8;
 }
 
 
 float
-CColor::HSVHueF()  const
+FColor::HSVHueF()  const
 {
-    if( mMode != eCColorModel::kHSV )
+    if( mMode != eColorModel::kHSV )
         return  ToHSV().HSVHueF();
     return  mRepr.hsv.h / 36000.f ;
 }
 
 
 float
-CColor::HSVSaturationF()  const
+FColor::HSVSaturationF()  const
 {
-    if( mMode != eCColorModel::kHSV )
+    if( mMode != eColorModel::kHSV )
         return  ToHSV().HSVSaturationF();
     return  mRepr.hsv.s / float( UINT16_MAX );
 }
 
 
 float
-CColor::ValueF()  const
+FColor::ValueF()  const
 {
-    if( mMode != eCColorModel::kHSV )
+    if( mMode != eColorModel::kHSV )
         return  ToHSV().ValueF();
     return  mRepr.hsv.v / float( UINT16_MAX );
 }
@@ -715,86 +725,86 @@ CColor::ValueF()  const
 
 // CMYK
 int
-CColor::Cyan()  const
+FColor::Cyan()  const
 {
-    if( mMode != eCColorModel::kCMYK )
+    if( mMode != eColorModel::kCMYK )
         return  ToCMYK().Cyan();
     return  mRepr.cmyk.c >> 8;
 }
 
 
 int
-CColor::Magenta()  const
+FColor::Magenta()  const
 {
-    if( mMode != eCColorModel::kCMYK )
+    if( mMode != eColorModel::kCMYK )
         return  ToCMYK().Magenta();
     return  mRepr.cmyk.m >> 8;
 }
 
 
 int
-CColor::Yellow()  const
+FColor::Yellow()  const
 {
-    if( mMode != eCColorModel::kCMYK )
+    if( mMode != eColorModel::kCMYK )
         return  ToCMYK().Yellow();
     return  mRepr.cmyk.y >> 8;
 }
 
 
 int
-CColor::Key()  const
+FColor::Key()  const
 {
-    if( mMode != eCColorModel::kCMYK )
+    if( mMode != eColorModel::kCMYK )
         return  ToCMYK().Black();
     return  mRepr.cmyk.k >> 8;
 }
 
 
 int
-CColor::Black()  const
+FColor::Black()  const
 {
     return  Key();
 }
 
 
 float
-CColor::CyanF()  const
+FColor::CyanF()  const
 {
-    if( mMode != eCColorModel::kCMYK )
+    if( mMode != eColorModel::kCMYK )
         return  ToCMYK().CyanF();
     return  mRepr.cmyk.c / float( UINT16_MAX );
 }
 
 
 float
-CColor::MagentaF()  const
+FColor::MagentaF()  const
 {
-    if( mMode != eCColorModel::kCMYK )
+    if( mMode != eColorModel::kCMYK )
         return  ToCMYK().MagentaF();
     return  mRepr.cmyk.m / float( UINT16_MAX );
 }
 
 
 float
-CColor::YellowF()  const
+FColor::YellowF()  const
 {
-    if( mMode != eCColorModel::kCMYK )
+    if( mMode != eColorModel::kCMYK )
         return  ToCMYK().YellowF();
     return  mRepr.cmyk.y / float( UINT16_MAX );
 }
 
 
 float
-CColor::KeyF()  const
+FColor::KeyF()  const
 {
-    if( mMode != eCColorModel::kCMYK )
+    if( mMode != eColorModel::kCMYK )
         return  ToCMYK().KeyF();
     return  mRepr.cmyk.k / float( UINT16_MAX );
 }
 
 
 float
-CColor::BlackF()  const
+FColor::BlackF()  const
 {
     return  KeyF();
 }
@@ -805,100 +815,100 @@ CColor::BlackF()  const
 
 
 void
-CColor::SetAlpha( int value )
+FColor::SetAlpha( int value )
 {
-    mRepr.rgb.alpha = 0x101 * FMath::Clamp( value, 0, 0xff );
+    mRepr.rgb.alpha = 0x101 * FMaths::Clamp( value, 0, 0xff );
 }
 
 void
-CColor::SetAlphaF( float value )
+FColor::SetAlphaF( float value )
 {
-    mRepr.rgb.alpha = floor( FMath::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.rgb.alpha = floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
 }
 
 
 void
-CColor::SetGrey( int g )
+FColor::SetGrey( int g )
 {
-    if( mMode != eCColorModel::kG )
+    if( mMode != eColorModel::kG )
         SetGrey( g, Alpha() );
     else
-        mRepr.grey.g = 0x101 * FMath::Clamp( g, 0, 0xff );
+        mRepr.grey.g = 0x101 * FMaths::Clamp( g, 0, 0xff );
 }
 
 
 void
-CColor::SetGreyF( float g )
+FColor::SetGreyF( float g )
 {
-    if( mMode != eCColorModel::kG )
+    if( mMode != eColorModel::kG )
         SetGreyF( g, AlphaF() );
     else
-        mRepr.grey.g = floor( FMath::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
+        mRepr.grey.g = floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
 }
 
 
 void
-CColor::SetRed( int value )
+FColor::SetRed( int value )
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         SetRGB( value, Green(), Blue(), Alpha() );
     else
-        mRepr.rgb.r = 0x101 * FMath::Clamp( value, 0, 0xff );
+        mRepr.rgb.r = 0x101 * FMaths::Clamp( value, 0, 0xff );
 }
 
 
 void
-CColor::SetGreen( int value )
+FColor::SetGreen( int value )
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         SetRGB( Red(), value, Blue(), Alpha() );
     else
-        mRepr.rgb.g = 0x101 * FMath::Clamp( value, 0, 0xff );
+        mRepr.rgb.g = 0x101 * FMaths::Clamp( value, 0, 0xff );
 }
 
 
 void
-CColor::SetBlue( int value )
+FColor::SetBlue( int value )
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         SetRGB( Red(), Green(), value, Alpha() );
     else
-        mRepr.rgb.b = 0x101 * FMath::Clamp( value, 0, 0xff );
+        mRepr.rgb.b = 0x101 * FMaths::Clamp( value, 0, 0xff );
 }
 
 
 void
-CColor::SetRedF( float value )
+FColor::SetRedF( float value )
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         SetRGB( value, GreenF(), BlueF(), AlphaF() );
     else
-        mRepr.rgb.r = floor( FMath::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
+        mRepr.rgb.r = floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
 }
 
 
 void
-CColor::SetGreenF( float value )
+FColor::SetGreenF( float value )
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         SetRGB( RedF(), value, BlueF(), AlphaF() );
     else
-        mRepr.rgb.g = floor( FMath::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
+        mRepr.rgb.g = floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
 }
 
 
 void
-CColor::SetBlueF( float value )
+FColor::SetBlueF( float value )
 {
-    if( mMode != eCColorModel::kRGB )
+    if( mMode != eColorModel::kRGB )
         SetRGB( RedF(), GreenF(), value, AlphaF() );
     else
-        mRepr.rgb.b = floor( FMath::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
+        mRepr.rgb.b = floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
 }
 
 
 void
-CColor::SetRGBHexValue( uint32 rgbHexValue, int alpha )
+FColor::SetRGBHexValue( uint32 rgbHexValue, int alpha )
 {
     uint32 rmask = 0x00ff0000;
     uint32 gmask = 0x0000ff00;
@@ -912,11 +922,11 @@ CColor::SetRGBHexValue( uint32 rgbHexValue, int alpha )
 
 
 void
-CColor::SetGrey( int g, int alpha )
+FColor::SetGrey( int g, int alpha )
 {
-    mMode = eCColorModel::kG;
-    mRepr.grey.alpha = 0x101 * FMath::Clamp( alpha, 0, 0xff );
-    mRepr.grey.g     = 0x101 * FMath::Clamp( g, 0, 0xff );
+    mMode = eColorModel::kG;
+    mRepr.grey.alpha = 0x101 * FMaths::Clamp( alpha, 0, 0xff );
+    mRepr.grey.g     = 0x101 * FMaths::Clamp( g, 0, 0xff );
     mRepr.grey._0    = 0;
     mRepr.grey._1    = 0;
     mRepr.grey._     = 0;
@@ -924,61 +934,61 @@ CColor::SetGrey( int g, int alpha )
 
 
 void
-CColor::SetRGB( int r, int g, int b, int alpha )
+FColor::SetRGB( int r, int g, int b, int alpha )
 {
-    mMode = eCColorModel::kRGB;
-    mRepr.rgb.alpha = 0x101 * FMath::Clamp( alpha, 0, 0xff );
-    mRepr.rgb.r     = 0x101 * FMath::Clamp( r, 0, 0xff );
-    mRepr.rgb.g     = 0x101 * FMath::Clamp( g, 0, 0xff );
-    mRepr.rgb.b     = 0x101 * FMath::Clamp( b, 0, 0xff );
+    mMode = eColorModel::kRGB;
+    mRepr.rgb.alpha = 0x101 * FMaths::Clamp( alpha, 0, 0xff );
+    mRepr.rgb.r     = 0x101 * FMaths::Clamp( r, 0, 0xff );
+    mRepr.rgb.g     = 0x101 * FMaths::Clamp( g, 0, 0xff );
+    mRepr.rgb.b     = 0x101 * FMaths::Clamp( b, 0, 0xff );
     mRepr.rgb._     = 0;
 }
 
 
 void
-CColor::SetHSL( int h, int s, int l, int alpha )
+FColor::SetHSL( int h, int s, int l, int alpha )
 {
     while( h < 0 ) { h += 360; }
-    mMode = eCColorModel::kHSL;
-    mRepr.hsl.alpha = 0x101 * FMath::Clamp( alpha, 0, 0xff );
+    mMode = eColorModel::kHSL;
+    mRepr.hsl.alpha = 0x101 * FMaths::Clamp( alpha, 0, 0xff );
     mRepr.hsl.h     = ( h % 360 ) * 100;
-    mRepr.hsl.s     = 0x101 * FMath::Clamp( s, 0, 0xff );
-    mRepr.hsl.l     = 0x101 * FMath::Clamp( l, 0, 0xff );
+    mRepr.hsl.s     = 0x101 * FMaths::Clamp( s, 0, 0xff );
+    mRepr.hsl.l     = 0x101 * FMaths::Clamp( l, 0, 0xff );
     mRepr.hsl._     = 0;
 }
 
 
 void
-CColor::SetHSV( int h, int s, int v, int alpha )
+FColor::SetHSV( int h, int s, int v, int alpha )
 {
     while( h < 0 ) { h += 360; }
-    mMode = eCColorModel::kHSV;
-    mRepr.hsv.alpha = 0x101 * FMath::Clamp( alpha, 0, 0xff );
+    mMode = eColorModel::kHSV;
+    mRepr.hsv.alpha = 0x101 * FMaths::Clamp( alpha, 0, 0xff );
     mRepr.hsv.h     = ( h % 360 ) * 100;
-    mRepr.hsv.s     = 0x101 * FMath::Clamp( s, 0, 0xff );
-    mRepr.hsv.v     = 0x101 * FMath::Clamp( v, 0, 0xff );
+    mRepr.hsv.s     = 0x101 * FMaths::Clamp( s, 0, 0xff );
+    mRepr.hsv.v     = 0x101 * FMaths::Clamp( v, 0, 0xff );
     mRepr.hsv._     = 0;
 }
 
 
 void
-CColor::SetCMYK( int c, int m, int y, int k, int alpha )
+FColor::SetCMYK( int c, int m, int y, int k, int alpha )
 {
-    mMode = eCColorModel::kCMYK;
-    mRepr.cmyk.alpha = 0x101 * FMath::Clamp( alpha, 0, 0xff );
-    mRepr.cmyk.c     = 0x101 * FMath::Clamp( c, 0, 0xff );
-    mRepr.cmyk.m     = 0x101 * FMath::Clamp( m, 0, 0xff );
-    mRepr.cmyk.y     = 0x101 * FMath::Clamp( y, 0, 0xff );
-    mRepr.cmyk.k     = 0x101 * FMath::Clamp( k, 0, 0xff );
+    mMode = eColorModel::kCMYK;
+    mRepr.cmyk.alpha = 0x101 * FMaths::Clamp( alpha, 0, 0xff );
+    mRepr.cmyk.c     = 0x101 * FMaths::Clamp( c, 0, 0xff );
+    mRepr.cmyk.m     = 0x101 * FMaths::Clamp( m, 0, 0xff );
+    mRepr.cmyk.y     = 0x101 * FMaths::Clamp( y, 0, 0xff );
+    mRepr.cmyk.k     = 0x101 * FMaths::Clamp( k, 0, 0xff );
 }
 
 
 void
-CColor::SetGreyF( float g, float alpha )
+FColor::SetGreyF( float g, float alpha )
 {
-    mMode = eCColorModel::kG;
-    mRepr.grey.alpha = floor( FMath::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.grey.g     = floor( FMath::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mMode = eColorModel::kG;
+    mRepr.grey.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.grey.g     = floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
     mRepr.grey._0    = 0;
     mRepr.grey._1    = 0;
     mRepr.grey._     = 0;
@@ -986,50 +996,51 @@ CColor::SetGreyF( float g, float alpha )
 
 
 void
-CColor::SetRGBF( float r, float g, float b, float alpha )
+FColor::SetRGBF( float r, float g, float b, float alpha )
 {
-    mMode = eCColorModel::kRGB;
-    mRepr.rgb.alpha = floor( FMath::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.rgb.r     = floor( FMath::Clamp( r, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.rgb.g     = floor( FMath::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.rgb.b     = floor( FMath::Clamp( b, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mMode = eColorModel::kRGB;
+    mRepr.rgb.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.rgb.r     = floor( FMaths::Clamp( r, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.rgb.g     = floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.rgb.b     = floor( FMaths::Clamp( b, 0.f, 1.f ) * float( UINT16_MAX ) );
     mRepr.rgb._     = 0;
 }
 
 
 void
-CColor::SetHSLF( float h, float s, float l, float alpha )
+FColor::SetHSLF( float h, float s, float l, float alpha )
 {
-    mMode = eCColorModel::kHSL;
-    mRepr.hsl.alpha = floor( FMath::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.hsl.h     = floor( FMath::Clamp( h, 0.f, 1.f ) * 36000 );
-    mRepr.hsl.s     = floor( FMath::Clamp( s, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.hsl.l     = floor( FMath::Clamp( l, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mMode = eColorModel::kHSL;
+    mRepr.hsl.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.hsl.h     = floor( FMaths::Clamp( h, 0.f, 1.f ) * 36000 );
+    mRepr.hsl.s     = floor( FMaths::Clamp( s, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.hsl.l     = floor( FMaths::Clamp( l, 0.f, 1.f ) * float( UINT16_MAX ) );
     mRepr.hsl._     = 0;
 }
 
 
 void
-CColor::SetHSVF( float h, float s, float v, float alpha )
+FColor::SetHSVF( float h, float s, float v, float alpha )
 {
-    mMode = eCColorModel::kHSV;
-    mRepr.hsv.alpha = floor( FMath::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.hsv.h     = floor( FMath::Clamp( h, 0.f, 1.f ) * 36000 );
-    mRepr.hsv.s     = floor( FMath::Clamp( s, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.hsv.v     = floor( FMath::Clamp( v, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mMode = eColorModel::kHSV;
+    mRepr.hsv.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.hsv.h     = floor( FMaths::Clamp( h, 0.f, 1.f ) * 36000 );
+    mRepr.hsv.s     = floor( FMaths::Clamp( s, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.hsv.v     = floor( FMaths::Clamp( v, 0.f, 1.f ) * float( UINT16_MAX ) );
     mRepr.hsv._     = 0;
 }
 
 
 void
-CColor::SetCMYKF( float c, float m, float y, float k, float alpha )
+FColor::SetCMYKF( float c, float m, float y, float k, float alpha )
 {
-    mMode = eCColorModel::kCMYK;
-    mRepr.cmyk.alpha = floor( FMath::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.cmyk.c     = floor( FMath::Clamp( c, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.cmyk.m     = floor( FMath::Clamp( m, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.cmyk.y     = floor( FMath::Clamp( y, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.cmyk.k     = floor( FMath::Clamp( k, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mMode = eColorModel::kCMYK;
+    mRepr.cmyk.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.cmyk.c     = floor( FMaths::Clamp( c, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.cmyk.m     = floor( FMaths::Clamp( m, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.cmyk.y     = floor( FMaths::Clamp( y, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.cmyk.k     = floor( FMaths::Clamp( k, 0.f, 1.f ) * float( UINT16_MAX ) );
 }
 
-} // namespace ULIS
+ULIS2_NAMESPACE_END
+

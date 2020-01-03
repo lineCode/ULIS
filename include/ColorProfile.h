@@ -1,21 +1,23 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Color.ColorProfile.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
+*
+*   ULIS2
+*__________________
+*
+* @file         ColorProfile.h
+* @author       Clement Berthaud
+* @brief        This file provides declaration for the FColorProfile class.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
-
-#include "ULIS/Color/ULIS.Color.Illuminants.h"
-#include "ULIS/Color/ULIS.Color.ModelSupport.h"
+#include "Core.h"
+#include "Illuminants.h"
+#include "ModelSupport.h"
 #include "lcms2.h"
-#include <string>
 
-namespace ULIS {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // DefaultProfiles
 namespace DefaultProfiles
@@ -40,17 +42,17 @@ public:
 
 public:
     // Public API
-    e_cm ModelSignature() const;
-    bool ModelSupported( e_cm iModel ) const;
-    const std::string& Name() const;
-    cmsHPROFILE ProfileHandle();
+    eModelSig           ModelSignature() const;
+    bool                ModelSupported( eModelSig iModel ) const;
+    const std::string&  Name() const;
+    cmsHPROFILE         ProfileHandle();
 
 private:
     // Private Data
-    cmsHPROFILE profile;
-    e_cm model;
-    std::string name;
+    cmsHPROFILE     mProfile;
+    eModelSig       mModel;
+    std::string     mName;
 };
 
-} // namespace ULIS
+ULIS2_NAMESPACE_END
 
