@@ -12,8 +12,9 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include <functional>
+#include <string>
+#include <cstring>
 #include <stdint.h>
 
 /////////////////////////////////////////////////////

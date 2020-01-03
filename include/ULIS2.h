@@ -12,6 +12,5 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Block.h"
 

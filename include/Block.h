@@ -12,7 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core.h"
 
 ULIS2_NAMESPACE_BEGIN
