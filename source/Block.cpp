@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Block.h"
+#include "ColorProfile.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -27,8 +28,8 @@ void Cleanup_DoNothing_imp( tByte* iData )
 }
 
 
-ULIS2_API FOnCleanup OnCleanup_FreeMemory = Cleanup_FreeMemory_imp;
-ULIS2_API FOnCleanup OnCleanup_DoNothing  = Cleanup_DoNothing_imp;
+ULIS2_API const FOnCleanup OnCleanup_FreeMemory = Cleanup_FreeMemory_imp;
+ULIS2_API const FOnCleanup OnCleanup_DoNothing  = Cleanup_DoNothing_imp;
 
 /////////////////////////////////////////////////////
 // FBlock
@@ -47,9 +48,26 @@ FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& 
     , mFormat( iFormat )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
+    , mProfile( nullptr )
 {
     ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
+    mData = new tByte[ BytesTotal() ];
+}
+
+
+FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup )
+    : mData( nullptr )
+    , mWidth( iWidth )
+    , mHeight( iHeight )
+    , mFormat( iFormat )
+    , mOnInvalid( iOnInvalid )
+    , mOnCleanup( iOnCleanup )
+    , mProfile( iProfile )
+{
+    ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
+    ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
+    ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
     mData = new tByte[ BytesTotal() ];
 }
 
@@ -61,9 +79,25 @@ FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, cons
     , mFormat( iFormat )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
+    , mProfile( nullptr )
 {
     ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
+}
+
+
+FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup )
+    : mData( iData )
+    , mWidth( iWidth )
+    , mHeight( iHeight )
+    , mFormat( iFormat )
+    , mOnInvalid( iOnInvalid )
+    , mOnCleanup( iOnCleanup )
+    , mProfile( iProfile )
+{
+    ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
+    ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
+    ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -84,29 +118,35 @@ FBlock::DataPtr() const
 
 
 tByte*
-FBlock::PixelPtr( int iX, int iY )
+FBlock::PixelPtr( tIndex iX, tIndex iY )
 {
+    ULIS2_ASSERT( iX >= 0 && iX <= mWidth, "Error: index out of range" );
+    ULIS2_ASSERT( iY >= 0 && iY <= mHeight, "Error: index out of range" );
     return  DataPtr() + ( iX * BytesPerPixel() + iY * BytesPerScanLine() );
 }
 
 
 const tByte*
-FBlock::PixelPtr( int iX, int iY ) const
+FBlock::PixelPtr( tIndex iX, tIndex iY ) const
 {
+    ULIS2_ASSERT( iX >= 0 && iX <= mWidth, "Error: index out of range" );
+    ULIS2_ASSERT( iY >= 0 && iY <= mHeight, "Error: index out of range" );
     return  DataPtr() + ( iX * BytesPerPixel() + iY * BytesPerScanLine() );
 }
 
 
 tByte*
-FBlock::ScanlinePtr( int iRow )
+FBlock::ScanlinePtr( tIndex iRow )
 {
+    ULIS2_ASSERT( iRow >= 0 && iRow <= mHeight, "Error: index out of range" );
     return  DataPtr() + ( iRow * BytesPerScanLine() );
 }
 
 
 const tByte*
-FBlock::ScanlinePtr( int iRow ) const
+FBlock::ScanlinePtr( tIndex iRow ) const
 {
+    ULIS2_ASSERT( iRow >= 0 && iRow <= mHeight, "Error: index out of range" );
     return  DataPtr() + ( iRow * BytesPerScanLine() );
 }
 
@@ -206,6 +246,13 @@ uint8
 FBlock::NumColorChannels() const
 {
     return  static_cast< uint8 >( ULIS2_R_CHANNELS( mFormat ) );
+}
+
+
+const FColorProfile&
+FBlock::Profile() const
+{
+    return  *mProfile;
 }
 
 ULIS2_NAMESPACE_END

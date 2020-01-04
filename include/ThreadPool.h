@@ -1,17 +1,19 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Thread.Pool.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
+*
+*   ULIS2
+*__________________
+*
+* @file         ThreadPool.h
+* @author       Clement Berthaud
+* @brief        This file provides the declaration for the FThreadPool class.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
-
-#include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
+#include "Core.h"
+#include "Perf.h"
 #include <iostream>
 #include <deque>
 #include <functional>
@@ -21,7 +23,7 @@
 #include <random>
 #include <atomic>
 
-namespace ULIS {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FThreadPool
 class FThreadPool
@@ -50,11 +52,11 @@ public:
     }
 
 
-    void                                    WaitForCompletion();
-    unsigned int                            GetProcessed() const { return processed; }
-    unsigned int                            GetNumWorkers() const { return workers.size(); }
-    void                                    SetNumWorkers( unsigned int );
-    unsigned int                            GetMaxWorkers() const { return  std::thread::hardware_concurrency(); }
+    void            WaitForCompletion();
+    unsigned int    GetProcessed() const { return processed; }
+    unsigned int    GetNumWorkers() const { return workers.size(); }
+    void            SetNumWorkers( unsigned int );
+    unsigned int    GetMaxWorkers() const { return  std::thread::hardware_concurrency(); }
 
 private:
     // Private API
@@ -72,6 +74,5 @@ private:
     std::condition_variable             cv_finished;
 };
 
-
-} // namespace ULIS
+ULIS2_NAMESPACE_END
 

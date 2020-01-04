@@ -14,10 +14,11 @@
 #pragma once
 #include "Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS2_FDECL_CLASS( FColorProfile );
 
-ULIS2_API extern FOnCleanup OnCleanup_FreeMemory;
-ULIS2_API extern FOnCleanup OnCleanup_DoNothing;
+ULIS2_NAMESPACE_BEGIN
+ULIS2_API extern const FOnCleanup OnCleanup_FreeMemory;
+ULIS2_API extern const FOnCleanup OnCleanup_DoNothing;
 
 /////////////////////////////////////////////////////
 /// @class      FBlock
@@ -29,39 +30,43 @@ public:
     // Construction / Destruction
     virtual ~FBlock();
     FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
+    FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
     FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
+    FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
 
 public:
     // Public API
-    tByte*              DataPtr();
-    const tByte*        DataPtr()                       const;
-    tByte*              PixelPtr( int iX, int iY );
-    const tByte*        PixelPtr( int iX, int iY )      const;
-    tByte*              ScanlinePtr( int iRow );
-    const tByte*        ScanlinePtr( int iRow )         const;
-    tSize               Width()                         const;
-    tSize               Height()                        const;
-    tSize               BytesPerSample()                const;
-    tSize               BytesPerPixel()                 const;
-    tSize               BytesPerScanLine()              const;
-    tSize               BytesTotal()                    const;
-    tFormat             Format()                        const;
-    eModelSig           Model()                         const;
-    eType               Type()                          const;
-    bool                HasAlpha()                      const;
-    bool                Swapped()                       const;
-    bool                Reversed()                      const;
-    uint8               SamplesPerPixel()               const;
-    uint8               NumColorChannels()              const;
+    tByte*                  DataPtr();
+    const tByte*            DataPtr()                           const;
+    tByte*                  PixelPtr( tIndex iX, tIndex iY );
+    const tByte*            PixelPtr( tIndex iX, tIndex iY )    const;
+    tByte*                  ScanlinePtr( tIndex iRow );
+    const tByte*            ScanlinePtr( tIndex iRow )          const;
+    tSize                   Width()                             const;
+    tSize                   Height()                            const;
+    tSize                   BytesPerSample()                    const;
+    tSize                   BytesPerPixel()                     const;
+    tSize                   BytesPerScanLine()                  const;
+    tSize                   BytesTotal()                        const;
+    tFormat                 Format()                            const;
+    eModelSig               Model()                             const;
+    eType                   Type()                              const;
+    bool                    HasAlpha()                          const;
+    bool                    Swapped()                           const;
+    bool                    Reversed()                          const;
+    uint8                   SamplesPerPixel()                   const;
+    uint8                   NumColorChannels()                  const;
+    const FColorProfile&    Profile()                           const;
 
 private:
     // Private Data Members
-    tByte*      mData;
-    tSize       mWidth;
-    tSize       mHeight;
-    tFormat     mFormat;
-    FOnInvalid  mOnInvalid;
-    FOnCleanup  mOnCleanup;
+    tByte*          mData;
+    tSize           mWidth;
+    tSize           mHeight;
+    tFormat         mFormat;
+    FOnInvalid      mOnInvalid;
+    FOnCleanup      mOnCleanup;
+    FColorProfile*  mProfile;
 };
 
 ULIS2_NAMESPACE_END

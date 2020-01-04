@@ -13,7 +13,8 @@
 */
 #pragma once
 #include "Core.h"
-#include "ColorProfile.h"
+
+ULIS2_FDECL_CLASS( FColorProfile );
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -26,7 +27,9 @@ public:
     // Construction / Destruction
     virtual ~FPixel();
     FPixel( uint32 iFormat );
+    FPixel( uint32 iFormat, FColorProfile* iProfile = nullptr );
     FPixel( tByte* iData, tFormat iFormat );
+    FPixel( tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
 
 public:
     // Public API
@@ -47,6 +50,7 @@ private:
     // Private Data Members
     tByte*          mData;
     tFormat         mFormat;
+    FColorProfile*  mProfile;
 };
 
 ULIS2_NAMESPACE_END

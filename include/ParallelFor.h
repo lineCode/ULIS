@@ -1,24 +1,26 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Thread.ParallelFor.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
+*
+*   ULIS2
+*__________________
+*
+* @file         ParallelFor.h
+* @author       Clement Berthaud
+* @brief        This file provides the declarations for the ParallelFor utilities.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
-#include "ULIS/ULIS.Config.h"
-#include "ULIS/Base/ULIS.Base.BaseTypes.h"
-#include "ULIS/Base/ULIS.Base.PerformanceOptions.h"
-#include "ULIS/Global/ULIS.Global.GlobalThreadPool.h"
-#include "ULIS/Thread/ULIS.Thread.Pool.h"
+#include "Core.h"
+#include "Perf.h"
+#include "ThreadPool.h"
 #include <functional>
 
-namespace ULIS {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ParallelFor
-inline  void  ParallelFor_Imp( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+inline  void  ParallelFor_Imp( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, const FPerf& iPerformanceOptions = FPerf() )
 {
     if( iPerformanceOptions.desired_workers > 1 && iPool.GetNumWorkers() > 1 )
     {
@@ -36,17 +38,10 @@ inline  void  ParallelFor_Imp( FThreadPool& iPool, int32 iNum, std::function< vo
 }
 
 
-inline  void  ParallelForPool( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) > iFun, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
+inline  void  ParallelForPool( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) > iFun, const FPerf& iPerformanceOptions = FPerf() )
 {
     ParallelFor_Imp( iPool, iNum, iFun, iPerformanceOptions );
 }
 
-
-inline  void  ParallelFor( int32 iNum, std::function< void( int32 ) > iFun, const FPerformanceOptions& iPerformanceOptions = FPerformanceOptions() )
-{
-    ParallelFor_Imp( FGlobalThreadPool::Get(), iNum, iFun, iPerformanceOptions );
-}
-
-
-} // namespace ULIS
+ULIS2_NAMESPACE_END
 

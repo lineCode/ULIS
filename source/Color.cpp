@@ -502,10 +502,19 @@ FColor::AlphaF()  const
 uint32
 FColor::RGBHexValue()  const
 {
-    FColor rgb = this->ToRGB();
-    int r = rgb.Red();
-    int g = rgb.Green();
-    int b = rgb.Blue();
+    if( mMode != eColorModel::kRGB )
+    {
+        FColor rgb = this->ToRGB();
+        int r = rgb.Red();
+        int g = rgb.Green();
+        int b = rgb.Blue();
+        uint32 out = ( uint32( r ) << 16 ) + ( uint32( g ) << 8 ) + ( uint32( b ) << 0 );
+        return  out;
+    }
+
+    int r = mRepr.rgb.r;
+    int g = mRepr.rgb.g;
+    int b = mRepr.rgb.b;
     uint32 out = ( uint32( r ) << 16 ) + ( uint32( g ) << 8 ) + ( uint32( b ) << 0 );
     return  out;
 }

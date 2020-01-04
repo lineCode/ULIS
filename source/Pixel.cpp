@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Pixel.h"
+#include "ColorProfile.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -29,11 +30,27 @@ FPixel::FPixel( tFormat iFormat )
 {
 }
 
+FPixel::FPixel( tFormat iFormat, FColorProfile* iProfile )
+    : mData( nullptr )
+    , mFormat( iFormat )
+    , mProfile( iProfile )
+{
+    ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+}
+
 
 FPixel::FPixel( tByte* iData, tFormat iFormat )
     : mData( iData )
     , mFormat( iFormat )
 {
+}
+
+
+FPixel::FPixel( tByte* iData, tFormat iFormat, FColorProfile* iProfile )
+    : mData( iData )
+    , mFormat( iFormat )
+{
+    ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 

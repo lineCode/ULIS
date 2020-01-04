@@ -1,21 +1,23 @@
 // Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-
 /**
- * @file        ULIS.Thread.Queue.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- */
-
+*
+*   ULIS2
+*__________________
+*
+* @file         SharedQueue.h
+* @author       Clement Berthaud
+* @brief        This file provides the declaration for the TSharedQueue class.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
-
-#include <queue>
-#include <mutex>
+#include "Core.h"
 #include <condition_variable>
+#include <mutex>
+#include <queue>
 
-
-namespace ULIS {
+ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // TSharedQueue
 template <typename T>
@@ -40,7 +42,6 @@ private:
     std::condition_variable     cond;
     std::mutex                  mutex;
 }; 
-
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
@@ -97,6 +98,5 @@ bool TSharedQueue<T>::Empty()
     return empty;
 }
 
-
-} // namespace ULIS
+ULIS2_NAMESPACE_END
 

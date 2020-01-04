@@ -102,7 +102,7 @@
 #define ULIS2_NAMESPACE_NAME     ULIS2
 #define ULIS2_NAMESPACE_BEGIN    namespace ULIS2_NAMESPACE_NAME {
 #define ULIS2_NAMESPACE_END      }
-#define ULIS2_FDECL( i ) ULIS2_NAMESPACE_BEGIN class i ; ULIS2_NAMESPACE_END
+#define ULIS2_FDECL_CLASS( i ) ULIS2_NAMESPACE_BEGIN class i ; ULIS2_NAMESPACE_END
 
 /////////////////////////////////////////////////////
 // Namespace alias
@@ -131,6 +131,9 @@ namespace ul2 = ULIS2_NAMESPACE_NAME;
     #define ULIS2_ASSERT( cond, log )
 #endif
 
+#define ULIS2_WARNING( cond, log )  if( !( cond ) ) { std::cout << "Warning: " << log << std::endl; }
+#define ULIS2_ERROR( cond, log )  if( !( cond ) ) { std::cout << "Error: " << log << std::endl; ULIS2_CRASH; }
+
 /////////////////////////////////////////////////////
 // glm FORCE extensions, before any glm related includes
 #define GLM_FORCE_SSE42
@@ -157,6 +160,7 @@ typedef  unsigned int   uint;
 typedef  uint8_t        tByte;
 typedef  uint32_t       tFormat;
 typedef  uint32_t       tSize;
+typedef  uint32_t       tIndex;
 
 // Forward Declarations
 class FBlock;
