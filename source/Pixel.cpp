@@ -35,7 +35,8 @@ FPixel::FPixel( tFormat iFormat, FColorProfile* iProfile )
     , mFormat( iFormat )
     , mProfile( iProfile )
 {
-    ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+    if( mProfile )
+        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -50,7 +51,8 @@ FPixel::FPixel( tByte* iData, tFormat iFormat, FColorProfile* iProfile )
     : mData( iData )
     , mFormat( iFormat )
 {
-    ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+    if( mProfile )
+        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -138,6 +140,24 @@ FPixel::NumColorChannels() const
 {
     return  static_cast< uint8 >( ULIS2_R_CHANNELS( mFormat ) );
 }
+
+
+const FColorProfile&
+FPixel::Profile() const
+{
+    return  *mProfile;
+}
+
+
+void
+FPixel::AssignProfile( FColorProfile* iProfile )
+{
+    mProfile = iProfile;
+
+    if( mProfile )
+        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+}
+
 
 
 ULIS2_NAMESPACE_END

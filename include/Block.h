@@ -37,26 +37,27 @@ public:
 public:
     // Public API
     tByte*                  DataPtr();
-    const tByte*            DataPtr()                           const;
+    const tByte*            DataPtr()                                   const;
     tByte*                  PixelPtr( tIndex iX, tIndex iY );
-    const tByte*            PixelPtr( tIndex iX, tIndex iY )    const;
+    const tByte*            PixelPtr( tIndex iX, tIndex iY )            const;
     tByte*                  ScanlinePtr( tIndex iRow );
-    const tByte*            ScanlinePtr( tIndex iRow )          const;
-    tSize                   Width()                             const;
-    tSize                   Height()                            const;
-    tSize                   BytesPerSample()                    const;
-    tSize                   BytesPerPixel()                     const;
-    tSize                   BytesPerScanLine()                  const;
-    tSize                   BytesTotal()                        const;
-    tFormat                 Format()                            const;
-    eModelSig               Model()                             const;
-    eType                   Type()                              const;
-    bool                    HasAlpha()                          const;
-    bool                    Swapped()                           const;
-    bool                    Reversed()                          const;
-    uint8                   SamplesPerPixel()                   const;
-    uint8                   NumColorChannels()                  const;
-    const FColorProfile&    Profile()                           const;
+    const tByte*            ScanlinePtr( tIndex iRow )                  const;
+    tSize                   Width()                                     const;
+    tSize                   Height()                                    const;
+    tSize                   BytesPerSample()                            const;
+    tSize                   BytesPerPixel()                             const;
+    tSize                   BytesPerScanLine()                          const;
+    tSize                   BytesTotal()                                const;
+    tFormat                 Format()                                    const;
+    eModelSig               Model()                                     const;
+    eType                   Type()                                      const;
+    bool                    HasAlpha()                                  const;
+    bool                    Swapped()                                   const;
+    bool                    Reversed()                                  const;
+    uint8                   SamplesPerPixel()                           const;
+    uint8                   NumColorChannels()                          const;
+    const FColorProfile&    Profile()                                   const;
+    void                    AssignProfile( FColorProfile* iProfile );
 
 private:
     // Private Data Members
@@ -70,4 +71,3 @@ private:
 };
 
 ULIS2_NAMESPACE_END
-

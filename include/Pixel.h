@@ -25,7 +25,7 @@ class ULIS2_API FPixel
 {
 public:
     // Construction / Destruction
-    virtual ~FPixel();
+    virtual ~FPixel() = 0;
     FPixel( uint32 iFormat );
     FPixel( uint32 iFormat, FColorProfile* iProfile = nullptr );
     FPixel( tByte* iData, tFormat iFormat );
@@ -33,21 +33,23 @@ public:
 
 public:
     // Public API
-    tByte*              Ptr();
-    const tByte*        Ptr()                           const;
-    tSize               BytesPerSample()                const;
-    tSize               Depth()                         const;
-    tFormat             Format()                        const;
-    eModelSig           Model()                         const;
-    eType               Type()                          const;
-    bool                HasAlpha()                      const;
-    bool                Swapped()                       const;
-    bool                Reversed()                      const;
-    uint8               SamplesPerPixel()               const;
-    uint8               NumColorChannels()              const;
+    tByte*                  Ptr();
+    const tByte*            Ptr()                                       const;
+    tSize                   BytesPerSample()                            const;
+    tSize                   Depth()                                     const;
+    tFormat                 Format()                                    const;
+    eModelSig               Model()                                     const;
+    eType                   Type()                                      const;
+    bool                    HasAlpha()                                  const;
+    bool                    Swapped()                                   const;
+    bool                    Reversed()                                  const;
+    uint8                   SamplesPerPixel()                           const;
+    uint8                   NumColorChannels()                          const;
+    const FColorProfile&    Profile()                                   const;
+    void                    AssignProfile( FColorProfile* iProfile );
 
-private:
-    // Private Data Members
+protected:
+    // Protected Data Members
     tByte*          mData;
     tFormat         mFormat;
     FColorProfile*  mProfile;
