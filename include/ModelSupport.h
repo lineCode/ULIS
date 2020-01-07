@@ -64,6 +64,8 @@ static eColorModel  ColorModelFromModelSig( eModelSig iValue )
     }
 }
 
+#pragma warning(push)
+#pragma warning(disable : 26812)
 static eModelSig ModelSigFromColorSpaceSignature( cmsColorSpaceSignature iValue )
 {
     eModelSig default_cm = eModelSig::kRGB;
@@ -114,7 +116,7 @@ static eModelSig ModelSigFromColorSpaceSignature( cmsColorSpaceSignature iValue 
         default                 : return  default_cm;
     }
 }
-
+#pragma warning(pop) 
 
 static constexpr eModelSig ModelSigCompatFallback( eModelSig iModel )
 {

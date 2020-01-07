@@ -119,9 +119,9 @@ FColor::ToRGB()  const
             r = g = b = 0.f;
             float var_h = h / 60;
             if ( var_h == 6 ) var_h = 0;
-            int var_i = var_h;
-            float C = ( 1 - fabs( 2 * l - 1 ) ) * s;
-            float X = C * ( 1 - fabs( fmod( var_h, 2 ) - 1 ) );
+            int var_i = int( var_h );
+            float C = ( 1.f - fabs( 2.f * l - 1.f ) ) * s;
+            float X = float( C * ( 1 - fabs( fmod( var_h, 2 ) - 1 ) ) );
             float m = l - C / 2;
             if      ( var_i == 0 ) { r = C; g = X; b = 0; }
             else if ( var_i == 1 ) { r = X; g = C; b = 0; }
@@ -156,7 +156,7 @@ FColor::ToRGB()  const
             {
                var_h = h * 6;
                if ( var_h == 6 ) var_h = 0 ;
-               var_i = int( var_h );
+               var_i = var_h;
                var_1 = v * ( 1 - s );
                var_2 = v * ( 1 - s * ( var_h - var_i ) );
                var_3 = v * ( 1 - s * ( 1 - ( var_h - var_i ) ) );
@@ -219,7 +219,7 @@ FColor::ToHSL()  const
     float s = 0.0;
     float l = 0.0;
 
-    l = ( deltaAdd ) / 2.0;
+    l = ( deltaAdd ) / 2.0f;
 
     if ( delta < FMaths::kEpsilonf ){
         h = 0.0;
@@ -227,15 +227,15 @@ FColor::ToHSL()  const
     }
     else
     {
-        s = ( l < 0.5 ) ? delta / deltaAdd : delta / ( 2.0 - deltaAdd );
+        s = ( l < 0.5f ) ? delta / deltaAdd : delta / ( 2.0f - deltaAdd );
 
-        float deltaR = ( ( ( cmax - r ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
-        float deltaG = ( ( ( cmax - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
-        float deltaB = ( ( ( cmax - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+        float deltaR = ( ( ( cmax - r ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+        float deltaG = ( ( ( cmax - g ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+        float deltaB = ( ( ( cmax - b ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
 
              if( fabs( r - cmax ) < FMaths::kEpsilonf )   h = deltaB - deltaG;
-        else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = (1.0 / 3.0) + deltaR - deltaB;
-        else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = (2.0 / 3.0) + deltaG - deltaR;
+        else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = ( 1.0f / 3.0f ) + deltaR - deltaB;
+        else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = ( 2.0f / 3.0f ) + deltaG - deltaR;
 
         if( h < 0.0 ) h += 1.0;
         if( h > 1.0 ) h -= 1.0;
@@ -276,17 +276,17 @@ FColor::ToHSV()  const
     {
         s = (delta / cmax );
 
-        float deltaR = ( ( ( cmax - r ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
-        float deltaG = ( ( ( cmax - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
-        float deltaB = ( ( ( cmax - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+        float deltaR = ( ( ( cmax - r ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+        float deltaG = ( ( ( cmax - g ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+        float deltaB = ( ( ( cmax - b ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
 
         if( fabs( r - cmax ) < FMaths::kEpsilonf )        h = deltaB - deltaG;
-        else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = (1.0 / 3.0) + deltaR - deltaB;
-        else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = (2.0 / 3.0) + deltaG - deltaR;
+        else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = ( 1.0f / 3.0f ) + deltaR - deltaB;
+        else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = ( 2.0f / 3.0f ) + deltaG - deltaR;
 
-        if( h < 0.0 ) h += 1.0;
+        if( h < 0.0f ) h += 1.0f;
 
-        if( h > 1.0 ) h -= 1.0;
+        if( h > 1.0f ) h -= 1.0f;
     }
 
     out.SetHSVF( h, s, v, AlphaF() );
@@ -832,7 +832,7 @@ FColor::SetAlpha( int value )
 void
 FColor::SetAlphaF( float value )
 {
-    mRepr.rgb.alpha = floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.rgb.alpha = uint16( floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) ) );
 }
 
 
@@ -852,7 +852,7 @@ FColor::SetGreyF( float g )
     if( mMode != eColorModel::kG )
         SetGreyF( g, AlphaF() );
     else
-        mRepr.grey.g = floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
+        mRepr.grey.g = uint16( floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) ) );
 }
 
 
@@ -890,9 +890,9 @@ void
 FColor::SetRedF( float value )
 {
     if( mMode != eColorModel::kRGB )
-        SetRGB( value, GreenF(), BlueF(), AlphaF() );
+        SetRGBF( value, GreenF(), BlueF(), AlphaF() );
     else
-        mRepr.rgb.r = floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
+        mRepr.rgb.r = uint16( floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) ) );
 }
 
 
@@ -900,9 +900,9 @@ void
 FColor::SetGreenF( float value )
 {
     if( mMode != eColorModel::kRGB )
-        SetRGB( RedF(), value, BlueF(), AlphaF() );
+        SetRGBF( RedF(), value, BlueF(), AlphaF() );
     else
-        mRepr.rgb.g = floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
+        mRepr.rgb.g = uint16( floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) ) );
 }
 
 
@@ -910,9 +910,9 @@ void
 FColor::SetBlueF( float value )
 {
     if( mMode != eColorModel::kRGB )
-        SetRGB( RedF(), GreenF(), value, AlphaF() );
+        SetRGBF( RedF(), GreenF(), value, AlphaF() );
     else
-        mRepr.rgb.b = floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) );
+        mRepr.rgb.b = uint16( floor( FMaths::Clamp( value, 0.f, 1.f ) * float( UINT16_MAX ) ) );
 }
 
 
@@ -996,8 +996,8 @@ void
 FColor::SetGreyF( float g, float alpha )
 {
     mMode = eColorModel::kG;
-    mRepr.grey.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.grey.g     = floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.grey.alpha = uint16( floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.grey.g     = uint16( floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) ) );
     mRepr.grey._0    = 0;
     mRepr.grey._1    = 0;
     mRepr.grey._     = 0;
@@ -1008,10 +1008,10 @@ void
 FColor::SetRGBF( float r, float g, float b, float alpha )
 {
     mMode = eColorModel::kRGB;
-    mRepr.rgb.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.rgb.r     = floor( FMaths::Clamp( r, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.rgb.g     = floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.rgb.b     = floor( FMaths::Clamp( b, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.rgb.alpha = uint16( floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.rgb.r     = uint16( floor( FMaths::Clamp( r, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.rgb.g     = uint16( floor( FMaths::Clamp( g, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.rgb.b     = uint16( floor( FMaths::Clamp( b, 0.f, 1.f ) * float( UINT16_MAX ) ) );
     mRepr.rgb._     = 0;
 }
 
@@ -1020,10 +1020,10 @@ void
 FColor::SetHSLF( float h, float s, float l, float alpha )
 {
     mMode = eColorModel::kHSL;
-    mRepr.hsl.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.hsl.h     = floor( FMaths::Clamp( h, 0.f, 1.f ) * 36000 );
-    mRepr.hsl.s     = floor( FMaths::Clamp( s, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.hsl.l     = floor( FMaths::Clamp( l, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.hsl.alpha = uint16( floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.hsl.h     = uint16( floor( FMaths::Clamp( h, 0.f, 1.f ) * 36000 ) );
+    mRepr.hsl.s     = uint16( floor( FMaths::Clamp( s, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.hsl.l     = uint16( floor( FMaths::Clamp( l, 0.f, 1.f ) * float( UINT16_MAX ) ) );
     mRepr.hsl._     = 0;
 }
 
@@ -1032,10 +1032,10 @@ void
 FColor::SetHSVF( float h, float s, float v, float alpha )
 {
     mMode = eColorModel::kHSV;
-    mRepr.hsv.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.hsv.h     = floor( FMaths::Clamp( h, 0.f, 1.f ) * 36000 );
-    mRepr.hsv.s     = floor( FMaths::Clamp( s, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.hsv.v     = floor( FMaths::Clamp( v, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.hsv.alpha = uint16( floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.hsv.h     = uint16( floor( FMaths::Clamp( h, 0.f, 1.f ) * 36000 ) );
+    mRepr.hsv.s     = uint16( floor( FMaths::Clamp( s, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.hsv.v     = uint16( floor( FMaths::Clamp( v, 0.f, 1.f ) * float( UINT16_MAX ) ) );
     mRepr.hsv._     = 0;
 }
 
@@ -1044,11 +1044,11 @@ void
 FColor::SetCMYKF( float c, float m, float y, float k, float alpha )
 {
     mMode = eColorModel::kCMYK;
-    mRepr.cmyk.alpha = floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.cmyk.c     = floor( FMaths::Clamp( c, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.cmyk.m     = floor( FMaths::Clamp( m, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.cmyk.y     = floor( FMaths::Clamp( y, 0.f, 1.f ) * float( UINT16_MAX ) );
-    mRepr.cmyk.k     = floor( FMaths::Clamp( k, 0.f, 1.f ) * float( UINT16_MAX ) );
+    mRepr.cmyk.alpha = uint16( floor( FMaths::Clamp( alpha, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.cmyk.c     = uint16( floor( FMaths::Clamp( c, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.cmyk.m     = uint16( floor( FMaths::Clamp( m, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.cmyk.y     = uint16( floor( FMaths::Clamp( y, 0.f, 1.f ) * float( UINT16_MAX ) ) );
+    mRepr.cmyk.k     = uint16( floor( FMaths::Clamp( k, 0.f, 1.f ) * float( UINT16_MAX ) ) );
 }
 
 ULIS2_NAMESPACE_END

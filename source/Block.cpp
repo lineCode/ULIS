@@ -127,7 +127,7 @@ FBlock::PixelPtr( tIndex iX, tIndex iY )
 {
     ULIS2_ASSERT( iX >= 0 && iX <= mWidth, "Error: index out of range" );
     ULIS2_ASSERT( iY >= 0 && iY <= mHeight, "Error: index out of range" );
-    return  DataPtr() + ( iX * BytesPerPixel() + iY * BytesPerScanLine() );
+    return  DataPtr() + ( uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
 }
 
 
@@ -136,7 +136,7 @@ FBlock::PixelPtr( tIndex iX, tIndex iY ) const
 {
     ULIS2_ASSERT( iX >= 0 && iX <= mWidth, "Error: index out of range" );
     ULIS2_ASSERT( iY >= 0 && iY <= mHeight, "Error: index out of range" );
-    return  DataPtr() + ( iX * BytesPerPixel() + iY * BytesPerScanLine() );
+    return  DataPtr() + (uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
 }
 
 
@@ -144,7 +144,7 @@ tByte*
 FBlock::ScanlinePtr( tIndex iRow )
 {
     ULIS2_ASSERT( iRow >= 0 && iRow <= mHeight, "Error: index out of range" );
-    return  DataPtr() + ( iRow * BytesPerScanLine() );
+    return  DataPtr() + (uint64( iRow ) * uint64( BytesPerScanLine() ) );
 }
 
 
@@ -152,7 +152,7 @@ const tByte*
 FBlock::ScanlinePtr( tIndex iRow ) const
 {
     ULIS2_ASSERT( iRow >= 0 && iRow <= mHeight, "Error: index out of range" );
-    return  DataPtr() + ( iRow * BytesPerScanLine() );
+    return  DataPtr() + (uint64( iRow ) * uint64( BytesPerScanLine() ) );
 }
 
 

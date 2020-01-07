@@ -18,10 +18,12 @@ set( CMAKE_SUPPRESS_REGENERATION true )
 set( CMAKE_DEBUG_POSTFIX d )
 
 # Set C++ standard options
-set( CMAKE_CXX_FLAGS "-std=c++14" )
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_CXX_EXTENSIONS OFF )
+if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
+	set( CMAKE_CXX_FLAGS "-std=c++14" )
+endif()
 
 # Create global solution
 project( ULIS2 )

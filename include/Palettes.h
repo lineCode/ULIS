@@ -42,22 +42,22 @@ static const FColor lightGray   ( 192, 192, 192 );
 /////////////////////////////////////////////////////
 // PaletteMSPaintDebug 
 static const FColor paletteMSPaintDebug[] = {
-    CColor( 237,  28,  36 ),
-    CColor( 255, 127,  39 ),
-    CColor( 255, 242,   0 ),
-    CColor(  34, 177,  76 ),
-    CColor(   0, 162, 232 ),
-    CColor(  63,  72, 204 ),
-    CColor( 163,  73, 164 ),
-    CColor( 255, 174, 201 ),
-    CColor( 255, 201,  14 ),
-    CColor( 239, 228, 176 ),
-    CColor( 181, 230,  29 ),
-    CColor( 153, 217, 234 ),
-    CColor( 112, 146, 190 ),
-    CColor( 200, 191, 231 ),
+    FColor( 237,  28,  36 ),
+    FColor( 255, 127,  39 ),
+    FColor( 255, 242,   0 ),
+    FColor(  34, 177,  76 ),
+    FColor(   0, 162, 232 ),
+    FColor(  63,  72, 204 ),
+    FColor( 163,  73, 164 ),
+    FColor( 255, 174, 201 ),
+    FColor( 255, 201,  14 ),
+    FColor( 239, 228, 176 ),
+    FColor( 181, 230,  29 ),
+    FColor( 153, 217, 234 ),
+    FColor( 112, 146, 190 ),
+    FColor( 200, 191, 231 ),
 }; // colors[]
-static constexpr int paletteMSPaintDebug_length = sizeof( colors ) / sizeof( CColor );
+static constexpr int paletteMSPaintDebug_length = sizeof( colors ) / sizeof( FColor );
 
 ULIS2_NAMESPACE_END
 

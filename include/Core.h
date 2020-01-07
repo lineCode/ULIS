@@ -71,6 +71,7 @@
 /////////////////////////////////////////////////////
 // Force Inline Utility
 #define ULIS2_ENABLE_FORCEINLINE
+
 #ifdef ULIS2_ENABLE_FORCEINLINE
     #if defined(__clang__)
     #define ULIS2_FORCEINLINE inline __attribute__ ((always_inline))
@@ -94,12 +95,13 @@
         #define ULIS2_API __declspec( dllimport )
     #endif
 #else
-    #define EXPORTED
+    #define ULIS2_API
 #endif
 
 /////////////////////////////////////////////////////
 // Define Namespaces
-#define ULIS2_NAMESPACE_NAME     ULIS2
+#define ULIS2_NAMESPACE_NAME        ULIS2
+#define ULIS2_SHORT_NAMESPACE_NAME  ul2
 #define ULIS2_NAMESPACE_BEGIN    namespace ULIS2_NAMESPACE_NAME {
 #define ULIS2_NAMESPACE_END      }
 #define ULIS2_FDECL_CLASS( i ) ULIS2_NAMESPACE_BEGIN class i ; ULIS2_NAMESPACE_END
@@ -107,7 +109,7 @@
 /////////////////////////////////////////////////////
 // Namespace alias
 namespace ULIS2_NAMESPACE_NAME {}
-namespace ul2 = ULIS2_NAMESPACE_NAME;
+namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Version Specification

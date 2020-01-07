@@ -22,9 +22,9 @@ ULIS2_NAMESPACE_BEGIN
 struct ULIS2_API FMaths
 {
     // Do not change this value !
-    static constexpr float kEpsilonf = .000001;
+    static constexpr float kEpsilonf = .000001f;
     static constexpr double kPId = 3.1415926535897932;
-    static constexpr float  kPIf = 3.14159265;
+    static constexpr float  kPIf = 3.14159265f;
 
     template< typename T >
     static ULIS2_FORCEINLINE T Min( T iA, T iB ) {
