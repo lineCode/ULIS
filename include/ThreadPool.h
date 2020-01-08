@@ -53,8 +53,8 @@ public:
 
 
     void            WaitForCompletion();
-    unsigned int    GetProcessed() const { return processed; }
-    unsigned int    GetNumWorkers() const { return workers.size(); }
+    unsigned int    GetProcessed() const { return  processed; }
+    unsigned int    GetNumWorkers() const { return  unsigned int( workers.size() ); }
     void            SetNumWorkers( unsigned int );
     unsigned int    GetMaxWorkers() const { return  std::thread::hardware_concurrency(); }
 

@@ -12,11 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include <iostream>
-#include <functional>
-#include <string>
-#include <cstring>
-#include <stdint.h>
 
 /////////////////////////////////////////////////////
 // Detect Build Configuration
@@ -37,6 +32,11 @@
 #else
     #define ULIS2_UNKNOWN_COMPILER
 #endif
+
+#ifdef ULIS2_MSVC
+    #define _CRT_SECURE_NO_WARNINGS 1
+#endif // ULIS2_MSVC
+
 
 /////////////////////////////////////////////////////
 // Detect Platform
@@ -89,22 +89,36 @@
 /////////////////////////////////////////////////////
 // Export utility macros
 #ifdef ULIS2_WIN
-    #ifdef ULIS2_SHARED
+    #ifdef ULIS2_BUILD_SHARED
         #define ULIS2_API __declspec( dllexport )
-    #else
+    #elif defined ULIS2_DYNAMIC_LIBRARY
         #define ULIS2_API __declspec( dllimport )
+    #else
+        #define ULIS2_API
     #endif
 #else
     #define ULIS2_API
 #endif
 
 /////////////////////////////////////////////////////
+// Includes
+// Shut down dll interface warnings.
+#pragma warning(disable : 4251)
+
+/////////////////////////////////////////////////////
+// Includes
+#include <iostream>
+#include <cstring>
+#include <cstdint>
+
+/////////////////////////////////////////////////////
 // Define Namespaces
 #define ULIS2_NAMESPACE_NAME        ULIS2
 #define ULIS2_SHORT_NAMESPACE_NAME  ul2
-#define ULIS2_NAMESPACE_BEGIN    namespace ULIS2_NAMESPACE_NAME {
-#define ULIS2_NAMESPACE_END      }
+#define ULIS2_NAMESPACE_BEGIN       namespace ULIS2_NAMESPACE_NAME {
+#define ULIS2_NAMESPACE_END         }
 #define ULIS2_FDECL_CLASS( i ) ULIS2_NAMESPACE_BEGIN class i ; ULIS2_NAMESPACE_END
+#define ULIS2_FDECL_STRUCT( i ) ULIS2_NAMESPACE_BEGIN struct i ; ULIS2_NAMESPACE_END
 
 /////////////////////////////////////////////////////
 // Namespace alias
@@ -169,8 +183,57 @@ class FBlock;
 struct FRect;
 
 // Callback Typedefs
-typedef std::function< void( FBlock*, const FRect& ) > FOnInvalid;
-typedef std::function< void( tByte* ) > FOnCleanup;
+typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRect& /* rect */ );
+typedef void (*fpCleanupFunction)( tByte* /* data */, void* /* info */ );
+struct ULIS2_API FOnInvalid
+{
+    FOnInvalid()
+        : execute( nullptr )
+        , info( nullptr )
+    {
+    }
+
+    FOnInvalid( fpInvalidateFunction iInvalidateFunction, void* iInvalidateInfo = nullptr )
+        : execute( nullptr )
+        , info( nullptr )
+    {
+    }
+
+    void ExecuteIfBound( const FBlock* iBlock, const FRect& iRect ) const
+    {
+        if( execute )
+            execute( iBlock, info, iRect );
+    }
+
+    fpInvalidateFunction    execute;
+    void*                   info;
+};
+
+
+struct ULIS2_API FOnCleanup
+{
+    FOnCleanup()
+        : execute( nullptr )
+        , info( nullptr )
+    {
+    }
+
+    FOnCleanup( fpCleanupFunction iCleanupFunction, void* iCleanupInfo = nullptr )
+        : execute( nullptr )
+        , info( nullptr )
+    {
+    }
+
+    void ExecuteIfBound( tByte* iData ) const
+    {
+        if( execute )
+            execute( iData, info );
+    }
+
+    fpCleanupFunction       execute;
+    void*                   info;
+};
+
 
 // Models
 enum class eModelSig : uint8 {

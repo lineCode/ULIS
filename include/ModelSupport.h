@@ -41,12 +41,12 @@ static eModelSig ModelSigFromColorModel( eColorModel iValue )
 {
     switch( iValue )
     {
-        case eColorModel::kInvalid:    return  eModelSig::kGrey;
-        case eColorModel::kG:          return  eModelSig::kGrey;
-        case eColorModel::kRGB:        return  eModelSig::kRGB;
-        case eColorModel::kHSL:        return  eModelSig::kHSL;
-        case eColorModel::kHSV:        return  eModelSig::kHSV;
-        case eColorModel::kCMYK:       return  eModelSig::kCMYK;
+        case eColorModel::kG:       return  eModelSig::kGrey;
+        case eColorModel::kRGB:     return  eModelSig::kRGB;
+        case eColorModel::kHSL:     return  eModelSig::kHSL;
+        case eColorModel::kHSV:     return  eModelSig::kHSV;
+        case eColorModel::kCMYK:    return  eModelSig::kCMYK;
+        default:                    return  eModelSig::kAny;
     }
 }
 
@@ -126,9 +126,14 @@ static constexpr eModelSig ModelSigCompatFallback( eModelSig iModel )
         case eModelSig::kRGB:       return  eModelSig::kRGB;
         case eModelSig::kHSL:       return  eModelSig::kRGB;
         case eModelSig::kHSV:       return  eModelSig::kRGB;
+        case eModelSig::kCMY:       return  eModelSig::kCMYK;
         case eModelSig::kCMYK:      return  eModelSig::kCMYK;
         case eModelSig::kLab:       return  eModelSig::kLab;
         case eModelSig::kXYZ:       return  eModelSig::kXYZ;
+        case eModelSig::kYxy:       return  eModelSig::kYxy;
+        case eModelSig::kYUV:       return  eModelSig::kYUVK;
+        case eModelSig::kYUVK:      return  eModelSig::kYUVK;
+        case eModelSig::kYCbCr:     return  eModelSig::kYCbCr;
         default:                    return  eModelSig::kRGB;
     }
 }

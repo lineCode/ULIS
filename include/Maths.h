@@ -14,7 +14,6 @@
 #pragma once
 #include "Core.h"
 #include <cmath>
-#include <glm/vec2.hpp>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

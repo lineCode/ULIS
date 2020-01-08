@@ -13,23 +13,21 @@
 */
 #include "Block.h"
 #include "ColorProfile.h"
+#include "Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Default Cleanup Behaviour
-void Cleanup_FreeMemory_imp( tByte* iData )
+void OnCleanup_FreeMemory( tByte* iData, void* iInfo )
 {
     delete [] iData;
 }
 
 
-void Cleanup_DoNothing_imp( tByte* iData )
+void OnCleanup_DoNothing( tByte* iData, void* iInfo )
 {
 }
 
-
-ULIS2_API const FOnCleanup OnCleanup_FreeMemory = Cleanup_FreeMemory_imp;
-ULIS2_API const FOnCleanup OnCleanup_DoNothing  = Cleanup_DoNothing_imp;
 
 /////////////////////////////////////////////////////
 // FBlock
@@ -37,7 +35,7 @@ ULIS2_API const FOnCleanup OnCleanup_DoNothing  = Cleanup_DoNothing_imp;
 //----------------------------------------------------------- Construction / Destruction
 FBlock::~FBlock()
 {
-    mOnCleanup( mData );
+    mOnCleanup.ExecuteIfBound( mData );
 }
 
 
@@ -125,8 +123,8 @@ FBlock::DataPtr() const
 tByte*
 FBlock::PixelPtr( tIndex iX, tIndex iY )
 {
-    ULIS2_ASSERT( iX >= 0 && iX <= mWidth, "Error: index out of range" );
-    ULIS2_ASSERT( iY >= 0 && iY <= mHeight, "Error: index out of range" );
+    ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Error: index out of range" );
+    ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Error: index out of range" );
     return  DataPtr() + ( uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
 }
 
@@ -134,8 +132,8 @@ FBlock::PixelPtr( tIndex iX, tIndex iY )
 const tByte*
 FBlock::PixelPtr( tIndex iX, tIndex iY ) const
 {
-    ULIS2_ASSERT( iX >= 0 && iX <= mWidth, "Error: index out of range" );
-    ULIS2_ASSERT( iY >= 0 && iY <= mHeight, "Error: index out of range" );
+    ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Error: index out of range" );
+    ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Error: index out of range" );
     return  DataPtr() + (uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
 }
 
@@ -143,7 +141,7 @@ FBlock::PixelPtr( tIndex iX, tIndex iY ) const
 tByte*
 FBlock::ScanlinePtr( tIndex iRow )
 {
-    ULIS2_ASSERT( iRow >= 0 && iRow <= mHeight, "Error: index out of range" );
+    ULIS2_ASSERT( iRow >= 0 && iRow < mHeight, "Error: index out of range" );
     return  DataPtr() + (uint64( iRow ) * uint64( BytesPerScanLine() ) );
 }
 
@@ -151,7 +149,7 @@ FBlock::ScanlinePtr( tIndex iRow )
 const tByte*
 FBlock::ScanlinePtr( tIndex iRow ) const
 {
-    ULIS2_ASSERT( iRow >= 0 && iRow <= mHeight, "Error: index out of range" );
+    ULIS2_ASSERT( iRow >= 0 && iRow < mHeight, "Error: index out of range" );
     return  DataPtr() + (uint64( iRow ) * uint64( BytesPerScanLine() ) );
 }
 
@@ -268,6 +266,24 @@ FBlock::AssignProfile( FColorProfile* iProfile )
 
     if( mProfile )
         ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+}
+
+
+void
+FBlock::Invalidate() const
+{
+    Invalidate( FRect( 0, 0, Width(), Height() ) );
+}
+
+
+void
+FBlock::Invalidate( const FRect& iRect ) const
+{
+    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < mWidth, "Error: index out of range" );
+    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < mHeight, "Error: index out of range" );
+    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= mWidth, "Error: index out of range" );
+    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= mHeight, "Error: index out of range" );
+    mOnInvalid.ExecuteIfBound( this, iRect );
 }
 
 

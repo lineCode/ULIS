@@ -69,10 +69,10 @@ file(
 
 if( ${ULIS2_BUILD_SHARED} )
    add_library( ULIS2 SHARED ${source_list} )
-   target_compile_definitions( ULIS2 PUBLIC ULIS2_SHARED )
+   target_compile_definitions( ULIS2 PUBLIC ULIS2_BUILD_SHARED )
 else()
    add_library( ULIS2 STATIC ${source_list} )
-   target_compile_definitions( ULIS2 PUBLIC ULIS2_STATIC )
+   target_compile_definitions( ULIS2 PUBLIC ULIS2_BUILD_STATIC )
 endif()
 
 target_compile_definitions( ULIS2 PUBLIC UNICODE )

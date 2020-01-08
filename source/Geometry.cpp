@@ -103,11 +103,11 @@ FPoint::RotateAround( FPoint pivotPoint, double radianRotation)
     //Trigonometric direction
     double sin = -std::sin(radianRotation);
     double cos = -std::cos(radianRotation);
-        
+
     x -= pivotPoint.x;
     y -= pivotPoint.y;
         
-    return FPoint( ( x * cos - y * sin ) + pivotPoint.x, ( x * sin + y * cos ) + pivotPoint.y );
+    return FPoint( int( x * cos - y * sin ) + pivotPoint.x, int( x * sin + y * cos ) + pivotPoint.y );
 }
 
 
@@ -115,8 +115,7 @@ FPoint
 FPoint::AxialSymmetry( float a, float b )
 {
     float d = ( x + ( y - b ) * a ) / ( 1 + a * a );
-    return FPoint( 2 * d - x,
-                    2 * d * a - y + 2 * b );
+    return FPoint( int( 2 * d - x ), int( 2 * d * a - y + 2 * b ) );
 }
 
 
@@ -144,16 +143,15 @@ FPoint64::RotateAround( FPoint pivotPoint, double radianRotation)
     x -= pivotPoint.x;
     y -= pivotPoint.y;
         
-    return FPoint64( ( x * cos - y * sin ) + pivotPoint.x, ( x * sin + y * cos ) + pivotPoint.y );
+    return FPoint64( int64( ( x * cos - y * sin ) + pivotPoint.x ), int64( ( x * sin + y * cos ) + pivotPoint.y ) );
 }
 
 
 FPoint64
-FPoint64::AxialSymmetry( float a, float b )
+FPoint64::AxialSymmetry( double a, double b )
 {
-    float d = ( x + ( y - b ) * a ) / ( 1 + a * a );
-    return FPoint64( 2 * d - x,
-                        2 * d * a - y + 2 * b );
+    double d = ( x + ( y - b ) * a ) / ( 1 + a * a );
+    return FPoint64( int64( 2 * d - x ), int64( 2 * d * a - y + 2 * b ) );
 }
 
 
@@ -393,14 +391,14 @@ FTransformOBB::BuildHullExpression() const
     assert( pointsRight.size() >= 2 );
 
     FOBBHullExpression hull;
-    for( int i = 0; i < pointsLeft.size() - 1; ++i )
+    for( uint64 i = 0; i < pointsLeft.size() - 1; ++i )
         hull.left.lines.push_back( FLinef::FromPointsVertical( pointsLeft[i+1], pointsLeft[i] ) );
 
-    for( int i = 0; i < pointsRight.size() - 1; ++i )
+    for( uint64 i = 0; i < pointsRight.size() - 1; ++i )
         hull.right.lines.push_back( FLinef::FromPointsVertical( pointsRight[i+1], pointsRight[i] ) );
 
-    hull.left.indexer = pointsLeft[1].y;
-    hull.right.indexer = pointsRight[1].y;
+    hull.left.indexer = int( pointsLeft[1].y );
+    hull.right.indexer = int( pointsRight[1].y );
 
     return  hull;
 }
@@ -457,7 +455,7 @@ float
 FOBBSlopeExpression::Eval( int iX ) const
 {
     int index = indexer == 0 ? 0 : FMaths::Min( iX / indexer, 1 );
-    return  lines[ index ].Eval( iX );
+    return  lines[ index ].Eval( float( iX ) );
 }
 
 

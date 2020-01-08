@@ -46,7 +46,7 @@ FMD5::FMD5()
 FMD5::FMD5( const  std::string&  iText )
 {
     Init();
-    Update( (const uint8*)iText.c_str(), iText.length() );
+    Update( (const uint8*)iText.c_str(), uint32( iText.length() ) );
     Finalize();
 }
 
@@ -220,8 +220,8 @@ FMD5::Hexdigest() const
         return  "";
 
     char buf[33];
-    for( int i=0; i < 16; i++ )
-        sprintf( buf+i*2, "%02x", mDigest[i] );
+    for( int64 i = 0; i < 16; i++ )
+        sprintf( buf + i * 2, "%02x", mDigest[i] );
     buf[32]=0;
 
     return  std::string( buf );

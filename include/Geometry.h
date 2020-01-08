@@ -75,7 +75,7 @@ struct ULIS2_API FPoint64
     FPoint64();
     FPoint64( int64 iX, int64 iY );
     FPoint64 RotateAround( FPoint pivotPoint, double radianRotation);
-    FPoint64 AxialSymmetry( float a, float b );
+    FPoint64 AxialSymmetry( double a, double b );
 };
 
 /////////////////////////////////////////////////////
@@ -105,6 +105,7 @@ struct ULIS2_API FTransformAABB
 // Sort
 ULIS2_API bool SortCompareLesserX( const glm::vec2& iA, const glm::vec2& iB );
 ULIS2_API bool SortCompareLesserY( const glm::vec2& iA, const glm::vec2& iB );
+
 
 /////////////////////////////////////////////////////
 // FTransformOBB

@@ -17,8 +17,8 @@
 ULIS2_FDECL_CLASS( FColorProfile );
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_API extern const FOnCleanup OnCleanup_FreeMemory;
-ULIS2_API extern const FOnCleanup OnCleanup_DoNothing;
+void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
+void OnCleanup_DoNothing( tByte* iData, void* iInfo );
 
 /////////////////////////////////////////////////////
 /// @class      FBlock
@@ -29,10 +29,10 @@ class ULIS2_API FBlock
 public:
     // Construction / Destruction
     virtual ~FBlock();
-    FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
-    FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
-    FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
-    FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup() );
+    FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup( &OnCleanup_FreeMemory ) );
+    FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup( &OnCleanup_FreeMemory ) );
+    FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup( &OnCleanup_DoNothing ) );
+    FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup( &OnCleanup_DoNothing ) );
 
 public:
     // Public API
@@ -58,6 +58,8 @@ public:
     uint8                   NumColorChannels()                          const;
     const FColorProfile&    Profile()                                   const;
     void                    AssignProfile( FColorProfile* iProfile );
+    void                    Invalidate()                                const;
+    void                    Invalidate( const FRect& iRect )            const;
 
 private:
     // Private Data Members
