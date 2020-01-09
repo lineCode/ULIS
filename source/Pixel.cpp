@@ -150,13 +150,13 @@ IPixel::Profile() const
 uint8
 IPixel::RedIndex( uint8 iIndex ) const
 {
-    uint8 num_samples   = NumSamples();
+    uint8 max_sample   = MaxSample();
     uint8 code = ULIS2_R_RS( mFormat );
     switch( code )
     {
-        case 1:     return  ( num_samples - iIndex );
-        case 2:     return  ( iIndex + 1 ) > num_samples ? 0 : iIndex + 1;
-        case 3:     return  ( num_samples - iIndex ) - 1 > num_samples ? num_samples : iIndex - 1;
+        case 1:     return  ( max_sample - iIndex );
+        case 2:     return  ( iIndex + 1 ) > max_sample ? 0 : iIndex + 1;
+        case 3:     return  ( max_sample - iIndex ) - 1 < 0 ? max_sample : ( max_sample - iIndex ) - 1;
         default:    return  iIndex;
     }
 }

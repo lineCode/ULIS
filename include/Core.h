@@ -280,12 +280,13 @@ enum eType : uint8 {
     X( float )                      \
     X( double )
 
-template< typename T > ULIS2_FORCEINLINE eType T42(void) { return  eType::kUint8; }
-template<> ULIS2_FORCEINLINE eType T42< uint8 >() { return  eType::kUint8; }
-template<> ULIS2_FORCEINLINE eType T42< uint16 >() { return  eType::kUint16; }
-template<> ULIS2_FORCEINLINE eType T42< uint32 >() { return  eType::kUint32; }
-template<> ULIS2_FORCEINLINE eType T42< float >() { return  eType::kFloat; }
-template<> ULIS2_FORCEINLINE eType T42< double >() { return  eType::kDouble; }
+template< typename T > ULIS2_FORCEINLINE eType T42(void)    { return  eType::kUint8;    }
+template<> ULIS2_FORCEINLINE eType T42< uint8 >()           { return  eType::kUint8;    }
+template<> ULIS2_FORCEINLINE eType T42< uint16 >()          { return  eType::kUint16;   }
+template<> ULIS2_FORCEINLINE eType T42< uint32 >()          { return  eType::kUint32;   }
+template<> ULIS2_FORCEINLINE eType T42< float >()           { return  eType::kFloat;    }
+template<> ULIS2_FORCEINLINE eType T42< double >()          { return  eType::kDouble;   }
+ULIS2_NAMESPACE_END
 
 //                         •   •   •   d   f   u32 u16 u8
 #define ULIS2_TYPE_DEPTH 0b00000000000010000100010000100001
@@ -294,7 +295,6 @@ template<> ULIS2_FORCEINLINE eType T42< double >() { return  eType::kDouble; }
 #define ULIS2_TYPE_DEPTH_MASK   0xF
 #define ULIS2_TYPE_DEPTH_SHIFT  4
 
-ULIS2_NAMESPACE_END
 /////////////////////////////////////////////////////
 // Pixel format
 //
@@ -332,4 +332,33 @@ ULIS2_NAMESPACE_END
 #define ULIS2_FORMAT_MASK_LO 0x0000FFFF
 #define ULIS2_FORMAT_MASK_HI 0xFFFF0000
 
+#define ULIS2_FORMAT_RGB8       ULIS2_W_TYPE( kUint8 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB )
+#define ULIS2_FORMAT_BGR8       ULIS2_W_TYPE( kUint8 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_REVERSE( true )
 #define ULIS2_FORMAT_RGBA8      ULIS2_W_TYPE( kUint8 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true )
+#define ULIS2_FORMAT_ABGR8      ULIS2_W_TYPE( kUint8 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_ARGB8      ULIS2_W_TYPE( kUint8 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_BGRA8      ULIS2_W_TYPE( kUint8 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_RGB16      ULIS2_W_TYPE( kUint16 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB )
+#define ULIS2_FORMAT_BGR16      ULIS2_W_TYPE( kUint16 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_RGBA16     ULIS2_W_TYPE( kUint16 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true )
+#define ULIS2_FORMAT_ABGR16     ULIS2_W_TYPE( kUint16 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_ARGB16     ULIS2_W_TYPE( kUint16 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_BGRA16     ULIS2_W_TYPE( kUint16 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_RGB32      ULIS2_W_TYPE( kUint32 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB )
+#define ULIS2_FORMAT_BGR32      ULIS2_W_TYPE( kUint32 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_RGBA32     ULIS2_W_TYPE( kUint32 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true )
+#define ULIS2_FORMAT_ABGR32     ULIS2_W_TYPE( kUint32 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_ARGB32     ULIS2_W_TYPE( kUint32 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_BGRA32     ULIS2_W_TYPE( kUint32 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_RGBF       ULIS2_W_TYPE( kFloat ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB )
+#define ULIS2_FORMAT_BGRF       ULIS2_W_TYPE( kFloat ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_RGBAF      ULIS2_W_TYPE( kFloat ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true )
+#define ULIS2_FORMAT_ABGRF      ULIS2_W_TYPE( kFloat ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_ARGBF      ULIS2_W_TYPE( kFloat ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_BGRAF      ULIS2_W_TYPE( kFloat ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_RGBD       ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB )
+#define ULIS2_FORMAT_BGRD       ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_RGBAD      ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true )
+#define ULIS2_FORMAT_ABGRD      ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true )
+#define ULIS2_FORMAT_ARGBD      ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_SWAP( true )
+#define ULIS2_FORMAT_BGRAD      ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true ) | ULIS2_W_SWAP( true )

@@ -17,7 +17,7 @@ using namespace ::ul2;
 int
 main()
 {
-    FPixel pixel( ULIS2_FORMAT_RGBA8 );
+    FPixel pixel( ULIS2_FORMAT_BGRAF );
     std::cout << "pixel.BytesPerSample()    : " << (int)pixel.BytesPerSample()     << std::endl;
     std::cout << "pixel.Depth()             : " << (int)pixel.Depth()              << std::endl;
     std::cout << "pixel.Format()            : " << (int)pixel.Format()             << std::endl;
@@ -28,16 +28,16 @@ main()
     std::cout << "pixel.Reversed()          : " << (int)pixel.Reversed()           << std::endl;
     std::cout << "pixel.Swapped()           : " << (int)pixel.Swapped()            << std::endl;
     std::cout << "pixel.Type()              : " << (int)pixel.Type()               << std::endl;
-    uint8& R = pixel.GetRef< uint8 >( RGB_R );
-    uint8& G = pixel.GetRef< uint8 >( RGB_G );
-    uint8& B = pixel.GetRef< uint8 >( RGB_B );
-    uint8& A = pixel.GetRef< uint8 >( RGB_A );
+    auto R = pixel.GetRef< float >( RGB_R );
+    auto G = pixel.GetRef< float >( RGB_G );
+    auto B = pixel.GetRef< float >( RGB_B );
+    auto A = pixel.GetRef< float >( RGB_A );
     R = 255; G = 20; B = 127; A = 220;
 
-    uint8 _r = pixel.R8();
-    uint8 _g = pixel.G8();
-    uint8 _b = pixel.B8();
-    uint8 _a = pixel.A8();
+    float _r = pixel.RF();
+    float _g = pixel.GF();
+    float _b = pixel.BF();
+    float _a = pixel.AF();
     auto dummy = 0;
 }
 
