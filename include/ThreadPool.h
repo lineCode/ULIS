@@ -26,7 +26,7 @@
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FThreadPool
-class FThreadPool
+class ULIS2_API FThreadPool
 {
 public:
     // Construction / Destruction

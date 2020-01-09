@@ -14,7 +14,6 @@
 #pragma once
 #include "Core.h"
 #include "Illuminants.h"
-#include "ModelSupport.h"
 #include "lcms2.h"
 
 ULIS2_NAMESPACE_BEGIN

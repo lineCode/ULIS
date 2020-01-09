@@ -37,7 +37,6 @@
     #define _CRT_SECURE_NO_WARNINGS 1
 #endif // ULIS2_MSVC
 
-
 /////////////////////////////////////////////////////
 // Detect Platform
 #ifdef _WIN32
@@ -101,9 +100,9 @@
 #endif
 
 /////////////////////////////////////////////////////
-// Includes
-// Shut down dll interface warnings.
-#pragma warning(disable : 4251)
+// Erors
+#pragma warning(disable : 4251)     // Shut down dll interface warnings.
+#pragma warning(disable : 26812)    // Shut non-class enum warnings.
 
 /////////////////////////////////////////////////////
 // Includes
@@ -117,8 +116,8 @@
 #define ULIS2_SHORT_NAMESPACE_NAME  ul2
 #define ULIS2_NAMESPACE_BEGIN       namespace ULIS2_NAMESPACE_NAME {
 #define ULIS2_NAMESPACE_END         }
-#define ULIS2_FDECL_CLASS( i ) ULIS2_NAMESPACE_BEGIN class i ; ULIS2_NAMESPACE_END
-#define ULIS2_FDECL_STRUCT( i ) ULIS2_NAMESPACE_BEGIN struct i ; ULIS2_NAMESPACE_END
+#define ULIS2_FDECL_CLASS( i )      ULIS2_NAMESPACE_BEGIN class i ; ULIS2_NAMESPACE_END
+#define ULIS2_FDECL_STRUCT( i )     ULIS2_NAMESPACE_BEGIN struct i ; ULIS2_NAMESPACE_END
 
 /////////////////////////////////////////////////////
 // Namespace alias
@@ -142,13 +141,13 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 /////////////////////////////////////////////////////
 // Assert Behaviours
 #ifdef ULIS2_DEBUG
-    #define ULIS2_ASSERT( cond, log )  if( !( cond ) ) { std::cout << log << std::endl; ULIS2_CRASH; }
+    #define ULIS2_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed:" << log << std::endl; ULIS2_CRASH; }
 #else
     #define ULIS2_ASSERT( cond, log )
 #endif
 
-#define ULIS2_WARNING( cond, log )  if( !( cond ) ) { std::cout << "Warning: " << log << std::endl; }
-#define ULIS2_ERROR( cond, log )  if( !( cond ) ) { std::cout << "Error: " << log << std::endl; ULIS2_CRASH; }
+#define ULIS2_WARNING( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " <<  "Warning: " << log << std::endl; }
+#define ULIS2_ERROR( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Error: " << log << std::endl; ULIS2_CRASH; }
 
 /////////////////////////////////////////////////////
 // glm FORCE extensions, before any glm related includes
@@ -236,7 +235,7 @@ struct ULIS2_API FOnCleanup
 
 
 // Models
-enum class eModelSig : uint8 {
+enum eModelSig : uint8 {
       kAny
     , kGrey
     , kRGB
@@ -252,18 +251,46 @@ enum class eModelSig : uint8 {
     , kYxy
 };
 
-// Types
-enum class eType : uint8 {
-      kUint8    = 0x1
-    , kUint16   = 0x2
-    , kUint32   = 0x4
-    , kFloat    = 0x8
-    , kDouble   = 0x10
+
+#define GREY_G      0
+#define GREY_A      1
+#define RGB_R       0
+#define RGB_G       1
+#define RGB_B       2
+#define RGB_A       3
+
+// Type
+enum eType : uint8 {
+      kUint8    = 0x0
+    , kUint16   = 0x1
+    , kUint32   = 0x2
+    , kFloat    = 0x3
+    , kDouble   = 0x4
 };
+
+#define ULIS2_FOR_ALL_TYPES_DO( X ) \
+    X( int8 )                       \
+    X( int16 )                      \
+    X( int32 )                      \
+    X( int64 )                      \
+    X( uint8 )                      \
+    X( uint16 )                     \
+    X( uint32 )                     \
+    X( uint64 )                     \
+    X( float )                      \
+    X( double )
+
+template< typename T > ULIS2_FORCEINLINE eType T42(void) { return  eType::kUint8; }
+template<> ULIS2_FORCEINLINE eType T42< uint8 >() { return  eType::kUint8; }
+template<> ULIS2_FORCEINLINE eType T42< uint16 >() { return  eType::kUint16; }
+template<> ULIS2_FORCEINLINE eType T42< uint32 >() { return  eType::kUint32; }
+template<> ULIS2_FORCEINLINE eType T42< float >() { return  eType::kFloat; }
+template<> ULIS2_FORCEINLINE eType T42< double >() { return  eType::kDouble; }
 
 //                         •   •   •   d   f   u32 u16 u8
 #define ULIS2_TYPE_DEPTH 0b00000000000010000100010000100001
 //                         •   •   •   |8  |4  |4  |2  |1
+//                         •   •   •   |20 |16 |12 |8  |4
 #define ULIS2_TYPE_DEPTH_MASK   0xF
 #define ULIS2_TYPE_DEPTH_SHIFT  4
 
@@ -275,6 +302,8 @@ ULIS2_NAMESPACE_END
 //          32   28   24   20       16        8    4  0
 //          1098 7654 3210 9876     543 21098 7654 3210
 //          •••• •••• •••• ••••     ASR MMMMM CCCC TTTT
+//    Example: RGBA8
+//                                  100 00010 0011 0001
 //
 //    B: Bytes per sample
 //    C: Num Channels
@@ -292,13 +321,15 @@ ULIS2_NAMESPACE_END
 #define ULIS2_W_SWAP( i )       ( i << 14 )
 #define ULIS2_W_ALPHA( i )      ( i << 15 )
 
-#define ULIS2_R_TYPE( i )       ( i & 0x07 )
+#define ULIS2_R_TYPE( i )       ( i & 0xF )
 #define ULIS2_R_CHANNELS( i )   ( ( i >> 4 ) & 0x07 )
 #define ULIS2_R_MODEL( i )      ( ( i >> 8 ) & 0x1F )
 #define ULIS2_R_REVERSE( i )    ( ( i >> 13 ) & 0x1 )
 #define ULIS2_R_SWAP( i )       ( ( i >> 14 ) & 0x1 )
+#define ULIS2_R_RS( i )         ( ( i >> 13 ) & 0x3 )
 #define ULIS2_R_ALPHA( i )      ( ( i >> 15 ) & 0x1 )
 
 #define ULIS2_FORMAT_MASK_LO 0x0000FFFF
 #define ULIS2_FORMAT_MASK_HI 0xFFFF0000
 
+#define ULIS2_FORMAT_RGBA8      ULIS2_W_TYPE( kUint8 ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true )

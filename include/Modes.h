@@ -99,7 +99,7 @@ static const char* kwBlendingMode[] =
 };
 
 
-#define ULIS_FOR_ALL_BLENDING_MODES_DO( iSelectedBlendingMode, X )                                  \
+#define ULIS2_FOR_ALL_BLENDING_MODES_DO( iSelectedBlendingMode, X )                                 \
     switch( iSelectedBlendingMode ) {                                                               \
         case eBlendingMode::kNormal             :   X( eBlendingMode::kNormal           );  break;  \
         case eBlendingMode::kErase              :   X( eBlendingMode::kErase            );  break;  \
@@ -166,7 +166,7 @@ static const char* kwAlphaMode[] =
 };
 
 
-#define ULIS_FOR_ALL_ALPHA_MODES_DO( iSelectedAlphaMode, X )                                \
+#define ULIS2_FOR_ALL_ALPHA_MODES_DO( iSelectedAlphaMode, X )                               \
     switch( iSelectedAlphaMode ) {                                                          \
         case eAlphaMode::kNormal            :   X( eAlphaMode::kNormal          );  break;  \
         case eAlphaMode::kErase             :   X( eAlphaMode::kErase           );  break;  \

@@ -5,13 +5,11 @@
 *   ULIS2
 *__________________
 *
-* @file         ULIS2.h
+* @file         Fill.h
 * @author       Clement Berthaud
-* @brief        This file provides a unique way to include all the necessary library files.
+* @brief        This file provides the declaration for the Fill entry point functions.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
-#include "Block.h"
-
+#include "Core.h"

@@ -14,34 +14,13 @@
 #pragma once
 #include "Core.h"
 #include "Perf.h"
-#include "ThreadPool.h"
-#include <functional>
 
+namespace std { template< typename T > class function; }
 ULIS2_NAMESPACE_BEGIN
+class FThreadPool;
 /////////////////////////////////////////////////////
 // ParallelFor
-inline  void  ParallelFor_Imp( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, const FPerf& iPerformanceOptions = FPerf() )
-{
-    if( iPerformanceOptions.desired_workers > 1 && iPool.GetNumWorkers() > 1 )
-    {
-        for( int i = 0; i < iNum; ++i )
-            iPool.ScheduleJob( iFun, i );
-        iPool.WaitForCompletion();
-    }
-    else
-    {
-        for( int i = 0; i < iNum; ++i )
-        {
-            iFun( i );
-        }
-    }
-}
-
-
-inline  void  ParallelForPool( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) > iFun, const FPerf& iPerformanceOptions = FPerf() )
-{
-    ParallelFor_Imp( iPool, iNum, iFun, iPerformanceOptions );
-}
+ULIS2_API void ParallelFor( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, const FPerf& iPerf = FPerf() );
 
 ULIS2_NAMESPACE_END
 

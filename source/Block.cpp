@@ -23,11 +23,9 @@ void OnCleanup_FreeMemory( tByte* iData, void* iInfo )
     delete [] iData;
 }
 
-
 void OnCleanup_DoNothing( tByte* iData, void* iInfo )
 {
 }
-
 
 /////////////////////////////////////////////////////
 // FBlock
@@ -39,7 +37,11 @@ FBlock::~FBlock()
 }
 
 
-FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup )
+FBlock::FBlock( tSize iWidth
+              , tSize iHeight
+              , tFormat iFormat
+              , const FOnInvalid& iOnInvalid
+              , const FOnCleanup& iOnCleanup )
     : mData( nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
@@ -48,13 +50,18 @@ FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& 
     , mOnCleanup( iOnCleanup )
     , mProfile( nullptr )
 {
-    ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
-    ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
+    ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
     mData = new tByte[ BytesTotal() ];
 }
 
 
-FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup )
+FBlock::FBlock( tSize iWidth
+              , tSize iHeight
+              , tFormat iFormat
+              , FColorProfile* iProfile
+              , const FOnInvalid& iOnInvalid
+              , const FOnCleanup& iOnCleanup )
     : mData( nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
@@ -63,8 +70,8 @@ FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iPr
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
 {
-    ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
-    ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
+    ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
 
     if( mProfile )
         ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
@@ -73,8 +80,13 @@ FBlock::FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iPr
 }
 
 
-FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup )
-    : mData( iData )
+FBlock::FBlock( tByte* iData
+              , tSize iWidth
+              , tSize iHeight
+              , tFormat iFormat
+              , const FOnInvalid& iOnInvalid
+              , const FOnCleanup& iOnCleanup )
+    : mData( nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
     , mFormat( iFormat )
@@ -82,13 +94,19 @@ FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, cons
     , mOnCleanup( iOnCleanup )
     , mProfile( nullptr )
 {
-    ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
-    ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
+    ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
 }
 
 
-FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup )
-    : mData( iData )
+FBlock::FBlock( tByte* iData
+              , tSize iWidth
+              , tSize iHeight
+              , tFormat iFormat
+              , FColorProfile* iProfile
+              , const FOnInvalid& iOnInvalid
+              , const FOnCleanup& iOnCleanup )
+    : mData( nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
     , mFormat( iFormat )
@@ -96,12 +114,13 @@ FBlock::FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, FCol
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
 {
-    ULIS2_ASSERT( iWidth  > 0, "Error: Width must be greater than zero" );
-    ULIS2_ASSERT( iHeight > 0, "Error: Height must be greater than zero" );
+    ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
 
     if( mProfile )
         ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
 }
+
 
 
 //--------------------------------------------------------------------------------------
@@ -113,6 +132,23 @@ FBlock::DataPtr()
 }
 
 
+tByte*
+FBlock::PixelPtr( tIndex iX, tIndex iY )
+{
+    ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
+    ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
+    return  DataPtr() + ( uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
+}
+
+
+tByte*
+FBlock::ScanlinePtr( tIndex iRow )
+{
+    ULIS2_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
+    return  DataPtr() + ( uint64( iRow ) * uint64( BytesPerScanLine() ) );
+}
+
+
 const tByte*
 FBlock::DataPtr() const
 {
@@ -120,36 +156,30 @@ FBlock::DataPtr() const
 }
 
 
-tByte*
-FBlock::PixelPtr( tIndex iX, tIndex iY )
+void
+FBlock::AssignProfile( FColorProfile* iProfile )
 {
-    ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Error: index out of range" );
-    ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Error: index out of range" );
-    return  DataPtr() + ( uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
+    mProfile = iProfile;
+
+    if( mProfile )
+        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
 const tByte*
 FBlock::PixelPtr( tIndex iX, tIndex iY ) const
 {
-    ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Error: index out of range" );
-    ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Error: index out of range" );
+    ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
+    ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
     return  DataPtr() + (uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
 }
 
-
-tByte*
-FBlock::ScanlinePtr( tIndex iRow )
-{
-    ULIS2_ASSERT( iRow >= 0 && iRow < mHeight, "Error: index out of range" );
-    return  DataPtr() + (uint64( iRow ) * uint64( BytesPerScanLine() ) );
-}
 
 
 const tByte*
 FBlock::ScanlinePtr( tIndex iRow ) const
 {
-    ULIS2_ASSERT( iRow >= 0 && iRow < mHeight, "Error: index out of range" );
+    ULIS2_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
     return  DataPtr() + (uint64( iRow ) * uint64( BytesPerScanLine() ) );
 }
 
@@ -252,20 +282,10 @@ FBlock::NumColorChannels() const
 }
 
 
-const FColorProfile&
+FColorProfile*
 FBlock::Profile() const
 {
-    return  *mProfile;
-}
-
-
-void
-FBlock::AssignProfile( FColorProfile* iProfile )
-{
-    mProfile = iProfile;
-
-    if( mProfile )
-        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+    return  mProfile;
 }
 
 
@@ -279,11 +299,32 @@ FBlock::Invalidate() const
 void
 FBlock::Invalidate( const FRect& iRect ) const
 {
-    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < mWidth, "Error: index out of range" );
-    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < mHeight, "Error: index out of range" );
-    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= mWidth, "Error: index out of range" );
-    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= mHeight, "Error: index out of range" );
+    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < mWidth, "Index out of range" );
+    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < mHeight, "Index out of range" );
+    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= mWidth, "Index out of range" );
+    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= mHeight, "Index out of range" );
     mOnInvalid.ExecuteIfBound( this, iRect );
+}
+
+
+FPixelValue
+FBlock::PixelValue( tIndex iX, tIndex iY ) const
+{
+    return  FPixelValue( PixelPtr( iX, iY ), Format(), Profile() );
+}
+
+
+FPixelProxy
+FBlock::PixelProxy( tIndex iX, tIndex iY )
+{
+    return  FPixelProxy( PixelPtr( iX, iY ), Format(), Profile() );
+}
+
+
+FColor
+FBlock::PixelColor( tIndex iX, tIndex iY ) const
+{
+    return  FColor();
 }
 
 

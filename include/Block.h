@@ -13,34 +13,60 @@
 */
 #pragma once
 #include "Core.h"
-
-ULIS2_FDECL_CLASS( FColorProfile );
+#include "Pixel.h"
+#include "Color.h"
 
 ULIS2_NAMESPACE_BEGIN
-void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
-void OnCleanup_DoNothing( tByte* iData, void* iInfo );
+
+ULIS2_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
+ULIS2_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
 
 /////////////////////////////////////////////////////
 /// @class      FBlock
 /// @brief      The FBlock class provides a mean of storing and manipulating digital images in various formats.
-/// @details    The block format, type, layout, and other informations can be retrieved in the block format member.
+/// @details    The block format, type, layout, and other informations can be retrieved with dedicated functions.
 class ULIS2_API FBlock
 {
 public:
     // Construction / Destruction
-    virtual ~FBlock();
-    FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup( &OnCleanup_FreeMemory ) );
-    FBlock( tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup( &OnCleanup_FreeMemory ) );
-    FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup( &OnCleanup_DoNothing ) );
-    FBlock( tByte* iData, tSize iWidth, tSize iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& = FOnInvalid(), const FOnCleanup& = FOnCleanup( &OnCleanup_DoNothing ) );
+    ~FBlock();
+
+    FBlock( tSize iWidth
+          , tSize iHeight
+          , tFormat iFormat
+          , const FOnInvalid& iOnInvalid = FOnInvalid()
+          , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory ) );
+
+    FBlock( tSize iWidth
+          , tSize iHeight
+          , tFormat iFormat
+          , FColorProfile* iProfile = nullptr
+          , const FOnInvalid& iOnInvalid = FOnInvalid()
+          , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory ) );
+
+    FBlock( tByte* iData
+          , tSize iWidth
+          , tSize iHeight
+          , tFormat iFormat
+          , const FOnInvalid& iOnInvalid = FOnInvalid()
+          , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_DoNothing ) );
+
+    FBlock( tByte* iData
+          , tSize iWidth
+          , tSize iHeight
+          , tFormat iFormat
+          , FColorProfile* iProfile = nullptr
+          , const FOnInvalid& iOnInvalid = FOnInvalid()
+          , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_DoNothing ) );
 
 public:
     // Public API
     tByte*                  DataPtr();
-    const tByte*            DataPtr()                                   const;
     tByte*                  PixelPtr( tIndex iX, tIndex iY );
-    const tByte*            PixelPtr( tIndex iX, tIndex iY )            const;
     tByte*                  ScanlinePtr( tIndex iRow );
+    void                    AssignProfile( FColorProfile* iProfile );
+    const tByte*            DataPtr()                                   const;
+    const tByte*            PixelPtr( tIndex iX, tIndex iY )            const;
     const tByte*            ScanlinePtr( tIndex iRow )                  const;
     tSize                   Width()                                     const;
     tSize                   Height()                                    const;
@@ -56,10 +82,12 @@ public:
     bool                    Reversed()                                  const;
     uint8                   SamplesPerPixel()                           const;
     uint8                   NumColorChannels()                          const;
-    const FColorProfile&    Profile()                                   const;
-    void                    AssignProfile( FColorProfile* iProfile );
+    FColorProfile*          Profile()                                   const;
     void                    Invalidate()                                const;
     void                    Invalidate( const FRect& iRect )            const;
+    FPixelValue             PixelValue( tIndex iX, tIndex iY )          const;
+    FPixelProxy             PixelProxy( tIndex iX, tIndex iY );
+    FColor                  PixelColor( tIndex iX, tIndex iY )          const;
 
 private:
     // Private Data Members
@@ -73,3 +101,4 @@ private:
 };
 
 ULIS2_NAMESPACE_END
+
