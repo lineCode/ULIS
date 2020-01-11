@@ -165,6 +165,7 @@ IPixel::RedIndex( uint8 iIndex ) const
 uint8
 IPixel::AlphaIndex() const
 {
+    ULIS2_ASSERT( HasAlpha(), "Bad Call" );
     uint8 max_sample = MaxSample();
     uint8 code = ULIS2_R_RS( mFormat );
     switch( code )
