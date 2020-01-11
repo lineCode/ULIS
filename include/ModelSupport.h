@@ -138,5 +138,47 @@ static constexpr eModelSig ModelSigCompatFallback( eModelSig iModel )
     }
 }
 
+static constexpr uint32 lcms2PixelTypeForModelSig( eModelSig iModel )
+{
+    
+    switch( iModel )
+    {
+        case eModelSig::kGrey:      return  PT_GRAY;
+        case eModelSig::kRGB:       return  PT_RGB;
+        case eModelSig::kCMY:       return  PT_CMY;
+        case eModelSig::kCMYK:      return  PT_CMYK;
+        case eModelSig::kYCbCr:     return  PT_YCbCr;
+        case eModelSig::kYUV:       return  PT_YUV;
+        case eModelSig::kLab:       return  PT_Lab;
+        case eModelSig::kYUVK:      return  PT_YUVK;
+        case eModelSig::kXYZ:       return  PT_XYZ;
+        case eModelSig::kYxy:       return  PT_Yxy;
+        case eModelSig::kHSL:       return  PT_HLS;
+        case eModelSig::kHSV:       return  PT_HSV;
+        default:                    return  PT_ANY;
+    }
+}
+
+static constexpr uint32 isFloat( eType iType )
+{
+    switch( iType )
+    {
+        case eType::kFloat:     return  1;
+        case eType::kDouble:    return  1;
+        default:                return  0;
+    }
+}
+
+static constexpr uint32 F42( uint32 i )
+{
+    return  (COLORSPACE_SH(lcms2PixelTypeForModelSig((eModelSig)ULIS2_R_MODEL(i)))
+            |EXTRA_SH(ULIS2_R_ALPHA(i))
+            |CHANNELS_SH(ULIS2_R_CHANNELS(i))
+            |BYTES_SH( ( ULIS2_TYPE_DEPTH >> ( ULIS2_R_TYPE( i ) << 2 ) ) & 0x7 )
+            |DOSWAP_SH(ULIS2_R_REVERSE(i))
+            |SWAPFIRST_SH(ULIS2_R_SWAP(i))
+            |FLOAT_SH(isFloat((eType)ULIS2_R_TYPE(i))));
+}
+
 ULIS2_NAMESPACE_END
 

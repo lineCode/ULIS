@@ -286,6 +286,7 @@ template<> ULIS2_FORCEINLINE eType T42< uint16 >()          { return  eType::kUi
 template<> ULIS2_FORCEINLINE eType T42< uint32 >()          { return  eType::kUint32;   }
 template<> ULIS2_FORCEINLINE eType T42< float >()           { return  eType::kFloat;    }
 template<> ULIS2_FORCEINLINE eType T42< double >()          { return  eType::kDouble;   }
+
 ULIS2_NAMESPACE_END
 
 //                         •   •   •   d   f   u32 u16 u8
@@ -362,3 +363,4 @@ ULIS2_NAMESPACE_END
 #define ULIS2_FORMAT_ABGRD      ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true )
 #define ULIS2_FORMAT_ARGBD      ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_SWAP( true )
 #define ULIS2_FORMAT_BGRAD      ULIS2_W_TYPE( kDouble ) | ULIS2_W_CHANNELS( 3 ) | ULIS2_W_MODEL( kRGB ) | ULIS2_W_ALPHA( true ) | ULIS2_W_REVERSE( true ) | ULIS2_W_SWAP( true )
+
