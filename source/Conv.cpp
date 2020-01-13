@@ -21,6 +21,7 @@
 #include "lcms2.h"
 #include <limits>
 
+ULIS2_NAMESPACE_BEGIN
 float srgb2linear( float iValue )
 {
     if( iValue <= 0.0f )
@@ -47,7 +48,6 @@ float linear2srgb( float iValue )
 }
 
 
-ULIS2_NAMESPACE_BEGIN
 void
 ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent )
 {

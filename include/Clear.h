@@ -25,8 +25,8 @@ class FThreadPool;
 /// @param      iPool           The pool to process the image in.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void Clear( FBlock*       iDst
-                    , FThreadPool&  iPool
+ULIS2_API void Clear( FThreadPool&  iPool
+                    , FBlock*       iDst
                     , const FPerf&  iPerf           = FPerf()
                     , bool          iCallInvalidCB  = true );
 
@@ -37,9 +37,9 @@ ULIS2_API void Clear( FBlock*       iDst
 /// @param      iPool           The pool to process the image in.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void ClearRect( FBlock*       iDst
+ULIS2_API void ClearRect( FThreadPool&  iPool
+                        , FBlock*       iDst
                         , const FRect&  iRect
-                        , FThreadPool&  iPool
                         , const FPerf&  iPerf           = FPerf()
                         , bool          iCallInvalidCB  = true );
 

@@ -14,25 +14,26 @@
 #include "Clear.h"
 #include "Fill.h"
 #include "Block.h"
+#include "Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-void Clear( FBlock*          iDst
-          , FThreadPool&     iPool
+void Clear( FThreadPool&     iPool
+          , FBlock*          iDst
           , const FPerf&     iPerf
           , bool             iCallInvalidCB )
 {
-    ClearRect( iDst, iDst->Rect(), iPool, iPerf, iCallInvalidCB );
+    ClearRect( iPool, iDst, iDst->Rect(), iPerf, iCallInvalidCB );
 }
 
 
-void ClearRect( FBlock*          iDst
+void ClearRect( FThreadPool&     iPool
+              , FBlock*          iDst
               , const FRect&     iRect
-              , FThreadPool&     iPool
               , const FPerf&     iPerf
               , bool             iCallInvalidCB )
 {
     FPixel clear( iDst->Format() );
-    FillRect( iDst, clear, iRect, iPool, iPerf, iCallInvalidCB );
+    FillRect( iPool, iDst, clear, iRect, iPerf, iCallInvalidCB );
 }
 
 ULIS2_NAMESPACE_END

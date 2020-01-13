@@ -51,20 +51,20 @@ void Fill_mono_mem_imp( FBlock*     iDst
 }
 
 
-void Fill( FBlock*          iDst
+void Fill( FThreadPool&     iPool
+         , FBlock*          iDst
          , const IPixel&    iColor
-         , FThreadPool&     iPool
          , const FPerf&     iPerf
          , bool             iCallInvalidCB )
 {
-    FillRect( iDst, iColor, iDst->Rect(), iPool, iPerf, iCallInvalidCB );
+    FillRect( iPool, iDst, iColor, iDst->Rect(), iPerf, iCallInvalidCB );
 }
 
 
-void FillRect( FBlock*          iDst
+void FillRect( FThreadPool&     iPool
+             , FBlock*          iDst
              , const IPixel&    iColor
              , const FRect&     iRect
-             , FThreadPool&     iPool
              , const FPerf&     iPerf
              , bool             iCallInvalidCB )
 {
@@ -72,13 +72,17 @@ void FillRect( FBlock*          iDst
     FPixel color( iDst->Format() );
     Conv( iColor, color );
     const tByte* src = color.Ptr();
-    FRect area = iRect & iDst->Rect();
+    FRect roi = iRect & iDst->Rect();
+
+    if( roi.Area() <= 0 )
+        return;
+
     if( iPerf.mtd )
-        ParallelFor( iPool, area.h, iPerf, ULIS2_PF_CALL { Fill_mtd_mem_imp( iDst, src, iLine ); } );
+        ParallelFor( iPool, roi.h, iPerf, ULIS2_PF_CALL { Fill_mtd_mem_imp( iDst, src, iLine ); } );
     else
         Fill_mono_mem_imp( iDst, src );
 
-    iDst->Invalidate( area, iCallInvalidCB );
+    iDst->Invalidate( roi, iCallInvalidCB );
 }
 
 

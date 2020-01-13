@@ -17,6 +17,10 @@
 ULIS2_NAMESPACE_BEGIN
 class IPixel;
 class FProfileRegistry;
+
+ULIS2_API float srgb2linear( float iValue );
+ULIS2_API float linear2srgb( float iValue );
+
 /// @fn         void ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent = INTENT_PERCEPTUAL )
 /// @brief      Conv a pixel from source to destination with color space and intent.
 /// @param      iSrc                A const reference to the source Pixel.
