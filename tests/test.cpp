@@ -17,14 +17,14 @@ using namespace ::ul2;
 int
 main()
 {
-    FBlock block( 256, 256, ULIS2_FORMAT_LabA32 );
-    FPixel src( ULIS2_FORMAT_RGB8 );
-    src.SetR8( 255 );
-    src.SetG8( 255 );
-    src.SetB8( 255 );
-    FThreadPool pool;
-    Fill( pool, &block, src );
-    FPixelProxy prox = block.PixelProxy( 0, 0 );
+    ::ul2::FBlock block( 256, 256, ULIS2_FORMAT_LabA32 );
+    ::ul2::FColor color( ULIS2_FORMAT_RGB8 );
+    color.SetR8( 255 );
+    color.SetG8( 255 );
+    color.SetB8( 255 );
+    ::ul2::FThreadPool pool;
+    Fill( pool, &block, color );
+    ::ul2::FPixelProxy prox = block.PixelProxy( 0, 0 );
     std::cout << ConvType< uint32, float >( prox.L32() ) << std::endl;
     std::cout << ConvType< uint32, float >( prox.a32() ) << std::endl;
     std::cout << ConvType< uint32, float >( prox.b32() ) << std::endl;

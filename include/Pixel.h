@@ -442,8 +442,65 @@ public:
     FPixelValue( uint32 iFormat, FColorProfile* iProfile = nullptr );
     FPixelValue( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelValue( const FPixelProxy& iProxy );
+
+public:
+    // Named static constructors
+    /*
+    static FPixel FromGreyA8(   uint8  iGrey,   uint8  iA = UINT8_MAX   );
+    static FPixel FromGreyA16(  uint16 iGrey,   uint16 iA = UINT16_MAX  );
+    static FPixel FromGreyA32(  uint32 iGrey,   uint32 iA = UINT32_MAX  );
+    static FPixel FromGreyAF(   float  iGrey,   float  iA = 1.f         );
+    static FPixel FromGreyAD(   double iGrey,   double iA = 1.0         );
+    static FPixel FromRGBA8(    uint8  iR,  uint8  iG,  uint8  iB,  uint8  iA = UINT8_MAX   );
+    static FPixel FromRGBA16(   uint16 iR,  uint16 iG,  uint16 iB,  uint16 iA = UINT16_MAX  );
+    static FPixel FromRGBA32(   uint32 iR,  uint32 iG,  uint32 iB,  uint32 iA = UINT32_MAX  );
+    static FPixel FromRGBAF(    float  iR,  float  iG,  float  iB,  float  iA = 1.f         );
+    static FPixel FromRGBAD(    double iR,  double iG,  double iB,  double iA = 1.0         );
+    static FPixel FromHSVA8(    uint8  iH,  uint8  iS,  uint8  iV,  uint8  iA = UINT8_MAX   );
+    static FPixel FromHSVA16(   uint16 iH,  uint16 iS,  uint16 iV,  uint16 iA = UINT16_MAX  );
+    static FPixel FromHSVA32(   uint32 iH,  uint32 iS,  uint32 iV,  uint32 iA = UINT32_MAX  );
+    static FPixel FromHSVAF(    float  iH,  float  iS,  float  iV,  float  iA = 1.f         );
+    static FPixel FromHSVAD(    double iH,  double iS,  double iV,  double iA = 1.0         );
+    static FPixel FromHSLA8(    uint8  iH,  uint8  iS,  uint8  iL,  uint8  iA = UINT8_MAX   );
+    static FPixel FromHSLA16(   uint16 iH,  uint16 iS,  uint16 iL,  uint16 iA = UINT16_MAX  );
+    static FPixel FromHSLA32(   uint32 iH,  uint32 iS,  uint32 iL,  uint32 iA = UINT32_MAX  );
+    static FPixel FromHSLAF(    float  iH,  float  iS,  float  iL,  float  iA = 1.f         );
+    static FPixel FromHSLAD(    double iH,  double iS,  double iL,  double iA = 1.0         );
+    static FPixel FromCMYA8(    uint8  iC,  uint8  iM,  uint8  iY,  uint8  iA = UINT8_MAX   );
+    static FPixel FromCMYA16(   uint16 iC,  uint16 iM,  uint16 iY,  uint16 iA = UINT16_MAX  );
+    static FPixel FromCMYA32(   uint32 iC,  uint32 iM,  uint32 iY,  uint32 iA = UINT32_MAX  );
+    static FPixel FromCMYAF(    float  iC,  float  iM,  float  iY,  float  iA = 1.f         );
+    static FPixel FromCMYAD(    double iC,  double iM,  double iY,  double iA = 1.0         );
+    static FPixel FromCMYKA8(   uint8  iC,  uint8  iM,  uint8  iY,  uint8  iK,  uint8  iA = UINT8_MAX   );
+    static FPixel FromCMYKA16(  uint16 iC,  uint16 iM,  uint16 iY,  uint16 iK,  uint16 iA = UINT16_MAX  );
+    static FPixel FromCMYKA32(  uint32 iC,  uint32 iM,  uint32 iY,  uint32 iK,  uint32 iA = UINT32_MAX  );
+    static FPixel FromCMYKAF(   float  iC,  float  iM,  float  iY,  float  iK,  float  iA = 1.f         );
+    static FPixel FromCMYKAD(   double iC,  double iM,  double iY,  double iK,  double iA = 1.0         );
+    static FPixel FromYUVA8(    uint8  iY,  uint8  iU,  uint8  iV,  uint8  iA = UINT8_MAX   );
+    static FPixel FromYUVA16(   uint16 iY,  uint16 iU,  uint16 iV,  uint16 iA = UINT16_MAX  );
+    static FPixel FromYUVA32(   uint32 iY,  uint32 iU,  uint32 iV,  uint32 iA = UINT32_MAX  );
+    static FPixel FromYUVAF(    float  iY,  float  iU,  float  iV,  float  iA = 1.f         );
+    static FPixel FromYUVAD(    double iY,  double iU,  double iV,  double iA = 1.0         );
+    static FPixel FromLabA8(    uint8  iL,  uint8  ia,  uint8  ib,  uint8  iA = UINT8_MAX   );
+    static FPixel FromLabA16(   uint16 iL,  uint16 ia,  uint16 ib,  uint16 iA = UINT16_MAX  );
+    static FPixel FromLabA32(   uint32 iL,  uint32 ia,  uint32 ib,  uint32 iA = UINT32_MAX  );
+    static FPixel FromLabAF(    float  iL,  float  ia,  float  ib,  float  iA = 1.f         );
+    static FPixel FromLabAD(    double iL,  double ia,  double ib,  double iA = 1.0         );
+    static FPixel FromXYZA8(    uint8  iX,  uint8  iY,  uint8  iZ,  uint8  iA = UINT8_MAX   );
+    static FPixel FromXYZA16(   uint16 iX,  uint16 iY,  uint16 iZ,  uint16 iA = UINT16_MAX  );
+    static FPixel FromXYZA32(   uint32 iX,  uint32 iY,  uint32 iZ,  uint32 iA = UINT32_MAX  );
+    static FPixel FromXYZAF(    float  iX,  float  iY,  float  iZ,  float  iA = 1.f         );
+    static FPixel FromXYZAD(    double iX,  double iY,  double iZ,  double iA = 1.0         );
+    static FPixel FromYxyA8(    uint8  iY,  uint8  ix,  uint8  iy,  uint8  iA = UINT8_MAX   );
+    static FPixel FromYxyA16(   uint16 iY,  uint16 ix,  uint16 iy,  uint16 iA = UINT16_MAX  );
+    static FPixel FromYxyA32(   uint32 iY,  uint32 ix,  uint32 iy,  uint32 iA = UINT32_MAX  );
+    static FPixel FromYxyAF(    float  iY,  float  ix,  float  iy,  float  iA = 1.f         );
+    static FPixel FromYxyAD(    double iY,  double ix,  double iy,  double iA = 1.0         );
+    */
+
 };
 typedef FPixelValue FPixel;
+typedef FPixelValue FColor;
 
 /////////////////////////////////////////////////////
 /// @class      FPixelProxy
