@@ -17,7 +17,7 @@
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ParallelFor
-void ParallelFor( FThreadPool& iPool, int32 iNum, const FPerf& iPerf, std::function< void( int32 ) >& iFun )
+void ParallelFor( FThreadPool& iPool, int32 iNum, const FPerf& iPerf, const std::function< void( int32 ) >& iFun )
 {
     if( iPerf.mtd && iPool.GetNumWorkers() > 1 )
     {

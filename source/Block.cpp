@@ -32,26 +32,6 @@ FBlock::~FBlock()
 FBlock::FBlock( tSize iWidth
               , tSize iHeight
               , tFormat iFormat
-              , const FOnInvalid& iOnInvalid
-              , const FOnCleanup& iOnCleanup )
-    : mData( nullptr )
-    , mWidth( iWidth )
-    , mHeight( iHeight )
-    , mFormat( iFormat )
-    , mOnInvalid( iOnInvalid )
-    , mOnCleanup( iOnCleanup )
-    , mProfile( nullptr )
-    , mUUID( GenerateWeakUUID( 16 ) )
-{
-    ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
-    mData = new tByte[ BytesTotal() ];
-}
-
-
-FBlock::FBlock( tSize iWidth
-              , tSize iHeight
-              , tFormat iFormat
               , FColorProfile* iProfile
               , const FOnInvalid& iOnInvalid
               , const FOnCleanup& iOnCleanup )
@@ -71,26 +51,6 @@ FBlock::FBlock( tSize iWidth
         ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
 
     mData = new tByte[ BytesTotal() ];
-}
-
-
-FBlock::FBlock( tByte* iData
-              , tSize iWidth
-              , tSize iHeight
-              , tFormat iFormat
-              , const FOnInvalid& iOnInvalid
-              , const FOnCleanup& iOnCleanup )
-    : mData( nullptr )
-    , mWidth( iWidth )
-    , mHeight( iHeight )
-    , mFormat( iFormat )
-    , mOnInvalid( iOnInvalid )
-    , mOnCleanup( iOnCleanup )
-    , mProfile( nullptr )
-    , mUUID( GenerateWeakUUID( 16 ) )
-{
-    ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
 }
 
 

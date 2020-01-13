@@ -18,4 +18,9 @@
 #include "Conv.h"
 #include "ColorProfile.h"
 #include "ProfileRegistry.h"
+#include "ThreadPool.h"
+#include "ParallelFor.h"
+#include "Fill.h"
+#include "Clear.h"
+#include "Blend.h"
 

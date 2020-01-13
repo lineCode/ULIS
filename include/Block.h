@@ -30,22 +30,9 @@ public:
     FBlock( tSize iWidth
           , tSize iHeight
           , tFormat iFormat
-          , const FOnInvalid& iOnInvalid = FOnInvalid()
-          , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory ) );
-
-    FBlock( tSize iWidth
-          , tSize iHeight
-          , tFormat iFormat
           , FColorProfile* iProfile = nullptr
           , const FOnInvalid& iOnInvalid = FOnInvalid()
           , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory ) );
-
-    FBlock( tByte* iData
-          , tSize iWidth
-          , tSize iHeight
-          , tFormat iFormat
-          , const FOnInvalid& iOnInvalid = FOnInvalid()
-          , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_DoNothing ) );
 
     FBlock( tByte* iData
           , tSize iWidth
