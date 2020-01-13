@@ -64,7 +64,7 @@ IPixel::Ptr() const
 uint8
 IPixel::BytesPerSample() const
 {
-    return  ( ULIS2_TYPE_DEPTH >> ( ULIS2_R_TYPE( mFormat ) << 2 ) ) & ULIS2_TYPE_DEPTH_MASK;
+    return  ULIS2_R_DEPTH( mFormat );
 }
 
 

@@ -82,15 +82,13 @@ public:
     template< typename T> ULIS2_FORCEINLINE T B() const                         { return  GetValue< T >( 2 );                   }
     template< typename T> ULIS2_FORCEINLINE T Hue() const                       { return  GetValue< T >( 0 );                   }
     template< typename T> ULIS2_FORCEINLINE T Saturation() const                { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Luminosity() const                { return  GetValue< T >( 2 );                   }
+    template< typename T> ULIS2_FORCEINLINE T Lightness() const                 { return  GetValue< T >( 2 );                   }
     template< typename T> ULIS2_FORCEINLINE T Value() const                     { return  GetValue< T >( 2 );                   }
     template< typename T> ULIS2_FORCEINLINE T Cyan() const                      { return  GetValue< T >( 0 );                   }
     template< typename T> ULIS2_FORCEINLINE T Magenta() const                   { return  GetValue< T >( 1 );                   }
     template< typename T> ULIS2_FORCEINLINE T Yellow() const                    { return  GetValue< T >( 2 );                   }
     template< typename T> ULIS2_FORCEINLINE T Key() const                       { return  GetValue< T >( 3 );                   }
     template< typename T> ULIS2_FORCEINLINE T Luma() const                      { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Cb() const                        { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Cr() const                        { return  GetValue< T >( 2 );                   }
     template< typename T> ULIS2_FORCEINLINE T U() const                         { return  GetValue< T >( 1 );                   }
     template< typename T> ULIS2_FORCEINLINE T V() const                         { return  GetValue< T >( 2 );                   }
     template< typename T> ULIS2_FORCEINLINE T K() const                         { return  GetValue< T >( 3 );                   }
@@ -113,15 +111,13 @@ public:
     ULIS2_FORCEINLINE uint8 B8() const                                          { return  B< uint8 >();                         }
     ULIS2_FORCEINLINE uint8 Hue8() const                                        { return  Hue< uint8 >();                       }
     ULIS2_FORCEINLINE uint8 Saturation8() const                                 { return  Saturation< uint8 >();                }
-    ULIS2_FORCEINLINE uint8 Lightness8() const                                  { return  Luminosity< uint8 >();                }
+    ULIS2_FORCEINLINE uint8 Lightness8() const                                  { return  Lightness< uint8 >();                 }
     ULIS2_FORCEINLINE uint8 Value8() const                                      { return  Value< uint8 >();                     }
     ULIS2_FORCEINLINE uint8 Cyan8() const                                       { return  Cyan< uint8 >();                      }
     ULIS2_FORCEINLINE uint8 Magenta8() const                                    { return  Magenta< uint8 >();                   }
     ULIS2_FORCEINLINE uint8 Yellow8() const                                     { return  Yellow< uint8 >();                    }
     ULIS2_FORCEINLINE uint8 Key8() const                                        { return  Key< uint8 >();                       }
     ULIS2_FORCEINLINE uint8 Luma8() const                                       { return  Luma< uint8 >();                      }
-    ULIS2_FORCEINLINE uint8 Cb8() const                                         { return  Cb< uint8 >();                        }
-    ULIS2_FORCEINLINE uint8 Cr8() const                                         { return  Cr< uint8 >();                        }
     ULIS2_FORCEINLINE uint8 U8() const                                          { return  U< uint8 >();                         }
     ULIS2_FORCEINLINE uint8 V8() const                                          { return  V< uint8 >();                         }
     ULIS2_FORCEINLINE uint8 K8() const                                          { return  K< uint8 >();                         }
@@ -144,15 +140,13 @@ public:
     ULIS2_FORCEINLINE uint16 B16() const                                        { return  B< uint16 >();                        }
     ULIS2_FORCEINLINE uint16 Hue16() const                                      { return  Hue< uint16 >();                      }
     ULIS2_FORCEINLINE uint16 Saturation16() const                               { return  Saturation< uint16 >();               }
-    ULIS2_FORCEINLINE uint16 Lightness16() const                                { return  Luminosity< uint16 >();               }
+    ULIS2_FORCEINLINE uint16 Lightness16() const                                { return  Lightness< uint16 >();                }
     ULIS2_FORCEINLINE uint16 Value16() const                                    { return  Value< uint16 >();                    }
     ULIS2_FORCEINLINE uint16 Cyan16() const                                     { return  Cyan< uint16 >();                     }
     ULIS2_FORCEINLINE uint16 Magenta16() const                                  { return  Magenta< uint16 >();                  }
     ULIS2_FORCEINLINE uint16 Yellow16() const                                   { return  Yellow< uint16 >();                   }
     ULIS2_FORCEINLINE uint16 Key16() const                                      { return  Key< uint16 >();                      }
     ULIS2_FORCEINLINE uint16 Luma16() const                                     { return  Luma< uint16 >();                     }
-    ULIS2_FORCEINLINE uint16 Cb16() const                                       { return  Cb< uint16 >();                       }
-    ULIS2_FORCEINLINE uint16 Cr16() const                                       { return  Cr< uint16 >();                       }
     ULIS2_FORCEINLINE uint16 U16() const                                        { return  U< uint16 >();                        }
     ULIS2_FORCEINLINE uint16 V16() const                                        { return  V< uint16 >();                        }
     ULIS2_FORCEINLINE uint16 K16() const                                        { return  K< uint16 >();                        }
@@ -175,15 +169,13 @@ public:
     ULIS2_FORCEINLINE uint32 B32() const                                        { return  B< uint32 >();                        }
     ULIS2_FORCEINLINE uint32 Hue32() const                                      { return  Hue< uint32 >();                      }
     ULIS2_FORCEINLINE uint32 Saturation32() const                               { return  Saturation< uint32 >();               }
-    ULIS2_FORCEINLINE uint32 Lightness32() const                                { return  Luminosity< uint32 >();               }
+    ULIS2_FORCEINLINE uint32 Lightness32() const                                { return  Lightness< uint32 >();                }
     ULIS2_FORCEINLINE uint32 Value32() const                                    { return  Value< uint32 >();                    }
     ULIS2_FORCEINLINE uint32 Cyan32() const                                     { return  Cyan< uint32 >();                     }
     ULIS2_FORCEINLINE uint32 Magenta32() const                                  { return  Magenta< uint32 >();                  }
     ULIS2_FORCEINLINE uint32 Yellow32() const                                   { return  Yellow< uint32 >();                   }
     ULIS2_FORCEINLINE uint32 Key32() const                                      { return  Key< uint32 >();                      }
     ULIS2_FORCEINLINE uint32 Luma32() const                                     { return  Luma< uint32 >();                     }
-    ULIS2_FORCEINLINE uint32 Cb32() const                                       { return  Cb< uint32 >();                       }
-    ULIS2_FORCEINLINE uint32 Cr32() const                                       { return  Cr< uint32 >();                       }
     ULIS2_FORCEINLINE uint32 U32() const                                        { return  U< uint32 >();                        }
     ULIS2_FORCEINLINE uint32 V32() const                                        { return  V< uint32 >();                        }
     ULIS2_FORCEINLINE uint32 K32() const                                        { return  K< uint32 >();                        }
@@ -206,15 +198,13 @@ public:
     ULIS2_FORCEINLINE float BF() const                                          { return  B< float >();                         }
     ULIS2_FORCEINLINE float HueF() const                                        { return  Hue< float >();                       }
     ULIS2_FORCEINLINE float SaturationF() const                                 { return  Saturation< float >();                }
-    ULIS2_FORCEINLINE float LightnessF() const                                  { return  Luminosity< float >();                }
+    ULIS2_FORCEINLINE float LightnessF() const                                  { return  Lightness< float >();                 }
     ULIS2_FORCEINLINE float ValueF() const                                      { return  Value< float >();                     }
     ULIS2_FORCEINLINE float CyanF() const                                       { return  Cyan< float >();                      }
     ULIS2_FORCEINLINE float MagentaF() const                                    { return  Magenta< float >();                   }
     ULIS2_FORCEINLINE float YellowF() const                                     { return  Yellow< float >();                    }
     ULIS2_FORCEINLINE float KeyF() const                                        { return  Key< float >();                       }
     ULIS2_FORCEINLINE float LumaF() const                                       { return  Luma< float >();                      }
-    ULIS2_FORCEINLINE float CbF() const                                         { return  Cb< float >();                        }
-    ULIS2_FORCEINLINE float CrF() const                                         { return  Cr< float >();                        }
     ULIS2_FORCEINLINE float UF() const                                          { return  U< float >();                         }
     ULIS2_FORCEINLINE float VF() const                                          { return  V< float >();                         }
     ULIS2_FORCEINLINE float KF() const                                          { return  K< float >();                         }
@@ -237,15 +227,13 @@ public:
     ULIS2_FORCEINLINE double BD() const                                         { return  B< double >();                        }
     ULIS2_FORCEINLINE double HueD() const                                       { return  Hue< double >();                      }
     ULIS2_FORCEINLINE double SaturationD() const                                { return  Saturation< double >();               }
-    ULIS2_FORCEINLINE double LightnessD() const                                 { return  Luminosity< double >();               }
+    ULIS2_FORCEINLINE double LightnessD() const                                 { return  Lightness< double >();                }
     ULIS2_FORCEINLINE double ValueD() const                                     { return  Value< double >();                    }
     ULIS2_FORCEINLINE double CyanD() const                                      { return  Cyan< double >();                     }
     ULIS2_FORCEINLINE double MagentaD() const                                   { return  Magenta< double >();                  }
     ULIS2_FORCEINLINE double YellowD() const                                    { return  Yellow< double >();                   }
     ULIS2_FORCEINLINE double KeyD() const                                       { return  Key< double >();                      }
     ULIS2_FORCEINLINE double LumaD() const                                      { return  Luma< double >();                     }
-    ULIS2_FORCEINLINE double CbD() const                                        { return  Cb< double >();                       }
-    ULIS2_FORCEINLINE double CrD() const                                        { return  Cr< double >();                       }
     ULIS2_FORCEINLINE double UD() const                                         { return  U< double >();                        }
     ULIS2_FORCEINLINE double VD() const                                         { return  V< double >();                        }
     ULIS2_FORCEINLINE double KD() const                                         { return  K< double >();                        }
@@ -276,8 +264,6 @@ public:
     template< typename T> ULIS2_FORCEINLINE void SetYellow(     T iValue )      { SetValue< T >( 2, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetKey(        T iValue )      { SetValue< T >( 3, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetLuma(       T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetCb(         T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetCr(         T iValue )      { SetValue< T >( 2, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetU(          T iValue )      { SetValue< T >( 1, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetV(          T iValue )      { SetValue< T >( 2, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetK(          T iValue )      { SetValue< T >( 3, iValue );                   }
@@ -307,8 +293,6 @@ public:
     ULIS2_FORCEINLINE void SetYellow8(                          uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetKey8(                             uint8 iValue )  { SetValue< uint8 >( 3, iValue );               }
     ULIS2_FORCEINLINE void SetLuma8(                            uint8 iValue )  { SetValue< uint8 >( 0, iValue );               }
-    ULIS2_FORCEINLINE void SetCb8(                              uint8 iValue )  { SetValue< uint8 >( 1, iValue );               }
-    ULIS2_FORCEINLINE void SetCr8(                              uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetU8(                               uint8 iValue )  { SetValue< uint8 >( 1, iValue );               }
     ULIS2_FORCEINLINE void SetV8(                               uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetK8(                               uint8 iValue )  { SetValue< uint8 >( 3, iValue );               }
@@ -338,8 +322,6 @@ public:
     ULIS2_FORCEINLINE void SetYellow16(                         uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetKey16(                            uint16 iValue ) { SetValue< uint16 >( 3, iValue );              }
     ULIS2_FORCEINLINE void SetLuma16(                           uint16 iValue ) { SetValue< uint16 >( 0, iValue );              }
-    ULIS2_FORCEINLINE void SetCb16(                             uint16 iValue ) { SetValue< uint16 >( 1, iValue );              }
-    ULIS2_FORCEINLINE void SetCr16(                             uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetU16(                              uint16 iValue ) { SetValue< uint16 >( 1, iValue );              }
     ULIS2_FORCEINLINE void SetV16(                              uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetK16(                              uint16 iValue ) { SetValue< uint16 >( 3, iValue );              }
@@ -369,8 +351,6 @@ public:
     ULIS2_FORCEINLINE void SetYellow32(                         uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetKey32(                            uint32 iValue ) { SetValue< uint32 >( 3, iValue );              }
     ULIS2_FORCEINLINE void SetLuma32(                           uint32 iValue ) { SetValue< uint32 >( 0, iValue );              }
-    ULIS2_FORCEINLINE void SetCb32(                             uint32 iValue ) { SetValue< uint32 >( 1, iValue );              }
-    ULIS2_FORCEINLINE void SetCr32(                             uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetU32(                              uint32 iValue ) { SetValue< uint32 >( 1, iValue );              }
     ULIS2_FORCEINLINE void SetV32(                              uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetK32(                              uint32 iValue ) { SetValue< uint32 >( 3, iValue );              }
@@ -400,8 +380,6 @@ public:
     ULIS2_FORCEINLINE void SetYellowF(                          float iValue )  { SetValue< float >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetKeyF(                             float iValue )  { SetValue< float >( 3, iValue );               }
     ULIS2_FORCEINLINE void SetLumaF(                            float iValue )  { SetValue< float >( 0, iValue );               }
-    ULIS2_FORCEINLINE void SetCbF(                              float iValue )  { SetValue< float >( 1, iValue );               }
-    ULIS2_FORCEINLINE void SetCrF(                              float iValue )  { SetValue< float >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetUF(                               float iValue )  { SetValue< float >( 1, iValue );               }
     ULIS2_FORCEINLINE void SetVF(                               float iValue )  { SetValue< float >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetKF(                               float iValue )  { SetValue< float >( 3, iValue );               }
@@ -431,8 +409,6 @@ public:
     ULIS2_FORCEINLINE void SetYellowD(                          double iValue ) { SetValue< double >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetKeyD(                             double iValue ) { SetValue< double >( 3, iValue );              }
     ULIS2_FORCEINLINE void SetLumaD(                            double iValue ) { SetValue< double >( 0, iValue );              }
-    ULIS2_FORCEINLINE void SetCbD(                              double iValue ) { SetValue< double >( 1, iValue );              }
-    ULIS2_FORCEINLINE void SetCrD(                              double iValue ) { SetValue< double >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetUD(                               double iValue ) { SetValue< double >( 1, iValue );              }
     ULIS2_FORCEINLINE void SetVD(                               double iValue ) { SetValue< double >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetKD(                               double iValue ) { SetValue< double >( 3, iValue );              }

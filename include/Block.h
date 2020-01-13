@@ -14,7 +14,6 @@
 #pragma once
 #include "Core.h"
 #include "Pixel.h"
-#include "Color.h"
 
 ULIS2_NAMESPACE_BEGIN
 
@@ -87,7 +86,6 @@ public:
     void                    Invalidate( const FRect& iRect )            const;
     FPixelValue             PixelValue( tIndex iX, tIndex iY )          const;
     FPixelProxy             PixelProxy( tIndex iX, tIndex iY );
-    FColor                  PixelColor( tIndex iX, tIndex iY )          const;
 
 private:
     // Private Data Members

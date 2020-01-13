@@ -56,20 +56,20 @@ FProfileRegistry::~FProfileRegistry()
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 FColorProfile*
-FProfileRegistry::GetProfile( const std::string iKey )
+FProfileRegistry::GetProfile( const std::string iKey ) const
 {
     if ( mLockedSoftwareProfiles.find( iKey ) != mLockedSoftwareProfiles.end() )
-        return  mLockedSoftwareProfiles[iKey];
+        return  mLockedSoftwareProfiles.at( iKey );
 
     if ( mFileBasedProfiles.find( iKey ) != mFileBasedProfiles.end() )
-        return  mFileBasedProfiles[iKey];
+        return  mFileBasedProfiles.at( iKey );
 
     return  nullptr;
 }
 
 
 std::string
-FProfileRegistry::DefaultProfileNameForModel( eModelSig iModel )
+FProfileRegistry::DefaultProfileNameForModel( eModelSig iModel ) const
 {
     switch( iModel )
     {
@@ -86,7 +86,7 @@ FProfileRegistry::DefaultProfileNameForModel( eModelSig iModel )
 
 
 FColorProfile*
-FProfileRegistry::GetDefaultProfileForModel( eModelSig iModel )
+FProfileRegistry::GetDefaultProfileForModel( eModelSig iModel ) const
 {
     return  GetProfile( DefaultProfileNameForModel( iModel ) );
 }

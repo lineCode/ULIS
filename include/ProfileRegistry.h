@@ -28,9 +28,9 @@ public:
 
 public:
     // Public API
-    FColorProfile* GetProfile( const std::string iKey );
-    std::string DefaultProfileNameForModel( eModelSig iModel );
-    FColorProfile* GetDefaultProfileForModel( eModelSig iModel );
+    FColorProfile* GetProfile( const std::string iKey ) const;
+    std::string DefaultProfileNameForModel( eModelSig iModel ) const;
+    FColorProfile* GetDefaultProfileForModel( eModelSig iModel ) const;
 
 private:
     // Private Data

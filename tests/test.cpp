@@ -17,27 +17,19 @@ using namespace ::ul2;
 int
 main()
 {
-    FPixel pixel( ULIS2_FORMAT_BGRAF );
-    std::cout << "pixel.BytesPerSample()    : " << (int)pixel.BytesPerSample()     << std::endl;
-    std::cout << "pixel.Depth()             : " << (int)pixel.Depth()              << std::endl;
-    std::cout << "pixel.Format()            : " << (int)pixel.Format()             << std::endl;
-    std::cout << "pixel.HasAlpha()          : " << (int)pixel.HasAlpha()           << std::endl;
-    std::cout << "pixel.Model()             : " << (int)pixel.Model()              << std::endl;
-    std::cout << "pixel.NumColorChannels()  : " << (int)pixel.NumColorChannels()   << std::endl;
-    std::cout << "pixel.NumSamples()        : " << (int)pixel.NumSamples()         << std::endl;
-    std::cout << "pixel.Reversed()          : " << (int)pixel.Reversed()           << std::endl;
-    std::cout << "pixel.Swapped()           : " << (int)pixel.Swapped()            << std::endl;
-    std::cout << "pixel.Type()              : " << (int)pixel.Type()               << std::endl;
-    auto R = pixel.GetRef< float >( RGB_R );
-    auto G = pixel.GetRef< float >( RGB_G );
-    auto B = pixel.GetRef< float >( RGB_B );
-    auto A = pixel.GetRef< float >( RGB_A );
-    R = 255; G = 20; B = 127; A = 220;
+    FProfileRegistry reg;
+    FPixel src( ULIS2_FORMAT_RGBA8 );
+    FPixel dst( ULIS2_FORMAT_GAD );
+    src.SetR8( 255 );
+    src.SetG8( 255 );
+    src.SetB8( 255 );
+    src.SetA8( 127 );
+    Conv( src, dst );
+    auto _g = dst.GreyD();
+    auto _a = dst.AD();
+    std::cout << "G:" << _g << std::endl;
+    std::cout << "A:" << _a << std::endl;
 
-    float _r = pixel.RF();
-    float _g = pixel.GF();
-    float _b = pixel.BF();
-    float _a = pixel.AF();
     auto dummy = 0;
 }
 

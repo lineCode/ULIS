@@ -14,4 +14,8 @@
 #pragma once
 
 #include "Block.h"
+#include "Pixel.h"
+#include "Conv.h"
+#include "ColorProfile.h"
+#include "ProfileRegistry.h"
 

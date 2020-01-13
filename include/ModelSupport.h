@@ -112,7 +112,7 @@ static eModelSig ModelSigFromColorSpaceSignature( cmsColorSpaceSignature iValue 
         case cmsSig13colorData  : return  default_cm;
         case cmsSig14colorData  : return  default_cm;
         case cmsSig15colorData  : return  default_cm;
-        case cmsSigLuvKData     : return  eModelSig::kYUVK;
+        case cmsSigLuvKData     : return  default_cm;
         default                 : return  default_cm;
     }
 }
@@ -131,9 +131,7 @@ static constexpr eModelSig ModelSigCompatFallback( eModelSig iModel )
         case eModelSig::kLab:       return  eModelSig::kLab;
         case eModelSig::kXYZ:       return  eModelSig::kXYZ;
         case eModelSig::kYxy:       return  eModelSig::kYxy;
-        case eModelSig::kYUV:       return  eModelSig::kYUVK;
-        case eModelSig::kYUVK:      return  eModelSig::kYUVK;
-        case eModelSig::kYCbCr:     return  eModelSig::kYCbCr;
+        case eModelSig::kYUV:       return  eModelSig::kYUV;
         default:                    return  eModelSig::kRGB;
     }
 }
@@ -147,10 +145,8 @@ static constexpr uint32 lcms2PixelTypeForModelSig( eModelSig iModel )
         case eModelSig::kRGB:       return  PT_RGB;
         case eModelSig::kCMY:       return  PT_CMY;
         case eModelSig::kCMYK:      return  PT_CMYK;
-        case eModelSig::kYCbCr:     return  PT_YCbCr;
         case eModelSig::kYUV:       return  PT_YUV;
         case eModelSig::kLab:       return  PT_Lab;
-        case eModelSig::kYUVK:      return  PT_YUVK;
         case eModelSig::kXYZ:       return  PT_XYZ;
         case eModelSig::kYxy:       return  PT_Yxy;
         case eModelSig::kHSL:       return  PT_HLS;
@@ -174,10 +170,10 @@ static constexpr uint32 F42( uint32 i )
     return  (COLORSPACE_SH(lcms2PixelTypeForModelSig((eModelSig)ULIS2_R_MODEL(i)))
             |EXTRA_SH(ULIS2_R_ALPHA(i))
             |CHANNELS_SH(ULIS2_R_CHANNELS(i))
-            |BYTES_SH( ( ULIS2_TYPE_DEPTH >> ( ULIS2_R_TYPE( i ) << 2 ) ) & 0x7 )
+            |BYTES_SH( ULIS2_R_DEPTH( i ) & 0x7 )
             |DOSWAP_SH(ULIS2_R_REVERSE(i))
             |SWAPFIRST_SH(ULIS2_R_SWAP(i))
-            |FLOAT_SH(isFloat((eType)ULIS2_R_TYPE(i))));
+            |FLOAT_SH(ULIS2_R_FLOATING(i)));
 }
 
 ULIS2_NAMESPACE_END

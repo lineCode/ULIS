@@ -171,9 +171,8 @@ FBlock::PixelPtr( tIndex iX, tIndex iY ) const
 {
     ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
     ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
-    return  DataPtr() + (uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
+    return  DataPtr() + ( uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
 }
-
 
 
 const tByte*
@@ -201,7 +200,7 @@ FBlock::Height() const
 tSize
 FBlock::BytesPerSample() const
 {
-    return  ( ( ULIS2_TYPE_DEPTH >> ULIS2_R_TYPE( mFormat ) ) & ULIS2_TYPE_DEPTH_MASK );
+    return  ULIS2_R_DEPTH( mFormat );
 }
 
 
@@ -295,14 +294,14 @@ FBlock::Invalidate() const
     Invalidate( FRect( 0, 0, Width(), Height() ) );
 }
 
-
+  
 void
 FBlock::Invalidate( const FRect& iRect ) const
 {
-    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < mWidth, "Index out of range" );
-    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < mHeight, "Index out of range" );
-    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= mWidth, "Index out of range" );
-    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= mHeight, "Index out of range" );
+    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < (int64)mWidth, "Index out of range" );
+    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < (int64)mHeight, "Index out of range" );
+    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int64)mWidth, "Index out of range" );
+    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= (int64)mHeight, "Index out of range" );
     mOnInvalid.ExecuteIfBound( this, iRect );
 }
 
@@ -318,13 +317,6 @@ FPixelProxy
 FBlock::PixelProxy( tIndex iX, tIndex iY )
 {
     return  FPixelProxy( PixelPtr( iX, iY ), Format(), Profile() );
-}
-
-
-FColor
-FBlock::PixelColor( tIndex iX, tIndex iY ) const
-{
-    return  FColor();
 }
 
 
