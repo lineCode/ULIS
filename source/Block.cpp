@@ -223,7 +223,7 @@ FBlock::BytesTotal() const
 tFormat
 FBlock::Format() const
 {
-    return  mFormat;
+    return  mFormat & ULIS2_FORMAT_MASK_LO;
 }
 
 

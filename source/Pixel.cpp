@@ -78,7 +78,7 @@ IPixel::Depth() const
 tFormat
 IPixel::Format() const
 {
-    return  mFormat;
+    return  mFormat & ULIS2_FORMAT_MASK_LO;
 }
 
 

@@ -20,6 +20,32 @@
 #include "ProfileRegistry.h"
 #include <limits>
 
+float srgb2linear( float iValue )
+{
+    if( iValue <= 0.0f )
+        return  0.0f;
+    else if( iValue >= 1.0f )
+        return  1.0f;
+    else if( iValue < 0.04045f )
+        return  iValue / 12.92f;
+    else
+        return  powf( ( iValue + 0.055f) / 1.055f, 2.4f );
+}
+
+
+float linear2srgb( float iValue )
+{
+    if( iValue <= 0.0f )
+        return  0.0f;
+    else if( iValue >= 1.0f )
+        return  1.0f;
+    else if( iValue < 0.0031308f )
+        return  iValue * 12.92f;
+    else
+        return  powf( iValue, 1.0f / 2.4f ) * 1.055f - 0.055f;
+}
+
+
 ULIS2_NAMESPACE_BEGIN
 void
 ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent )
@@ -309,9 +335,9 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
             float y = ConvType< T1, float >( iSrc.Luma< T1 >() );
             float u = ConvType< T1, float >( iSrc.U< T1 >() );
             float v = ConvType< T1, float >( iSrc.V< T1 >() );
-            float r = y + 1.14f * v;
-            float g = y - 0.395f * u - 0.581f * v;
-            float b = y + 2.033f * u;
+            float r = linear2srgb( y + 1.14f * v );
+            float g = linear2srgb( y - 0.395f * u - 0.581f * v );
+            float b = linear2srgb( y + 2.033f * u );
             iDst.SetR< T2 >( ConvType< float, T2 >( r ) );
             iDst.SetG< T2 >( ConvType< float, T2 >( g ) );
             iDst.SetB< T2 >( ConvType< float, T2 >( b ) );
@@ -324,14 +350,14 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
             cmsCIELab Lab;
             cmsCIEXYZ XYZ;
             cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() );
-            Lab.a = ConvType< T1, double >( iSrc.a< T1 >() );
-            Lab.b = ConvType< T1, double >( iSrc.b< T1 >() );
+            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() ) * 255.0;
+            Lab.a = ( ConvType< T1, double >( iSrc.a< T1 >() ) - 0.5 ) * 128.0;
+            Lab.b = ( ConvType< T1, double >( iSrc.b< T1 >() ) - 0.5 ) * 128.0;
             cmsLab2XYZ( &D65, &XYZ, &Lab );
             FPixel temp( ULIS2_FORMAT_XYZAD );
-            temp.SetXD( XYZ.X );
-            temp.SetYD( XYZ.Y );
-            temp.SetZD( XYZ.Z );
+            temp.SetXD( XYZ.X / 100.0 );
+            temp.SetYD( XYZ.Y / 100.0 );
+            temp.SetZD( XYZ.Z / 100.0 );
             temp.SetAD( ConvType< T1, double >( iSrc.A< T1 >() ) );
             ToRGB< double, T2 >( temp, iDst );
             return;
@@ -343,9 +369,9 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
             float x = ConvType< T1, float >( iSrc.X< T1 >() );
             float y = ConvType< T1, float >( iSrc.Y< T1 >() );
             float z = ConvType< T1, float >( iSrc.Z< T1 >() );
-            float r =  3.2404542f * x - 1.5371385f * y - 0.4985314f * z;
-            float g = -0.9692660f * x + 1.8760108f * y + 0.0415560f * z;
-            float b =  0.0556434f * x - 0.2040259f * y + 1.0572252f * z;
+            float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
+            float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
+            float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );
             iDst.SetR< T2 >( ConvType< float, T2 >( r ) );
             iDst.SetG< T2 >( ConvType< float, T2 >( g ) );
             iDst.SetB< T2 >( ConvType< float, T2 >( b ) );
@@ -867,9 +893,9 @@ ToYUV( const IPixel& iSrc, IPixel& iDst )
 
         case eModelSig::kRGB:
         {
-            float r = ConvType< T1, float >( iSrc.R< T1 >() );
-            float g = ConvType< T1, float >( iSrc.G< T1 >() );
-            float b = ConvType< T1, float >( iSrc.B< T1 >() );
+            float r = srgb2linear( ConvType< T1, float >( iSrc.R< T1 >() ) );
+            float g = srgb2linear( ConvType< T1, float >( iSrc.G< T1 >() ) );
+            float b = srgb2linear( ConvType< T1, float >( iSrc.B< T1 >() ) );
             float y = 0.299f * r + 0.587f * g + 0.114f * b;
             float u = 0.492f * ( b - y );
             float v = 0.877f * ( r - y );
@@ -1031,13 +1057,15 @@ ToLab( const IPixel& iSrc, IPixel& iDst )
             cmsCIELab Lab;
             cmsCIEXYZ XYZ;
             cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() );
-            Lab.a = ConvType< T1, double >( iSrc.a< T1 >() );
-            Lab.b = ConvType< T1, double >( iSrc.b< T1 >() );
-            cmsLab2XYZ( &D65, &XYZ, &Lab );
-            iDst.SetX< T2 >( ConvType< double, T2 >( XYZ.X ) );
-            iDst.SetY< T2 >( ConvType< double, T2 >( XYZ.Y ) );
-            iDst.SetZ< T2 >( ConvType< double, T2 >( XYZ.Z ) );
+            // Note: * 100 to keep lab in range [0;255], [-128;+127]
+            XYZ.X = ConvType< T1, double >( iSrc.X< T1 >() ) * 100.0;
+            XYZ.Y = ConvType< T1, double >( iSrc.Y< T1 >() ) * 100.0;
+            XYZ.Z = ConvType< T1, double >( iSrc.Z< T1 >() ) * 100.0;
+            cmsXYZ2Lab( &D65, &Lab, &XYZ );
+            // Note: / 255 & / 128 + 0.5 to keep lab in range [0;1]
+            iDst.SetL< T2 >( ConvType< double, T2 >( Lab.L / 255.0 ) );
+            iDst.Seta< T2 >( ConvType< double, T2 >( Lab.a / 128.0 + 0.5 ) );
+            iDst.Setb< T2 >( ConvType< double, T2 >( Lab.b / 128.0 + 0.5 ) );
             iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
             return;
         }
@@ -1076,15 +1104,15 @@ ToXYZ( const IPixel& iSrc, IPixel& iDst )
         case eModelSig::kRGB:
         {
             // Note: this is sRGB under D65
-            float r = ConvType< T1, float >( iSrc.R< T1 >() );
-            float g = ConvType< T1, float >( iSrc.G< T1 >() );
-            float b = ConvType< T1, float >( iSrc.B< T1 >() );
+            float r = srgb2linear( ConvType< T1, float >( iSrc.R< T1 >() ) );
+            float g = srgb2linear( ConvType< T1, float >( iSrc.G< T1 >() ) );
+            float b = srgb2linear( ConvType< T1, float >( iSrc.B< T1 >() ) );
             float x = 0.4124f * r + 0.3576f * g + 0.1805f * b;
             float y = 0.2126f * r + 0.7152f * g + 0.0722f * b;
             float z = 0.0193f * r + 0.1192f * g + 0.9505f * b;
-            iDst.SetX< T2 >( ConvType< float, T2 >( r ) );
-            iDst.SetY< T2 >( ConvType< float, T2 >( g ) );
-            iDst.SetZ< T2 >( ConvType< float, T2 >( b ) );
+            iDst.SetX< T2 >( ConvType< float, T2 >( x ) );
+            iDst.SetY< T2 >( ConvType< float, T2 >( y ) );
+            iDst.SetZ< T2 >( ConvType< float, T2 >( z ) );
             iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
             return;
         }
@@ -1134,9 +1162,9 @@ ToXYZ( const IPixel& iSrc, IPixel& iDst )
             cmsCIELab Lab;
             cmsCIEXYZ XYZ;
             cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() );
-            Lab.a = ConvType< T1, double >( iSrc.a< T1 >() );
-            Lab.b = ConvType< T1, double >( iSrc.b< T1 >() );
+            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() ) * 255.0;
+            Lab.a = ( ConvType< T1, double >( iSrc.a< T1 >() ) - 0.5 ) * 128.0;
+            Lab.b = ( ConvType< T1, double >( iSrc.b< T1 >() ) - 0.5 ) * 128.0;
             cmsLab2XYZ( &D65, &XYZ, &Lab );
             iDst.SetX< T2 >( ConvType< double, T2 >( XYZ.X ) );
             iDst.SetY< T2 >( ConvType< double, T2 >( XYZ.Y ) );

@@ -17,18 +17,18 @@ using namespace ::ul2;
 int
 main()
 {
-    FProfileRegistry reg;
-    FPixel src( ULIS2_FORMAT_RGBA8 );
-    FPixel dst( ULIS2_FORMAT_GAD );
-    src.SetR8( 255 );
-    src.SetG8( 255 );
-    src.SetB8( 255 );
-    src.SetA8( 127 );
+    FPixel src( ULIS2_FORMAT_LabAD);
+    FPixel dst( ULIS2_FORMAT_RGBAF  );
+    src.SetLD( 0.262745 );
+    src.SetaD( 0.84375 );
+    src.SetbD( 0.9765625 );
+    src.SetAD( 1.0 );
     Conv( src, dst );
-    auto _g = dst.GreyD();
-    auto _a = dst.AD();
-    std::cout << "G:" << _g << std::endl;
-    std::cout << "A:" << _a << std::endl;
+
+    std::cout << "0:" << dst.RF() << std::endl;
+    std::cout << "1:" << dst.GF() << std::endl;
+    std::cout << "2:" << dst.BF() << std::endl;
+    std::cout << "3:" << dst.AF() << std::endl;
 
     auto dummy = 0;
 }
