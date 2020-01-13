@@ -72,6 +72,10 @@ ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileR
     cmsDeleteTransform( hTransform );
 }
 
+// TODO: maybe use such linearized table and bit shifting to find the index with one indirection rather than a multi switch approach
+// This could be used to retrieve the instanciated function pointer and avoid search too !
+// typedef void (*fpConversionFunction)( const IPixel& /* src */, IPixel& /* dst */ );
+// fpConversionFunction table[5][5][10][10];
 
 template< typename T1, typename T2 >
 void
