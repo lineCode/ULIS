@@ -74,7 +74,6 @@ if( ${ULIS2_BUILD_SHARED} )
 else()
    add_library( ULIS2 STATIC ${source_list} )
    target_compile_definitions( ULIS2 PUBLIC ULIS2_BUILD_STATIC )
-   set_target_properties( ULIS2 PROPERTIES DEBUG_POSTFIX "s${CMAKE_DEBUG_POSTFIX}")
 endif()
 
 target_compile_definitions( ULIS2 PUBLIC UNICODE )

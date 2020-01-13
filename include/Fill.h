@@ -26,11 +26,11 @@ class FThreadPool;
 /// @param      iPool           The pool to process the image in.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void Fill( FBlock*            iDst
-                   , const IPixel&      iColor
-                   , FThreadPool& iPool
-                   , const FPerf&       iPerf           = FPerf()
-                   , bool               iCallInvalidCB  = true );
+ULIS2_API void Fill( FBlock*        iDst
+                   , const IPixel&  iColor
+                   , FThreadPool&   iPool
+                   , const FPerf&   iPerf           = FPerf()
+                   , bool           iCallInvalidCB  = true );
 
 /// @fn         void Fill( FBlock* iDst, const FColor& iColor, const FRect& iRect, FThreadPool& iPool, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @brief      Fill dst block rect with specified color.
@@ -40,12 +40,12 @@ ULIS2_API void Fill( FBlock*            iDst
 /// @param      iPool           The pool to process the image in.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void FillRect( FBlock*            iDst
-                       , const IPixel&      iColor
-                       , const FRect&       iRect
-                       , FThreadPool& iPool
-                       , const FPerf&       iPerf           = FPerf()
-                       , bool               iCallInvalidCB  = true );
+ULIS2_API void FillRect( FBlock*        iDst
+                       , const IPixel&  iColor
+                       , const FRect&   iRect
+                       , FThreadPool&   iPool
+                       , const FPerf&   iPerf           = FPerf()
+                       , bool           iCallInvalidCB  = true );
 
 ULIS2_NAMESPACE_END
 

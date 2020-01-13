@@ -68,6 +68,7 @@ void FillRect( FBlock*          iDst
              , const FPerf&     iPerf
              , bool             iCallInvalidCB )
 {
+    ULIS2_ASSERT( iDst, "Bad destination" );
     FPixel color( iDst->Format() );
     Conv( iColor, color );
     const tByte* src = color.Ptr();

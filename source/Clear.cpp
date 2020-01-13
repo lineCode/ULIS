@@ -5,9 +5,35 @@
 *   ULIS2
 *__________________
 *
-* @file         Blend.cpp
+* @file         Clear.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the Blend entry point functions.
+* @brief        This file provides the definitions for the Clear entry point functions.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include "Clear.h"
+#include "Fill.h"
+#include "Block.h"
+
+ULIS2_NAMESPACE_BEGIN
+void Clear( FBlock*          iDst
+          , FThreadPool&     iPool
+          , const FPerf&     iPerf
+          , bool             iCallInvalidCB )
+{
+    ClearRect( iDst, iDst->Rect(), iPool, iPerf, iCallInvalidCB );
+}
+
+
+void ClearRect( FBlock*          iDst
+              , const FRect&     iRect
+              , FThreadPool&     iPool
+              , const FPerf&     iPerf
+              , bool             iCallInvalidCB )
+{
+    FPixel clear( iDst->Format() );
+    FillRect( iDst, clear, iRect, iPool, iPerf, iCallInvalidCB );
+}
+
+ULIS2_NAMESPACE_END
+
