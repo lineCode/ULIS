@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core.h"
-#include "lcms2.h"
 
 ULIS2_NAMESPACE_BEGIN
 class IPixel;
@@ -24,7 +23,7 @@ class FProfileRegistry;
 /// @param      iDst                A reference to the destination Pixel.
 /// @param      iProfileRegistry    A reference to the profile registry used as backup if input pixels do not have profiles associated with them.
 /// @param      iIntent             The profile conversion intent.
-ULIS2_API void ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent = INTENT_PERCEPTUAL );
+ULIS2_API void ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent = 0 /* INTENT_PERCEPTUAL */ );
 
 /// @fn         void Conv( const IPixel& iSrc, IPixel& iDst )
 /// @brief      Conv a pixel from source to destination with basic model conversion.

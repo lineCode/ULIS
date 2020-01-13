@@ -223,7 +223,7 @@ FBlock::BytesTotal() const
 tFormat
 FBlock::Format() const
 {
-    return  mFormat & ULIS2_FORMAT_MASK_LO;
+    return  mFormat;
 }
 
 
@@ -284,15 +284,18 @@ FBlock::Profile() const
 
 
 void
-FBlock::Invalidate() const
+FBlock::Invalidate( bool iCall ) const
 {
-    Invalidate( FRect( 0, 0, Width(), Height() ) );
+    Invalidate( FRect( 0, 0, Width(), Height() ), iCall );
 }
 
 
 void
-FBlock::Invalidate( const FRect& iRect ) const
+FBlock::Invalidate( const FRect& iRect, bool iCall ) const
 {
+    if( !iCall )
+        return;
+
     ULIS2_ASSERT( iRect.x >= 0 && iRect.x < (int64)mWidth, "Index out of range" );
     ULIS2_ASSERT( iRect.y >= 0 && iRect.y < (int64)mHeight, "Index out of range" );
     ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int64)mWidth, "Index out of range" );
@@ -300,6 +303,12 @@ FBlock::Invalidate( const FRect& iRect ) const
     mOnInvalid.ExecuteIfBound( this, iRect );
 }
 
+
+FRect
+FBlock::Rect() const
+{
+    return  FRect( 0, 0, mWidth, mHeight );
+}
 
 FPixelValue
 FBlock::PixelValue( tIndex iX, tIndex iY ) const

@@ -12,22 +12,74 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Fill.h"
+#include "Block.h"
+#include "Pixel.h"
+#include "Conv.h"
+#include "Geometry.h"
+#include "ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
-void Fill( FBlock*        iDst
-         , const FColor&  iColor
-         , const FPerf&   iPerf
-         , bool           iCallInvalidCB )
+void Fill_mtd_mem_imp( FBlock*      iDst
+                 , const tByte*     iSrc
+                 , int32            iLine )
 {
+    const tSize bpp = iDst->BytesPerPixel();
+    const tSize w   = iDst->Width();
+    const tSize bps = bpp * w;
+    tByte*      dst = iDst->DataPtr() + iLine * bps;
+    for( uint32 i = 0; i < w; ++i )
+    {
+        memcpy( dst, iSrc, bpp );
+        dst += bpp;
+    }
 }
 
-void FillRect( FBlock*        iDst
-             , const FColor&  iColor
-             , const FRect&   iRect
-             , const FPerf&   iPerf
-             , bool           iCallInvalidCB )
+
+void Fill_mono_mem_imp( FBlock*     iDst
+                 , const tByte*     iSrc )
 {
+    const tSize bpp = iDst->BytesPerPixel();
+    const tSize w   = iDst->Width();
+    const tSize h   = iDst->Height();
+    const tSize num = w * h;
+    tByte* dst      = iDst->DataPtr();
+    for( uint32 i = 0; i < num; ++i )
+    {
+        memcpy( dst, iSrc, bpp );
+        dst += bpp;
+    }
 }
+
+
+void Fill( FBlock*          iDst
+         , const IPixel&    iColor
+         , FThreadPool&     iPool
+         , const FPerf&     iPerf
+         , bool             iCallInvalidCB )
+{
+    FillRect( iDst, iColor, iDst->Rect(), iPool, iPerf, iCallInvalidCB );
+}
+
+
+void FillRect( FBlock*          iDst
+             , const IPixel&    iColor
+             , const FRect&     iRect
+             , FThreadPool&     iPool
+             , const FPerf&     iPerf
+             , bool             iCallInvalidCB )
+{
+    FPixel color( iDst->Format() );
+    Conv( iColor, color );
+    const tByte* src = color.Ptr();
+    FRect area = iRect & iDst->Rect();
+    if( iPerf.mtd )
+        ParallelFor( iPool, area.h, iPerf, ULIS2_PF_CALL { Fill_mtd_mem_imp( iDst, src, iLine ); } );
+    else
+        Fill_mono_mem_imp( iDst, src );
+
+    iDst->Invalidate( area, iCallInvalidCB );
+}
+
 
 ULIS2_NAMESPACE_END
 

@@ -18,6 +18,7 @@
 #include "ModelSupport.h"
 #include "ColorProfile.h"
 #include "ProfileRegistry.h"
+#include "lcms2.h"
 #include <limits>
 
 float srgb2linear( float iValue )
@@ -70,37 +71,6 @@ ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileR
     cmsDoTransform( hTransform, iSrc.Ptr(), iDst.Ptr(), 1 );
     cmsDeleteTransform( hTransform );
 }
-
-
-template< typename T1, typename T2 > T2 inline ConvType( T1 iValue ) { return (T2)iValue; }
-template<> uint16   inline ConvType< uint8,  uint16 >( uint8 iValue  ) { return iValue * 0x101;                         }
-template<> uint32   inline ConvType< uint8,  uint32 >( uint8 iValue  ) { return iValue * 0x1010101;                     }
-template<> uint64   inline ConvType< uint8,  uint64 >( uint8 iValue  ) { return iValue * 0x10100000101;                 }
-template<> uint32   inline ConvType< uint16, uint32 >( uint16 iValue ) { return iValue * 0x10001;                       }
-template<> uint64   inline ConvType< uint16, uint64 >( uint16 iValue ) { return iValue * 0x1000100010001;               }
-template<> uint64   inline ConvType< uint32, uint64 >( uint32 iValue ) { return iValue * 0x100000001;                   }
-template<> uint8    inline ConvType< uint16, uint8  >( uint16 iValue ) { return ( iValue + 1 + ( iValue>>8 ) ) >> 8;    }
-template<> uint8    inline ConvType< uint32, uint8  >( uint32 iValue ) { return iValue >> 24;                           }
-template<> uint8    inline ConvType< uint64, uint8  >( uint64 iValue ) { return iValue >> 56;                           }
-template<> uint16   inline ConvType< uint32, uint16 >( uint32 iValue ) { return ( iValue + 1 + ( iValue>>16 ) ) >> 16;  }
-template<> uint16   inline ConvType< uint64, uint16 >( uint64 iValue ) { return iValue >> 48;                           }
-template<> uint32   inline ConvType< uint64, uint32 >( uint64 iValue ) { return iValue >> 32;                           }
-template<> float    inline ConvType< uint8,  float  >( uint8 iValue  ) { return iValue / (float)0xFF;                   }
-template<> float    inline ConvType< uint16, float  >( uint16 iValue ) { return iValue / (float)0xFFFF;                 }
-template<> float    inline ConvType< uint32, float  >( uint32 iValue ) { return iValue / (float)0xFFFFFFFF;             }
-template<> float    inline ConvType< uint64, float  >( uint64 iValue ) { return iValue / (float)0xFFFFFFFFFFFFFFFF;     }
-template<> double   inline ConvType< uint8,  double >( uint8 iValue  ) { return iValue / (double)0xFF;                  }
-template<> double   inline ConvType< uint16, double >( uint16 iValue ) { return iValue / (double)0xFFFF;                }
-template<> double   inline ConvType< uint32, double >( uint32 iValue ) { return iValue / (double)0xFFFFFFFF;            }
-template<> double   inline ConvType< uint64, double >( uint64 iValue ) { return iValue / (double)0xFFFFFFFFFFFFFFFF;    }
-template<> uint8    inline ConvType< float,  uint8  >( float iValue  ) { return uint8(  iValue * 0xFF               );  }
-template<> uint16   inline ConvType< float,  uint16 >( float iValue  ) { return uint16( iValue * 0xFFFF             );  }
-template<> uint32   inline ConvType< float,  uint32 >( float iValue  ) { return uint32( iValue * 0xFFFFFFFF         );  }
-template<> uint64   inline ConvType< float,  uint64 >( float iValue  ) { return uint64( iValue * 0xFFFFFFFFFFFFFFFF );  }
-template<> uint8    inline ConvType< double, uint8  >( double iValue ) { return uint8(  iValue * 0xFF               );  }
-template<> uint16   inline ConvType< double, uint16 >( double iValue ) { return uint16( iValue * 0xFFFF             );  }
-template<> uint32   inline ConvType< double, uint32 >( double iValue ) { return uint32( iValue * 0xFFFFFFFF         );  }
-template<> uint64   inline ConvType< double, uint64 >( double iValue ) { return uint64( iValue * 0xFFFFFFFFFFFFFFFF );  }
 
 
 template< typename T1, typename T2 >

@@ -14,13 +14,15 @@
 #pragma once
 #include "Core.h"
 #include "Perf.h"
+#include "ThreadPool.h"
+#include <functional>
 
-namespace std { template< typename T > class function; }
 ULIS2_NAMESPACE_BEGIN
 class FThreadPool;
 /////////////////////////////////////////////////////
 // ParallelFor
-ULIS2_API void ParallelFor( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, const FPerf& iPerf = FPerf() );
+#define ULIS2_PF_CALL [&]( int32 iLine )
+ULIS2_API void ParallelFor( FThreadPool& iPool, int32 iNum, const FPerf& iPerf, const std::function< void( int32 ) >& iFun );
 
 ULIS2_NAMESPACE_END
 

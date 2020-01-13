@@ -11,6 +11,12 @@
 #include "Core.h"
 
 ULIS2_NAMESPACE_BEGIN
+enum eOpt
+{
+      kMem
+    , kSSE
+};
+
 /////////////////////////////////////////////////////
 /// @struct     FPerf
 /// @brief      The FPerf struct is used for holding performance options.
@@ -24,15 +30,13 @@ public:
     /// @brief      Default Constructor.
     /// @details    Initializes members with default values
     FPerf()
-        : sse( true )
-        , mem( true )
+        : opt( true )
         , mtd( true )
     {}
 
 public:
     // Public Data Members
-    bool    sse;///< boolean flag specifying if sse optimisations should be used if available.
-    bool    mem;///< boolean flag specifying if memory optimisations should be used if available.
+    uint    opt; ///< uint flag specifying the optimisation level that should be used if available.
     bool    mtd; ///< boolean flag specifying if multithreaded optimisations should be used if available.
 };
 

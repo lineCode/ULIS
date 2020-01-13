@@ -57,7 +57,8 @@ endif()
 # Add Dependencies
 include(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/CMakeLists.txt)
 
-# Add project
+####################################
+# Add Main Project
 file(
     GLOB_RECURSE
     source_list
@@ -73,6 +74,7 @@ if( ${ULIS2_BUILD_SHARED} )
 else()
    add_library( ULIS2 STATIC ${source_list} )
    target_compile_definitions( ULIS2 PUBLIC ULIS2_BUILD_STATIC )
+   set_target_properties( ULIS2 PROPERTIES DEBUG_POSTFIX "s${CMAKE_DEBUG_POSTFIX}")
 endif()
 
 target_compile_definitions( ULIS2 PUBLIC UNICODE )
@@ -97,7 +99,8 @@ foreach(source IN LISTS source_list)
     source_group("${source_path_msvc}" FILES "${source}")
 endforeach()
 
-# Add project
+####################################
+# Add Test Project
 file(
     GLOB_RECURSE
     source_list
@@ -115,7 +118,6 @@ foreach(source IN LISTS source_list)
     string(REPLACE "/" "\\" source_path_msvc "${source_path}")
     source_group("${source_path_msvc}" FILES "${source}")
 endforeach()
-
 
 # Set default startup project
 set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Test )

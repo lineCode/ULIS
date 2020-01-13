@@ -13,12 +13,11 @@
 */
 #include "ParallelFor.h"
 #include "ThreadPool.h"
-#include <functional>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ParallelFor
-void ParallelFor( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >& iFun, const FPerf& iPerf )
+void ParallelFor( FThreadPool& iPool, int32 iNum, const FPerf& iPerf, std::function< void( int32 ) >& iFun )
 {
     if( iPerf.mtd && iPool.GetNumWorkers() > 1 )
     {
@@ -34,7 +33,6 @@ void ParallelFor( FThreadPool& iPool, int32 iNum, std::function< void( int32 ) >
         }
     }
 }
-
 
 ULIS2_NAMESPACE_END
 

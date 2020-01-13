@@ -13,12 +13,11 @@
 */
 #pragma once
 #include "Core.h"
-#include "Color.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Color Palettes
-
+/*
 /////////////////////////////////////////////////////
 // eMSWindows
 static const FColor white       ( 255, 255, 255 );
@@ -58,6 +57,6 @@ static const FColor paletteMSPaintDebug[] = {
     FColor( 200, 191, 231 ),
 }; // colors[]
 static constexpr int paletteMSPaintDebug_length = sizeof( colors ) / sizeof( FColor );
-
+*/
 ULIS2_NAMESPACE_END
 

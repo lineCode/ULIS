@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         Test.cpp
+* @file         test.cpp
 * @author       Clement Berthaud
 * @brief        Test application for ULIS2.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
