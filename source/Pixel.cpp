@@ -332,6 +332,14 @@ FPixelProxy::FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile
 }
 
 
+FPixelProxy::FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iProfile )
+    : tParent( iFormat, iProfile )
+{
+    ULIS2_ERROR( iData, "Bad data provided." );
+    mData = const_cast< tByte* >( iData );
+}
+
+
 /////////////////////////////////////////////////////
 // Template Instanciations
 #define X_DO_A( i ) template i* IPixel::SamplePtrT< i >( uint8 );

@@ -13,6 +13,7 @@
 */
 #include "Conv.h"
 #include "Pixel.h"
+#include "Maths.h"
 #include "Illuminants.h"
 #include "ModelSupport.h"
 #include "ColorProfile.h"
@@ -334,7 +335,6 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
             temp.SetAD( ConvType< T1, double >( iSrc.A< T1 >() ) );
             ToRGB< double, T2 >( temp, iDst );
             return;
-
         }
 
         case eModelSig::kXYZ:
@@ -377,6 +377,129 @@ template< typename T1, typename T2 >
 void
 ToHSV( const IPixel& iSrc, IPixel& iDst )
 {
+    switch( iSrc.Model() )
+    {
+        case eModelSig::kAny:
+        {
+            ULIS2_CRASH_DELIBERATE;
+            return;
+        }
+
+        case eModelSig::kGrey:
+        {
+            iDst.SetHue< T2 >( T2(0) );
+            iDst.SetSaturation< T2 >( T2(0) );
+            iDst.SetValue< T2 >( ConvType< T1, T2 >( iSrc.G< T1 >() ) );
+            iDst.SetAlpha< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kRGB:
+        {
+            float r = ConvType< T2, float >( iSrc.R< T2 >() );
+            float g = ConvType< T2, float >( iSrc.G< T2 >() );
+            float b = ConvType< T2, float >( iSrc.B< T2 >() );
+            float cmin = FMaths::Min3( r, g, b );
+            float cmax = FMaths::Max3( r, g, b );
+            float delta = cmax - cmin;
+            float h = 0.0;
+            float s = 0.0;
+            float v = 0.0;
+            v = cmax;
+            if ( delta < FMaths::kEpsilonf ){
+                h = 0.0;
+                s = 0.0;
+            }
+            else
+            {
+                s = (delta / cmax );
+
+                float deltaR = ( ( ( cmax - r ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+                float deltaG = ( ( ( cmax - g ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+                float deltaB = ( ( ( cmax - b ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+
+                if( fabs( r - cmax ) < FMaths::kEpsilonf )        h = deltaB - deltaG;
+                else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = ( 1.0f / 3.0f ) + deltaR - deltaB;
+                else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = ( 2.0f / 3.0f ) + deltaG - deltaR;
+
+                if( h < 0.0f ) h += 1.0f;
+
+                if( h > 1.0f ) h -= 1.0f;
+            }
+
+            iDst.SetHue< T2 >( ConvType< float, T2 >( h ) );
+            iDst.SetSaturation< T2 >( ConvType< float, T2 >( s ) );
+            iDst.SetValue< T2 >( ConvType< float, T2 >( v ) );
+            iDst.SetAlpha< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kHSV:
+        {
+            iDst.SetHue< T2 >( ConvType< T1, T2 >( iSrc.Hue< T1 >() ) );
+            iDst.SetSaturation< T2 >( ConvType< T1, T2 >( iSrc.Saturation< T1 >() ) );
+            iDst.SetValue< T2 >( ConvType< T1, T2 >( iSrc.Value< T1 >() ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kHSL:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMY:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMYK:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYUV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kLab:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSV< float, T2 >( temp, iDst );
+            return;
+
+        }
+
+        case eModelSig::kXYZ:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYxy:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSV< float, T2 >( temp, iDst );
+            return;
+        }
+    }
 }
 
 
@@ -384,6 +507,129 @@ template< typename T1, typename T2 >
 void
 ToHSL( const IPixel& iSrc, IPixel& iDst )
 {
+    switch( iSrc.Model() )
+    {
+        case eModelSig::kAny:
+        {
+            ULIS2_CRASH_DELIBERATE;
+            return;
+        }
+
+        case eModelSig::kGrey:
+        {
+            iDst.SetHue< T2 >( T2(0) );
+            iDst.SetSaturation< T2 >( T2(0) );
+            iDst.SetLightness< T2 >( ConvType< T1, T2 >( iSrc.G< T1 >() ) );
+            iDst.SetAlpha< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kRGB:
+        {
+            float r = ConvType< T2, float >( iSrc.R< T2 >() );
+            float g = ConvType< T2, float >( iSrc.G< T2 >() );
+            float b = ConvType< T2, float >( iSrc.B< T2 >() );
+            float cmin = FMaths::Min3( r, g, b );
+            float cmax = FMaths::Max3( r, g, b );
+            float delta = cmax - cmin;
+            float deltaAdd = cmax + cmin;
+            float h = 0.0;
+            float s = 0.0;
+            float l = 0.0;
+            l = ( deltaAdd ) / 2.0f;
+            if ( delta < FMaths::kEpsilonf ){
+                h = 0.0;
+                s = 0.0;
+            }
+            else
+            {
+                s = ( l < 0.5f ) ? delta / deltaAdd : delta / ( 2.0f - deltaAdd );
+
+                float deltaR = ( ( ( cmax - r ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+                float deltaG = ( ( ( cmax - g ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+                float deltaB = ( ( ( cmax - b ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
+
+                     if( fabs( r - cmax ) < FMaths::kEpsilonf )   h = deltaB - deltaG;
+                else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = ( 1.0f / 3.0f ) + deltaR - deltaB;
+                else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = ( 2.0f / 3.0f ) + deltaG - deltaR;
+
+                if( h < 0.0 ) h += 1.0;
+                if( h > 1.0 ) h -= 1.0;
+            }
+
+            iDst.SetHue< T2 >( ConvType< float, T2 >( h ) );
+            iDst.SetSaturation< T2 >( ConvType< float, T2 >( s ) );
+            iDst.SetLightness< T2 >( ConvType< float, T2 >( l ) );
+            iDst.SetAlpha< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kHSV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSL< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSL:
+        {
+            iDst.SetHue< T2 >( ConvType< T1, T2 >( iSrc.Hue< T1 >() ) );
+            iDst.SetSaturation< T2 >( ConvType< T1, T2 >( iSrc.Saturation< T1 >() ) );
+            iDst.SetLightness< T2 >( ConvType< T1, T2 >( iSrc.Lightness< T1 >() ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kCMY:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSL< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMYK:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSL< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYUV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSL< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kLab:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSL< float, T2 >( temp, iDst );
+            return;
+
+        }
+
+        case eModelSig::kXYZ:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSL< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYxy:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToHSL< float, T2 >( temp, iDst );
+            return;
+        }
+    }
 }
 
 
@@ -391,6 +637,98 @@ template< typename T1, typename T2 >
 void
 ToCMY( const IPixel& iSrc, IPixel& iDst )
 {
+    switch( iSrc.Model() )
+    {
+        case eModelSig::kAny:
+        {
+            ULIS2_CRASH_DELIBERATE;
+            return;
+        }
+
+        case eModelSig::kGrey:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kRGB:
+        {
+            T2 max = std::numeric_limits< T2 >::max();
+            iDst.SetCyan< T2 >(     max - ConvType< T1, T2 >( iSrc.Cyan< T1 >() ) );
+            iDst.SetMagenta< T2 >(  max - ConvType< T1, T2 >( iSrc.Magenta< T1 >() ) );
+            iDst.SetYellow< T2 >(   max - ConvType< T1, T2 >( iSrc.Yellow< T1 >() ) );
+            iDst.SetA< T2 >(        max - ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kHSV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSL:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMY:
+        {
+            iDst.SetCyan< T2 >( ConvType< T1, T2 >( iSrc.Cyan< T1 >() ) );
+            iDst.SetMagenta< T2 >( ConvType< T1, T2 >( iSrc.Magenta< T1 >() ) );
+            iDst.SetYellow< T2 >( ConvType< T1, T2 >( iSrc.Yellow< T1 >() ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kCMYK:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYUV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kLab:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+
+        }
+
+        case eModelSig::kXYZ:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYxy:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+        }
+    }
 }
 
 
@@ -398,6 +736,112 @@ template< typename T1, typename T2 >
 void
 ToCMYK( const IPixel& iSrc, IPixel& iDst )
 {
+    switch( iSrc.Model() )
+    {
+        case eModelSig::kAny:
+        {
+            ULIS2_CRASH_DELIBERATE;
+            return;
+        }
+
+        case eModelSig::kGrey:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMY< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kRGB:
+        {
+            float r = ConvType< T2, float >( iSrc.R< T2 >() );
+            float g = ConvType< T2, float >( iSrc.G< T2 >() );
+            float b = ConvType< T2, float >( iSrc.B< T2 >() );
+            float ik = FMaths::Max3( r, g, b );
+            float k = 1.f - ik;
+
+            if( ik == 0 )
+                ik = 1; // Division by 0 countermeasure, doesn't affect the result
+
+            float c = ( ( 1.f - r ) - k ) / ( ik );
+            float m = ( ( 1.f - g ) - k ) / ( ik );
+            float y = ( ( 1.f - b ) - k ) / ( ik );
+
+            iDst.SetCyan< T2 >( ConvType< float, T2 >( c ) );
+            iDst.SetMagenta< T2 >( ConvType< float, T2 >( m ) );
+            iDst.SetYellow< T2 >( ConvType< float, T2 >( y ) );
+            iDst.SetKey< T2 >( ConvType< float, T2 >( k ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kHSV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMYK< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSL:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMYK< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMY:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMYK< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMYK:
+        {
+            iDst.SetCyan< T2 >( ConvType< T1, T2 >( iSrc.Cyan< T1 >() ) );
+            iDst.SetMagenta< T2 >( ConvType< T1, T2 >( iSrc.Magenta< T1 >() ) );
+            iDst.SetYellow< T2 >( ConvType< T1, T2 >( iSrc.Yellow< T1 >() ) );
+            iDst.SetKey< T2 >( ConvType< T1, T2 >( iSrc.Key< T1 >() ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kYUV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMYK< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kLab:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMYK< float, T2 >( temp, iDst );
+            return;
+
+        }
+
+        case eModelSig::kXYZ:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMYK< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYxy:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToCMYK< float, T2 >( temp, iDst );
+            return;
+        }
+    }
 }
 
 
@@ -405,6 +849,103 @@ template< typename T1, typename T2 >
 void
 ToYUV( const IPixel& iSrc, IPixel& iDst )
 {
+    switch( iSrc.Model() )
+    {
+        case eModelSig::kAny:
+        {
+            ULIS2_CRASH_DELIBERATE;
+            return;
+        }
+
+        case eModelSig::kGrey:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToYUV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kRGB:
+        {
+            float r = ConvType< T1, float >( iSrc.R< T1 >() );
+            float g = ConvType< T1, float >( iSrc.G< T1 >() );
+            float b = ConvType< T1, float >( iSrc.B< T1 >() );
+            float y = 0.299f * r + 0.587f * g + 0.114f * b;
+            float u = 0.492f * ( b - y );
+            float v = 0.877f * ( r - y );
+            iDst.SetLuma< T2 >( ConvType< float, T2 >( y ) );
+            iDst.SetU< T2 >( ConvType< float, T2 >( u ) );
+            iDst.SetV< T2 >( ConvType< float, T2 >( v ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kHSV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToYUV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSL:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToYUV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMY:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToYUV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMYK:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToYUV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYUV:
+        {
+            iDst.SetLuma< T2 >( ConvType< T1, T2 >( iSrc.Luma< T1 >() ) );
+            iDst.SetU< T2 >( ConvType< T1, T2 >( iSrc.U< T1 >() ) );
+            iDst.SetV< T2 >( ConvType< T1, T2 >( iSrc.V< T1 >() ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kLab:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToYUV< float, T2 >( temp, iDst );
+            return;
+
+        }
+
+        case eModelSig::kXYZ:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToYUV< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYxy:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToYUV< float, T2 >( temp, iDst );
+            return;
+        }
+    }
 }
 
 
@@ -412,6 +953,103 @@ template< typename T1, typename T2 >
 void
 ToLab( const IPixel& iSrc, IPixel& iDst )
 {
+    switch( iSrc.Model() )
+    {
+        case eModelSig::kAny:
+        {
+            ULIS2_CRASH_DELIBERATE;
+            return;
+        }
+
+        case eModelSig::kGrey:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToLab< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kRGB:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZAF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToLab< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSV:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZAF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToLab< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSL:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZAF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToLab< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMY:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZAF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToLab< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMYK:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZAF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToLab< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYUV:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZAF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToLab< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kLab:
+        {
+            iDst.SetL< T2 >( ConvType< T1, T2 >( iSrc.L< T1 >() ) );
+            iDst.Seta< T2 >( ConvType< T1, T2 >( iSrc.a< T1 >() ) );
+            iDst.Setb< T2 >( ConvType< T1, T2 >( iSrc.b< T1 >() ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kXYZ:
+        {
+            cmsCIELab Lab;
+            cmsCIEXYZ XYZ;
+            cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
+            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() );
+            Lab.a = ConvType< T1, double >( iSrc.a< T1 >() );
+            Lab.b = ConvType< T1, double >( iSrc.b< T1 >() );
+            cmsLab2XYZ( &D65, &XYZ, &Lab );
+            iDst.SetX< T2 >( ConvType< double, T2 >( XYZ.X ) );
+            iDst.SetY< T2 >( ConvType< double, T2 >( XYZ.Y ) );
+            iDst.SetZ< T2 >( ConvType< double, T2 >( XYZ.Z ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kYxy:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZAF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToLab< float, T2 >( temp, iDst );
+            return;
+        }
+    }
 }
 
 
@@ -419,6 +1057,118 @@ template< typename T1, typename T2 >
 void
 ToXYZ( const IPixel& iSrc, IPixel& iDst )
 {
+    switch( iSrc.Model() )
+    {
+        case eModelSig::kAny:
+        {
+            ULIS2_CRASH_DELIBERATE;
+            return;
+        }
+
+        case eModelSig::kGrey:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToXYZ< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kRGB:
+        {
+            // Note: this is sRGB under D65
+            float r = ConvType< T1, float >( iSrc.R< T1 >() );
+            float g = ConvType< T1, float >( iSrc.G< T1 >() );
+            float b = ConvType< T1, float >( iSrc.B< T1 >() );
+            float x = 0.4124f * r + 0.3576f * g + 0.1805f * b;
+            float y = 0.2126f * r + 0.7152f * g + 0.0722f * b;
+            float z = 0.0193f * r + 0.1192f * g + 0.9505f * b;
+            iDst.SetX< T2 >( ConvType< float, T2 >( r ) );
+            iDst.SetY< T2 >( ConvType< float, T2 >( g ) );
+            iDst.SetZ< T2 >( ConvType< float, T2 >( b ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kHSV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToXYZ< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSL:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToXYZ< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMY:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToXYZ< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMYK:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToXYZ< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYUV:
+        {
+            FPixel temp( ULIS2_FORMAT_RGBAF );
+            ToRGB< T1, float >( iSrc, temp );
+            ToXYZ< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kLab:
+        {
+            cmsCIELab Lab;
+            cmsCIEXYZ XYZ;
+            cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
+            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() );
+            Lab.a = ConvType< T1, double >( iSrc.a< T1 >() );
+            Lab.b = ConvType< T1, double >( iSrc.b< T1 >() );
+            cmsLab2XYZ( &D65, &XYZ, &Lab );
+            iDst.SetX< T2 >( ConvType< double, T2 >( XYZ.X ) );
+            iDst.SetY< T2 >( ConvType< double, T2 >( XYZ.Y ) );
+            iDst.SetZ< T2 >( ConvType< double, T2 >( XYZ.Z ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kXYZ:
+        {
+            iDst.SetX< T2 >( ConvType< T1, T2 >( iSrc.X< T1 >() ) );
+            iDst.SetY< T2 >( ConvType< T1, T2 >( iSrc.Y< T1 >() ) );
+            iDst.SetZ< T2 >( ConvType< T1, T2 >( iSrc.Z< T1 >() ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kYxy:
+        {
+            cmsCIExyY xyY;
+            cmsCIEXYZ XYZ;
+            xyY.x = ConvType< T1, double >( iSrc.x< T1 >() );
+            xyY.y = ConvType< T1, double >( iSrc.y< T1 >() );
+            xyY.Y = ConvType< T1, double >( iSrc.Luma< T1 >() );
+            cmsxyY2XYZ( &XYZ, &xyY );
+            iDst.SetX< T2 >( ConvType< double, T2 >( XYZ.X ) );
+            iDst.SetY< T2 >( ConvType< double, T2 >( XYZ.Y ) );
+            iDst.SetZ< T2 >( ConvType< double, T2 >( XYZ.Z ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+    }
 }
 
 
@@ -426,8 +1176,103 @@ template< typename T1, typename T2 >
 void
 ToYxy( const IPixel& iSrc, IPixel& iDst )
 {
-}
+    switch( iSrc.Model() )
+    {
+        case eModelSig::kAny:
+        {
+            ULIS2_CRASH_DELIBERATE;
+            return;
+        }
 
+        case eModelSig::kGrey:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToYxy< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kRGB:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToYxy< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSV:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToYxy< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kHSL:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToYxy< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMY:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToYxy< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kCMYK:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToYxy< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kYUV:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToYxy< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kLab:
+        {
+            FPixel temp( ULIS2_FORMAT_XYZF );
+            ToXYZ< T1, float >( iSrc, temp );
+            ToYxy< float, T2 >( temp, iDst );
+            return;
+        }
+
+        case eModelSig::kXYZ:
+        {
+            cmsCIEXYZ XYZ;
+            cmsCIExyY xyY;
+            XYZ.Y = ConvType< T1, double >( iSrc.X< T1 >() );
+            XYZ.X = ConvType< T1, double >( iSrc.Y< T1 >() );
+            XYZ.Y = ConvType< T1, double >( iSrc.Z< T1 >() );
+            cmsXYZ2xyY( &xyY, &XYZ );
+            iDst.SetLuma< T2 >( ConvType< double, T2 >( xyY.Y ) );
+            iDst.Setx< T2 >( ConvType< double, T2 >( xyY.x ) );
+            iDst.Sety< T2 >( ConvType< double, T2 >( xyY.y ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+
+        case eModelSig::kYxy:
+        {
+            iDst.SetLuma< T2 >( ConvType< T1, T2 >( iSrc.Luma< T1 >() ) );
+            iDst.Setx< T2 >( ConvType< T1, T2 >( iSrc.x< T1 >() ) );
+            iDst.Sety< T2 >( ConvType< T1, T2 >( iSrc.y< T1 >() ) );
+            iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
+            return;
+        }
+    }
+}
 
 
 template< typename T1, typename T2 >
@@ -485,7 +1330,6 @@ void Conv( const IPixel& iSrc, IPixel& iDst )
                 case eType::kDouble:    Conv_imp< double, double >( iSrc, iDst );    return; }
     }
 }
-
 
 ULIS2_NAMESPACE_END
 

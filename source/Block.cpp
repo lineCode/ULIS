@@ -13,20 +13,12 @@
 */
 #include "Block.h"
 #include "ColorProfile.h"
+#include "UUID.h"
 #include "Geometry.h"
+#include "CRC32.h"
+#include "MD5.h"
 
 ULIS2_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// Default Cleanup Behaviour
-void OnCleanup_FreeMemory( tByte* iData, void* iInfo )
-{
-    delete [] iData;
-}
-
-void OnCleanup_DoNothing( tByte* iData, void* iInfo )
-{
-}
-
 /////////////////////////////////////////////////////
 // FBlock
 //--------------------------------------------------------------------------------------
@@ -49,6 +41,7 @@ FBlock::FBlock( tSize iWidth
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
     , mProfile( nullptr )
+    , mUUID( GenerateWeakUUID( 16 ) )
 {
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
@@ -69,6 +62,7 @@ FBlock::FBlock( tSize iWidth
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
+    , mUUID( GenerateWeakUUID( 16 ) )
 {
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
@@ -93,6 +87,7 @@ FBlock::FBlock( tByte* iData
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
     , mProfile( nullptr )
+    , mUUID( GenerateWeakUUID( 16 ) )
 {
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
@@ -113,6 +108,7 @@ FBlock::FBlock( tByte* iData
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
+    , mUUID( GenerateWeakUUID( 16 ) )
 {
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
@@ -120,7 +116,6 @@ FBlock::FBlock( tByte* iData
     if( mProfile )
         ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
 }
-
 
 
 //--------------------------------------------------------------------------------------
@@ -294,7 +289,7 @@ FBlock::Invalidate() const
     Invalidate( FRect( 0, 0, Width(), Height() ) );
 }
 
-  
+
 void
 FBlock::Invalidate( const FRect& iRect ) const
 {
@@ -317,6 +312,27 @@ FPixelProxy
 FBlock::PixelProxy( tIndex iX, tIndex iY )
 {
     return  FPixelProxy( PixelPtr( iX, iY ), Format(), Profile() );
+}
+
+
+const FPixelProxy
+FBlock::PixelProxy( tIndex iX, tIndex iY ) const
+{
+    return  FPixelProxy( PixelPtr( iX, iY ), Format(), Profile() );
+}
+
+
+uint32
+FBlock::CRC32() const
+{
+    return  ::ULIS2::CRC32( mData, BytesTotal() );
+}
+
+
+std::string
+FBlock::MD5() const
+{
+    return  ::ULIS2::MD5( mData, BytesTotal() );
 }
 
 

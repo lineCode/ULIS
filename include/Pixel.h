@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core.h"
-#include <vector>
 
 ULIS2_NAMESPACE_BEGIN
 class IPixel;
@@ -22,7 +21,7 @@ class FPixelProxy;
 class FColorProfile;
 /////////////////////////////////////////////////////
 /// @class      IPixel
-/// @brief      The IPixel class provides a mean of storing and manipulating pixels in various formats.
+/// @brief      The pure virtual IPixel class provides a mean of storing and manipulating pixels in various formats.
 /// @details    The pixel format, type, layout, and other informations can be retrieved in the pixel format member.
 class ULIS2_API IPixel
 {
@@ -257,7 +256,7 @@ public:
     template< typename T> ULIS2_FORCEINLINE void SetB(          T iValue )      { SetValue< T >( 2, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetHue(        T iValue )      { SetValue< T >( 0, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetSaturation( T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetLuminosity( T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T> ULIS2_FORCEINLINE void SetLightness(  T iValue )      { SetValue< T >( 2, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetValue(      T iValue )      { SetValue< T >( 2, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetCyan(       T iValue )      { SetValue< T >( 0, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetMagenta(    T iValue )      { SetValue< T >( 1, iValue );                   }
@@ -286,7 +285,7 @@ public:
     ULIS2_FORCEINLINE void SetB8(                               uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetHue8(                             uint8 iValue )  { SetValue< uint8 >( 0, iValue );               }
     ULIS2_FORCEINLINE void SetSaturation8(                      uint8 iValue )  { SetValue< uint8 >( 1, iValue );               }
-    ULIS2_FORCEINLINE void SetLuminosity8(                      uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
+    ULIS2_FORCEINLINE void SetLightness8(                       uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetValue8(                           uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetCyan8(                            uint8 iValue )  { SetValue< uint8 >( 0, iValue );               }
     ULIS2_FORCEINLINE void SetMagenta8(                         uint8 iValue )  { SetValue< uint8 >( 1, iValue );               }
@@ -315,7 +314,7 @@ public:
     ULIS2_FORCEINLINE void SetB16(                              uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetHue16(                            uint16 iValue ) { SetValue< uint16 >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetSaturation16(                     uint16 iValue ) { SetValue< uint16 >( 1, iValue );              }
-    ULIS2_FORCEINLINE void SetLuminosity16(                     uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
+    ULIS2_FORCEINLINE void SetLightness16(                      uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetValue16(                          uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetCyan16(                           uint16 iValue ) { SetValue< uint16 >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetMagenta16(                        uint16 iValue ) { SetValue< uint16 >( 1, iValue );              }
@@ -344,7 +343,7 @@ public:
     ULIS2_FORCEINLINE void SetB32(                              uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetHue32(                            uint32 iValue ) { SetValue< uint32 >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetSaturation32(                     uint32 iValue ) { SetValue< uint32 >( 1, iValue );              }
-    ULIS2_FORCEINLINE void SetLuminosity32(                     uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
+    ULIS2_FORCEINLINE void SetLightness32(                      uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetValue32(                          uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetCyan32(                           uint32 iValue ) { SetValue< uint32 >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetMagenta32(                        uint32 iValue ) { SetValue< uint32 >( 1, iValue );              }
@@ -373,7 +372,7 @@ public:
     ULIS2_FORCEINLINE void SetBF(                               float iValue )  { SetValue< float >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetHueF(                             float iValue )  { SetValue< float >( 0, iValue );               }
     ULIS2_FORCEINLINE void SetSaturationF(                      float iValue )  { SetValue< float >( 1, iValue );               }
-    ULIS2_FORCEINLINE void SetLuminosityF(                      float iValue )  { SetValue< float >( 2, iValue );               }
+    ULIS2_FORCEINLINE void SetLightnessF(                       float iValue )  { SetValue< float >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetValueF(                           float iValue )  { SetValue< float >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetCyanF(                            float iValue )  { SetValue< float >( 0, iValue );               }
     ULIS2_FORCEINLINE void SetMagentaF(                         float iValue )  { SetValue< float >( 1, iValue );               }
@@ -402,7 +401,7 @@ public:
     ULIS2_FORCEINLINE void SetBD(                               double iValue ) { SetValue< double >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetHueD(                             double iValue ) { SetValue< double >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetSaturationD(                      double iValue ) { SetValue< double >( 1, iValue );              }
-    ULIS2_FORCEINLINE void SetLuminosityD(                      double iValue ) { SetValue< double >( 2, iValue );              }
+    ULIS2_FORCEINLINE void SetLightnessD(                       double iValue ) { SetValue< double >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetValueD(                           double iValue ) { SetValue< double >( 2, iValue );              }
     ULIS2_FORCEINLINE void SetCyanD(                            double iValue ) { SetValue< double >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetMagentaD(                         double iValue ) { SetValue< double >( 1, iValue );              }
@@ -429,6 +428,10 @@ protected:
 };
 
 
+/////////////////////////////////////////////////////
+/// @class      FPixelValue
+/// @brief      The FPixelValue class provides a mean of storing and manipulating pixels value in various formats.
+/// @details    A pixel value allocates its own storage space and is responsible for its memory.
 class ULIS2_API FPixelValue : public IPixel
 {
     typedef IPixel tParent;
@@ -442,6 +445,10 @@ public:
 };
 typedef FPixelValue FPixel;
 
+/////////////////////////////////////////////////////
+/// @class      FPixelProxy
+/// @brief      The FPixelProxy class provides a mean of storing and manipulating pixels value in various formats.
+/// @details    A pixel proxy is a view to a block memory space and is not responsible for this memory.
 class ULIS2_API FPixelProxy : public IPixel
 {
     typedef IPixel tParent;
@@ -450,6 +457,7 @@ public:
     // Construction / Destruction
     virtual ~FPixelProxy();
     FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
+    FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
 };
 
 ULIS2_NAMESPACE_END

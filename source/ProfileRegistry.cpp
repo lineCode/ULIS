@@ -12,7 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include "ProfileRegistry.h"
-#include "DefaultCMYK_SNAP.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -35,7 +34,6 @@ FProfileRegistry::FProfileRegistry()
     mLockedSoftwareProfiles[ DefaultProfiles::Lab_D50 ]            = new FColorProfile( DefaultProfiles::Lab_D50,             cmsCreateLab4Profile( &whitepoint_D50 ) );
     mLockedSoftwareProfiles[ DefaultProfiles::XYZ ]                = new FColorProfile( DefaultProfiles::XYZ,                 cmsCreateXYZProfile() );
     mLockedSoftwareProfiles[ DefaultProfiles::Grey_Gamma2_2_D65 ]  = new FColorProfile( DefaultProfiles::Grey_Gamma2_2_D65,   cmsCreateGrayProfile( &whitepoint_D65, gamma_2_2 ) );
-    mLockedSoftwareProfiles[ DefaultProfiles::Default_CMYK ]       = new FColorProfile( DefaultProfiles::Default_CMYK,        cmsOpenProfileFromMem( Default_Profile_CMYK_SNAP, sizeof( Default_Profile_CMYK_SNAP ) ));
 
     cmsFreeToneCurve( gamma_2_2 );
 }
@@ -77,7 +75,6 @@ FProfileRegistry::DefaultProfileNameForModel( eModelSig iModel ) const
         case eModelSig::kRGB:   return  "sRGB";
         case eModelSig::kHSL:   return  "sRGB";
         case eModelSig::kHSV:   return  "sRGB";
-        case eModelSig::kCMYK:  return  "Default_CMYK";
         case eModelSig::kLab:   return  "Lab_D65";
         case eModelSig::kXYZ:   return  "XYZ";
         default:                return  "invalid";

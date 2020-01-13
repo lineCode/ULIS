@@ -14,12 +14,9 @@
 #pragma once
 #include "Core.h"
 #include "Pixel.h"
+#include "Callbacks.h"
 
 ULIS2_NAMESPACE_BEGIN
-
-ULIS2_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
-ULIS2_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
-
 /////////////////////////////////////////////////////
 /// @class      FBlock
 /// @brief      The FBlock class provides a mean of storing and manipulating digital images in various formats.
@@ -86,7 +83,9 @@ public:
     void                    Invalidate( const FRect& iRect )            const;
     FPixelValue             PixelValue( tIndex iX, tIndex iY )          const;
     FPixelProxy             PixelProxy( tIndex iX, tIndex iY );
-
+    const FPixelProxy       PixelProxy( tIndex iX, tIndex iY )          const;
+    uint32                  CRC32()                                     const;
+    std::string             MD5()                                       const;
 private:
     // Private Data Members
     tByte*          mData;
@@ -96,6 +95,7 @@ private:
     FOnInvalid      mOnInvalid;
     FOnCleanup      mOnCleanup;
     FColorProfile*  mProfile;
+    std::string     mUUID;
 };
 
 ULIS2_NAMESPACE_END
