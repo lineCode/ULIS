@@ -70,8 +70,8 @@ public:
 
 public:
     // Model Access API
-    template< typename T> ULIS2_FORCEINLINE T Alpha() const                     { return  GetValueRaw< T >( AlphaIndex() );     }
-    template< typename T> ULIS2_FORCEINLINE T A() const                         { return  GetValueRaw< T >( AlphaIndex() );     }
+    template< typename T> ULIS2_FORCEINLINE T Alpha() const                     { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : std::numeric_limits< T >::max(); }
+    template< typename T> ULIS2_FORCEINLINE T A() const                         { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : std::numeric_limits< T >::max(); }
     template< typename T> ULIS2_FORCEINLINE T Grey() const                      { return  GetValue< T >( 0 );                   }
     template< typename T> ULIS2_FORCEINLINE T Red() const                       { return  GetValue< T >( 0 );                   }
     template< typename T> ULIS2_FORCEINLINE T Green() const                     { return  GetValue< T >( 1 );                   }
@@ -245,8 +245,8 @@ public:
     ULIS2_FORCEINLINE double xD() const                                         { return  x< double >();                        }
     ULIS2_FORCEINLINE double yD() const                                         { return  y< double >();                        }
 
-    template< typename T> ULIS2_FORCEINLINE void SetAlpha(      T iValue )      { SetValueRaw< T >( AlphaIndex(), iValue );     }
-    template< typename T> ULIS2_FORCEINLINE void SetA(          T iValue )      { SetValueRaw< T >( AlphaIndex(), iValue );     }
+    template< typename T> ULIS2_FORCEINLINE void SetAlpha(      T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue ); }
+    template< typename T> ULIS2_FORCEINLINE void SetA(          T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue );     }
     template< typename T> ULIS2_FORCEINLINE void SetGrey(       T iValue )      { SetValue< T >( 0, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetRed(        T iValue )      { SetValue< T >( 0, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void SetGreen(      T iValue )      { SetValue< T >( 1, iValue );                   }
@@ -274,8 +274,8 @@ public:
     template< typename T> ULIS2_FORCEINLINE void Setb(          T iValue )      { SetValue< T >( 2, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void Setx(          T iValue )      { SetValue< T >( 1, iValue );                   }
     template< typename T> ULIS2_FORCEINLINE void Sety(          T iValue )      { SetValue< T >( 2, iValue );                   }
-    ULIS2_FORCEINLINE void SetAlpha8(                           uint8 iValue )  { SetValueRaw< uint8 >( AlphaIndex(), iValue ); }
-    ULIS2_FORCEINLINE void SetA8(                               uint8 iValue )  { SetValueRaw< uint8 >( AlphaIndex(), iValue ); }
+    ULIS2_FORCEINLINE void SetAlpha8(                           uint8 iValue )  { SetAlpha< uint8 >( iValue );                  }
+    ULIS2_FORCEINLINE void SetA8(                               uint8 iValue )  { SetA< uint8 >( iValue );                      }
     ULIS2_FORCEINLINE void SetGrey8(                            uint8 iValue )  { SetValue< uint8 >( 0, iValue );               }
     ULIS2_FORCEINLINE void SetRed8(                             uint8 iValue )  { SetValue< uint8 >( 0, iValue );               }
     ULIS2_FORCEINLINE void SetGreen8(                           uint8 iValue )  { SetValue< uint8 >( 1, iValue );               }
@@ -303,8 +303,8 @@ public:
     ULIS2_FORCEINLINE void Setb8(                               uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
     ULIS2_FORCEINLINE void Setx8(                               uint8 iValue )  { SetValue< uint8 >( 1, iValue );               }
     ULIS2_FORCEINLINE void Sety8(                               uint8 iValue )  { SetValue< uint8 >( 2, iValue );               }
-    ULIS2_FORCEINLINE void SetAlpha16(                          uint16 iValue ) { SetValueRaw< uint16 >( AlphaIndex(), iValue );}
-    ULIS2_FORCEINLINE void SetA16(                              uint16 iValue ) { SetValueRaw< uint16 >( AlphaIndex(), iValue );}
+    ULIS2_FORCEINLINE void SetAlpha16(                          uint16 iValue ) { SetAlpha< uint16 >( iValue );                 }
+    ULIS2_FORCEINLINE void SetA16(                              uint16 iValue ) { SetA< uint16 >( iValue );                     }
     ULIS2_FORCEINLINE void SetGrey16(                           uint16 iValue ) { SetValue< uint16 >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetRed16(                            uint16 iValue ) { SetValue< uint16 >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetGreen16(                          uint16 iValue ) { SetValue< uint16 >( 1, iValue );              }
@@ -332,8 +332,8 @@ public:
     ULIS2_FORCEINLINE void Setb16(                              uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
     ULIS2_FORCEINLINE void Setx16(                              uint16 iValue ) { SetValue< uint16 >( 1, iValue );              }
     ULIS2_FORCEINLINE void Sety16(                              uint16 iValue ) { SetValue< uint16 >( 2, iValue );              }
-    ULIS2_FORCEINLINE void SetAlpha32(                          uint32 iValue ) { SetValueRaw< uint32 >( AlphaIndex(), iValue );}
-    ULIS2_FORCEINLINE void SetA32(                              uint32 iValue ) { SetValueRaw< uint32 >( AlphaIndex(), iValue );}
+    ULIS2_FORCEINLINE void SetAlpha32(                          uint32 iValue ) { SetAlpha< uint32 >( iValue );                 }
+    ULIS2_FORCEINLINE void SetA32(                              uint32 iValue ) { SetA< uint32 >( iValue );                     }
     ULIS2_FORCEINLINE void SetGrey32(                           uint32 iValue ) { SetValue< uint32 >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetRed32(                            uint32 iValue ) { SetValue< uint32 >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetGreen32(                          uint32 iValue ) { SetValue< uint32 >( 1, iValue );              }
@@ -361,8 +361,8 @@ public:
     ULIS2_FORCEINLINE void Setb32(                              uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
     ULIS2_FORCEINLINE void Setx32(                              uint32 iValue ) { SetValue< uint32 >( 1, iValue );              }
     ULIS2_FORCEINLINE void Sety32(                              uint32 iValue ) { SetValue< uint32 >( 2, iValue );              }
-    ULIS2_FORCEINLINE void SetAlphaF(                           float iValue )  { SetValueRaw< float >( AlphaIndex(), iValue ); }
-    ULIS2_FORCEINLINE void SetAF(                               float iValue )  { SetValueRaw< float >( AlphaIndex(), iValue ); }
+    ULIS2_FORCEINLINE void SetAlphaF(                           float iValue )  { SetAlpha< float >( iValue );                  }
+    ULIS2_FORCEINLINE void SetAF(                               float iValue )  { SetA< float >( iValue );                      }
     ULIS2_FORCEINLINE void SetGreyF(                            float iValue )  { SetValue< float >( 0, iValue );               }
     ULIS2_FORCEINLINE void SetRedF(                             float iValue )  { SetValue< float >( 0, iValue );               }
     ULIS2_FORCEINLINE void SetGreenF(                           float iValue )  { SetValue< float >( 1, iValue );               }
@@ -390,8 +390,8 @@ public:
     ULIS2_FORCEINLINE void SetbF(                               float iValue )  { SetValue< float >( 2, iValue );               }
     ULIS2_FORCEINLINE void SetxF(                               float iValue )  { SetValue< float >( 1, iValue );               }
     ULIS2_FORCEINLINE void SetyF(                               float iValue )  { SetValue< float >( 2, iValue );               }
-    ULIS2_FORCEINLINE void SetAlphaD(                           double iValue ) { SetValueRaw< double >( AlphaIndex(), iValue );}
-    ULIS2_FORCEINLINE void SetAD(                               double iValue ) { SetValueRaw< double >( AlphaIndex(), iValue );}
+    ULIS2_FORCEINLINE void SetAlphaD(                           double iValue ) { SetAlpha< double >( iValue );                 }
+    ULIS2_FORCEINLINE void SetAD(                               double iValue ) { SetA< double >( iValue );                     }
     ULIS2_FORCEINLINE void SetGreyD(                            double iValue ) { SetValue< double >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetRedD(                             double iValue ) { SetValue< double >( 0, iValue );              }
     ULIS2_FORCEINLINE void SetGreenD(                           double iValue ) { SetValue< double >( 1, iValue );              }
