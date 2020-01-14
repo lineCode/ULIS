@@ -19,7 +19,8 @@
 #include "ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
-void InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i& iSrc, const tSize iCount, const tSize iStride )
+void
+InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i& iSrc, const tSize iCount, const tSize iStride )
 {
     tSize index;
     for( index = 0; index < ( iCount - 32 ); index += iStride )
@@ -31,7 +32,8 @@ void InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i& iSrc, const tSize iC
 }
 
 
-void InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i& iSrc, const tSize iCount, const tSize iStride )
+void
+InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i& iSrc, const tSize iCount, const tSize iStride )
 {
     tSize index;
     for( index = 0; index < ( iCount - 16 ); index += iStride )
@@ -43,7 +45,8 @@ void InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i& iSrc, const tSize iC
 }
 
 
-void InvokeFillMTProcessScanline_mem( tByte* iDst, const tByte* iSrc, tSize iCount, tSize iStride )
+void
+InvokeFillMTProcessScanline_mem( tByte* iDst, const tByte* iSrc, tSize iCount, tSize iStride )
 {
     for( uint32 i = 0; i < iCount; ++i )
     {
@@ -53,18 +56,21 @@ void InvokeFillMTProcessScanline_mem( tByte* iDst, const tByte* iSrc, tSize iCou
 }
 
 
-void FillMT( FThreadPool&   iPool
-           , FBlock*        iDst
-           , const tByte*   iSrc
-           , const FRect&   iRoi
-           , const FPerf&   iPerf )
+void
+FillMT( FThreadPool&   iPool
+      , FBlock*        iDst
+      , const tByte*   iSrc
+      , const FRect&   iRoi
+      , const FPerf&   iPerf )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
     const tSize bpp = bpc * spp;
     const tSize w   = iDst->Width();
     const tSize bps = bpp * w;
-    #define DST iDst->DataPtr() + ( ( iRoi.y + iLine ) * bps ) + iRoi.x
+    const tSize dsh = iRoi.x * bpp;
+    tByte*      dsb = iDst->DataPtr() + dsh;
+    #define DST dsb + ( ( iRoi.y + iLine ) * bps )
     if( iPerf.useAVX2 )
     {
         const tSize stride = 32 - ( 32 % bpp );
@@ -100,14 +106,20 @@ void FillMT( FThreadPool&   iPool
 }
 
 
-void FillMono( FBlock*     iDst
-             , const tByte*     iSrc )
+void
+FillMono( FBlock*      iDst
+        , const tByte* iSrc
+        , const FRect& iRoi )
 {
-    const tSize bpp = iDst->BytesPerPixel();
+    const tSize bpc = iDst->BytesPerSample();
+    const tSize spp = iDst->SamplesPerPixel();
+    const tSize bpp = bpc * spp;
     const tSize w   = iDst->Width();
     const tSize h   = iDst->Height();
+    const tSize bps = bpp * w;
     const tSize num = w * h;
-    tByte* dst      = iDst->DataPtr();
+    tByte*      dst = iDst->DataPtr() + iRoi.y * bps + iRoi.x * bpp;
+
     for( uint32 i = 0; i < num; ++i )
     {
         memcpy( dst, iSrc, bpp );
@@ -116,22 +128,24 @@ void FillMono( FBlock*     iDst
 }
 
 
-void Fill( FThreadPool&     iPool
-         , FBlock*          iDst
-         , const IPixel&    iColor
-         , const FPerf&     iPerf
-         , bool             iCallInvalidCB )
+void
+Fill( FThreadPool&     iPool
+    , FBlock*          iDst
+    , const IPixel&    iColor
+    , const FPerf&     iPerf
+    , bool             iCallInvalidCB )
 {
     FillRect( iPool, iDst, iColor, iDst->Rect(), iPerf, iCallInvalidCB );
 }
 
 
-void FillRect( FThreadPool&     iPool
-             , FBlock*          iDst
-             , const IPixel&    iColor
-             , const FRect&     iRect
-             , const FPerf&     iPerf
-             , bool             iCallInvalidCB )
+void
+FillRect( FThreadPool&     iPool
+        , FBlock*          iDst
+        , const IPixel&    iColor
+        , const FRect&     iRect
+        , const FPerf&     iPerf
+        , bool             iCallInvalidCB )
 {
     ULIS2_ASSERT( iDst, "Bad destination" );
     FPixel color( iDst->Format() );
@@ -145,7 +159,7 @@ void FillRect( FThreadPool&     iPool
     if( iPerf.useMT )
         FillMT( iPool, iDst, src, roi, iPerf );
     else
-        FillMono( iDst, src );
+        FillMono( iDst, src, roi );
 
     iDst->Invalidate( roi, iCallInvalidCB );
 }

@@ -18,12 +18,12 @@
 ULIS2_NAMESPACE_BEGIN
 class FThreadPool;
 
-/// @fn         void Fill( FBlock* iDst, const FColor& iColor, FThreadPool& iPool, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void Fill( FThreadPool& iPool, FBlock* iDst, const FColor& iColor, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @brief      Fill dst block with specified color.
 /// @details    The dst block will be filled entirely with a solid color.
+/// @param      iPool           The pool to process the image in.
 /// @param      iDst            The block destination to fill.
 /// @param      iColor          The color to fill.
-/// @param      iPool           The pool to process the image in.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
 ULIS2_API void Fill( FThreadPool&   iPool
@@ -32,12 +32,12 @@ ULIS2_API void Fill( FThreadPool&   iPool
                    , const FPerf&   iPerf           = FPerf()
                    , bool           iCallInvalidCB  = true );
 
-/// @fn         void Fill( FBlock* iDst, const FColor& iColor, const FRect& iRect, FThreadPool& iPool, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void Fill( FThreadPool& iPool, FBlock* iDst, const FColor& iColor, const FRect& iRect, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @brief      Fill dst block rect with specified color.
 /// @details    The dst block will be filled in a rect with a solid color.
+/// @param      iPool           The pool to process the image in.
 /// @param      iDst            The block destination to fill.
 /// @param      iColor          The color to fill.
-/// @param      iPool           The pool to process the image in.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
 ULIS2_API void FillRect( FThreadPool&   iPool

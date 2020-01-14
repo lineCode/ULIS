@@ -18,11 +18,11 @@
 ULIS2_NAMESPACE_BEGIN
 class FThreadPool;
 
-/// @fn         void Clear( FBlock* iDst, FThreadPool& iPool, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void Clear( FThreadPool& iPool, FBlock* iDst, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @brief      Clear dst block with zero.
 /// @details    The dst block will be clear entirely.
-/// @param      iDst            The block destination to fill.
 /// @param      iPool           The pool to process the image in.
+/// @param      iDst            The block destination to fill.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
 ULIS2_API void Clear( FThreadPool&  iPool
@@ -30,11 +30,11 @@ ULIS2_API void Clear( FThreadPool&  iPool
                     , const FPerf&  iPerf           = FPerf()
                     , bool          iCallInvalidCB  = true );
 
-/// @fn         void Clear( FBlock* iDst, const FRect& iRect, FThreadPool& iPool, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void Clear( FThreadPool& iPool, FBlock* iDst, const FRect& iRect, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @brief      Clear dst block rect with zero.
 /// @details    The dst block will be clear in a rect.
-/// @param      iDst            The block destination to fill.
 /// @param      iPool           The pool to process the image in.
+/// @param      iDst            The block destination to fill.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
 ULIS2_API void ClearRect( FThreadPool&  iPool
@@ -42,6 +42,13 @@ ULIS2_API void ClearRect( FThreadPool&  iPool
                         , const FRect&  iRect
                         , const FPerf&  iPerf           = FPerf()
                         , bool          iCallInvalidCB  = true );
+
+/// @fn         void ClearRaw( FBlock* iDst, bool iCallInvalidCB = true )
+/// @brief      Perform a raw complete clear of dst block, good for small blocks.
+/// @param      iSrc            The source block to clear;
+/// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
+ULIS2_API void ClearRaw( const FBlock* iSrc
+                       , bool          iCallInvalidCB  = true );
 
 ULIS2_NAMESPACE_END
 

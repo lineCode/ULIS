@@ -13,21 +13,19 @@
 */
 #pragma once
 #include "Core.h"
-#include "Perf.h"
+#include "Geometry.h"
 #include "Modes.h"
+#include "Perf.h"
 
 ULIS2_NAMESPACE_BEGIN
-class FThreadPool;
-
-/// @fn         void Blend( FThreadPool& iPool, const FBlock* iSource, FBlock* iBackdrop, eBlendingMode iMode, int iDstX = 0, int iDstY = 0, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void Blend( FThreadPool& iPool, const FBlock* iSource, FBlock* iBackdrop, const FPoint& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @brief      Blend two block together.
 /// @details    The source block will be blended on the backdrop block, according to the specified parameters.
 ///             Warning ! Both blocks should be the same underlying format in order for the function to succeed, else the function will fail and crash.
 /// @param      iPool           The pool to process the image in.
 /// @param      iSource         The pointer to the source \e FBlock ( remains untouched ).
 /// @param      iBackdrop       The pointer to the backdrop \e FBlock ( receives the blend ).
-/// @param      iDstX           x coordinate of the position to blend in the back block.
-/// @param      iDstY           y coordinate of the position to blend in the back block.
+/// @param      iDstPos         The position in destination to write.
 /// @param      iBlendingMode   The blending mode ( see \e eBlendingMode ).
 /// @param      iAlphaMode      The alpha mode ( see \e eAlphaMode ).
 /// @param      iOpacity        The opacity used to perform the blend, beetween 0.0f and 1.0f.
@@ -36,8 +34,7 @@ class FThreadPool;
 ULIS2_API void Blend( FThreadPool&      iPool
                     , const FBlock*     iSource
                     , FBlock*           iBackdrop
-                    , int               iDstX = 0
-                    , int               iDstY = 0
+                    , const FPoint&     iDstPos         = FPoint()
                     , eBlendingMode     iBlendingMode   = eBlendingMode::kNormal
                     , eAlphaMode        iAlphaMode      = eAlphaMode::kNormal
                     , float             iOpacity        = 1.f
@@ -45,13 +42,14 @@ ULIS2_API void Blend( FThreadPool&      iPool
                     , bool              iCallInvalidCB  = true );
 
 
-/// @fn         void Blend( const FBlock* iSource, FBlock* iBackdrop, eBlendingMode iMode, const FRect& iArea, int iDstX = 0, int iDstY = 0, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void Blend( FThreadPool& iPool, const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcRect, const FPoint& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @details    The source block will be blended on the backdrop block, according to the specified parameters.
 ///             Warning ! Both blocks should be the same underlying format in order for the function to succeed, else the function will fail and crash.
 /// @param      iPool           The pool to process the image in
 /// @param      iSource         The pointer to the source \e FBlock ( remains untouched ).
 /// @param      iBackdrop       The pointer to the backdrop \e FBlock ( receives the blend ).
-/// @param      iRect           The area to blend in the back block.
+/// @param      iSrcRect        The area to blend in the back block.
+/// @param      iDstPos         The position in destination to write.
 /// @param      iBlendingMode   The blending mode ( see \e eBlendingMode ).
 /// @param      iAlphaMode      The alpha mode ( see \e eAlphaMode ).
 /// @param      iOpacity        The opacity used to perform the blend, beetween 0 and 1.
@@ -60,9 +58,8 @@ ULIS2_API void Blend( FThreadPool&      iPool
 ULIS2_API void Blend( FThreadPool&      iPool
                     , const FBlock*     iSource
                     , FBlock*           iBackdrop
-                    , const FRect&      iSourceRect
-                    , int               iDstX = 0
-                    , int               iDstY = 0
+                    , const FRect&      iSrcRect
+                    , const FPoint&     iDstPos         = FPoint()
                     , eBlendingMode     iBlendingMode   = eBlendingMode::kNormal
                     , eAlphaMode        iAlphaMode      = eAlphaMode::kNormal
                     , float             iOpacity        = 1.f

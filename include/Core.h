@@ -184,6 +184,8 @@ class IPixel;
 class FPixelValue;
 class FPixelProxy;
 struct FRect;
+struct FPoint;
+class FThreadPool;
 
 // Types
 enum eType : uint8 {

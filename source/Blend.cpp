@@ -16,49 +16,10 @@
 #include "Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-void Blend_mtd_sse_imp( FThreadPool&   iPool
-                      , const FBlock*  iSource
-                      , FBlock*        iBackdrop
-                      , const FRect&   iRoi
-                      , const FPoint&  iShift
-                      , eBlendingMode  iBlendingMode
-                      , eAlphaMode     iAlphaMode
-                      , float          iOpacity
-                      , const FPerf&   iPerf )
-{
-}
-
-void Blend_mono_sse_imp( FThreadPool&   iPool
-                       , const FBlock*  iSource
-                       , FBlock*        iBackdrop
-                       , const FRect&   iRoi
-                       , const FPoint&  iShift
-                       , eBlendingMode  iBlendingMode
-                       , eAlphaMode     iAlphaMode
-                       , float          iOpacity
-                       , const FPerf&   iPerf )
-{
-    const tSize bpp  = iSource->BytesPerPixel();
-    const tSize w    = iSource->Width();
-    const tSize h    = iSource->Height();
-    const tSize num  = iRoi.Area();
-    const tByte* src = iSource->DataPtr();
-    const tByte* bdp = iBackdrop->DataPtr();
-    for( uint32 i = 0; i < num; ++i )
-    {
-        /*
-        memcpy( dst, iSrc, bpp );
-        dst += bpp;
-        */
-    }
-}
-
-
 void Blend( FThreadPool&    iPool
           , const FBlock*   iSource
           , FBlock*         iBackdrop
-          , int             iDstX
-          , int             iDstY
+          , const FPoint&   iDstPos
           , eBlendingMode   iBlendingMode
           , eAlphaMode      iAlphaMode
           , float           iOpacity
@@ -69,8 +30,7 @@ void Blend( FThreadPool&    iPool
          , iSource
          , iBackdrop
          , iSource->Rect()
-         , iDstX
-         , iDstY
+         , iDstPos
          , iBlendingMode
          , iAlphaMode
          , iOpacity
@@ -82,32 +42,33 @@ void Blend( FThreadPool&    iPool
 void Blend( FThreadPool&    iPool
           , const FBlock*   iSource
           , FBlock*         iBackdrop
-          , const FRect&    iSourceRect
-          , int             iDstX
-          , int             iDstY
+          , const FRect&    iSrcRect
+          , const FPoint&   iDstPos
           , eBlendingMode   iBlendingMode
           , eAlphaMode      iAlphaMode
           , float           iOpacity
           , const FPerf&    iPerf
           , bool            iCallInvalidCB )
 {
-    ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(), "Models do not match" );
-    ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(), "Types do not match" );
-    ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(), "Samples do not match" );
-    FRect dst_rect = iSourceRect;
-    dst_rect.x = iDstX;
-    dst_rect.y = iDstY;
-    FPoint shift( -iDstX, -iDstY );
-    FRect back_rect = iBackdrop->Rect();
-    FRect roi = dst_rect & back_rect;
+    ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(),                       "Models do not match" );
+    ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(),                         "Types do not match" );
+    ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(),   "Samples do not match" );
 
-    if( roi.Area() <= 0 )
+    // Gather src rect and shift to destination
+    FRect target_rect = iSrcRect & iSource->Rect();
+    target_rect.x = iDstPos.x;
+    target_rect.y = iDstPos.y;
+    // Gather dst rect
+    // Interset target with dst, target may be out of range
+    FRect dst_roi = target_rect & iBackdrop->Rect();
+    // Gather src rect and fit size to fix overflow
+    FRect src_roi = dst_roi;
+    src_roi.x = iSrcRect.x;
+    src_roi.y = iSrcRect.y;
+
+    // Check if this is a no-op
+    if( src_roi.Area() <= 0 )
         return;
-
-    if( iPerf.useMT )
-        Blend_mtd_sse_imp( iPool, iSource, iBackdrop, roi, shift, iBlendingMode, iAlphaMode, iOpacity, iPerf );
-    else
-        Blend_mono_sse_imp( iPool, iSource, iBackdrop, roi, shift, iBlendingMode, iAlphaMode, iOpacity, iPerf );
 
     iBackdrop->Invalidate( FRect(), iCallInvalidCB );
 }
