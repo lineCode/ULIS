@@ -18,7 +18,7 @@ using namespace ::ul2;
 int
 main()
 {
-    FBlock block( 256, 256, ULIS2_FORMAT_RGBF );
+    FBlock block( 256, 256, ULIS2_FORMAT_RGBAF );
     FColor color( ULIS2_FORMAT_LabAF );
     memset( block.DataPtr(), 1, 256 * 256 * 3 * 1 );
     color.SetLF( +62 / 255.f );
@@ -61,11 +61,10 @@ main()
     cl::Program::Sources sources;
 
     // kernel calculates for each element C=A+B
-    std::string kernel_code=
+    std::string kernel_code =
             "   void kernel simple_add(global const int* A, global const int* B, global int* C){    "
             "       C[get_global_id(0)]=A[get_global_id(0)]+B[get_global_id(0)];                    "
             "   }                                                                                   ";
-
     sources.push_back({kernel_code.c_str(),kernel_code.length()});
 
     cl::Program program(context,sources);
@@ -101,4 +100,14 @@ main()
     for(int i=0;i<10;i++){
         std::cout<<C[i]<< " " << std::endl;
     }
+
+    cl_int err;
+    cl::Image2D resource( context, CL_MEM_READ_WRITE, { CL_RGBA, CL_FLOAT }, 256, 256, 0, nullptr, &err );
+    std::cout << err << std::endl;
+    std::cout << resource.getInfo< CL_MEM_SIZE >( &err ) << std::endl;
+    std::cout << err << std::endl;
+    auto _dummy = 0;
+
+    return  0;
 }
+

@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         ColorMatching.h
+* @file         CMF.h
 * @author       Clement Berthaud
 * @brief        This file provides the color matching data for certain illuminants.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.

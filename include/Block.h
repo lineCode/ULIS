@@ -21,6 +21,7 @@ ULIS2_NAMESPACE_BEGIN
 /// @class      FBlock
 /// @brief      The FBlock class provides a mean of storing and manipulating digital images in various formats.
 /// @details    The block format, type, layout, and other informations can be retrieved with dedicated functions.
+/// @details    FBlock differs from FTexture because FBlock only lives on host CPU memory.
 class ULIS2_API FBlock
 {
 public:

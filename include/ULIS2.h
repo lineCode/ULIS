@@ -12,15 +12,22 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
+// Data
 #include "Block.h"
 #include "Pixel.h"
-#include "Conv.h"
+// Color
 #include "ColorProfile.h"
 #include "ProfileRegistry.h"
+// MT
+#include "CPU.h"
+#include "Perf.h"
 #include "ThreadPool.h"
 #include "ParallelFor.h"
+// Utility
+#include "Conv.h"
+#include "Blend.h"
 #include "Fill.h"
 #include "Clear.h"
-#include "Blend.h"
+#include "Copy.h"
+#include "Swap.h"
 
