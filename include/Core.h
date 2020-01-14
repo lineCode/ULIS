@@ -259,6 +259,14 @@ template<> uint16   inline ConvType< double, uint16 >( double iValue ) { return 
 template<> uint32   inline ConvType< double, uint32 >( double iValue ) { return uint32( iValue * 0xFFFFFFFF         );  }
 template<> uint64   inline ConvType< double, uint64 >( double iValue ) { return uint64( iValue * 0xFFFFFFFFFFFFFFFF );  }
 
+template< typename T > T inline MinType() { return T(0); }
+template< typename T > T inline MaxType() { return T(1); }
+template<> uint8  inline MaxType< uint8  >() { return UINT8_MAX;    }
+template<> uint16 inline MaxType< uint16 >() { return UINT16_MAX;   }
+template<> uint32 inline MaxType< uint32 >() { return UINT32_MAX;   }
+template<> float  inline MaxType< float  >() { return 1.f;          }
+template<> double inline MaxType< double >() { return 0.0;          }
+
 ULIS2_NAMESPACE_END
 
 /////////////////////////////////////////////////////

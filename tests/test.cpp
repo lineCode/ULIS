@@ -17,18 +17,21 @@ using namespace ::ul2;
 int
 main()
 {
-    ::ul2::FBlock block( 256, 256, ULIS2_FORMAT_LabA32 );
-    ::ul2::FColor color( ULIS2_FORMAT_RGB8 );
-    color.SetR8( 255 );
-    color.SetG8( 255 );
-    color.SetB8( 255 );
-    ::ul2::FThreadPool pool;
-    Fill( pool, &block, color );
-    ::ul2::FPixelProxy prox = block.PixelProxy( 0, 0 );
-    std::cout << ConvType< uint32, float >( prox.L32() ) << std::endl;
-    std::cout << ConvType< uint32, float >( prox.a32() ) << std::endl;
-    std::cout << ConvType< uint32, float >( prox.b32() ) << std::endl;
-    std::cout << ConvType< uint32, float >( prox.A32() ) << std::endl;
+    FBlock block( 256, 256, ULIS2_FORMAT_RGBF );
+    FColor color( ULIS2_FORMAT_LabAF );
+    memset( block.DataPtr(), 1, 256 * 256 * 3 * 1 );
+    color.SetLF( +62 / 255.f );
+    color.SetaF( +81 / 128.f + 0.5f );
+    color.SetbF( -58 / 128.f + 0.5f );
+    color.SetAF( 1.f );
+    FThreadPool pool;
+    FPerf perf( true, true, true );
+    Fill( pool, &block, color, perf );
+    FPixelProxy prox = block.PixelProxy( 240, 0 );
+    std::cout << (float)prox.RF() << std::endl;
+    std::cout << (float)prox.GF() << std::endl;
+    std::cout << (float)prox.BF() << std::endl;
+    std::cout << (float)prox.AF() << std::endl;
     auto dummy = 0;
 }
 

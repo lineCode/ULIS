@@ -19,24 +19,89 @@
 #include "ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
-void Fill_mtd_mem_imp( FBlock*      iDst
-                 , const tByte*     iSrc
-                 , int32            iLine )
+void InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i& iSrc, const tSize iCount, const tSize iStride )
 {
-    const tSize bpp = iDst->BytesPerPixel();
-    const tSize w   = iDst->Width();
-    const tSize bps = bpp * w;
-    tByte*      dst = iDst->DataPtr() + iLine * bps;
-    for( uint32 i = 0; i < w; ++i )
+    tSize index;
+    for( index = 0; index < ( iCount - 32 ); index += iStride )
     {
-        memcpy( dst, iSrc, bpp );
-        dst += bpp;
+        _mm256_storeu_si256( (__m256i*)iDst, iSrc );
+        iDst += iStride;
+    }
+    memcpy( iDst, &iSrc, iCount - index );
+}
+
+
+void InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i& iSrc, const tSize iCount, const tSize iStride )
+{
+    tSize index;
+    for( index = 0; index < ( iCount - 16 ); index += iStride )
+    {
+        _mm_storeu_si128( (__m128i*)iDst, iSrc );
+        iDst += iStride;
+    }
+    memcpy( iDst, &iSrc, iCount - index );
+}
+
+
+void InvokeFillMTProcessScanline_mem( tByte* iDst, const tByte* iSrc, tSize iCount, tSize iStride )
+{
+    for( uint32 i = 0; i < iCount; ++i )
+    {
+        memcpy( iDst, iSrc, iStride );
+        iDst += iStride;
     }
 }
 
 
-void Fill_mono_mem_imp( FBlock*     iDst
-                 , const tByte*     iSrc )
+void FillMT( FThreadPool&   iPool
+           , FBlock*        iDst
+           , const tByte*   iSrc
+           , const FRect&   iRoi
+           , const FPerf&   iPerf )
+{
+    const tSize bpc = iDst->BytesPerSample();
+    const tSize spp = iDst->SamplesPerPixel();
+    const tSize bpp = bpc * spp;
+    const tSize w   = iDst->Width();
+    const tSize bps = bpp * w;
+    #define DST iDst->DataPtr() + ( ( iRoi.y + iLine ) * bps ) + iRoi.x
+    if( iPerf.useAVX2 )
+    {
+        const tSize stride = 32 - ( 32 % bpp );
+        tByte* srcb = new tByte[32];
+        #ifdef ULIS2_DEBUG
+        memset( srcb, 0, 32 );
+        #endif // ULIS2_DEBUG
+        for( tSize i = 0; i < stride; i+= bpp )
+            memcpy( (void*)( ( srcb ) + i ), iSrc, bpp );
+        __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
+        delete [] srcb;
+        const tSize count = iRoi.w * bpp;
+        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, src, count, stride ); } );
+    }
+    else if( iPerf.useSSE4_2 )
+    {
+        const tSize stride = 16 - ( 16 % bpp );
+        tByte* srcb = new tByte[16];
+        #ifdef ULIS2_DEBUG
+        memset( srcb, 0, 16 );
+        #endif // ULIS2_DEBUG
+        for( tSize i = 0; i < stride; i+= bpp )
+            memcpy( (void*)( ( srcb ) + i ), iSrc, bpp );
+        __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
+        delete [] srcb;
+        const tSize count = iRoi.w * bpp;
+        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE( DST, src, count, stride ); } );
+    }
+    else
+    {
+        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_mem( DST, iSrc, iRoi.w, bpp ); } );
+    }
+}
+
+
+void FillMono( FBlock*     iDst
+             , const tByte*     iSrc )
 {
     const tSize bpp = iDst->BytesPerPixel();
     const tSize w   = iDst->Width();
@@ -77,10 +142,10 @@ void FillRect( FThreadPool&     iPool
     if( roi.Area() <= 0 )
         return;
 
-    if( iPerf.mtd )
-        ParallelFor( iPool, roi.h, iPerf, ULIS2_PF_CALL { Fill_mtd_mem_imp( iDst, src, iLine ); } );
+    if( iPerf.useMT )
+        FillMT( iPool, iDst, src, roi, iPerf );
     else
-        Fill_mono_mem_imp( iDst, src );
+        FillMono( iDst, src );
 
     iDst->Invalidate( roi, iCallInvalidCB );
 }

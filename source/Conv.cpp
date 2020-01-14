@@ -280,7 +280,7 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
 
         case eModelSig::kCMY:
         {
-            T2 max = std::numeric_limits< T2 >::max();
+            T2 max = MaxType< T2 >();
             iDst.SetCyan< T2 >(     max - ConvType< T1, T2 >( iSrc.R< T1 >() ) );
             iDst.SetMagenta< T2 >(  max - ConvType< T1, T2 >( iSrc.G< T1 >() ) );
             iDst.SetYellow< T2 >(   max - ConvType< T1, T2 >( iSrc.B< T1 >() ) );
@@ -655,7 +655,7 @@ ToCMY( const IPixel& iSrc, IPixel& iDst )
 
         case eModelSig::kRGB:
         {
-            T2 max = std::numeric_limits< T2 >::max();
+            T2 max = MaxType< T2 >();
             iDst.SetCyan< T2 >(     max - ConvType< T1, T2 >( iSrc.Cyan< T1 >() ) );
             iDst.SetMagenta< T2 >(  max - ConvType< T1, T2 >( iSrc.Magenta< T1 >() ) );
             iDst.SetYellow< T2 >(   max - ConvType< T1, T2 >( iSrc.Yellow< T1 >() ) );

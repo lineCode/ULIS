@@ -16,6 +16,44 @@
 #include "Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
+void Blend_mtd_sse_imp( FThreadPool&   iPool
+                      , const FBlock*  iSource
+                      , FBlock*        iBackdrop
+                      , const FRect&   iRoi
+                      , const FPoint&  iShift
+                      , eBlendingMode  iBlendingMode
+                      , eAlphaMode     iAlphaMode
+                      , float          iOpacity
+                      , const FPerf&   iPerf )
+{
+}
+
+void Blend_mono_sse_imp( FThreadPool&   iPool
+                       , const FBlock*  iSource
+                       , FBlock*        iBackdrop
+                       , const FRect&   iRoi
+                       , const FPoint&  iShift
+                       , eBlendingMode  iBlendingMode
+                       , eAlphaMode     iAlphaMode
+                       , float          iOpacity
+                       , const FPerf&   iPerf )
+{
+    const tSize bpp  = iSource->BytesPerPixel();
+    const tSize w    = iSource->Width();
+    const tSize h    = iSource->Height();
+    const tSize num  = iRoi.Area();
+    const tByte* src = iSource->DataPtr();
+    const tByte* bdp = iBackdrop->DataPtr();
+    for( uint32 i = 0; i < num; ++i )
+    {
+        /*
+        memcpy( dst, iSrc, bpp );
+        dst += bpp;
+        */
+    }
+}
+
+
 void Blend( FThreadPool&    iPool
           , const FBlock*   iSource
           , FBlock*         iBackdrop
@@ -53,18 +91,26 @@ void Blend( FThreadPool&    iPool
           , const FPerf&    iPerf
           , bool            iCallInvalidCB )
 {
+    ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(), "Models do not match" );
+    ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(), "Types do not match" );
+    ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(), "Samples do not match" );
     FRect dst_rect = iSourceRect;
     dst_rect.x = iDstX;
     dst_rect.y = iDstY;
+    FPoint shift( -iDstX, -iDstY );
     FRect back_rect = iBackdrop->Rect();
     FRect roi = dst_rect & back_rect;
 
     if( roi.Area() <= 0 )
         return;
 
+    if( iPerf.useMT )
+        Blend_mtd_sse_imp( iPool, iSource, iBackdrop, roi, shift, iBlendingMode, iAlphaMode, iOpacity, iPerf );
+    else
+        Blend_mono_sse_imp( iPool, iSource, iBackdrop, roi, shift, iBlendingMode, iAlphaMode, iOpacity, iPerf );
+
     iBackdrop->Invalidate( FRect(), iCallInvalidCB );
 }
-
 
 ULIS2_NAMESPACE_END
 

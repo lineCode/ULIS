@@ -26,18 +26,20 @@ struct ULIS2_API FPerf
 {
 public:
     // Construction
-    /// @fn         FPerf()
+    /// @fn         FPerf( bool iUseMT = true, bool iUseSSE4_2 = true, bool iUseAVX2 = true )
     /// @brief      Default Constructor.
     /// @details    Initializes members with default values
-    FPerf()
-        : opt( true )
-        , mtd( true )
+    FPerf( bool iUseMT = true, bool iUseSSE4_2 = true, bool iUseAVX2 = true )
+        : useMT(        iUseMT      )
+        , useSSE4_2(    iUseSSE4_2  )
+        , useAVX2(      iUseAVX2    )
     {}
 
 public:
     // Public Data Members
-    uint    opt; ///< uint flag specifying the optimisation level that should be used if available.
-    bool    mtd; ///< boolean flag specifying if multithreaded optimisations should be used if available.
+    bool    useMT;      ///< boolean flag specifying if multithreaded optimisations should be used if available.
+    bool    useSSE4_2;  ///< boolean flag specifying if sse4.2 optimisations should be used if available.
+    bool    useAVX2;    ///< boolean flag specifying if avx2 optimisations should be used if available.
 };
 
 ULIS2_NAMESPACE_END

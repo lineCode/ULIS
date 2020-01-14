@@ -70,8 +70,8 @@ public:
 
 public:
     // Model Access API
-    template< typename T> ULIS2_FORCEINLINE T Alpha() const                     { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : std::numeric_limits< T >::max(); }
-    template< typename T> ULIS2_FORCEINLINE T A() const                         { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : std::numeric_limits< T >::max(); }
+    template< typename T> ULIS2_FORCEINLINE T Alpha() const                     { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
+    template< typename T> ULIS2_FORCEINLINE T A() const                         { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
     template< typename T> ULIS2_FORCEINLINE T Grey() const                      { return  GetValue< T >( 0 );                   }
     template< typename T> ULIS2_FORCEINLINE T Red() const                       { return  GetValue< T >( 0 );                   }
     template< typename T> ULIS2_FORCEINLINE T Green() const                     { return  GetValue< T >( 1 );                   }
