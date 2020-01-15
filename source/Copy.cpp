@@ -132,8 +132,9 @@ CopyRect( FThreadPool&  iPool
     ULIS2_ASSERT( iSrc->Model() == iDst->Model(),                       "Models do not match" );
     ULIS2_ASSERT( iSrc->Type() == iDst->Type(),                         "Types do not match" );
     ULIS2_ASSERT( iSrc->SamplesPerPixel() == iDst->SamplesPerPixel(),   "Samples do not match" );
-    ULIS2_ASSERT( iSrc, "Bad source" );
-    ULIS2_ASSERT( iDst, "Bad destination" );
+    ULIS2_ASSERT( iSrc,                                                 "Bad source" );
+    ULIS2_ASSERT( iDst,                                                 "Bad destination" );
+    ULIS2_ASSERT( iSrc != iDst,                                         "Destination and source cannot be the same" );
 
     // Gather src rect and shift to destination
     FRect target_rect = iSrcRect & iSrc->Rect();
@@ -171,8 +172,9 @@ CopyRaw( const FBlock* iSrc
     ULIS2_ASSERT( iSrc->Type() == iDst->Type(),                         "Types do not match" );
     ULIS2_ASSERT( iSrc->SamplesPerPixel() == iDst->SamplesPerPixel(),   "Samples do not match" );
     ULIS2_ASSERT( iSrc->BytesTotal() == iDst->BytesTotal(),             "Sizes do not match" );
-    ULIS2_ASSERT( iSrc, "Bad source" );
-    ULIS2_ASSERT( iDst, "Bad destination" );
+    ULIS2_ASSERT( iSrc,                                                 "Bad source" );
+    ULIS2_ASSERT( iDst,                                                 "Bad destination" );
+    ULIS2_ASSERT( iSrc != iDst,                                         "Destination and source cannot be the same" );
     // One call, supposedly more efficient for small block.
     memcpy( iDst->DataPtr(), iSrc->DataPtr(), iSrc->BytesTotal() );
 }

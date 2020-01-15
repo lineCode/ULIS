@@ -47,8 +47,8 @@ ULIS2_API void ClearRect( FThreadPool&  iPool
 /// @brief      Perform a raw complete clear of dst block, good for small blocks.
 /// @param      iSrc            The source block to clear;
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void ClearRaw( const FBlock* iSrc
-                       , bool          iCallInvalidCB  = true );
+ULIS2_API void ClearRaw( FBlock*    iSrc
+                       , bool       iCallInvalidCB  = true );
 
 ULIS2_NAMESPACE_END
 

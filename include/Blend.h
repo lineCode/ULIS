@@ -42,7 +42,7 @@ ULIS2_API void Blend( FThreadPool&      iPool
                     , bool              iCallInvalidCB  = true );
 
 
-/// @fn         void Blend( FThreadPool& iPool, const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcRect, const FPoint& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void BlendRect( FThreadPool& iPool, const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcRect, const FPoint& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @details    The source block will be blended on the backdrop block, according to the specified parameters.
 ///             Warning ! Both blocks should be the same underlying format in order for the function to succeed, else the function will fail and crash.
 /// @param      iPool           The pool to process the image in
@@ -55,16 +55,16 @@ ULIS2_API void Blend( FThreadPool&      iPool
 /// @param      iOpacity        The opacity used to perform the blend, beetween 0 and 1.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the back block after the operation finished.
-ULIS2_API void Blend( FThreadPool&      iPool
-                    , const FBlock*     iSource
-                    , FBlock*           iBackdrop
-                    , const FRect&      iSrcRect
-                    , const FPoint&     iDstPos         = FPoint()
-                    , eBlendingMode     iBlendingMode   = eBlendingMode::kNormal
-                    , eAlphaMode        iAlphaMode      = eAlphaMode::kNormal
-                    , float             iOpacity        = 1.f
-                    , const FPerf&      iPerf           = FPerf()
-                    , bool              iCallInvalidCB  = true );
+ULIS2_API void BlendRect( FThreadPool&      iPool
+                        , const FBlock*     iSource
+                        , FBlock*           iBackdrop
+                        , const FRect&      iSrcRect
+                        , const FPoint&     iDstPos         = FPoint()
+                        , eBlendingMode     iBlendingMode   = eBlendingMode::kNormal
+                        , eAlphaMode        iAlphaMode      = eAlphaMode::kNormal
+                        , float             iOpacity        = 1.f
+                        , const FPerf&      iPerf           = FPerf()
+                        , bool              iCallInvalidCB  = true );
 
 ULIS2_NAMESPACE_END
 

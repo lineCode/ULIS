@@ -163,19 +163,21 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 // Typedefs and enums
 ULIS2_NAMESPACE_BEGIN
 // Typedefs
-typedef  uint8_t        uint8;
-typedef  uint16_t       uint16;
-typedef  uint32_t       uint32;
-typedef  uint64_t       uint64;
-typedef  int8_t         int8;
-typedef  int16_t        int16;
-typedef  int32_t        int32;
-typedef  int64_t        int64;
-typedef  unsigned int   uint;
-typedef  uint8_t        tByte;
-typedef  uint32_t       tFormat;
-typedef  uint32_t       tSize;
-typedef  uint32_t       tIndex;
+typedef  uint8_t                uint8;
+typedef  uint16_t               uint16;
+typedef  uint32_t               uint32;
+typedef  uint64_t               uint64;
+typedef  int8_t                 int8;
+typedef  int16_t                int16;
+typedef  int32_t                int32;
+typedef  int64_t                int64;
+typedef  unsigned int           uint;
+typedef  uint8_t                tByte;
+typedef  uint32_t               tFormat;
+typedef  uint32_t               tSize;
+typedef  uint32_t               tIndex;
+typedef unsigned long long int  ullint;
+
 
 // Fdecl
 class FBlock;
@@ -225,49 +227,91 @@ enum eModelSig : uint8 {
     X( double )
 
 template< typename T > ULIS2_FORCEINLINE eType T42(void)    { return  eType::kUint8;    }
-template<> ULIS2_FORCEINLINE eType T42< uint8 >()           { return  eType::kUint8;    }
-template<> ULIS2_FORCEINLINE eType T42< uint16 >()          { return  eType::kUint16;   }
-template<> ULIS2_FORCEINLINE eType T42< uint32 >()          { return  eType::kUint32;   }
-template<> ULIS2_FORCEINLINE eType T42< float >()           { return  eType::kFloat;    }
-template<> ULIS2_FORCEINLINE eType T42< double >()          { return  eType::kDouble;   }
+template<> constexpr ULIS2_FORCEINLINE eType T42< uint8 >()           { return  eType::kUint8;    }
+template<> constexpr ULIS2_FORCEINLINE eType T42< uint16 >()          { return  eType::kUint16;   }
+template<> constexpr ULIS2_FORCEINLINE eType T42< uint32 >()          { return  eType::kUint32;   }
+template<> constexpr ULIS2_FORCEINLINE eType T42< float >()           { return  eType::kFloat;    }
+template<> constexpr ULIS2_FORCEINLINE eType T42< double >()          { return  eType::kDouble;   }
 
-template< typename T1, typename T2 > T2 inline ConvType( T1 iValue ) { return (T2)iValue; }
-template<> uint16   inline ConvType< uint8,  uint16 >( uint8 iValue  ) { return iValue * 0x101;                         }
-template<> uint32   inline ConvType< uint8,  uint32 >( uint8 iValue  ) { return iValue * 0x1010101;                     }
-template<> uint64   inline ConvType< uint8,  uint64 >( uint8 iValue  ) { return iValue * 0x10100000101;                 }
-template<> uint32   inline ConvType< uint16, uint32 >( uint16 iValue ) { return iValue * 0x10001;                       }
-template<> uint64   inline ConvType< uint16, uint64 >( uint16 iValue ) { return iValue * 0x1000100010001;               }
-template<> uint64   inline ConvType< uint32, uint64 >( uint32 iValue ) { return iValue * 0x100000001;                   }
-template<> uint8    inline ConvType< uint16, uint8  >( uint16 iValue ) { return ( iValue + 1 + ( iValue>>8 ) ) >> 8;    }
-template<> uint8    inline ConvType< uint32, uint8  >( uint32 iValue ) { return iValue >> 24;                           }
-template<> uint8    inline ConvType< uint64, uint8  >( uint64 iValue ) { return iValue >> 56;                           }
-template<> uint16   inline ConvType< uint32, uint16 >( uint32 iValue ) { return ( iValue + 1 + ( iValue>>16 ) ) >> 16;  }
-template<> uint16   inline ConvType< uint64, uint16 >( uint64 iValue ) { return iValue >> 48;                           }
-template<> uint32   inline ConvType< uint64, uint32 >( uint64 iValue ) { return iValue >> 32;                           }
-template<> float    inline ConvType< uint8,  float  >( uint8 iValue  ) { return iValue / (float)0xFF;                   }
-template<> float    inline ConvType< uint16, float  >( uint16 iValue ) { return iValue / (float)0xFFFF;                 }
-template<> float    inline ConvType< uint32, float  >( uint32 iValue ) { return iValue / (float)0xFFFFFFFF;             }
-template<> float    inline ConvType< uint64, float  >( uint64 iValue ) { return iValue / (float)0xFFFFFFFFFFFFFFFF;     }
-template<> double   inline ConvType< uint8,  double >( uint8 iValue  ) { return iValue / (double)0xFF;                  }
-template<> double   inline ConvType< uint16, double >( uint16 iValue ) { return iValue / (double)0xFFFF;                }
-template<> double   inline ConvType< uint32, double >( uint32 iValue ) { return iValue / (double)0xFFFFFFFF;            }
-template<> double   inline ConvType< uint64, double >( uint64 iValue ) { return iValue / (double)0xFFFFFFFFFFFFFFFF;    }
-template<> uint8    inline ConvType< float,  uint8  >( float iValue  ) { return uint8(  iValue * 0xFF               );  }
-template<> uint16   inline ConvType< float,  uint16 >( float iValue  ) { return uint16( iValue * 0xFFFF             );  }
-template<> uint32   inline ConvType< float,  uint32 >( float iValue  ) { return uint32( iValue * 0xFFFFFFFF         );  }
-template<> uint64   inline ConvType< float,  uint64 >( float iValue  ) { return uint64( iValue * 0xFFFFFFFFFFFFFFFF );  }
-template<> uint8    inline ConvType< double, uint8  >( double iValue ) { return uint8(  iValue * 0xFF               );  }
-template<> uint16   inline ConvType< double, uint16 >( double iValue ) { return uint16( iValue * 0xFFFF             );  }
-template<> uint32   inline ConvType< double, uint32 >( double iValue ) { return uint32( iValue * 0xFFFFFFFF         );  }
-template<> uint64   inline ConvType< double, uint64 >( double iValue ) { return uint64( iValue * 0xFFFFFFFFFFFFFFFF );  }
 
-template< typename T > T inline MinType() { return T(0); }
-template< typename T > T inline MaxType() { return T(1); }
-template<> uint8  inline MaxType< uint8  >() { return UINT8_MAX;    }
-template<> uint16 inline MaxType< uint16 >() { return UINT16_MAX;   }
-template<> uint32 inline MaxType< uint32 >() { return UINT32_MAX;   }
-template<> float  inline MaxType< float  >() { return 1.f;          }
-template<> double inline MaxType< double >() { return 0.0;          }
+template< typename T >
+static constexpr ULIS2_FORCEINLINE T _min( T iA, T iB ) {
+    return  iA < iB ? iA : iB;
+}
+
+template< typename T >
+static constexpr ULIS2_FORCEINLINE T _max( T iA, T iB ) {
+    return  iA > iB ? iA : iB;
+}
+
+template< typename T >
+static constexpr ULIS2_FORCEINLINE T _clamp( T iValue, T iMin, T iMax ) {
+    return  _max( iMin, _min( iValue, iMax ) );
+}
+
+
+template< typename T1, typename T2 > constexpr T2 inline ConvType( T1 iValue ) { return (T2)iValue; }
+template<> constexpr uint16   inline ConvType< uint8,  uint16 >( uint8 iValue  ) { return iValue * 0x101;                         }
+template<> constexpr uint32   inline ConvType< uint8,  uint32 >( uint8 iValue  ) { return iValue * 0x1010101;                     }
+template<> constexpr uint64   inline ConvType< uint8,  uint64 >( uint8 iValue  ) { return iValue * 0x10100000101;                 }
+template<> constexpr uint32   inline ConvType< uint16, uint32 >( uint16 iValue ) { return iValue * 0x10001;                       }
+template<> constexpr uint64   inline ConvType< uint16, uint64 >( uint16 iValue ) { return iValue * 0x1000100010001;               }
+template<> constexpr uint64   inline ConvType< uint32, uint64 >( uint32 iValue ) { return iValue * 0x100000001;                   }
+template<> constexpr uint8    inline ConvType< uint16, uint8  >( uint16 iValue ) { return ( iValue + 1 + ( iValue>>8 ) ) >> 8;    }
+template<> constexpr uint8    inline ConvType< uint32, uint8  >( uint32 iValue ) { return iValue >> 24;                           }
+template<> constexpr uint8    inline ConvType< uint64, uint8  >( uint64 iValue ) { return iValue >> 56;                           }
+template<> constexpr uint16   inline ConvType< uint32, uint16 >( uint32 iValue ) { return ( iValue + 1 + ( iValue>>16 ) ) >> 16;  }
+template<> constexpr uint16   inline ConvType< uint64, uint16 >( uint64 iValue ) { return iValue >> 48;                           }
+template<> constexpr uint32   inline ConvType< uint64, uint32 >( uint64 iValue ) { return iValue >> 32;                           }
+template<> constexpr float    inline ConvType< uint8,  float  >( uint8 iValue  ) { return iValue / (float)0xFF;                   }
+template<> constexpr float    inline ConvType< uint16, float  >( uint16 iValue ) { return iValue / (float)0xFFFF;                 }
+template<> constexpr float    inline ConvType< uint32, float  >( uint32 iValue ) { return iValue / (float)0xFFFFFFFF;             }
+template<> constexpr float    inline ConvType< uint64, float  >( uint64 iValue ) { return iValue / (float)0xFFFFFFFFFFFFFFFF;     }
+template<> constexpr double   inline ConvType< uint8,  double >( uint8 iValue  ) { return iValue / (double)0xFF;                  }
+template<> constexpr double   inline ConvType< uint16, double >( uint16 iValue ) { return iValue / (double)0xFFFF;                }
+template<> constexpr double   inline ConvType< uint32, double >( uint32 iValue ) { return iValue / (double)0xFFFFFFFF;            }
+template<> constexpr double   inline ConvType< uint64, double >( uint64 iValue ) { return iValue / (double)0xFFFFFFFFFFFFFFFF;    }
+template<> constexpr uint8    inline ConvType< float,  uint8  >( float iValue  ) { return uint8(  iValue * 0xFF               );  }
+template<> constexpr uint16   inline ConvType< float,  uint16 >( float iValue  ) { return uint16( iValue * 0xFFFF             );  }
+template<> constexpr uint32   inline ConvType< float,  uint32 >( float iValue  ) { return uint32( iValue * 0xFFFFFFFF         );  }
+template<> constexpr uint64   inline ConvType< float,  uint64 >( float iValue  ) { return uint64( iValue * 0xFFFFFFFFFFFFFFFF );  }
+template<> constexpr uint8    inline ConvType< double, uint8  >( double iValue ) { return uint8(  iValue * 0xFF               );  }
+template<> constexpr uint16   inline ConvType< double, uint16 >( double iValue ) { return uint16( iValue * 0xFFFF             );  }
+template<> constexpr uint32   inline ConvType< double, uint32 >( double iValue ) { return uint32( iValue * 0xFFFFFFFF         );  }
+template<> constexpr uint64   inline ConvType< double, uint64 >( double iValue ) { return uint64( iValue * 0xFFFFFFFFFFFFFFFF );  }
+template<> constexpr uint8    inline ConvType< int,  uint8  >( int iValue  ) { return _clamp( iValue, 0, (int)UINT8_MAX ); }
+template<> constexpr uint16   inline ConvType< int,  uint16 >( int iValue  ) { return ConvType< uint8, uint16 >( (uint8)_clamp( iValue, 0, (int)UINT8_MAX ) ); }
+template<> constexpr uint32   inline ConvType< int,  uint32 >( int iValue  ) { return ConvType< uint8, uint32 >( (uint8)_clamp( iValue, 0, (int)UINT8_MAX ) ); }
+template<> constexpr float    inline ConvType< int,  float  >( int iValue  ) { return ConvType< uint8, float  >( (uint8)_clamp( iValue, 0, (int)UINT8_MAX ) ); }
+template<> constexpr double   inline ConvType< int,  double >( int iValue  ) { return ConvType< uint8, double >( (uint8)_clamp( iValue, 0, (int)UINT8_MAX ) ); }
+
+template< typename T > T constexpr inline MinType() { return T(0); }
+template< typename T > T constexpr inline MaxType() { return T(1); }
+template<> uint8  constexpr inline MaxType< uint8  >() { return UINT8_MAX;    }
+template<> uint16 constexpr inline MaxType< uint16 >() { return UINT16_MAX;   }
+template<> uint32 constexpr inline MaxType< uint32 >() { return UINT32_MAX;   }
+template<> float  constexpr inline MaxType< float  >() { return 1.f;          }
+template<> double constexpr inline MaxType< double >() { return 0.0;          }
+
+
+constexpr uint8     operator "" _u8(  ullint i ) { return  (uint8)_clamp( i, (ullint)0, (ullint)UINT8_MAX ); }
+constexpr uint16    operator "" _u16( ullint i ) { return  ConvType< uint8, uint16 >( (uint8)_clamp( i, (ullint)0, (ullint)UINT8_MAX ) ); }
+constexpr uint32    operator "" _u32( ullint i ) { return  ConvType< uint8, uint32 >( (uint8)_clamp( i, (ullint)0, (ullint)UINT8_MAX ) ); }
+constexpr uint64    operator "" _u64( ullint i ) { return  ConvType< uint8, uint64 >( (uint8)_clamp( i, (ullint)0, (ullint)UINT8_MAX ) ); }
+constexpr float  fix8f() { return ( 128.0f / 255.0f ) - 0.5f; }
+constexpr double fix8d() { return ( 128.0 / 255.0 ) - 0.5; }
+struct __encodedlab_ab
+{
+    constexpr __encodedlab_ab( float i ) : m( i ) {}
+    constexpr float operator-(){        return  _clamp( -m + 0.5f, 0.f, 1.f ); }
+    constexpr float operator+(){        return  _clamp( +m + 0.5f, 0.f, 1.f ); }
+    constexpr operator float() const {  return  _clamp( +m + 0.5f, 0.f, 1.f ); }
+    float m;
+};
+
+constexpr float operator "" _L( ullint i) { return _clamp( i, (ullint)0, (ullint)100 ) / 100.f; }
+constexpr __encodedlab_ab operator "" _a( ullint i) { return  __encodedlab_ab( _clamp( i, (ullint)0, (ullint)128 ) / 255.f ); }
+constexpr __encodedlab_ab operator "" _b( ullint i) { return  __encodedlab_ab( _clamp( i, (ullint)0, (ullint)128 ) / 255.f ); }
 
 ULIS2_NAMESPACE_END
 

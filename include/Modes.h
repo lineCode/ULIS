@@ -23,19 +23,16 @@ enum class eBlendingMode : uint8
     , kErase
     , kBehind
     , kDissolve
-
     , kDarken
     , kMultiply
     , kColorBurn
     , kLinearBurn
     , kDarkerColor
-
     , kLighten
     , kScreen
     , kColorDodge
     , kLinearDodge
     , kLighterColor
-
     , kOverlay
     , kSoftLight
     , kHardLight
@@ -43,12 +40,10 @@ enum class eBlendingMode : uint8
     , kLinearLight
     , kPinLight
     , kHardMix
-
     , kDifference
     , kExclusion
     , kSubstract
     , kDivide
-
     , kHue
     , kSaturation
     , kColor
@@ -147,6 +142,7 @@ enum class eAlphaMode : uint8
     , kMul
     , kMin
     , kMax
+    , kInvMax
     , kNumAlphaModes
 };
 
@@ -177,7 +173,7 @@ static const char* kwAlphaMode[] =
         case eAlphaMode::kMul               :   X( eAlphaMode::kMul             );  break;  \
         case eAlphaMode::kMin               :   X( eAlphaMode::kMin             );  break;  \
         case eAlphaMode::kMax               :   X( eAlphaMode::kMax             );  break;  \
-        case eAlphaMode::kNumAlphaModes     :   X( eAlphaMode::kNumAlphaModes   );  break;  \
+        case eAlphaMode::kInvMax            :   X( eAlphaMode::kInvMax          );  break;  \
     }
 
 

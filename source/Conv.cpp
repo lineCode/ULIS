@@ -15,7 +15,7 @@
 #include "Pixel.h"
 #include "Maths.h"
 #include "Illuminants.h"
-#include "ModelSupport.h"
+#include "Models.h"
 #include "ColorProfile.h"
 #include "ProfileRegistry.h"
 #include "lcms2.h"
@@ -324,9 +324,9 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
             cmsCIELab Lab;
             cmsCIEXYZ XYZ;
             cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() ) * 255.0;
-            Lab.a = ( ConvType< T1, double >( iSrc.a< T1 >() ) - 0.5 ) * 128.0;
-            Lab.b = ( ConvType< T1, double >( iSrc.b< T1 >() ) - 0.5 ) * 128.0;
+            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() ) * 100.0;
+            Lab.a = ( ConvType< T1, double >( iSrc.a< T1 >() ) - 0.5 ) * 255.0;
+            Lab.b = ( ConvType< T1, double >( iSrc.b< T1 >() ) - 0.5 ) * 255.0;
             cmsLab2XYZ( &D65, &XYZ, &Lab );
             FPixel temp( ULIS2_FORMAT_XYZAD );
             temp.SetXD( XYZ.X / 100.0 );
@@ -1036,10 +1036,10 @@ ToLab( const IPixel& iSrc, IPixel& iDst )
             XYZ.Y = ConvType< T1, double >( iSrc.Y< T1 >() ) * 100.0;
             XYZ.Z = ConvType< T1, double >( iSrc.Z< T1 >() ) * 100.0;
             cmsXYZ2Lab( &D65, &Lab, &XYZ );
-            // Note: / 255 & / 128 + 0.5 to keep lab in range [0;1]
-            iDst.SetL< T2 >( ConvType< double, T2 >( Lab.L / 255.0 ) );
-            iDst.Seta< T2 >( ConvType< double, T2 >( Lab.a / 128.0 + 0.5 ) );
-            iDst.Setb< T2 >( ConvType< double, T2 >( Lab.b / 128.0 + 0.5 ) );
+            // Note: / 100 & / 255 + 0.5 to keep lab in range [0;1]
+            iDst.SetL< T2 >( ConvType< double, T2 >( Lab.L / 100.0 ) );
+            iDst.Seta< T2 >( ConvType< double, T2 >( Lab.a / 255.0 + 0.5 ) );
+            iDst.Setb< T2 >( ConvType< double, T2 >( Lab.b / 255.0 + 0.5 ) );
             iDst.SetA< T2 >( ConvType< T1, T2 >( iSrc.A< T1 >() ) );
             return;
         }
@@ -1136,9 +1136,9 @@ ToXYZ( const IPixel& iSrc, IPixel& iDst )
             cmsCIELab Lab;
             cmsCIEXYZ XYZ;
             cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() ) * 255.0;
-            Lab.a = ( ConvType< T1, double >( iSrc.a< T1 >() ) - 0.5 ) * 128.0;
-            Lab.b = ( ConvType< T1, double >( iSrc.b< T1 >() ) - 0.5 ) * 128.0;
+            Lab.L = ConvType< T1, double >( iSrc.L< T1 >() ) * 100.0;
+            Lab.a = ( ConvType< T1, double >( iSrc.a< T1 >() ) - 0.5 ) * 255.0;
+            Lab.b = ( ConvType< T1, double >( iSrc.b< T1 >() ) - 0.5 ) * 255.0;
             cmsLab2XYZ( &D65, &XYZ, &Lab );
             iDst.SetX< T2 >( ConvType< double, T2 >( XYZ.X ) );
             iDst.SetY< T2 >( ConvType< double, T2 >( XYZ.Y ) );

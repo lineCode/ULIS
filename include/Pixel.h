@@ -443,6 +443,30 @@ public:
     FPixelValue( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelValue( const FPixelProxy& iProxy );
 
+    template< typename T >
+    FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile = nullptr )
+        : tParent( iFormat, iProfile )
+    {
+        mData = new tByte[ Depth() ];
+        switch( Type() )
+        {
+            case eType::kUint8:     Set_imp< T, uint8  >( iValues ); return;
+            case eType::kUint16:    Set_imp< T, uint16 >( iValues ); return;
+            case eType::kUint32:    Set_imp< T, uint32 >( iValues ); return;
+            case eType::kFloat:     Set_imp< T, float  >( iValues ); return;
+            case eType::kDouble:    Set_imp< T, double >( iValues ); return;
+        }
+    }
+
+private:
+    template< typename T1, typename T2 >
+    ULIS2_FORCEINLINE void Set_imp( const std::initializer_list< T1 > iValues )
+    {
+        ULIS2_ASSERT( iValues.size() == NumSamples(), "Bad input values" );
+        for( int i = 0; i < iValues.size(); ++i )
+            SetValue< T2 >( i, ConvType< T1, T2 >( *(iValues.begin() + i) ) );
+    }
+
 public:
     // Named static constructors
     /*
@@ -500,7 +524,6 @@ public:
 
 };
 typedef FPixelValue FPixel;
-typedef FPixelValue FColor;
 
 /////////////////////////////////////////////////////
 /// @class      FPixelProxy

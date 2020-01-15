@@ -15,19 +15,25 @@
 #include <CL/cl.hpp>
 using namespace ::ul2;
 
+
 int
 main()
 {
     FBlock block( 256, 256, ULIS2_FORMAT_RGBAF );
-    FColor color( ULIS2_FORMAT_LabAF );
-    memset( block.DataPtr(), 1, 256 * 256 * 3 * 1 );
-    color.SetLF( +62 / 255.f );
-    color.SetaF( +81 / 128.f + 0.5f );
-    color.SetbF( -58 / 128.f + 0.5f );
-    color.SetAF( 1.f );
+    FBlock block2( 256, 256, ULIS2_FORMAT_RGBAF );
+    FPixel color( ULIS2_FORMAT_LabAF, { 0.5, 0.2, 0.7, 1.0 }    );
+    FPixel rgb( ULIS2_FORMAT_RGB8,    { 255, 81, 255 }          );
+    FPixel lab( ULIS2_FORMAT_LabAF,   { +100_L, +64_a, -20_b, 1.f }    );
+    Conv( rgb, lab );
     FThreadPool pool;
     FPerf perf( true, true, true );
+    ClearRaw( &block );
+    CopyRaw( &block2, &block );
+    Clear( pool, &block2 );
+    Copy( pool, &block2, &block );
+    Swap( pool, &block2, 0, 2 );
     Fill( pool, &block, color, perf );
+    Blend( pool, &block, &block2 );
     FPixelProxy prox = block.PixelProxy( 240, 0 );
     std::cout << (float)prox.RF() << std::endl;
     std::cout << (float)prox.GF() << std::endl;
@@ -83,7 +89,6 @@ main()
 
     //create queue to which we will push commands for the device.
     cl::CommandQueue queue(context,default_device);
-
     //write arrays A and B to the device
     queue.enqueueWriteBuffer(buffer_A,CL_TRUE,0,sizeof(int)*10,A);
     queue.enqueueWriteBuffer(buffer_B,CL_TRUE,0,sizeof(int)*10,B);
@@ -102,7 +107,11 @@ main()
     }
 
     cl_int err;
-    cl::Image2D resource( context, CL_MEM_READ_WRITE, { CL_RGBA, CL_FLOAT }, 256, 256, 0, nullptr, &err );
+    cl::size_t< 3 > origin;
+    cl::size_t< 3 > region;
+    region[0] = 256;
+    region[1] = 256;
+    cl::Image2D resource( context, CL_MEM_USE_HOST_PTR, { CL_RGBA, CL_FLOAT }, 256, 256, 0, block.DataPtr(), &err );
     std::cout << err << std::endl;
     std::cout << resource.getInfo< CL_MEM_SIZE >( &err ) << std::endl;
     std::cout << err << std::endl;
