@@ -39,56 +39,56 @@ BlendMono( const FBlock*    iSource
     tByte*          bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp ); // Backdrop Pointer in dst ROI
 
     // Build Redirection Tables
-    uint8* index_table = new uint8[ ncc ];                                                  // Table of redirected index
-    uint8  alpha_index;                                                                     // Alpha Index
-    switch( cod )
-    {
-        case 1:
-            for( tSize i = 0; i < ncc; ++i )
-                index_table[i] = ( msp - i );
-            alpha_index = 0;
-            break;
-
-        case 2:
-            for( tSize i = 0; i < ncc; ++i )
-                index_table[i] = ( i + 1 ) > msp ? 0 : i + 1;
-            alpha_index = 0;
-            break;
-
-        case 3:
-            for( tSize i = 0; i < ncc; ++i )
-                index_table[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1;
-            alpha_index = msp;
-            break;
-
-        default:
-            for( tSize i = 0; i < ncc; ++i )
-                index_table[i] = i;
-            alpha_index = msp;
+    uint8* index_table  = new uint8[ spp ];
+    uint8 alpha_index   = 0;
+    switch( cod ) {
+        case 1:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( msp - i );                                     alpha_index = 0;    break;
+        case 2:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( i + 1 ) > msp ? 0 : i + 1;                     alpha_index = 0;    break;
+        case 3:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1;     alpha_index = msp;  break;
+        default: for( tSize i = 0; i < spp; ++i ) index_table[i] = i;                                               alpha_index = msp;  break;
     }
+
+    // Data Holders to abstract away the Alpha.
+    float*  srcd = new  float[ ncc + 1 ];
+    float*  bdpd = new  float[ ncc + 1 ];
+    for( tSize i = 0; i < ncc + 1; ++i )
+    { srcd[i] = 1.f;    bdpd[i] = 1.f; }
 
     // Process
-    for( uint32 y = 0; y < (uint32)iSrcRoi.h; ++y )
+    const tSize count = iSrcRoi.w * iSrcRoi.h;
+    for( tSize i = 0; i < count; ++i )
     {
-        for( uint32 x = 0; x < (uint32)iSrcRoi.w; ++x )
+        for( tSize j = 0; j < ( spp ); ++j )
         {
-            // Precomp
-            const float alpha_bdp       = hea ? ConvType< T, float >( *( (T*)( bdp + alpha_index ) ) )              : 1.0f;
-            const float alpha_src       = hea ? ConvType< T, float >( *( (T*)( bdp + alpha_index ) ) ) * iOpacity   : iOpacity;
-            const float alpha_comp      = ( alpha_bdp + alpha_src ) - ( alpha_bdp * alpha_src );
-            const float alpha_result    = 1.0f;
-            const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
-            // Compute Separable Channels
-            for( tSize i = 0; i < ncc; ++i )
-                *( (T*)( bdp + index_table[i] ) ) = ConvType< float, T >( 1.0f );
-            // Emplace alpha result
-            if( hea ) *( (T*)( bdp + alpha_index ) ) = ConvType< float, T >( alpha_result );
-            src += bpp;
-            bdp += bpp;
+            uint8 r = index_table[j];
+            srcd[ r ] = ConvType< T, float >( *( (T*)( src + r ) ) );
+            bdpd[ r ] = ConvType< T, float >( *( (T*)( bdp + r ) ) );
         }
-        src += bps;
-        bdp += bps;
+
+        // Precomp
+        const float alpha_bdp       = bdpd[ alpha_index ];
+        const float alpha_src       = srcd[ alpha_index ] * iOpacity;
+        const float alpha_comp      = ( alpha_bdp + alpha_src ) - ( alpha_bdp * alpha_src );
+        const float alpha_result    = 1.0f;
+        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
+        // Compute Separable Channels in float
+        for( tSize j = 0; j < ncc; ++j )
+            bdpd[ index_table[ j ] ] = 1.f;
+        bdpd[ alpha_index ] = alpha_result;
+
+        // Emplace result
+        for( tSize j = 0; j < spp; ++j )
+            *( (T*)( bdp + index_table[ j ] ) ) = ConvType< float, T >( bdpd[ index_table[ j ] ] );
+
+        // Increment ptrs by one pixel
+        src += bpp;
+        bdp += bpp;
     }
+
+    // Delete temporary data
+    delete [] index_table;
+    delete [] srcd;
+    delete [] bdpd;
 }
 
 
@@ -150,7 +150,8 @@ Blend_select_BM( FThreadPool&   iPool
     switch( iBlendingMode )
     {
         case eBlendingMode::kNormal:        Blend_select_AM< T, eBlendingMode::kNormal       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kErase:         Blend_select_AM< T, eBlendingMode::kErase        >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case eBlendingMode::kTop:           Blend_select_AM< T, eBlendingMode::kTop          >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case eBlendingMode::kBack:          Blend_select_AM< T, eBlendingMode::kBack         >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
         case eBlendingMode::kBehind:        Blend_select_AM< T, eBlendingMode::kBehind       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
         case eBlendingMode::kDissolve:      Blend_select_AM< T, eBlendingMode::kDissolve     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
         case eBlendingMode::kDarken:        Blend_select_AM< T, eBlendingMode::kDarken       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
@@ -254,4 +255,3 @@ BlendRect( FThreadPool&     iPool
 }
 
 ULIS2_NAMESPACE_END
-

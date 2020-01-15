@@ -19,8 +19,10 @@ using namespace ::ul2;
 int
 main()
 {
-    FBlock block( 256, 256, ULIS2_FORMAT_RGBAF );
-    FBlock block2( 256, 256, ULIS2_FORMAT_RGBAF );
+    FBlock block( 256, 256, ULIS2_FORMAT_ARGBF );
+    for( int i = 0; i < block.SamplesPerPixel(); ++i )
+        std::cout << (int)block.RedirectedIndex( i ) << std::endl;
+    FBlock block2( 256, 256, ULIS2_FORMAT_ARGBF );
     FPixel color( ULIS2_FORMAT_LabAF, { 0.5, 0.2, 0.7, 1.0 }    );
     FPixel rgb( ULIS2_FORMAT_RGB8,    { 255, 81, 255 }          );
     FPixel lab( ULIS2_FORMAT_LabAF,   { +100_L, +64_a, -20_b, 1.f }    );
@@ -33,7 +35,8 @@ main()
     Copy( pool, &block2, &block );
     Swap( pool, &block2, 0, 2 );
     Fill( pool, &block, color, perf );
-    Blend( pool, &block, &block2 );
+    FPerf perf2( false, false, false );
+    Blend( pool, &block, &block2, FPoint(), eBlendingMode::kNormal, eAlphaMode::kNormal, 1.f, perf2, true );
     FPixelProxy prox = block.PixelProxy( 240, 0 );
     std::cout << (float)prox.RF() << std::endl;
     std::cout << (float)prox.GF() << std::endl;

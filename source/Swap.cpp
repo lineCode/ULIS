@@ -19,7 +19,6 @@
 ULIS2_NAMESPACE_BEGIN
 // TODO: This could benefit from SSE / AVX with shuffle masks.
 // This would still require special handling for scanline ends to avoid concurrency issues.
-
 void
 InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2, tSize iBPC, tSize iBPP )
 {

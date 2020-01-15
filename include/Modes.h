@@ -20,7 +20,8 @@ ULIS2_NAMESPACE_BEGIN
 enum class eBlendingMode : uint8
 {
       kNormal
-    , kErase
+    , kTop
+    , kBack
     , kBehind
     , kDissolve
     , kDarken
@@ -56,7 +57,8 @@ enum class eBlendingMode : uint8
 static const char* kwBlendingMode[] =
 {
       "Normal"
-    , "Erase"
+    , "Top"
+    , "Back"
     , "Behind"
     , "Dissolve"
 
@@ -158,6 +160,7 @@ static const char* kwAlphaMode[] =
     , "Mul"
     , "Min"
     , "Max"
+    , "InvMax"
     , "Invalid"
 };
 
