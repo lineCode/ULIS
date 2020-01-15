@@ -44,14 +44,10 @@ public:
     bool            Swapped()           const;
     bool            Reversed()          const;
     uint8           NumSamples()        const;
-    uint8           MaxSample()         const;
     uint8           NumColorChannels()  const;
     FColorProfile*  Profile()           const;
-
-public:
-    // Index Layout API
-    uint8  RedIndex( uint8 iIndex ) const;
-    uint8  AlphaIndex() const;
+    uint8           RedirectedIndex( uint8 iIndex ) const;
+    uint8           AlphaIndex()                    const;
 
 public:
     // Generic access API

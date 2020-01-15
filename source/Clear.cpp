@@ -26,6 +26,8 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iS
         _mm256_storeu_si256( (__m256i*)iDst, _mm256_setzero_si256() );
         iDst += iStride;
     }
+    // Remaining unaligned scanline end:
+    // avoid concurrent write on 256 bit with avx and perform a memset instead
     memset( iDst, 0, iCount - index );
 }
 
@@ -39,12 +41,14 @@ InvokeFillMTProcessScanline_SSE( tByte* iDst, const tSize iCount, const tSize iS
         _mm_storeu_si128( (__m128i*)iDst, _mm_setzero_si128() );
         iDst += iStride;
     }
+    // Remaining unaligned scanline end:
+    // avoid concurrent write on 128 bit with SSE and perform a memset instead
     memset( iDst, 0, iCount - index );
 }
 
 
 void
-InvokeFillMTProcessScanline_mem( tByte* iDst, tSize iCount, tSize iStride )
+InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, tSize iStride )
 {
     memset( iDst, 0, iCount );
 }
@@ -78,7 +82,7 @@ ClearMT( FThreadPool&   iPool
     }
     else
     {
-        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_mem( DST, iRoi.w, bpp ); } );
+        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iRoi.w, bpp ); } );
     }
 }
 

@@ -243,6 +243,37 @@ FBlock::Profile() const
 }
 
 
+uint8
+FBlock::RedirectedIndex( uint8 iIndex ) const
+{
+    uint8 max_sample = SamplesPerPixel() - 1;
+    uint8 code = ULIS2_R_RS( mFormat );
+    switch( code )
+    {
+        case 1:     return  ( max_sample - iIndex );
+        case 2:     return  ( iIndex + 1 ) > max_sample ? 0 : iIndex + 1;
+        case 3:     return  ( max_sample - iIndex ) - 1 < 0 ? max_sample : ( max_sample - iIndex ) - 1;
+        default:    return  iIndex;
+    }
+}
+
+
+uint8
+FBlock::AlphaIndex() const
+{
+    ULIS2_ASSERT( HasAlpha(), "Bad Call" );
+    uint8 max_sample = SamplesPerPixel() - 1;
+    uint8 code = ULIS2_R_RS( mFormat );
+    switch( code )
+    {
+        case 1:     return  0;
+        case 2:     return  0;
+        case 3:     return  max_sample;
+        default:    return  max_sample;
+    }
+}
+
+
 void
 FBlock::Invalidate( bool iCall ) const
 {

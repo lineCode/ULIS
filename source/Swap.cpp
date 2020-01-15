@@ -17,8 +17,11 @@
 #include "ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
+// TODO: This could benefit from SSE / AVX with shuffle masks.
+// This would still require special handling for scanline ends to avoid concurrency issues.
+
 void
-InvokeSwapMTProcessScanline( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2, tSize iBPC, tSize iBPP )
+InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2, tSize iBPC, tSize iBPP )
 {
     tByte* tmp = new tByte[iBPC];
     tByte* dst = iDst;
@@ -47,7 +50,7 @@ SwapMT( FThreadPool&    iPool
     const tSize bps = bpp * w;
     tByte*      dsb = iDst->DataPtr();
     #define DST dsb + ( iLine * bps )
-    ParallelFor( iPool, iDst->Height(), iPerf, ULIS2_PF_CALL { InvokeSwapMTProcessScanline( DST, w, iC1, iC2, bpc, bpp ); } );
+    ParallelFor( iPool, iDst->Height(), iPerf, ULIS2_PF_CALL { InvokeSwapMTProcessScanline_MEM( DST, w, iC1, iC2, bpc, bpp ); } );
 }
 
 

@@ -293,7 +293,6 @@ template<> uint32 constexpr inline MaxType< uint32 >() { return UINT32_MAX;   }
 template<> float  constexpr inline MaxType< float  >() { return 1.f;          }
 template<> double constexpr inline MaxType< double >() { return 0.0;          }
 
-
 constexpr uint8     operator "" _u8(  ullint i ) { return  (uint8)_clamp( i, (ullint)0, (ullint)UINT8_MAX ); }
 constexpr uint16    operator "" _u16( ullint i ) { return  ConvType< uint8, uint16 >( (uint8)_clamp( i, (ullint)0, (ullint)UINT8_MAX ) ); }
 constexpr uint32    operator "" _u32( ullint i ) { return  ConvType< uint8, uint32 >( (uint8)_clamp( i, (ullint)0, (ullint)UINT8_MAX ) ); }

@@ -125,13 +125,6 @@ IPixel::NumSamples() const
 
 
 uint8
-IPixel::MaxSample() const
-{
-    return  NumSamples() - 1;
-}
-
-
-uint8
 IPixel::NumColorChannels() const
 {
     return  static_cast< uint8 >( ULIS2_R_CHANNELS( mFormat ) );
@@ -145,12 +138,10 @@ IPixel::Profile() const
 }
 
 
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------------- Index Layout API
 uint8
-IPixel::RedIndex( uint8 iIndex ) const
+IPixel::RedirectedIndex( uint8 iIndex ) const
 {
-    uint8 max_sample   = MaxSample();
+    uint8 max_sample = NumSamples() - 1;
     uint8 code = ULIS2_R_RS( mFormat );
     switch( code )
     {
@@ -166,7 +157,7 @@ uint8
 IPixel::AlphaIndex() const
 {
     ULIS2_ASSERT( HasAlpha(), "Bad Call" );
-    uint8 max_sample = MaxSample();
+    uint8 max_sample = NumSamples() - 1;
     uint8 code = ULIS2_R_RS( mFormat );
     switch( code )
     {
@@ -249,7 +240,7 @@ template< typename T >
 T
 IPixel::GetValue( uint8 iIndex ) const
 {
-    return  GetValueRaw< T >( RedIndex( iIndex ) );
+    return  GetValueRaw< T >( RedirectedIndex( iIndex ) );
 }
 
 
@@ -257,7 +248,7 @@ template< typename T >
 T&
 IPixel::GetRef( uint8 iIndex )
 {
-    return  GetRefRaw< T >( RedIndex( iIndex ) );
+    return  GetRefRaw< T >( RedirectedIndex( iIndex ) );
 }
 
 
@@ -265,7 +256,7 @@ template< typename T >
 const T&
 IPixel::GetConstRef( uint8 iIndex ) const
 {
-    return  GetConstRefRaw< T >( RedIndex( iIndex ) );
+    return  GetConstRefRaw< T >( RedirectedIndex( iIndex ) );
 }
 
 
@@ -273,7 +264,7 @@ template< typename T >
 void
 IPixel::SetValue( uint8 iIndex, T iValue )
 {
-    SetValueRaw< T >( RedIndex( iIndex ), iValue );
+    SetValueRaw< T >( RedirectedIndex( iIndex ), iValue );
 }
 
 
@@ -327,7 +318,7 @@ FPixelProxy::~FPixelProxy()
 FPixelProxy::FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile )
     : tParent( iFormat, iProfile )
 {
-    ULIS2_ERROR( iData, "Bad data provided." );
+    ULIS2_ASSERT( iData, "Bad data provided." );
     mData = iData;
 }
 
@@ -335,7 +326,7 @@ FPixelProxy::FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile
 FPixelProxy::FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iProfile )
     : tParent( iFormat, iProfile )
 {
-    ULIS2_ERROR( iData, "Bad data provided." );
+    ULIS2_ASSERT( iData, "Bad data provided." );
     mData = const_cast< tByte* >( iData );
 }
 

@@ -24,6 +24,8 @@ void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSiz
         _mm256_storeu_si256( (__m256i*)iDst, _mm256_loadu_si256( (const __m256i*)iSrc ) );
         iDst += iStride;
     }
+    // Remaining unaligned scanline end:
+    // avoid concurrent write on 256 bit with AVS and perform a memcpy instead
     memcpy( iDst, &iSrc, iCount - index );
 }
 
@@ -36,11 +38,13 @@ void InvokeCopyMTProcessScanline_SSE( tByte* iDst, const tByte* iSrc, const tSiz
         _mm_storeu_si128( (__m128i*)iDst, _mm_loadu_si128( (const __m128i*)iSrc ) );
         iDst += iStride;
     }
+    // Remaining unaligned scanline end:
+    // avoid concurrent write on 128 bit with SSE and perform a memcpy instead
     memcpy( iDst, &iSrc, iCount - index );
 }
 
 
-void InvokeCopyMTProcessScanline_mem( tByte* iDst, const tByte* iSrc, tSize iCount )
+void InvokeCopyMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCount )
 {
     memcpy( iDst, iSrc, iCount );
 }
@@ -80,7 +84,7 @@ CopyMT( FThreadPool&    iPool
     else
     {
         const tSize count = iSrcRoi.w * bpp;
-        ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_mem( DST, SRC, iSrcRoi.w ); } );
+        ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_MEM( DST, SRC, iSrcRoi.w ); } );
     }
 }
 

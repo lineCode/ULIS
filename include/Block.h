@@ -67,6 +67,8 @@ public:
     uint8                   SamplesPerPixel()                                   const;
     uint8                   NumColorChannels()                                  const;
     FColorProfile*          Profile()                                           const;
+    uint8                   RedirectedIndex( uint8 iIndex )                     const;
+    uint8                   AlphaIndex()                                        const;
     void                    Invalidate( bool iCall = true )                     const;
     void                    Invalidate( const FRect& iRect, bool iCall = true ) const;
     FRect                   Rect()                                              const;
