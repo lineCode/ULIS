@@ -48,10 +48,29 @@ void BlendMono_MEM_Separable( const FBlock* iSource
     uint8* index_table  = new uint8[ spp ];
     uint8 alpha_index   = 0;
     switch( cod ) {
-        case 1:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( msp - i );                                     alpha_index = 0;    break;
-        case 2:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( i + 1 ) > msp ? 0 : i + 1;                     alpha_index = 0;    break;
-        case 3:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1;     alpha_index = msp;  break;
-        default: for( tSize i = 0; i < spp; ++i ) index_table[i] = i;                                               alpha_index = msp;  break;
+        case 1:
+            for( int i = 0; i < spp; ++i )
+                index_table[i] = ( msp - i );
+            alpha_index = 0;
+            break;
+
+        case 2:
+            for( int i = 0; i < spp; ++i )
+                index_table[i] = ( i + 1 ) > msp ? 0 : i + 1;
+            alpha_index = 0;
+            break;
+
+        case 3:
+            for( int i = 0; i < spp; ++i )
+                index_table[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1;
+            alpha_index = msp;
+            break;
+
+        default:
+            for( int i = 0; i < spp; ++i )
+                index_table[i] = i;
+            alpha_index = msp;
+            break;
     }
 
     // Data Holders to abstract away the Alpha.
@@ -78,38 +97,37 @@ void BlendMono_MEM_Separable( const FBlock* iSource
         const float alpha_result    = 1.0f;
         const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
         // Compute Separable Channels in float
-        for( tSize j = 0; j < ncc; ++j )
-        {
+        for( tSize j = 0; j < ncc; ++j ) {
             uint8 r = index_table[j];
             switch( iBlendingMode ) {
-                case BM_NORMAL          :   bdpd[ index_table[ j ] ] = BlendNormalF( srcd[r], bdpd[r] ); break;
-                case BM_TOP             :   bdpd[ index_table[ j ] ] = BlendTopF( srcd[r], bdpd[r] ); break;
-                case BM_BACK            :   bdpd[ index_table[ j ] ] = BlendBackF( srcd[r], bdpd[r] ); break;
-                case BM_BEHIND          :   bdpd[ index_table[ j ] ] = BlendBehindF( srcd[r], bdpd[r] ); break;
-                case BM_DARKEN          :   bdpd[ index_table[ j ] ] = BlendDarkenF( srcd[r], bdpd[r] ); break;
-                case BM_MULTIPY         :   bdpd[ index_table[ j ] ] = BlendMultiplyF( srcd[r], bdpd[r] ); break;
-                case BM_COLORBURN       :   bdpd[ index_table[ j ] ] = BlendColorBurnF( srcd[r], bdpd[r] ); break;
-                case BM_LINEARBURN      :   bdpd[ index_table[ j ] ] = BlendLinearBurnF( srcd[r], bdpd[r] ); break;
-                case BM_LIGHTEN         :   bdpd[ index_table[ j ] ] = BlendLightenF( srcd[r], bdpd[r] ); break;
-                case BM_SCREEN          :   bdpd[ index_table[ j ] ] = BlendScreenF( srcd[r], bdpd[r] ); break;
-                case BM_COLORDODGE      :   bdpd[ index_table[ j ] ] = BlendColorDodgeF( srcd[r], bdpd[r] ); break;
-                case BM_LINEARDODGE     :   bdpd[ index_table[ j ] ] = BlendLinearDodgeF( srcd[r], bdpd[r] ); break;
-                case BM_OVERLAY         :   bdpd[ index_table[ j ] ] = BlendOverlayF( srcd[r], bdpd[r] ); break;
-                case BM_SOFTLIGHT       :   bdpd[ index_table[ j ] ] = BlendSoftLightF( srcd[r], bdpd[r] ); break;
-                case BM_HARDLIGHT       :   bdpd[ index_table[ j ] ] = BlendHardLightF( srcd[r], bdpd[r] ); break;
-                case BM_VIVIDLIGHT      :   bdpd[ index_table[ j ] ] = BlendVividLightF( srcd[r], bdpd[r] ); break;
-                case BM_LINEARLIGHT     :   bdpd[ index_table[ j ] ] = BlendLinearLightF( srcd[r], bdpd[r] ); break;
-                case BM_PINLIGHT        :   bdpd[ index_table[ j ] ] = BlendPinLightF( srcd[r], bdpd[r] ); break;
-                case BM_HARDMIX         :   bdpd[ index_table[ j ] ] = BlendHardMixF( srcd[r], bdpd[r] ); break;
-                case BM_PHOENIX         :   bdpd[ index_table[ j ] ] = BlendPhoenixF( srcd[r], bdpd[r] ); break;
-                case BM_REFLECT         :   bdpd[ index_table[ j ] ] = BlendReflectF( srcd[r], bdpd[r] ); break;
-                case BM_GLOW            :   bdpd[ index_table[ j ] ] = BlendGlowF( srcd[r], bdpd[r] ); break;
-                case BM_DIFFERENCE      :   bdpd[ index_table[ j ] ] = BlendDifferenceF( srcd[r], bdpd[r] ); break;
-                case BM_EXCLUSION       :   bdpd[ index_table[ j ] ] = BlendExclusionF( srcd[r], bdpd[r] ); break;
-                case BM_ADD             :   bdpd[ index_table[ j ] ] = BlendAddF( srcd[r], bdpd[r] ); break;
-                case BM_SUBSTRACT       :   bdpd[ index_table[ j ] ] = BlendSubstractF( srcd[r], bdpd[r] ); break;
-                case BM_DIVIDE          :   bdpd[ index_table[ j ] ] = BlendDivideF( srcd[r], bdpd[r] ); break;
-                case BM_AVERAGE         :   bdpd[ index_table[ j ] ] = BlendAverageF( srcd[r], bdpd[r] ); break;
+                case BM_NORMAL          :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendNormalF(        srcd[r], bdpd[r] ) ); break;
+                case BM_TOP             :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendTopF(           srcd[r], bdpd[r] ) ); break;
+                case BM_BACK            :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendBackF(          srcd[r], bdpd[r] ) ); break;
+                case BM_BEHIND          :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendBehindF(        srcd[r], bdpd[r] ) ); break;
+                case BM_DARKEN          :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendDarkenF(        srcd[r], bdpd[r] ) ); break;
+                case BM_MULTIPY         :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendMultiplyF(      srcd[r], bdpd[r] ) ); break;
+                case BM_COLORBURN       :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendColorBurnF(     srcd[r], bdpd[r] ) ); break;
+                case BM_LINEARBURN      :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendLinearBurnF(    srcd[r], bdpd[r] ) ); break;
+                case BM_LIGHTEN         :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendLightenF(       srcd[r], bdpd[r] ) ); break;
+                case BM_SCREEN          :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendScreenF(        srcd[r], bdpd[r] ) ); break;
+                case BM_COLORDODGE      :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendColorDodgeF(    srcd[r], bdpd[r] ) ); break;
+                case BM_LINEARDODGE     :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendLinearDodgeF(   srcd[r], bdpd[r] ) ); break;
+                case BM_OVERLAY         :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendOverlayF(       srcd[r], bdpd[r] ) ); break;
+                case BM_SOFTLIGHT       :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendSoftLightF(     srcd[r], bdpd[r] ) ); break;
+                case BM_HARDLIGHT       :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendHardLightF(     srcd[r], bdpd[r] ) ); break;
+                case BM_VIVIDLIGHT      :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendVividLightF(    srcd[r], bdpd[r] ) ); break;
+                case BM_LINEARLIGHT     :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendLinearLightF(   srcd[r], bdpd[r] ) ); break;
+                case BM_PINLIGHT        :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendPinLightF(      srcd[r], bdpd[r] ) ); break;
+                case BM_HARDMIX         :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendHardMixF(       srcd[r], bdpd[r] ) ); break;
+                case BM_PHOENIX         :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendPhoenixF(       srcd[r], bdpd[r] ) ); break;
+                case BM_REFLECT         :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendReflectF(       srcd[r], bdpd[r] ) ); break;
+                case BM_GLOW            :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendGlowF(          srcd[r], bdpd[r] ) ); break;
+                case BM_DIFFERENCE      :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendDifferenceF(    srcd[r], bdpd[r] ) ); break;
+                case BM_EXCLUSION       :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendExclusionF(     srcd[r], bdpd[r] ) ); break;
+                case BM_ADD             :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendAddF(           srcd[r], bdpd[r] ) ); break;
+                case BM_SUBSTRACT       :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendSubstractF(     srcd[r], bdpd[r] ) ); break;
+                case BM_DIVIDE          :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendDivideF(        srcd[r], bdpd[r] ) ); break;
+                case BM_AVERAGE         :   bdpd[ index_table[ j ] ] = ComposeF( srcd[r], bdpd[r], alpha_bdp, var, BlendAverageF(       srcd[r], bdpd[r] ) ); break;
             }
         }
 

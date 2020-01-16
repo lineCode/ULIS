@@ -141,14 +141,15 @@ IPixel::Profile() const
 uint8
 IPixel::RedirectedIndex( uint8 iIndex ) const
 {
-    uint8 max_sample = NumSamples() - 1;
+    int max_sample = NumSamples() - 1;
+    int index = iIndex;
     uint8 code = ULIS2_R_RS( mFormat );
     switch( code )
     {
-        case 1:     return  ( max_sample - iIndex );
-        case 2:     return  ( iIndex + 1 ) > max_sample ? 0 : iIndex + 1;
-        case 3:     return  ( max_sample - iIndex ) - 1 < 0 ? max_sample : ( max_sample - iIndex ) - 1;
-        default:    return  iIndex;
+        case 1:     return  ( max_sample - index );
+        case 2:     return  ( index + 1 ) > max_sample ? 0 : index + 1;
+        case 3:     return  ( max_sample - index ) - 1 < 0 ? max_sample : ( max_sample - index ) - 1;
+        default:    return  index;
     }
 }
 

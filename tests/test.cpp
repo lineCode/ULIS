@@ -23,8 +23,8 @@ main()
     for( int i = 0; i < block.SamplesPerPixel(); ++i )
         std::cout << (int)block.RedirectedIndex( i ) << std::endl;
     FBlock block2( 256, 256, ULIS2_FORMAT_ARGBF );
-    FPixel color( ULIS2_FORMAT_LabAF, { 0.5, 0.2, 0.7, 1.0 }    );
-    FPixel rgb( ULIS2_FORMAT_RGB8,    { 255, 81, 255 }          );
+    FPixel color( ULIS2_FORMAT_LabAF, { 0.5, 0.2, 0.7, 1.0 } );
+    FPixel rgb( ULIS2_FORMAT_RGB8,    { 255, 81, 255 }      );
     FPixel lab( 0, UEncodeLabA( 100, 64, -20, 1.0 ) );
     Conv( rgb, lab );
     FThreadPool pool;

@@ -17,6 +17,12 @@
 #include "Maths.h"
 
 ULIS2_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Compositing
+ULIS2_FORCEINLINE
+float ComposeF( float iCs, float iCb, float iAb, float iVar, float iCr ) {
+    return ( 1.f - iVar ) * iCb + iVar * ( ( 1.f - iAb ) *iCs + iAb * iCr );
+}
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Normal
