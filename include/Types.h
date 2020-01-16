@@ -1,0 +1,69 @@
+// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+/**
+*
+*   ULIS2
+*__________________
+*
+* @file         Types.h
+* @author       Clement Berthaud
+* @brief        This file provides core types definitions for the ULIS2 library.
+* @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
+#pragma once
+#include "CoreInternal.h"
+#include <cstdint>
+
+ULIS2_NAMESPACE_BEGIN
+// Typedefs
+typedef  uint8_t    uint8;
+typedef  uint16_t   uint16;
+typedef  uint32_t   uint32;
+typedef  uint64_t   uint64;
+typedef  int8_t     int8;
+typedef  int16_t    int16;
+typedef  int32_t    int32;
+typedef  int64_t    int64;
+typedef  float      ufloat;
+typedef  double     udouble;
+typedef  uint8_t    tByte;
+typedef  uint32_t   tFormat;
+typedef  uint32_t   tSize;
+typedef  uint32_t   tIndex;
+
+// Types
+enum eType {
+      TYPE_UINT8     = 0x0
+    , TYPE_UINT16    = 0x1
+    , TYPE_UINT32    = 0x2
+    , TYPE_UFLOAT    = 0x3
+    , TYPE_UDOUBLE   = 0x4
+    , TYPE_INVALID
+};
+
+// Models
+enum eColorModel {
+      CM_ANY
+    , CM_GREY
+    , CM_RGB
+    , CM_HSV
+    , CM_HSL
+    , CM_CMY
+    , CM_CMYK
+    , CM_YUV
+    , CM_Lab
+    , CM_XYZ
+    , CM_Yxy
+};
+
+// Macro for all types for template instanciation
+#define ULIS2_FOR_ALL_TYPES_DO( X ) \
+    X( uint8 )                      \
+    X( uint16 )                     \
+    X( uint32 )                     \
+    X( ufloat )                     \
+    X( udouble )                    \
+
+ULIS2_NAMESPACE_END
+

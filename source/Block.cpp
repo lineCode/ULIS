@@ -48,7 +48,7 @@ FBlock::FBlock( tSize iWidth
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
 
     if( mProfile )
-        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+        ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 
     mData = new tByte[ BytesTotal() ];
 }
@@ -74,7 +74,7 @@ FBlock::FBlock( tByte* iData
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
 
     if( mProfile )
-        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+        ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -117,7 +117,7 @@ FBlock::AssignProfile( FColorProfile* iProfile )
     mProfile = iProfile;
 
     if( mProfile )
-        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+        ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -187,10 +187,10 @@ FBlock::Format() const
 }
 
 
-eModelSig
+eColorModel
 FBlock::Model() const
 {
-    return  static_cast< eModelSig >( ULIS2_R_MODEL( mFormat ) );
+    return  static_cast< eColorModel >( ULIS2_R_MODEL( mFormat ) );
 }
 
 

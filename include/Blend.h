@@ -35,8 +35,8 @@ ULIS2_API void Blend( FThreadPool&      iPool
                     , const FBlock*     iSource
                     , FBlock*           iBackdrop
                     , const FPoint&     iDstPos         = FPoint()
-                    , eBlendingMode     iBlendingMode   = eBlendingMode::kNormal
-                    , eAlphaMode        iAlphaMode      = eAlphaMode::kNormal
+                    , eBlendingMode     iBlendingMode   = BM_NORMAL
+                    , eAlphaMode        iAlphaMode      = AM_NORMAL
                     , float             iOpacity        = 1.f
                     , const FPerf&      iPerf           = FPerf()
                     , bool              iCallInvalidCB  = true );
@@ -60,8 +60,8 @@ ULIS2_API void BlendRect( FThreadPool&      iPool
                         , FBlock*           iBackdrop
                         , const FRect&      iSrcRect
                         , const FPoint&     iDstPos         = FPoint()
-                        , eBlendingMode     iBlendingMode   = eBlendingMode::kNormal
-                        , eAlphaMode        iAlphaMode      = eAlphaMode::kNormal
+                        , eBlendingMode     iBlendingMode   = BM_NORMAL
+                        , eAlphaMode        iAlphaMode      = AM_NORMAL
                         , float             iOpacity        = 1.f
                         , const FPerf&      iPerf           = FPerf()
                         , bool              iCallInvalidCB  = true );

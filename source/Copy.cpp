@@ -69,13 +69,13 @@ CopyMT( FThreadPool&    iPool
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define SRC srb + ( ( iSrcRoi.y + iLine ) * bps )
     #define DST dsb + ( ( iDstRoi.y + iLine ) * bps )
-    if( iPerf.useAVX2 )
+    if( iPerf.UseAVX2() )
     {
         const tSize stride = 32 - ( 32 % bpp );
         const tSize count = iSrcRoi.w * bpp;
         ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_AX2( DST, SRC, count, stride ); } );
     }
-    else if( iPerf.useSSE4_2 )
+    else if( iPerf.UseSSE4_2() )
     {
         const tSize stride = 16 - ( 16 % bpp );
         const tSize count = iSrcRoi.w * bpp;
@@ -157,7 +157,7 @@ CopyRect( FThreadPool&  iPool
         return;
 
     // Select invocation based on performance preferences
-    if( iPerf.useMT )
+    if( iPerf.UseMT() )
         CopyMT( iPool, iSrc, iDst, src_roi, dst_roi, iPerf );
     else
         CopyMono( iSrc, iDst, src_roi, dst_roi );

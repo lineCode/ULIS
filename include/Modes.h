@@ -17,40 +17,39 @@
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // eBlendingMode
-enum class eBlendingMode : uint8
+enum eBlendingMode
 {
-      kNormal
-    , kTop
-    , kBack
-    , kBehind
-    , kDissolve
-    , kDarken
-    , kMultiply
-    , kColorBurn
-    , kLinearBurn
-    , kDarkerColor
-    , kLighten
-    , kScreen
-    , kColorDodge
-    , kLinearDodge
-    , kLighterColor
-    , kOverlay
-    , kSoftLight
-    , kHardLight
-    , kVividLight
-    , kLinearLight
-    , kPinLight
-    , kHardMix
-    , kDifference
-    , kExclusion
-    , kSubstract
-    , kDivide
-    , kHue
-    , kSaturation
-    , kColor
-    , kLuminosity
-
-    , kNumBlendingModes
+      BM_NORMAL
+    , BM_TOP
+    , BM_BACK
+    , BM_BEHIND
+    , BM_DISSOLVE
+    , BM_DARKEN
+    , BM_MULTIPY
+    , BM_COLORBURN
+    , BM_LINEARBURN
+    , BM_DARKERCOLOR
+    , BM_LIGHTEN
+    , BM_SCREEN
+    , BM_COLORDODGE
+    , BM_LINEARDODGE
+    , BM_LIGHTERCOLOR
+    , BM_OVERLAY
+    , BM_SOFTLIGHT
+    , BM_HARDLIGHT
+    , BM_VIVIDLIGHT
+    , BM_LINEARLIGHT
+    , BM_PINLIGHT
+    , BM_HARDMIX
+    , BM_DIFFERENCE
+    , BM_EXCLUSION
+    , BM_SUBSTRACT
+    , BM_DIVIDE
+    , BM_HUE
+    , BM_SATURATION
+    , BM_COLOR
+    , BM_LUMINOSITY
+    , NUM_BLENDING_MODES
 };
 
 
@@ -61,19 +60,16 @@ static const char* kwBlendingMode[] =
     , "Back"
     , "Behind"
     , "Dissolve"
-
     , "Darken"
     , "Multiply"
     , "ColorBurn"
     , "LinearBurn"
     , "DarkerColor"
-
     , "Lighten"
     , "Screen"
     , "ColorDodge"
     , "LinearDodge"
     , "LighterColor"
-
     , "Overlay"
     , "SoftLight"
     , "HardLight"
@@ -81,71 +77,33 @@ static const char* kwBlendingMode[] =
     , "LinearLight"
     , "PinLight"
     , "HardMix"
-
     , "Difference"
     , "Exclusion"
     , "Substract"
     , "Divide"
-
     , "Hue"
     , "Saturation"
     , "Color"
     , "Luminosity"
-
     , "Invalid"
 };
 
 
-#define ULIS2_FOR_ALL_BLENDING_MODES_DO( iSelectedBlendingMode, X )                                 \
-    switch( iSelectedBlendingMode ) {                                                               \
-        case eBlendingMode::kNormal             :   X( eBlendingMode::kNormal           );  break;  \
-        case eBlendingMode::kErase              :   X( eBlendingMode::kErase            );  break;  \
-        case eBlendingMode::kBehind             :   X( eBlendingMode::kBehind           );  break;  \
-        case eBlendingMode::kDissolve           :   X( eBlendingMode::kDissolve         );  break;  \
-        case eBlendingMode::kDarken             :   X( eBlendingMode::kDarken           );  break;  \
-        case eBlendingMode::kMultiply           :   X( eBlendingMode::kMultiply         );  break;  \
-        case eBlendingMode::kColorBurn          :   X( eBlendingMode::kColorBurn        );  break;  \
-        case eBlendingMode::kLinearBurn         :   X( eBlendingMode::kLinearBurn       );  break;  \
-        case eBlendingMode::kDarkerColor        :   X( eBlendingMode::kDarkerColor      );  break;  \
-        case eBlendingMode::kLighten            :   X( eBlendingMode::kLighten          );  break;  \
-        case eBlendingMode::kScreen             :   X( eBlendingMode::kScreen           );  break;  \
-        case eBlendingMode::kColorDodge         :   X( eBlendingMode::kColorDodge       );  break;  \
-        case eBlendingMode::kLinearDodge        :   X( eBlendingMode::kLinearDodge      );  break;  \
-        case eBlendingMode::kLighterColor       :   X( eBlendingMode::kLighterColor     );  break;  \
-        case eBlendingMode::kOverlay            :   X( eBlendingMode::kOverlay          );  break;  \
-        case eBlendingMode::kSoftLight          :   X( eBlendingMode::kSoftLight        );  break;  \
-        case eBlendingMode::kHardLight          :   X( eBlendingMode::kHardLight        );  break;  \
-        case eBlendingMode::kVividLight         :   X( eBlendingMode::kVividLight       );  break;  \
-        case eBlendingMode::kLinearLight        :   X( eBlendingMode::kLinearLight      );  break;  \
-        case eBlendingMode::kPinLight           :   X( eBlendingMode::kPinLight         );  break;  \
-        case eBlendingMode::kHardMix            :   X( eBlendingMode::kHardMix          );  break;  \
-        case eBlendingMode::kDifference         :   X( eBlendingMode::kDifference       );  break;  \
-        case eBlendingMode::kExclusion          :   X( eBlendingMode::kExclusion        );  break;  \
-        case eBlendingMode::kSubstract          :   X( eBlendingMode::kSubstract        );  break;  \
-        case eBlendingMode::kDivide             :   X( eBlendingMode::kDivide           );  break;  \
-        case eBlendingMode::kHue                :   X( eBlendingMode::kHue              );  break;  \
-        case eBlendingMode::kSaturation         :   X( eBlendingMode::kSaturation       );  break;  \
-        case eBlendingMode::kColor              :   X( eBlendingMode::kColor            );  break;  \
-        case eBlendingMode::kLuminosity         :   X( eBlendingMode::kLuminosity       );  break;  \
-        case eBlendingMode::kNumBlendingModes   :   X( eBlendingMode::kNumBlendingModes );  break;  \
-    }
-
-
 /////////////////////////////////////////////////////
 // eAlphaMode
-enum class eAlphaMode : uint8
+enum eAlphaMode
 {
-      kNormal
-    , kErase
-    , kTop
-    , kBack
-    , kSub
-    , kAdd
-    , kMul
-    , kMin
-    , kMax
-    , kInvMax
-    , kNumAlphaModes
+      AM_NORMAL
+    , AM_ERASE
+    , AM_TOP
+    , AM_BACK
+    , AM_SUB
+    , AM_ADD
+    , AM_MUL
+    , AM_MIN
+    , AM_MAX
+    , AM_INVMAX
+    , NUM_ALPHA_MODES
 };
 
 
@@ -165,35 +123,32 @@ static const char* kwAlphaMode[] =
 };
 
 
-#define ULIS2_FOR_ALL_ALPHA_MODES_DO( iSelectedAlphaMode, X )                               \
-    switch( iSelectedAlphaMode ) {                                                          \
-        case eAlphaMode::kNormal            :   X( eAlphaMode::kNormal          );  break;  \
-        case eAlphaMode::kErase             :   X( eAlphaMode::kErase           );  break;  \
-        case eAlphaMode::kTop               :   X( eAlphaMode::kTop             );  break;  \
-        case eAlphaMode::kBack              :   X( eAlphaMode::kBack            );  break;  \
-        case eAlphaMode::kSub               :   X( eAlphaMode::kSub             );  break;  \
-        case eAlphaMode::kAdd               :   X( eAlphaMode::kAdd             );  break;  \
-        case eAlphaMode::kMul               :   X( eAlphaMode::kMul             );  break;  \
-        case eAlphaMode::kMin               :   X( eAlphaMode::kMin             );  break;  \
-        case eAlphaMode::kMax               :   X( eAlphaMode::kMax             );  break;  \
-        case eAlphaMode::kInvMax            :   X( eAlphaMode::kInvMax          );  break;  \
-    }
-
-
-static inline constexpr bool IsNonSeparableBlendingMode( eBlendingMode iBlendingMode )
+enum eBlendingModeQualifier
 {
-    switch( iBlendingMode )
-    {
-        case eBlendingMode::kDissolve       :   return  true;
-        case eBlendingMode::kDarkerColor    :   return  true;
-        case eBlendingMode::kLighterColor   :   return  true;
-        case eBlendingMode::kHue            :   return  true;
-        case eBlendingMode::kSaturation     :   return  true;
-        case eBlendingMode::kColor          :   return  true;
-        case eBlendingMode::kLuminosity     :   return  true;
-        default:                                return  false;
+      BMQ_SEPARABLE
+    , BMQ_NONSEPARABLE
+    , BMQ_UNUSUAL
+};
+
+
+static
+inline
+constexpr
+eBlendingModeQualifier
+BlendingModeQualifier( eBlendingMode iBlendingMode )
+{
+    switch( iBlendingMode ) {
+        case BM_DISSOLVE        :   return  BMQ_UNUSUAL;
+        case BM_DARKERCOLOR     :   return  BMQ_NONSEPARABLE;
+        case BM_LIGHTERCOLOR    :   return  BMQ_NONSEPARABLE;
+        case BM_HUE             :   return  BMQ_NONSEPARABLE;
+        case BM_SATURATION      :   return  BMQ_NONSEPARABLE;
+        case BM_COLOR           :   return  BMQ_NONSEPARABLE;
+        case BM_LUMINOSITY      :   return  BMQ_NONSEPARABLE;
+        default                 :   return  BMQ_SEPARABLE;
     }
 }
+
 
 ULIS2_NAMESPACE_END
 

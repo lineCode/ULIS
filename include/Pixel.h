@@ -38,7 +38,7 @@ public:
     uint8           BytesPerSample()    const;
     uint8           Depth()             const;
     tFormat         Format()            const;
-    eModelSig       Model()             const;
+    eColorModel     Model()             const;
     eType           Type()              const;
     bool            HasAlpha()          const;
     bool            Swapped()           const;
@@ -446,11 +446,11 @@ public:
         mData = new tByte[ Depth() ];
         switch( Type() )
         {
-            case eType::kUint8:     Set_imp< T, uint8  >( iValues ); return;
-            case eType::kUint16:    Set_imp< T, uint16 >( iValues ); return;
-            case eType::kUint32:    Set_imp< T, uint32 >( iValues ); return;
-            case eType::kFloat:     Set_imp< T, float  >( iValues ); return;
-            case eType::kDouble:    Set_imp< T, double >( iValues ); return;
+            case TYPE_UINT8:        Set_imp< T, uint8   >( iValues ); return;
+            case TYPE_UINT16:       Set_imp< T, uint16  >( iValues ); return;
+            case TYPE_UINT32:       Set_imp< T, uint32  >( iValues ); return;
+            case TYPE_UFLOAT:       Set_imp< T, ufloat  >( iValues ); return;
+            case TYPE_UDOUBLE:      Set_imp< T, udouble >( iValues ); return;
         }
     }
 

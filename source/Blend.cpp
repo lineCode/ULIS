@@ -17,13 +17,13 @@
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void
-BlendMono( const FBlock*    iSource
-         , FBlock*          iBackdrop
-         , const FRect&     iSrcRoi
-         , const FRect&     iDstRoi
-         , float            iOpacity )
+void BlendMono_MEM_Separable( const FBlock* iSource
+                            , FBlock*       iBackdrop
+                            , const FRect&  iSrcRoi
+                            , const FRect&  iDstRoi
+                            , float         iOpacity )
 {
+
     // Gather Data
     const tFormat   fmt = iSource->Format();                                                // Format
     const tSize     bpc = iSource->BytesPerSample();                                        // Bytes Per Channel
@@ -91,94 +91,146 @@ BlendMono( const FBlock*    iSource
     delete [] bdpd;
 }
 
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void BlendMono_MEM_NonSeparable( const FBlock*  iSource
+                               , FBlock*        iBackdrop
+                               , const FRect&   iSrcRoi
+                               , const FRect&   iDstRoi
+                               , float          iOpacity )
+{
+}
 
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void
-Blend_imp( FThreadPool&     iPool
-         , const FBlock*    iSource
-         , FBlock*          iBackdrop
-         , const FRect&     iSrcRoi
-         , const FRect&     iDstRoi
-         , float            iOpacity
-         , const FPerf&     iPerf )
+void BlendMono_MEM_Unusual( const FBlock*   iSource
+                          , FBlock*         iBackdrop
+                          , const FRect&    iSrcRoi
+                          , const FRect&    iDstRoi
+                          , float           iOpacity )
 {
-    if( iPerf.useMT )
-        return;
+}
+
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void ULIS2_FORCEINLINE BlendMono_MEM( const FBlock* iSource
+                                    , FBlock*       iBackdrop
+                                    , const FRect&  iSrcRoi
+                                    , const FRect&  iDstRoi
+                                    , float         iOpacity )
+{
+    switch( BlendingModeQualifier( _BM ) )
+    {
+        case BMQ_SEPARABLE      : BlendMono_MEM_Separable<      T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
+        case BMQ_NONSEPARABLE   : BlendMono_MEM_NonSeparable<   T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
+        case BMQ_UNUSUAL        : BlendMono_MEM_Unusual<        T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
+    }
+}
+
+// BlendMono Generic
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void ULIS2_FORCEINLINE BlendMono( const FBlock* iSource
+                                , FBlock*       iBackdrop
+                                , const FRect&  iSrcRoi
+                                , const FRect&  iDstRoi
+                                , float         iOpacity
+                                , const FPerf&  iPerf )
+{
+    if( iPerf.UseAVX2() )
+    {
+        BlendMono_MEM< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
+    }
+    else if( iPerf.UseSSE4_2() )
+    {
+        BlendMono_MEM< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
+    }
     else
-        BlendMono< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
+    {
+        BlendMono_MEM< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
+    }
+}
+
+
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void ULIS2_FORCEINLINE Blend_imp( FThreadPool&  iPool
+                                , const FBlock* iSource
+                                , FBlock*       iBackdrop
+                                , const FRect&  iSrcRoi
+                                , const FRect&  iDstRoi
+                                , float         iOpacity
+                                , const FPerf&  iPerf )
+{
+    if( iPerf.UseMT() )
+        BlendMono< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf );
+    else
+        BlendMono< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf );
 }
 
 
 template< typename T, eBlendingMode _BM >
-void
-Blend_select_AM( FThreadPool&    iPool
-               , const FBlock*   iSource
-               , FBlock*         iBackdrop
-               , const FRect&    iSrcRoi
-               , const FRect&    iDstRoi
-               , eAlphaMode      iAlphaMode
-               , float           iOpacity
-               , const FPerf&    iPerf )
+void ULIS2_FORCEINLINE Blend_select_AM( FThreadPool&    iPool
+                                      , const FBlock*   iSource
+                                      , FBlock*         iBackdrop
+                                      , const FRect&    iSrcRoi
+                                      , const FRect&    iDstRoi
+                                      , eAlphaMode      iAlphaMode
+                                      , float           iOpacity
+                                      , const FPerf&    iPerf )
 {
     switch( iAlphaMode ) {
-        case eAlphaMode::kNormal:   Blend_imp< T, _BM, eAlphaMode::kNormal  >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kErase:    Blend_imp< T, _BM, eAlphaMode::kErase   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kTop:      Blend_imp< T, _BM, eAlphaMode::kTop     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kBack:     Blend_imp< T, _BM, eAlphaMode::kBack    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kSub:      Blend_imp< T, _BM, eAlphaMode::kSub     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kAdd:      Blend_imp< T, _BM, eAlphaMode::kAdd     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kMul:      Blend_imp< T, _BM, eAlphaMode::kMul     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kMin:      Blend_imp< T, _BM, eAlphaMode::kMin     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kMax:      Blend_imp< T, _BM, eAlphaMode::kMax     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
-        case eAlphaMode::kInvMax:   Blend_imp< T, _BM, eAlphaMode::kInvMax  >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_NORMAL  :   Blend_imp< T, _BM, AM_NORMAL    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_ERASE   :   Blend_imp< T, _BM, AM_ERASE     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_TOP     :   Blend_imp< T, _BM, AM_TOP       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_BACK    :   Blend_imp< T, _BM, AM_BACK      >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_SUB     :   Blend_imp< T, _BM, AM_SUB       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_ADD     :   Blend_imp< T, _BM, AM_ADD       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_MUL     :   Blend_imp< T, _BM, AM_MUL       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_MIN     :   Blend_imp< T, _BM, AM_MIN       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_MAX     :   Blend_imp< T, _BM, AM_MAX       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
+        case AM_INVMAX  :   Blend_imp< T, _BM, AM_INVMAX    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf ); break;
     }
 }
 
 
 template< typename T >
-void
-Blend_select_BM( FThreadPool&   iPool
-               , const FBlock*  iSource
-               , FBlock*        iBackdrop
-               , const FRect&   iSrcRoi
-               , const FRect&   iDstRoi
-               , eBlendingMode  iBlendingMode
-               , eAlphaMode     iAlphaMode
-               , float          iOpacity
-               , const FPerf&   iPerf )
+void ULIS2_FORCEINLINE Blend_select_BM( FThreadPool&    iPool
+                                      , const FBlock*   iSource
+                                      , FBlock*         iBackdrop
+                                      , const FRect&    iSrcRoi
+                                      , const FRect&    iDstRoi
+                                      , eBlendingMode   iBlendingMode
+                                      , eAlphaMode      iAlphaMode
+                                      , float           iOpacity
+                                      , const FPerf&    iPerf )
 {
-    switch( iBlendingMode )
-    {
-        case eBlendingMode::kNormal:        Blend_select_AM< T, eBlendingMode::kNormal       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kTop:           Blend_select_AM< T, eBlendingMode::kTop          >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kBack:          Blend_select_AM< T, eBlendingMode::kBack         >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kBehind:        Blend_select_AM< T, eBlendingMode::kBehind       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kDissolve:      Blend_select_AM< T, eBlendingMode::kDissolve     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kDarken:        Blend_select_AM< T, eBlendingMode::kDarken       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kMultiply:      Blend_select_AM< T, eBlendingMode::kMultiply     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kColorBurn:     Blend_select_AM< T, eBlendingMode::kColorBurn    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kLinearBurn:    Blend_select_AM< T, eBlendingMode::kLinearBurn   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kDarkerColor:   Blend_select_AM< T, eBlendingMode::kDarkerColor  >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kLighten:       Blend_select_AM< T, eBlendingMode::kLighten      >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kScreen:        Blend_select_AM< T, eBlendingMode::kScreen       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kColorDodge:    Blend_select_AM< T, eBlendingMode::kColorDodge   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kLinearDodge:   Blend_select_AM< T, eBlendingMode::kLinearDodge  >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kLighterColor:  Blend_select_AM< T, eBlendingMode::kLighterColor >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kOverlay:       Blend_select_AM< T, eBlendingMode::kOverlay      >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kSoftLight:     Blend_select_AM< T, eBlendingMode::kSoftLight    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kHardLight:     Blend_select_AM< T, eBlendingMode::kHardLight    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kVividLight:    Blend_select_AM< T, eBlendingMode::kVividLight   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kLinearLight:   Blend_select_AM< T, eBlendingMode::kLinearLight  >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kPinLight:      Blend_select_AM< T, eBlendingMode::kPinLight     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kHardMix:       Blend_select_AM< T, eBlendingMode::kHardMix      >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kDifference:    Blend_select_AM< T, eBlendingMode::kDifference   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kExclusion:     Blend_select_AM< T, eBlendingMode::kExclusion    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kSubstract:     Blend_select_AM< T, eBlendingMode::kSubstract    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kDivide:        Blend_select_AM< T, eBlendingMode::kDivide       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kHue:           Blend_select_AM< T, eBlendingMode::kHue          >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kSaturation:    Blend_select_AM< T, eBlendingMode::kSaturation   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kColor:         Blend_select_AM< T, eBlendingMode::kColor        >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
-        case eBlendingMode::kLuminosity:    Blend_select_AM< T, eBlendingMode::kLuminosity   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+    switch( iBlendingMode ) {
+        case BM_NORMAL          :   Blend_select_AM< T, BM_NORMAL       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_TOP             :   Blend_select_AM< T, BM_TOP          >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_BACK            :   Blend_select_AM< T, BM_BACK         >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_BEHIND          :   Blend_select_AM< T, BM_BEHIND       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_DISSOLVE        :   Blend_select_AM< T, BM_DISSOLVE     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_DARKEN          :   Blend_select_AM< T, BM_DARKEN       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_MULTIPY         :   Blend_select_AM< T, BM_MULTIPY      >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_COLORBURN       :   Blend_select_AM< T, BM_COLORBURN    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_LINEARBURN      :   Blend_select_AM< T, BM_LINEARBURN   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_DARKERCOLOR     :   Blend_select_AM< T, BM_DARKERCOLOR  >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_LIGHTEN         :   Blend_select_AM< T, BM_LIGHTEN      >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_SCREEN          :   Blend_select_AM< T, BM_SCREEN       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_COLORDODGE      :   Blend_select_AM< T, BM_COLORDODGE   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_LINEARDODGE     :   Blend_select_AM< T, BM_LINEARDODGE  >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_LIGHTERCOLOR    :   Blend_select_AM< T, BM_LIGHTERCOLOR >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_OVERLAY         :   Blend_select_AM< T, BM_OVERLAY      >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_SOFTLIGHT       :   Blend_select_AM< T, BM_SOFTLIGHT    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_HARDLIGHT       :   Blend_select_AM< T, BM_HARDLIGHT    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_VIVIDLIGHT      :   Blend_select_AM< T, BM_VIVIDLIGHT   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_LINEARLIGHT     :   Blend_select_AM< T, BM_LINEARLIGHT  >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_PINLIGHT        :   Blend_select_AM< T, BM_PINLIGHT     >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_HARDMIX         :   Blend_select_AM< T, BM_HARDMIX      >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_DIFFERENCE      :   Blend_select_AM< T, BM_DIFFERENCE   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_EXCLUSION       :   Blend_select_AM< T, BM_EXCLUSION    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_SUBSTRACT       :   Blend_select_AM< T, BM_SUBSTRACT    >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_DIVIDE          :   Blend_select_AM< T, BM_DIVIDE       >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_HUE             :   Blend_select_AM< T, BM_HUE          >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_SATURATION      :   Blend_select_AM< T, BM_SATURATION   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_COLOR           :   Blend_select_AM< T, BM_COLOR        >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
+        case BM_LUMINOSITY      :   Blend_select_AM< T, BM_LUMINOSITY   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
     }
 }
 
@@ -244,11 +296,11 @@ BlendRect( FThreadPool&     iPool
 
     float opacity = FMaths::Clamp( iOpacity, 0.f, 1.f );
     switch( iSource->Type() ) {
-        case eType::kUint8:     Blend_select_BM< uint8  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case eType::kUint16:    Blend_select_BM< uint16 >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case eType::kUint32:    Blend_select_BM< uint32 >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case eType::kFloat:     Blend_select_BM< float  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case eType::kDouble:    Blend_select_BM< double >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UINT8:    Blend_select_BM< uint8   >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UINT16:   Blend_select_BM< uint16  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UINT32:   Blend_select_BM< uint32  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UFLOAT:   Blend_select_BM< ufloat  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UDOUBLE:  Blend_select_BM< udouble >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
     }
 
     iBackdrop->Invalidate( dst_roi, iCallInvalidCB );

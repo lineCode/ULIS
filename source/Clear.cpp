@@ -68,13 +68,13 @@ ClearMT( FThreadPool&   iPool
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
-    if( iPerf.useAVX2 )
+    if( iPerf.UseAVX2() )
     {
         const tSize stride = 32 - ( 32 % bpp );
         const tSize count = iRoi.w * bpp;
         ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, count, stride ); } );
     }
-    else if( iPerf.useSSE4_2 )
+    else if( iPerf.UseSSE4_2() )
     {
         const tSize stride = 16 - ( 16 % bpp );
         const tSize count = iRoi.w * bpp;
@@ -131,7 +131,7 @@ ClearRect( FThreadPool& iPool
     if( roi.Area() <= 0 )
         return;
 
-    if( iPerf.useMT )
+    if( iPerf.UseMT() )
         ClearMT( iPool, iDst, roi, iPerf );
     else
         ClearMono( iDst, roi );

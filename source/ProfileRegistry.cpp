@@ -67,23 +67,23 @@ FProfileRegistry::GetProfile( const std::string iKey ) const
 
 
 std::string
-FProfileRegistry::DefaultProfileNameForModel( eModelSig iModel ) const
+FProfileRegistry::DefaultProfileNameForModel( eColorModel iModel ) const
 {
     switch( iModel )
     {
-        case eModelSig::kGrey:  return  "Grey_Gamma2.2_D65";
-        case eModelSig::kRGB:   return  "sRGB";
-        case eModelSig::kHSL:   return  "sRGB";
-        case eModelSig::kHSV:   return  "sRGB";
-        case eModelSig::kLab:   return  "Lab_D65";
-        case eModelSig::kXYZ:   return  "XYZ";
-        default:                return  "invalid";
+        case CM_GREY:   return  "Grey_Gamma2.2_D65";
+        case CM_RGB:    return  "sRGB";
+        case CM_HSL:    return  "sRGB";
+        case CM_HSV:    return  "sRGB";
+        case CM_Lab:    return  "Lab_D65";
+        case CM_XYZ:    return  "XYZ";
+        default:        return  "invalid";
     }
 }
 
 
 FColorProfile*
-FProfileRegistry::GetDefaultProfileForModel( eModelSig iModel ) const
+FProfileRegistry::GetDefaultProfileForModel( eColorModel iModel ) const
 {
     return  GetProfile( DefaultProfileNameForModel( iModel ) );
 }

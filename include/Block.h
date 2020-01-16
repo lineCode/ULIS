@@ -59,7 +59,7 @@ public:
     tSize                   BytesPerScanLine()                                  const;
     tSize                   BytesTotal()                                        const;
     tFormat                 Format()                                            const;
-    eModelSig               Model()                                             const;
+    eColorModel             Model()                                             const;
     eType                   Type()                                              const;
     bool                    HasAlpha()                                          const;
     bool                    Swapped()                                           const;

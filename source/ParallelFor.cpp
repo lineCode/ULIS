@@ -19,7 +19,7 @@ ULIS2_NAMESPACE_BEGIN
 // ParallelFor
 void ParallelFor( FThreadPool& iPool, int32 iNum, const FPerf& iPerf, const std::function< void( int32 ) >& iFun )
 {
-    if( iPerf.useMT && iPool.GetNumWorkers() > 1 )
+    if( iPerf.UseMT() && iPool.GetNumWorkers() > 1 )
     {
         for( int i = 0; i < iNum; ++i )
             iPool.ScheduleJob( iFun, i );

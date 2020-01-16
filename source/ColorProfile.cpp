@@ -21,7 +21,7 @@ ULIS2_NAMESPACE_BEGIN
 //----------------------------------------------------------- Construction / Destruction
 FColorProfile::FColorProfile( const std::string& iName, cmsHPROFILE iProfile )
     : mProfile( iProfile )
-    , mModel( ModelSigFromColorSpaceSignature( cmsGetColorSpace( iProfile ) ) )
+    , mModel( ModelFromColorSpaceSignature( cmsGetColorSpace( iProfile ) ) )
     , mName( iName )
 {
 }
@@ -36,17 +36,17 @@ FColorProfile::~FColorProfile()
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-eModelSig
-FColorProfile::ModelSignature()  const
+eColorModel
+FColorProfile::Model()  const
 {
     return  mModel;
 }
 
 
 bool
-FColorProfile::ModelSupported( eModelSig iModel ) const
+FColorProfile::IsModelSupported( eColorModel iModel ) const
 {
-    return  ModelSigCompatFallback( iModel ) == mModel;
+    return  ModelCompatFallback( iModel ) == mModel;
 }
 
 

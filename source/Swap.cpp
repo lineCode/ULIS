@@ -22,11 +22,11 @@ ULIS2_NAMESPACE_BEGIN
 void
 InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2, tSize iBPC, tSize iBPP )
 {
-    tByte* tmp = new tByte[iBPC];
     tByte* dst = iDst;
+    tByte* tmp = new tByte[iBPC];
     for( uint32 i = 0; i < iCount; ++i )
     {
-        memcpy( tmp, iDst + iC1, iBPC );
+        memcpy( tmp, dst + iC1, iBPC );
         memcpy( dst + iC1, dst + iC2, iBPC );
         memcpy( dst + iC2, tmp, iBPC );
         dst += iBPP;
@@ -40,7 +40,7 @@ SwapMT( FThreadPool&    iPool
       , FBlock*         iDst
       , uint8           iC1
       , uint8           iC2
-      , const FPerf&  iPerf )
+      , const FPerf&    iPerf )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -92,7 +92,7 @@ Swap( FThreadPool&  iPool
     if( iC1 == iC2 )
         return;
 
-    if( iPerf.useMT )
+    if( iPerf.UseMT() )
         SwapMT( iPool, iDst, iC1, iC2, iPerf );
     else
         SwapMono( iDst, iC1, iC2 );

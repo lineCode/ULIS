@@ -11,35 +11,52 @@
 #include "Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-enum eOpt
-{
-      kMem
-    , kSSE
+
+#define UPERF_MT_BIT        0x1
+#define UPERF_TSPEC_BIT     0x2
+#define UPERF_SSE4_2_BIT    0x4
+#define UPERF_AVX2_BIT      0x8
+#define UPERF_GPU_BIT       0xF
+#define UPERF_LOWEST        0x0
+#define UPERF_BEST_CPU      UPERF_MT_BIT | UPERF_TSPEC_BIT | UPERF_SSE4_2_BIT | UPERF_AVX2_BIT
+#define UPERF_BEST_GPU      UPERF_BEST_CPU | UPERF_GPU_BIT
+enum ePerf {
+      Perf_MT       = UPERF_MT_BIT
+    , Perf_TSPEC    = UPERF_TSPEC_BIT
+    , Perf_SSE4_2   = UPERF_SSE4_2_BIT
+    , Perf_AVX2     = UPERF_AVX2_BIT
+    , Perf_GPU      = UPERF_GPU_BIT
+    , Perf_Lowest   = UPERF_LOWEST
+    , Perf_Best_CPU = UPERF_BEST_CPU
+    , Perf_Best_GPU = UPERF_GPU_BIT
 };
 
 /////////////////////////////////////////////////////
 /// @struct     FPerf
-/// @brief      The FPerf struct is used for holding performance options.
+/// @brief      The FPerf class is used for holding performance options.
 /// @details    Used for specification and forwarding of options in multi threaded / SSE pipelines.
 ///             These flags are juste hints, they can be overriden in some pipelines.
-struct ULIS2_API FPerf
+class ULIS2_API FPerf
 {
 public:
     // Construction
-    /// @fn         FPerf( bool iUseMT = true, bool iUseSSE4_2 = true, bool iUseAVX2 = true )
+    /// @fn         FPerf( uint32 iFlags = UPERF_MAXCPU_PERF )
     /// @brief      Default Constructor.
     /// @details    Initializes members with default values
-    FPerf( bool iUseMT = true, bool iUseSSE4_2 = true, bool iUseAVX2 = true )
-        : useMT(        iUseMT      )
-        , useSSE4_2(    iUseSSE4_2  )
-        , useAVX2(      iUseAVX2    )
-    {}
+    FPerf( uint32 iFlags = UPERF_BEST_CPU );
 
 public:
-    // Public Data Members
-    bool    useMT;      ///< boolean flag specifying if multithreaded optimisations should be used if available.
-    bool    useSSE4_2;  ///< boolean flag specifying if sse4.2 optimisations should be used if available.
-    bool    useAVX2;    ///< boolean flag specifying if avx2 optimisations should be used if available.
+    // Getters
+    uint32 Flags()      const;
+    bool UseMT()        const;
+    bool UseTSPEC()     const;
+    bool UseSSE4_2()    const;
+    bool UseAVX2()      const;
+    bool UseGPU()       const;
+
+private:
+    // Private Data Members
+    uint32 flags;
 };
 
 ULIS2_NAMESPACE_END

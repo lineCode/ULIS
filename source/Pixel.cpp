@@ -31,7 +31,7 @@ IPixel::IPixel( tFormat iFormat, FColorProfile* iProfile )
     , mProfile( iProfile )
 {
     if( mProfile )
-        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+        ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -50,7 +50,7 @@ IPixel::AssignProfile( FColorProfile* iProfile )
     mProfile = iProfile;
 
     if( mProfile )
-        ULIS2_ERROR( mProfile->ModelSupported( Model() ), "Bad ColorProfile" );
+        ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -82,10 +82,10 @@ IPixel::Format() const
 }
 
 
-eModelSig
+eColorModel
 IPixel::Model() const
 {
-    return  static_cast< eModelSig >( ULIS2_R_MODEL( mFormat ) );
+    return  static_cast< eColorModel >( ULIS2_R_MODEL( mFormat ) );
 }
 
 
@@ -183,7 +183,7 @@ template< typename T >
 T*
 IPixel::SamplePtrT( uint8 iIndex )
 {
-    ULIS2_ASSERT( Type() == T42< T >(), "Bad type" )
+    ULIS2_ASSERT( Type() == eTypeFromT< T >(), "Bad type" )
     return  ( T* )( SamplePtr( iIndex ) );
 }
 
@@ -200,7 +200,7 @@ template< typename T >
 const T*
 IPixel::SamplePtrT( uint8 iIndex ) const
 {
-    ULIS2_ASSERT( Type() == T42< T >(), "Bad type" )
+    ULIS2_ASSERT( Type() == eTypeFromT< T >(), "Bad type" )
     return  ( T* )( SamplePtr( iIndex ) );
 }
 

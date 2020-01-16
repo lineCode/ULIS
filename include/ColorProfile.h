@@ -41,15 +41,15 @@ public:
 
 public:
     // Public API
-    eModelSig           ModelSignature() const;
-    bool                ModelSupported( eModelSig iModel ) const;
+    eColorModel         Model() const;
+    bool                IsModelSupported( eColorModel iModel ) const;
     const std::string&  Name() const;
     cmsHPROFILE         ProfileHandle();
 
 private:
     // Private Data
     cmsHPROFILE     mProfile;
-    eModelSig       mModel;
+    eColorModel     mModel;
     std::string     mName;
 };
 
