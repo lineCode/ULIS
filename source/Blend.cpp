@@ -14,156 +14,143 @@
 #include "Blend.h"
 #include "Block.h"
 #include "Geometry.h"
+#include "BlendGeneric.h"
 
 ULIS2_NAMESPACE_BEGIN
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_MEM_Separable( const FBlock* iSource
-                            , FBlock*       iBackdrop
-                            , const FRect&  iSrcRoi
-                            , const FRect&  iDstRoi
-                            , float         iOpacity )
-{
-
-    // Gather Data
-    const tFormat   fmt = iSource->Format();                                                // Format
-    const tSize     bpc = iSource->BytesPerSample();                                        // Bytes Per Channel
-    const tSize     ncc = iSource->NumColorChannels();                                      // Num Color Channel
-    const bool      hea = iSource->HasAlpha();                                              // Has Extra Alpha
-    const tSize     spp = ncc + hea;                                                        // Samples Per Pixel
-    const tSize     bpp = bpc * spp;                                                        // Bytes Per Pixel
-    const tSize     w   = iSource->Width();                                                 // Width
-    const tSize     bps = bpp * w;                                                          // Bytes Per Scanline
-    uint8           msp = spp - 1;                                                          // Max Sample
-    uint8           cod = ULIS2_R_RS( fmt );                                                // Reverse-Swap code
-    const tByte*    src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp ); // Source Pointer in src ROI
-    tByte*          bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp ); // Backdrop Pointer in dst ROI
-
-    // Build Redirection Tables
-    uint8* index_table  = new uint8[ spp ];
-    uint8 alpha_index   = 0;
-    switch( cod ) {
-        case 1:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( msp - i );                                     alpha_index = 0;    break;
-        case 2:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( i + 1 ) > msp ? 0 : i + 1;                     alpha_index = 0;    break;
-        case 3:  for( tSize i = 0; i < spp; ++i ) index_table[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1;     alpha_index = msp;  break;
-        default: for( tSize i = 0; i < spp; ++i ) index_table[i] = i;                                               alpha_index = msp;  break;
-    }
-
-    // Data Holders to abstract away the Alpha.
-    float*  srcd = new  float[ ncc + 1 ];
-    float*  bdpd = new  float[ ncc + 1 ];
-    for( tSize i = 0; i < ncc + 1; ++i )
-    { srcd[i] = 1.f;    bdpd[i] = 1.f; }
-
-    // Process
-    const tSize count = iSrcRoi.w * iSrcRoi.h;
-    for( tSize i = 0; i < count; ++i )
-    {
-        for( tSize j = 0; j < ( spp ); ++j )
-        {
-            uint8 r = index_table[j];
-            srcd[ r ] = ConvType< T, float >( *( (T*)( src + r ) ) );
-            bdpd[ r ] = ConvType< T, float >( *( (T*)( bdp + r ) ) );
-        }
-
-        // Precomp
-        const float alpha_bdp       = bdpd[ alpha_index ];
-        const float alpha_src       = srcd[ alpha_index ] * iOpacity;
-        const float alpha_comp      = ( alpha_bdp + alpha_src ) - ( alpha_bdp * alpha_src );
-        const float alpha_result    = 1.0f;
-        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
-        // Compute Separable Channels in float
-        for( tSize j = 0; j < ncc; ++j )
-            bdpd[ index_table[ j ] ] = 1.f;
-        bdpd[ alpha_index ] = alpha_result;
-
-        // Emplace result
-        for( tSize j = 0; j < spp; ++j )
-            *( (T*)( bdp + index_table[ j ] ) ) = ConvType< float, T >( bdpd[ index_table[ j ] ] );
-
-        // Increment ptrs by one pixel
-        src += bpp;
-        bdp += bpp;
-    }
-
-    // Delete temporary data
-    delete [] index_table;
-    delete [] srcd;
-    delete [] bdpd;
-}
-
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_MEM_NonSeparable( const FBlock*  iSource
-                               , FBlock*        iBackdrop
-                               , const FRect&   iSrcRoi
-                               , const FRect&   iDstRoi
-                               , float          iOpacity )
-{
-}
-
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_MEM_Unusual( const FBlock*   iSource
-                          , FBlock*         iBackdrop
-                          , const FRect&    iSrcRoi
-                          , const FRect&    iDstRoi
-                          , float           iOpacity )
-{
-}
-
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void ULIS2_FORCEINLINE BlendMono_MEM( const FBlock* iSource
-                                    , FBlock*       iBackdrop
-                                    , const FRect&  iSrcRoi
-                                    , const FRect&  iDstRoi
-                                    , float         iOpacity )
-{
-    switch( BlendingModeQualifier( _BM ) )
-    {
-        case BMQ_SEPARABLE      : BlendMono_MEM_Separable<      T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
-        case BMQ_NONSEPARABLE   : BlendMono_MEM_NonSeparable<   T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
-        case BMQ_UNUSUAL        : BlendMono_MEM_Unusual<        T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
-    }
-}
-
-// BlendMono Generic
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void ULIS2_FORCEINLINE BlendMono( const FBlock* iSource
-                                , FBlock*       iBackdrop
-                                , const FRect&  iSrcRoi
-                                , const FRect&  iDstRoi
-                                , float         iOpacity
-                                , const FPerf&  iPerf )
-{
-    if( iPerf.UseAVX2() )
-    {
-        BlendMono_MEM< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
-    }
-    else if( iPerf.UseSSE4_2() )
-    {
-        BlendMono_MEM< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
-    }
-    else
-    {
-        BlendMono_MEM< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity );
-    }
-}
-
-
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+template< typename T >
 void ULIS2_FORCEINLINE Blend_imp( FThreadPool&  iPool
                                 , const FBlock* iSource
                                 , FBlock*       iBackdrop
                                 , const FRect&  iSrcRoi
                                 , const FRect&  iDstRoi
+                                , eBlendingMode iBlendingMode
+                                , eAlphaMode    iAlphaMode
                                 , float         iOpacity
                                 , const FPerf&  iPerf )
 {
-    if( iPerf.UseMT() )
-        BlendMono< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf );
-    else
-        BlendMono< T, _BM, _AM >( iSource, iBackdrop, iSrcRoi, iDstRoi, iOpacity, iPerf );
+    switch( iPerf.UseMT() ) {
+        case true:
+            if( iPerf.UseAVX2() ) {
+                switch( BlendingModeQualifier( iBlendingMode ) ) {
+                    //case BMQ_SEPARABLE      : BlendMT_AVX_Separable<    T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    //case BMQ_NONSEPARABLE   : BlendMT_AVX_NonSeparable< T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    //case BMQ_UNUSUAL        : BlendMT_AVX_Unusual<      T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                }
+            } else if( iPerf.UseSSE4_2() ) {
+                switch( BlendingModeQualifier( iBlendingMode ) ) {
+                    //case BMQ_SEPARABLE      : BlendMT_SSE_Separable<    T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    //case BMQ_NONSEPARABLE   : BlendMT_SSE_NonSeparable< T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    //case BMQ_UNUSUAL        : BlendMT_SSE_Unusual<      T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                }
+            } else {
+                switch( BlendingModeQualifier( iBlendingMode ) ) {
+                    //case BMQ_SEPARABLE      : BlendMT_MEM_Separable<    T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    //case BMQ_NONSEPARABLE   : BlendMT_MEM_NonSeparable< T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    //case BMQ_UNUSUAL        : BlendMT_MEM_Unusual<      T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                } }
+            break;
+
+        case false:
+            if( iPerf.UseAVX2() ) {
+                switch( BlendingModeQualifier( iBlendingMode ) ) {
+                    //case BMQ_SEPARABLE      : BlendMono_AVX_Separable<      T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    //case BMQ_NONSEPARABLE   : BlendMono_AVX_NonSeparable<   T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    //case BMQ_UNUSUAL        : BlendMono_AVX_Unusual<        T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                }
+            } else if( iPerf.UseSSE4_2() ) {
+                switch( BlendingModeQualifier( iBlendingMode ) ) {
+                    //case BMQ_SEPARABLE      : BlendMono_SSE_Separable<      T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    //case BMQ_NONSEPARABLE   : BlendMono_SSE_NonSeparable<   T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    //case BMQ_UNUSUAL        : BlendMono_SSE_Unusual<        T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                }
+            } else {
+                switch( BlendingModeQualifier( iBlendingMode ) ) {
+                    case BMQ_SEPARABLE      : BlendMono_MEM_Separable<      T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_NONSEPARABLE   : BlendMono_MEM_NonSeparable<   T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_UNUSUAL        : BlendMono_MEM_Unusual<        T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                } }
+            break;
+    }
 }
 
 
+void
+Blend( FThreadPool&     iPool
+     , const FBlock*    iSource
+     , FBlock*          iBackdrop
+     , const FPoint&    iDstPos
+     , eBlendingMode    iBlendingMode
+     , eAlphaMode       iAlphaMode
+     , float            iOpacity
+     , const FPerf&     iPerf
+     , bool             iCallInvalidCB )
+{
+    BlendRect( iPool
+         , iSource
+         , iBackdrop
+         , iSource->Rect()
+         , iDstPos
+         , iBlendingMode
+         , iAlphaMode
+         , iOpacity
+         , iPerf
+         , iCallInvalidCB );
+}
+
+
+void
+BlendRect( FThreadPool&     iPool
+         , const FBlock*    iSource
+         , FBlock*          iBackdrop
+         , const FRect&     iSrcRect
+         , const FPoint&    iDstPos
+         , eBlendingMode    iBlendingMode
+         , eAlphaMode       iAlphaMode
+         , float            iOpacity
+         , const FPerf&     iPerf
+         , bool             iCallInvalidCB )
+{
+    ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(),                       "Models do not match" );
+    ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(),                         "Types do not match" );
+    ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(),   "Samples do not match" );
+    ULIS2_ASSERT( iSource->Reversed() == iBackdrop->Reversed(),                 "Layouts do match" );
+    ULIS2_ASSERT( iSource->Swapped() == iBackdrop->Swapped(),                   "Layouts do not match" );
+    ULIS2_ASSERT( iSource,                                                      "Bad source" );
+    ULIS2_ASSERT( iBackdrop,                                                    "Bad destination" );
+    ULIS2_ASSERT( iSource != iBackdrop,                                         "Can not blend a block on itself" );
+
+    // Gather src rect and shift to destination
+    FRect target_rect = iSrcRect & iSource->Rect();
+    target_rect.x = iDstPos.x;
+    target_rect.y = iDstPos.y;
+    // Gather dst rect
+    // Interset target with dst, target may be out of range
+    FRect dst_roi = target_rect & iBackdrop->Rect();
+    // Gather src rect and fit size to fix overflow
+    FRect src_roi = dst_roi;
+    src_roi.x = iSrcRect.x;
+    src_roi.y = iSrcRect.y;
+
+    // Check if this is a no-op
+    if( src_roi.Area() <= 0 )
+        return;
+
+    float opacity = FMaths::Clamp( iOpacity, 0.f, 1.f );
+    switch( iSource->Type() ) {
+        case TYPE_UINT8     : Blend_imp< uint8   >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UINT16    : Blend_imp< uint16  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UINT32    : Blend_imp< uint32  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UFLOAT    : Blend_imp< ufloat  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UDOUBLE   : Blend_imp< udouble >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+    }
+
+    iBackdrop->Invalidate( dst_roi, iCallInvalidCB );
+}
+
+ULIS2_NAMESPACE_END
+
+
+/*
 template< typename T, eBlendingMode _BM >
 void ULIS2_FORCEINLINE Blend_select_AM( FThreadPool&    iPool
                                       , const FBlock*   iSource
@@ -233,77 +220,4 @@ void ULIS2_FORCEINLINE Blend_select_BM( FThreadPool&    iPool
         case BM_LUMINOSITY      :   Blend_select_AM< T, BM_LUMINOSITY   >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iAlphaMode, iOpacity, iPerf ); break;
     }
 }
-
-
-void
-Blend( FThreadPool&     iPool
-     , const FBlock*    iSource
-     , FBlock*          iBackdrop
-     , const FPoint&    iDstPos
-     , eBlendingMode    iBlendingMode
-     , eAlphaMode       iAlphaMode
-     , float            iOpacity
-     , const FPerf&     iPerf
-     , bool             iCallInvalidCB )
-{
-    BlendRect( iPool
-         , iSource
-         , iBackdrop
-         , iSource->Rect()
-         , iDstPos
-         , iBlendingMode
-         , iAlphaMode
-         , iOpacity
-         , iPerf
-         , iCallInvalidCB );
-}
-
-
-void
-BlendRect( FThreadPool&     iPool
-         , const FBlock*    iSource
-         , FBlock*          iBackdrop
-         , const FRect&     iSrcRect
-         , const FPoint&    iDstPos
-         , eBlendingMode    iBlendingMode
-         , eAlphaMode       iAlphaMode
-         , float            iOpacity
-         , const FPerf&     iPerf
-         , bool             iCallInvalidCB )
-{
-    ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(),                       "Models do not match" );
-    ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(),                         "Types do not match" );
-    ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(),   "Samples do not match" );
-    ULIS2_ASSERT( iSource,                                                      "Bad source" );
-    ULIS2_ASSERT( iBackdrop,                                                    "Bad destination" );
-    ULIS2_ASSERT( iSource != iBackdrop,                                         "Destination and source cannot be the same" );
-
-    // Gather src rect and shift to destination
-    FRect target_rect = iSrcRect & iSource->Rect();
-    target_rect.x = iDstPos.x;
-    target_rect.y = iDstPos.y;
-    // Gather dst rect
-    // Interset target with dst, target may be out of range
-    FRect dst_roi = target_rect & iBackdrop->Rect();
-    // Gather src rect and fit size to fix overflow
-    FRect src_roi = dst_roi;
-    src_roi.x = iSrcRect.x;
-    src_roi.y = iSrcRect.y;
-
-    // Check if this is a no-op
-    if( src_roi.Area() <= 0 )
-        return;
-
-    float opacity = FMaths::Clamp( iOpacity, 0.f, 1.f );
-    switch( iSource->Type() ) {
-        case TYPE_UINT8:    Blend_select_BM< uint8   >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case TYPE_UINT16:   Blend_select_BM< uint16  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case TYPE_UINT32:   Blend_select_BM< uint32  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case TYPE_UFLOAT:   Blend_select_BM< ufloat  >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case TYPE_UDOUBLE:  Blend_select_BM< udouble >( iPool, iSource, iBackdrop, src_roi, dst_roi, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-    }
-
-    iBackdrop->Invalidate( dst_roi, iCallInvalidCB );
-}
-
-ULIS2_NAMESPACE_END
+*/

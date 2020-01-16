@@ -21,8 +21,7 @@ ULIS2_NAMESPACE_BEGIN
 static eColorModel ModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
 {
     eColorModel default_cm = CM_RGB;
-    switch( iValue )
-    {
+    switch( iValue ) {
         case cmsSigXYZData    : return  CM_XYZ;
         case cmsSigLabData    : return  CM_Lab;
         case cmsSigLuvData    : return  CM_YUV;
@@ -72,8 +71,7 @@ static eColorModel ModelFromColorSpaceSignature( cmsColorSpaceSignature iValue )
 
 static constexpr eColorModel ModelCompatFallback( eColorModel iModel )
 {
-    switch( iModel )
-    {
+    switch( iModel ) {
         case CM_GREY: return  CM_GREY;
         case CM_RGB : return  CM_RGB;
         case CM_HSL : return  CM_RGB;
@@ -90,9 +88,7 @@ static constexpr eColorModel ModelCompatFallback( eColorModel iModel )
 
 static constexpr uint32 lcms2PixelTypeForModel( eColorModel iModel )
 {
-    
-    switch( iModel )
-    {
+    switch( iModel ) {
         case CM_GREY: return  PT_GRAY;
         case CM_RGB : return  PT_RGB;
         case CM_CMY : return  PT_CMY;

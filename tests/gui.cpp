@@ -25,8 +25,8 @@ main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
 
-    int width   = 512;
-    int height  = 512;
+    int width   = 1024;
+    int height  = 1024;
     FBlock blockA( width, height, ULIS2_FORMAT_RGBA8 );
     FBlock blockB( width, height, ULIS2_FORMAT_RGBA8 );
     FThreadPool pool;
@@ -39,7 +39,7 @@ main( int argc, char *argv[] )
     Swap( pool, &blockA, 0, 2,  perf_best );
     Swap( pool, &blockA, 1, 2,  perf_best );
     Fill( pool, &blockB, color, perf_best );
-    Blend( pool, &blockB, &blockA, FPoint(), BM_NORMAL, AM_NORMAL, 1.0f, perf_best );
+    Blend( pool, &blockB, &blockA, FPoint(), BM_NORMAL, AM_NORMAL, 1.0f, perf_low );
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap  pixmap = QPixmap::fromImage( *image );

@@ -41,10 +41,15 @@ enum eBlendingMode
     , BM_LINEARLIGHT
     , BM_PINLIGHT
     , BM_HARDMIX
+    , BM_PHOENIX
+    , BM_REFLECT
+    , BM_GLOW
     , BM_DIFFERENCE
     , BM_EXCLUSION
+    , BM_ADD
     , BM_SUBSTRACT
     , BM_DIVIDE
+    , BM_AVERAGE
     , BM_HUE
     , BM_SATURATION
     , BM_COLOR
@@ -77,10 +82,15 @@ static const char* kwBlendingMode[] =
     , "LinearLight"
     , "PinLight"
     , "HardMix"
+    , "Phoenix"
+    , "Reflect"
+    , "Glow"
     , "Difference"
     , "Exclusion"
+    , "Add"
     , "Substract"
     , "Divide"
+    , "Average"
     , "Hue"
     , "Saturation"
     , "Color"
@@ -148,7 +158,6 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
         default                 :   return  BMQ_SEPARABLE;
     }
 }
-
 
 ULIS2_NAMESPACE_END
 

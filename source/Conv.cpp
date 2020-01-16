@@ -1304,32 +1304,32 @@ void Conv( const IPixel& iSrc, IPixel& iDst )
                 case TYPE_UINT8:        Conv_imp< uint8, uint8 >( iSrc, iDst );     return;
                 case TYPE_UINT16:       Conv_imp< uint8, uint16 >( iSrc, iDst );    return;
                 case TYPE_UINT32:       Conv_imp< uint8, uint32 >( iSrc, iDst );    return;
-                case TYPE_UFLOAT:       Conv_imp< uint8, ufloat >( iSrc, iDst );     return;
-                case TYPE_UDOUBLE:      Conv_imp< uint8, udouble >( iSrc, iDst );    return; }
+                case TYPE_UFLOAT:       Conv_imp< uint8, ufloat >( iSrc, iDst );    return;
+                case TYPE_UDOUBLE:      Conv_imp< uint8, udouble >( iSrc, iDst );   return; }
         case TYPE_UINT16: switch( iDst.Type() ) {
                 case TYPE_UINT8:        Conv_imp< uint16, uint8 >( iSrc, iDst );    return;
                 case TYPE_UINT16:       Conv_imp< uint16, uint16 >( iSrc, iDst );   return;
                 case TYPE_UINT32:       Conv_imp< uint16, uint32 >( iSrc, iDst );   return;
-                case TYPE_UFLOAT:       Conv_imp< uint16, ufloat >( iSrc, iDst );    return;
-                case TYPE_UDOUBLE:      Conv_imp< uint16, udouble >( iSrc, iDst );   return; }
+                case TYPE_UFLOAT:       Conv_imp< uint16, ufloat >( iSrc, iDst );   return;
+                case TYPE_UDOUBLE:      Conv_imp< uint16, udouble >( iSrc, iDst );  return; }
         case TYPE_UINT32: switch( iDst.Type() ) {
                 case TYPE_UINT8:        Conv_imp< uint32, uint8 >( iSrc, iDst );    return;
                 case TYPE_UINT16:       Conv_imp< uint32, uint16 >( iSrc, iDst );   return;
                 case TYPE_UINT32:       Conv_imp< uint32, uint32 >( iSrc, iDst );   return;
-                case TYPE_UFLOAT:       Conv_imp< uint32, ufloat >( iSrc, iDst );    return;
-                case TYPE_UDOUBLE:      Conv_imp< uint32, udouble >( iSrc, iDst );   return; }
+                case TYPE_UFLOAT:       Conv_imp< uint32, ufloat >( iSrc, iDst );   return;
+                case TYPE_UDOUBLE:      Conv_imp< uint32, udouble >( iSrc, iDst );  return; }
         case TYPE_UFLOAT: switch( iDst.Type() ) {
-                case TYPE_UINT8:        Conv_imp< ufloat, uint8 >( iSrc, iDst );     return;
-                case TYPE_UINT16:       Conv_imp< ufloat, uint16 >( iSrc, iDst );    return;
-                case TYPE_UINT32:       Conv_imp< ufloat, uint32 >( iSrc, iDst );    return;
-                case TYPE_UFLOAT:       Conv_imp< ufloat, ufloat >( iSrc, iDst );     return;
-                case TYPE_UDOUBLE:      Conv_imp< ufloat, udouble >( iSrc, iDst );    return; }
+                case TYPE_UINT8:        Conv_imp< ufloat, uint8 >( iSrc, iDst );    return;
+                case TYPE_UINT16:       Conv_imp< ufloat, uint16 >( iSrc, iDst );   return;
+                case TYPE_UINT32:       Conv_imp< ufloat, uint32 >( iSrc, iDst );   return;
+                case TYPE_UFLOAT:       Conv_imp< ufloat, ufloat >( iSrc, iDst );   return;
+                case TYPE_UDOUBLE:      Conv_imp< ufloat, udouble >( iSrc, iDst );  return; }
         case TYPE_UDOUBLE: switch( iDst.Type() ) {
-                case TYPE_UINT8:        Conv_imp< udouble, uint8 >( iSrc, iDst );     return;
-                case TYPE_UINT16:       Conv_imp< udouble, uint16 >( iSrc, iDst );    return;
-                case TYPE_UINT32:       Conv_imp< udouble, uint32 >( iSrc, iDst );    return;
-                case TYPE_UFLOAT:       Conv_imp< udouble, ufloat >( iSrc, iDst );     return;
-                case TYPE_UDOUBLE:      Conv_imp< udouble, udouble >( iSrc, iDst );    return; }
+                case TYPE_UINT8:        Conv_imp< udouble, uint8 >( iSrc, iDst );   return;
+                case TYPE_UINT16:       Conv_imp< udouble, uint16 >( iSrc, iDst );  return;
+                case TYPE_UINT32:       Conv_imp< udouble, uint32 >( iSrc, iDst );  return;
+                case TYPE_UFLOAT:       Conv_imp< udouble, ufloat >( iSrc, iDst );  return;
+                case TYPE_UDOUBLE:      Conv_imp< udouble, udouble >( iSrc, iDst ); return; }
     }
 }
 
