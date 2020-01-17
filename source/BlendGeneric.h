@@ -58,8 +58,8 @@ void BlendMono_MEM_Standard( const FBlock* iSource
             float bdpvf = TYPE_TO_FLOAT( bdp + j );
             switch( iBlendingMode ) {
                 case BM_NORMAL          :   *( (T*)( bdp + j ) ) = ConvType< float, T >( ComposeF( srcvf, bdpvf, alpha_bdp, var, BlendNormalF(        srcvf, bdpvf ) ) ); break;
-                case BM_TOP             :   *( (T*)( bdp + j ) ) = ConvType< float, T >( ComposeF( srcvf, bdpvf, alpha_bdp, var, BlendTopF(           srcvf, bdpvf ) ) ); break;
-                case BM_BACK            :   *( (T*)( bdp + j ) ) = ConvType< float, T >( ComposeF( srcvf, bdpvf, alpha_bdp, var, BlendBackF(          srcvf, bdpvf ) ) ); break;
+                case BM_TOP             :   *( (T*)( bdp + j ) ) = ConvType< float, T >( srcvf ); break;
+                case BM_BACK            :   *( (T*)( bdp + j ) ) = ConvType< float, T >( bdpvf ); break;
                 case BM_BEHIND          :   *( (T*)( bdp + j ) ) = ConvType< float, T >( ComposeF( srcvf, bdpvf, alpha_bdp, var, BlendBehindF(        srcvf, bdpvf ) ) ); break;
                 case BM_DARKEN          :   *( (T*)( bdp + j ) ) = ConvType< float, T >( ComposeF( srcvf, bdpvf, alpha_bdp, var, BlendDarkenF(        srcvf, bdpvf ) ) ); break;
                 case BM_MULTIPY         :   *( (T*)( bdp + j ) ) = ConvType< float, T >( ComposeF( srcvf, bdpvf, alpha_bdp, var, BlendMultiplyF(      srcvf, bdpvf ) ) ); break;
