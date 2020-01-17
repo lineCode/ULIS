@@ -21,15 +21,6 @@
 
 ULIS2_NAMESPACE_BEGIN
 #define TYPE_TO_FLOAT( i ) ConvType< T, float >( *( (T*)( i ) ) )
-void BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8 iMSP, uint8* oIndexTable ) {
-    switch( iCOD ) {
-        case 1:  for( int i = 0; i < iSPP; ++i ) oIndexTable[i] = ( iMSP - i );                                     break;
-        case 2:  for( int i = 0; i < iSPP; ++i ) oIndexTable[i] = ( i + 1 ) > iMSP ? 0 : i + 1;                     break;
-        case 3:  for( int i = 0; i < iSPP; ++i ) oIndexTable[i] = ( iMSP - i ) - 1 < 0 ? iMSP : ( iMSP - i ) - 1;   break;
-        default: for( int i = 0; i < iSPP; ++i ) oIndexTable[i] = i;                                                break;
-    }
-}
-
 template< typename T >
 void BlendMono_MEM_Standard( const FBlock* iSource
                            , FBlock*       iBackdrop
