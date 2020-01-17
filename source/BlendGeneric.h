@@ -16,6 +16,7 @@
 #include "Geometry.h"
 #include "Modes.h"
 #include "Perf.h"
+#include "ModelStructs.h"
 #include "BlendFuncF.h"
 #include "Conv.h"
 
@@ -89,8 +90,7 @@ void BlendMono_MEM_Standard( const FBlock* iSource
             }
         }
         // Assign alpha
-        if( hea )
-            *( (T*)( bdp + aid ) ) = ConvType< float, T >( alpha_result );
+        if( hea ) *( (T*)( bdp + aid ) ) = ConvType< float, T >( alpha_result );
 
         // Increment ptrs by one pixel
         src += bpp;
@@ -120,21 +120,24 @@ void BlendMono_MEM_HSL( const FBlock*  iSource
     tByte*          bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );                         // Backdrop Pointer in dst ROI
 
     const tFormat   fmt = iSource->Format();
-    FPixelValue srchslf( ULIS2_FORMAT_HSLF );
-    FPixelValue bdphslf( ULIS2_FORMAT_HSLF );
-    FPixelValue reshslf( ULIS2_FORMAT_HSLF );
-    FPixelValue resnat( fmt );
-    FPixelProxy srcproxy( src, fmt );
-    FPixelProxy bdpproxy( bdp, fmt );
+    FPixelProxy src_proxy( src, fmt );
+    FPixelProxy bdp_proxy( bdp, fmt );
+    FPixelValue src_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue bdp_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue res_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue result( fmt );
     // Process
     const tSize count = iSrcRoi.w * iSrcRoi.h;
     for( tSize i = 0; i < count; ++i )
     {
         // Convert forward any model forward to hsl
-        srcproxy.SetPtr( src );
-        bdpproxy.SetPtr( bdp );
-        Conv( srcproxy, srchslf );
-        Conv( bdpproxy, bdphslf );
+        src_proxy.SetPtr( src );
+        bdp_proxy.SetPtr( bdp );
+        ConvToRGB< T, ufloat >( src_proxy, src_conv );
+        ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
+        FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
+        FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
+        FRGBF result_rgbf;
 
         // Precomp
         const float alpha_bdp       = hea ? TYPE_TO_FLOAT( bdp + aid ) : 1.f;
@@ -144,20 +147,23 @@ void BlendMono_MEM_HSL( const FBlock*  iSource
         const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
 
         switch( iBlendingMode ) {
-            case BM_DARKERCOLOR     :   BlendDarkerColorHSLF(   &srchslf, &bdphslf, &reshslf ); break;
-            case BM_LIGHTERCOLOR    :   BlendLighterColorHSLF(  &srchslf, &bdphslf, &reshslf ); break;
-            case BM_HUE             :   BlendHueHSLF(           &srchslf, &bdphslf, &reshslf ); break;
-            case BM_SATURATION      :   BlendSaturationHSLF(    &srchslf, &bdphslf, &reshslf ); break;
-            case BM_COLOR           :   BlendColorHSLF(         &srchslf, &bdphslf, &reshslf ); break;
-            case BM_LUMINOSITY      :   BlendLuminosityHSLF(    &srchslf, &bdphslf, &reshslf ); break;
+            case BM_DARKERCOLOR     :   result_rgbf = BlendDarkerColorF(  src_rgbf, bdp_rgbf ); break;
+            case BM_LIGHTERCOLOR    :   result_rgbf = BlendLighterColorF( src_rgbf, bdp_rgbf ); break;
+            case BM_HUE             :   result_rgbf = BlendHueF(          src_rgbf, bdp_rgbf ); break;
+            case BM_SATURATION      :   result_rgbf = BlendSaturationF(   src_rgbf, bdp_rgbf ); break;
+            case BM_COLOR           :   result_rgbf = BlendColorF(        src_rgbf, bdp_rgbf ); break;
+            case BM_LUMINOSITY      :   result_rgbf = BlendLuminosityF(   src_rgbf, bdp_rgbf ); break;
             default                 :   ULIS2_ASSERT( false, "Bad Blending Mode" );
         }
         // Convert back hsl to native model
-        Conv( reshslf, resnat );
+        res_conv.SetRF( result_rgbf.R );
+        res_conv.SetGF( result_rgbf.G );
+        res_conv.SetBF( result_rgbf.B );
+        ConvT< ufloat, T >( res_conv, result );
 
         // Compose
         for( tSize j = 0; j < spp; ++j )
-            *( (T*)( bdp + j ) ) = ConvType< float, T >( ComposeF( TYPE_TO_FLOAT( srcproxy.Ptr() + j ), TYPE_TO_FLOAT( bdpproxy.Ptr() + j ), alpha_bdp, var, TYPE_TO_FLOAT( resnat.Ptr() + j ) ) );
+            *( (T*)( bdp + j ) ) = ConvType< float, T >( ComposeF( TYPE_TO_FLOAT( src_proxy.Ptr() + j ), TYPE_TO_FLOAT( bdp_proxy.Ptr() + j ), alpha_bdp, var, TYPE_TO_FLOAT( result.Ptr() + j ) ) );
 
         // Assign alpha
         if( hea )

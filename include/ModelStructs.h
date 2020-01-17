@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         Models.h
+* @file         ModelStructs.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for models structs.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.

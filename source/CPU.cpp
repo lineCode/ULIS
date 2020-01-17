@@ -14,7 +14,6 @@
 #include "CPU.h"
 #include "cpu_x86.h"
 
-
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FCPU

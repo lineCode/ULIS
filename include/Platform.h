@@ -69,6 +69,7 @@
 /////////////////////////////////////////////////////
 // Force Inline Utility
 #define ULIS2_ENABLE_FORCEINLINE
+#define ULIS2_ENABLE_VECTORCALL
 
 #ifdef ULIS2_ENABLE_FORCEINLINE
     #if defined(__clang__)
@@ -84,20 +85,39 @@
     #define ULIS2_FORCEINLINE inline
 #endif // ULIS2_ENABLE_FORCEINLINE
 
+#ifdef ULIS2_ENABLE_VECTORCALL
+    #if defined(__clang__)
+    #define ULIS2_VECTORCALL __vectorcall
+    #elif defined(__GNUC__) || defined(__GNUG__)
+    #define ULIS2_VECTORCALL __vectorcall
+    #elif defined(_MSC_VER)
+    #define ULIS2_VECTORCALL __vectorcall
+    #else
+    #define ULIS2_VECTORCALL __vectorcall
+    #endif
+#else // ULIS2_ENABLE_FORCEINLINE
+    #define ULIS2_VECTORCALL
+#endif // ULIS2_ENABLE_FORCEINLINE
+
 /////////////////////////////////////////////////////
 // Export utility macros
 #ifdef ULIS2_WIN
     #ifdef ULIS2_BUILD_SHARED
+        #define ULIS2_SHARED
         #define ULIS2_API __declspec( dllexport )
         #define ULIS2_API_TEMPLATE template ULIS2_API
     #elif defined ULIS2_DYNAMIC_LIBRARY
+        #define ULIS2_SHARED
         #define ULIS2_API __declspec( dllimport )
         #define ULIS2_API extern template ULIS2_API
     #else
+        #define ULIS2_STATIC
         #define ULIS2_API
+        #define ULIS2_API_TEMPLATE template
     #endif
 #else
     #define ULIS2_API
+    #define ULIS2_API_TEMPLATE template
 #endif
 
 /////////////////////////////////////////////////////

@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "ColorProfile.h"
-#include "Models.h"
+#include "ModelCompat.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

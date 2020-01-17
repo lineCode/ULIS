@@ -15,7 +15,6 @@
 #include <CL/cl.hpp>
 using namespace ::ul2;
 
-
 int
 main()
 {
@@ -25,7 +24,7 @@ main()
     FBlock block2( 256, 256, ULIS2_FORMAT_ARGBF );
     FPixel color( ULIS2_FORMAT_LabAF, { 0.5, 0.2, 0.7, 1.0 } );
     FPixel rgb( ULIS2_FORMAT_RGB8,    { 255, 81, 255 }      );
-    FPixel lab( 0, UEncodeLabA( 100, 64, -20, 1.0 ) );
+    FPixel lab( ULIS2_FORMAT_LabAD, UEncodeLabA( 100, 64, -20, 1.0 ) );
     Conv( rgb, lab );
     FThreadPool pool;
     FPerf perf( Perf_Best_CPU & Perf_SSE4_2 );

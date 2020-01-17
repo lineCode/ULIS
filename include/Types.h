@@ -63,7 +63,35 @@ enum eColorModel {
     X( uint16 )                     \
     X( uint32 )                     \
     X( ufloat )                     \
-    X( udouble )                    \
+    X( udouble )
+
+// Macro for all types for combination template instanciation
+#define ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X )    \
+    X( uint8,   uint8    )                          \
+    X( uint8,   uint16   )                          \
+    X( uint8,   uint32   )                          \
+    X( uint8,   ufloat   )                          \
+    X( uint8,   udouble  )                          \
+    X( uint16,  uint8   )                           \
+    X( uint16,  uint16  )                           \
+    X( uint16,  uint32  )                           \
+    X( uint16,  ufloat  )                           \
+    X( uint16,  udouble )                           \
+    X( uint32,  uint8   )                           \
+    X( uint32,  uint16  )                           \
+    X( uint32,  uint32  )                           \
+    X( uint32,  ufloat  )                           \
+    X( uint32,  udouble )                           \
+    X( ufloat,  uint8   )                           \
+    X( ufloat,  uint16  )                           \
+    X( ufloat,  uint32  )                           \
+    X( ufloat,  ufloat  )                           \
+    X( ufloat,  udouble )                           \
+    X( udouble, uint8   )                           \
+    X( udouble, uint16  )                           \
+    X( udouble, uint32  )                           \
+    X( udouble, ufloat  )                           \
+    X( udouble, udouble )
 
 ULIS2_NAMESPACE_END
 

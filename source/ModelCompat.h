@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         ModelSupport.h
+* @file         ModelCompat.h
 * @author       Clement Berthaud
 * @brief        This file provides various model compatibility tools.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.

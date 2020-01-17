@@ -15,39 +15,14 @@
 #include "Pixel.h"
 #include "Maths.h"
 #include "Illuminants.h"
-#include "Models.h"
+#include "ModelCompat.h"
+#include "ModelStructs.h"
 #include "ColorProfile.h"
 #include "ProfileRegistry.h"
 #include "lcms2.h"
-#include <limits>
+#include "srgb2linear.h"
 
 ULIS2_NAMESPACE_BEGIN
-float srgb2linear( float iValue )
-{
-    if( iValue <= 0.0f )
-        return  0.0f;
-    else if( iValue >= 1.0f )
-        return  1.0f;
-    else if( iValue < 0.04045f )
-        return  iValue / 12.92f;
-    else
-        return  powf( ( iValue + 0.055f) / 1.055f, 2.4f );
-}
-
-
-float linear2srgb( float iValue )
-{
-    if( iValue <= 0.0f )
-        return  0.0f;
-    else if( iValue >= 1.0f )
-        return  1.0f;
-    else if( iValue < 0.0031308f )
-        return  iValue * 12.92f;
-    else
-        return  powf( iValue, 1.0f / 2.4f ) * 1.055f - 0.055f;
-}
-
-
 void
 ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent )
 {
@@ -72,14 +47,9 @@ ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileR
     cmsDeleteTransform( hTransform );
 }
 
-// TODO: maybe use such linearized table and bit shifting to find the index with one indirection rather than a multi switch approach
-// This could be used to retrieve the instanciated function pointer and avoid search too !
-// typedef void (*fpConversionFunction)( const IPixel& /* src */, IPixel& /* dst */ );
-// fpConversionFunction table[5][5][10][10];
-
 template< typename T1, typename T2 >
 void
-ToGrey( const IPixel& iSrc, IPixel& iDst )
+ConvToGrey( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -110,8 +80,8 @@ ToGrey( const IPixel& iSrc, IPixel& iDst )
         case CM_HSV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToGrey< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToGrey< float, T2 >( temp, iDst );
             return;
         }
 
@@ -126,16 +96,16 @@ ToGrey( const IPixel& iSrc, IPixel& iDst )
         case CM_CMY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToGrey< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToGrey< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMYK:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToGrey< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToGrey< float, T2 >( temp, iDst );
             return;
         }
 
@@ -176,7 +146,7 @@ ToGrey( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToRGB( const IPixel& iSrc, IPixel& iDst )
+ConvToRGB( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -333,7 +303,7 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
             temp.SetYD( XYZ.Y / 100.0 );
             temp.SetZD( XYZ.Z / 100.0 );
             temp.SetAD( ConvType< T1, double >( iSrc.A< T1 >() ) );
-            ToRGB< double, T2 >( temp, iDst );
+            ConvToRGB< double, T2 >( temp, iDst );
             return;
         }
 
@@ -366,7 +336,7 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
             temp.SetYD( XYZ.Y );
             temp.SetZD( XYZ.Z );
             temp.SetAD( ConvType< T1, double >( iSrc.A< T1 >() ) );
-            ToRGB< double, T2 >( temp, iDst );
+            ConvToRGB< double, T2 >( temp, iDst );
             return;
         }
     }
@@ -375,7 +345,7 @@ ToRGB( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToHSV( const IPixel& iSrc, IPixel& iDst )
+ConvToHSV( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -446,40 +416,40 @@ ToHSV( const IPixel& iSrc, IPixel& iDst )
         case CM_HSL:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMYK:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_YUV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Lab:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSV< float, T2 >( temp, iDst );
             return;
 
         }
@@ -487,16 +457,16 @@ ToHSV( const IPixel& iSrc, IPixel& iDst )
         case CM_XYZ:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Yxy:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSV< float, T2 >( temp, iDst );
             return;
         }
     }
@@ -505,7 +475,7 @@ ToHSV( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToHSL( const IPixel& iSrc, IPixel& iDst )
+ConvToHSL( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -567,8 +537,8 @@ ToHSL( const IPixel& iSrc, IPixel& iDst )
         case CM_HSV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSL< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSL< float, T2 >( temp, iDst );
             return;
         }
 
@@ -584,32 +554,32 @@ ToHSL( const IPixel& iSrc, IPixel& iDst )
         case CM_CMY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSL< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSL< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMYK:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSL< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSL< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_YUV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSL< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSL< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Lab:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSL< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSL< float, T2 >( temp, iDst );
             return;
 
         }
@@ -617,16 +587,16 @@ ToHSL( const IPixel& iSrc, IPixel& iDst )
         case CM_XYZ:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSL< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSL< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Yxy:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToHSL< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToHSL< float, T2 >( temp, iDst );
             return;
         }
     }
@@ -635,7 +605,7 @@ ToHSL( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToCMY( const IPixel& iSrc, IPixel& iDst )
+ConvToCMY( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -648,8 +618,8 @@ ToCMY( const IPixel& iSrc, IPixel& iDst )
         case CM_GREY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
         }
 
@@ -666,16 +636,16 @@ ToCMY( const IPixel& iSrc, IPixel& iDst )
         case CM_HSV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_HSL:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
         }
 
@@ -691,24 +661,24 @@ ToCMY( const IPixel& iSrc, IPixel& iDst )
         case CM_CMYK:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_YUV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Lab:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
 
         }
@@ -716,16 +686,16 @@ ToCMY( const IPixel& iSrc, IPixel& iDst )
         case CM_XYZ:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Yxy:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
         }
     }
@@ -734,7 +704,7 @@ ToCMY( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToCMYK( const IPixel& iSrc, IPixel& iDst )
+ConvToCMYK( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -747,8 +717,8 @@ ToCMYK( const IPixel& iSrc, IPixel& iDst )
         case CM_GREY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMY< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMY< float, T2 >( temp, iDst );
             return;
         }
 
@@ -778,24 +748,24 @@ ToCMYK( const IPixel& iSrc, IPixel& iDst )
         case CM_HSV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMYK< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMYK< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_HSL:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMYK< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMYK< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMYK< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMYK< float, T2 >( temp, iDst );
             return;
         }
 
@@ -812,16 +782,16 @@ ToCMYK( const IPixel& iSrc, IPixel& iDst )
         case CM_YUV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMYK< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMYK< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Lab:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMYK< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMYK< float, T2 >( temp, iDst );
             return;
 
         }
@@ -829,16 +799,16 @@ ToCMYK( const IPixel& iSrc, IPixel& iDst )
         case CM_XYZ:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMYK< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMYK< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Yxy:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToCMYK< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToCMYK< float, T2 >( temp, iDst );
             return;
         }
     }
@@ -847,7 +817,7 @@ ToCMYK( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToYUV( const IPixel& iSrc, IPixel& iDst )
+ConvToYUV( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -860,8 +830,8 @@ ToYUV( const IPixel& iSrc, IPixel& iDst )
         case CM_GREY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToYUV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToYUV< float, T2 >( temp, iDst );
             return;
         }
 
@@ -883,32 +853,32 @@ ToYUV( const IPixel& iSrc, IPixel& iDst )
         case CM_HSV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToYUV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToYUV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_HSL:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToYUV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToYUV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToYUV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToYUV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMYK:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToYUV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToYUV< float, T2 >( temp, iDst );
             return;
         }
 
@@ -924,8 +894,8 @@ ToYUV( const IPixel& iSrc, IPixel& iDst )
         case CM_Lab:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToYUV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToYUV< float, T2 >( temp, iDst );
             return;
 
         }
@@ -933,16 +903,16 @@ ToYUV( const IPixel& iSrc, IPixel& iDst )
         case CM_XYZ:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToYUV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToYUV< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Yxy:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToYUV< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToYUV< float, T2 >( temp, iDst );
             return;
         }
     }
@@ -951,7 +921,7 @@ ToYUV( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToLab( const IPixel& iSrc, IPixel& iDst )
+ConvToLab( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -964,56 +934,56 @@ ToLab( const IPixel& iSrc, IPixel& iDst )
         case CM_GREY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToLab< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToLab< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_RGB:
         {
             FPixel temp( ULIS2_FORMAT_XYZAF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToLab< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToLab< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_HSV:
         {
             FPixel temp( ULIS2_FORMAT_XYZAF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToLab< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToLab< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_HSL:
         {
             FPixel temp( ULIS2_FORMAT_XYZAF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToLab< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToLab< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMY:
         {
             FPixel temp( ULIS2_FORMAT_XYZAF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToLab< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToLab< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMYK:
         {
             FPixel temp( ULIS2_FORMAT_XYZAF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToLab< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToLab< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_YUV:
         {
             FPixel temp( ULIS2_FORMAT_XYZAF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToLab< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToLab< float, T2 >( temp, iDst );
             return;
         }
 
@@ -1047,8 +1017,8 @@ ToLab( const IPixel& iSrc, IPixel& iDst )
         case CM_Yxy:
         {
             FPixel temp( ULIS2_FORMAT_XYZAF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToLab< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToLab< float, T2 >( temp, iDst );
             return;
         }
     }
@@ -1057,7 +1027,7 @@ ToLab( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToXYZ( const IPixel& iSrc, IPixel& iDst )
+ConvToXYZ( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -1070,8 +1040,8 @@ ToXYZ( const IPixel& iSrc, IPixel& iDst )
         case CM_GREY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToXYZ< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToXYZ< float, T2 >( temp, iDst );
             return;
         }
 
@@ -1094,40 +1064,40 @@ ToXYZ( const IPixel& iSrc, IPixel& iDst )
         case CM_HSV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToXYZ< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToXYZ< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_HSL:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToXYZ< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToXYZ< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMY:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToXYZ< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToXYZ< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMYK:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToXYZ< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToXYZ< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_YUV:
         {
             FPixel temp( ULIS2_FORMAT_RGBAF );
-            ToRGB< T1, float >( iSrc, temp );
-            ToXYZ< float, T2 >( temp, iDst );
+            ConvToRGB< T1, float >( iSrc, temp );
+            ConvToXYZ< float, T2 >( temp, iDst );
             return;
         }
 
@@ -1176,7 +1146,7 @@ ToXYZ( const IPixel& iSrc, IPixel& iDst )
 
 template< typename T1, typename T2 >
 void
-ToYxy( const IPixel& iSrc, IPixel& iDst )
+ConvToYxy( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Model() )
     {
@@ -1189,64 +1159,64 @@ ToYxy( const IPixel& iSrc, IPixel& iDst )
         case CM_GREY:
         {
             FPixel temp( ULIS2_FORMAT_XYZF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToYxy< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToYxy< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_RGB:
         {
             FPixel temp( ULIS2_FORMAT_XYZF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToYxy< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToYxy< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_HSV:
         {
             FPixel temp( ULIS2_FORMAT_XYZF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToYxy< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToYxy< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_HSL:
         {
             FPixel temp( ULIS2_FORMAT_XYZF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToYxy< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToYxy< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMY:
         {
             FPixel temp( ULIS2_FORMAT_XYZF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToYxy< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToYxy< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_CMYK:
         {
             FPixel temp( ULIS2_FORMAT_XYZF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToYxy< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToYxy< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_YUV:
         {
             FPixel temp( ULIS2_FORMAT_XYZF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToYxy< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToYxy< float, T2 >( temp, iDst );
             return;
         }
 
         case CM_Lab:
         {
             FPixel temp( ULIS2_FORMAT_XYZF );
-            ToXYZ< T1, float >( iSrc, temp );
-            ToYxy< float, T2 >( temp, iDst );
+            ConvToXYZ< T1, float >( iSrc, temp );
+            ConvToYxy< float, T2 >( temp, iDst );
             return;
         }
 
@@ -1278,21 +1248,21 @@ ToYxy( const IPixel& iSrc, IPixel& iDst )
 
 
 template< typename T1, typename T2 >
-void Conv_imp( const IPixel& iSrc, IPixel& iDst )
+void ConvT( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iDst.Model() )
     {
         case CM_ANY:    ULIS2_CRASH_DELIBERATE;         return;
-        case CM_GREY:   ToGrey< T1, T2 >( iSrc, iDst ); return;
-        case CM_RGB:    ToRGB< T1, T2 >( iSrc, iDst );  return;
-        case CM_HSV:    ToHSV< T1, T2 >( iSrc, iDst );  return;
-        case CM_HSL:    ToHSL< T1, T2 >( iSrc, iDst );  return;
-        case CM_CMY:    ToCMY< T1, T2 >( iSrc, iDst );  return;
-        case CM_CMYK:   ToCMYK< T1, T2 >( iSrc, iDst ); return;
-        case CM_YUV:    ToYUV< T1, T2 >( iSrc, iDst );  return;
-        case CM_Lab:    ToLab< T1, T2 >( iSrc, iDst );  return;
-        case CM_XYZ:    ToXYZ< T1, T2 >( iSrc, iDst );  return;
-        case CM_Yxy:    ToYxy< T1, T2 >( iSrc, iDst );  return;
+        case CM_GREY:   ConvToGrey< T1, T2 >( iSrc, iDst ); return;
+        case CM_RGB:    ConvToRGB< T1, T2 >( iSrc, iDst );  return;
+        case CM_HSV:    ConvToHSV< T1, T2 >( iSrc, iDst );  return;
+        case CM_HSL:    ConvToHSL< T1, T2 >( iSrc, iDst );  return;
+        case CM_CMY:    ConvToCMY< T1, T2 >( iSrc, iDst );  return;
+        case CM_CMYK:   ConvToCMYK< T1, T2 >( iSrc, iDst ); return;
+        case CM_YUV:    ConvToYUV< T1, T2 >( iSrc, iDst );  return;
+        case CM_Lab:    ConvToLab< T1, T2 >( iSrc, iDst );  return;
+        case CM_XYZ:    ConvToXYZ< T1, T2 >( iSrc, iDst );  return;
+        case CM_Yxy:    ConvToYxy< T1, T2 >( iSrc, iDst );  return;
     }
 }
 
@@ -1301,37 +1271,38 @@ void Conv( const IPixel& iSrc, IPixel& iDst )
 {
     switch( iSrc.Type() ) {
         case TYPE_UINT8: switch( iDst.Type() ) {
-                case TYPE_UINT8:        Conv_imp< uint8, uint8 >( iSrc, iDst );     return;
-                case TYPE_UINT16:       Conv_imp< uint8, uint16 >( iSrc, iDst );    return;
-                case TYPE_UINT32:       Conv_imp< uint8, uint32 >( iSrc, iDst );    return;
-                case TYPE_UFLOAT:       Conv_imp< uint8, ufloat >( iSrc, iDst );    return;
-                case TYPE_UDOUBLE:      Conv_imp< uint8, udouble >( iSrc, iDst );   return; }
+                case TYPE_UINT8:        ConvT< uint8, uint8   >( iSrc, iDst );   return;
+                case TYPE_UINT16:       ConvT< uint8, uint16  >( iSrc, iDst );   return;
+                case TYPE_UINT32:       ConvT< uint8, uint32  >( iSrc, iDst );   return;
+                case TYPE_UFLOAT:       ConvT< uint8, ufloat  >( iSrc, iDst );   return;
+                case TYPE_UDOUBLE:      ConvT< uint8, udouble >( iSrc, iDst );   return; }
         case TYPE_UINT16: switch( iDst.Type() ) {
-                case TYPE_UINT8:        Conv_imp< uint16, uint8 >( iSrc, iDst );    return;
-                case TYPE_UINT16:       Conv_imp< uint16, uint16 >( iSrc, iDst );   return;
-                case TYPE_UINT32:       Conv_imp< uint16, uint32 >( iSrc, iDst );   return;
-                case TYPE_UFLOAT:       Conv_imp< uint16, ufloat >( iSrc, iDst );   return;
-                case TYPE_UDOUBLE:      Conv_imp< uint16, udouble >( iSrc, iDst );  return; }
+                case TYPE_UINT8:        ConvT< uint16, uint8   >( iSrc, iDst );  return;
+                case TYPE_UINT16:       ConvT< uint16, uint16  >( iSrc, iDst );  return;
+                case TYPE_UINT32:       ConvT< uint16, uint32  >( iSrc, iDst );  return;
+                case TYPE_UFLOAT:       ConvT< uint16, ufloat  >( iSrc, iDst );  return;
+                case TYPE_UDOUBLE:      ConvT< uint16, udouble >( iSrc, iDst );  return; }
         case TYPE_UINT32: switch( iDst.Type() ) {
-                case TYPE_UINT8:        Conv_imp< uint32, uint8 >( iSrc, iDst );    return;
-                case TYPE_UINT16:       Conv_imp< uint32, uint16 >( iSrc, iDst );   return;
-                case TYPE_UINT32:       Conv_imp< uint32, uint32 >( iSrc, iDst );   return;
-                case TYPE_UFLOAT:       Conv_imp< uint32, ufloat >( iSrc, iDst );   return;
-                case TYPE_UDOUBLE:      Conv_imp< uint32, udouble >( iSrc, iDst );  return; }
+                case TYPE_UINT8:        ConvT< uint32, uint8   >( iSrc, iDst );  return;
+                case TYPE_UINT16:       ConvT< uint32, uint16  >( iSrc, iDst );  return;
+                case TYPE_UINT32:       ConvT< uint32, uint32  >( iSrc, iDst );  return;
+                case TYPE_UFLOAT:       ConvT< uint32, ufloat  >( iSrc, iDst );  return;
+                case TYPE_UDOUBLE:      ConvT< uint32, udouble >( iSrc, iDst );  return; }
         case TYPE_UFLOAT: switch( iDst.Type() ) {
-                case TYPE_UINT8:        Conv_imp< ufloat, uint8 >( iSrc, iDst );    return;
-                case TYPE_UINT16:       Conv_imp< ufloat, uint16 >( iSrc, iDst );   return;
-                case TYPE_UINT32:       Conv_imp< ufloat, uint32 >( iSrc, iDst );   return;
-                case TYPE_UFLOAT:       Conv_imp< ufloat, ufloat >( iSrc, iDst );   return;
-                case TYPE_UDOUBLE:      Conv_imp< ufloat, udouble >( iSrc, iDst );  return; }
+                case TYPE_UINT8:        ConvT< ufloat, uint8   >( iSrc, iDst );  return;
+                case TYPE_UINT16:       ConvT< ufloat, uint16  >( iSrc, iDst );  return;
+                case TYPE_UINT32:       ConvT< ufloat, uint32  >( iSrc, iDst );  return;
+                case TYPE_UFLOAT:       ConvT< ufloat, ufloat  >( iSrc, iDst );  return;
+                case TYPE_UDOUBLE:      ConvT< ufloat, udouble >( iSrc, iDst );  return; }
         case TYPE_UDOUBLE: switch( iDst.Type() ) {
-                case TYPE_UINT8:        Conv_imp< udouble, uint8 >( iSrc, iDst );   return;
-                case TYPE_UINT16:       Conv_imp< udouble, uint16 >( iSrc, iDst );  return;
-                case TYPE_UINT32:       Conv_imp< udouble, uint32 >( iSrc, iDst );  return;
-                case TYPE_UFLOAT:       Conv_imp< udouble, ufloat >( iSrc, iDst );  return;
-                case TYPE_UDOUBLE:      Conv_imp< udouble, udouble >( iSrc, iDst ); return; }
+                case TYPE_UINT8:        ConvT< udouble, uint8   >( iSrc, iDst ); return;
+                case TYPE_UINT16:       ConvT< udouble, uint16  >( iSrc, iDst ); return;
+                case TYPE_UINT32:       ConvT< udouble, uint32  >( iSrc, iDst ); return;
+                case TYPE_UFLOAT:       ConvT< udouble, ufloat  >( iSrc, iDst ); return;
+                case TYPE_UDOUBLE:      ConvT< udouble, udouble >( iSrc, iDst ); return; }
     }
 }
+
 
 ULIS2_NAMESPACE_END
 

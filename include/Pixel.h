@@ -426,39 +426,6 @@ protected:
 };
 
 /////////////////////////////////////////////////////
-// Template Instanciations
-#define X_DO_A( i ) ULIS2_API_TEMPLATE i* IPixel::SamplePtrT< i >( uint8 );
-#define X_DO_B( i ) ULIS2_API_TEMPLATE const i* IPixel::SamplePtrT< i >( uint8 ) const;
-#define X_DO_C( i ) ULIS2_API_TEMPLATE i IPixel::GetValueRaw< i >( uint8 ) const;
-#define X_DO_D( i ) ULIS2_API_TEMPLATE i& IPixel::GetRefRaw< i >( uint8 );
-#define X_DO_E( i ) ULIS2_API_TEMPLATE const i& IPixel::GetConstRefRaw< i >( uint8 ) const;
-#define X_DO_F( i ) ULIS2_API_TEMPLATE i IPixel::GetValue< i >( uint8 ) const;
-#define X_DO_G( i ) ULIS2_API_TEMPLATE i& IPixel::GetRef< i >( uint8 );
-#define X_DO_H( i ) ULIS2_API_TEMPLATE const i& IPixel::GetConstRef< i >( uint8 ) const;
-#define X_DO_I( i ) ULIS2_API_TEMPLATE void IPixel::SetValueRaw< i >( uint8, i iValue );
-#define X_DO_J( i ) ULIS2_API_TEMPLATE void IPixel::SetValue< i >( uint8, i iValue );
-ULIS2_FOR_ALL_TYPES_DO( X_DO_A )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_B )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_C )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_D )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_E )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_F )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_G )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_H )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_I )
-ULIS2_FOR_ALL_TYPES_DO( X_DO_J )
-#undef X_DO_A
-#undef X_DO_B
-#undef X_DO_C
-#undef X_DO_D
-#undef X_DO_E
-#undef X_DO_F
-#undef X_DO_G
-#undef X_DO_H
-#undef X_DO_I
-#undef X_DO_J
-
-/////////////////////////////////////////////////////
 /// @class      FPixelValue
 /// @brief      The FPixelValue class provides a mean of storing and manipulating pixels value in various formats.
 /// @details    A pixel value allocates its own storage space and is responsible for its memory.
@@ -571,5 +538,37 @@ public:
     void SetPtr( const tByte* iPtr );
 };
 
+/////////////////////////////////////////////////////
+// Template Instanciations
+#define X_DO_A( i ) template i* IPixel::SamplePtrT< i >( uint8 );
+#define X_DO_B( i ) template const i* IPixel::SamplePtrT< i >( uint8 ) const;
+#define X_DO_C( i ) template i IPixel::GetValueRaw< i >( uint8 ) const;
+#define X_DO_D( i ) template i& IPixel::GetRefRaw< i >( uint8 );
+#define X_DO_E( i ) template const i& IPixel::GetConstRefRaw< i >( uint8 ) const;
+#define X_DO_F( i ) template i IPixel::GetValue< i >( uint8 ) const;
+#define X_DO_G( i ) template i& IPixel::GetRef< i >( uint8 );
+#define X_DO_H( i ) template const i& IPixel::GetConstRef< i >( uint8 ) const;
+#define X_DO_I( i ) template void IPixel::SetValueRaw< i >( uint8, i iValue );
+#define X_DO_J( i ) template void IPixel::SetValue< i >( uint8, i iValue );
+ULIS2_FOR_ALL_TYPES_DO( X_DO_A )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_B )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_C )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_D )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_E )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_F )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_G )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_H )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_I )
+ULIS2_FOR_ALL_TYPES_DO( X_DO_J )
+#undef X_DO_A
+#undef X_DO_B
+#undef X_DO_C
+#undef X_DO_D
+#undef X_DO_E
+#undef X_DO_F
+#undef X_DO_G
+#undef X_DO_H
+#undef X_DO_I
+#undef X_DO_J
 ULIS2_NAMESPACE_END
 
