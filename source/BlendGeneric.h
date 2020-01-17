@@ -31,13 +31,13 @@ void BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8 iMSP, uint8* oIndexTable ) {
 }
 
 template< typename T >
-void BlendMono_MEM_Separable( const FBlock* iSource
-                            , FBlock*       iBackdrop
-                            , const FRect&  iSrcRoi
-                            , const FRect&  iDstRoi
-                            , eBlendingMode iBlendingMode
-                            , eAlphaMode    iAlphaMode
-                            , float         iOpacity )
+void BlendMono_MEM_Standard( const FBlock* iSource
+                           , FBlock*       iBackdrop
+                           , const FRect&  iSrcRoi
+                           , const FRect&  iDstRoi
+                           , eBlendingMode iBlendingMode
+                           , eAlphaMode    iAlphaMode
+                           , float         iOpacity )
 {
 
     // Gather Data
@@ -108,13 +108,13 @@ void BlendMono_MEM_Separable( const FBlock* iSource
 }
 
 template< typename T >
-void BlendMono_MEM_NonSeparable( const FBlock*  iSource
-                               , FBlock*        iBackdrop
-                               , const FRect&   iSrcRoi
-                               , const FRect&   iDstRoi
-                               , eBlendingMode  iBlendingMode
-                               , eAlphaMode     iAlphaMode
-                               , float          iOpacity )
+void BlendMono_MEM_HSL( const FBlock*  iSource
+                      , FBlock*        iBackdrop
+                      , const FRect&   iSrcRoi
+                      , const FRect&   iDstRoi
+                      , eBlendingMode  iBlendingMode
+                      , eAlphaMode     iAlphaMode
+                      , float          iOpacity )
 {
     // Gather Data
     const tSize     bpc = iSource->BytesPerSample();                                                                // Bytes Per Channel
@@ -179,13 +179,13 @@ void BlendMono_MEM_NonSeparable( const FBlock*  iSource
 }
 
 template< typename T >
-void BlendMono_MEM_Unusual( const FBlock*   iSource
-                          , FBlock*         iBackdrop
-                          , const FRect&    iSrcRoi
-                          , const FRect&    iDstRoi
-                          , eBlendingMode   iBlendingMode
-                          , eAlphaMode      iAlphaMode
-                          , float           iOpacity )
+void BlendMono_MEM_Misc( const FBlock*   iSource
+                       , FBlock*         iBackdrop
+                       , const FRect&    iSrcRoi
+                       , const FRect&    iDstRoi
+                       , eBlendingMode   iBlendingMode
+                       , eAlphaMode      iAlphaMode
+                       , float           iOpacity )
 {
 }
 

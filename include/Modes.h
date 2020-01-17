@@ -135,9 +135,9 @@ static const char* kwAlphaMode[] =
 
 enum eBlendingModeQualifier
 {
-      BMQ_SEPARABLE
-    , BMQ_NONSEPARABLE
-    , BMQ_UNUSUAL
+      BMQ_STANDARD
+    , BMQ_HSL
+    , BMQ_MISC
 };
 
 
@@ -148,14 +148,14 @@ eBlendingModeQualifier
 BlendingModeQualifier( eBlendingMode iBlendingMode )
 {
     switch( iBlendingMode ) {
-        case BM_DISSOLVE        :   return  BMQ_UNUSUAL;
-        case BM_DARKERCOLOR     :   return  BMQ_NONSEPARABLE;
-        case BM_LIGHTERCOLOR    :   return  BMQ_NONSEPARABLE;
-        case BM_HUE             :   return  BMQ_NONSEPARABLE;
-        case BM_SATURATION      :   return  BMQ_NONSEPARABLE;
-        case BM_COLOR           :   return  BMQ_NONSEPARABLE;
-        case BM_LUMINOSITY      :   return  BMQ_NONSEPARABLE;
-        default                 :   return  BMQ_SEPARABLE;
+        case BM_DISSOLVE        :   return  BMQ_MISC;
+        case BM_DARKERCOLOR     :   return  BMQ_HSL;
+        case BM_LIGHTERCOLOR    :   return  BMQ_HSL;
+        case BM_HUE             :   return  BMQ_HSL;
+        case BM_SATURATION      :   return  BMQ_HSL;
+        case BM_COLOR           :   return  BMQ_HSL;
+        case BM_LUMINOSITY      :   return  BMQ_HSL;
+        default                 :   return  BMQ_STANDARD;
     }
 }
 
