@@ -87,7 +87,6 @@ target_include_directories(
     ULIS2
     PUBLIC
     "include/"
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     ${OpenCL_INCLUDE_DIR}

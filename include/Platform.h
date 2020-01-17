@@ -89,8 +89,10 @@
 #ifdef ULIS2_WIN
     #ifdef ULIS2_BUILD_SHARED
         #define ULIS2_API __declspec( dllexport )
+        #define ULIS2_API_TEMPLATE template ULIS2_API
     #elif defined ULIS2_DYNAMIC_LIBRARY
         #define ULIS2_API __declspec( dllimport )
+        #define ULIS2_API extern template ULIS2_API
     #else
         #define ULIS2_API
     #endif
