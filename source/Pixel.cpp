@@ -170,6 +170,13 @@ IPixel::AlphaIndex() const
 }
 
 
+void
+IPixel::AssignMemoryUnsafe( const IPixel& iOther )
+{
+    memcpy( mData, iOther.Ptr(), Depth() );
+}
+
+
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------ Generic Accesss API
 tByte*
@@ -331,6 +338,18 @@ FPixelProxy::FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iP
     mData = const_cast< tByte* >( iData );
 }
 
+
+void
+FPixelProxy::SetPtr( tByte* iPtr )
+{
+    mData = iPtr;
+}
+
+void
+FPixelProxy::SetPtr( const tByte* iPtr )
+{
+    mData = const_cast< tByte* >( iPtr );
+}
 
 /////////////////////////////////////////////////////
 // Template Instanciations

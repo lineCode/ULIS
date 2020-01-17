@@ -15,6 +15,7 @@
 #include "Core.h"
 #include "Modes.h"
 #include "Maths.h"
+#include "Pixel.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -24,6 +25,8 @@ float ComposeF( float iCs, float iCb, float iAb, float iVar, float iCr ) {
     return ( 1.f - iVar ) * iCb + iVar * ( ( 1.f - iAb ) *iCs + iAb * iCr );
 }
 
+/////////////////////////////////////////////////////
+// Standard Separable Blending Modes
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Normal
 ULIS2_FORCEINLINE float BlendNormalF( float iCs, float iCb ) {
@@ -171,6 +174,47 @@ ULIS2_FORCEINLINE float BlendReflectF( float iCs, float iCb ) {
 //--------------------------------------------------------------------------------- Glow
 ULIS2_FORCEINLINE float BlendGlowF( float iCs, float iCb ) {
     return  BlendReflectF( iCb, iCs );
+}
+/////////////////////////////////////////////////////
+// Non Separable HSL Blending Modes
+// We assume they are HSL, no check is done, beware.
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------- DarkerColor
+ULIS2_FORCEINLINE void BlendDarkerColorHSLF( IPixel* iCs, IPixel* iCb, IPixel* oCr ) {
+    iCb->LightnessF() > iCs->LightnessF() ? oCr->AssignMemoryUnsafe( *iCb ) : oCr->AssignMemoryUnsafe( *iCs );
+}
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------- LighterColor
+ULIS2_FORCEINLINE void BlendLighterColorHSLF( IPixel* iCs, IPixel* iCb, IPixel* oCr ) {
+    iCb->LightnessF() < iCs->LightnessF() ? oCr->AssignMemoryUnsafe( *iCb ) : oCr->AssignMemoryUnsafe( *iCs );
+}
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- Hue
+ULIS2_FORCEINLINE void BlendHueHSLF( IPixel* iCs, IPixel* iCb, IPixel* oCr ) {
+    oCr->SetHueF( iCs->HueF() );
+    oCr->SetSaturationF( iCb->SaturationF() );
+    oCr->SetLightnessF( iCb->LightnessF() );
+}
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- Saturation
+ULIS2_FORCEINLINE void BlendSaturationHSLF( IPixel* iCs, IPixel* iCb, IPixel* oCr ) {
+    oCr->SetHueF( iCb->HueF() );
+    oCr->SetSaturationF( iCs->SaturationF() );
+    oCr->SetLightnessF( iCb->LightnessF() );
+}
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- Color
+ULIS2_FORCEINLINE void BlendColorHSLF( IPixel* iCs, IPixel* iCb, IPixel* oCr ) {
+    oCr->SetHueF( iCs->HueF() );
+    oCr->SetSaturationF( iCs->SaturationF() );
+    oCr->SetLightnessF( iCb->LightnessF() );
+}
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- Luminosity
+ULIS2_FORCEINLINE void BlendLuminosityHSLF( IPixel* iCs, IPixel* iCb, IPixel* oCr ) {
+    oCr->SetHueF( iCb->HueF() );
+    oCr->SetSaturationF( iCb->SaturationF() );
+    oCr->SetLF( iCs->LightnessF() );
 }
 
 ULIS2_NAMESPACE_END

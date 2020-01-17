@@ -396,9 +396,9 @@ ToHSV( const IPixel& iSrc, IPixel& iDst )
 
         case CM_RGB:
         {
-            float r = ConvType< T2, float >( iSrc.R< T2 >() );
-            float g = ConvType< T2, float >( iSrc.G< T2 >() );
-            float b = ConvType< T2, float >( iSrc.B< T2 >() );
+            float r = ConvType< T1, float >( iSrc.R< T1 >() );
+            float g = ConvType< T1, float >( iSrc.G< T1 >() );
+            float b = ConvType< T1, float >( iSrc.B< T1 >() );
             float cmin = FMaths::Min3( r, g, b );
             float cmax = FMaths::Max3( r, g, b );
             float delta = cmax - cmin;
@@ -526,9 +526,9 @@ ToHSL( const IPixel& iSrc, IPixel& iDst )
 
         case CM_RGB:
         {
-            float r = ConvType< T2, float >( iSrc.R< T2 >() );
-            float g = ConvType< T2, float >( iSrc.G< T2 >() );
-            float b = ConvType< T2, float >( iSrc.B< T2 >() );
+            float r = ConvType< T1, float >( iSrc.R< T1 >() );
+            float g = ConvType< T1, float >( iSrc.G< T1 >() );
+            float b = ConvType< T1, float >( iSrc.B< T1 >() );
             float cmin = FMaths::Min3( r, g, b );
             float cmax = FMaths::Max3( r, g, b );
             float delta = cmax - cmin;
@@ -754,9 +754,9 @@ ToCMYK( const IPixel& iSrc, IPixel& iDst )
 
         case CM_RGB:
         {
-            float r = ConvType< T2, float >( iSrc.R< T2 >() );
-            float g = ConvType< T2, float >( iSrc.G< T2 >() );
-            float b = ConvType< T2, float >( iSrc.B< T2 >() );
+            float r = ConvType< T1, float >( iSrc.R< T1 >() );
+            float g = ConvType< T1, float >( iSrc.G< T1 >() );
+            float b = ConvType< T1, float >( iSrc.B< T1 >() );
             float ik = FMaths::Max3( r, g, b );
             float k = 1.f - ik;
 

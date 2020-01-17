@@ -49,6 +49,8 @@ public:
     uint8           RedirectedIndex( uint8 iIndex ) const;
     uint8           AlphaIndex()                    const;
 
+    void AssignMemoryUnsafe( const IPixel& iOther );
+
 public:
     // Generic access API
     tByte*                              SamplePtr( uint8 iIndex );
@@ -517,7 +519,6 @@ public:
     static FPixel FromYxyAF(    float  iY,  float  ix,  float  iy,  float  iA = 1.f         );
     static FPixel FromYxyAD(    double iY,  double ix,  double iy,  double iA = 1.0         );
     */
-
 };
 typedef FPixelValue FPixel;
 
@@ -534,6 +535,8 @@ public:
     virtual ~FPixelProxy();
     FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
+    void SetPtr( tByte* iPtr );
+    void SetPtr( const tByte* iPtr );
 };
 
 ULIS2_NAMESPACE_END

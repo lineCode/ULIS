@@ -11,6 +11,8 @@
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include "Types.h"
+#include "Format.h"
 #pragma once
 /////////////////////////////////////////////////////
 // All ~300 formats.
