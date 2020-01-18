@@ -66,5 +66,11 @@ ULIS2_API void BlendRect( FThreadPool&      iPool
                         , const FPerf&      iPerf           = FPerf()
                         , bool              iCallInvalidCB  = true );
 
+
+
+// Callback Typedefs
+//typedef void (*fpDispatchedBlendFunc)( const FBlock*, FBlock*, const FRect&, const FRect&, eBlendingMode, eAlphaMode, ufloat );
+//ULIS2_API fpDispatchedBlendFunc QueryDispatch( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, const FPerf& iPerf );
+
 ULIS2_NAMESPACE_END
 

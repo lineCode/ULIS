@@ -540,16 +540,16 @@ public:
 
 /////////////////////////////////////////////////////
 // Template Instanciations
-#define X_DO_A( i ) template i* IPixel::SamplePtrT< i >( uint8 );
-#define X_DO_B( i ) template const i* IPixel::SamplePtrT< i >( uint8 ) const;
-#define X_DO_C( i ) template i IPixel::GetValueRaw< i >( uint8 ) const;
-#define X_DO_D( i ) template i& IPixel::GetRefRaw< i >( uint8 );
-#define X_DO_E( i ) template const i& IPixel::GetConstRefRaw< i >( uint8 ) const;
-#define X_DO_F( i ) template i IPixel::GetValue< i >( uint8 ) const;
-#define X_DO_G( i ) template i& IPixel::GetRef< i >( uint8 );
-#define X_DO_H( i ) template const i& IPixel::GetConstRef< i >( uint8 ) const;
-#define X_DO_I( i ) template void IPixel::SetValueRaw< i >( uint8, i iValue );
-#define X_DO_J( i ) template void IPixel::SetValue< i >( uint8, i iValue );
+#define X_DO_A( i ) ULIS2_API_TEMPLATE i* IPixel::SamplePtrT< i >( uint8 );
+#define X_DO_B( i ) ULIS2_API_TEMPLATE const i* IPixel::SamplePtrT< i >( uint8 ) const;
+#define X_DO_C( i ) ULIS2_API_TEMPLATE i IPixel::GetValueRaw< i >( uint8 ) const;
+#define X_DO_D( i ) ULIS2_API_TEMPLATE i& IPixel::GetRefRaw< i >( uint8 );
+#define X_DO_E( i ) ULIS2_API_TEMPLATE const i& IPixel::GetConstRefRaw< i >( uint8 ) const;
+#define X_DO_F( i ) ULIS2_API_TEMPLATE i IPixel::GetValue< i >( uint8 ) const;
+#define X_DO_G( i ) ULIS2_API_TEMPLATE i& IPixel::GetRef< i >( uint8 );
+#define X_DO_H( i ) ULIS2_API_TEMPLATE const i& IPixel::GetConstRef< i >( uint8 ) const;
+#define X_DO_I( i ) ULIS2_API_TEMPLATE void IPixel::SetValueRaw< i >( uint8, i iValue );
+#define X_DO_J( i ) ULIS2_API_TEMPLATE void IPixel::SetValue< i >( uint8, i iValue );
 ULIS2_FOR_ALL_TYPES_DO( X_DO_A )
 ULIS2_FOR_ALL_TYPES_DO( X_DO_B )
 ULIS2_FOR_ALL_TYPES_DO( X_DO_C )

@@ -113,14 +113,14 @@ BlendRect( FThreadPool&     iPool
          , const FPerf&     iPerf
          , bool             iCallInvalidCB )
 {
+    ULIS2_ASSERT( iSource,                                                      "Bad source" );
+    ULIS2_ASSERT( iBackdrop,                                                    "Bad destination" );
+    ULIS2_ASSERT( iSource != iBackdrop,                                         "Can not blend a block on itself" );
     ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(),                       "Models do not match" );
     ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(),                         "Types do not match" );
     ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(),   "Samples do not match" );
     ULIS2_ASSERT( iSource->Reversed() == iBackdrop->Reversed(),                 "Layouts do match" );
     ULIS2_ASSERT( iSource->Swapped() == iBackdrop->Swapped(),                   "Layouts do not match" );
-    ULIS2_ASSERT( iSource,                                                      "Bad source" );
-    ULIS2_ASSERT( iBackdrop,                                                    "Bad destination" );
-    ULIS2_ASSERT( iSource != iBackdrop,                                         "Can not blend a block on itself" );
 
     // Gather src rect and shift to destination
     FRect target_rect = iSrcRect & iSource->Rect();

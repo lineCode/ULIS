@@ -27,7 +27,6 @@ void BlendMono_Separable_MEM( const FBlock* iSource
                             , eAlphaMode    iAlphaMode
                             , float         iOpacity )
 {
-
     // Gather Data
     const tSize     bpc = iSource->BytesPerSample();                                        // Bytes Per Channel
     const tSize     ncc = iSource->NumColorChannels();                                      // Num Color Channel

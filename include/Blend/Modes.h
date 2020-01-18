@@ -159,5 +159,9 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     }
 }
 
+#define ULIS2_ENCODE_BM_AM( iBM, iAM )  uint32( uint32( iBM ) | ( uint32( iAM ) << 16 ) )
+#define ULIS2_DECODE_BM( iENCODED )     eBlendingMode( iENCODED & 0xFFFF )
+#define ULIS2_DECODE_AM( iENCODED )     eBlendingMode( ( iENCODED >> 16 ) & 0xFFFF )
+
 ULIS2_NAMESPACE_END
 

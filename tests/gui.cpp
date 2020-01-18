@@ -46,6 +46,10 @@ main( int argc, char *argv[] )
     int height  = 1024;
     FBlock blockA( width, height, ULIS2_FORMAT_RGBA8 );
     FBlock blockB( width, height, ULIS2_FORMAT_RGBA8 );
+    //fpDispatchedBlendFunc fptr = QueryDispatch( ULIS2_FORMAT_RGBA8, BM_NORMAL, AM_ADD, FPerf() );
+
+
+
     eType tp = blockA.Type();
     std::cout << int(ULIS2_FORMAT_RGBA8) << std::endl;
     FThreadPool pool;
@@ -58,6 +62,9 @@ main( int argc, char *argv[] )
     Swap( pool, &blockA, 0, 2,  perf_best );
     Swap( pool, &blockA, 1, 2,  perf_best );
     Fill( pool, &blockB, color, perf_best );
+
+    //fptr( &blockB, &blockA, FRect(), FRect(), BM_HUE, AM_NORMAL, 1.0f );
+
     Blend( pool, &blockB, &blockA, FPoint(), BM_HUE, AM_NORMAL, 1.0f, perf_low );
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

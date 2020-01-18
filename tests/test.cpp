@@ -12,48 +12,21 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS2>
-#include <CL/cl.hpp>
-#include <vectorclass.h>
+//#include <CL/cl.hpp>
+//#include <vectorclass.h>
 using namespace ::ul2;
 
 int
 main()
 {
-    //VCL
-    Vec16uc a(255);
-    Vec16uc b(2);
-    Vec8us  c = a;
-    for( int i = 0; i < c.size(); ++i )
-        std::cout << (int)c[i] << "\n";
-    auto __dummy = 0;
-
-    std::cout << std::endl;
-    // ULIS2
-    FBlock block( 256, 256, ULIS2_FORMAT_ARGBF );
-    for( int i = 0; i < block.SamplesPerPixel(); ++i )
-        std::cout << (int)block.RedirectedIndex( i ) << std::endl;
-    FBlock block2( 256, 256, ULIS2_FORMAT_ARGBF );
-    FPixel color( ULIS2_FORMAT_LabAF, { 0.5, 0.2, 0.7, 1.0 } );
-    FPixel rgb( ULIS2_FORMAT_RGB8,    { 255, 81, 255 }      );
-    FPixel lab( ULIS2_FORMAT_LabAD, UEncodeLabA( 100, 64, -20, 1.0 ) );
-    Conv( rgb, lab );
+    FBlock blockA( 256, 256, ULIS2_FORMAT_ARGB8 );
+    FBlock blockB( 256, 256, ULIS2_FORMAT_ARGB8 );
     FThreadPool pool;
-    FPerf perf( Perf_Best_CPU & Perf_SSE4_2 );
-    ClearRaw( &block );
-    CopyRaw( &block2, &block );
-    Clear( pool, &block2 );
-    Copy( pool, &block2, &block );
-    Swap( pool, &block2, 0, 2 );
-    Fill( pool, &block, color, perf );
-    FPerf perf2( Perf_Best_CPU );
-    Blend( pool, &block, &block2, FPoint(), BM_NORMAL, AM_NORMAL, 1.f, perf2, true );
-    FPixelProxy prox = block.PixelProxy( 240, 0 );
-    std::cout << (float)prox.RF() << std::endl;
-    std::cout << (float)prox.GF() << std::endl;
-    std::cout << (float)prox.BF() << std::endl;
-    std::cout << (float)prox.AF() << std::endl;
-    auto dummy = 0;
+    FPerf       perf( Perf_Lowest );
+    FPoint      point;
+    Blend( pool, &blockA, &blockB, point, BM_HUE, AM_NORMAL, 1.f, perf, true );
 
+    /*
     // OpenCL
     //get all platforms (drivers)
     std::vector<cl::Platform> all_platforms;
@@ -129,7 +102,7 @@ main()
     std::cout << resource.getInfo< CL_MEM_SIZE >( &err ) << std::endl;
     std::cout << err << std::endl;
     auto _dummy = 0;
-
+    */
     return  0;
 }
 
