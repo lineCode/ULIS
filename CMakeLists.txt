@@ -40,19 +40,20 @@ endif()
 
 # Flags for Compiler / Platforms
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -fabi-version=0")
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
     if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux" )
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1 -W -pthread")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -fabi-version=0 -W -pthread")
     elseif( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1 -Wa")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -fabi-version=0 -Wa")
     endif()
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc -D__SSE4_2__ -D__AVX2__")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Z7 -MP -Od -MDd")
-    # Z7: Produced object files contain full symbolic debugging information.
-    # MP: Parallelize compilation of source files.
-    # Od: Turns off all optimizations in the program and speeds compilation.
+    # EHsc: Exception stuff
+    # Z7:   Produced object files contain full symbolic debugging information.
+    # MP:   Parallelize compilation of source files.
+    # Od:   Turns off all optimizations in the program and speeds compilation.
 endif()
 
 # Add Dependencies
@@ -89,6 +90,8 @@ target_include_directories(
     "include/"
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
     ${OpenCL_INCLUDE_DIR}
     PRIVATE
     "source/"

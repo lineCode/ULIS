@@ -13,11 +13,22 @@
 */
 #include <ULIS2>
 #include <CL/cl.hpp>
+#include <vectorclass.h>
 using namespace ::ul2;
 
 int
 main()
 {
+    //VCL
+    Vec16uc a(255);
+    Vec16uc b(2);
+    Vec8us  c = a;
+    for( int i = 0; i < c.size(); ++i )
+        std::cout << (int)c[i] << "\n";
+    auto __dummy = 0;
+
+    std::cout << std::endl;
+    // ULIS2
     FBlock block( 256, 256, ULIS2_FORMAT_ARGBF );
     for( int i = 0; i < block.SamplesPerPixel(); ++i )
         std::cout << (int)block.RedirectedIndex( i ) << std::endl;
