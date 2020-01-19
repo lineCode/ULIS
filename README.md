@@ -37,9 +37,9 @@ Dependencies are redistributed directly within the repository under the 3rdparty
         - FeatureDetector
 
 Additional Optional library can be used with ULIS2 to test or extend capabilities:
+
         - OpenCL
         - Qt
-
 
 ## Getting Started
         - git clone https://github.com/Praxinos/ULIS2
