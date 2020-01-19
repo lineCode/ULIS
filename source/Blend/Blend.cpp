@@ -14,11 +14,10 @@
 #include "Blend/Blend.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
-
 // Mono Mem Generic
-#include "Blend/Generic/MEM/BlendMono_Separable_MEM_Generic.ipp"
-#include "Blend/Generic/MEM/BlendMono_NonSeparable_MEM_Generic.ipp"
-#include "Blend/Generic/MEM/BlendMono_Misc_MEM_Generic.ipp"
+#include "Blend/Generic/Mono/MEM/BlendMono_Separable_MEM_Generic.ipp"
+#include "Blend/Generic/Mono/MEM/BlendMono_NonSeparable_MEM_Generic.ipp"
+#include "Blend/Generic/Mono/MEM/BlendMono_Misc_MEM_Generic.ipp"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >

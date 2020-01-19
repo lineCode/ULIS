@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         BlendMono_NonSeparable_CM_Grey_MEM_Generic.ipp
+* @file         BlendMono_NonSeparable_CM_Lab_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic Blend entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -20,15 +20,16 @@
 #include "Color/ModelStructs.h"
 #include "Maths/Geometry.h"
 
+
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_NonSeparable_CM_Grey_MEM( const FBlock*          iSource
-                                       , FBlock*                iBackdrop
-                                       , const FRect&           iSrcRoi
-                                       , const FRect&           iDstRoi
-                                       , const eBlendingMode    iBlendingMode
-                                       , const eAlphaMode       iAlphaMode
-                                       , const float            iOpacity )
+void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock*       iSource
+                                      , FBlock*             iBackdrop
+                                      , const FRect&        iSrcRoi
+                                      , const FRect&        iDstRoi
+                                      , const eBlendingMode iBlendingMode
+                                      , const eAlphaMode    iAlphaMode
+                                      , const float         iOpacity )
 {
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
@@ -38,12 +39,17 @@ void BlendMono_NonSeparable_CM_Grey_MEM( const FBlock*          iSource
     tByte*       bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
 
     for( tSize i = 0; i < num; ++i ) {
-        float src_greyf = TYPE2FLOAT( src, idt[0] );
-        float bdp_greyf = TYPE2FLOAT( bdp, idt[0] );
+        FLabF src_lab = { TYPE2FLOAT( src, idt[0] ), TYPE2FLOAT( src, idt[1] ), TYPE2FLOAT( src, idt[2] ) };
+        FLabF bdp_lab = { TYPE2FLOAT( bdp, idt[0] ), TYPE2FLOAT( bdp, idt[1] ), TYPE2FLOAT( bdp, idt[2] ) };
+        FLChF src_lch = LabToLCh( src_lab );
+        FLChF bdp_lch = LabToLCh( bdp_lab );
+        FLChF result_lch;
+        FLabF result_lab;
 
         const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
         const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
         float alpha_result;
         switch( iAlphaMode ) {
             case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp );
@@ -57,19 +63,22 @@ void BlendMono_NonSeparable_CM_Grey_MEM( const FBlock*          iSource
             case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp );
             case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp );
         }
-        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
 
         switch( iBlendingMode ) {
-            #define COMPOSE( i ) FLOAT2TYPE( bdp, idt[0], ComposeF( src_greyf, bdp_greyf, alpha_bdp, var, i( src_greyf, bdp_greyf ) ) ); break;
-            case BM_DARKERCOLOR     :   COMPOSE( BlendDarkerColorF  ); break;
-            case BM_LIGHTERCOLOR    :   COMPOSE( BlendLighterColorF ); break;
-            case BM_HUE             :   COMPOSE( BlendHueF          ); break;
-            case BM_SATURATION      :   COMPOSE( BlendSaturationF   ); break;
-            case BM_COLOR           :   COMPOSE( BlendColorF        ); break;
-            case BM_LUMINOSITY      :   COMPOSE( BlendLuminosityF   ); break;
+            case BM_DARKERCOLOR     :   result_lch = BlendDarkerColorF(  src_lch, bdp_lch ); break;
+            case BM_LIGHTERCOLOR    :   result_lch = BlendLighterColorF( src_lch, bdp_lch ); break;
+            case BM_HUE             :   result_lch = BlendHueF(          src_lch, bdp_lch ); break;
+            case BM_SATURATION      :   result_lch = BlendSaturationF(   src_lch, bdp_lch ); break;
+            case BM_COLOR           :   result_lch = BlendColorF(        src_lch, bdp_lch ); break;
+            case BM_LUMINOSITY      :   result_lch = BlendLuminosityF(   src_lch, bdp_lch ); break;
             default                 :   ULIS2_ASSERT( false, "Bad Blending Mode" );
-            #undef COMPOSE
         }
+
+        result_lab = LChToLab( result_lch );
+
+        // Compose
+        for( tSize j = 0; j < ncc; ++j )
+            FLOAT2TYPE( bdp, idt[j], ComposeF( *( (float*)(&src_lab) + j ), *( (float*)(&bdp_lab) + j ), alpha_bdp, var, *( (float*)(&result_lab) + j ) ) );
 
         // Assign alpha
         if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );

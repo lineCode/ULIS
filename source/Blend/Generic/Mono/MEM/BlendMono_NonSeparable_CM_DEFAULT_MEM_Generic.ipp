@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         BlendMono_NonSeparable_CM_CMYK_MEM_Generic.ipp
+* @file         BlendMono_NonSeparable_CM_DEFAULT_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic Blend entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -18,17 +18,18 @@
 #include "Blend/Func/AlphaFuncF.ipp"
 #include "Blend/Func/NonSeparableBlendFuncF.ipp"
 #include "Color/ModelStructs.h"
+#include "Conv/Conv.h"
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*      iSource
-                                       , FBlock*             iBackdrop
-                                       , const FRect&        iSrcRoi
-                                       , const FRect&        iDstRoi
-                                       , const eBlendingMode iBlendingMode
-                                       , const eAlphaMode    iAlphaMode
-                                       , const float         iOpacity )
+void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
+                                          , FBlock*             iBackdrop
+                                          , const FRect&        iSrcRoi
+                                          , const FRect&        iDstRoi
+                                          , const eBlendingMode iBlendingMode
+                                          , const eAlphaMode    iAlphaMode
+                                          , const float         iOpacity )
 {
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
@@ -36,18 +37,28 @@ void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*      iSource
     BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSrcRoi );
     const tByte* src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp );
     tByte*       bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
+    const tFormat   fmt = iSource->Format();        // Format
+    FPixelProxy     src_proxy( src, fmt );          // Proxy on source
+    FPixelProxy     bdp_proxy( bdp, fmt );          // Proxy on backdrop
+    FPixelValue     src_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl source
+    FPixelValue     bdp_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl backdrop
+    FPixelValue     res_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl result
+    FPixelValue     result( fmt );                  // result buffer in native model format
 
-    for( tSize i = 0; i < num; ++i ) {
-        FCMYKF  src_cmykf = { TYPE2FLOAT( src, idt[0] ), TYPE2FLOAT( src, idt[1] ), TYPE2FLOAT( src, idt[2] ), TYPE2FLOAT( src, idt[3] ) };
-        FCMYKF  bdp_cmykf = { TYPE2FLOAT( bdp, idt[0] ), TYPE2FLOAT( bdp, idt[1] ), TYPE2FLOAT( bdp, idt[2] ), TYPE2FLOAT( bdp, idt[3] ) };
-        FRGBF   src_rgbf = CMYKToRGB( src_cmykf );
-        FRGBF   bdp_rgbf = CMYKToRGB( bdp_cmykf );
-        FRGBF   result_rgbf;
-        FCMYKF  result_cmykf;
+    for( tSize i = 0; i < num; ++i )
+    {
+        src_proxy.SetPtr( src );
+        bdp_proxy.SetPtr( bdp );
+        ConvToRGB< T, ufloat >( src_proxy, src_conv );
+        ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
+        FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
+        FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
+        FRGBF result_rgbf;
 
         const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
         const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
         float alpha_result;
         switch( iAlphaMode ) {
             case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp );
@@ -61,7 +72,6 @@ void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*      iSource
             case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp );
             case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp );
         }
-        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
 
         switch( iBlendingMode ) {
             case BM_DARKERCOLOR     :   result_rgbf = BlendDarkerColorF(  src_rgbf, bdp_rgbf ); break;
@@ -72,12 +82,15 @@ void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*      iSource
             case BM_LUMINOSITY      :   result_rgbf = BlendLuminosityF(   src_rgbf, bdp_rgbf ); break;
             default                 :   ULIS2_ASSERT( false, "Bad Blending Mode" );
         }
-
-        result_cmykf = RGBToCMYK( result_rgbf );
+        // Convert back rgb to native model
+        res_conv.SetRF( result_rgbf.R );
+        res_conv.SetGF( result_rgbf.G );
+        res_conv.SetBF( result_rgbf.B );
+        ConvT< ufloat, T >( res_conv, result );
 
         // Compose
-        for( tSize j = 0; j < ncc; ++j )
-            FLOAT2TYPE( bdp, idt[j], ComposeF( *( (float*)(&src_cmykf) + j ), *( (float*)(&bdp_cmykf) + j ), alpha_bdp, var, *( (float*)(&result_cmykf) + j ) ) );
+        for( tSize j = 0; j < spp; ++j )
+            FLOAT2TYPE( bdp, j, ComposeF( TYPE2FLOAT( src_proxy.Ptr(), j ), TYPE2FLOAT( bdp_proxy.Ptr(), j ), alpha_bdp, var, TYPE2FLOAT( result.Ptr(), j ) ) );
 
         // Assign alpha
         if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
@@ -87,7 +100,6 @@ void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*      iSource
         bdp += bpp;
     }
 
-    // delete temp
     delete [] idt;
 }
 

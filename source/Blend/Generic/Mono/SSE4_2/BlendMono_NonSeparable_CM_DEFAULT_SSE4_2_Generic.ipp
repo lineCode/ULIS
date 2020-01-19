@@ -58,6 +58,7 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
         const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
         const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
         float alpha_result;
         switch( iAlphaMode ) {
             case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp );
@@ -71,7 +72,6 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
             case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp );
             case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp );
         }
-        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
 
         switch( iBlendingMode ) {
             case BM_DARKERCOLOR     :   result_rgbf = BlendDarkerColorF(  src_rgbf, bdp_rgbf ); break;
