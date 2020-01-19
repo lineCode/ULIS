@@ -25,7 +25,7 @@ ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL BuildIndexTable( uint8 iCOD, u
     }
 }
 
-ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL  BuildBlendParams( uint8* oBPC
+ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL  BuildBlendParams( uint8*         oBPC
                                                                    , uint8*         oNCC
                                                                    , uint8*         oHEA
                                                                    , uint8*         oSPP
@@ -36,6 +36,15 @@ ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL  BuildBlendParams( uint8* oBPC
                                                                    , uint8**        oIDT
                                                                    , uint32         iFmt
                                                                    , const FRect&   iROI ) {
+    // BPC: Bytes Per Channel
+    // NCC: Num Color Channel ( Without Alpha )
+    // HEA: Has Extra Alpha ( 0 = false, else true )
+    // SPP: Samples Per Pixel ( Number of Channels with Alpha )
+    // BPP: Bytes Per Pixel ( With Alpha )
+    // BPS: Bytes Per Scanline
+    // NUM: Number or Pixels to treat in ROI
+    // AID: Alpha redirected Index
+    // IDT: Redirected channels Index table, allocated here, don't forget to delete [] it outside.
     *oBPC = ULIS2_R_DEPTH(    iFmt );
     *oNCC = ULIS2_R_CHANNELS( iFmt );
     *oHEA = ULIS2_R_ALPHA(    iFmt );
@@ -43,7 +52,7 @@ ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL  BuildBlendParams( uint8* oBPC
     *oBPP = (*oBPC) * (*oSPP);
     *oBPS = iROI.w * (*oBPP);
     *oNUM = iROI.w * iROI.h;
-    uint8 cod = ULIS2_R_RS( iFmt );
+    uint8 cod = ULIS2_R_RS( iFmt ); // Reverse-Swapped layout identifier
     *oIDT = new uint8[*oSPP];
     BuildIndexTable( cod, *oSPP, *oIDT, oAID );
 }
