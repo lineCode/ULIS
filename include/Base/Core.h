@@ -7,7 +7,7 @@
 *
 * @file         Core.h
 * @author       Clement Berthaud
-* @brief        This file provides core definitions for the ULIS2 library.
+* @brief        This file gathers core definitions for the ULIS2 library.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

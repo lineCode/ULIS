@@ -15,15 +15,11 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-// Forward Declarations
-class FBlock;
-struct FRect;
-
 // Callback Typedefs
 typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRect& /* rect */ );
 typedef void (*fpCleanupFunction)( tByte* /* data */, void* /* info */ );
 
-// Default Callback
+// Default Callbacks
 ULIS2_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
 ULIS2_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
 

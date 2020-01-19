@@ -14,6 +14,7 @@
 #include "Blend/Blend.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
+
 // Mono Mem Generic
 #include "Blend/Generic/MEM/BlendMono_Separable_MEM_Generic.ipp"
 #include "Blend/Generic/MEM/BlendMono_NonSeparable_MEM_Generic.ipp"
@@ -113,14 +114,14 @@ BlendRect( FThreadPool&     iPool
          , const FPerf&     iPerf
          , bool             iCallInvalidCB )
 {
-    ULIS2_ASSERT( iSource,                                                      "Bad source" );
-    ULIS2_ASSERT( iBackdrop,                                                    "Bad destination" );
-    ULIS2_ASSERT( iSource != iBackdrop,                                         "Can not blend a block on itself" );
-    ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(),                       "Models do not match" );
-    ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(),                         "Types do not match" );
-    ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(),   "Samples do not match" );
-    ULIS2_ASSERT( iSource->Reversed() == iBackdrop->Reversed(),                 "Layouts do match" );
-    ULIS2_ASSERT( iSource->Swapped() == iBackdrop->Swapped(),                   "Layouts do not match" );
+    ULIS2_ASSERT( iSource,                                                      "Bad source"                        );
+    ULIS2_ASSERT( iBackdrop,                                                    "Bad destination"                   );
+    ULIS2_ASSERT( iSource != iBackdrop,                                         "Can not blend a block on itself"   );
+    ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(),                       "Models do not match"               );
+    ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(),                         "Types do not match"                );
+    ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(),   "Samples do not match"              );
+    ULIS2_ASSERT( iSource->Reversed() == iBackdrop->Reversed(),                 "Layouts do match"                  );
+    ULIS2_ASSERT( iSource->Swapped() == iBackdrop->Swapped(),                   "Layouts do not match"              );
 
     // Gather src rect and shift to destination
     FRect target_rect = iSrcRect & iSource->Rect();

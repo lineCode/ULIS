@@ -26,5 +26,6 @@ class FPixelProxy;
 struct FRect;
 struct FPoint;
 class FThreadPool;
+class FPerf;
 ULIS2_NAMESPACE_END
 

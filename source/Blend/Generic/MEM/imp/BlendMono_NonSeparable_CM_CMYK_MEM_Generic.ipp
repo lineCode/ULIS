@@ -13,24 +13,22 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Maths/Geometry.h"
-#include "Blend/Modes.h"
-#include "Base/Perf.h"
-#include "Color/ModelStructs.h"
-#include "Blend/Func/NonSeparableBlendFuncRGBF.ipp"
 #include "Blend/BlendHelpers.h"
-#include "Conv/Conv.h"
-
+#include "Blend/Modes.h"
+#include "Blend/Func/AlphaFuncF.ipp"
+#include "Blend/Func/NonSeparableBlendFuncF.ipp"
+#include "Color/ModelStructs.h"
+#include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*      iSource
-                                      , FBlock*             iBackdrop
-                                      , const FRect&        iSrcRoi
-                                      , const FRect&        iDstRoi
-                                      , const eBlendingMode iBlendingMode
-                                      , const eAlphaMode    iAlphaMode
-                                      , const float         iOpacity )
+                                       , FBlock*             iBackdrop
+                                       , const FRect&        iSrcRoi
+                                       , const FRect&        iDstRoi
+                                       , const eBlendingMode iBlendingMode
+                                       , const eAlphaMode    iAlphaMode
+                                       , const float         iOpacity )
 {
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
@@ -49,8 +47,20 @@ void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*      iSource
 
         const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
         const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
-        const float alpha_comp      = ( alpha_bdp + alpha_src ) - ( alpha_bdp * alpha_src );
-        const float alpha_result    = 1.0f;
+        const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+        float alpha_result;
+        switch( iAlphaMode ) {
+            case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp );
+            case AM_ERASE   : alpha_result = AlphaEraseF(   alpha_src, alpha_bdp );
+            case AM_TOP     : alpha_result = AlphaTopF(     alpha_src, alpha_bdp );
+            case AM_BACK    : alpha_result = AlphaBackF(    alpha_src, alpha_bdp );
+            case AM_SUB     : alpha_result = AlphaSubF(     alpha_src, alpha_bdp );
+            case AM_ADD     : alpha_result = AlphaAddF(     alpha_src, alpha_bdp );
+            case AM_MUL     : alpha_result = AlphaMulF(     alpha_src, alpha_bdp );
+            case AM_MIN     : alpha_result = AlphaMinF(     alpha_src, alpha_bdp );
+            case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp );
+            case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp );
+        }
         const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
 
         switch( iBlendingMode ) {

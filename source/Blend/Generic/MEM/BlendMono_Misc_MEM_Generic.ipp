@@ -13,12 +13,11 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Maths/Geometry.h"
-#include "Blend/Modes.h"
-#include "Base/Perf.h"
-#include "Color/ModelStructs.h"
 #include "Blend/BlendHelpers.h"
-#include "Conv/Conv.h"
+#include "Blend/Modes.h"
+#include "Blend/Func/AlphaFuncF.ipp"
+#include "Color/ModelStructs.h"
+#include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >

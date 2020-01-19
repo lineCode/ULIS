@@ -13,11 +13,12 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Maths/Geometry.h"
-#include "Blend/Modes.h"
-#include "Base/Perf.h"
-#include "Color/ModelStructs.h"
 #include "Blend/BlendHelpers.h"
+#include "Blend/Modes.h"
+#include "Blend/Func/AlphaFuncF.ipp"
+#include "Color/ModelStructs.h"
+#include "Maths/Geometry.h"
+// Mono Non Separable Mem Generic
 #include "Blend/Generic/MEM/imp/BlendMono_NonSeparable_CM_DEFAULT_MEM_Generic.ipp"
 #include "Blend/Generic/MEM/imp/BlendMono_NonSeparable_CM_Grey_MEM_Generic.ipp"
 #include "Blend/Generic/MEM/imp/BlendMono_NonSeparable_CM_RGB_MEM_Generic.ipp"

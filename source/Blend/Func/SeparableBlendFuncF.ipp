@@ -14,8 +14,8 @@
 #pragma once
 #include "Base/Core.h"
 #include "Blend/Modes.h"
-#include "Maths/Maths.h"
 #include "Color/ModelStructs.h"
+#include "Maths/Maths.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

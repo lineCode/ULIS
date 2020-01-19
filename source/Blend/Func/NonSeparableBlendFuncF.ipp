@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         NonSeparableBlendFuncRGBF.h
+* @file         NonSeparableBlendFuncF.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the ufloat Blending functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -14,8 +14,8 @@
 #pragma once
 #include "Base/Core.h"
 #include "Blend/Modes.h"
-#include "Maths/Maths.h"
 #include "Color/ModelStructs.h"
+#include "Maths/Maths.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

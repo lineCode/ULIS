@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Maths/Geometry.h"
-#include "Blend/Modes.h"
 #include "Base/Perf.h"
+#include "Blend/Modes.h"
+#include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
 /// @fn         void Blend( FThreadPool& iPool, const FBlock* iSource, FBlock* iBackdrop, const FPoint& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
@@ -66,9 +66,7 @@ ULIS2_API void BlendRect( FThreadPool&      iPool
                         , const FPerf&      iPerf           = FPerf()
                         , bool              iCallInvalidCB  = true );
 
-
-
-// Callback Typedefs
+// Dispatch Typedefs
 //typedef void (*fpDispatchedBlendFunc)( const FBlock*, FBlock*, const FRect&, const FRect&, eBlendingMode, eAlphaMode, ufloat );
 //ULIS2_API fpDispatchedBlendFunc QueryDispatch( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, const FPerf& iPerf );
 

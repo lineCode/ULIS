@@ -23,6 +23,12 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
+    {
+        float b = 0.f;
+        float a = 1.f / b;
+        auto dummy = 0;
+    }
+
     cmsCIELab a = { 0.8, 0.5, 0.5 };
     cmsCIELCh b;
     cmsLab2LCh( &b, &a );
@@ -42,7 +48,7 @@ main( int argc, char *argv[] )
     //m0 = m1;
 
     FPixel A( ULIS2_FORMAT_RGBD, { 1.0, 0.0, 0.0 }, reg.GetDefaultProfileForModel( CM_RGB ) );
-    FPixel B( ULIS2_FORMAT_Lab8, { 255, 0, 0 }, reg.GetDefaultProfileForModel( CM_Lab ) );
+    FPixel B( ULIS2_FORMAT_Lab8, { 255, 0, 0 },     reg.GetDefaultProfileForModel( CM_Lab ) );
     ProfileConv( A, B, reg );
 
     ConvT< udouble, uint8 >( A, B );

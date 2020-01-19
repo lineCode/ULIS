@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         Callbacks.h
+* @file         Callbacks.cpp
 * @author       Clement Berthaud
 * @brief        This file provides definitions for the image callbacks.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -72,5 +72,5 @@ FOnCleanup::ExecuteIfBound( tByte* iData ) const
         execute( iData, info );
 }
 
-
 ULIS2_NAMESPACE_END
+

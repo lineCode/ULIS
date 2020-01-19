@@ -43,7 +43,7 @@ public:
     /// @fn         FPerf( uint32 iFlags = UPERF_MAXCPU_PERF )
     /// @brief      Default Constructor.
     /// @details    Initializes members with default values
-    FPerf( uint32 iFlags = UPERF_BEST_CPU );
+    FPerf( uint32 iFlags = Perf_Best_CPU );
 
 public:
     // Getters

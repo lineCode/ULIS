@@ -7,13 +7,14 @@
 *
 * @file         Decl.h
 * @author       Clement Berthaud
-* @brief        This file provides core definitions for the ULIS2 library.
+* @brief        This file provides format declarations for the ULIS2 library.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Base/Types.h"
-#include "Base/Format.h"
 #pragma once
+#include "Base/Format.h"
+#include "Base/Types.h"
+
 /////////////////////////////////////////////////////
 // All ~300 formats.
 #define ULIS2_FORMAT_G8         ULIS2_W_TYPE( TYPE_UINT8    ) | ULIS2_W_CHANNELS( 1 ) | ULIS2_W_MODEL( CM_GREY )    | ULIS2_W_DEPTH( 1 )

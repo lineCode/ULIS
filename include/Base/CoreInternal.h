@@ -13,8 +13,8 @@
 */
 #pragma once
 #include "Base/Platform.h"
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 /////////////////////////////////////////////////////
 // Define Namespaces
@@ -50,4 +50,5 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 #endif
 
 #define ULIS2_WARNING( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " <<  "Warning: " << log << std::endl; }
-#define ULIS2_ERROR( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Error: " << log << std::endl; ULIS2_CRASH; }
+#define ULIS2_ERROR( cond, log )    if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Error: " << log << std::endl; ULIS2_CRASH; }
+
