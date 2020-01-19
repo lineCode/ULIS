@@ -75,8 +75,7 @@ main( int argc, char *argv[] )
     Fill( pool, &blockB, color, perf_best );
 
     //fptr( &blockB, &blockA, FRect(), FRect(), BM_HUE, AM_NORMAL, 1.0f );
-
-    Blend( pool, &blockB, &blockA, FPoint(), BM_HUE, AM_NORMAL, 1.0f, perf_low );
+    Blend( pool, &blockB, &blockA, FPoint(), BM_DISSOLVE, AM_NORMAL, 0.1f, perf_low );
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap  pixmap = QPixmap::fromImage( *image );

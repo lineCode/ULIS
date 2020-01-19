@@ -17,7 +17,8 @@
 ULIS2_NAMESPACE_BEGIN
 // Per process global
 // each dll / exe will have its own in case of static link
-extern int gBlendingPRNGSeed;
+extern uint32 gBlendingPRNGSeed;
+ULIS2_API void SetDetermisticBlendingPRNGSeed( uint32 iValue );
 
 ULIS2_NAMESPACE_END
 

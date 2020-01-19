@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         BlendMono_NonSeparable_CM_RGB_MEM_Generic.ipp
+* @file         BlendMono_NonSeparable_CM_RGB_AVX2_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic Blend entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -22,13 +22,13 @@
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_NonSeparable_CM_RGB_MEM( const FBlock*       iSource
-                                      , FBlock*             iBackdrop
-                                      , const FRect&        iSrcRoi
-                                      , const FRect&        iDstRoi
-                                      , const eBlendingMode iBlendingMode
-                                      , const eAlphaMode    iAlphaMode
-                                      , const float         iOpacity )
+void BlendMono_NonSeparable_CM_RGB_AVX2( const FBlock*       iSource
+                                       , FBlock*             iBackdrop
+                                       , const FRect&        iSrcRoi
+                                       , const FRect&        iDstRoi
+                                       , const eBlendingMode iBlendingMode
+                                       , const eAlphaMode    iAlphaMode
+                                       , const float         iOpacity )
 {
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;

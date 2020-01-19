@@ -15,7 +15,11 @@
 #include "Blend/BlendingPRNGSeed.h"
 
 ULIS2_NAMESPACE_BEGIN
-int gBlendingPRNGSeed = 0;
+uint32 gBlendingPRNGSeed = 0;
+void SetDetermisticBlendingPRNGSeed( uint32 iValue )
+{
+    gBlendingPRNGSeed = iValue;
+}
 
 ULIS2_NAMESPACE_END
 

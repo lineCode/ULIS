@@ -39,11 +39,15 @@ void BlendMono_Misc_MEM( const FBlock*          iSource
     const tByte* src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp );
     tByte*       bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
 
+    uint32 localPRNGSeed = gBlendingPRNGSeed;
     for( tSize i = 0; i < num; ++i ) {
         // Random toss, pseudo random can be improved.
         const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
         const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
-        float toss = float( ( int( 8253729 * ( ( sin( gBlendingPRNGSeed * 65537.f ) + cos( gBlendingPRNGSeed * 65537.f ) + 2.0f ) / 4.0f ) ) + 2396403 ) % 65537 ) / 65537.f;
+
+        localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
+        float toss = ( localPRNGSeed % 65537 ) / 65537.f;
+
         if( toss < alpha_src ) {
             float alpha_result;
             switch( iAlphaMode ) {
