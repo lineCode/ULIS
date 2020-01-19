@@ -16,7 +16,8 @@
 #include "Maths/Geometry.h"
 #include "Blend/Modes.h"
 #include "Base/Perf.h"
-#include "color/ModelStructs.h"
+#include "Color/ModelStructs.h"
+#include "Blend/BlendHelpers.h"
 #include "Conv/Conv.h"
 
 ULIS2_NAMESPACE_BEGIN

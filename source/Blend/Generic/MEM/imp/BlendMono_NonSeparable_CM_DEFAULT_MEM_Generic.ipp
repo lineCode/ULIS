@@ -16,8 +16,9 @@
 #include "Maths/Geometry.h"
 #include "Blend/Modes.h"
 #include "Base/Perf.h"
-#include "color/ModelStructs.h"
+#include "Color/ModelStructs.h"
 #include "Blend/Func/NonSeparableBlendFuncRGBF.ipp"
+#include "Blend/BlendHelpers.h"
 #include "Conv/Conv.h"
 
 ULIS2_NAMESPACE_BEGIN
@@ -30,25 +31,19 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
                                           , const eAlphaMode    iAlphaMode
                                           , const float         iOpacity )
 {
-    // Gather Data
-    const tSize     bpc = iSource->BytesPerSample();                                                                // Bytes Per Channel
-    const tSize     ncc = iSource->NumColorChannels();                                                              // Num Color Channel
-    const bool      hea = iSource->HasAlpha();                                                                      // Has Extra Alpha
-    const tSize     spp = ncc + hea;                                                                                // Samples Per Pixel
-    const tSize     bpp = bpc * spp;                                                                                // Bytes Per Pixel
-    const tSize     w   = iSource->Width();                                                                         // Width
-    const tSize     bps = bpp * w;                                                                                  // Bytes Per Scanline
-    uint8           aid = iSource->AlphaIndex();                                                                    // alpha index
-    tByte*          src = const_cast< tByte* >( iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp ) ); // Source Pointer in src ROI
-    tByte*          bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );                         // Backdrop Pointer in dst ROI
-    const tSize     num = iSrcRoi.w * iSrcRoi.h;                                                                    // Number of operations
-    const tFormat   fmt = iSource->Format();                                                                        // Format
-    FPixelProxy     src_proxy( src, fmt );                                                                          // Proxy on source
-    FPixelProxy     bdp_proxy( bdp, fmt );                                                                          // Proxy on backdrop
-    FPixelValue     src_conv( ULIS2_FORMAT_RGBF );                                                                  // conv buffer for hsl source
-    FPixelValue     bdp_conv( ULIS2_FORMAT_RGBF );                                                                  // conv buffer for hsl backdrop
-    FPixelValue     res_conv( ULIS2_FORMAT_RGBF );                                                                  // conv buffer for hsl result
-    FPixelValue     result( fmt );                                                                                  // result buffer in native model format
+    uint8 bpc, ncc, hea, spp, bpp, aid;
+    tSize bps, num;
+    uint8* idt;
+    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSrcRoi );
+    const tByte* src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp );
+    tByte*       bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
+    const tFormat   fmt = iSource->Format();        // Format
+    FPixelProxy     src_proxy( src, fmt );          // Proxy on source
+    FPixelProxy     bdp_proxy( bdp, fmt );          // Proxy on backdrop
+    FPixelValue     src_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl source
+    FPixelValue     bdp_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl backdrop
+    FPixelValue     res_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl result
+    FPixelValue     result( fmt );                  // result buffer in native model format
 
     for( tSize i = 0; i < num; ++i )
     {
@@ -92,6 +87,8 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
         src += bpp;
         bdp += bpp;
     }
+
+    delete [] idt;
 }
 
 ULIS2_NAMESPACE_END

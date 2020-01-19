@@ -16,6 +16,7 @@
 #include "Maths/Geometry.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/SeparableBlendFuncF.ipp"
+#include "Blend/BlendHelpers.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
@@ -27,18 +28,12 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
                             , const eAlphaMode      iAlphaMode
                             , const float           iOpacity )
 {
-    // Gather Data
-    const tSize     bpc = iSource->BytesPerSample();                                        // Bytes Per Channel
-    const tSize     ncc = iSource->NumColorChannels();                                      // Num Color Channel
-    const bool      hea = iSource->HasAlpha();                                              // Has Extra Alpha
-    const tSize     spp = ncc + hea;                                                        // Samples Per Pixel
-    const tSize     bpp = bpc * spp;                                                        // Bytes Per Pixel
-    const tSize     w   = iSource->Width();                                                 // Width
-    const tSize     bps = bpp * w;                                                          // Bytes Per Scanline
-    uint8           aid = iSource->AlphaIndex();                                            // alpha index
-    const tByte*    src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp ); // Source Pointer in src ROI
-    tByte*          bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp ); // Backdrop Pointer in dst ROI
-    const tSize     num = iSrcRoi.w * iSrcRoi.h;                                            // Nulber of operations
+    uint8 bpc, ncc, hea, spp, bpp, aid;
+    tSize bps, num;
+    uint8* idt;
+    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSrcRoi );
+    const tByte* src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp );
+    tByte*       bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
 
     for( tSize i = 0; i < num; ++i ) {
         const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
@@ -46,6 +41,7 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
         const float alpha_comp      = ( alpha_bdp + alpha_src ) - ( alpha_bdp * alpha_src );
         const float alpha_result    = 1.0f;
         const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
+
         for( tSize j = 0; j < spp; ++j ) {
             float srcvf = TYPE2FLOAT( src, j );
             float bdpvf = TYPE2FLOAT( bdp, j );
@@ -90,6 +86,8 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
         src += bpp;
         bdp += bpp;
     }
+
+    delete [] idt;
 }
 
 ULIS2_NAMESPACE_END

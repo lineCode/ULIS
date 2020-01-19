@@ -23,7 +23,6 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
-
     cmsCIELab a = { 0.8, 0.5, 0.5 };
     cmsCIELCh b;
     cmsLab2LCh( &b, &a );

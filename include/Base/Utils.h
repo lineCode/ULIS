@@ -88,15 +88,5 @@ constexpr udouble   fix8d() { return ( 128.0 / 255.0 ) - 0.5; }
 #define UEncodeLab( L, a, b )       { double(L##_L), double(a##_a), double(b##_b) }
 #define UEncodeLabA( L, a, b, A )   { double(L##_L), double(a##_a), double(b##_b), double(A) }
 
-static ULIS2_FORCEINLINE void BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8* oIndexTable ) {
-    uint8 msp = iSPP - 1;
-    switch( iCOD ) {
-        case 1:  for( int i = 0; i < iSPP; ++i ) oIndexTable[i] = ( msp - i );                                      break;
-        case 2:  for( int i = 0; i < iSPP; ++i ) oIndexTable[i] = ( i + 1 ) > msp ? 0 : i + 1;                      break;
-        case 3:  for( int i = 0; i < iSPP; ++i ) oIndexTable[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1;      break;
-        default: for( int i = 0; i < iSPP; ++i ) oIndexTable[i] = i;                                                break;
-    }
-}
-
 ULIS2_NAMESPACE_END
 
