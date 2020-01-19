@@ -3,29 +3,43 @@ Unique Library for Imaging Systems
 
 ## Description
         - Cross-Platform C++14 Library
+        - Build as static or dynamic library
+        - Very lightweight, good performance
         - Generic Digital Image Processing
+        - Read Write from files for many popular formats
+        - Image conversions
+        - Affine Image Transforms
+        - FX, Convolution, Blur, Noise, ...
         - 2D Software Rasterizer
         - All Standard Pixel Blending Modes
         - Many Image Formats, Layouts and Types ( u8, u16, u32, float, double )
         - Color Models ( RGB, HSL, HSV, CMY, CMYK, Lab, XYZ, ... )
         - Color-Managed Pipelines, Color Space Support With Little-CMS
-        - Everything Multithreaded
-        - SIMD SSE Extensions For Common Heavy Pixel Operations
-        - Big Images, Tiled Images ( 300000 px * 300000 px)
+        - Multithreaded optimisations
+        - SSE4.2 and AVX2 optimisations
+        - Support for GPU image processing with OpenCL
+        - Large Tiled Images ( 300000 px * 300000 px)
         - Image Pools and Caches for Optimisation
 
 ## Software Requirements Specification ( SRS )
         - 64bit OS Only
         - Linux, Windows or MacOS
-        - CMake ( 3.11+ )
-        - Git ( 2.17+ )
+        - CMake
+        - Git
         - C++ compiler with support for C++14 or greater
 
 ## Library Dependencies
-Dependencies are provided as custom shaped redistributions with the repository under the 3rdparty directory.
+Dependencies are redistributed directly within the repository under the 3rdparty directory.
 
         - glm
         - Little-CMS
+        - VCL ( Agner Fog's Vector Class Library )
+        - FeatureDetector
+
+Additional Optional library can be used with ULIS2 to test or extend capabilities:
+        - OpenCL
+        - Qt
+
 
 ## Getting Started
         - git clone https://github.com/Praxinos/ULIS2
