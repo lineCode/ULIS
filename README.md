@@ -51,3 +51,4 @@ Sample scripts are also available in the repository to help with the build proce
 
 ## ULIS2 for UnrealEngine ThirdParty Module
 A `ULIS2.Build.cs` script is provided within the repository.
+ULIS2 GPU capabilities and interop with Direct3D or OpenGL in the context of a generic rendering hardware interface is still a work in progress.
