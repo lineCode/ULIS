@@ -21,15 +21,15 @@
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void ULIS2_FORCEINLINE Blend_imp( FThreadPool&  iPool
-                                , const FBlock* iSource
-                                , FBlock*       iBackdrop
-                                , const FRect&  iSrcRoi
-                                , const FRect&  iDstRoi
-                                , eBlendingMode iBlendingMode
-                                , eAlphaMode    iAlphaMode
-                                , float         iOpacity
-                                , const FPerf&  iPerf )
+void ULIS2_FORCEINLINE Blend_imp( FThreadPool&          iPool
+                                , const FBlock*         iSource
+                                , FBlock*               iBackdrop
+                                , const FRect&          iSrcRoi
+                                , const FRect&          iDstRoi
+                                , const eBlendingMode   iBlendingMode
+                                , const eAlphaMode      iAlphaMode
+                                , const float           iOpacity
+                                , const FPerf&          iPerf )
 {
     switch( iPerf.UseMT() ) {
         case true:

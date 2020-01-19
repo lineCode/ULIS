@@ -17,18 +17,20 @@
 #include "Blend/Modes.h"
 #include "Base/Perf.h"
 #include "color/ModelStructs.h"
-#include "Blend/BlendFuncF.h"
+#include "Blend/Func/NonSeparableBlendFuncRGBF.ipp"
 #include "Conv/Conv.h"
+#include "lcms2.h"
+
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock*  iSource
-                                      , FBlock*        iBackdrop
-                                      , const FRect&   iSrcRoi
-                                      , const FRect&   iDstRoi
-                                      , eBlendingMode  iBlendingMode
-                                      , eAlphaMode     iAlphaMode
-                                      , float          iOpacity )
+void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock*       iSource
+                                      , FBlock*             iBackdrop
+                                      , const FRect&        iSrcRoi
+                                      , const FRect&        iDstRoi
+                                      , const eBlendingMode iBlendingMode
+                                      , const eAlphaMode    iAlphaMode
+                                      , const float         iOpacity )
 {
     // Gather Data
     const tSize     bpc = iSource->BytesPerSample();                                                                // Bytes Per Channel
@@ -38,27 +40,22 @@ void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock*  iSource
     const tSize     bpp = bpc * spp;                                                                                // Bytes Per Pixel
     const tSize     w   = iSource->Width();                                                                         // Width
     const tSize     bps = bpp * w;                                                                                  // Bytes Per Scanline
-    uint8           aid = iSource->AlphaIndex();                                                                    // alpha index
+    const uint8     aid = iSource->AlphaIndex();                                                                    // alpha index
     tByte*          src = const_cast< tByte* >( iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp ) ); // Source Pointer in src ROI
     tByte*          bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );                         // Backdrop Pointer in dst ROI
     const tSize     num = iSrcRoi.w * iSrcRoi.h;                                                                    // Number of operations
     const tFormat   fmt = iSource->Format();                                                                        // Format
-    FPixelProxy     src_proxy( src, fmt );                                                                          // Proxy on source
-    FPixelProxy     bdp_proxy( bdp, fmt );                                                                          // Proxy on backdrop
-    FPixelValue     src_conv( ULIS2_FORMAT_RGBF );                                                                  // conv buffer for hsl source
-    FPixelValue     bdp_conv( ULIS2_FORMAT_RGBF );                                                                  // conv buffer for hsl backdrop
-    FPixelValue     res_conv( ULIS2_FORMAT_RGBF );                                                                  // conv buffer for hsl result
-    FPixelValue     result( fmt );                                                                                  // result buffer in native model format
+    const uint8     cod = ULIS2_R_RS( fmt );                                                                        // Layout ( Reverse Swapped )
+    uint8*          idt = new uint8[ bpp ];                                                                         // Index table
+    BuildIndexTable( cod, spp, idt );
 
-    for( tSize i = 0; i < num; ++i )
-    {
-        src_proxy.SetPtr( src );
-        bdp_proxy.SetPtr( bdp );
-        ConvToRGB< T, ufloat >( src_proxy, src_conv );
-        ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
-        FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
-        FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
-        FRGBF result_rgbf;
+    for( tSize i = 0; i < num; ++i ) {
+        FLabF src_lab = { TYPE2FLOAT( src, idt[0] ), TYPE2FLOAT( src, idt[1] ), TYPE2FLOAT( src, idt[2] ) };
+        FLabF bdp_lab = { TYPE2FLOAT( bdp, idt[0] ), TYPE2FLOAT( bdp, idt[1] ), TYPE2FLOAT( bdp, idt[2] ) };
+        FLChF src_lch = LabToLCh( src_lab );
+        FLChF bdp_lch = LabToLCh( bdp_lab );
+        FLChF result_lch;
+        FLabF result_lab;
 
         const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
         const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
@@ -67,23 +64,20 @@ void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock*  iSource
         const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
 
         switch( iBlendingMode ) {
-            case BM_DARKERCOLOR     :   result_rgbf = BlendDarkerColorF(  src_rgbf, bdp_rgbf ); break;
-            case BM_LIGHTERCOLOR    :   result_rgbf = BlendLighterColorF( src_rgbf, bdp_rgbf ); break;
-            case BM_HUE             :   result_rgbf = BlendHueF(          src_rgbf, bdp_rgbf ); break;
-            case BM_SATURATION      :   result_rgbf = BlendSaturationF(   src_rgbf, bdp_rgbf ); break;
-            case BM_COLOR           :   result_rgbf = BlendColorF(        src_rgbf, bdp_rgbf ); break;
-            case BM_LUMINOSITY      :   result_rgbf = BlendLuminosityF(   src_rgbf, bdp_rgbf ); break;
+            case BM_DARKERCOLOR     :   result_lch = BlendDarkerColorF(  src_lch, bdp_lch ); break;
+            case BM_LIGHTERCOLOR    :   result_lch = BlendLighterColorF( src_lch, bdp_lch ); break;
+            case BM_HUE             :   result_lch = BlendHueF(          src_lch, bdp_lch ); break;
+            case BM_SATURATION      :   result_lch = BlendSaturationF(   src_lch, bdp_lch ); break;
+            case BM_COLOR           :   result_lch = BlendColorF(        src_lch, bdp_lch ); break;
+            case BM_LUMINOSITY      :   result_lch = BlendLuminosityF(   src_lch, bdp_lch ); break;
             default                 :   ULIS2_ASSERT( false, "Bad Blending Mode" );
         }
-        // Convert back rgb to native model
-        res_conv.SetRF( result_rgbf.R );
-        res_conv.SetGF( result_rgbf.G );
-        res_conv.SetBF( result_rgbf.B );
-        ConvT< ufloat, T >( res_conv, result );
+
+        result_lab = LChToLab( result_lch );
 
         // Compose
-        for( tSize j = 0; j < spp; ++j )
-            FLOAT2TYPE( bdp, j, ComposeF( TYPE2FLOAT( src_proxy.Ptr(), j ), TYPE2FLOAT( bdp_proxy.Ptr(), j ), alpha_bdp, var, TYPE2FLOAT( result.Ptr(), j ) ) );
+        for( tSize j = 0; j < ncc; ++j )
+            FLOAT2TYPE( bdp, idt[j], ComposeF( *( (float*)(&src_lab) + j ), *( (float*)(&bdp_lab) + j ), alpha_bdp, var, *( (float*)(&result_lab) + j ) ) );
 
         // Assign alpha
         if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
@@ -92,6 +86,9 @@ void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock*  iSource
         src += bpp;
         bdp += bpp;
     }
+
+    // delete temp
+    delete [] idt;
 }
 
 ULIS2_NAMESPACE_END

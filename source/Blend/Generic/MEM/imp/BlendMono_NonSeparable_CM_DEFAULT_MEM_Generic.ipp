@@ -17,18 +17,18 @@
 #include "Blend/Modes.h"
 #include "Base/Perf.h"
 #include "color/ModelStructs.h"
-#include "Blend/BlendFuncF.h"
+#include "Blend/Func/NonSeparableBlendFuncRGBF.ipp"
 #include "Conv/Conv.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*  iSource
-                                          , FBlock*        iBackdrop
-                                          , const FRect&   iSrcRoi
-                                          , const FRect&   iDstRoi
-                                          , eBlendingMode  iBlendingMode
-                                          , eAlphaMode     iAlphaMode
-                                          , float          iOpacity )
+void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
+                                          , FBlock*             iBackdrop
+                                          , const FRect&        iSrcRoi
+                                          , const FRect&        iDstRoi
+                                          , const eBlendingMode iBlendingMode
+                                          , const eAlphaMode    iAlphaMode
+                                          , const float         iOpacity )
 {
     // Gather Data
     const tSize     bpc = iSource->BytesPerSample();                                                                // Bytes Per Channel

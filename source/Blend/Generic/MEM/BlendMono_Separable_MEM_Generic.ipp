@@ -15,17 +15,17 @@
 #include "Base/Core.h"
 #include "Maths/Geometry.h"
 #include "Blend/Modes.h"
-#include "Blend/BlendFuncF.h"
+#include "Blend/Func/SeparableBlendFuncF.ipp"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_Separable_MEM( const FBlock* iSource
-                            , FBlock*       iBackdrop
-                            , const FRect&  iSrcRoi
-                            , const FRect&  iDstRoi
-                            , eBlendingMode iBlendingMode
-                            , eAlphaMode    iAlphaMode
-                            , float         iOpacity )
+void BlendMono_Separable_MEM( const FBlock*         iSource
+                            , FBlock*               iBackdrop
+                            , const FRect&          iSrcRoi
+                            , const FRect&          iDstRoi
+                            , const eBlendingMode   iBlendingMode
+                            , const eAlphaMode      iAlphaMode
+                            , const float           iOpacity )
 {
     // Gather Data
     const tSize     bpc = iSource->BytesPerSample();                                        // Bytes Per Channel
@@ -40,8 +40,7 @@ void BlendMono_Separable_MEM( const FBlock* iSource
     tByte*          bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp ); // Backdrop Pointer in dst ROI
     const tSize     num = iSrcRoi.w * iSrcRoi.h;                                            // Nulber of operations
 
-    for( tSize i = 0; i < num; ++i )
-    {
+    for( tSize i = 0; i < num; ++i ) {
         const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
         const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
         const float alpha_comp      = ( alpha_bdp + alpha_src ) - ( alpha_bdp * alpha_src );

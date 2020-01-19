@@ -15,7 +15,7 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-struct GreyF
+struct FGreyF
 {
     float Grey;
 };
@@ -34,21 +34,21 @@ struct HSVF
     float V;
 };
 
-struct HSLF
+struct FHSLF
 {
     float H;
     float S;
     float L;
 };
 
-struct CMYF
+struct FCMYF
 {
     float C;
     float M;
     float Y;
 };
 
-struct CMYKF
+struct FCMYKF
 {
     float C;
     float M;
@@ -56,33 +56,66 @@ struct CMYKF
     float K;
 };
 
-struct YUVF
+struct FYUVF
 {
     float Y;
     float U;
     float V;
 };
 
-struct LabF
+struct FLabF
 {
-    float Y;
-    float U;
-    float V;
+    float L;
+    float a;
+    float b;
 };
 
-struct XYZF
+struct FXYZF
 {
+    float X;
     float Y;
-    float U;
-    float V;
+    float Z;
 };
 
-struct Yxy
+struct FYxyF
 {
     float Y;
-    float U;
-    float V;
+    float x;
+    float y;
 };
+
+struct FLChF
+{
+    float L;
+    float C;
+    float h;
+};
+
+static ULIS2_FORCEINLINE FCMYKF ULIS2_VECTORCALL RGBToCMYK( const FRGBF& iValue )
+{
+    float ik = FMaths::Max3( iValue.R, iValue.G, iValue.B );
+    float k = 1.f - ik;
+    if( ik == 0 ) ik = 0.f;
+    return  { ( ( 1.f - iValue.R ) - k ) / ik, ( ( 1.f - iValue.G ) - k ) / ik, ( ( 1.f - iValue.B ) - k ) / ik, k };
+}
+
+static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL CMYKToRGB( const FCMYKF& iValue )
+{
+    return  { 1.f - ( iValue.C * ( 1.f - iValue.K ) + iValue.K ), 1.f - ( iValue.M * ( 1.f - iValue.K ) + iValue.K ), 1.f - ( iValue.Y * ( 1.f - iValue.K ) + iValue.K ) };
+}
+
+
+static ULIS2_FORCEINLINE FLChF ULIS2_VECTORCALL LabToLCh( const FLabF& iValue )
+{
+    return  { iValue.L, powf( sqrtf( iValue.a ) + sqrtf( iValue.b ), 0.5f ), atan2f( iValue.b, iValue.a ) };
+}
+
+static ULIS2_FORCEINLINE FLabF ULIS2_VECTORCALL LChToLab( const FLChF& iValue )
+{
+    return  { iValue.L, iValue.C * cosf( iValue.h ), iValue.C * sinf( iValue.h ) };
+}
+
+
 
 ULIS2_NAMESPACE_END
 

@@ -17,20 +17,19 @@
 #include "Blend/Modes.h"
 #include "Base/Perf.h"
 #include "color/ModelStructs.h"
-#include "Blend/BlendFuncF.h"
+#include "Blend/Func/NonSeparableBlendFuncRGBF.ipp"
 #include "Conv/Conv.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_NonSeparable_CM_RGB_MEM( const FBlock*  iSource
-                                      , FBlock*        iBackdrop
-                                      , const FRect&   iSrcRoi
-                                      , const FRect&   iDstRoi
-                                      , eBlendingMode  iBlendingMode
-                                      , eAlphaMode     iAlphaMode
-                                      , float          iOpacity )
+void BlendMono_NonSeparable_CM_RGB_MEM( const FBlock*       iSource
+                                      , FBlock*             iBackdrop
+                                      , const FRect&        iSrcRoi
+                                      , const FRect&        iDstRoi
+                                      , const eBlendingMode iBlendingMode
+                                      , const eAlphaMode    iAlphaMode
+                                      , const float         iOpacity )
 {
-    // TODO: FIX HEAP CORRUPTION ?!
     // Gather Data
     const tSize     bpc = iSource->BytesPerSample();                                                                // Bytes Per Channel
     const tSize     ncc = iSource->NumColorChannels();                                                              // Num Color Channel
@@ -48,8 +47,7 @@ void BlendMono_NonSeparable_CM_RGB_MEM( const FBlock*  iSource
     uint8*          idt = new uint8[ bpp ];                                                                         // Index table
     BuildIndexTable( cod, spp, idt );
 
-    for( tSize i = 0; i < num; ++i )
-    {
+    for( tSize i = 0; i < num; ++i ) {
         FRGBF src_rgbf = { TYPE2FLOAT( src, idt[0] ), TYPE2FLOAT( src, idt[1] ), TYPE2FLOAT( src, idt[2] ) };
         FRGBF bdp_rgbf = { TYPE2FLOAT( bdp, idt[0] ), TYPE2FLOAT( bdp, idt[1] ), TYPE2FLOAT( bdp, idt[2] ) };
         FRGBF result_rgbf;

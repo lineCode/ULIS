@@ -17,18 +17,17 @@
 #include "Blend/Modes.h"
 #include "Base/Perf.h"
 #include "color/ModelStructs.h"
-#include "Blend/BlendFuncF.h"
 #include "Conv/Conv.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_Misc_MEM( const FBlock*   iSource
-                       , FBlock*         iBackdrop
-                       , const FRect&    iSrcRoi
-                       , const FRect&    iDstRoi
-                       , eBlendingMode   iBlendingMode
-                       , eAlphaMode      iAlphaMode
-                       , float           iOpacity )
+void BlendMono_Misc_MEM( const FBlock*          iSource
+                       , FBlock*                iBackdrop
+                       , const FRect&           iSrcRoi
+                       , const FRect&           iDstRoi
+                       , const eBlendingMode    iBlendingMode
+                       , const eAlphaMode       iAlphaMode
+                       , const float            iOpacity )
 {
 }
 

@@ -23,13 +23,19 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
+
+    cmsCIELab a = { 0.8, 0.5, 0.5 };
+    cmsCIELCh b;
+    cmsLab2LCh( &b, &a );
+    cmsLCh2Lab( &a, &b );
+
     QApplication app( argc, argv );
     {
-        FBlock blockA( 512, 512, ULIS2_FORMAT_baLAD );
-        FBlock blockB( 512, 512, ULIS2_FORMAT_baLAD );
+        FBlock blockA( 512, 512, ULIS2_FORMAT_CMYKAF);
+        FBlock blockB( 512, 512, ULIS2_FORMAT_CMYKAF);
         FThreadPool pool;
         FPerf perf_low( Perf_Lowest );
-        Blend( pool, &blockA, &blockB, FPoint(), BM_NORMAL, AM_NORMAL, 0.5f, perf_low );
+        Blend( pool, &blockA, &blockB, FPoint(), BM_HUE, AM_NORMAL, 0.5f, perf_low );
     }
     FProfileRegistry reg;
     FPixel m0( ULIS2_FORMAT_RGBD, { 1.0, 0.0, 0.0 }, reg.GetDefaultProfileForModel( CM_RGB ) );

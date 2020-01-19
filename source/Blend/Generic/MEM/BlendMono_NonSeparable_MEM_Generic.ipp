@@ -17,8 +17,6 @@
 #include "Blend/Modes.h"
 #include "Base/Perf.h"
 #include "color/ModelStructs.h"
-#include "Blend/BlendFuncF.h"
-#include "Conv/Conv.h"
 #include "Blend/Generic/MEM/imp/BlendMono_NonSeparable_CM_DEFAULT_MEM_Generic.ipp"
 #include "Blend/Generic/MEM/imp/BlendMono_NonSeparable_CM_Grey_MEM_Generic.ipp"
 #include "Blend/Generic/MEM/imp/BlendMono_NonSeparable_CM_RGB_MEM_Generic.ipp"
@@ -27,13 +25,13 @@
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_NonSeparable_MEM( const FBlock*  iSource
-                               , FBlock*        iBackdrop
-                               , const FRect&   iSrcRoi
-                               , const FRect&   iDstRoi
-                               , eBlendingMode  iBlendingMode
-                               , eAlphaMode     iAlphaMode
-                               , float          iOpacity )
+void BlendMono_NonSeparable_MEM( const FBlock*      iSource
+                               , FBlock*            iBackdrop
+                               , const FRect&       iSrcRoi
+                               , const FRect&       iDstRoi
+                               , eBlendingMode      iBlendingMode
+                               , const eAlphaMode   iAlphaMode
+                               , const float        iOpacity )
 {
     switch( iSource->Model() ) {
         case CM_ANY:    ULIS2_CRASH_DELIBERATE; return;

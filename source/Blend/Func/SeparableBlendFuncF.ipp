@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         BlendFunF.h
+* @file         SeparableBlendFuncF.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the ufloat Blending functions.
 * @copyright    Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
@@ -177,104 +177,5 @@ ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendReflectF( ufloat iCs, ufloat iCb 
 ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendGlowF( ufloat iCs, ufloat iCb ) {
     return  BlendReflectF( iCb, iCs );
 }
-/////////////////////////////////////////////////////
-// Non Separable HSL Blending Modes
-// We assume they are RGB, no check is done, beware.
-static ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL LumF( const FRGBF& iC ) {
-    return  0.3f * iC.R + 0.59f * iC.G + 0.11f * iC.B;
-}
-
-static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL ClipColorF( FRGBF iC ) {
-    ufloat l = LumF( iC );
-    ufloat n = FMaths::Min3( iC.R, iC.G, iC.B );
-    ufloat x = FMaths::Max3( iC.R, iC.G, iC.B );
-    if( n < 0.0f )
-    {
-        ufloat ln = l - n;
-        iC.R = l + ( ( ( iC.R - l ) * l ) / ( ln ) );
-        iC.G = l + ( ( ( iC.G - l ) * l ) / ( ln ) );
-        iC.B = l + ( ( ( iC.B - l ) * l ) / ( ln ) );
-    }
-
-    if( x > 1.0f )
-    {
-        ufloat xl = x - l;
-        ufloat ml = 1.f - l;
-        iC.R = l + ( ( ( iC.R - l ) * ( ml ) ) / ( xl ) );
-        iC.G = l + ( ( ( iC.G - l ) * ( ml ) ) / ( xl ) );
-        iC.B = l + ( ( ( iC.B - l ) * ( ml ) ) / ( xl ) );
-    }
-
-    return  iC;
-}
-
-static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL SetLumF( const FRGBF& iC, ufloat iL ) {
-    ufloat d = iL - LumF( iC );
-    FRGBF C;
-    C.R = iC.R + d;
-    C.G = iC.G + d;
-    C.B = iC.B + d;
-    return  ClipColorF( C );
-}
-
-static ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL SatF( const FRGBF& iC ) {
-    return  FMaths::Max3( iC.R, iC.G, iC.B ) - FMaths::Min3( iC.R, iC.G, iC.B );
-}
-
-static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL SetSatF( const FRGBF& iC, ufloat iS ) {
-    uint8 maxIndex = iC.R > iC.G ? ( iC.R > iC.B ? 0 : 2 ) : ( iC.G > iC.B ? 1 : 2 );
-    uint8 minIndex = iC.R < iC.G ? ( iC.R < iC.B ? 0 : 2 ) : ( iC.G < iC.B ? 1 : 2 );
-    uint8 midIndex = 3 - maxIndex - minIndex;
-    ufloat Cmax = *( ( (ufloat*)( &iC ) ) + maxIndex );
-    ufloat Cmin = *( ( (ufloat*)( &iC ) ) + minIndex );
-    ufloat Cmid = *( ( (ufloat*)( &iC ) ) + midIndex );
-    if( Cmax > Cmin )
-    {
-        Cmid = ( ( ( Cmid - Cmin ) * iS ) / ( Cmax - Cmin ) );
-        Cmax = iS;
-    }
-    else
-    {
-        Cmid = Cmax = 0.f;
-    }
-    Cmin = 0.f;
-    FRGBF ret;
-    *( ( (ufloat*)( &ret ) ) + maxIndex ) = Cmax;
-    *( ( (ufloat*)( &ret ) ) + minIndex ) = Cmin;
-    *( ( (ufloat*)( &ret ) ) + midIndex ) = Cmid;
-    return  ret;
-}
-
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------- DarkerColor
-ULIS2_FORCEINLINE FRGBF BlendDarkerColorF( const FRGBF& iCs, const FRGBF& iCb ) {
-    return  LumF( iCb ) < LumF( iCs ) ? iCb : iCs;
-}
-//--------------------------------------------------------------------------------------
-//------------------------------------------------------------------------- LighterColor
-ULIS2_FORCEINLINE FRGBF BlendLighterColorF( const FRGBF& iCs, const FRGBF& iCb ) {
-    return  LumF( iCb ) > LumF( iCs ) ? iCb : iCs;
-}
-//--------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------- Hue
-ULIS2_FORCEINLINE FRGBF BlendHueF( const FRGBF& iCs, const FRGBF& iCb ) {
-    return  SetLumF( SetSatF( iCs, SatF( iCb ) ), LumF( iCb ) );
-}
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------- Saturation
-ULIS2_FORCEINLINE FRGBF BlendSaturationF( const FRGBF& iCs, const FRGBF& iCb ) {
-    return  SetLumF( SetSatF( iCb, SatF( iCs ) ), LumF( iCb ) );
-}
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------- Color
-ULIS2_FORCEINLINE FRGBF BlendColorF( const FRGBF& iCs, const FRGBF& iCb ) {
-    return  SetLumF( iCs, LumF( iCb ) );
-}
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------- Luminosity
-ULIS2_FORCEINLINE FRGBF BlendLuminosityF( const FRGBF& iCs, const FRGBF& iCb ) {
-    return  SetLumF( iCb, LumF( iCs ) );
-}
-
 ULIS2_NAMESPACE_END
 
