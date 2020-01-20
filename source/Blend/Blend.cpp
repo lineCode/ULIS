@@ -43,42 +43,42 @@ void ULIS2_FORCEINLINE Blend_imp( FThreadPool&          iPool
         case true:
             if( iPerf.UseAVX2() ) {
                 switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    //case BMQ_SEPARABLE       : BlendMT_AVX_Standard<   T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
-                    //case BMQ_NONSEPARABLE            : BlendMT_AVX_HSL<        T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
-                    //case BMQ_MISC           : BlendMT_AVX_Misc<       T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    case BMQ_SEPARABLE      : BlendMono_Separable_AVX2<         T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_AVX2<      T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_MISC           : BlendMono_Misc_AVX2<              T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
                 }
             } else if( iPerf.UseSSE4_2() ) {
                 switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    //case BMQ_SEPARABLE       : BlendMT_SSE_Standard<   T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
-                    //case BMQ_NONSEPARABLE            : BlendMT_SSE_HSL<        T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
-                    //case BMQ_MISC           : BlendMT_SSE_Misc<       T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    case BMQ_SEPARABLE      : BlendMono_Separable_SSE4_2<       T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_SSE4_2<    T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_MISC           : BlendMono_Misc_SSE4_2<            T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
                 }
             } else {
                 switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    //case BMQ_SEPARABLE       : BlendMT_MEM_Standard<   T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
-                    //case BMQ_NONSEPARABLE            : BlendMT_MEM_HSL<        T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
-                    //case BMQ_MISC           : BlendMT_MEM_Mic<        T >( iPool, iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity, iPerf ); break;
+                    case BMQ_SEPARABLE      : BlendMono_Separable_MEM<          T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_MEM<       T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_MISC           : BlendMono_Misc_MEM<               T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
                 } }
             break;
 
         case false:
             if( iPerf.UseAVX2() ) {
                 switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : BlendMono_Separable_AVX2<     T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_AVX2<  T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-                    case BMQ_MISC           : BlendMono_Misc_AVX2<          T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_SEPARABLE      : BlendMono_Separable_AVX2<         T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_AVX2<      T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_MISC           : BlendMono_Misc_AVX2<              T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
                 }
             } else if( iPerf.UseSSE4_2() ) {
                 switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE    : BlendMono_Separable_SSE4_2<     T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-                    case BMQ_NONSEPARABLE : BlendMono_NonSeparable_SSE4_2<  T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-                    case BMQ_MISC         : BlendMono_Misc_SSE4_2<          T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_SEPARABLE      : BlendMono_Separable_SSE4_2<       T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_SSE4_2<    T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_MISC           : BlendMono_Misc_SSE4_2<            T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
                 }
             } else {
                 switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : BlendMono_Separable_MEM<      T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_MEM<   T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-                    case BMQ_MISC           : BlendMono_Misc_MEM<           T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_SEPARABLE      : BlendMono_Separable_MEM<          T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_MEM<       T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_MISC           : BlendMono_Misc_MEM<               T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
                 } }
             break;
     }
