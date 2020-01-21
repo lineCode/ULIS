@@ -79,10 +79,10 @@ else()
 endif()
 
 target_compile_definitions( ULIS2 PUBLIC UNICODE )
-find_package(OpenCL REQUIRED)
+#find_package(OpenCL)
 set_target_properties( ULIS2 PROPERTIES OUTPUT_NAME "ULIS2.0" )
 target_link_libraries( ULIS2 PUBLIC lcms2 )
-target_link_libraries( ULIS2 PUBLIC ${OpenCL_LIBRARY} )
+#target_link_libraries( ULIS2 PUBLIC ${OpenCL_LIBRARY} )
 
 target_include_directories(
     ULIS2
@@ -92,7 +92,7 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
-    ${OpenCL_INCLUDE_DIR}
+    #${OpenCL_INCLUDE_DIR}
     PRIVATE
     "source/"
 )

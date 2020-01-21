@@ -47,7 +47,15 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
         int64               index   = ( iSrcStart.y + y ) * width + iSrcStart.x;
         for( tSize x = 0; x < iDstRoiSize.x; ++x ) {
             const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
-            const float alpha_src       = hea ? SampleSubpixelAlpha< T >( src, aid, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus ) * iOpacity : iOpacity;
+
+            //const float alpha_src       = hea ? SampleSubpixelAlpha< T >( src, aid, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus ) * iOpacity : iOpacity;
+            float m11, m01, m10, m00, hh0, hh1, res;
+            if( hea )
+                SampleSubpixelAlpha< T >( src, aid, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus, &m11, &m01, &m10, &m00, &hh0, &hh1, &res );
+            else
+                m11 = m01 = m10 = m00 = hh0 = hh1 = res = 1.f;
+
+            const float alpha_src       = res * iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
             float alpha_result;
@@ -64,7 +72,8 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
                 case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp ); break; }
 
             for( tSize j = 0; j < spp; ++j ) {
-                float srcvf = SampleSubpixelAlpha< T >( src, j, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus );
+                //float srcvf = SampleSubpixelAlpha< T >( src, j, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus );
+                float srcvf = SampleSubpixelChannelPremult< T >( src, j, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus, m11, m01, m10, m00, hh0, hh1, res );
                 float bdpvf = TYPE2FLOAT( bdp, j );
                 switch( iBlendingMode ) {
                 #define COMPOSE( i ) FLOAT2TYPE( bdp, j, ComposeF( srcvf, bdpvf, alpha_bdp, var, i( srcvf, bdpvf ) ) ); break;

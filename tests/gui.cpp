@@ -12,7 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS2>
-#include <CL/cl.hpp>
 #include <QApplication>
 #include <QWidget>
 #include <QImage>
@@ -24,8 +23,8 @@ int
 main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
-    int width   = 1024;
-    int height  = 1024;
+    int width   = 512;
+    int height  = 512;
     FBlock blockA( width, height, ULIS2_FORMAT_RGBA8 );
     FBlock blockB( width, height, ULIS2_FORMAT_RGBA8 );
 
@@ -37,7 +36,7 @@ main( int argc, char *argv[] )
     Fill( pool, &blockA, green, perf_best );
     Fill( pool, &blockB, red,  perf_best );
     //Blend( &pool, ULIS2_BLOCKING, &blockB, &blockA, glm::vec2( 0.5f ), BM_NORMAL, AM_NORMAL, 1.f, perf_low, ULIS2_CALL_CB );
-    Blend( &pool, ULIS2_BLOCKING, &blockB, &blockA, glm::vec2( 64.5f, 64.5f ), BM_NORMAL, AM_NORMAL, 1.f, perf_low, ULIS2_CALL_CB );
+    BlendRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 32, 32 ), glm::vec2( 64.5f, 64.5f ), BM_NORMAL, AM_NORMAL, 1.f, perf_low, ULIS2_CALL_CB );
 
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

@@ -64,10 +64,10 @@ template< typename T >
 ULIS2_API ULIS2_FORCEINLINE
 float ULIS2_VECTORCALL
 SampleSubpixelAlpha( const tByte* iPtr, uint8 iChannel, uint8 iBPP, uint8 iBPS, int64 iX, int64 iY, const glm::uvec2& iRoiSize, int64 iIndex, int64 iWidth, int64 iTotal, const glm::vec2& iT, const glm::vec2& iU ) {
-    float m11 = ( iY >= iRoiSize.y || iX >= iRoiSize.x )    || ( iIndex                < 0 || iIndex               >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
-    float m01 = ( iY >= iRoiSize.y || iX - 1 < 0 )          || ( iIndex - 1            < 0 || iIndex - 1           >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
-    float m10 = ( iX >= iRoiSize.x || iY - 1 < 0 )          || ( iIndex - iWidth       < 0 || iIndex - iWidth      >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
-    float m00 = ( iX - 1 < 0 || iY - 1 < 0 )                || ( iIndex - iWidth - 1   < 0 || iIndex - iWidth - 1  >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
+    float m11 = ( iY >= iRoiSize.y || iX >= iRoiSize.x ) /*  || ( iIndex                < 0 || iIndex               >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
+    float m01 = ( iY >= iRoiSize.y || iX - 1 < 0 )       /*  || ( iIndex - 1            < 0 || iIndex - 1           >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
+    float m10 = ( iX >= iRoiSize.x || iY - 1 < 0 )       /*  || ( iIndex - iWidth       < 0 || iIndex - iWidth      >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
+    float m00 = ( iX - 1 < 0 || iY - 1 < 0 )             /*  || ( iIndex - iWidth - 1   < 0 || iIndex - iWidth - 1  >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
     float h1 = m00 * iT.x + m10 * iU.x;
     float h2 = m01 * iT.x + m11 * iU.x;
     return  h1 * iT.y + h2 * iU.y;
@@ -99,9 +99,9 @@ SampleSubpixelAlpha( const tByte* iPtr
     *oM01 = ( iY >= iRoiSize.y || iX - 1 < 0 )          || ( iIndex - 1            < 0 || iIndex - 1           >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
     *oM10 = ( iX >= iRoiSize.x || iY - 1 < 0 )          || ( iIndex - iWidth       < 0 || iIndex - iWidth      >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
     *oM00 = ( iX - 1 < 0 || iY - 1 < 0 )                || ( iIndex - iWidth - 1   < 0 || iIndex - iWidth - 1  >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
-    *oHH0 = m00 * iT.x + m10 * iU.x;
-    *oHH1 = m01 * iT.x + m11 * iU.x;
-    *oRES = h1 * iT.y + h2 * iU.y;
+    *oHH0 = *oM00 * iT.x + *oM10 * iU.x;
+    *oHH1 = *oM01 * iT.x + *oM11 * iU.x;
+    *oRES = *oHH0 * iT.y + *oHH1 * iU.y;
 }
 
 template< typename T >

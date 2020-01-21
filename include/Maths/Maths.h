@@ -150,7 +150,7 @@ struct ULIS2_API FMaths
     }
 
     static ULIS2_FORCEINLINE ufloat FixInf( ufloat iValue ) {
-        return  isinf( iValue ) ? 0.f : iValue;
+        return  isinf( iValue ) || isnan( iValue ) ? 0.f : iValue;
     }
 
 }; // struct FMaths

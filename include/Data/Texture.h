@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include <CL/cl.hpp>
+//#include <CL/cl.hpp>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
