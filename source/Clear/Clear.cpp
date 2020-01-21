@@ -34,7 +34,7 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iS
 
 
 void
-InvokeFillMTProcessScanline_SSE( tByte* iDst, const tSize iCount, const tSize iStride )
+InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const tSize iStride )
 {
     tSize index;
     for( index = 0; index < ( iCount - 16 ); index += iStride )
@@ -56,11 +56,12 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, tSize iStride )
 
 
 void
-ClearMT( FThreadPool&   iPool
+ClearMT( FThreadPool*   iPool
        , FBlock*        iDst
        , const FRect&   iRoi
        , const FPerf&   iPerf )
 {
+    ULIS2_ASSERT( iDst, "Bad pool" );
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
     const tSize bpp = bpc * spp;
@@ -73,24 +74,23 @@ ClearMT( FThreadPool&   iPool
     {
         const tSize stride = 32 - ( 32 % bpp );
         const tSize count = iRoi.w * bpp;
-        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, count, stride ); } );
+        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, count, stride ); } );
     }
     else if( iPerf.UseSSE4_2() )
     {
         const tSize stride = 16 - ( 16 % bpp );
         const tSize count = iRoi.w * bpp;
-        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE( DST, count, stride ); } );
+        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE4_2( DST, count, stride ); } );
     }
     else
     {
-        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iRoi.w, bpp ); } );
+        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iRoi.w, bpp ); } );
     }
 }
 
-
 void
-ClearMono( FBlock*      iDst
-         , const FRect& iRoi )
+ClearMonoMEM( FBlock*      iDst
+            , const FRect& iRoi )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -99,18 +99,32 @@ ClearMono( FBlock*      iDst
     const tSize h   = iDst->Height();
     const tSize bps = bpp * w;
     const tSize num = w * h;
-    tByte*      dst = iDst->DataPtr() + iRoi.y * bps + iRoi.x * bpp;
+    tByte*      dst = iDst->DataPtr() + (uint64)iRoi.y * bps + (uint64)iRoi.x * bpp;
 
     for( uint32 i = 0; i < num; ++i )
     {
-        memcpy( dst, 0, bpp );
+        memset( dst, 0, bpp );
         dst += bpp;
     }
 }
 
 
 void
-Clear( FThreadPool&     iPool
+ClearMono( FBlock*      iDst
+         , const FRect& iRoi
+         , const FPerf& iPerf )
+{
+    if( iPerf.UseAVX2() )
+        ClearMonoMEM( iDst, iRoi );
+    else if( iPerf.UseSSE4_2() )
+        ClearMonoMEM( iDst, iRoi );
+    else
+        ClearMonoMEM( iDst, iRoi );
+}
+
+
+void
+Clear( FThreadPool*     iPool
      , FBlock*          iDst
      , const FPerf&     iPerf
      , bool             iCallInvalidCB )
@@ -120,7 +134,7 @@ Clear( FThreadPool&     iPool
 
 
 void
-ClearRect( FThreadPool& iPool
+ClearRect( FThreadPool* iPool
          , FBlock*      iDst
          , const FRect& iRect
          , const FPerf& iPerf
@@ -135,7 +149,7 @@ ClearRect( FThreadPool& iPool
     if( iPerf.UseMT() )
         ClearMT( iPool, iDst, roi, iPerf );
     else
-        ClearMono( iDst, roi );
+        ClearMono( iDst, roi, iPerf );
 
     iDst->Invalidate( roi, iCallInvalidCB );
 }

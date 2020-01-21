@@ -177,8 +177,8 @@ BlendRect( FThreadPool*     iPool
     glm::vec2   subpixel_component = glm::abs( FMaths::FloatingPart( iDstPos ) );
     glm::uvec2  src_start = glm::uvec2( src_roi.x - fx, src_roi.y - fy );
     glm::uvec2  dst_start = glm::uvec2( dst_fit.x, dst_fit.y );
-    glm::uvec2  src_roi_size = glm::uvec2( src_roi.w, src_roi.w );
-    glm::uvec2  dst_roi_size = glm::uvec2( dst_fit.w, dst_fit.w );
+    glm::uvec2  src_roi_size = glm::uvec2( src_roi.w, src_roi.h );
+    glm::uvec2  dst_roi_size = glm::uvec2( dst_fit.w, dst_fit.h );
 
     switch( iSource->Type() ) {
         case TYPE_UINT8     : Blend_imp< uint8   >( iPool, iBlocking, iSource, iBackdrop, src_start, dst_start, src_roi_size, dst_roi_size, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
