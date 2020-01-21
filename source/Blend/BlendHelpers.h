@@ -13,6 +13,8 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Base/Utils.h"
+#include "glm/vec2.hpp"
 
 ULIS2_NAMESPACE_BEGIN
 ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8* oIDT, uint8* oAID ) {
@@ -35,7 +37,8 @@ ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL  BuildBlendParams( uint8*     
                                                                    , uint8*         oAID
                                                                    , uint8**        oIDT
                                                                    , uint32         iFmt
-                                                                   , const FRect&   iROI ) {
+                                                                   , uint32         iWidth
+                                                                   , const glm::uvec2& iRoiSize ) {
     // BPC: Bytes Per Channel
     // NCC: Num Color Channel ( Without Alpha )
     // HEA: Has Extra Alpha ( 0 = false, else true )
@@ -50,11 +53,87 @@ ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL  BuildBlendParams( uint8*     
     *oHEA = ULIS2_R_ALPHA(    iFmt );
     *oSPP = (*oNCC) + (*oHEA);
     *oBPP = (*oBPC) * (*oSPP);
-    *oBPS = iROI.w * (*oBPP);
-    *oNUM = iROI.w * iROI.h;
+    *oBPS = iWidth * (*oBPP);
+    *oNUM = iRoiSize.x * iRoiSize.y;
     uint8 cod = ULIS2_R_RS( iFmt ); // Reverse-Swapped layout identifier
     *oIDT = new uint8[*oSPP];
     BuildIndexTable( cod, *oSPP, *oIDT, oAID );
 }
+
+template< typename T >
+ULIS2_API ULIS2_FORCEINLINE
+float ULIS2_VECTORCALL
+SampleSubpixelAlpha( const tByte* iPtr, uint8 iChannel, uint8 iBPP, uint8 iBPS, int64 iX, int64 iY, const glm::uvec2& iRoiSize, int64 iIndex, int64 iWidth, int64 iTotal, const glm::vec2& iT, const glm::vec2& iU ) {
+    float m11 = ( iY >= iRoiSize.y || iX >= iRoiSize.x )    || ( iIndex                < 0 || iIndex               >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
+    float m01 = ( iY >= iRoiSize.y || iX - 1 < 0 )          || ( iIndex - 1            < 0 || iIndex - 1           >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
+    float m10 = ( iX >= iRoiSize.x || iY - 1 < 0 )          || ( iIndex - iWidth       < 0 || iIndex - iWidth      >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
+    float m00 = ( iX - 1 < 0 || iY - 1 < 0 )                || ( iIndex - iWidth - 1   < 0 || iIndex - iWidth - 1  >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
+    float h1 = m00 * iT.x + m10 * iU.x;
+    float h2 = m01 * iT.x + m11 * iU.x;
+    return  h1 * iT.y + h2 * iU.y;
+}
+
+template< typename T >
+ULIS2_API ULIS2_FORCEINLINE
+void ULIS2_VECTORCALL
+SampleSubpixelAlpha( const tByte* iPtr
+                   , uint8 iChannel
+                   , uint8 iBPP
+                   , uint8 iBPS
+                   , int64 iX
+                   , int64 iY
+                   , const glm::uvec2& iRoiSize
+                   , int64 iIndex
+                   , int64 iWidth
+                   , int64 iTotal
+                   , const glm::vec2& iT
+                   , const glm::vec2& iU
+                   , float* oM11
+                   , float* oM01
+                   , float* oM10
+                   , float* oM00
+                   , float* oHH0
+                   , float* oHH1
+                   , float* oRES ) {
+    *oM11 = ( iY >= iRoiSize.y || iX >= iRoiSize.x )    || ( iIndex                < 0 || iIndex               >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
+    *oM01 = ( iY >= iRoiSize.y || iX - 1 < 0 )          || ( iIndex - 1            < 0 || iIndex - 1           >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
+    *oM10 = ( iX >= iRoiSize.x || iY - 1 < 0 )          || ( iIndex - iWidth       < 0 || iIndex - iWidth      >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
+    *oM00 = ( iX - 1 < 0 || iY - 1 < 0 )                || ( iIndex - iWidth - 1   < 0 || iIndex - iWidth - 1  >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
+    *oHH0 = m00 * iT.x + m10 * iU.x;
+    *oHH1 = m01 * iT.x + m11 * iU.x;
+    *oRES = h1 * iT.y + h2 * iU.y;
+}
+
+template< typename T >
+ULIS2_API ULIS2_FORCEINLINE
+float ULIS2_VECTORCALL
+SampleSubpixelChannelPremult( const tByte* iPtr
+                            , uint8 iChannel
+                            , uint8 iBPP
+                            , uint8 iBPS
+                            , int64 iX
+                            , int64 iY
+                            , const glm::uvec2& iRoiSize
+                            , int64 iIndex
+                            , int64 iWidth
+                            , int64 iTotal
+                            , const glm::vec2& iT
+                            , const glm::vec2& iU
+                            , float iA11
+                            , float iA01
+                            , float iA10
+                            , float iA00
+                            , float iHH0
+                            , float iHH1
+                            , float iRES ) {
+    float m11 = ( iY >= iRoiSize.y || iX >= iRoiSize.x )    || ( iIndex                < 0 || iIndex               >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
+    float m01 = ( iY >= iRoiSize.y || iX - 1 < 0 )          || ( iIndex - 1            < 0 || iIndex - 1           >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
+    float m10 = ( iX >= iRoiSize.x || iY - 1 < 0 )          || ( iIndex - iWidth       < 0 || iIndex - iWidth      >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
+    float m00 = ( iX - 1 < 0 || iY - 1 < 0 )                || ( iIndex - iWidth - 1   < 0 || iIndex - iWidth - 1  >= iTotal ) ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
+    float h1 = FMaths::FixInf( ( ( m00 * iA00 ) * iT.x + ( m10 * iA10 ) * iU.x ) / iHH0 );
+    float h2 = FMaths::FixInf( ( ( m01 * iA01 ) * iT.x + ( m11 * iA11 ) * iU.x ) / iHH1 );
+    return  FMaths::FixInf( ( ( h1 * iHH0 ) * iT.y + ( h2 * iHH1 ) * iU.y ) / iRES );
+}
+
 ULIS2_NAMESPACE_END
 

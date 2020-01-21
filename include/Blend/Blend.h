@@ -19,11 +19,12 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-/// @fn         void Blend( FThreadPool& iPool, const FBlock* iSource, FBlock* iBackdrop, const FPoint& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void Blend( FThreadPool* iPool, const FBlock* iSource, FBlock* iBackdrop, const glm::vec2& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @brief      Blend two block together.
 /// @details    The source block will be blended on the backdrop block, according to the specified parameters.
 ///             Warning ! Both blocks should be the same underlying format in order for the function to succeed, else the function will fail and crash.
 /// @param      iPool           The pool to process the image in.
+/// @param      iBlocking       Weither the MT process should wait for completion or not
 /// @param      iSource         The pointer to the source \e FBlock ( remains untouched ).
 /// @param      iBackdrop       The pointer to the backdrop \e FBlock ( receives the blend ).
 /// @param      iDstPos         The position in destination to write.
@@ -32,21 +33,22 @@ ULIS2_NAMESPACE_BEGIN
 /// @param      iOpacity        The opacity used to perform the blend, beetween 0.0f and 1.0f.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void Blend( FThreadPool&      iPool
+ULIS2_API void Blend( FThreadPool*      iPool
+                    , bool              iBlocking
                     , const FBlock*     iSource
                     , FBlock*           iBackdrop
-                    , const FPoint&     iDstPos         = FPoint()
-                    , eBlendingMode     iBlendingMode   = BM_NORMAL
-                    , eAlphaMode        iAlphaMode      = AM_NORMAL
-                    , float             iOpacity        = 1.f
-                    , const FPerf&      iPerf           = FPerf()
-                    , bool              iCallInvalidCB  = true );
+                    , const glm::vec2&  iDstPos
+                    , eBlendingMode     iBlendingMode
+                    , eAlphaMode        iAlphaMode
+                    , float             iOpacity
+                    , const FPerf&      iPerf
+                    , bool              iCallInvalidCB );
 
-
-/// @fn         void BlendRect( FThreadPool& iPool, const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcRect, const FPoint& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void BlendRect( FThreadPool* iPool, const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcRect, const glm::vec2& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity = 1.f, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
 /// @details    The source block will be blended on the backdrop block, according to the specified parameters.
 ///             Warning ! Both blocks should be the same underlying format in order for the function to succeed, else the function will fail and crash.
 /// @param      iPool           The pool to process the image in
+/// @param      iBlocking       Weither the MT process should wait for completion or not
 /// @param      iSource         The pointer to the source \e FBlock ( remains untouched ).
 /// @param      iBackdrop       The pointer to the backdrop \e FBlock ( receives the blend ).
 /// @param      iSrcRect        The area to blend in the back block.
@@ -56,16 +58,17 @@ ULIS2_API void Blend( FThreadPool&      iPool
 /// @param      iOpacity        The opacity used to perform the blend, beetween 0 and 1.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the back block after the operation finished.
-ULIS2_API void BlendRect( FThreadPool&      iPool
+ULIS2_API void BlendRect( FThreadPool*      iPool
+                        , bool              iBlocking
                         , const FBlock*     iSource
                         , FBlock*           iBackdrop
                         , const FRect&      iSrcRect
-                        , const FPoint&     iDstPos         = FPoint()
-                        , eBlendingMode     iBlendingMode   = BM_NORMAL
-                        , eAlphaMode        iAlphaMode      = AM_NORMAL
-                        , float             iOpacity        = 1.f
-                        , const FPerf&      iPerf           = FPerf()
-                        , bool              iCallInvalidCB  = true );
+                        , const glm::vec2&  iDstPos
+                        , eBlendingMode     iBlendingMode
+                        , eAlphaMode        iAlphaMode
+                        , float             iOpacity
+                        , const FPerf&      iPerf
+                        , bool              iCallInvalidCB );
 
 // Dispatch Typedefs
 //typedef void (*fpDispatchedBlendFunc)( const FBlock*, FBlock*, const FRect&, const FRect&, eBlendingMode, eAlphaMode, ufloat );

@@ -24,8 +24,11 @@ ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void BlendMono_Misc_MEM( const FBlock*          iSource
                        , FBlock*                iBackdrop
-                       , const FRect&           iSrcRoi
-                       , const FRect&           iDstRoi
+                       , const glm::uvec2&      iSrcStart
+                       , const glm::uvec2&      iDstStart
+                       , const glm::uvec2&      iSrcRoiSize
+                       , const glm::uvec2&      iDstRoiSize
+                       , const glm::vec2&       iSubpixelComponent
                        , const eBlendingMode    iBlendingMode
                        , const eAlphaMode       iAlphaMode
                        , const float            iOpacity )
@@ -35,9 +38,9 @@ void BlendMono_Misc_MEM( const FBlock*          iSource
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
     uint8* idt;
-    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSrcRoi );
-    const tByte* src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp );
-    tByte*       bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
+    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSource->Width(), iDstRoiSize );
+    const tByte* src = iSource->DataPtr()   + ( iSrcStart.y * bps ) + ( iSrcStart.x * bpp );
+    tByte*       bdp = iBackdrop->DataPtr() + ( iDstStart.y * bps ) + ( iDstStart.x * bpp );
 
     uint32 localPRNGSeed = gBlendingPRNGSeed;
     for( tSize i = 0; i < num; ++i ) {
@@ -51,16 +54,16 @@ void BlendMono_Misc_MEM( const FBlock*          iSource
         if( toss < alpha_src ) {
             float alpha_result;
             switch( iAlphaMode ) {
-                case AM_NORMAL  : alpha_result = AlphaNormalF(  1.f, alpha_bdp );
-                case AM_ERASE   : alpha_result = AlphaEraseF(   1.f, alpha_bdp );
-                case AM_TOP     : alpha_result = AlphaTopF(     1.f, alpha_bdp );
-                case AM_BACK    : alpha_result = AlphaBackF(    1.f, alpha_bdp );
-                case AM_SUB     : alpha_result = AlphaSubF(     1.f, alpha_bdp );
-                case AM_ADD     : alpha_result = AlphaAddF(     1.f, alpha_bdp );
-                case AM_MUL     : alpha_result = AlphaMulF(     1.f, alpha_bdp );
-                case AM_MIN     : alpha_result = AlphaMinF(     1.f, alpha_bdp );
-                case AM_MAX     : alpha_result = AlphaMaxF(     1.f, alpha_bdp );
-                case AM_INVMAX  : alpha_result = AlphaInvMaxF(  1.f, alpha_bdp );
+                case AM_NORMAL  : alpha_result = AlphaNormalF(  1.f, alpha_bdp ); break;
+                case AM_ERASE   : alpha_result = AlphaEraseF(   1.f, alpha_bdp ); break;
+                case AM_TOP     : alpha_result = AlphaTopF(     1.f, alpha_bdp ); break;
+                case AM_BACK    : alpha_result = AlphaBackF(    1.f, alpha_bdp ); break;
+                case AM_SUB     : alpha_result = AlphaSubF(     1.f, alpha_bdp ); break;
+                case AM_ADD     : alpha_result = AlphaAddF(     1.f, alpha_bdp ); break;
+                case AM_MUL     : alpha_result = AlphaMulF(     1.f, alpha_bdp ); break;
+                case AM_MIN     : alpha_result = AlphaMinF(     1.f, alpha_bdp ); break;
+                case AM_MAX     : alpha_result = AlphaMaxF(     1.f, alpha_bdp ); break;
+                case AM_INVMAX  : alpha_result = AlphaInvMaxF(  1.f, alpha_bdp ); break;
             }
             memcpy( bdp, src, bpp );
             if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );

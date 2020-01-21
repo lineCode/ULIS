@@ -52,3 +52,10 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 #define ULIS2_WARNING( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " <<  "Warning: " << log << std::endl; }
 #define ULIS2_ERROR( cond, log )    if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Error: " << log << std::endl; ULIS2_CRASH; }
 
+/////////////////////////////////////////////////////
+// Named booleans literals
+#define ULIS2_BLOCKING      true
+#define ULIS2_NON_BLOCKING  false
+#define ULIS2_CALL_CB       true
+#define ULIS2_NO_CB         false
+

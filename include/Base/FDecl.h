@@ -19,12 +19,10 @@
 ULIS2_NAMESPACE_BEGIN
 // FDecl
 class FBlock;
-class IBlock;
 class IPixel;
 class FPixelValue;
 class FPixelProxy;
 struct FRect;
-struct FPoint;
 class FThreadPool;
 class FPerf;
 ULIS2_NAMESPACE_END

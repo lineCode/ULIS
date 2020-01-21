@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         BlendMono_NonSeparable_CM_Grey_AVX2_Generic.ipp
+* @file         BlendMono_NonSeparable_CM_Grey_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic Blend entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -22,19 +22,21 @@
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
-void BlendMono_NonSeparable_CM_Grey_AVX2( const FBlock*          iSource
-                                        , FBlock*                iBackdrop
-                                        , const FRect&           iSrcRoi
-                                        , const FRect&           iDstRoi
-                                        , const eBlendingMode    iBlendingMode
-                                        , const eAlphaMode       iAlphaMode
-                                        , const float            iOpacity )
+void BlendMono_NonSeparable_CM_Grey_MEM( const FBlock*          iSource
+                                       , FBlock*                iBackdrop
+                                       , const glm::uvec2&      iSrcStart
+                                       , const glm::uvec2&      iDstStart
+                                       , const glm::uvec2&      iRoiSize
+                                       , const glm::vec2&       iSubpixelComponent
+                                       , const eBlendingMode    iBlendingMode
+                                       , const eAlphaMode       iAlphaMode
+                                       , const float            iOpacity )
 {
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
     uint8* idt;
-    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSrcRoi );
-    const tByte* src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp );
+    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iRoiSize );
+    const tByte* src = iSource->DataPtr()   + ( iSrcStart.y * bps ) + ( iSrcStart.x * bpp );
     tByte*       bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
 
     for( tSize i = 0; i < num; ++i ) {

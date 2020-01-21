@@ -103,8 +103,8 @@ ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL _softlight_D( ufloat iX ) {
 }
 ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendSoftLightF( ufloat iCs, ufloat iCb ) {
     //return  iCs <= 0.5f ? iCb - ( 1.f - 2.f * iCs ) * iCb * ( 1.f - iCb ) : iCb + ( 2.f * iCs - 1.f ) * ( _softlight_D( iCb ) - iCb );
-    ufloat q = iCb * iCb;
-    ufloat d = 2 * iCs;
+    ufloat  q = iCb * iCb;
+    ufloat  d = 2 * iCs;
     return  q + d * iCb - d * q;
 }
 //--------------------------------------------------------------------------------------

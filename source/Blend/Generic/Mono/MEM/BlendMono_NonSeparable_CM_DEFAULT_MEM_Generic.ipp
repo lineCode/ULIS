@@ -25,8 +25,11 @@ ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
                                           , FBlock*             iBackdrop
-                                          , const FRect&        iSrcRoi
-                                          , const FRect&        iDstRoi
+                                          , const glm::uvec2&   iSrcStart
+                                          , const glm::uvec2&   iDstStart
+                                          , const glm::uvec2&   iSrcRoiSize
+                                          , const glm::uvec2&   iDstRoiSize
+                                          , const glm::vec2&    iSubpixelComponent
                                           , const eBlendingMode iBlendingMode
                                           , const eAlphaMode    iAlphaMode
                                           , const float         iOpacity )
@@ -34,9 +37,9 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
     uint8* idt;
-    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSrcRoi );
-    const tByte* src = iSource->DataPtr()   + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp );
-    tByte*       bdp = iBackdrop->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
+    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSource->Width(), iDstRoiSize );
+    const tByte* src = iSource->DataPtr()   + ( iSrcStart.y * bps ) + ( iSrcStart.x * bpp );
+    tByte*       bdp = iBackdrop->DataPtr() + ( iDstStart.y * bps ) + ( iDstStart.x * bpp );
     const tFormat   fmt = iSource->Format();        // Format
     FPixelProxy     src_proxy( src, fmt );          // Proxy on source
     FPixelProxy     bdp_proxy( bdp, fmt );          // Proxy on backdrop
@@ -61,16 +64,16 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock*       iSource
         const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
         float alpha_result;
         switch( iAlphaMode ) {
-            case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp );
-            case AM_ERASE   : alpha_result = AlphaEraseF(   alpha_src, alpha_bdp );
-            case AM_TOP     : alpha_result = AlphaTopF(     alpha_src, alpha_bdp );
-            case AM_BACK    : alpha_result = AlphaBackF(    alpha_src, alpha_bdp );
-            case AM_SUB     : alpha_result = AlphaSubF(     alpha_src, alpha_bdp );
-            case AM_ADD     : alpha_result = AlphaAddF(     alpha_src, alpha_bdp );
-            case AM_MUL     : alpha_result = AlphaMulF(     alpha_src, alpha_bdp );
-            case AM_MIN     : alpha_result = AlphaMinF(     alpha_src, alpha_bdp );
-            case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp );
-            case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp );
+            case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp ); break;
+            case AM_ERASE   : alpha_result = AlphaEraseF(   alpha_src, alpha_bdp ); break;
+            case AM_TOP     : alpha_result = AlphaTopF(     alpha_src, alpha_bdp ); break;
+            case AM_BACK    : alpha_result = AlphaBackF(    alpha_src, alpha_bdp ); break;
+            case AM_SUB     : alpha_result = AlphaSubF(     alpha_src, alpha_bdp ); break;
+            case AM_ADD     : alpha_result = AlphaAddF(     alpha_src, alpha_bdp ); break;
+            case AM_MUL     : alpha_result = AlphaMulF(     alpha_src, alpha_bdp ); break;
+            case AM_MIN     : alpha_result = AlphaMinF(     alpha_src, alpha_bdp ); break;
+            case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp ); break;
+            case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp ); break;
         }
 
         switch( iBlendingMode ) {

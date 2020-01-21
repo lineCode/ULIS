@@ -15,6 +15,7 @@
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
+#include <immintrin.h>
 
 ULIS2_NAMESPACE_BEGIN
 void

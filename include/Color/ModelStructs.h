@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Maths/Maths.h"
 
 ULIS2_NAMESPACE_BEGIN
 struct FGreyF

@@ -14,6 +14,7 @@
 #include "Copy/Copy.h"
 #include "Data/Block.h"
 #include "Thread/ParallelFor.h"
+#include <immintrin.h>
 
 ULIS2_NAMESPACE_BEGIN
 void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSize iCount, const tSize iStride )
@@ -113,25 +114,25 @@ CopyMono( const FBlock* iSrc
 
 
 void
-Copy( FThreadPool&  iPool
-    , const FBlock* iSrc
-    , FBlock*       iDst
-    , const FPoint& iDstPos
-    , const FPerf&  iPerf
-    , bool          iCallInvalidCB )
+Copy( FThreadPool&      iPool
+    , const FBlock*     iSrc
+    , FBlock*           iDst
+    , const glm::uvec2& iDstPos
+    , const FPerf&      iPerf
+    , bool              iCallInvalidCB )
 {
-    CopyRect( iPool, iSrc, iDst, iSrc->Rect(), FPoint(), iPerf, iCallInvalidCB );
+    CopyRect( iPool, iSrc, iDst, iSrc->Rect(), iDstPos, iPerf, iCallInvalidCB );
 }
 
 
 void
-CopyRect( FThreadPool&  iPool
-        , const FBlock* iSrc
-        , FBlock*       iDst
-        , const FRect&  iSrcRect
-        , const FPoint& iDstPos
-        , const FPerf&  iPerf
-        , bool          iCallInvalidCB )
+CopyRect( FThreadPool&      iPool
+        , const FBlock*     iSrc
+        , FBlock*           iDst
+        , const FRect&      iSrcRect
+        , const glm::uvec2& iDstPos
+        , const FPerf&      iPerf
+        , bool              iCallInvalidCB )
 {
     ULIS2_ASSERT( iSrc->Model() == iDst->Model(),                       "Models do not match" );
     ULIS2_ASSERT( iSrc->Type() == iDst->Type(),                         "Types do not match" );

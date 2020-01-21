@@ -14,6 +14,9 @@
 #pragma once
 #include "Base/Core.h"
 #include <cmath>
+#include <cmath>
+#include <immintrin.h>
+#include <glm/vec2.hpp>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -21,9 +24,34 @@ ULIS2_NAMESPACE_BEGIN
 struct ULIS2_API FMaths
 {
     // Do not change this value !
-    static constexpr float kEpsilonf = .000001f;
+    static constexpr float  kEpsilonf = .000001f;
     static constexpr double kPId = 3.1415926535897932;
     static constexpr float  kPIf = 3.14159265f;
+
+    // These functions are designed to be the same as UE4 implementation
+    static ULIS2_FORCEINLINE int32 FloorToInt( ufloat iValue ) {
+        return  _mm_cvt_ss2si( _mm_set_ss( iValue + iValue - 0.5f ) ) >> 1;
+    }
+
+    static ULIS2_FORCEINLINE ufloat FloorToFloat( ufloat iValue ) {
+        return  static_cast< ufloat >( FloorToInt( iValue ) );
+    }
+
+    static ULIS2_FORCEINLINE int32 CeilToInt( ufloat iValue ) {
+        return -( _mm_cvt_ss2si( _mm_set_ss( -0.5f - ( iValue + iValue ) ) ) >> 1 );
+    }
+
+    static ULIS2_FORCEINLINE ufloat CeilToFloat( ufloat iValue ) {
+        return static_cast< ufloat >( CeilToInt( iValue ) );
+    }
+
+    static ULIS2_FORCEINLINE ufloat RoundToNegativeInfinity( ufloat iValue ) {
+        return  FloorToFloat( iValue );
+    }
+
+    static ULIS2_FORCEINLINE ufloat RoundToPositiveInfinity( ufloat iValue ) {
+        return  CeilToFloat( iValue );
+    }
 
     template< typename T >
     static ULIS2_FORCEINLINE T Min( T iA, T iB ) {
@@ -80,7 +108,11 @@ struct ULIS2_API FMaths
         if ( iNumber > 0 )
             return iNumber - IntegerPartOfNumber( iNumber );
         else
-            return iNumber - ( IntegerPartOfNumber( iNumber ) + 1 );
+            return iNumber - IntegerPartOfNumber( iNumber );
+    }
+
+    static ULIS2_FORCEINLINE glm::vec2 FloatingPart( const glm::vec2& iVec ) {
+        return  glm::vec2( FloatingPartOfNumber( iVec.x ), FloatingPartOfNumber( iVec.y ) );
     }
 
     static ULIS2_FORCEINLINE int RoundNumber( float iNumber )
@@ -115,6 +147,10 @@ struct ULIS2_API FMaths
     static ULIS2_FORCEINLINE bool EpsilonComp( float iA, float iB )
     {
         return  Abs( iA - iB ) <= kEpsilonf;
+    }
+
+    static ULIS2_FORCEINLINE ufloat FixInf( ufloat iValue ) {
+        return  isinf( iValue ) ? 0.f : iValue;
     }
 
 }; // struct FMaths

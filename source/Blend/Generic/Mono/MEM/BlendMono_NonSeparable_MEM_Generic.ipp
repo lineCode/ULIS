@@ -29,19 +29,22 @@ ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void BlendMono_NonSeparable_MEM( const FBlock*      iSource
                                , FBlock*            iBackdrop
-                               , const FRect&       iSrcRoi
-                               , const FRect&       iDstRoi
+                               , const glm::uvec2&  iSrcStart
+                               , const glm::uvec2&  iDstStart
+                               , const glm::uvec2&  iSrcRoiSize
+                               , const glm::uvec2&  iDstRoiSize
+                               , const glm::vec2&   iSubpixelComponent
                                , eBlendingMode      iBlendingMode
                                , const eAlphaMode   iAlphaMode
                                , const float        iOpacity )
 {
     switch( iSource->Model() ) {
         case CM_ANY:    ULIS2_CRASH_DELIBERATE; return;
-        case CM_GREY:   BlendMono_NonSeparable_CM_Grey_MEM<     T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-        case CM_RGB:    BlendMono_NonSeparable_CM_RGB_MEM<      T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-        case CM_CMYK:   BlendMono_NonSeparable_CM_CMYK_MEM<     T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-        case CM_Lab:    BlendMono_NonSeparable_CM_Lab_MEM<      T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
-        default:        BlendMono_NonSeparable_CM_DEFAULT_MEM<  T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iBlendingMode, iAlphaMode, iOpacity ); break;
+        case CM_GREY:   BlendMono_NonSeparable_CM_Grey_MEM<     T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
+        case CM_RGB:    BlendMono_NonSeparable_CM_RGB_MEM<      T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
+        case CM_CMYK:   BlendMono_NonSeparable_CM_CMYK_MEM<     T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
+        case CM_Lab:    BlendMono_NonSeparable_CM_Lab_MEM<      T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
+        default:        BlendMono_NonSeparable_CM_DEFAULT_MEM<  T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
     }
 }
 
