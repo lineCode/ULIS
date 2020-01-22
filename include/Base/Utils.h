@@ -52,8 +52,8 @@ template<> constexpr uint32     ULIS2_FORCEINLINE ConvType< int,  uint32    >( i
 template<> constexpr ufloat     ULIS2_FORCEINLINE ConvType< int,  ufloat    >( int iValue  )    { return ConvType< uint8, ufloat  >( (uint8)_clamp( iValue, 0, (int)UINT8_MAX ) ); }
 template<> constexpr udouble    ULIS2_FORCEINLINE ConvType< int,  udouble   >( int iValue  )    { return ConvType< uint8, udouble >( (uint8)_clamp( iValue, 0, (int)UINT8_MAX ) ); }
 
-template< typename T > constexpr ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL _TypeToFloat( const tByte* iSrc, uint8 iIndex ) { return  ConvType< T, ufloat >( *( ( (T*)( iSrc ) ) + iIndex ) ); }
-template< typename T > constexpr ULIS2_FORCEINLINE void ULIS2_VECTORCALL _FloatToType( tByte* iSrc, uint8 iIndex, ufloat iValue ) { *( ( (T*)( iSrc ) ) + iIndex ) = ConvType< ufloat, T >( iValue ); }
+template< typename T > constexpr ULIS2_FORCEINLINE ufloat _TypeToFloat( const tByte* iSrc, uint8 iIndex ) { return  ConvType< T, ufloat >( *( ( (T*)( iSrc ) ) + iIndex ) ); }
+template< typename T > constexpr ULIS2_FORCEINLINE void _FloatToType( tByte* iSrc, uint8 iIndex, ufloat iValue ) { *( ( (T*)( iSrc ) ) + iIndex ) = ConvType< ufloat, T >( iValue ); }
 #define TYPE2FLOAT( iSrc, iIndex )          _TypeToFloat< T >( iSrc, iIndex )
 #define FLOAT2TYPE( iSrc, iIndex, iValue )  _FloatToType< T >( iSrc, iIndex, iValue )
 

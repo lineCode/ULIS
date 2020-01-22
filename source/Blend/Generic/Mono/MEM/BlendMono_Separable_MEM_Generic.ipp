@@ -20,18 +20,39 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
+
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void Call() {
+    auto dummy = 0;
+}
+
+template< typename T >
+void Test( const eBlendingMode iBlendingMode, const eAlphaMode iAlphaMode ) {
+    #define ACT_AM( iAM, iBM )      case iAM  : Call< T, iBM, iAM >();
+    #define ACT_BM( iBM, extra )    case iBM  :     \
+        switch( iAlphaMode ) {                      \
+            ULIS2_FOR_ALL_AM_DO( ACT_AM, iBM )      \
+        }                                           \
+        break;
+
+    switch( iBlendingMode ) {
+        ULIS2_FOR_ALL_BM_DO( ACT_BM, 0 )
+    }
+}
+
 template< typename T >
 void BlendMono_Separable_MEM( const FBlock*         iSource
                             , FBlock*               iBackdrop
-                            , const glm::uvec2&     iSrcStart
-                            , const glm::uvec2&     iDstStart
-                            , const glm::uvec2&     iSrcRoiSize
-                            , const glm::uvec2&     iDstRoiSize
+                            , const FRect&          iSrcRoi
+                            , const FRect&          iDstRoi
                             , const glm::vec2&      iSubpixelComponent
                             , const eBlendingMode   iBlendingMode
                             , const eAlphaMode      iAlphaMode
                             , const float           iOpacity )
 {
+    Test< T >( iBlendingMode, iAlphaMode );
+
+    /*
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
     uint8* idt;
@@ -72,6 +93,7 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
                 case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp ); break; }
 
             for( tSize j = 0; j < spp; ++j ) {
+                //float srcvf = TYPE2FLOAT( src, j );
                 //float srcvf = SampleSubpixelAlpha< T >( src, j, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus );
                 float srcvf = SampleSubpixelChannelPremult< T >( src, j, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus, m11, m01, m10, m00, hh0, hh1, res );
                 float bdpvf = TYPE2FLOAT( bdp, j );
@@ -121,6 +143,7 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
     }
 
     delete [] idt;
+    */
 }
 
 ULIS2_NAMESPACE_END

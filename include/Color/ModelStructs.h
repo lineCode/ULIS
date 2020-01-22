@@ -92,7 +92,7 @@ struct FLChF
     float h;
 };
 
-static ULIS2_FORCEINLINE FCMYKF ULIS2_VECTORCALL RGBToCMYK( const FRGBF& iValue )
+static ULIS2_FORCEINLINE FCMYKF RGBToCMYK( const FRGBF& iValue )
 {
     float ik = FMaths::Max3( iValue.R, iValue.G, iValue.B );
     float k = 1.f - ik;
@@ -100,18 +100,18 @@ static ULIS2_FORCEINLINE FCMYKF ULIS2_VECTORCALL RGBToCMYK( const FRGBF& iValue 
     return  { ( ( 1.f - iValue.R ) - k ) / ik, ( ( 1.f - iValue.G ) - k ) / ik, ( ( 1.f - iValue.B ) - k ) / ik, k };
 }
 
-static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL CMYKToRGB( const FCMYKF& iValue )
+static ULIS2_FORCEINLINE FRGBF CMYKToRGB( const FCMYKF& iValue )
 {
     return  { 1.f - ( iValue.C * ( 1.f - iValue.K ) + iValue.K ), 1.f - ( iValue.M * ( 1.f - iValue.K ) + iValue.K ), 1.f - ( iValue.Y * ( 1.f - iValue.K ) + iValue.K ) };
 }
 
 
-static ULIS2_FORCEINLINE FLChF ULIS2_VECTORCALL LabToLCh( const FLabF& iValue )
+static ULIS2_FORCEINLINE FLChF LabToLCh( const FLabF& iValue )
 {
     return  { iValue.L, powf( sqrtf( iValue.a ) + sqrtf( iValue.b ), 0.5f ), atan2f( iValue.b, iValue.a ) };
 }
 
-static ULIS2_FORCEINLINE FLabF ULIS2_VECTORCALL LChToLab( const FLChF& iValue )
+static ULIS2_FORCEINLINE FLabF LChToLab( const FLChF& iValue )
 {
     return  { iValue.L, iValue.C * cosf( iValue.h ), iValue.C * sinf( iValue.h ) };
 }

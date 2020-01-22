@@ -36,7 +36,7 @@ main( int argc, char *argv[] )
     Fill( pool, &blockA, green, perf_best );
     Fill( pool, &blockB, red,  perf_best );
     //Blend( &pool, ULIS2_BLOCKING, &blockB, &blockA, glm::vec2( 0.5f ), BM_NORMAL, AM_NORMAL, 1.f, perf_low, ULIS2_CALL_CB );
-    BlendRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 32, 32 ), glm::vec2( 32.5f, 32.5f ), BM_NORMAL, AM_NORMAL, 1.f, perf_low, ULIS2_CALL_CB );
+    BlendRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 32, 32 ), glm::vec2( 32.5f, 32.5f ), BM_NORMAL, AM_NORMAL, 0.5f, perf_low, ULIS2_CALL_CB );
 
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

@@ -163,5 +163,57 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
 #define ULIS2_DECODE_BM( iENCODED )     eBlendingMode( iENCODED & 0xFFFF )
 #define ULIS2_DECODE_AM( iENCODED )     eBlendingMode( ( iENCODED >> 16 ) & 0xFFFF )
 
+// Macro for all types for template instanciation
+#define ULIS2_FOR_ALL_BM_DO( X, extra ) \
+    X( BM_NORMAL            , extra )   \
+    X( BM_TOP               , extra )   \
+    X( BM_BACK              , extra )   \
+    X( BM_BEHIND            , extra )   \
+    X( BM_DISSOLVE          , extra )   \
+    X( BM_DARKEN            , extra )   \
+    X( BM_MULTIPY           , extra )   \
+    X( BM_COLORBURN         , extra )   \
+    X( BM_LINEARBURN        , extra )   \
+    X( BM_DARKERCOLOR       , extra )   \
+    X( BM_LIGHTEN           , extra )   \
+    X( BM_SCREEN            , extra )   \
+    X( BM_COLORDODGE        , extra )   \
+    X( BM_LINEARDODGE       , extra )   \
+    X( BM_LIGHTERCOLOR      , extra )   \
+    X( BM_OVERLAY           , extra )   \
+    X( BM_SOFTLIGHT         , extra )   \
+    X( BM_HARDLIGHT         , extra )   \
+    X( BM_VIVIDLIGHT        , extra )   \
+    X( BM_LINEARLIGHT       , extra )   \
+    X( BM_PINLIGHT          , extra )   \
+    X( BM_HARDMIX           , extra )   \
+    X( BM_PHOENIX           , extra )   \
+    X( BM_REFLECT           , extra )   \
+    X( BM_GLOW              , extra )   \
+    X( BM_DIFFERENCE        , extra )   \
+    X( BM_EXCLUSION         , extra )   \
+    X( BM_ADD               , extra )   \
+    X( BM_SUBSTRACT         , extra )   \
+    X( BM_DIVIDE            , extra )   \
+    X( BM_AVERAGE           , extra )   \
+    X( BM_HUE               , extra )   \
+    X( BM_SATURATION        , extra )   \
+    X( BM_COLOR             , extra )   \
+    X( BM_LUMINOSITY        , extra )   \
+    X( NUM_BLENDING_MODES   , extra )
+
+#define ULIS2_FOR_ALL_AM_DO( X, extra ) \
+    X( AM_NORMAL        , extra )       \
+    X( AM_ERASE         , extra )       \
+    X( AM_TOP           , extra )       \
+    X( AM_BACK          , extra )       \
+    X( AM_SUB           , extra )       \
+    X( AM_ADD           , extra )       \
+    X( AM_MUL           , extra )       \
+    X( AM_MIN           , extra )       \
+    X( AM_MAX           , extra )       \
+    X( AM_INVMAX        , extra )       \
+    X( NUM_ALPHA_MODES  , extra )
+
 ULIS2_NAMESPACE_END
 

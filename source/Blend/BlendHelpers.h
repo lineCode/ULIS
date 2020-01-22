@@ -17,7 +17,7 @@
 #include "glm/vec2.hpp"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8* oIDT, uint8* oAID ) {
+ULIS2_API ULIS2_FORCEINLINE void BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8* oIDT, uint8* oAID ) {
     uint8 msp = iSPP - 1;
     switch( iCOD ) {
         case 1:  for( int i = 0; i < iSPP; ++i ) oIDT[i] = ( msp - i );                                 *oAID = 0;   break;
@@ -27,7 +27,7 @@ ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL BuildIndexTable( uint8 iCOD, u
     }
 }
 
-ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL  BuildBlendParams( uint8*         oBPC
+ULIS2_API ULIS2_FORCEINLINE void  BuildBlendParams( uint8*         oBPC
                                                                    , uint8*         oNCC
                                                                    , uint8*         oHEA
                                                                    , uint8*         oSPP
@@ -62,7 +62,7 @@ ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL  BuildBlendParams( uint8*     
 
 template< typename T >
 ULIS2_API ULIS2_FORCEINLINE
-float ULIS2_VECTORCALL
+float
 SampleSubpixelAlpha( const tByte* iPtr, uint8 iChannel, uint8 iBPP, uint8 iBPS, int64 iX, int64 iY, const glm::uvec2& iRoiSize, int64 iIndex, int64 iWidth, int64 iTotal, const glm::vec2& iT, const glm::vec2& iU ) {
     float m11 = ( iY >= iRoiSize.y || iX >= iRoiSize.x ) /*  || ( iIndex                < 0 || iIndex               >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
     float m01 = ( iY >= iRoiSize.y || iX - 1 < 0 )       /*  || ( iIndex - 1            < 0 || iIndex - 1           >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
@@ -75,7 +75,7 @@ SampleSubpixelAlpha( const tByte* iPtr, uint8 iChannel, uint8 iBPP, uint8 iBPS, 
 
 template< typename T >
 ULIS2_API ULIS2_FORCEINLINE
-void ULIS2_VECTORCALL
+void
 SampleSubpixelAlpha( const tByte* iPtr
                    , uint8 iChannel
                    , uint8 iBPP
@@ -106,7 +106,7 @@ SampleSubpixelAlpha( const tByte* iPtr
 
 template< typename T >
 ULIS2_API ULIS2_FORCEINLINE
-float ULIS2_VECTORCALL
+float
 SampleSubpixelChannelPremult( const tByte* iPtr
                             , uint8 iChannel
                             , uint8 iBPP

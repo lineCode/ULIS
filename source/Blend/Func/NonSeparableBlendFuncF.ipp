@@ -20,11 +20,11 @@
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Non Separable Blending Modes for RGB
-static ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL LumF( const FRGBF& iC ) {
+static ULIS2_FORCEINLINE ufloat LumF( const FRGBF& iC ) {
     return  0.3f * iC.R + 0.59f * iC.G + 0.11f * iC.B;
 }
 
-static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL ClipColorF( FRGBF iC ) {
+static ULIS2_FORCEINLINE FRGBF ClipColorF( FRGBF iC ) {
     ufloat l = LumF( iC );
     ufloat n = FMaths::Min3( iC.R, iC.G, iC.B );
     ufloat x = FMaths::Max3( iC.R, iC.G, iC.B );
@@ -48,7 +48,7 @@ static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL ClipColorF( FRGBF iC ) {
     return  iC;
 }
 
-static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL SetLumF( const FRGBF& iC, ufloat iL ) {
+static ULIS2_FORCEINLINE FRGBF SetLumF( const FRGBF& iC, ufloat iL ) {
     ufloat d = iL - LumF( iC );
     FRGBF C;
     C.R = iC.R + d;
@@ -57,11 +57,11 @@ static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL SetLumF( const FRGBF& iC, ufloat
     return  ClipColorF( C );
 }
 
-static ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL SatF( const FRGBF& iC ) {
+static ULIS2_FORCEINLINE ufloat SatF( const FRGBF& iC ) {
     return  FMaths::Max3( iC.R, iC.G, iC.B ) - FMaths::Min3( iC.R, iC.G, iC.B );
 }
 
-static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL SetSatF( const FRGBF& iC, ufloat iS ) {
+static ULIS2_FORCEINLINE FRGBF SetSatF( const FRGBF& iC, ufloat iS ) {
     uint8 maxIndex = iC.R > iC.G ? ( iC.R > iC.B ? 0 : 2 ) : ( iC.G > iC.B ? 1 : 2 );
     uint8 minIndex = iC.R < iC.G ? ( iC.R < iC.B ? 0 : 2 ) : ( iC.G < iC.B ? 1 : 2 );
     uint8 midIndex = 3 - maxIndex - minIndex;
@@ -87,32 +87,32 @@ static ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL SetSatF( const FRGBF& iC, ufloat
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- DarkerColor
-ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL BlendDarkerColorF( const FRGBF& iCs, const FRGBF& iCb ) {
+ULIS2_FORCEINLINE FRGBF BlendDarkerColorF( const FRGBF& iCs, const FRGBF& iCb ) {
     return  LumF( iCb ) < LumF( iCs ) ? iCb : iCs;
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------- LighterColor
-ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL BlendLighterColorF( const FRGBF& iCs, const FRGBF& iCb ) {
+ULIS2_FORCEINLINE FRGBF BlendLighterColorF( const FRGBF& iCs, const FRGBF& iCb ) {
     return  LumF( iCb ) > LumF( iCs ) ? iCb : iCs;
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Hue
-ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL BlendHueF( const FRGBF& iCs, const FRGBF& iCb ) {
+ULIS2_FORCEINLINE FRGBF BlendHueF( const FRGBF& iCs, const FRGBF& iCb ) {
     return  SetLumF( SetSatF( iCs, SatF( iCb ) ), LumF( iCb ) );
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Saturation
-ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL BlendSaturationF( const FRGBF& iCs, const FRGBF& iCb ) {
+ULIS2_FORCEINLINE FRGBF BlendSaturationF( const FRGBF& iCs, const FRGBF& iCb ) {
     return  SetLumF( SetSatF( iCb, SatF( iCs ) ), LumF( iCb ) );
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- Color
-ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL BlendColorF( const FRGBF& iCs, const FRGBF& iCb ) {
+ULIS2_FORCEINLINE FRGBF BlendColorF( const FRGBF& iCs, const FRGBF& iCb ) {
     return  SetLumF( iCs, LumF( iCb ) );
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Luminosity
-ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL BlendLuminosityF( const FRGBF& iCs, const FRGBF& iCb ) {
+ULIS2_FORCEINLINE FRGBF BlendLuminosityF( const FRGBF& iCs, const FRGBF& iCb ) {
     return  SetLumF( iCb, LumF( iCs ) );
 }
 
@@ -120,64 +120,64 @@ ULIS2_FORCEINLINE FRGBF ULIS2_VECTORCALL BlendLuminosityF( const FRGBF& iCs, con
 // Non Separable Blending Modes for Grey, these are actually separable
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- DarkerColor
-ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendDarkerColorF( ufloat iCs, ufloat iCb ) {
+ULIS2_FORCEINLINE ufloat BlendDarkerColorF( ufloat iCs, ufloat iCb ) {
     return  iCb < iCs ? iCb : iCs;
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------- LighterColor
-ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendLighterColorF( ufloat iCs, ufloat iCb ) {
+ULIS2_FORCEINLINE ufloat BlendLighterColorF( ufloat iCs, ufloat iCb ) {
     return  iCb > iCs ? iCb : iCs;
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Hue
-ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendHueF( ufloat iCs, ufloat iCb ) {
+ULIS2_FORCEINLINE ufloat BlendHueF( ufloat iCs, ufloat iCb ) {
     return  iCb;
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Saturation
-ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendSaturationF( ufloat iCs, ufloat iCb ) {
+ULIS2_FORCEINLINE ufloat BlendSaturationF( ufloat iCs, ufloat iCb ) {
     return  iCb;
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- Color
-ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendColorF( ufloat iCs, ufloat iCb ) {
+ULIS2_FORCEINLINE ufloat BlendColorF( ufloat iCs, ufloat iCb ) {
     return  iCb;
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Luminosity
-ULIS2_FORCEINLINE ufloat ULIS2_VECTORCALL BlendLuminosityF( ufloat iCs, ufloat iCb ) {
+ULIS2_FORCEINLINE ufloat BlendLuminosityF( ufloat iCs, ufloat iCb ) {
     return  iCs;
 }
 /////////////////////////////////////////////////////
 // Non Separable Blending Modes for Lab LCh
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- DarkerColor
-ULIS2_FORCEINLINE FLChF ULIS2_VECTORCALL BlendDarkerColorF( const FLChF& iCs, const FLChF& iCb ) {
+ULIS2_FORCEINLINE FLChF BlendDarkerColorF( const FLChF& iCs, const FLChF& iCb ) {
     return  iCb.L < iCs.L ? iCb : iCs;
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------- LighterColor
-ULIS2_FORCEINLINE FLChF ULIS2_VECTORCALL BlendLighterColorF( const FLChF& iCs, const FLChF& iCb ) {
+ULIS2_FORCEINLINE FLChF BlendLighterColorF( const FLChF& iCs, const FLChF& iCb ) {
     return  iCb.L > iCs.L ? iCb : iCs;
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Hue
-ULIS2_FORCEINLINE FLChF ULIS2_VECTORCALL BlendHueF( const FLChF& iCs, const FLChF& iCb ) {
+ULIS2_FORCEINLINE FLChF BlendHueF( const FLChF& iCs, const FLChF& iCb ) {
     return  { iCb.L, iCb.C, iCs.h };
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Saturation
-ULIS2_FORCEINLINE FLChF ULIS2_VECTORCALL BlendSaturationF( const FLChF& iCs, const FLChF& iCb ) {
+ULIS2_FORCEINLINE FLChF BlendSaturationF( const FLChF& iCs, const FLChF& iCb ) {
     return  { iCb.L, iCs.C, iCb.h };
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- Color
-ULIS2_FORCEINLINE FLChF ULIS2_VECTORCALL BlendColorF( const FLChF& iCs, const FLChF& iCb ) {
+ULIS2_FORCEINLINE FLChF BlendColorF( const FLChF& iCs, const FLChF& iCb ) {
     return  { iCb.L, iCs.C, iCs.h };
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Luminosity
-ULIS2_FORCEINLINE FLChF ULIS2_VECTORCALL BlendLuminosityF( const FLChF& iCs, const FLChF& iCb ) {
+ULIS2_FORCEINLINE FLChF BlendLuminosityF( const FLChF& iCs, const FLChF& iCb ) {
     return  { iCs.L, iCb.C, iCb.h };
 }
 

@@ -20,9 +20,11 @@
 #include "Blend/Generic/Mono/MEM/BlendMono_NonSeparable_MEM_Generic.ipp"
 #include "Blend/Generic/Mono/MEM/BlendMono_Misc_MEM_Generic.ipp"
 // Mono SSE Generic
+/*
 #include "Blend/Generic/Mono/SSE4_2/BlendMono_Separable_SSE4_2_Generic.ipp"
 #include "Blend/Generic/Mono/SSE4_2/BlendMono_NonSeparable_SSE4_2_Generic.ipp"
 #include "Blend/Generic/Mono/SSE4_2/BlendMono_Misc_SSE4_2_Generic.ipp"
+*/
 // Mono AVX Generic
 /*
 #include "Blend/Generic/Mono/AVX2/BlendMono_Separable_AVX2_Generic.ipp"
@@ -36,10 +38,8 @@ void ULIS2_FORCEINLINE Blend_imp( FThreadPool*          iPool
                                 , bool                  iBlocking
                                 , const FBlock*         iSource
                                 , FBlock*               iBackdrop
-                                , const glm::uvec2&     iSrcStart
-                                , const glm::uvec2&     iDstStart
-                                , const glm::uvec2&     iSrcRoiSize
-                                , const glm::uvec2&     iDstRoiSize
+                                , const FRect&          iSrcRoi
+                                , const FRect&          iDstRoi
                                 , const glm::vec2&      iSubpixelComponent
                                 , const eBlendingMode   iBlendingMode
                                 , const eAlphaMode      iAlphaMode
@@ -94,9 +94,9 @@ void ULIS2_FORCEINLINE Blend_imp( FThreadPool*          iPool
                 */
             } else {
                 switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : BlendMono_Separable_MEM<          T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
-                    case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_MEM<       T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
-                    case BMQ_MISC           : BlendMono_Misc_MEM<               T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    case BMQ_SEPARABLE      : BlendMono_Separable_MEM<          T >( iSource, iBackdrop, iSrcRoi, iDstRoi, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    //case BMQ_NONSEPARABLE   : BlendMono_NonSeparable_MEM<       T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
+                    //case BMQ_MISC           : BlendMono_Misc_MEM<               T >( iSource, iBackdrop, iSrcStart, iDstStart, iSrcRoiSize, iDstRoiSize, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity ); break;
                 }
             }
             break;
@@ -164,28 +164,22 @@ BlendRect( FThreadPool*     iPool
 
     // Ensure the selected target actually fits in destination
     FRect dst_fit = dst_target & iBackdrop->Rect();
-
     if( dst_fit.Area() <= 0 ) return;
 
-    // Get potential overflow
     int fx = dst_target.x - dst_fit.x;
     int fy = dst_target.y - dst_fit.y;
+    src_roi.x -= dst_target.x - dst_fit.x;
+    src_roi.y -= dst_target.y - dst_fit.y;
 
-    float opacity = FMaths::Clamp( iOpacity, 0.f, 1.f );
-    //int fx = xmin < 0 ? xmin : 0;
-    //int fy = ymin < 0 ? ymin : 0;
+    float       opacity = FMaths::Clamp( iOpacity, 0.f, 1.f );
     glm::vec2   subpixel_component = glm::abs( FMaths::FloatingPart( iDstPos ) );
-    glm::uvec2  src_start = glm::uvec2( src_roi.x - fx, src_roi.y - fy );
-    glm::uvec2  dst_start = glm::uvec2( dst_fit.x, dst_fit.y );
-    glm::uvec2  src_roi_size = glm::uvec2( src_roi.w, src_roi.h );
-    glm::uvec2  dst_roi_size = glm::uvec2( dst_fit.w, dst_fit.h );
 
     switch( iSource->Type() ) {
-        case TYPE_UINT8     : Blend_imp< uint8   >( iPool, iBlocking, iSource, iBackdrop, src_start, dst_start, src_roi_size, dst_roi_size, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case TYPE_UINT16    : Blend_imp< uint16  >( iPool, iBlocking, iSource, iBackdrop, src_start, dst_start, src_roi_size, dst_roi_size, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case TYPE_UINT32    : Blend_imp< uint32  >( iPool, iBlocking, iSource, iBackdrop, src_start, dst_start, src_roi_size, dst_roi_size, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case TYPE_UFLOAT    : Blend_imp< ufloat  >( iPool, iBlocking, iSource, iBackdrop, src_start, dst_start, src_roi_size, dst_roi_size, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
-        case TYPE_UDOUBLE   : Blend_imp< udouble >( iPool, iBlocking, iSource, iBackdrop, src_start, dst_start, src_roi_size, dst_roi_size, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UINT8     : Blend_imp< uint8   >( iPool, iBlocking, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UINT16    : Blend_imp< uint16  >( iPool, iBlocking, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UINT32    : Blend_imp< uint32  >( iPool, iBlocking, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UFLOAT    : Blend_imp< ufloat  >( iPool, iBlocking, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
+        case TYPE_UDOUBLE   : Blend_imp< udouble >( iPool, iBlocking, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf ); break;
     }
 
     iBackdrop->Invalidate( dst_fit, iCallInvalidCB );
