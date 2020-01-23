@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Blend/Blend.h"
 #include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/SeparableBlendFuncF.ipp"
@@ -22,24 +23,16 @@
 ULIS2_NAMESPACE_BEGIN
 
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void Call() {
-    auto dummy = 0;
+void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
+{
 }
 
-template< typename T >
-void Test( const eBlendingMode iBlendingMode, const eAlphaMode iAlphaMode ) {
-    #define ACT_AM( iAM, iBM )      case iAM  : Call< T, iBM, iAM >();
-    #define ACT_BM( iBM, extra )    case iBM  :     \
-        switch( iAlphaMode ) {                      \
-            ULIS2_FOR_ALL_AM_DO( ACT_AM, iBM )      \
-        }                                           \
-        break;
-
-    switch( iBlendingMode ) {
-        ULIS2_FOR_ALL_BM_DO( ACT_BM, 0 )
-    }
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void BlendMono_Separable_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
+{
 }
 
+/*
 template< typename T >
 void BlendMono_Separable_MEM( const FBlock*         iSource
                             , FBlock*               iBackdrop
@@ -50,9 +43,6 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
                             , const eAlphaMode      iAlphaMode
                             , const float           iOpacity )
 {
-    Test< T >( iBlendingMode, iAlphaMode );
-
-    /*
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
     uint8* idt;
@@ -143,7 +133,23 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
     }
 
     delete [] idt;
-    */
+}
+*/
+
+template< typename T >
+fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters_Mono_Separable_MEM( eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel ) {
+    if( iSubpixel ) {
+        #define ACTION( iBM, iAM ) return  &BlendMono_Separable_MEM_Subpixel< T, iBM, iAM >;
+        ULIS2_SWITCH_FOR_ALL_BM_SUBSET_AM_COMBINATIONS_DO( iBlendingMode, iAlphaMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, ACTION );
+        #undef ACTION
+    } else {
+        #define ACTION( iBM, iAM ) return  &BlendMono_Separable_MEM< T, iBM, iAM >;
+        ULIS2_SWITCH_FOR_ALL_BM_SUBSET_AM_COMBINATIONS_DO( iBlendingMode, iAlphaMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, ACTION );
+        #undef ACTION
+    }
+
+    ULIS2_ASSERT( false, "Bad input modes !" );
+    return  nullptr;
 }
 
 ULIS2_NAMESPACE_END

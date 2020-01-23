@@ -19,11 +19,11 @@
 #include "Color/ModelStructs.h"
 #include "Maths/Geometry.h"
 // Mono Non Separable Mem Generic
-#include "Blend/Generic/Mono/MEM/BlendMono_NonSeparable_CM_DEFAULT_MEM_Generic.ipp"
-#include "Blend/Generic/Mono/MEM/BlendMono_NonSeparable_CM_Grey_MEM_Generic.ipp"
-#include "Blend/Generic/Mono/MEM/BlendMono_NonSeparable_CM_RGB_MEM_Generic.ipp"
-#include "Blend/Generic/Mono/MEM/BlendMono_NonSeparable_CM_CMYK_MEM_Generic.ipp"
-#include "Blend/Generic/Mono/MEM/BlendMono_NonSeparable_CM_Lab_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_DEFAULT_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_Grey_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_RGB_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_CMYK_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_Lab_MEM_Generic.ipp"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >

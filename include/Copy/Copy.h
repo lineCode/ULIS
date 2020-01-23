@@ -28,7 +28,7 @@ ULIS2_NAMESPACE_BEGIN
 ULIS2_API void Copy( FThreadPool&       iPool
                     , const FBlock*     iSrc
                     , FBlock*           iDst
-                    , const glm::uvec2& iDstPos
+                    , const glm::ivec2& iDstPos
                     , const FPerf&      iPerf
                     , bool              iCallInvalidCB );
 
@@ -45,7 +45,7 @@ ULIS2_API void CopyRect( FThreadPool&       iPool
                        , const FBlock*      iSrc
                        , FBlock*            iDst
                        , const FRect&       iSrcRect
-                       , const glm::uvec2&  iDstPos
+                       , const glm::ivec2&  iDstPos
                        , const FPerf&       iPerf
                        , bool               iCallInvalidCB );
 

@@ -24,6 +24,7 @@ enum eBlendingMode
     , BM_BACK
     , BM_BEHIND
     , BM_DISSOLVE
+    , BM_DITHER
     , BM_DARKEN
     , BM_MULTIPY
     , BM_COLORBURN
@@ -164,56 +165,68 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
 #define ULIS2_DECODE_AM( iENCODED )     eBlendingMode( ( iENCODED >> 16 ) & 0xFFFF )
 
 // Macro for all types for template instanciation
-#define ULIS2_FOR_ALL_BM_DO( X, extra ) \
-    X( BM_NORMAL            , extra )   \
-    X( BM_TOP               , extra )   \
-    X( BM_BACK              , extra )   \
-    X( BM_BEHIND            , extra )   \
-    X( BM_DISSOLVE          , extra )   \
-    X( BM_DARKEN            , extra )   \
-    X( BM_MULTIPY           , extra )   \
-    X( BM_COLORBURN         , extra )   \
-    X( BM_LINEARBURN        , extra )   \
-    X( BM_DARKERCOLOR       , extra )   \
-    X( BM_LIGHTEN           , extra )   \
-    X( BM_SCREEN            , extra )   \
-    X( BM_COLORDODGE        , extra )   \
-    X( BM_LINEARDODGE       , extra )   \
-    X( BM_LIGHTERCOLOR      , extra )   \
-    X( BM_OVERLAY           , extra )   \
-    X( BM_SOFTLIGHT         , extra )   \
-    X( BM_HARDLIGHT         , extra )   \
-    X( BM_VIVIDLIGHT        , extra )   \
-    X( BM_LINEARLIGHT       , extra )   \
-    X( BM_PINLIGHT          , extra )   \
-    X( BM_HARDMIX           , extra )   \
-    X( BM_PHOENIX           , extra )   \
-    X( BM_REFLECT           , extra )   \
-    X( BM_GLOW              , extra )   \
-    X( BM_DIFFERENCE        , extra )   \
-    X( BM_EXCLUSION         , extra )   \
-    X( BM_ADD               , extra )   \
-    X( BM_SUBSTRACT         , extra )   \
-    X( BM_DIVIDE            , extra )   \
-    X( BM_AVERAGE           , extra )   \
-    X( BM_HUE               , extra )   \
-    X( BM_SATURATION        , extra )   \
-    X( BM_COLOR             , extra )   \
-    X( BM_LUMINOSITY        , extra )   \
-    X( NUM_BLENDING_MODES   , extra )
+#define ULIS2_FOR_ALL_SEPARABLE_BM_DO( X, _E0, _E1 )    \
+    X( BM_NORMAL            , _E0, _E1 )                \
+    X( BM_TOP               , _E0, _E1 )                \
+    X( BM_BACK              , _E0, _E1 )                \
+    X( BM_BEHIND            , _E0, _E1 )                \
+    X( BM_DARKEN            , _E0, _E1 )                \
+    X( BM_MULTIPY           , _E0, _E1 )                \
+    X( BM_COLORBURN         , _E0, _E1 )                \
+    X( BM_LINEARBURN        , _E0, _E1 )                \
+    X( BM_LIGHTEN           , _E0, _E1 )                \
+    X( BM_SCREEN            , _E0, _E1 )                \
+    X( BM_COLORDODGE        , _E0, _E1 )                \
+    X( BM_LINEARDODGE       , _E0, _E1 )                \
+    X( BM_OVERLAY           , _E0, _E1 )                \
+    X( BM_SOFTLIGHT         , _E0, _E1 )                \
+    X( BM_HARDLIGHT         , _E0, _E1 )                \
+    X( BM_VIVIDLIGHT        , _E0, _E1 )                \
+    X( BM_LINEARLIGHT       , _E0, _E1 )                \
+    X( BM_PINLIGHT          , _E0, _E1 )                \
+    X( BM_HARDMIX           , _E0, _E1 )                \
+    X( BM_PHOENIX           , _E0, _E1 )                \
+    X( BM_REFLECT           , _E0, _E1 )                \
+    X( BM_GLOW              , _E0, _E1 )                \
+    X( BM_DIFFERENCE        , _E0, _E1 )                \
+    X( BM_EXCLUSION         , _E0, _E1 )                \
+    X( BM_ADD               , _E0, _E1 )                \
+    X( BM_SUBSTRACT         , _E0, _E1 )                \
+    X( BM_DIVIDE            , _E0, _E1 )                \
+    X( BM_AVERAGE           , _E0, _E1 )
 
-#define ULIS2_FOR_ALL_AM_DO( X, extra ) \
-    X( AM_NORMAL        , extra )       \
-    X( AM_ERASE         , extra )       \
-    X( AM_TOP           , extra )       \
-    X( AM_BACK          , extra )       \
-    X( AM_SUB           , extra )       \
-    X( AM_ADD           , extra )       \
-    X( AM_MUL           , extra )       \
-    X( AM_MIN           , extra )       \
-    X( AM_MAX           , extra )       \
-    X( AM_INVMAX        , extra )       \
-    X( NUM_ALPHA_MODES  , extra )
+#define ULIS2_FOR_ALL_NONSEPARABLE_BM_DO( X, _E0, _E1 ) \
+    X( BM_DARKERCOLOR       , _E0, _E1 )                \
+    X( BM_LIGHTERCOLOR      , _E0, _E1 )                \
+    X( BM_HUE               , _E0, _E1 )                \
+    X( BM_SATURATION        , _E0, _E1 )                \
+    X( BM_COLOR             , _E0, _E1 )                \
+    X( BM_LUMINOSITY        , _E0, _E1 )
+
+#define ULIS2_FOR_ALL_MISC_BM_DO( X, _E0, _E1 )     \
+    X( BM_DISSOLVE          , _E0, _E1 )            \
+    X( BM_DITHER            , _E0, _E1 )
+
+#define ULIS2_FOR_ALL_BM_DO( X, _E0, _E1 )          \
+    ULIS2_FOR_ALL_SEPARABLE_BM_DO( X, _E0, _E1 )    \
+    ULIS2_FOR_ALL_NONSEPARABLE_BM_DO( X, _E0, _E1 ) \
+    ULIS2_FOR_ALL_MISC_BM_DO( X, _E0, _E1 )
+
+#define ULIS2_FOR_ALL_AM_DO( X, _E0, _E1 ) \
+    X( AM_NORMAL        , _E0, _E1 )       \
+    X( AM_ERASE         , _E0, _E1 )       \
+    X( AM_TOP           , _E0, _E1 )       \
+    X( AM_BACK          , _E0, _E1 )       \
+    X( AM_SUB           , _E0, _E1 )       \
+    X( AM_ADD           , _E0, _E1 )       \
+    X( AM_MUL           , _E0, _E1 )       \
+    X( AM_MIN           , _E0, _E1 )       \
+    X( AM_MAX           , _E0, _E1 )       \
+    X( AM_INVMAX        , _E0, _E1 )
+
+#define ULIS2_ENUM_CASE_AM_DO( iAM, iBM, iAction ) case iAM: iAction( iBM, iAM ); break;
+#define ULIS2_ENUM_CASE_BM_SWITCH_FOR_ALL_AM_DO( iBM, iAM, iAction )   case iBM: switch( iAM ) { ULIS2_FOR_ALL_AM_DO( ULIS2_ENUM_CASE_AM_DO, iBM, iAction ) } break;
+#define ULIS2_SWITCH_FOR_ALL_BM_SUBSET_AM_COMBINATIONS_DO( iBM, iAM, iSubset, iAction ) switch( iBM ) { iSubset( ULIS2_ENUM_CASE_BM_SWITCH_FOR_ALL_AM_DO, iAM, iAction ) }
 
 ULIS2_NAMESPACE_END
 

@@ -117,7 +117,7 @@ void
 Copy( FThreadPool&      iPool
     , const FBlock*     iSrc
     , FBlock*           iDst
-    , const glm::uvec2& iDstPos
+    , const glm::ivec2& iDstPos
     , const FPerf&      iPerf
     , bool              iCallInvalidCB )
 {
@@ -130,41 +130,41 @@ CopyRect( FThreadPool&      iPool
         , const FBlock*     iSrc
         , FBlock*           iDst
         , const FRect&      iSrcRect
-        , const glm::uvec2& iDstPos
+        , const glm::ivec2& iDstPos
         , const FPerf&      iPerf
         , bool              iCallInvalidCB )
 {
-    ULIS2_ASSERT( iSrc->Model() == iDst->Model(),                       "Models do not match" );
-    ULIS2_ASSERT( iSrc->Type() == iDst->Type(),                         "Types do not match" );
-    ULIS2_ASSERT( iSrc->SamplesPerPixel() == iDst->SamplesPerPixel(),   "Samples do not match" );
-    ULIS2_ASSERT( iSrc,                                                 "Bad source" );
-    ULIS2_ASSERT( iDst,                                                 "Bad destination" );
+    ULIS2_ASSERT( iSrc,                                                 "Bad source"                                );
+    ULIS2_ASSERT( iDst,                                                 "Bad destination"                           );
     ULIS2_ASSERT( iSrc != iDst,                                         "Destination and source cannot be the same" );
+    ULIS2_ASSERT( iSrc->Model() == iDst->Model(),                       "Models do not match"                       );
+    ULIS2_ASSERT( iSrc->Type() == iDst->Type(),                         "Types do not match"                        );
+    ULIS2_ASSERT( iSrc->SamplesPerPixel() == iDst->SamplesPerPixel(),   "Samples do not match"                      );
+    ULIS2_ASSERT( iSrc->Reversed() == iDst->Reversed(),                 "Layouts do not match"                      );
+    ULIS2_ASSERT( iSrc->Swapped() == iDst->Swapped(),                   "Layouts do not match"                      );
 
-    // Gather src rect and shift to destination
-    FRect target_rect = iSrcRect & iSrc->Rect();
-    target_rect.x = iDstPos.x;
-    target_rect.y = iDstPos.y;
-    // Gather dst rect
-    // Interset target with dst, target may be out of range
-    FRect dst_roi = target_rect & iDst->Rect();
-    // Gather src rect and fit size to fix overflow
-    FRect src_roi = dst_roi;
-    src_roi.x = iSrcRect.x;
-    src_roi.y = iSrcRect.y;
+    // Ensure the selected source rect actually fits in source dimensions.
+    FRect src_roi = iSrcRect & iSrc->Rect();
 
-    // Check if this is a no-op
-    if( src_roi.Area() <= 0 )
-        return;
+    // Compute coordinates of target rect in destination, with source rect dimension
+    int target_xmin = iDstPos.x;
+    int target_ymin = iDstPos.y;
+    int target_xmax = iDstPos.x + src_roi.w;
+    int target_ymax = iDstPos.y + src_roi.h;
+    FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
+
+    // Ensure the selected target actually fits in destination
+    FRect dst_fit = dst_target & iDst->Rect();
+    if( dst_fit.Area() <= 0 ) return;
 
     // Select invocation based on performance preferences
     if( iPerf.UseMT() )
-        CopyMT( iPool, iSrc, iDst, src_roi, dst_roi, iPerf );
+        CopyMT( iPool, iSrc, iDst, src_roi, dst_fit, iPerf );
     else
-        CopyMono( iSrc, iDst, src_roi, dst_roi );
+        CopyMono( iSrc, iDst, src_roi, dst_fit );
 
     // Invalidate dst region of interest
-    iDst->Invalidate( dst_roi, iCallInvalidCB );
+    iDst->Invalidate( dst_fit, iCallInvalidCB );
 }
 
 
