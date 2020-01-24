@@ -30,13 +30,12 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM_Subpixel( const FBlock* iSource, FBlo
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
 void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
 {
-    /*
+    uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize bps, num;
-    uint8* idt;
-    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSource->Width(), iDstRoiSize );
-    const tByte* src = iSource->DataPtr()   + ( iSrcStart.y * bps ) + ( iSrcStart.x * bpp );
-    tByte*       bdp = iBackdrop->DataPtr() + ( iDstStart.y * bps ) + ( iDstStart.x * bpp );
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
+    tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
     const tFormat   fmt = iSource->Format();        // Format
     FPixelProxy     src_proxy( src, fmt );          // Proxy on source
     FPixelProxy     bdp_proxy( bdp, fmt );          // Proxy on backdrop
@@ -45,63 +44,45 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock* iSource, FBlock* iBack
     FPixelValue     res_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl result
     FPixelValue     result( fmt );                  // result buffer in native model format
 
-    for( tSize i = 0; i < num; ++i )
-    {
-        src_proxy.SetPtr( src );
-        bdp_proxy.SetPtr( bdp );
-        ConvToRGB< T, ufloat >( src_proxy, src_conv );
-        ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
-        FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
-        FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
-        FRGBF result_rgbf;
+    for( tSize y = 0; y < roi_w; ++y ) {
+        for( tSize x = 0; x < roi_h; ++x ) {
+            const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
+            const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
+            const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+            const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
 
-        const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
-        const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
-        const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
-        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
-        float alpha_result;
-        switch( iAlphaMode ) {
-            case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp ); break;
-            case AM_ERASE   : alpha_result = AlphaEraseF(   alpha_src, alpha_bdp ); break;
-            case AM_TOP     : alpha_result = AlphaTopF(     alpha_src, alpha_bdp ); break;
-            case AM_BACK    : alpha_result = AlphaBackF(    alpha_src, alpha_bdp ); break;
-            case AM_SUB     : alpha_result = AlphaSubF(     alpha_src, alpha_bdp ); break;
-            case AM_ADD     : alpha_result = AlphaAddF(     alpha_src, alpha_bdp ); break;
-            case AM_MUL     : alpha_result = AlphaMulF(     alpha_src, alpha_bdp ); break;
-            case AM_MIN     : alpha_result = AlphaMinF(     alpha_src, alpha_bdp ); break;
-            case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp ); break;
-            case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp ); break;
+            src_proxy.SetPtr( src );
+            bdp_proxy.SetPtr( bdp );
+            ConvToRGB< T, ufloat >( src_proxy, src_conv );
+            ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
+            FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
+            FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
+            FRGBF result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
+            res_conv.SetRF( result_rgbf.R );
+            res_conv.SetGF( result_rgbf.G );
+            res_conv.SetBF( result_rgbf.B );
+            ConvT< ufloat, T >( res_conv, result );
+
+            // Compose
+            for( tSize j = 0; j < ncc; ++j ) {
+                uint8 r = xidt[j];
+                FLOAT2TYPE( bdp, r, ComposeF( TYPE2FLOAT( src_proxy.Ptr(), r ), TYPE2FLOAT( bdp_proxy.Ptr(), r ), alpha_bdp, var, TYPE2FLOAT( result.Ptr(), r ) ) );
+            }
+
+            // Assign alpha
+            if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
+
+            // Increment ptrs by one pixel
+            src += bpp;
+            bdp += bpp;
         }
-
-        switch( iBlendingMode ) {
-            case BM_DARKERCOLOR     :   result_rgbf = BlendDarkerColorF(  src_rgbf, bdp_rgbf ); break;
-            case BM_LIGHTERCOLOR    :   result_rgbf = BlendLighterColorF( src_rgbf, bdp_rgbf ); break;
-            case BM_HUE             :   result_rgbf = BlendHueF(          src_rgbf, bdp_rgbf ); break;
-            case BM_SATURATION      :   result_rgbf = BlendSaturationF(   src_rgbf, bdp_rgbf ); break;
-            case BM_COLOR           :   result_rgbf = BlendColorF(        src_rgbf, bdp_rgbf ); break;
-            case BM_LUMINOSITY      :   result_rgbf = BlendLuminosityF(   src_rgbf, bdp_rgbf ); break;
-            default                 :   ULIS2_ASSERT( false, "Bad Blending Mode" );
-        }
-        // Convert back rgb to native model
-        res_conv.SetRF( result_rgbf.R );
-        res_conv.SetGF( result_rgbf.G );
-        res_conv.SetBF( result_rgbf.B );
-        ConvT< ufloat, T >( res_conv, result );
-
-        // Compose
-        for( tSize j = 0; j < spp; ++j )
-            FLOAT2TYPE( bdp, j, ComposeF( TYPE2FLOAT( src_proxy.Ptr(), j ), TYPE2FLOAT( bdp_proxy.Ptr(), j ), alpha_bdp, var, TYPE2FLOAT( result.Ptr(), j ) ) );
-
-        // Assign alpha
-        if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
-
-        // Increment ptrs by one pixel
-        src += bpp;
-        bdp += bpp;
+        // Increment ptrs jump one line
+        src += src_jmp;
+        bdp += bdp_jmp;
     }
 
-    delete [] idt;
-    */
+    delete [] xidt;
 }
 
 ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_DEFAULT_MEM )

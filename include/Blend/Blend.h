@@ -120,7 +120,7 @@ ULIS2_API void BlendSubpixelRect( FThreadPool*      iPool
                                 , const FPerf&      iPerf
                                 , bool              iCallInvalidCB );
 
-// Dispatch Typedefs
+// Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedBlendFunc)( const FBlock*, FBlock*, const FRect&, const FRect&, const glm::vec2&, ufloat, const FPerf& );
 ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf );
 

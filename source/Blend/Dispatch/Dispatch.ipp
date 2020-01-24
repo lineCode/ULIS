@@ -48,7 +48,7 @@ QueryDispatchedBlendFunctionForParameters_imp( uint32 iFormat, eBlendingMode iBl
                 case BMQ_MISC           : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_MISC_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Misc_MEM );
                 case BMQ_NONSEPARABLE   :
                     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iFormat ) ) ) {
-                        case CM_ANY:    ULIS2_CRASH_DELIBERATE; return  nullptr;
+                        case CM_ANY:    ULIS2_ASSERT( false, "Bad input model" ); return  nullptr;
                         case CM_GREY:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Grey_MEM    );
                         case CM_RGB:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_RGB_MEM     );
                         case CM_CMYK:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_CMYK_MEM    );
@@ -73,5 +73,6 @@ QueryDispatchedBlendFunctionForParameters( uint32 iFormat, eBlendingMode iBlendi
         default             : ULIS2_ASSERT( false, "Bad input format !" ); return  nullptr;
     }
 }
+
 ULIS2_NAMESPACE_END
 

@@ -19,11 +19,13 @@ using namespace ::ul2;
 int
 main()
 {
+    /*
     FBlock blockA( 256, 256, ULIS2_FORMAT_ARGB8 );
     FBlock blockB( 256, 256, ULIS2_FORMAT_ARGB8 );
     FThreadPool pool;
     FPerf       perf( Perf_Lowest );
     Blend( &pool, ULIS2_BLOCKING, &blockA, &blockB, glm::vec2( 0 ), BM_HUE, AM_NORMAL, 1.f, perf, ULIS2_CALL_CB );
+    */
 
     /*
     // OpenCL

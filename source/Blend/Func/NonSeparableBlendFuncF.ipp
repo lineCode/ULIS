@@ -181,5 +181,48 @@ ULIS2_FORCEINLINE FLChF BlendLuminosityF( const FLChF& iCs, const FLChF& iCb ) {
     return  { iCs.L, iCb.C, iCb.h };
 }
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------- NonSeparableOpF Template Selector for RGB
+template< eBlendingMode _BM >
+ULIS2_FORCEINLINE FRGBF NonSeparableOpF( const FRGBF& iCs, const FRGBF& iCb ) {
+    ULIS2_ASSERT( false, "Blend Specialization Not Implemented" );
+    return  {};
+}
+
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_DARKERCOLOR  >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendDarkerColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_LIGHTERCOLOR >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLighterColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_HUE          >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendHueF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_SATURATION   >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendSaturationF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_COLOR        >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_LUMINOSITY   >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLuminosityF( iCs, iCb ); }
+//--------------------------------------------------------------------------------------
+//------------------------------------------- NonSeparableOpF Template Selector for Grey
+template< eBlendingMode _BM >
+ULIS2_FORCEINLINE ufloat NonSeparableOpF( ufloat iCs, ufloat iCb ) {
+    ULIS2_ASSERT( false, "Blend Specialization Not Implemented" );
+    return  0;
+}
+
+template<> ULIS2_FORCEINLINE float NonSeparableOpF< BM_DARKERCOLOR  >( float iCs, float iCb ) { return  BlendDarkerColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE float NonSeparableOpF< BM_LIGHTERCOLOR >( float iCs, float iCb ) { return  BlendLighterColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE float NonSeparableOpF< BM_HUE          >( float iCs, float iCb ) { return  BlendHueF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE float NonSeparableOpF< BM_SATURATION   >( float iCs, float iCb ) { return  BlendSaturationF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE float NonSeparableOpF< BM_COLOR        >( float iCs, float iCb ) { return  BlendColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE float NonSeparableOpF< BM_LUMINOSITY   >( float iCs, float iCb ) { return  BlendLuminosityF( iCs, iCb ); }
+//--------------------------------------------------------------------------------------
+//---------------------------------------- NonSeparableOpF Template Selector for Lab LCh
+template< eBlendingMode _BM >
+ULIS2_FORCEINLINE FLChF NonSeparableOpF( const FLChF& iCs, const FLChF& iCb ) {
+    ULIS2_ASSERT( false, "Blend Specialization Not Implemented" );
+    return  {};
+}
+
+template<> ULIS2_FORCEINLINE FLChF NonSeparableOpF< BM_DARKERCOLOR  >( const FLChF& iCs, const FLChF& iCb ) { return  BlendDarkerColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FLChF NonSeparableOpF< BM_LIGHTERCOLOR >( const FLChF& iCs, const FLChF& iCb ) { return  BlendLighterColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FLChF NonSeparableOpF< BM_HUE          >( const FLChF& iCs, const FLChF& iCb ) { return  BlendHueF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FLChF NonSeparableOpF< BM_SATURATION   >( const FLChF& iCs, const FLChF& iCb ) { return  BlendSaturationF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FLChF NonSeparableOpF< BM_COLOR        >( const FLChF& iCs, const FLChF& iCb ) { return  BlendColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FLChF NonSeparableOpF< BM_LUMINOSITY   >( const FLChF& iCs, const FLChF& iCb ) { return  BlendLuminosityF( iCs, iCb ); }
+
 ULIS2_NAMESPACE_END
 

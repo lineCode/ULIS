@@ -32,11 +32,22 @@ void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop,
     const glm::vec2&    sub = iSubpixelComponent;
     glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
 
+    //  -------------
+    //  | m00 | m10 |
+    //  |_____|_____|___
+    //  | m01 | m11 |
+    //  |_____|_____|
+    //     |  |  |
+    //    vv0 | vv1  -> res
+    float m11, m01, m10, m00, vv0, vv1, res;
     for( tSize y = 0; y < roi_w; ++y ) {
+        m11 = m10 = vv1 = 0.f;
         for( tSize x = 0; x < roi_h; ++x ) {
+            m00 = m10;
+            m01 = m11;
+            vv0 = vv1;
             const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
-            float m11, m01, m10, m00, hh0, hh1, res;
-            SampleSubpixelAlpha< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, &m11, &m01, &m10, &m00, &hh0, &hh1, &res );
+            SampleSubpixelAlphaOpt< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
             const float alpha_src       = res * iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
@@ -45,9 +56,9 @@ void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop,
             for( uint8 j = 0; j < ncc; ++j )
             {
                 uint8 r = xidt[j];
-                float srcvf = SampleSubpixelChannelPremult< T >( src, r, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, hh0, hh1, res );
+                float srcvf = SampleSubpixelChannelPremult< T >( src, r, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
                 float bdpvf = TYPE2FLOAT( bdp, r );
-                FLOAT2TYPE( bdp, r, CompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
+                FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
             }
 
             // Assign alpha
@@ -88,7 +99,7 @@ void BlendMono_Separable_MEM( const FBlock* iSource, FBlock* iBackdrop, const FR
                 uint8 r = xidt[j];
                 float srcvf = TYPE2FLOAT( src, r );
                 float bdpvf = TYPE2FLOAT( bdp, r );
-                FLOAT2TYPE( bdp, r, CompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
+                FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
             }
 
             // Assign alpha

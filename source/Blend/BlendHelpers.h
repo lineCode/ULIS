@@ -77,19 +77,6 @@ ULIS2_API ULIS2_FORCEINLINE void  XBuildBlendParams( const FRect&   iROI
 
 template< typename T >
 ULIS2_API ULIS2_FORCEINLINE
-float
-SampleSubpixelAlpha( const tByte* iPtr, uint8 iChannel, uint8 iBPP, uint8 iBPS, int64 iX, int64 iY, const glm::uvec2& iRoiSize, int64 iIndex, int64 iWidth, int64 iTotal, const glm::vec2& iT, const glm::vec2& iU ) {
-    float m11 = ( iY >= iRoiSize.y || iX >= iRoiSize.x ) /*  || ( iIndex                < 0 || iIndex               >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
-    float m01 = ( iY >= iRoiSize.y || iX - 1 < 0 )       /*  || ( iIndex - 1            < 0 || iIndex - 1           >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
-    float m10 = ( iX >= iRoiSize.x || iY - 1 < 0 )       /*  || ( iIndex - iWidth       < 0 || iIndex - iWidth      >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
-    float m00 = ( iX - 1 < 0 || iY - 1 < 0 )             /*  || ( iIndex - iWidth - 1   < 0 || iIndex - iWidth - 1  >= iTotal ) */ ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
-    float h1 = m00 * iT.x + m10 * iU.x;
-    float h2 = m01 * iT.x + m11 * iU.x;
-    return  h1 * iT.y + h2 * iU.y;
-}
-
-template< typename T >
-ULIS2_API ULIS2_FORCEINLINE
 void
 SampleSubpixelAlpha( const tByte* iPtr
                    , bool iHEA
@@ -106,23 +93,40 @@ SampleSubpixelAlpha( const tByte* iPtr
                    , float* oM01
                    , float* oM10
                    , float* oM00
-                   , float* oHH0
-                   , float* oHH1
+                   , float* oVV0
+                   , float* oVV1
                    , float* oRES ) {
     if( iHEA ) {
-        *oM11 = ( iY >= iROI_H || iX >= iROI_W ) ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
-        *oM01 = ( iY >= iROI_H || iX - 1 < 0 )       ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
-        *oM10 = ( iX >= iROI_W || iY - 1 < 0 )       ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
-        *oM00 = ( iX - 1 < 0 || iY - 1 < 0 )             ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
+        *oM11 = ( iY >= iROI_H || iX >= iROI_W )    ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
+        *oM01 = ( iY >= iROI_H || iX - 1 < 0 )      ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
+        *oM10 = ( iX >= iROI_W || iY - 1 < 0 )      ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
+        *oM00 = ( iX - 1 < 0 || iY - 1 < 0 )        ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
     } else {
-        *oM11 = ( iY >= iROI_H || iX >= iROI_W ) ? 0.f : 1.f;
-        *oM01 = ( iY >= iROI_H || iX - 1 < 0 )       ? 0.f : 1.f;
-        *oM10 = ( iX >= iROI_W || iY - 1 < 0 )       ? 0.f : 1.f;
-        *oM00 = ( iX - 1 < 0 || iY - 1 < 0 )             ? 0.f : 1.f;
+        *oM11 = ( iY >= iROI_H || iX >= iROI_W )    ? 0.f : 1.f;
+        *oM01 = ( iY >= iROI_H || iX - 1 < 0 )      ? 0.f : 1.f;
+        *oM10 = ( iX >= iROI_W || iY - 1 < 0 )      ? 0.f : 1.f;
+        *oM00 = ( iX - 1 < 0 || iY - 1 < 0 )        ? 0.f : 1.f;
     }
-    *oHH0 = *oM00 * iT.x + *oM10 * iU.x;
-    *oHH1 = *oM01 * iT.x + *oM11 * iU.x;
-    *oRES = *oHH0 * iT.y + *oHH1 * iU.y;
+
+    *oVV0 = *oM00 * iT.y + *oM01 * iU.y;
+    *oVV1 = *oM10 * iT.y + *oM11 * iU.y;
+    *oRES = *oVV0 * iT.x + *oVV1 * iU.x;
+}
+
+
+template< typename T >
+ULIS2_API ULIS2_FORCEINLINE
+void
+SampleSubpixelAlphaOpt( const tByte* iPtr, bool iHEA, uint8 iChannel, uint8 iBPP, uint8 iBPS, int64 iX, int64 iY, int64 iROI_W, int64 iROI_H, const glm::vec2& iT, const glm::vec2& iU, float iVV0, float* oM11, float* oM10, float* oVV1, float* oRES ) {
+    if( iHEA ) {
+        *oM11 = ( iY >= iROI_H || iX >= iROI_W )    ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
+        *oM10 = ( iX >= iROI_W || iY - 1 < 0 )      ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
+    } else {
+        *oM11 = ( iY >= iROI_H || iX >= iROI_W )    ? 0.f : 1.f;
+        *oM10 = ( iX >= iROI_W || iY - 1 < 0 )      ? 0.f : 1.f;
+    }
+    *oVV1 = (*oM10) * iT.y + (*oM11) * iU.y;
+    *oRES = iVV0 * iT.x + (*oVV1) * iU.x;
 }
 
 template< typename T >
@@ -142,16 +146,14 @@ SampleSubpixelChannelPremult( const tByte* iPtr
                             , float iA01
                             , float iA10
                             , float iA00
-                            , float iHH0
-                            , float iHH1
                             , float iRES ) {
-    float m11 = ( iY >= iROI_H || iX >= iROI_W ) ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
-    float m01 = ( iY >= iROI_H || iX - 1 < 0 )       ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
-    float m10 = ( iX >= iROI_W || iY - 1 < 0 )       ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
-    float m00 = ( iX - 1 < 0 || iY - 1 < 0 )             ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
-    float h1 = FMaths::FixInf( ( ( m00 * iA00 ) * iT.x + ( m10 * iA10 ) * iU.x ) / iHH0 );
-    float h2 = FMaths::FixInf( ( ( m01 * iA01 ) * iT.x + ( m11 * iA11 ) * iU.x ) / iHH1 );
-    return  FMaths::FixInf( ( ( h1 * iHH0 ) * iT.y + ( h2 * iHH1 ) * iU.y ) / iRES );
+    float m11 = ( iY >= iROI_H || iX >= iROI_W )    ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
+    float m01 = ( iY >= iROI_H || iX - 1 < 0 )      ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
+    float m10 = ( iX >= iROI_W || iY - 1 < 0 )      ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
+    float m00 = ( iX - 1 < 0 || iY - 1 < 0 )        ? 0.f : TYPE2FLOAT( iPtr - iBPP + iBPP, iChannel );
+    float v1 = ( m00 * iA00 ) * iT.y + ( m01 * iA01 ) * iU.y;
+    float v2 = ( m10 * iA10 ) * iT.y + ( m11 * iA11 ) * iU.y;
+    return  iRES == 0.f ? 0.f : ( ( v1 ) * iT.x + ( v2 ) * iU.x ) / iRES;
 }
 
 ULIS2_NAMESPACE_END

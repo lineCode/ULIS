@@ -19,16 +19,6 @@
 #include <QLabel>
 using namespace ::ul2;
 
-template< typename T >
-T Foo( T i )
-{
-    return  (++i);
-};
-
-template int Foo< int >( int );                         // Template instanciation
-template<> double Foo< double >( double ) = delete;     // Template specialisation with delete
-template double Foo< double >( double );                // Template instanciation
-
 int
 main( int argc, char *argv[] )
 {
@@ -45,7 +35,7 @@ main( int argc, char *argv[] )
     FPixel red(     ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
     Fill( pool, &blockA, green, perf_best );
     Fill( pool, &blockB, red,   perf_best );
-    BlendSubpixelRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 32, 32 ), glm::vec2( 32.5f, 32.5f ), BM_BAYERDITHER8x8, AM_NORMAL, 0.5f, perf_low, ULIS2_CALL_CB );
+    BlendSubpixelRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 32, 32 ), glm::vec2( 32.5f, 32.5f ), BM_NORMAL, AM_NORMAL, 1.f, perf_low, ULIS2_CALL_CB );
 
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
