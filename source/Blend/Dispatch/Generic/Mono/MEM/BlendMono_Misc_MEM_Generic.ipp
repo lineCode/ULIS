@@ -46,11 +46,22 @@ void BlendMono_Misc_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, cons
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_DISSOLVE: {
             uint32 localPRNGSeed = gBlendingPRNGSeed;
+            //  -------------
+            //  | m00 | m10 |
+            //  |_____|_____|___
+            //  | m01 | m11 |
+            //  |_____|_____|
+            //     |  |  |
+            //    vv0 | vv1  -> res
+            float m11, m01, m10, m00, vv0, vv1, res;
             for( tSize y = 0; y < roi_w; ++y ) {
+                m11 = m10 = vv1 = 0.f;
                 for( tSize x = 0; x < roi_h; ++x ) {
+                    m00 = m10;
+                    m01 = m11;
+                    vv0 = vv1;
+                    SampleSubpixelAlphaOpt< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
                     const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
-                    float m11, m01, m10, m00, hh0, hh1, res;
-                    SampleSubpixelAlpha< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, &m11, &m01, &m10, &m00, &hh0, &hh1, &res );
                     const float alpha_src       = res * iOpacity;
                     localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
                     float toss = ( localPRNGSeed % 65537 ) / 65537.f;
@@ -71,11 +82,22 @@ void BlendMono_Misc_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, cons
         } // BM_DISSOLVE
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_BAYERDITHER8x8: {
+            //  -------------
+            //  | m00 | m10 |
+            //  |_____|_____|___
+            //  | m01 | m11 |
+            //  |_____|_____|
+            //     |  |  |
+            //    vv0 | vv1  -> res
+            float m11, m01, m10, m00, vv0, vv1, res;
             for( tSize y = 0; y < roi_w; ++y ) {
+                m11 = m10 = vv1 = 0.f;
                 for( tSize x = 0; x < roi_h; ++x ) {
+                    m00 = m10;
+                    m01 = m11;
+                    vv0 = vv1;
+                    SampleSubpixelAlphaOpt< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
                     const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
-                    float m11, m01, m10, m00, hh0, hh1, res;
-                    SampleSubpixelAlpha< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, &m11, &m01, &m10, &m00, &hh0, &hh1, &res );
                     const float alpha_src       = res * iOpacity;
                     const tSize bayerX = x % 8;
                     const tSize bayerY = y % 8;

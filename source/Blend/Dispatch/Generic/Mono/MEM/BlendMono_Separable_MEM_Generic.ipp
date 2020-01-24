@@ -46,8 +46,8 @@ void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop,
             m00 = m10;
             m01 = m11;
             vv0 = vv1;
-            const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
             SampleSubpixelAlphaOpt< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+            const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
             const float alpha_src       = res * iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;

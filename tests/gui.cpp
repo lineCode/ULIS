@@ -35,7 +35,7 @@ main( int argc, char *argv[] )
     FPixel red(     ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
     Fill( pool, &blockA, green, perf_best );
     Fill( pool, &blockB, red,   perf_best );
-    BlendSubpixelRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 32, 32 ), glm::vec2( 32.5f, 32.5f ), BM_NORMAL, AM_NORMAL, 1.f, perf_low, ULIS2_CALL_CB );
+    BlendSubpixelRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 32, 32 ), glm::vec2( 32.5f, 32.5f ), BM_COLOR, AM_NORMAL, 0.8f, perf_low, ULIS2_CALL_CB );
 
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
