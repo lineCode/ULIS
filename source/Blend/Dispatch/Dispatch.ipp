@@ -18,7 +18,11 @@
 
 // Mono Mem Generic
 #include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_Separable_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_DEFAULT_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_Grey_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_RGB_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_CMYK_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_Lab_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_Misc_MEM_Generic.ipp"
 
 ULIS2_NAMESPACE_BEGIN
@@ -27,90 +31,30 @@ fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_imp( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf ) {
     if( iPerf.UseMT() ) {
         if( iPerf.UseAVX2() ) {
-            if( iSubpixel ) {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            } else {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            }
+            return  nullptr;
         } else if( iPerf.UseSSE4_2() ) {
-            if( iSubpixel ) {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            } else {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            }
+            return  nullptr;
         } else {
-            if( iSubpixel ) {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            } else {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            }
+            return  nullptr;
         }
     } else {
         if( iPerf.UseAVX2() ) {
-            if( iSubpixel ) {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            } else {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            }
+            return  nullptr;
         } else if( iPerf.UseSSE4_2() ) {
-            if( iSubpixel ) {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            } else {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            }
+            return  nullptr;
         } else {
-            if( iSubpixel ) {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  nullptr;
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
-            } else {
-                switch( BlendingModeQualifier( iBlendingMode ) ) {
-                    case BMQ_SEPARABLE      : return  QueryDispatchedBlendFunctionForParameters_Mono_Separable_MEM< T >( iBlendingMode, iAlphaMode, iSubpixel );
-                    case BMQ_NONSEPARABLE   : return  nullptr;
-                    case BMQ_MISC           : return  nullptr;
-                }
+            switch( BlendingModeQualifier( iBlendingMode ) ) {
+                case BMQ_SEPARABLE      : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_SEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Separable_MEM );
+                case BMQ_MISC           : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_MISC_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Misc_MEM );
+                case BMQ_NONSEPARABLE   :
+                    switch( static_cast< eColorModel >( ULIS2_R_MODEL( iFormat ) ) ) {
+                        case CM_ANY:    ULIS2_CRASH_DELIBERATE; return  nullptr;
+                        case CM_GREY:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Grey_MEM    );
+                        case CM_RGB:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_RGB_MEM     );
+                        case CM_CMYK:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_CMYK_MEM    );
+                        case CM_Lab:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Lab_MEM     );
+                        default:        ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_DEFAULT_MEM );
+                    }
             }
         }
     }

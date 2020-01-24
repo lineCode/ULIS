@@ -58,12 +58,12 @@ enum eColorModel {
 };
 
 // Macro for all types for template instanciation
-#define ULIS2_FOR_ALL_TYPES_DO( X ) \
-    X( uint8 )                      \
-    X( uint16 )                     \
-    X( uint32 )                     \
-    X( ufloat )                     \
-    X( udouble )
+#define ULIS2_FOR_ALL_TYPES_DO( X, _E0, _E1, _E2, _E3 )     \
+    X( uint8,   _E0, _E1, _E2, _E3 )                        \
+    X( uint16,  _E0, _E1, _E2, _E3 )                        \
+    X( uint32,  _E0, _E1, _E2, _E3 )                        \
+    X( ufloat,  _E0, _E1, _E2, _E3 )                        \
+    X( udouble, _E0, _E1, _E2, _E3 )
 
 // Macro for all types for combination template instanciation
 #define ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X )    \

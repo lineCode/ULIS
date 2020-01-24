@@ -21,18 +21,15 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-template< typename T >
-void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*          iSource
-                                       , FBlock*                iBackdrop
-                                       , const glm::uvec2&      iSrcStart
-                                       , const glm::uvec2&      iDstStart
-                                       , const glm::uvec2&      iSrcRoiSize
-                                       , const glm::uvec2&      iDstRoiSize
-                                       , const glm::vec2&       iSubpixelComponent
-                                       , const eBlendingMode    iBlendingMode
-                                       , const eAlphaMode       iAlphaMode
-                                       , const float            iOpacity )
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void BlendMono_NonSeparable_CM_CMYK_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
 {
+}
+
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
+{
+    /*
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps, num;
     uint8* idt;
@@ -92,7 +89,13 @@ void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock*          iSource
 
     // delete temp
     delete [] idt;
+    */
 }
+
+ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_CMYK_MEM )
+ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_CMYK_MEM_Subpixel )
+ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_SEPARABLE_BM_DO, BlendMono_NonSeparable_CM_CMYK_MEM )
+ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_SEPARABLE_BM_DO, BlendMono_NonSeparable_CM_CMYK_MEM_Subpixel )
 
 ULIS2_NAMESPACE_END
 

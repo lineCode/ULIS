@@ -21,105 +21,33 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
-{
-}
-
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_Separable_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
-{
-}
-
-/*
-template< typename T >
-void BlendMono_Separable_MEM( const FBlock*         iSource
-                            , FBlock*               iBackdrop
-                            , const FRect&          iSrcRoi
-                            , const FRect&          iDstRoi
-                            , const glm::vec2&      iSubpixelComponent
-                            , const eBlendingMode   iBlendingMode
-                            , const eAlphaMode      iAlphaMode
-                            , const float           iOpacity )
-{
+void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf ) {
+    uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize bps, num;
-    uint8* idt;
-    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSource->Width(), iDstRoiSize );
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
+    tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
     const glm::vec2&    sub = iSubpixelComponent;
     glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
-    int64 width = iSource->Width();
-    int64 total = iSource->Width() * iSource->Height();
 
-    for( tSize y = 0; y < iDstRoiSize.y; ++y ) {
-        const tByte*        src     = iSource->DataPtr()   + ( ( iSrcStart.y + y ) * bps ) + ( iSrcStart.x * bpp );
-        tByte*              bdp     = iBackdrop->DataPtr() + ( ( iDstStart.y + y ) * bps ) + ( iDstStart.x * bpp );
-        int64               index   = ( iSrcStart.y + y ) * width + iSrcStart.x;
-        for( tSize x = 0; x < iDstRoiSize.x; ++x ) {
+    for( tSize y = 0; y < roi_w; ++y ) {
+        for( tSize x = 0; x < roi_h; ++x ) {
             const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
-
-            //const float alpha_src       = hea ? SampleSubpixelAlpha< T >( src, aid, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus ) * iOpacity : iOpacity;
             float m11, m01, m10, m00, hh0, hh1, res;
-            if( hea )
-                SampleSubpixelAlpha< T >( src, aid, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus, &m11, &m01, &m10, &m00, &hh0, &hh1, &res );
-            else
-                m11 = m01 = m10 = m00 = hh0 = hh1 = res = 1.f;
-
+            SampleSubpixelAlpha< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, &m11, &m01, &m10, &m00, &hh0, &hh1, &res );
             const float alpha_src       = res * iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
-            const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
-            float alpha_result;
-            switch( iAlphaMode ) {
-                case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp ); break;
-                case AM_ERASE   : alpha_result = AlphaEraseF(   alpha_src, alpha_bdp ); break;
-                case AM_TOP     : alpha_result = AlphaTopF(     alpha_src, alpha_bdp ); break;
-                case AM_BACK    : alpha_result = AlphaBackF(    alpha_src, alpha_bdp ); break;
-                case AM_SUB     : alpha_result = AlphaSubF(     alpha_src, alpha_bdp ); break;
-                case AM_ADD     : alpha_result = AlphaAddF(     alpha_src, alpha_bdp ); break;
-                case AM_MUL     : alpha_result = AlphaMulF(     alpha_src, alpha_bdp ); break;
-                case AM_MIN     : alpha_result = AlphaMinF(     alpha_src, alpha_bdp ); break;
-                case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp ); break;
-                case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp ); break; }
+            const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
 
-            for( tSize j = 0; j < spp; ++j ) {
-                //float srcvf = TYPE2FLOAT( src, j );
-                //float srcvf = SampleSubpixelAlpha< T >( src, j, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus );
-                float srcvf = SampleSubpixelChannelPremult< T >( src, j, bpp, bps, x, y, iSrcRoiSize, index, width, total, sub, bus, m11, m01, m10, m00, hh0, hh1, res );
-                float bdpvf = TYPE2FLOAT( bdp, j );
-                switch( iBlendingMode ) {
-                #define COMPOSE( i ) FLOAT2TYPE( bdp, j, ComposeF( srcvf, bdpvf, alpha_bdp, var, i( srcvf, bdpvf ) ) ); break;
-                    case BM_NORMAL          :   COMPOSE( BlendNormalF       ); break;
-                    case BM_TOP             :   FLOAT2TYPE( bdp, j, srcvf   ); break;
-                    case BM_BACK            :   FLOAT2TYPE( bdp, j, bdpvf   ); break;
-                    case BM_BEHIND          :   COMPOSE( BlendBehindF       ); break;
-                    case BM_DARKEN          :   COMPOSE( BlendDarkenF       ); break;
-                    case BM_MULTIPY         :   COMPOSE( BlendMultiplyF     ); break;
-                    case BM_COLORBURN       :   COMPOSE( BlendColorBurnF    ); break;
-                    case BM_LINEARBURN      :   COMPOSE( BlendLinearBurnF   ); break;
-                    case BM_LIGHTEN         :   COMPOSE( BlendLightenF      ); break;
-                    case BM_SCREEN          :   COMPOSE( BlendScreenF       ); break;
-                    case BM_COLORDODGE      :   COMPOSE( BlendColorDodgeF   ); break;
-                    case BM_LINEARDODGE     :   COMPOSE( BlendLinearDodgeF  ); break;
-                    case BM_OVERLAY         :   COMPOSE( BlendOverlayF      ); break;
-                    case BM_SOFTLIGHT       :   COMPOSE( BlendSoftLightF    ); break;
-                    case BM_HARDLIGHT       :   COMPOSE( BlendHardLightF    ); break;
-                    case BM_VIVIDLIGHT      :   COMPOSE( BlendVividLightF   ); break;
-                    case BM_LINEARLIGHT     :   COMPOSE( BlendLinearLightF  ); break;
-                    case BM_PINLIGHT        :   COMPOSE( BlendPinLightF     ); break;
-                    case BM_HARDMIX         :   COMPOSE( BlendHardMixF      ); break;
-                    case BM_PHOENIX         :   COMPOSE( BlendPhoenixF      ); break;
-                    case BM_REFLECT         :   COMPOSE( BlendReflectF      ); break;
-                    case BM_GLOW            :   COMPOSE( BlendGlowF         ); break;
-                    case BM_DIFFERENCE      :   COMPOSE( BlendDifferenceF   ); break;
-                    case BM_EXCLUSION       :   COMPOSE( BlendExclusionF    ); break;
-                    case BM_ADD             :   COMPOSE( BlendAddF          ); break;
-                    case BM_SUBSTRACT       :   COMPOSE( BlendSubstractF    ); break;
-                    case BM_DIVIDE          :   COMPOSE( BlendDivideF       ); break;
-                    case BM_AVERAGE         :   COMPOSE( BlendAverageF      ); break;
-                    default                 :   ULIS2_ASSERT( false, "Bad Blending Mode" );
-                #undef COMPOSE
-                }
+            for( uint8 j = 0; j < ncc; ++j )
+            {
+                uint8 r = xidt[j];
+                float srcvf = SampleSubpixelChannelPremult< T >( src, r, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, hh0, hh1, res );
+                float bdpvf = TYPE2FLOAT( bdp, r );
+                FLOAT2TYPE( bdp, r, CompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
             }
 
             // Assign alpha
@@ -128,29 +56,60 @@ void BlendMono_Separable_MEM( const FBlock*         iSource
             // Increment ptrs by one pixel
             src += bpp;
             bdp += bpp;
-            index++;
         }
+        // Increment ptrs jump one line
+        src += src_jmp;
+        bdp += bdp_jmp;
     }
 
-    delete [] idt;
+    delete [] xidt;
 }
-*/
 
-template< typename T >
-fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters_Mono_Separable_MEM( eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel ) {
-    if( iSubpixel ) {
-        #define ACTION( iBM, iAM ) return  &BlendMono_Separable_MEM_Subpixel< T, iBM, iAM >;
-        ULIS2_SWITCH_FOR_ALL_BM_SUBSET_AM_COMBINATIONS_DO( iBlendingMode, iAlphaMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, ACTION );
-        #undef ACTION
-    } else {
-        #define ACTION( iBM, iAM ) return  &BlendMono_Separable_MEM< T, iBM, iAM >;
-        ULIS2_SWITCH_FOR_ALL_BM_SUBSET_AM_COMBINATIONS_DO( iBlendingMode, iAlphaMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, ACTION );
-        #undef ACTION
+
+template< typename T, eBlendingMode _BM, eAlphaMode _AM >
+void BlendMono_Separable_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf ) {
+    uint8* xidt;
+    uint8 bpc, ncc, hea, spp, bpp, aid;
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
+    tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
+
+    for( tSize y = 0; y < roi_w; ++y ) {
+        for( tSize x = 0; x < roi_h; ++x ) {
+            const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
+            const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
+            const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+            const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+
+            for( uint8 j = 0; j < ncc; ++j )
+            {
+                uint8 r = xidt[j];
+                float srcvf = TYPE2FLOAT( src, r );
+                float bdpvf = TYPE2FLOAT( bdp, r );
+                FLOAT2TYPE( bdp, r, CompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
+            }
+
+            // Assign alpha
+            if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
+
+            // Increment ptrs by one pixel
+            src += bpp;
+            bdp += bpp;
+        }
+        // Increment ptrs jump one line
+        src += src_jmp;
+        bdp += bdp_jmp;
     }
 
-    ULIS2_ASSERT( false, "Bad input modes !" );
-    return  nullptr;
+    delete [] xidt;
 }
+
+ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, BlendMono_Separable_MEM )
+ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, BlendMono_Separable_MEM_Subpixel )
+ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_Separable_MEM )
+ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_Separable_MEM_Subpixel )
 
 ULIS2_NAMESPACE_END
 
