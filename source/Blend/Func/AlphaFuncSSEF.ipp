@@ -22,52 +22,52 @@ ULIS2_NAMESPACE_BEGIN
 // Standard Alpha Modes
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Normal
-ULIS2_FORCEINLINE Vec4f AlphaNormalSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaNormalSSEF( Vec4f iCs, Vec4f iCb ) {
     return ( iCb + iCs ) - ( iCb * iCs );
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- Erase
-ULIS2_FORCEINLINE Vec4f AlphaEraseSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaEraseSSEF( Vec4f iCs, Vec4f iCb ) {
     return ( 1.f - iCs ) * iCb;
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------- Back
-ULIS2_FORCEINLINE Vec4f AlphaBackSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaBackSSEF( Vec4f iCs, Vec4f iCb ) {
     return iCb;
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Top
-ULIS2_FORCEINLINE Vec4f AlphaTopSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaTopSSEF( Vec4f iCs, Vec4f iCb ) {
     return iCs;
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Sub
-ULIS2_FORCEINLINE Vec4f AlphaSubSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaSubSSEF( Vec4f iCs, Vec4f iCb ) {
     return  max( iCb - iCs, Vec4f( 0 ) );
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Add
-ULIS2_FORCEINLINE Vec4f AlphaAddSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaAddSSEF( Vec4f iCs, Vec4f iCb ) {
     return  min( iCb + iCs, Vec4f( 1.f ) );
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Mul
-ULIS2_FORCEINLINE Vec4f AlphaMulSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaMulSSEF( Vec4f iCs, Vec4f iCb ) {
     return  iCb * iCs;
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Min
-ULIS2_FORCEINLINE Vec4f AlphaMinSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaMinSSEF( Vec4f iCs, Vec4f iCb ) {
     return  FMaths::Min( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Max
-ULIS2_FORCEINLINE Vec4f AlphaMaxSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaMaxSSEF( Vec4f iCs, Vec4f iCb ) {
     return  FMaths::Max( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- InvMax
-ULIS2_FORCEINLINE Vec4f AlphaInvMaxSSEF( Vec4f iCs, Vec4f iCb ) {
+ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaInvMaxSSEF( Vec4f iCs, Vec4f iCb ) {
     Vec4f invCs = select( iCs == 0.0f, 0.f, 1.f / iCs );
     Vec4f invCb = select( iCs == 0.0f, 0.f, 1.f / iCb );
     Vec4f max = FMaths::Max( invCs, invCb );
