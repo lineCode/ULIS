@@ -22,9 +22,7 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_NonSeparable_CM_DEFAULT_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
-{
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_NonSeparable_CM_DEFAULT_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -60,7 +58,8 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM_Subpixel( const FBlock* iSource, FBlo
             const float alpha_src       = res * iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+            float alpha_result;
+            ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
             for( uint8 j = 0; j < ncc; ++j ) {
                 uint8 r = xidt[j];
@@ -72,7 +71,10 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM_Subpixel( const FBlock* iSource, FBlo
             ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
             FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
             FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
-            FRGBF result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
+            FRGBF result_rgbf;
+            #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
+            ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+            #undef TMP_ASSIGN
             res_conv.SetRF( result_rgbf.R );
             res_conv.SetGF( result_rgbf.G );
             res_conv.SetBF( result_rgbf.B );
@@ -99,9 +101,8 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM_Subpixel( const FBlock* iSource, FBlo
     delete [] xidt;
 }
 
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
-{
+
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_NonSeparable_CM_DEFAULT_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -122,7 +123,8 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock* iSource, FBlock* iBack
             const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+            float alpha_result;
+            ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
             src_proxy.SetPtr( src );
             bdp_proxy.SetPtr( bdp );
@@ -130,7 +132,10 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock* iSource, FBlock* iBack
             ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
             FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
             FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
-            FRGBF result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
+            FRGBF result_rgbf;
+            #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
+            ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+            #undef TMP_ASSIGN
             res_conv.SetRF( result_rgbf.R );
             res_conv.SetGF( result_rgbf.G );
             res_conv.SetBF( result_rgbf.B );
@@ -156,11 +161,6 @@ void BlendMono_NonSeparable_CM_DEFAULT_MEM( const FBlock* iSource, FBlock* iBack
 
     delete [] xidt;
 }
-
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_DEFAULT_MEM )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_DEFAULT_MEM_Subpixel )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_SEPARABLE_BM_DO, BlendMono_NonSeparable_CM_DEFAULT_MEM )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_SEPARABLE_BM_DO, BlendMono_NonSeparable_CM_DEFAULT_MEM_Subpixel )
 
 ULIS2_NAMESPACE_END
 

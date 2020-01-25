@@ -31,8 +31,7 @@ float gBayer8x8Matrix[8][8] = {
     { 0.671875f, 0.421875f, 0.609375f, 0.359375f, 0.65625f, 0.40625f, 0.59375f, 0.34375f } };
 
 ULIS2_NAMESPACE_BEGIN
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_Misc_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf ) {
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -42,7 +41,7 @@ void BlendMono_Misc_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, cons
     const glm::vec2&    sub = iSubpixelComponent;
     glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
 
-    switch( _BM ) {
+    switch( iBlendingMode ) {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_DISSOLVE: {
             uint32 localPRNGSeed = gBlendingPRNGSeed;
@@ -66,7 +65,8 @@ void BlendMono_Misc_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, cons
                     localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
                     float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                     if( toss < alpha_src ) {
-                        const float alpha_result = AlphaF< _AM >( alpha_src, alpha_bdp );
+                        float alpha_result;
+                        ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
                         memcpy( bdp, src, bpp );
                         if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
                     }
@@ -103,7 +103,8 @@ void BlendMono_Misc_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, cons
                     const tSize bayerY = y % 8;
                     const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
                     if( alpha_src >= bayerEl ) {
-                        const float alpha_result = AlphaF< _AM >( alpha_src, alpha_bdp );
+                        float alpha_result;
+                        ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
                         memcpy( bdp, src, bpp );
                         if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
                     }
@@ -123,8 +124,7 @@ void BlendMono_Misc_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, cons
     delete [] xidt;
 }
 
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_Misc_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf ) {
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -132,7 +132,7 @@ void BlendMono_Misc_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& 
     const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
     tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
 
-    switch( _BM ) {
+    switch( iBlendingMode ) {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_DISSOLVE: {
             uint32 localPRNGSeed = gBlendingPRNGSeed;
@@ -143,7 +143,8 @@ void BlendMono_Misc_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& 
                     localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
                     float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                     if( toss < alpha_src ) {
-                        const float alpha_result = AlphaF< _AM >( alpha_src, alpha_bdp );
+                        float alpha_result;
+                        ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
                         memcpy( bdp, src, bpp );
                         if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
                     }
@@ -167,7 +168,8 @@ void BlendMono_Misc_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& 
                     const tSize bayerY = y % 8;
                     const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
                     if( alpha_src >= bayerEl ) {
-                        const float alpha_result = AlphaF< _AM >( alpha_src, alpha_bdp );
+                        float alpha_result;
+                        ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
                         memcpy( bdp, src, bpp );
                         if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
                     }
@@ -186,11 +188,6 @@ void BlendMono_Misc_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& 
 
     delete [] xidt;
 }
-
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, BlendMono_Misc_MEM )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, BlendMono_Misc_MEM_Subpixel )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_SEPARABLE_BM_DO, BlendMono_Misc_MEM )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_SEPARABLE_BM_DO, BlendMono_Misc_MEM_Subpixel )
 
 ULIS2_NAMESPACE_END
 

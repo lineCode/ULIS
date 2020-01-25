@@ -17,6 +17,10 @@
 #include "glm/vec2.hpp"
 
 ULIS2_NAMESPACE_BEGIN
+
+#define ULIS2_BLENDSPEC_TEMPLATE_SIG    template< typename T>
+#define ULIS2_BLENDSPEC_PARAMS_SIG      const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, ufloat iOpacity, const FPerf& iPerf
+
 ULIS2_API ULIS2_FORCEINLINE void BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8* oIDT, uint8* oAID ) {
     uint8 msp = iSPP - 1;
     switch( iCOD ) {

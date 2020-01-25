@@ -21,9 +21,7 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_NonSeparable_CM_Lab_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
-{
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_NonSeparable_CM_Lab_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -52,7 +50,8 @@ void BlendMono_NonSeparable_CM_Lab_MEM_Subpixel( const FBlock* iSource, FBlock* 
             const float alpha_src       = res * iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+            float alpha_result;
+            ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
             float subpixel_L = SampleSubpixelChannelPremult< T >( src, xidt[0], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
             float subpixel_a = SampleSubpixelChannelPremult< T >( src, xidt[1], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
@@ -61,7 +60,10 @@ void BlendMono_NonSeparable_CM_Lab_MEM_Subpixel( const FBlock* iSource, FBlock* 
             FLabF bdp_lab = { TYPE2FLOAT( bdp, xidt[0] ), TYPE2FLOAT( bdp, xidt[1] ), TYPE2FLOAT( bdp, xidt[2] ) };
             FLChF src_lch = LabToLCh( src_lab );
             FLChF bdp_lch = LabToLCh( bdp_lab );
-            FLChF result_lch = NonSeparableOpF< _BM >( src_lch, bdp_lch );
+            FLChF result_lch;
+            #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_lch = NonSeparableOpF< _BM >( src_lch, bdp_lch );
+            ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+            #undef TMP_ASSIGN
             FLabF result_lab = LChToLab( result_lch );
 
             // Compose
@@ -83,9 +85,7 @@ void BlendMono_NonSeparable_CM_Lab_MEM_Subpixel( const FBlock* iSource, FBlock* 
     delete [] xidt;
 }
 
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
-{
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_NonSeparable_CM_Lab_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -99,13 +99,17 @@ void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock* iSource, FBlock* iBackdrop
             const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+            float alpha_result;
+            ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
             FLabF src_lab = { TYPE2FLOAT( src, xidt[0] ), TYPE2FLOAT( src, xidt[1] ), TYPE2FLOAT( src, xidt[2] ) };
             FLabF bdp_lab = { TYPE2FLOAT( bdp, xidt[0] ), TYPE2FLOAT( bdp, xidt[1] ), TYPE2FLOAT( bdp, xidt[2] ) };
             FLChF src_lch = LabToLCh( src_lab );
             FLChF bdp_lch = LabToLCh( bdp_lab );
-            FLChF result_lch = NonSeparableOpF< _BM >( src_lch, bdp_lch );
+            FLChF result_lch;
+            #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_lch = NonSeparableOpF< _BM >( src_lch, bdp_lch );
+            ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+            #undef TMP_ASSIGN
             FLabF result_lab = LChToLab( result_lch );
 
             // Compose
@@ -126,11 +130,6 @@ void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock* iSource, FBlock* iBackdrop
 
     delete [] xidt;
 }
-
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_Lab_MEM )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_Lab_MEM_Subpixel )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_SEPARABLE_BM_DO, BlendMono_NonSeparable_CM_Lab_MEM )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_SEPARABLE_BM_DO, BlendMono_NonSeparable_CM_Lab_MEM_Subpixel )
 
 ULIS2_NAMESPACE_END
 

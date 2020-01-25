@@ -21,8 +21,7 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf ) {
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -51,14 +50,17 @@ void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop,
             const float alpha_src       = res * iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+            float alpha_result;
+            ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
             for( uint8 j = 0; j < ncc; ++j )
             {
                 uint8 r = xidt[j];
                 float srcvf = SampleSubpixelChannelPremult< T >( src, r, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
                 float bdpvf = TYPE2FLOAT( bdp, r );
-                FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
+                #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
+                ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+                #undef TMP_ASSIGN
             }
 
             // Assign alpha
@@ -77,8 +79,7 @@ void BlendMono_Separable_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop,
 }
 
 
-template< typename T, eBlendingMode _BM, eAlphaMode _AM >
-void BlendMono_Separable_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf ) {
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -92,14 +93,17 @@ void BlendMono_Separable_MEM( const FBlock* iSource, FBlock* iBackdrop, const FR
             const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
             const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+            float alpha_result;
+            ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
             for( uint8 j = 0; j < ncc; ++j )
             {
                 uint8 r = xidt[j];
                 float srcvf = TYPE2FLOAT( src, r );
                 float bdpvf = TYPE2FLOAT( bdp, r );
-                FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
+                #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
+                ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+                #undef TMP_ASSIGN
             }
 
             // Assign alpha
@@ -116,11 +120,6 @@ void BlendMono_Separable_MEM( const FBlock* iSource, FBlock* iBackdrop, const FR
 
     delete [] xidt;
 }
-
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, BlendMono_Separable_MEM )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, BlendMono_Separable_MEM_Subpixel )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_Separable_MEM )
-ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_Separable_MEM_Subpixel )
 
 ULIS2_NAMESPACE_END
 

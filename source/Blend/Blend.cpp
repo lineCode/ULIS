@@ -87,7 +87,7 @@ BlendRect( FThreadPool*         iPool
     glm::vec2   subpixel_component = glm::vec2( 0.f );
 
     fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iSource->Format(), iBlendingMode, iAlphaMode, false, iPerf );
-    if( fptr ) fptr( iSource, iBackdrop, src_roi, dst_fit, subpixel_component, opacity, iPerf );
+    if( fptr ) fptr( iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf );
 
     iBackdrop->Invalidate( dst_fit, iCallInvalidCB );
 }
@@ -164,7 +164,7 @@ BlendSubpixelRect( FThreadPool*     iPool
     glm::vec2   subpixel_component = glm::abs( FMaths::FloatingPart( iDstPos ) );
 
     fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iSource->Format(), iBlendingMode, iAlphaMode, true, iPerf );
-    fptr( iSource, iBackdrop, src_roi, dst_fit, subpixel_component, opacity, iPerf );
+    if( fptr ) fptr( iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf );
 
     iBackdrop->Invalidate( dst_fit, iCallInvalidCB );
 }

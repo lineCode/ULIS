@@ -50,30 +50,30 @@ QueryDispatchedBlendFunctionForParameters_imp( uint32 iFormat, eBlendingMode iBl
             return  nullptr;
         } else if( iPerf.UseSSE4_2() ) {
             switch( BlendingModeQualifier( iBlendingMode ) ) {
-                case BMQ_SEPARABLE      : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_SEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Separable_SSE4_2 );
-                case BMQ_MISC           : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_MISC_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Misc_SSE4_2 );
+                case BMQ_SEPARABLE      : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_SSE4_2 );
+                case BMQ_MISC           : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Misc_SSE4_2 );
                 case BMQ_NONSEPARABLE   :
                     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iFormat ) ) ) {
                         case CM_ANY:    ULIS2_ASSERT( false, "Bad input model" ); return  nullptr;
-                        case CM_GREY:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Grey_SSE4_2    );
-                        case CM_RGB:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_RGB_SSE4_2     );
-                        case CM_CMYK:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_CMYK_SSE4_2    );
-                        case CM_Lab:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Lab_SSE4_2     );
-                        default:        ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_DEFAULT_SSE4_2 );
+                        case CM_GREY:   ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_Grey_SSE4_2    );
+                        case CM_RGB:    ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_RGB_SSE4_2     );
+                        case CM_CMYK:   ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_CMYK_SSE4_2    );
+                        case CM_Lab:    ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_Lab_SSE4_2     );
+                        default:        ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_DEFAULT_SSE4_2 );
                     }
             }
         } else {
             switch( BlendingModeQualifier( iBlendingMode ) ) {
-                case BMQ_SEPARABLE      : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_SEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Separable_MEM );
-                case BMQ_MISC           : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_MISC_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Misc_MEM );
+                case BMQ_SEPARABLE      : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_MEM );
+                case BMQ_MISC           : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Misc_MEM );
                 case BMQ_NONSEPARABLE   :
                     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iFormat ) ) ) {
                         case CM_ANY:    ULIS2_ASSERT( false, "Bad input model" ); return  nullptr;
-                        case CM_GREY:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Grey_MEM    );
-                        case CM_RGB:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_RGB_MEM     );
-                        case CM_CMYK:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_CMYK_MEM    );
-                        case CM_Lab:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Lab_MEM     );
-                        default:        ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_DEFAULT_MEM );
+                        case CM_GREY:   ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_Grey_MEM    );
+                        case CM_RGB:    ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_RGB_MEM     );
+                        case CM_CMYK:   ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_CMYK_MEM    );
+                        case CM_Lab:    ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_Lab_MEM     );
+                        default:        ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_NonSeparable_CM_DEFAULT_MEM );
                     }
             }
         }
