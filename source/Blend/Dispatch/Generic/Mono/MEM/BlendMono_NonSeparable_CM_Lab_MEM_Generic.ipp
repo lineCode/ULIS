@@ -24,72 +24,107 @@ ULIS2_NAMESPACE_BEGIN
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
 void BlendMono_NonSeparable_CM_Lab_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
 {
+    uint8* xidt;
+    uint8 bpc, ncc, hea, spp, bpp, aid;
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
+    tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
+    const glm::vec2&    sub = iSubpixelComponent;
+    glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
+
+    //  -------------
+    //  | m00 | m10 |
+    //  |_____|_____|___
+    //  | m01 | m11 |
+    //  |_____|_____|
+    //     |  |  |
+    //    vv0 | vv1  -> res
+    float m11, m01, m10, m00, vv0, vv1, res;
+    for( tSize y = 0; y < roi_w; ++y ) {
+        m11 = m10 = vv1 = 0.f;
+        for( tSize x = 0; x < roi_h; ++x ) {
+            m00 = m10;
+            m01 = m11;
+            vv0 = vv1;
+            SampleSubpixelAlphaOpt< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+            const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
+            const float alpha_src       = res * iOpacity;
+            const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+            const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+
+            float subpixel_L = SampleSubpixelChannelPremult< T >( src, xidt[0], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            float subpixel_a = SampleSubpixelChannelPremult< T >( src, xidt[1], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            float subpixel_b = SampleSubpixelChannelPremult< T >( src, xidt[2], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            FLabF src_lab = { subpixel_L, subpixel_a, subpixel_b };
+            FLabF bdp_lab = { TYPE2FLOAT( bdp, xidt[0] ), TYPE2FLOAT( bdp, xidt[1] ), TYPE2FLOAT( bdp, xidt[2] ) };
+            FLChF src_lch = LabToLCh( src_lab );
+            FLChF bdp_lch = LabToLCh( bdp_lab );
+            FLChF result_lch = NonSeparableOpF< _BM >( src_lch, bdp_lch );
+            FLabF result_lab = LChToLab( result_lch );
+
+            // Compose
+            for( tSize j = 0; j < ncc; ++j )
+                FLOAT2TYPE( bdp, xidt[j], ComposeF( *( &(src_lab.L) + j ), *( &(bdp_lab.L) + j ), alpha_bdp, var, *( &(result_lab.L) + j ) ) );
+
+            // Assign alpha
+            if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
+
+            // Increment ptrs by one pixel
+            src += bpp;
+            bdp += bpp;
+        }
+        // Increment ptrs jump one line
+        src += src_jmp;
+        bdp += bdp_jmp;
+    }
+
+    delete [] xidt;
 }
 
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
 void BlendMono_NonSeparable_CM_Lab_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
 {
-    /*
+    uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize bps, num;
-    uint8* idt;
-    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSource->Width(), iDstRoiSize );
-    const tByte* src = iSource->DataPtr()   + ( iSrcStart.y * bps ) + ( iSrcStart.x * bpp );
-    tByte*       bdp = iBackdrop->DataPtr() + ( iDstStart.y * bps ) + ( iDstStart.x * bpp );
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
+    tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
 
-    for( tSize i = 0; i < num; ++i ) {
-        FLabF src_lab = { TYPE2FLOAT( src, idt[0] ), TYPE2FLOAT( src, idt[1] ), TYPE2FLOAT( src, idt[2] ) };
-        FLabF bdp_lab = { TYPE2FLOAT( bdp, idt[0] ), TYPE2FLOAT( bdp, idt[1] ), TYPE2FLOAT( bdp, idt[2] ) };
-        FLChF src_lch = LabToLCh( src_lab );
-        FLChF bdp_lch = LabToLCh( bdp_lab );
-        FLChF result_lch;
-        FLabF result_lab;
+    for( tSize y = 0; y < roi_w; ++y ) {
+        for( tSize x = 0; x < roi_h; ++x ) {
+            const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
+            const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
+            const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+            const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
 
-        const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
-        const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
-        const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
-        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
-        float alpha_result;
-        switch( iAlphaMode ) {
-            case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp ); break;
-            case AM_ERASE   : alpha_result = AlphaEraseF(   alpha_src, alpha_bdp ); break;
-            case AM_TOP     : alpha_result = AlphaTopF(     alpha_src, alpha_bdp ); break;
-            case AM_BACK    : alpha_result = AlphaBackF(    alpha_src, alpha_bdp ); break;
-            case AM_SUB     : alpha_result = AlphaSubF(     alpha_src, alpha_bdp ); break;
-            case AM_ADD     : alpha_result = AlphaAddF(     alpha_src, alpha_bdp ); break;
-            case AM_MUL     : alpha_result = AlphaMulF(     alpha_src, alpha_bdp ); break;
-            case AM_MIN     : alpha_result = AlphaMinF(     alpha_src, alpha_bdp ); break;
-            case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp ); break;
-            case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp ); break;
+            FLabF src_lab = { TYPE2FLOAT( src, xidt[0] ), TYPE2FLOAT( src, xidt[1] ), TYPE2FLOAT( src, xidt[2] ) };
+            FLabF bdp_lab = { TYPE2FLOAT( bdp, xidt[0] ), TYPE2FLOAT( bdp, xidt[1] ), TYPE2FLOAT( bdp, xidt[2] ) };
+            FLChF src_lch = LabToLCh( src_lab );
+            FLChF bdp_lch = LabToLCh( bdp_lab );
+            FLChF result_lch = NonSeparableOpF< _BM >( src_lch, bdp_lch );
+            FLabF result_lab = LChToLab( result_lch );
+
+            // Compose
+            for( tSize j = 0; j < ncc; ++j )
+                FLOAT2TYPE( bdp, xidt[j], ComposeF( *( &(src_lab.L) + j ), *( &(bdp_lab.L) + j ), alpha_bdp, var, *( &(result_lab.L) + j ) ) );
+
+            // Assign alpha
+            if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
+
+            // Increment ptrs by one pixel
+            src += bpp;
+            bdp += bpp;
         }
-
-        switch( iBlendingMode ) {
-            case BM_DARKERCOLOR     :   result_lch = BlendDarkerColorF(  src_lch, bdp_lch ); break;
-            case BM_LIGHTERCOLOR    :   result_lch = BlendLighterColorF( src_lch, bdp_lch ); break;
-            case BM_HUE             :   result_lch = BlendHueF(          src_lch, bdp_lch ); break;
-            case BM_SATURATION      :   result_lch = BlendSaturationF(   src_lch, bdp_lch ); break;
-            case BM_COLOR           :   result_lch = BlendColorF(        src_lch, bdp_lch ); break;
-            case BM_LUMINOSITY      :   result_lch = BlendLuminosityF(   src_lch, bdp_lch ); break;
-            default                 :   ULIS2_ASSERT( false, "Bad Blending Mode" );
-        }
-
-        result_lab = LChToLab( result_lch );
-
-        // Compose
-        for( tSize j = 0; j < ncc; ++j )
-            FLOAT2TYPE( bdp, idt[j], ComposeF( *( (float*)(&src_lab) + j ), *( (float*)(&bdp_lab) + j ), alpha_bdp, var, *( (float*)(&result_lab) + j ) ) );
-
-        // Assign alpha
-        if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
-
-        // Increment ptrs by one pixel
-        src += bpp;
-        bdp += bpp;
+        // Increment ptrs jump one line
+        src += src_jmp;
+        bdp += bdp_jmp;
     }
 
-    // delete temp
-    delete [] idt;
-    */
+    delete [] xidt;
 }
 
 ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_Lab_MEM )

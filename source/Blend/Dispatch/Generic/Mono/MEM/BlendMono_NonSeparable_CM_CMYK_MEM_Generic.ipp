@@ -24,72 +24,108 @@ ULIS2_NAMESPACE_BEGIN
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
 void BlendMono_NonSeparable_CM_CMYK_MEM_Subpixel( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
 {
+    uint8* xidt;
+    uint8 bpc, ncc, hea, spp, bpp, aid;
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
+    tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
+    const glm::vec2&    sub = iSubpixelComponent;
+    glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
+
+    //  -------------
+    //  | m00 | m10 |
+    //  |_____|_____|___
+    //  | m01 | m11 |
+    //  |_____|_____|
+    //     |  |  |
+    //    vv0 | vv1  -> res
+    float m11, m01, m10, m00, vv0, vv1, res;
+    for( tSize y = 0; y < roi_w; ++y ) {
+        m11 = m10 = vv1 = 0.f;
+        for( tSize x = 0; x < roi_h; ++x ) {
+            m00 = m10;
+            m01 = m11;
+            vv0 = vv1;
+            SampleSubpixelAlphaOpt< T >( src, hea, aid, bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+            const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
+            const float alpha_src       = res * iOpacity;
+            const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+            const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
+
+            float subpixel_C = SampleSubpixelChannelPremult< T >( src, xidt[0], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            float subpixel_M = SampleSubpixelChannelPremult< T >( src, xidt[1], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            float subpixel_Y = SampleSubpixelChannelPremult< T >( src, xidt[2], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            float subpixel_K = SampleSubpixelChannelPremult< T >( src, xidt[2], bpp, src_bps, x, y, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            FCMYKF  src_cmykf = { subpixel_C, subpixel_M, subpixel_Y, subpixel_K };
+            FCMYKF  bdp_cmykf = { TYPE2FLOAT( bdp, xidt[0] ), TYPE2FLOAT( bdp, xidt[1] ), TYPE2FLOAT( bdp, xidt[2] ), TYPE2FLOAT( bdp, xidt[3] ) };
+            FRGBF   src_rgbf = CMYKToRGB( src_cmykf );
+            FRGBF   bdp_rgbf = CMYKToRGB( bdp_cmykf );
+            FRGBF   result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
+            FCMYKF  result_cmykf = RGBToCMYK( result_rgbf );
+
+            // Compose
+            for( tSize j = 0; j < ncc; ++j )
+                FLOAT2TYPE( bdp, xidt[j], ComposeF( *( &(src_rgbf.R) + j ), *( &(bdp_rgbf.R) + j ), alpha_bdp, var, *( &(result_rgbf.R) + j ) ) );
+
+            // Assign alpha
+            if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
+
+            // Increment ptrs by one pixel
+            src += bpp;
+            bdp += bpp;
+        }
+        // Increment ptrs jump one line
+        src += src_jmp;
+        bdp += bdp_jmp;
+    }
+
+    delete [] xidt;
 }
 
 template< typename T, eBlendingMode _BM, eAlphaMode _AM >
 void BlendMono_NonSeparable_CM_CMYK_MEM( const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, ufloat iOpacity, const FPerf& iPerf )
 {
-    /*
+    uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize bps, num;
-    uint8* idt;
-    BuildBlendParams( &bpc, &ncc, &hea, &spp, &bpp, &bps, &num, &aid, &idt, iSource->Format(), iSource->Width(), iDstRoiSize );
-    const tByte* src = iSource->DataPtr()   + ( iSrcStart.y * bps ) + ( iSrcStart.x * bpp );
-    tByte*       bdp = iBackdrop->DataPtr() + ( iDstStart.y * bps ) + ( iDstStart.x * bpp );
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
+    tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
 
-    for( tSize i = 0; i < num; ++i ) {
-        FCMYKF  src_cmykf = { TYPE2FLOAT( src, idt[0] ), TYPE2FLOAT( src, idt[1] ), TYPE2FLOAT( src, idt[2] ), TYPE2FLOAT( src, idt[3] ) };
-        FCMYKF  bdp_cmykf = { TYPE2FLOAT( bdp, idt[0] ), TYPE2FLOAT( bdp, idt[1] ), TYPE2FLOAT( bdp, idt[2] ), TYPE2FLOAT( bdp, idt[3] ) };
-        FRGBF   src_rgbf = CMYKToRGB( src_cmykf );
-        FRGBF   bdp_rgbf = CMYKToRGB( bdp_cmykf );
-        FRGBF   result_rgbf;
-        FCMYKF  result_cmykf;
+    for( tSize y = 0; y < roi_w; ++y ) {
+        for( tSize x = 0; x < roi_h; ++x ) {
+            const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
+            const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
+            const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+            const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+            const float alpha_result    = AlphaF< _AM >( alpha_src, alpha_bdp );
 
-        const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
-        const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
-        const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
-        const float var             = alpha_comp == 0 ? 0 : alpha_src / alpha_comp;
-        float alpha_result;
-        switch( iAlphaMode ) {
-            case AM_NORMAL  : alpha_result = AlphaNormalF(  alpha_src, alpha_bdp ); break;
-            case AM_ERASE   : alpha_result = AlphaEraseF(   alpha_src, alpha_bdp ); break;
-            case AM_TOP     : alpha_result = AlphaTopF(     alpha_src, alpha_bdp ); break;
-            case AM_BACK    : alpha_result = AlphaBackF(    alpha_src, alpha_bdp ); break;
-            case AM_SUB     : alpha_result = AlphaSubF(     alpha_src, alpha_bdp ); break;
-            case AM_ADD     : alpha_result = AlphaAddF(     alpha_src, alpha_bdp ); break;
-            case AM_MUL     : alpha_result = AlphaMulF(     alpha_src, alpha_bdp ); break;
-            case AM_MIN     : alpha_result = AlphaMinF(     alpha_src, alpha_bdp ); break;
-            case AM_MAX     : alpha_result = AlphaMaxF(     alpha_src, alpha_bdp ); break;
-            case AM_INVMAX  : alpha_result = AlphaInvMaxF(  alpha_src, alpha_bdp ); break;
+            FCMYKF  src_cmykf = { TYPE2FLOAT( src, xidt[0] ), TYPE2FLOAT( src, xidt[1] ), TYPE2FLOAT( src, xidt[2] ), TYPE2FLOAT( src, xidt[3] ) };
+            FCMYKF  bdp_cmykf = { TYPE2FLOAT( bdp, xidt[0] ), TYPE2FLOAT( bdp, xidt[1] ), TYPE2FLOAT( bdp, xidt[2] ), TYPE2FLOAT( bdp, xidt[3] ) };
+            FRGBF   src_rgbf = CMYKToRGB( src_cmykf );
+            FRGBF   bdp_rgbf = CMYKToRGB( bdp_cmykf );
+            FRGBF   result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
+            FCMYKF  result_cmykf = RGBToCMYK( result_rgbf );
+
+            // Compose
+            for( tSize j = 0; j < ncc; ++j )
+                FLOAT2TYPE( bdp, xidt[j], ComposeF( *( &(src_cmykf.C) + j ), *( &(bdp_cmykf.C) + j ), alpha_bdp, var, *( &(result_cmykf.C) + j ) ) );
+
+            // Assign alpha
+            if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
+
+            // Increment ptrs by one pixel
+            src += bpp;
+            bdp += bpp;
         }
-
-        switch( iBlendingMode ) {
-            case BM_DARKERCOLOR     :   result_rgbf = BlendDarkerColorF(  src_rgbf, bdp_rgbf ); break;
-            case BM_LIGHTERCOLOR    :   result_rgbf = BlendLighterColorF( src_rgbf, bdp_rgbf ); break;
-            case BM_HUE             :   result_rgbf = BlendHueF(          src_rgbf, bdp_rgbf ); break;
-            case BM_SATURATION      :   result_rgbf = BlendSaturationF(   src_rgbf, bdp_rgbf ); break;
-            case BM_COLOR           :   result_rgbf = BlendColorF(        src_rgbf, bdp_rgbf ); break;
-            case BM_LUMINOSITY      :   result_rgbf = BlendLuminosityF(   src_rgbf, bdp_rgbf ); break;
-            default                 :   ULIS2_ASSERT( false, "Bad Blending Mode" );
-        }
-
-        result_cmykf = RGBToCMYK( result_rgbf );
-
-        // Compose
-        for( tSize j = 0; j < ncc; ++j )
-            FLOAT2TYPE( bdp, idt[j], ComposeF( *( (float*)(&src_cmykf) + j ), *( (float*)(&bdp_cmykf) + j ), alpha_bdp, var, *( (float*)(&result_cmykf) + j ) ) );
-
-        // Assign alpha
-        if( hea ) FLOAT2TYPE( bdp, aid, alpha_result );
-
-        // Increment ptrs by one pixel
-        src += bpp;
-        bdp += bpp;
+        // Increment ptrs jump one line
+        src += src_jmp;
+        bdp += bdp_jmp;
     }
 
-    // delete temp
-    delete [] idt;
-    */
+    delete [] xidt;
 }
 
 ULIS2_DELETE_COMP_OP_INSTANCIATION( ULIS2_FOR_ALL_MISC_BM_DO, BlendMono_NonSeparable_CM_CMYK_MEM )

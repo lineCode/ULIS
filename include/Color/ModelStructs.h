@@ -97,12 +97,17 @@ static ULIS2_FORCEINLINE FCMYKF RGBToCMYK( const FRGBF& iValue )
     float ik = FMaths::Max3( iValue.R, iValue.G, iValue.B );
     float k = 1.f - ik;
     if( ik == 0 ) ik = 0.f;
-    return  { ( ( 1.f - iValue.R ) - k ) / ik, ( ( 1.f - iValue.G ) - k ) / ik, ( ( 1.f - iValue.B ) - k ) / ik, k };
+    return  { ( ( 1.f - iValue.R ) - k ) / ik
+            , ( ( 1.f - iValue.G ) - k ) / ik
+            , ( ( 1.f - iValue.B ) - k ) / ik
+            , k };
 }
 
 static ULIS2_FORCEINLINE FRGBF CMYKToRGB( const FCMYKF& iValue )
 {
-    return  { 1.f - ( iValue.C * ( 1.f - iValue.K ) + iValue.K ), 1.f - ( iValue.M * ( 1.f - iValue.K ) + iValue.K ), 1.f - ( iValue.Y * ( 1.f - iValue.K ) + iValue.K ) };
+    return  { 1.f - ( iValue.C * ( 1.f - iValue.K ) + iValue.K )
+            , 1.f - ( iValue.M * ( 1.f - iValue.K ) + iValue.K )
+            , 1.f - ( iValue.Y * ( 1.f - iValue.K ) + iValue.K ) };
 }
 
 
