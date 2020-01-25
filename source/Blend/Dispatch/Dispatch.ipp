@@ -24,6 +24,14 @@
 #include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_CMYK_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_Lab_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_Misc_MEM_Generic.ipp"
+// Mono SSE4_2 Generic
+#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Separable_SSE4_2_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_NonSeparable_CM_DEFAULT_SSE4_2_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_NonSeparable_CM_Grey_SSE4_2_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_NonSeparable_CM_RGB_SSE4_2_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_NonSeparable_CM_CMYK_SSE4_2_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_NonSeparable_CM_Lab_SSE4_2_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Misc_SSE4_2_Generic.ipp"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
@@ -41,7 +49,19 @@ QueryDispatchedBlendFunctionForParameters_imp( uint32 iFormat, eBlendingMode iBl
         if( iPerf.UseAVX2() ) {
             return  nullptr;
         } else if( iPerf.UseSSE4_2() ) {
-            return  nullptr;
+            switch( BlendingModeQualifier( iBlendingMode ) ) {
+                case BMQ_SEPARABLE      : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_SEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Separable_SSE4_2 );
+                case BMQ_MISC           : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_MISC_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Misc_SSE4_2 );
+                case BMQ_NONSEPARABLE   :
+                    switch( static_cast< eColorModel >( ULIS2_R_MODEL( iFormat ) ) ) {
+                        case CM_ANY:    ULIS2_ASSERT( false, "Bad input model" ); return  nullptr;
+                        case CM_GREY:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Grey_SSE4_2    );
+                        case CM_RGB:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_RGB_SSE4_2     );
+                        case CM_CMYK:   ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_CMYK_SSE4_2    );
+                        case CM_Lab:    ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_Lab_SSE4_2     );
+                        default:        ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_NonSeparable_CM_DEFAULT_SSE4_2 );
+                    }
+            }
         } else {
             switch( BlendingModeQualifier( iBlendingMode ) ) {
                 case BMQ_SEPARABLE      : ULIS2_SELECT_COMP_OP( ULIS2_FOR_ALL_SEPARABLE_BM_DO, iBlendingMode, iAlphaMode, iSubpixel, BlendMono_Separable_MEM );
