@@ -15,6 +15,7 @@
 #include "Base/Core.h"
 #include "Base/Utils.h"
 #include "glm/vec2.hpp"
+#include <vectorclass.h>
 
 ULIS2_NAMESPACE_BEGIN
 
@@ -159,6 +160,36 @@ SampleSubpixelChannelPremult( const tByte* iPtr
     float v2 = ( m10 * iA10 ) * iT.y + ( m11 * iA11 ) * iU.y;
     return  iRES == 0.f ? 0.f : ( ( v1 ) * iT.x + ( v2 ) * iU.x ) / iRES;
 }
+
+template< typename T > ULIS2_API ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL LoadSSEF( const tByte* iPtr, uint8 iFCI ) {
+    ULIS2_ASSERT( false, "Specialization is not implemented" );
+    return  0.f;
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL LoadSSEF< uint8 >( const tByte* iPtr, uint8 iFCI ) {
+    return  _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( ((uint8*)iPtr) + iFCI ) ) ) );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL LoadSSEF< uint16 >( const tByte* iPtr, uint8 iFCI ) {
+    return  _mm_cvtepi32_ps( _mm_cvtepu16_epi32( _mm_loadu_si128( (const __m128i*)( ((uint16*)iPtr) + iFCI ) ) ) );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL LoadSSEF< uint32 >( const tByte* iPtr, uint8 iFCI ) {
+    return  _mm_cvtepi32_ps( _mm_loadu_si128( (const __m128i*)( ((uint32*)iPtr) + iFCI ) ) );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL LoadSSEF< ufloat >( const tByte* iPtr, uint8 iFCI ) {
+    return  _mm_loadu_ps( ((ufloat*)iPtr) + iFCI );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL LoadSSEF< udouble >( const tByte* iPtr, uint8 iFCI ) {
+    return  _mm256_cvtpd_ps( _mm256_loadu_pd( ((udouble*)iPtr) + iFCI ) );
+}
+
+template< typename T > ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL StoreSSEF( Vec4f iValue, const tByte* iPtr, uint8 iFCI ) {
+    ULIS2_ASSERT( false, "Specialization is not implemented" );
+}
+
 
 ULIS2_NAMESPACE_END
 

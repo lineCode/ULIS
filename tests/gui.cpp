@@ -22,6 +22,29 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
+    {
+        int size = 64;
+        FBlock blockGreyA( size, size, ULIS2_FORMAT_GAF );
+        FBlock blockGreyB( size, size, ULIS2_FORMAT_GAF );
+        FBlock blockRGBAA( size, size, ULIS2_FORMAT_RGBA8 );
+        FBlock blockRGBAB( size, size, ULIS2_FORMAT_RGBA8 );
+        FBlock blockCMYKADA( size, size, ULIS2_FORMAT_CMYKAD );
+        FBlock blockCMYKADB( size, size, ULIS2_FORMAT_CMYKAD );
+
+        FThreadPool pool;
+        FPerf perf_mono_sse( Perf_SSE4_2 );
+        Clear( &pool, &blockGreyA, FPerf(), ULIS2_NO_CB );
+        Clear( &pool, &blockGreyB, FPerf(), ULIS2_NO_CB );
+        blockGreyB.PixelProxy( 0, 0 ).SetGreyF( 0.2f );
+        blockGreyB.PixelProxy( 0, 0 ).SetAlphaF( 0.5f );
+
+        Blend( &pool, ULIS2_BLOCKING, &blockGreyB, &blockGreyA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 0.8f, perf_mono_sse, ULIS2_CALL_CB );
+        Blend( &pool, ULIS2_BLOCKING, &blockRGBAB, &blockRGBAA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 0.8f, perf_mono_sse, ULIS2_CALL_CB );
+        Blend( &pool, ULIS2_BLOCKING, &blockCMYKADB, &blockCMYKADA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 0.8f, perf_mono_sse, ULIS2_CALL_CB );
+    }
+
+
+
     QApplication app( argc, argv );
     int width   = 512;
     int height  = 512;

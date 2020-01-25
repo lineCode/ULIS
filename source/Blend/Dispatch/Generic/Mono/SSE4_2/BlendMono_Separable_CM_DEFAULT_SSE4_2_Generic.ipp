@@ -33,21 +33,13 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_SSE4_2( ULIS2_BLENDSPEC_PA
     tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
     const tSize stride = 16 - ( 16 % bpp );
     const tSize count  = roi_w * bpp;
-    // fci: First Channel Index, this allows to load 4 floats in case of CMYK
-    // sid: second alpha index, this allows to load 2 grey pixels at once
-    // alb: alpha base, for samples that are 5 channels, this allows to shift load alpha properly
-    // lui: look up indexes, this allows to spread alpha properly.
+    // First Channel Index, this allows to load 4 floats in case of CMYK 
     uint8 fci = ncc >= 4 ? xidt[0] : 0;
-    uint8 sid = aid + spp;
-    uint8 alb = ncc >= 4 ? fci ? 0 : 4 : 0;
-    Vec4i lui;
-    if( spp * 4 < 16 )  lui = Vec4i( aid, aid, sid, sid );
-    else                lui = Vec4i( aid - alb );
 
     for( tSize y = 0; y < roi_w; ++y ) {
         for( tSize x = 0; x < roi_h; ++x ) {
-            const Vec4f alpha_bdp = hea ? lookup4( lui, LoadSSEF< T >( bdp, alb ) ) : 1.f;
-            const Vec4f alpha_src = hea ? lookup4( lui, LoadSSEF< T >( src, alb ) ) * iOpacity : iOpacity;
+            const Vec4f alpha_bdp   = hea ? Vec4f( TYPE2FLOAT( bdp, aid ) ) : 1.f;
+            const Vec4f alpha_src   = hea ? Vec4f( TYPE2FLOAT( src, aid ) ) * iOpacity : iOpacity;
             const Vec4f alpha_comp  = AlphaNormalSSEF( alpha_src, alpha_bdp );
             const Vec4f var         = select( alpha_comp == 0, 0.f, alpha_src / alpha_comp );
             Vec4f alpha_result;

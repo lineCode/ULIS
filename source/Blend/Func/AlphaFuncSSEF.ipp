@@ -58,20 +58,20 @@ ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaMulSSEF( Vec4f iCs, Vec4f iCb ) {
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Min
 ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaMinSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  FMaths::Min( iCs, iCb );
+    return  min( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Max
 ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaMaxSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  FMaths::Max( iCs, iCb );
+    return  max( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- InvMax
 ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaInvMaxSSEF( Vec4f iCs, Vec4f iCb ) {
     Vec4f invCs = select( iCs == 0.0f, 0.f, 1.f / iCs );
     Vec4f invCb = select( iCs == 0.0f, 0.f, 1.f / iCb );
-    Vec4f max = FMaths::Max( invCs, invCb );
-    return  select( max == 0.f, 0.f, 1.f / max );
+    Vec4f maxv = max( invCs, invCb );
+    return  select( maxv == 0.f, 0.f, 1.f / maxv );
 }
 
 //--------------------------------------------------------------------------------------
