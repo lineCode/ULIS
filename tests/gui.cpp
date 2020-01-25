@@ -33,14 +33,26 @@ main( int argc, char *argv[] )
 
         FThreadPool pool;
         FPerf perf_mono_sse( Perf_SSE4_2 );
+
         Clear( &pool, &blockGreyA, FPerf(), ULIS2_NO_CB );
         Clear( &pool, &blockGreyB, FPerf(), ULIS2_NO_CB );
         blockGreyB.PixelProxy( 0, 0 ).SetGreyF( 0.2f );
         blockGreyB.PixelProxy( 0, 0 ).SetAlphaF( 0.5f );
 
-        Blend( &pool, ULIS2_BLOCKING, &blockGreyB, &blockGreyA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 0.8f, perf_mono_sse, ULIS2_CALL_CB );
-        Blend( &pool, ULIS2_BLOCKING, &blockRGBAB, &blockRGBAA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 0.8f, perf_mono_sse, ULIS2_CALL_CB );
-        Blend( &pool, ULIS2_BLOCKING, &blockCMYKADB, &blockCMYKADA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 0.8f, perf_mono_sse, ULIS2_CALL_CB );
+        Clear( &pool, &blockCMYKADA, FPerf(), ULIS2_NO_CB );
+        Clear( &pool, &blockCMYKADB, FPerf(), ULIS2_NO_CB );
+        FPixelProxy proxCMYKADA = blockCMYKADA.PixelProxy( 0, 0 );
+        proxCMYKADA.SetCyanD( 0.9 );
+        proxCMYKADA.SetMagentaD( 0.8 );
+        proxCMYKADA.SetYellowD( 0.7 );
+        proxCMYKADA.SetKeyD( 0.6 );
+        proxCMYKADA.SetAlphaD( 1.0 );
+        FPixelValue cmykdcolor( ULIS2_FORMAT_CMYKAD, { 0.1, 0.2, 0.3, 0.4, 0.5 } );
+        Fill( &pool, &blockCMYKADB, cmykdcolor, FPerf(), ULIS2_NO_CB );
+
+        Blend( &pool, ULIS2_BLOCKING, &blockGreyB, &blockGreyA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 1.f, perf_mono_sse, ULIS2_CALL_CB );
+        Blend( &pool, ULIS2_BLOCKING, &blockRGBAB, &blockRGBAA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 1.f, perf_mono_sse, ULIS2_CALL_CB );
+        Blend( &pool, ULIS2_BLOCKING, &blockCMYKADB, &blockCMYKADA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 1.f, perf_mono_sse, ULIS2_CALL_CB );
     }
 
 
@@ -56,8 +68,8 @@ main( int argc, char *argv[] )
     FPerf perf_best( Perf_Best_CPU );
     FPixel green(   ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
     FPixel red(     ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
-    Fill( pool, &blockA, green, perf_best );
-    Fill( pool, &blockB, red,   perf_best );
+    Fill( &pool, &blockA, green, perf_best, ULIS2_NO_CB );
+    Fill( &pool, &blockB, red,   perf_best, ULIS2_NO_CB );
     BlendSubpixelRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 32, 32 ), glm::vec2( 32.5f, 32.5f ), BM_COLOR, AM_NORMAL, 0.8f, perf_low, ULIS2_CALL_CB );
 
     QWidget* widget = new  QWidget();

@@ -72,13 +72,13 @@ ClearMT( FThreadPool*   iPool
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
     if( iPerf.UseAVX2() )
     {
-        const tSize stride = 32 - ( 32 % bpp );
+        const tSize stride = 32;
         const tSize count = iRoi.w * bpp;
         ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, count, stride ); } );
     }
     else if( iPerf.UseSSE4_2() )
     {
-        const tSize stride = 16 - ( 16 % bpp );
+        const tSize stride = 16;
         const tSize count = iRoi.w * bpp;
         ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE4_2( DST, count, stride ); } );
     }

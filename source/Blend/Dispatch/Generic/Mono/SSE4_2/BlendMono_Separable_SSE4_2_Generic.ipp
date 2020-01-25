@@ -31,7 +31,7 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_SSE4_2( ULIS2_BLENDSPEC_PA
     XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
     const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
     tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
-    const tSize stride = 16 - ( 16 % bpp );
+    const tSize stride = 16;
     const tSize count  = roi_w * bpp;
     // fci: First Channel Index, this allows to load 4 floats in case of CMYK
     // sid: second alpha index, this allows to load 2 grey pixels at once
@@ -54,7 +54,7 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_SSE4_2( ULIS2_BLENDSPEC_PA
             ULIS2_ASSIGN_ALPHASSEF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
             Vec4f srcvf = LoadSSEF< T >( src, fci );
-            Vec4f bdpvf = LoadSSEF< T >( src, fci );
+            Vec4f bdpvf = LoadSSEF< T >( bdp, fci );
             Vec4f resvf;
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) resvf = SeparableCompOpSSEF< _BM >( srcvf, bdpvf, alpha_bdp, var );
             ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )

@@ -62,7 +62,7 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCount, t
 
 
 void
-FillMT( FThreadPool&   iPool
+FillMT( FThreadPool*   iPool
       , FBlock*        iDst
       , const tByte*   iSrc
       , const FRect&   iRoi
@@ -76,7 +76,7 @@ FillMT( FThreadPool&   iPool
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
-    if( iPerf.UseAVX2() )
+    if( iPerf.UseAVX2() && bpp <= 32 )
     {
         const tSize stride = 32 - ( 32 % bpp );
         tByte* srcb = new tByte[32];
@@ -88,9 +88,9 @@ FillMT( FThreadPool&   iPool
         __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
         delete [] srcb;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, src, count, stride ); } );
+        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, src, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() )
+    else if( iPerf.UseSSE4_2() && bpp <= 16 )
     {
         const tSize stride = 16 - ( 16 % bpp );
         tByte* srcb = new tByte[16];
@@ -102,11 +102,11 @@ FillMT( FThreadPool&   iPool
         __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
         delete [] srcb;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE( DST, src, count, stride ); } );
+        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE( DST, src, count, stride ); } );
     }
     else
     {
-        ParallelFor( iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iSrc, iRoi.w, bpp ); } );
+        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iSrc, iRoi.w, bpp ); } );
     }
 }
 
@@ -134,7 +134,7 @@ FillMono( FBlock*      iDst
 
 
 void
-Fill( FThreadPool&     iPool
+Fill( FThreadPool*     iPool
     , FBlock*          iDst
     , const IPixel&    iColor
     , const FPerf&     iPerf
@@ -145,7 +145,7 @@ Fill( FThreadPool&     iPool
 
 
 void
-FillRect( FThreadPool&     iPool
+FillRect( FThreadPool*     iPool
         , FBlock*          iDst
         , const IPixel&    iColor
         , const FRect&     iRect
