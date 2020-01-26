@@ -25,12 +25,7 @@
 #include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_NonSeparable_CM_Lab_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/Mono/MEM/BlendMono_Misc_MEM_Generic.ipp"
 // Mono SSE4_2 Generic
-#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Separable_C1_SSE4_2_Generic.ipp"
-#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Separable_C3_SSE4_2_Generic.ipp"
-#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Separable_C4_SSE4_2_Generic.ipp"
-#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Separable_C1A_SSE4_2_Generic.ipp"
-#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Separable_C3A_SSE4_2_Generic.ipp"
-#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Separable_C4A_SSE4_2_Generic.ipp"
+#include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_Separable_SSE4_2_Generic.ipp"
 #include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_NonSeparable_CM_DEFAULT_SSE4_2_Generic.ipp"
 #include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_NonSeparable_CM_Grey_SSE4_2_Generic.ipp"
 #include "Blend/Dispatch/Generic/Mono/SSE4_2/BlendMono_NonSeparable_CM_RGB_SSE4_2_Generic.ipp"
@@ -56,13 +51,7 @@ QueryDispatchedBlendFunctionForParameters_imp( uint32 iFormat, eBlendingMode iBl
         } else if( iPerf.UseSSE4_2() ) {
             switch( BlendingModeQualifier( iBlendingMode ) ) {
                 case BMQ_MISC           : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Misc_SSE4_2 );
-                case BMQ_SEPARABLE      :
-                    switch( static_cast< uint8 >( ULIS2_R_CHANNELS( iFormat ) ) ) {
-                        case 1:         return  ULIS2_R_ALPHA( iFormat ) ? ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_C1A_SSE4_2 ) : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_C1_SSE4_2 );
-                        case 3:         return  ULIS2_R_ALPHA( iFormat ) ? ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_C3A_SSE4_2 ) : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_C3_SSE4_2 );
-                        case 4:         return  ULIS2_R_ALPHA( iFormat ) ? ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_C4A_SSE4_2 ) : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_C4_SSE4_2 );
-                        default:        ULIS2_ASSERT( false, "Bad input channels" ); return  nullptr;
-                    }
+                case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMono_Separable_SSE4_2 );
                 case BMQ_NONSEPARABLE   :
                     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iFormat ) ) ) {
                         case CM_ANY:    ULIS2_ASSERT( false, "Bad input model" ); return  nullptr;

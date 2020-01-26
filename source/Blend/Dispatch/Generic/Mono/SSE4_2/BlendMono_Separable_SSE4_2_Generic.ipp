@@ -21,10 +21,11 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_C1A_SSE4_2_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_SSE4_2_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
 }
 
-ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_C1A_SSE4_2( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_SSE4_2( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+    /*
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -44,8 +45,8 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_C1A_SSE4_2( ULIS2_BLENDSPE
     if( spp * 4 < 16 )  lui = Vec4i( aid, aid, sid, sid );
     else                lui = Vec4i( aid - alb );
 
-    for( tSize y = 0; y < roi_w; ++y ) {
-        for( tSize x = 0; x < roi_h; ++x ) {
+    for( tSize y = 0; y < roi_h; ++y ) {
+        for( tSize x = 0; x < roi_w; ++x ) {
             const Vec4f alpha_bdp = hea ? lookup4( lui, LoadSSEF< T >( bdp, alb ) ) : 1.f;
             const Vec4f alpha_src = hea ? lookup4( lui, LoadSSEF< T >( src, alb ) ) * iOpacity : iOpacity;
             const Vec4f alpha_comp  = AlphaNormalSSEF( alpha_src, alpha_bdp );
@@ -70,6 +71,7 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_C1A_SSE4_2( ULIS2_BLENDSPE
     }
 
     delete [] xidt;
+    */
 }
 
 ULIS2_NAMESPACE_END

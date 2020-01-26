@@ -21,8 +21,8 @@ ULIS2_NAMESPACE_BEGIN
 void
 InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iStride )
 {
-    tSize index;
-    for( index = 0; index < ( iCount - 32 ); index += iStride )
+    int64 index;
+    for( index = 0; index < int64( iCount ) - 32; index += iStride )
     {
         _mm256_storeu_si256( (__m256i*)iDst, _mm256_setzero_si256() );
         iDst += iStride;
@@ -36,8 +36,8 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iS
 void
 InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const tSize iStride )
 {
-    tSize index;
-    for( index = 0; index < ( iCount - 16 ); index += iStride )
+    int64 index;
+    for( index = 0; index < int64( iCount ) - 16; index += iStride )
     {
         _mm_storeu_si128( (__m128i*)iDst, _mm_setzero_si128() );
         iDst += iStride;

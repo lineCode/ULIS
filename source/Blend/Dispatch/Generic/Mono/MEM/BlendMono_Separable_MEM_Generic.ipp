@@ -14,7 +14,7 @@
 #pragma once
 #include "Base/Core.h"
 #include "Blend/Blend.h"
-#include "Blend/BlendHelpers.h"
+#include "Blend/Func/BlendHelpers.ipp"
 #include "Blend/Modes.h"
 #include "Blend/Func/SeparableBlendFuncF.ipp"
 #include "Blend/Func/AlphaFuncF.ipp"
@@ -39,9 +39,9 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_MEM_Subpixel( ULIS2_BLENDS
     //     |  |  |
     //    vv0 | vv1  -> res
     float m11, m01, m10, m00, vv0, vv1, res;
-    for( tSize y = 0; y < roi_w; ++y ) {
+    for( tSize y = 0; y < roi_h; ++y ) {
         m11 = m10 = vv1 = 0.f;
-        for( tSize x = 0; x < roi_h; ++x ) {
+        for( tSize x = 0; x < roi_w; ++x ) {
             m00 = m10;
             m01 = m11;
             vv0 = vv1;
@@ -87,8 +87,8 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_MEM( ULIS2_BLENDSPEC_PARAM
     const tByte*        src = iSource->DataPtr()   + ( iSrcROI.y * src_bps ) + ( iSrcROI.x * bpp );
     tByte*              bdp = iBackdrop->DataPtr() + ( iBdpROI.y * bdp_bps ) + ( iBdpROI.x * bpp );
 
-    for( tSize y = 0; y < roi_w; ++y ) {
-        for( tSize x = 0; x < roi_h; ++x ) {
+    for( tSize y = 0; y < roi_h; ++y ) {
+        for( tSize x = 0; x < roi_w; ++x ) {
             const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
             const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
             const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );

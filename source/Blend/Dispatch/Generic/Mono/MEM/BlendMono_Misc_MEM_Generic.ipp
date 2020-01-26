@@ -53,9 +53,9 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM_Subpixel( ULIS2_BLENDSPEC_P
             //     |  |  |
             //    vv0 | vv1  -> res
             float m11, m01, m10, m00, vv0, vv1, res;
-            for( tSize y = 0; y < roi_w; ++y ) {
+            for( tSize y = 0; y < roi_h; ++y ) {
                 m11 = m10 = vv1 = 0.f;
-                for( tSize x = 0; x < roi_h; ++x ) {
+                for( tSize x = 0; x < roi_w; ++x ) {
                     m00 = m10;
                     m01 = m11;
                     vv0 = vv1;
@@ -90,9 +90,9 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM_Subpixel( ULIS2_BLENDSPEC_P
             //     |  |  |
             //    vv0 | vv1  -> res
             float m11, m01, m10, m00, vv0, vv1, res;
-            for( tSize y = 0; y < roi_w; ++y ) {
+            for( tSize y = 0; y < roi_h; ++y ) {
                 m11 = m10 = vv1 = 0.f;
-                for( tSize x = 0; x < roi_h; ++x ) {
+                for( tSize x = 0; x < roi_w; ++x ) {
                     m00 = m10;
                     m01 = m11;
                     vv0 = vv1;
@@ -136,8 +136,8 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM( ULIS2_BLENDSPEC_PARAMS_SIG
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_DISSOLVE: {
             uint32 localPRNGSeed = gBlendingPRNGSeed;
-            for( tSize y = 0; y < roi_w; ++y ) {
-                for( tSize x = 0; x < roi_h; ++x ) {
+            for( tSize y = 0; y < roi_h; ++y ) {
+                for( tSize x = 0; x < roi_w; ++x ) {
                     const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
                     const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
                     localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
@@ -160,8 +160,8 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM( ULIS2_BLENDSPEC_PARAMS_SIG
         } // BM_DISSOLVE
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_BAYERDITHER8x8: {
-            for( tSize y = 0; y < roi_w; ++y ) {
-                for( tSize x = 0; x < roi_h; ++x ) {
+            for( tSize y = 0; y < roi_h; ++y ) {
+                for( tSize x = 0; x < roi_w; ++x ) {
                     const float alpha_bdp       = hea ? TYPE2FLOAT( bdp, aid ) : 1.f;
                     const float alpha_src       = hea ? TYPE2FLOAT( src, aid ) * iOpacity : iOpacity;
                     const tSize bayerX = x % 8;

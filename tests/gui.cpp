@@ -24,35 +24,16 @@ main( int argc, char *argv[] )
 {
     {
         int size = 64;
-        FBlock blockGreyA( size, size, ULIS2_FORMAT_GAF );
-        FBlock blockGreyB( size, size, ULIS2_FORMAT_GAF );
-        FBlock blockRGBAA( size, size, ULIS2_FORMAT_RGBA8 );
-        FBlock blockRGBAB( size, size, ULIS2_FORMAT_RGBA8 );
-        FBlock blockCMYKADA( size, size, ULIS2_FORMAT_CMYKAD );
-        FBlock blockCMYKADB( size, size, ULIS2_FORMAT_CMYKAD );
+        FBlock blockGreyA( 12, 5, ULIS2_FORMAT_G8 );
+        FBlock blockGreyB( 12, 5, ULIS2_FORMAT_G8 );
 
         FThreadPool pool;
         FPerf perf_mono_sse( Perf_SSE4_2 );
 
         Clear( &pool, &blockGreyA, FPerf(), ULIS2_NO_CB );
         Clear( &pool, &blockGreyB, FPerf(), ULIS2_NO_CB );
-        blockGreyB.PixelProxy( 0, 0 ).SetGrey( 0.2f );
-        blockGreyB.PixelProxy( 0, 0 ).SetAlphaF( 0.5f );
-
-        Clear( &pool, &blockCMYKADA, FPerf(), ULIS2_NO_CB );
-        Clear( &pool, &blockCMYKADB, FPerf(), ULIS2_NO_CB );
-        FPixelProxy proxCMYKADA = blockCMYKADA.PixelProxy( 0, 0 );
-        proxCMYKADA.SetCyanD( 0.9 );
-        proxCMYKADA.SetMagentaD( 0.8 );
-        proxCMYKADA.SetYellowD( 0.7 );
-        proxCMYKADA.SetKeyD( 0.6 );
-        proxCMYKADA.SetAlphaD( 1.0 );
-        FPixelValue cmykdcolor( ULIS2_FORMAT_CMYKAD, { 0.1, 0.2, 0.3, 0.4, 0.5 } );
-        Fill( &pool, &blockCMYKADB, cmykdcolor, FPerf(), ULIS2_NO_CB );
 
         Blend( &pool, ULIS2_BLOCKING, &blockGreyB, &blockGreyA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 1.f, perf_mono_sse, ULIS2_CALL_CB );
-        Blend( &pool, ULIS2_BLOCKING, &blockRGBAB, &blockRGBAA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 1.f, perf_mono_sse, ULIS2_CALL_CB );
-        Blend( &pool, ULIS2_BLOCKING, &blockCMYKADB, &blockCMYKADA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 1.f, perf_mono_sse, ULIS2_CALL_CB );
     }
 
 
