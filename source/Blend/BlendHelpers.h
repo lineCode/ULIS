@@ -161,6 +161,7 @@ SampleSubpixelChannelPremult( const tByte* iPtr
     return  iRES == 0.f ? 0.f : ( ( v1 ) * iT.x + ( v2 ) * iU.x ) / iRES;
 }
 
+// LOAD
 template< typename T > ULIS2_API ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL LoadSSEF( const tByte* iPtr, uint8 iFCI ) {
     ULIS2_ASSERT( false, "Specialization is not implemented" );
     return  0.f;
@@ -186,8 +187,29 @@ template<> ULIS2_API ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL LoadSSEF< udouble 
     return  _mm256_cvtpd_ps( _mm256_loadu_pd( ((udouble*)iPtr) + iFCI ) );
 }
 
+// STORE
 template< typename T > ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL StoreSSEF( Vec4f iValue, const tByte* iPtr, uint8 iFCI ) {
     ULIS2_ASSERT( false, "Specialization is not implemented" );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL StoreSSEF< uint8 >( Vec4f iValue, const tByte* iPtr, uint8 iFCI ) {
+    _mm_storeu_si128( (__m128i*)( ((uint8*)iPtr) + iFCI ), _mm_cvtepi32_epi8( _mm_cvtps_epi32( iValue ) ) );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL StoreSSEF< uint16 >( Vec4f iValue, const tByte* iPtr, uint8 iFCI ) {
+    _mm_storeu_si128( (__m128i*)( ((uint16*)iPtr) + iFCI ), _mm_cvtepi32_epi16( _mm_cvtps_epi32( iValue ) ) );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL StoreSSEF< uint32 >( Vec4f iValue, const tByte* iPtr, uint8 iFCI ) {
+    _mm_storeu_si128( (__m128i*)( ((uint32*)iPtr) + iFCI ), _mm_cvtps_epi32( iValue ) );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL StoreSSEF< ufloat >( Vec4f iValue, const tByte* iPtr, uint8 iFCI ) {
+    _mm_storeu_ps( ((float*)iPtr) + iFCI, iValue );
+}
+
+template<> ULIS2_API ULIS2_FORCEINLINE void ULIS2_VECTORCALL StoreSSEF< udouble >( Vec4f iValue, const tByte* iPtr, uint8 iFCI ) {
+    _mm256_storeu_pd( ((double*)iPtr) + iFCI, _mm256_cvtps_pd( iValue ) );
 }
 
 

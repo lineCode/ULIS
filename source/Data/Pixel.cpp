@@ -217,7 +217,14 @@ template< typename T >
 T
 IPixel::GetValueRaw( uint8 iIndex ) const
 {
-    return  *SamplePtrT< T >( iIndex );
+    switch( Type() ) {
+        case TYPE_UINT8     :   return  ConvType< uint8, T   >( *( (uint8*)   ( SamplePtrT< T >( iIndex ) ) ) );
+        case TYPE_UINT16    :   return  ConvType< uint16, T  >( *( (uint16*)  ( SamplePtrT< T >( iIndex ) ) ) );
+        case TYPE_UINT32    :   return  ConvType< uint32, T  >( *( (uint32*)  ( SamplePtrT< T >( iIndex ) ) ) );
+        case TYPE_UFLOAT    :   return  ConvType< ufloat, T  >( *( (ufloat*)  ( SamplePtrT< T >( iIndex ) ) ) );
+        case TYPE_UDOUBLE   :   return  ConvType< udouble, T >( *( (udouble*) ( SamplePtrT< T >( iIndex ) ) ) );
+        default:                ULIS2_ASSERT( false, "Bad Type" ); return  T(0);
+    }
 }
 
 
@@ -225,7 +232,14 @@ template< typename T >
 void
 IPixel::SetValueRaw( uint8 iIndex, T iValue )
 {
-    *SamplePtrT< T >( iIndex ) = iValue;
+    switch( Type() ) {
+        case TYPE_UINT8     :   *( (uint8*)   ( SamplePtrT< T >( iIndex ) ) ) = ConvType< T, uint8   >( iValue ); break;
+        case TYPE_UINT16    :   *( (uint16*)  ( SamplePtrT< T >( iIndex ) ) ) = ConvType< T, uint16  >( iValue ); break;
+        case TYPE_UINT32    :   *( (uint32*)  ( SamplePtrT< T >( iIndex ) ) ) = ConvType< T, uint32  >( iValue ); break;
+        case TYPE_UFLOAT    :   *( (ufloat*)  ( SamplePtrT< T >( iIndex ) ) ) = ConvType< T, ufloat  >( iValue ); break;
+        case TYPE_UDOUBLE   :   *( (udouble*) ( SamplePtrT< T >( iIndex ) ) ) = ConvType< T, udouble >( iValue ); break;
+        default:                ULIS2_ASSERT( false, "Bad Type" );
+    }
 }
 
 

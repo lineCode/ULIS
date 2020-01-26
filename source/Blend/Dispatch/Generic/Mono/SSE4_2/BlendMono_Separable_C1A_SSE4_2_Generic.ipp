@@ -21,10 +21,10 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_SSE4_2_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_C1A_SSE4_2_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
 }
 
-ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_SSE4_2( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Separable_C1A_SSE4_2( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;

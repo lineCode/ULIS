@@ -14,12 +14,12 @@
 
 ULIS2_NAMESPACE_BEGIN
 // eTypeFromT
-template< typename T > ULIS2_FORCEINLINE eType  eTypeFromT(void)         { return  TYPE_INVALID; }
-template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint8 >()      { return  TYPE_UINT8;   }
-template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint16 >()     { return  TYPE_UINT16;  }
-template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint32 >()     { return  TYPE_UINT32;  }
-template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< ufloat >()     { return  TYPE_UFLOAT;  }
-template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< udouble >()    { return  TYPE_UDOUBLE; }
+template< typename T > ULIS2_FORCEINLINE eType  eTypeFromT(void)            { return  TYPE_INVALID; }
+template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint8 >()       { return  TYPE_UINT8;   }
+template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint16 >()      { return  TYPE_UINT16;  }
+template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint32 >()      { return  TYPE_UINT32;  }
+template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< ufloat >()      { return  TYPE_UFLOAT;  }
+template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< udouble >()     { return  TYPE_UDOUBLE; }
 
 // _min _max _clamp
 template< typename T > static constexpr ULIS2_FORCEINLINE T _min( T iA, T iB ) { return  iA < iB ? iA : iB; }
