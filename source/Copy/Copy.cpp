@@ -72,13 +72,13 @@ CopyMT( FThreadPool&    iPool
     #define DST dsb + ( ( iDstRoi.y + iLine ) * bps )
     if( iPerf.UseAVX2() )
     {
-        const tSize stride = 32 - ( 32 % bpp );
+        const tSize stride = 32;
         const tSize count = iSrcRoi.w * bpp;
         ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_AX2( DST, SRC, count, stride ); } );
     }
     else if( iPerf.UseSSE4_2() )
     {
-        const tSize stride = 16 - ( 16 % bpp );
+        const tSize stride = 16;
         const tSize count = iSrcRoi.w * bpp;
         ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_SSE( DST, SRC, count, stride ); } );
     }
