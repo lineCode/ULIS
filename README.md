@@ -27,7 +27,7 @@ Check LICENSE.md, ULIS2 is not available for commerical use.
 ## History
 ULIS was first developped by Clément BERTHAUD ( a.k.a Layl or Robot-Fromage ) on his spare-time in December 2018.
 It was then developped as part of Praxinos, aiming for robust tools for digital image processing.
-ULIS "1.0" was first released internaly for Praxinos at the end of summer 2019, and used in Iliad, a digital painting for UnrealEngine developped by Praxinos.
+ULIS "1.0" was first released internaly for Praxinos at the end of summer 2019, and used in Iliad, a digital painting plugin for UnrealEngine developped by Praxinos.
 ULIS "1.0" had a lot of issues. It was hard to maintain and overused template, resulting in terrible binary sizes for the compiled library ( over 200mo for a release build ).
 Performance was ok but there was a lot of room for improvments.
 The library needed to mature a bit, and the changes to make were so drastic that a separate successor library, ULIS2, was starting development in beginning of January 2020.
