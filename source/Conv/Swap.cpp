@@ -36,7 +36,7 @@ InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2
 
 
 void
-Swap_imp( FThreadPool&    iPool
+Swap_imp( FThreadPool*    iPool
         , FBlock*         iDst
         , uint8           iC1
         , uint8           iC2
@@ -49,11 +49,11 @@ Swap_imp( FThreadPool&    iPool
     const tSize bps = bpp * w;
     tByte*      dsb = iDst->DataPtr();
     #define DST dsb + ( iLine * bps )
-    ParallelFor( iPool, iDst->Height(), iPerf, ULIS2_PF_CALL { InvokeSwapMTProcessScanline_MEM( DST, w, iC1, iC2, bpc, bpp ); } );
+    ParallelFor( *iPool, iDst->Height(), iPerf, ULIS2_PF_CALL { InvokeSwapMTProcessScanline_MEM( DST, w, iC1, iC2, bpc, bpp ); } );
 }
 
 void
-Swap( FThreadPool&  iPool
+Swap( FThreadPool*  iPool
     , FBlock*       iDst
     , uint8         iC1
     , uint8         iC2
