@@ -51,7 +51,7 @@ public:
 
     void AssignMemoryUnsafe( const IPixel& iOther );
 
-public:
+protected:
     // Generic access API
     tByte*                              SamplePtr( uint8 iIndex );
     template< typename T > T*           SamplePtrT( uint8 iIndex );
