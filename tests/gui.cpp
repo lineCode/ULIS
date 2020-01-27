@@ -23,6 +23,16 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
+    {
+        FBlock test( 1, 1, ULIS2_FORMAT_RGBA8 );
+        FPixelProxy prox = test.PixelProxy( 0, 0 );
+        FPixelValue valu0( ULIS2_FORMAT_RGBA8 );
+        FPixelValue valu1( ULIS2_FORMAT_RGBA8, { 255_u8, 255_u8, 255_u8, 255_u8 } );
+        IPixel* pix = &prox;
+        FPixelValue t0 = prox;
+        auto dummy = 0;
+    }
+
     /*
     {
         Vec16uc src( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 );

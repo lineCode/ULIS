@@ -15,7 +15,6 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-class IPixel;
 class FProfileRegistry;
 /// @fn         void ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent = INTENT_PERCEPTUAL )
 /// @brief      Conv a pixel from source to destination with color space and intent.

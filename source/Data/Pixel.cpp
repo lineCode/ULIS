@@ -328,6 +328,13 @@ FPixelValue::FPixelValue( const FPixelProxy& iProxy )
     memcpy( mData, iProxy.Ptr(), Depth() );
 }
 
+FPixelValue::FPixelValue( const FPixelValue& iValue )
+    : tParent( iValue.Format(), iValue.Profile() )
+{
+    mData = new tByte[ Depth() ];
+    memcpy( mData, iValue.Ptr(), Depth() );
+}
+
 /////////////////////////////////////////////////////
 // FPixelValue
 //--------------------------------------------------------------------------------------

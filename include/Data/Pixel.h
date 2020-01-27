@@ -15,10 +15,6 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-class IPixel;
-class FPixelValue;
-class FPixelProxy;
-class FColorProfile;
 /////////////////////////////////////////////////////
 /// @class      IPixel
 /// @brief      The pure virtual IPixel class provides a mean of storing and manipulating pixels in various formats.
@@ -51,7 +47,7 @@ public:
 
     void AssignMemoryUnsafe( const IPixel& iOther );
 
-protected:
+public:
     // Generic access API
     tByte*                              SamplePtr( uint8 iIndex );
     template< typename T > T*           SamplePtrT( uint8 iIndex );
@@ -439,6 +435,7 @@ public:
     FPixelValue( uint32 iFormat, FColorProfile* iProfile = nullptr );
     FPixelValue( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelValue( const FPixelProxy& iProxy );
+    FPixelValue( const FPixelValue& iValue );
 
     template< typename T >
     FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile = nullptr )
