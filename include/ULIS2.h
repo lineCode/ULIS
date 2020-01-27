@@ -26,7 +26,7 @@
 #include "Thread/ParallelFor.h"
 // Interface
 #include "Conv/Conv.h"
-#include "Conv/Swap.h"
+#include "Misc/Swap.h"
 #include "Blend/Blend.h"
 #include "Fill/Fill.h"
 #include "Clear/Clear.h"
