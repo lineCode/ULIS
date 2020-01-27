@@ -218,10 +218,10 @@ T
 IPixel::GetValueRaw( uint8 iIndex ) const
 {
     switch( Type() ) {
-        case TYPE_UINT8     :   return  ConvType< uint8, T   >( *( (uint8*)   ( SamplePtrT< T >( iIndex ) ) ) );
-        case TYPE_UINT16    :   return  ConvType< uint16, T  >( *( (uint16*)  ( SamplePtrT< T >( iIndex ) ) ) );
-        case TYPE_UINT32    :   return  ConvType< uint32, T  >( *( (uint32*)  ( SamplePtrT< T >( iIndex ) ) ) );
-        case TYPE_UFLOAT    :   return  ConvType< ufloat, T  >( *( (ufloat*)  ( SamplePtrT< T >( iIndex ) ) ) );
+        case TYPE_UINT8     :   return  ConvType< uint8,   T >( *( (uint8*)   ( SamplePtrT< T >( iIndex ) ) ) );
+        case TYPE_UINT16    :   return  ConvType< uint16,  T >( *( (uint16*)  ( SamplePtrT< T >( iIndex ) ) ) );
+        case TYPE_UINT32    :   return  ConvType< uint32,  T >( *( (uint32*)  ( SamplePtrT< T >( iIndex ) ) ) );
+        case TYPE_UFLOAT    :   return  ConvType< ufloat,  T >( *( (ufloat*)  ( SamplePtrT< T >( iIndex ) ) ) );
         case TYPE_UDOUBLE   :   return  ConvType< udouble, T >( *( (udouble*) ( SamplePtrT< T >( iIndex ) ) ) );
         default:                ULIS2_ASSERT( false, "Bad Type" ); return  T(0);
     }

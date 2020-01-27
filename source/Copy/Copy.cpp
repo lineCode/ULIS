@@ -52,7 +52,7 @@ void InvokeCopyMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCou
 
 
 void
-Copy_imp( FThreadPool&    iPool
+Copy_imp( FThreadPool*    iPool
         , const FBlock*   iSrc
         , FBlock*         iDst
         , const FRect&    iSrcRoi
@@ -74,24 +74,24 @@ Copy_imp( FThreadPool&    iPool
     {
         const tSize stride = 32;
         const tSize count = iSrcRoi.w * bpp;
-        ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_AX2( DST, SRC, count, stride ); } );
+        ParallelFor( *iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_AX2( DST, SRC, count, stride ); } );
     }
     else if( iPerf.UseSSE4_2() )
     {
         const tSize stride = 16;
         const tSize count = iSrcRoi.w * bpp;
-        ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_SSE( DST, SRC, count, stride ); } );
+        ParallelFor( *iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_SSE( DST, SRC, count, stride ); } );
     }
     else
     {
         const tSize count = iSrcRoi.w * bpp;
-        ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_MEM( DST, SRC, iSrcRoi.w ); } );
+        ParallelFor( *iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_MEM( DST, SRC, iSrcRoi.w ); } );
     }
 }
 
 
 void
-Copy( FThreadPool&      iPool
+Copy( FThreadPool*      iPool
     , const FBlock*     iSrc
     , FBlock*           iDst
     , const glm::ivec2& iDstPos
@@ -103,7 +103,7 @@ Copy( FThreadPool&      iPool
 
 
 void
-CopyRect( FThreadPool&      iPool
+CopyRect( FThreadPool*      iPool
         , const FBlock*     iSrc
         , FBlock*           iDst
         , const FRect&      iSrcRect
@@ -111,14 +111,11 @@ CopyRect( FThreadPool&      iPool
         , const FPerf&      iPerf
         , bool              iCallInvalidCB )
 {
-    ULIS2_ASSERT( iSrc,                                                 "Bad source"                                );
-    ULIS2_ASSERT( iDst,                                                 "Bad destination"                           );
-    ULIS2_ASSERT( iSrc != iDst,                                         "Destination and source cannot be the same" );
-    ULIS2_ASSERT( iSrc->Model() == iDst->Model(),                       "Models do not match"                       );
-    ULIS2_ASSERT( iSrc->Type() == iDst->Type(),                         "Types do not match"                        );
-    ULIS2_ASSERT( iSrc->SamplesPerPixel() == iDst->SamplesPerPixel(),   "Samples do not match"                      );
-    ULIS2_ASSERT( iSrc->Reversed() == iDst->Reversed(),                 "Layouts do not match"                      );
-    ULIS2_ASSERT( iSrc->Swapped() == iDst->Swapped(),                   "Layouts do not match"                      );
+    ULIS2_ASSERT( iPool,                            "Bad pool" );
+    ULIS2_ASSERT( iSrc,                             "Bad source" );
+    ULIS2_ASSERT( iDst,                             "Bad destination" );
+    ULIS2_ASSERT( iSrc->Format() == iDst->Format(), "Formats do not match" );
+    ULIS2_WARNING( iSrc != iDst,                    "Copying a block on itself may trigger data race, use at your own risk or ensure written areas do not overlap." );
 
     // Ensure the selected source rect actually fits in source dimensions.
     FRect src_roi = iSrcRect & iSrc->Rect();
@@ -144,13 +141,10 @@ CopyRaw( const FBlock* iSrc
        , FBlock*       iDst
        , bool          iCallInvalidCB )
 {
-    ULIS2_ASSERT( iSrc->Model() == iDst->Model(),                       "Models do not match" );
-    ULIS2_ASSERT( iSrc->Type() == iDst->Type(),                         "Types do not match" );
-    ULIS2_ASSERT( iSrc->SamplesPerPixel() == iDst->SamplesPerPixel(),   "Samples do not match" );
-    ULIS2_ASSERT( iSrc->BytesTotal() == iDst->BytesTotal(),             "Sizes do not match" );
-    ULIS2_ASSERT( iSrc,                                                 "Bad source" );
-    ULIS2_ASSERT( iDst,                                                 "Bad destination" );
-    ULIS2_ASSERT( iSrc != iDst,                                         "Destination and source cannot be the same" );
+    ULIS2_ASSERT( iSrc,                             "Bad source" );
+    ULIS2_ASSERT( iDst,                             "Bad destination" );
+    ULIS2_ASSERT( iSrc != iDst,                     "Destination and source cannot be the same" );
+    ULIS2_ASSERT( iSrc->Format() == iDst->Format(), "Formats do not matchs" );
     // One call, supposedly more efficient for small block.
     memcpy( iDst->DataPtr(), iSrc->DataPtr(), iSrc->BytesTotal() );
 }

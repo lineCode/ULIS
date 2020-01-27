@@ -129,6 +129,7 @@ FillRect( FThreadPool*     iPool
         , const FPerf&     iPerf
         , bool             iCallInvalidCB )
 {
+    ULIS2_ASSERT( iPool, "Bad pool" );
     ULIS2_ASSERT( iDst, "Bad destination" );
     FPixel color( iDst->Format() );
     Conv( iColor, color );

@@ -17,7 +17,7 @@
 #include "Base/Perf.h"
 
 ULIS2_NAMESPACE_BEGIN
-/// @fn         void Copy( FThreadPool& iPool, const FBlock* iSrc, FBlock* iDst, const glm::uvec2& iDstPos, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void Copy( FThreadPool* iPool, const FBlock* iSrc, FBlock* iDst, const glm::uvec2& iDstPos, const FPerf& iPerf, bool iCallInvalidCB )
 /// @brief      Copy src block into dst block according to specified pos
 /// @param      iPool           The pool to process the image in.
 /// @param      iSrc            The sourc block to read;
@@ -25,14 +25,14 @@ ULIS2_NAMESPACE_BEGIN
 /// @param      iDstPos         The position in destination to write.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void Copy( FThreadPool&       iPool
+ULIS2_API void Copy( FThreadPool*       iPool
                     , const FBlock*     iSrc
                     , FBlock*           iDst
                     , const glm::ivec2& iDstPos
                     , const FPerf&      iPerf
                     , bool              iCallInvalidCB );
 
-/// @fn         void CopyRect( FThreadPool& iPool, const FBlock* iSrc, FBlock* iDst, const FRect& iSrcRect, const FPoint& iDstPos, const FPerf& iPerf = FPerf(), bool iCallInvalidCB = true )
+/// @fn         void CopyRect( FThreadPool* iPool, const FBlock* iSrc, FBlock* iDst, const FRect& iSrcRect, const FPoint& iDstPos, const FPerf& iPerf, bool iCallInvalidCB )
 /// @brief      Copy src block into dst block according to specified pos
 /// @param      iPool           The pool to process the image in.
 /// @param      iSrc            The sourc block to read;
@@ -41,7 +41,7 @@ ULIS2_API void Copy( FThreadPool&       iPool
 /// @param      iDstPos         The position in destination to write.
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void CopyRect( FThreadPool&       iPool
+ULIS2_API void CopyRect( FThreadPool*       iPool
                        , const FBlock*      iSrc
                        , FBlock*            iDst
                        , const FRect&       iSrcRect

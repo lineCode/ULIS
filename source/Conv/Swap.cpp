@@ -60,6 +60,7 @@ Swap( FThreadPool*  iPool
     , const FPerf&  iPerf
     , bool          iCallInvalidCB )
 {
+    ULIS2_ASSERT( iPool,                            "Bad pool" );
     ULIS2_ASSERT( iDst,                             "Bad destination" );
     ULIS2_ASSERT( iC1 < iDst->SamplesPerPixel(),    "Bad channel" );
     ULIS2_ASSERT( iC2 < iDst->SamplesPerPixel(),    "Bad channel" );

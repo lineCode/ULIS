@@ -63,15 +63,11 @@ BlendRect( FThreadPool*         iPool
          , const FPerf&         iPerf
          , bool                 iCallInvalidCB )
 {
-    ULIS2_ASSERT( iSource,                                                      "Bad source"                        );
-    ULIS2_ASSERT( iBackdrop,                                                    "Bad destination"                   );
-    ULIS2_ASSERT( iSource != iBackdrop,                                         "Can not blend a block on itself"   );
-    ULIS2_ASSERT( iSource->Model() == iBackdrop->Model(),                       "Models do not match"               );
-    ULIS2_ASSERT( iSource->Type() == iBackdrop->Type(),                         "Types do not match"                );
-    ULIS2_ASSERT( iSource->SamplesPerPixel() == iBackdrop->SamplesPerPixel(),   "Samples do not match"              );
-    ULIS2_ASSERT( iSource->Reversed() == iBackdrop->Reversed(),                 "Layouts do not match"              );
-    ULIS2_ASSERT( iSource->Swapped() == iBackdrop->Swapped(),                   "Layouts do not match"              );
-
+    ULIS2_ASSERT( iPool,                                    "Bad pool" );
+    ULIS2_ASSERT( iSource,                                  "Bad source" );
+    ULIS2_ASSERT( iBackdrop,                                "Bad destination" );
+    ULIS2_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match" );
+    ULIS2_WARNING( iSource != iBackdrop,                    "Blending a block on itself may trigger data race, use at your own risk or ensure written areas do not overlap." );
     // Ensure the selected source rect actually fits in source dimensions.
     FRect src_roi = iSrcRect & iSource->Rect();
     // Compute coordinates of target rect in destination, with source rect dimension

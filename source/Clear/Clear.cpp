@@ -61,7 +61,6 @@ Clear_imp( FThreadPool*   iPool
          , const FRect&   iRoi
          , const FPerf&   iPerf )
 {
-    ULIS2_ASSERT( iDst, "Bad pool" );
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
     const tSize bpp = bpc * spp;
@@ -105,6 +104,7 @@ ClearRect( FThreadPool* iPool
          , const FPerf& iPerf
          , bool         iCallInvalidCB )
 {
+    ULIS2_ASSERT( iPool, "Bad pool" );
     ULIS2_ASSERT( iDst, "Bad destination" );
     FRect roi = iRect & iDst->Rect();
 
