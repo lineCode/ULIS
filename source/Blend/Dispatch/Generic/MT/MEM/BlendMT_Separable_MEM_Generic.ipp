@@ -117,8 +117,6 @@ BlendMT_Separable_MEM_Generic_Subpixel( FThreadPool*        iPool
     delete [] xidt;
 }
 
-
-
 template< typename T >
 void
 InvokeBlendMTProcessScanline_Separable_MEM_Generic( int32               iLINE

@@ -19,8 +19,8 @@
 #include "Blend/Func/AlphaFuncF.ipp"
 #include "Color/ModelStructs.h"
 #include "Maths/Geometry.h"
+#include "Thread/ParallelFor.h"
 
-/*
 float gBayer8x8Matrix[8][8] = {
     { 0.015625f, 0.765625f, 0.203125f, 0.953125f, 0.0625f, 0.8125f, 0.25f, 1.0f          },
     { 0.515625f, 0.265625f, 0.703125f, 0.453125f, 0.5625f, 0.3125f, 0.75f, 0.5f          },
@@ -30,13 +30,233 @@ float gBayer8x8Matrix[8][8] = {
     { 0.546875f, 0.296875f, 0.734375f, 0.484375f, 0.53125f, 0.28125f, 0.71875f, 0.46875f },
     { 0.171875f, 0.921875f, 0.109375f, 0.859375f, 0.15625f, 0.90625f, 0.09375f, 0.84375f },
     { 0.671875f, 0.421875f, 0.609375f, 0.359375f, 0.65625f, 0.40625f, 0.59375f, 0.34375f } };
-*/
 
 ULIS2_NAMESPACE_BEGIN
-template< typename T > void BlendMT_Misc_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+template< typename T >
+void
+InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( int32               iLINE
+                                                      , const tByte*        iSRC
+                                                      , tByte*              iBDP
+                                                      , uint8*              iXIDT
+                                                      , uint8               iBPC
+                                                      , uint8               iNCC
+                                                      , uint8               iHEA
+                                                      , uint8               iSPP
+                                                      , uint8               iBPP
+                                                      , uint8               iAID
+                                                      , tSize                iSRC_BPS
+                                                      , const FRect&        iSrcROI
+                                                      , const FRect&        iBdpROI
+                                                      , const glm::vec2&    iSubpixelComponent
+                                                      , eBlendingMode       iBlendingMode
+                                                      , eAlphaMode          iAlphaMode
+                                                      , ufloat              iOpacity )
+{
+    const tByte* src = iSRC;
+    tByte*       bdp = iBDP;
+    const glm::vec2&    sub = iSubpixelComponent;
+    glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
+
+    switch( iBlendingMode ) {
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        case BM_DISSOLVE: {
+            uint32 localPRNGSeed = gBlendingPRNGSeed;
+            int32 seedy = iBdpROI.y + iLINE + 1;
+            localPRNGSeed = ( 8253729 % seedy ) * localPRNGSeed + ( 2396403 % ( seedy + 64578 ) * seedy );
+            //  -------------
+            //  | m00 | m10 |
+            //  |_____|_____|___
+            //  | m01 | m11 |
+            //  |_____|_____|
+            //     |  |  |
+            //    vv0 | vv1  -> res
+            float m11, m01, m10, m00, vv0, vv1, res;
+            m11 = m10 = vv1 = 0.f;
+            for( int x = 0; x < iBdpROI.w; ++x ) {
+                m00 = m10;
+                m01 = m11;
+                vv0 = vv1;
+                SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+                const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
+                const float alpha_src       = res * iOpacity;
+                localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
+                float toss = ( localPRNGSeed % 65537 ) / 65537.f;
+                if( toss < alpha_src ) {
+                    float alpha_result;
+                    ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, iBPP );
+                    if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+                }
+                // Increment ptrs by one pixel
+                src += iBPP;
+                bdp += iBPP;
+            }
+            break;
+        } // BM_DISSOLVE
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        case BM_BAYERDITHER8x8: {
+            //  -------------
+            //  | m00 | m10 |
+            //  |_____|_____|___
+            //  | m01 | m11 |
+            //  |_____|_____|
+            //     |  |  |
+            //    vv0 | vv1  -> res
+            float m11, m01, m10, m00, vv0, vv1, res;
+            m11 = m10 = vv1 = 0.f;
+            for( int x = 0; x < iBdpROI.w; ++x ) {
+                m00 = m10;
+                m01 = m11;
+                vv0 = vv1;
+                SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+                const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
+                const float alpha_src       = res * iOpacity;
+                const tSize bayerX          = ( iBdpROI.x + x )     % 8;
+                const tSize bayerY          = ( iBdpROI.y + iLINE ) % 8;
+                const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
+                if( alpha_src >= bayerEl ) {
+                    float alpha_result;
+                    ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, iBPP );
+                    if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+                }
+                // Increment ptrs by one pixel
+                src += iBPP;
+                bdp += iBPP;
+            }
+            break;
+        } // BM_DISSOLVE
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
 }
 
-template< typename T > void BlendMT_Misc_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+template< typename T >
+void
+BlendMT_Misc_MEM_Generic_Subpixel( FThreadPool*         iPool
+                                  , const FBlock*       iSource
+                                  , FBlock*             iBackdrop
+                                  , const FRect&        iSrcROI
+                                  , const FRect&        iBdpROI
+                                  , const glm::vec2&    iSubpixelComponent
+                                  , eBlendingMode       iBlendingMode
+                                  , eAlphaMode          iAlphaMode
+                                  , ufloat              iOpacity
+                                  , const FPerf&        iPerf )
+{
+    uint8* xidt;
+    uint8 bpc, ncc, hea, spp, bpp, aid;
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    ParallelFor( *iPool
+               , iBdpROI.h
+               , iPerf
+               , ULIS2_PF_CALL {
+                    InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel< T >( iLine
+                                                                               , iSource->DataPtr()   + ( ( iSrcROI.y + iLine ) * src_bps ) + ( iSrcROI.x * bpp )
+                                                                               , iBackdrop->DataPtr() + ( ( iBdpROI.y + iLine ) * bdp_bps ) + ( iBdpROI.x * bpp )
+                                                                               , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
+                                                                               , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
+               } );
+    delete [] xidt;
+}
+
+template< typename T >
+void
+InvokeBlendMTProcessScanline_Misc_MEM_Generic( int32            iLINE
+                                             , const tByte*     iSRC
+                                             , tByte*           iBDP
+                                             , uint8*           iXIDT
+                                             , uint8            iBCP
+                                             , uint8            iNCC
+                                             , uint8            iHEA
+                                             , uint8            iSPP
+                                             , uint8            iBPP
+                                             , uint8            iAID
+                                             , tSize            iSRC_BPS
+                                             , const FRect&     iSrcROI
+                                             , const FRect&     iBdpROI
+                                             , const glm::vec2& iSubpixelComponent
+                                             , eBlendingMode    iBlendingMode
+                                             , eAlphaMode       iAlphaMode
+                                             , ufloat           iOpacity )
+{
+    const tByte* src = iSRC;
+    tByte*       bdp = iBDP;
+    switch( iBlendingMode ) {
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        case BM_DISSOLVE: {
+            uint32 localPRNGSeed = gBlendingPRNGSeed;
+            int32 seedy = iBdpROI.y + iLINE + 1;
+            localPRNGSeed = ( 8253729 % seedy ) * localPRNGSeed + ( 2396403 % ( seedy + 64578 ) * seedy );
+            for( int x = 0; x < iBdpROI.w; ++x ) {
+                const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
+                const float alpha_src       = iHEA ? TYPE2FLOAT( src, iAID ) * iOpacity : iOpacity;
+                localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
+                float toss = ( localPRNGSeed % 65537 ) / 65537.f;
+                if( toss < alpha_src ) {
+                    float alpha_result;
+                    ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, iBPP );
+                    if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+                }
+                // Increment ptrs by one pixel
+                src += iBPP;
+                bdp += iBPP;
+            }
+            break;
+        } // BM_DISSOLVE
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        case BM_BAYERDITHER8x8: {
+            for( int x = 0; x < iBdpROI.w; ++x ) {
+                const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
+                const float alpha_src       = iHEA ? TYPE2FLOAT( src, iAID ) * iOpacity : iOpacity;
+                const tSize bayerX          = ( iBdpROI.x + x )     % 8;
+                const tSize bayerY          = ( iBdpROI.y + iLINE ) % 8;
+                const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
+                if( alpha_src >= bayerEl ) {
+                    float alpha_result;
+                    ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, iBPP );
+                    if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+                }
+                // Increment ptrs by one pixel
+                src += iBPP;
+                bdp += iBPP;
+            }
+            break;
+        } // BM_DISSOLVE
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+}
+
+template< typename T >
+void
+BlendMT_Misc_MEM_Generic( FThreadPool*      iPool
+                        , const FBlock*     iSource
+                        , FBlock*           iBackdrop
+                        , const FRect&      iSrcROI
+                        , const FRect&      iBdpROI
+                        , const glm::vec2&  iSubpixelComponent
+                        , eBlendingMode     iBlendingMode
+                        , eAlphaMode        iAlphaMode
+                        , ufloat            iOpacity
+                        , const FPerf&      iPerf )
+{
+    uint8* xidt;
+    uint8 bpc, ncc, hea, spp, bpp, aid;
+    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
+    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    ParallelFor( *iPool
+               , iBdpROI.h
+               , iPerf
+               , ULIS2_PF_CALL {
+                    InvokeBlendMTProcessScanline_Misc_MEM_Generic< T >( iLine
+                                                                      , iSource->DataPtr()   + ( ( iSrcROI.y + iLine ) * src_bps ) + ( iSrcROI.x * bpp )
+                                                                      , iBackdrop->DataPtr() + ( ( iBdpROI.y + iLine ) * bdp_bps ) + ( iBdpROI.x * bpp )
+                                                                      , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
+                                                                      , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
+               } );
+    delete [] xidt;
 }
 
 ULIS2_NAMESPACE_END
