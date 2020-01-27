@@ -52,12 +52,12 @@ void InvokeCopyMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCou
 
 
 void
-CopyMT( FThreadPool&    iPool
-      , const FBlock*   iSrc
-      , FBlock*         iDst
-      , const FRect&    iSrcRoi
-      , const FRect&    iDstRoi
-      , const FPerf&    iPerf )
+Copy_imp( FThreadPool&    iPool
+        , const FBlock*   iSrc
+        , FBlock*         iDst
+        , const FRect&    iSrcRoi
+        , const FRect&    iDstRoi
+        , const FPerf&    iPerf )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -86,29 +86,6 @@ CopyMT( FThreadPool&    iPool
     {
         const tSize count = iSrcRoi.w * bpp;
         ParallelFor( iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_MEM( DST, SRC, iSrcRoi.w ); } );
-    }
-}
-
-
-void
-CopyMono( const FBlock* iSrc
-        , FBlock*       iDst
-        , const FRect&  iSrcRoi
-        , const FRect&  iDstRoi )
-{
-    const tSize  bpc = iDst->BytesPerSample();
-    const tSize  spp = iDst->SamplesPerPixel();
-    const tSize  bpp = bpc * spp;
-    const tSize  w   = iDst->Width();
-    const tSize  bps = bpp * w;
-    const tByte* src = iSrc->DataPtr() + ( iSrcRoi.y * bps ) + ( iSrcRoi.x * bpp );
-    tByte*       dst = iDst->DataPtr() + ( iDstRoi.y * bps ) + ( iDstRoi.x * bpp );
-    const tSize  num = iSrcRoi.w * bpp;
-    for( uint32 i = 0; i < (uint32)iSrcRoi.h; ++i )
-    {
-        memcpy( dst, src, num );
-        src += bps;
-        dst += bps;
     }
 }
 
@@ -157,13 +134,7 @@ CopyRect( FThreadPool&      iPool
     FRect dst_fit = dst_target & iDst->Rect();
     if( dst_fit.Area() <= 0 ) return;
 
-    // Select invocation based on performance preferences
-    if( iPerf.UseMT() )
-        CopyMT( iPool, iSrc, iDst, src_roi, dst_fit, iPerf );
-    else
-        CopyMono( iSrc, iDst, src_roi, dst_fit );
-
-    // Invalidate dst region of interest
+    Copy_imp( iPool, iSrc, iDst, src_roi, dst_fit, iPerf );
     iDst->Invalidate( dst_fit, iCallInvalidCB );
 }
 

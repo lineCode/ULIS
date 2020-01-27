@@ -68,35 +68,35 @@ public:
 
 public:
     // Model Access API
-    template< typename T> ULIS2_FORCEINLINE T Alpha() const                     { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
-    template< typename T> ULIS2_FORCEINLINE T A() const                         { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
-    template< typename T> ULIS2_FORCEINLINE T Grey() const                      { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Red() const                       { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Green() const                     { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Blue() const                      { return  GetValue< T >( 2 );                   }
-    template< typename T> ULIS2_FORCEINLINE T R() const                         { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T G() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T B() const                         { return  GetValue< T >( 2 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Hue() const                       { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Saturation() const                { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Lightness() const                 { return  GetValue< T >( 2 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Value() const                     { return  GetValue< T >( 2 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Cyan() const                      { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Magenta() const                   { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Yellow() const                    { return  GetValue< T >( 2 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Key() const                       { return  GetValue< T >( 3 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Luma() const                      { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T U() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T V() const                         { return  GetValue< T >( 2 );                   }
-    template< typename T> ULIS2_FORCEINLINE T K() const                         { return  GetValue< T >( 3 );                   }
-    template< typename T> ULIS2_FORCEINLINE T X() const                         { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Y() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T Z() const                         { return  GetValue< T >( 2 );                   }
-    template< typename T> ULIS2_FORCEINLINE T L() const                         { return  GetValue< T >( 0 );                   }
-    template< typename T> ULIS2_FORCEINLINE T a() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T b() const                         { return  GetValue< T >( 2 );                   }
-    template< typename T> ULIS2_FORCEINLINE T x() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T> ULIS2_FORCEINLINE T y() const                         { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Alpha() const                     { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
+    template< typename T > ULIS2_FORCEINLINE T A() const                         { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
+    template< typename T > ULIS2_FORCEINLINE T Grey() const                      { return  GetValue< T >( 0 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Red() const                       { return  GetValue< T >( 0 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Green() const                     { return  GetValue< T >( 1 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Blue() const                      { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T R() const                         { return  GetValue< T >( 0 );                   }
+    template< typename T > ULIS2_FORCEINLINE T G() const                         { return  GetValue< T >( 1 );                   }
+    template< typename T > ULIS2_FORCEINLINE T B() const                         { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Hue() const                       { return  GetValue< T >( 0 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Saturation() const                { return  GetValue< T >( 1 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Lightness() const                 { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Value() const                     { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Cyan() const                      { return  GetValue< T >( 0 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Magenta() const                   { return  GetValue< T >( 1 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Yellow() const                    { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Key() const                       { return  GetValue< T >( 3 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Luma() const                      { return  GetValue< T >( 0 );                   }
+    template< typename T > ULIS2_FORCEINLINE T U() const                         { return  GetValue< T >( 1 );                   }
+    template< typename T > ULIS2_FORCEINLINE T V() const                         { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T K() const                         { return  GetValue< T >( 3 );                   }
+    template< typename T > ULIS2_FORCEINLINE T X() const                         { return  GetValue< T >( 0 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Y() const                         { return  GetValue< T >( 1 );                   }
+    template< typename T > ULIS2_FORCEINLINE T Z() const                         { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T L() const                         { return  GetValue< T >( 0 );                   }
+    template< typename T > ULIS2_FORCEINLINE T a() const                         { return  GetValue< T >( 1 );                   }
+    template< typename T > ULIS2_FORCEINLINE T b() const                         { return  GetValue< T >( 2 );                   }
+    template< typename T > ULIS2_FORCEINLINE T x() const                         { return  GetValue< T >( 1 );                   }
+    template< typename T > ULIS2_FORCEINLINE T y() const                         { return  GetValue< T >( 2 );                   }
     ULIS2_FORCEINLINE uint8 Alpha8() const                                      { return  Alpha< uint8 >();                     }
     ULIS2_FORCEINLINE uint8 A8() const                                          { return  A< uint8 >();                         }
     ULIS2_FORCEINLINE uint8 Grey8() const                                       { return  Grey< uint8 >();                      }
@@ -243,35 +243,35 @@ public:
     ULIS2_FORCEINLINE double xD() const                                         { return  x< double >();                        }
     ULIS2_FORCEINLINE double yD() const                                         { return  y< double >();                        }
 
-    template< typename T> ULIS2_FORCEINLINE void SetAlpha(      T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue ); }
-    template< typename T> ULIS2_FORCEINLINE void SetA(          T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue );     }
-    template< typename T> ULIS2_FORCEINLINE void SetGrey(       T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetRed(        T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetGreen(      T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetBlue(       T iValue )      { SetValue< T >( 2, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetR(          T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetG(          T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetB(          T iValue )      { SetValue< T >( 2, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetHue(        T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetSaturation( T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetLightness(  T iValue )      { SetValue< T >( 2, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetValue(      T iValue )      { SetValue< T >( 2, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetCyan(       T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetMagenta(    T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetYellow(     T iValue )      { SetValue< T >( 2, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetKey(        T iValue )      { SetValue< T >( 3, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetLuma(       T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetU(          T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetV(          T iValue )      { SetValue< T >( 2, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetK(          T iValue )      { SetValue< T >( 3, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetX(          T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetY(          T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetZ(          T iValue )      { SetValue< T >( 2, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void SetL(          T iValue )      { SetValue< T >( 0, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void Seta(          T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void Setb(          T iValue )      { SetValue< T >( 2, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void Setx(          T iValue )      { SetValue< T >( 1, iValue );                   }
-    template< typename T> ULIS2_FORCEINLINE void Sety(          T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetAlpha(      T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue ); }
+    template< typename T > ULIS2_FORCEINLINE void SetA(          T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue );     }
+    template< typename T > ULIS2_FORCEINLINE void SetGrey(       T iValue )      { SetValue< T >( 0, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetRed(        T iValue )      { SetValue< T >( 0, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetGreen(      T iValue )      { SetValue< T >( 1, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetBlue(       T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetR(          T iValue )      { SetValue< T >( 0, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetG(          T iValue )      { SetValue< T >( 1, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetB(          T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetHue(        T iValue )      { SetValue< T >( 0, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetSaturation( T iValue )      { SetValue< T >( 1, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetLightness(  T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetValue(      T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetCyan(       T iValue )      { SetValue< T >( 0, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetMagenta(    T iValue )      { SetValue< T >( 1, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetYellow(     T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetKey(        T iValue )      { SetValue< T >( 3, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetLuma(       T iValue )      { SetValue< T >( 0, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetU(          T iValue )      { SetValue< T >( 1, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetV(          T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetK(          T iValue )      { SetValue< T >( 3, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetX(          T iValue )      { SetValue< T >( 0, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetY(          T iValue )      { SetValue< T >( 1, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetZ(          T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void SetL(          T iValue )      { SetValue< T >( 0, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void Seta(          T iValue )      { SetValue< T >( 1, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void Setb(          T iValue )      { SetValue< T >( 2, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void Setx(          T iValue )      { SetValue< T >( 1, iValue );                   }
+    template< typename T > ULIS2_FORCEINLINE void Sety(          T iValue )      { SetValue< T >( 2, iValue );                   }
     ULIS2_FORCEINLINE void SetAlpha8(                           uint8 iValue )  { SetAlpha< uint8 >( iValue );                  }
     ULIS2_FORCEINLINE void SetA8(                               uint8 iValue )  { SetA< uint8 >( iValue );                      }
     ULIS2_FORCEINLINE void SetGrey8(                            uint8 iValue )  { SetValue< uint8 >( 0, iValue );               }

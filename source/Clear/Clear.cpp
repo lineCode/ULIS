@@ -56,10 +56,10 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, tSize iStride )
 
 
 void
-ClearMT( FThreadPool*   iPool
-       , FBlock*        iDst
-       , const FRect&   iRoi
-       , const FPerf&   iPerf )
+Clear_imp( FThreadPool*   iPool
+         , FBlock*        iDst
+         , const FRect&   iRoi
+         , const FPerf&   iPerf )
 {
     ULIS2_ASSERT( iDst, "Bad pool" );
     const tSize bpc = iDst->BytesPerSample();
@@ -89,41 +89,6 @@ ClearMT( FThreadPool*   iPool
 }
 
 void
-ClearMonoMEM( FBlock*      iDst
-            , const FRect& iRoi )
-{
-    const tSize bpc = iDst->BytesPerSample();
-    const tSize spp = iDst->SamplesPerPixel();
-    const tSize bpp = bpc * spp;
-    const tSize w   = iDst->Width();
-    const tSize h   = iDst->Height();
-    const tSize bps = bpp * w;
-    const tSize num = w * h;
-    tByte*      dst = iDst->DataPtr() + (uint64)iRoi.y * bps + (uint64)iRoi.x * bpp;
-
-    for( uint32 i = 0; i < num; ++i )
-    {
-        memset( dst, 0, bpp );
-        dst += bpp;
-    }
-}
-
-
-void
-ClearMono( FBlock*      iDst
-         , const FRect& iRoi
-         , const FPerf& iPerf )
-{
-    if( iPerf.UseAVX2() )
-        ClearMonoMEM( iDst, iRoi );
-    else if( iPerf.UseSSE4_2() )
-        ClearMonoMEM( iDst, iRoi );
-    else
-        ClearMonoMEM( iDst, iRoi );
-}
-
-
-void
 Clear( FThreadPool*     iPool
      , FBlock*          iDst
      , const FPerf&     iPerf
@@ -146,11 +111,7 @@ ClearRect( FThreadPool* iPool
     if( roi.Area() <= 0 )
         return;
 
-    if( iPerf.UseMT() )
-        ClearMT( iPool, iDst, roi, iPerf );
-    else
-        ClearMono( iDst, roi, iPerf );
-
+    Clear_imp( iPool, iDst, roi, iPerf );
     iDst->Invalidate( roi, iCallInvalidCB );
 }
 

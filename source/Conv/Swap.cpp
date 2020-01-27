@@ -36,11 +36,11 @@ InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2
 
 
 void
-SwapMT( FThreadPool&    iPool
-      , FBlock*         iDst
-      , uint8           iC1
-      , uint8           iC2
-      , const FPerf&    iPerf )
+Swap_imp( FThreadPool&    iPool
+        , FBlock*         iDst
+        , uint8           iC1
+        , uint8           iC2
+        , const FPerf&    iPerf )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -51,32 +51,6 @@ SwapMT( FThreadPool&    iPool
     #define DST dsb + ( iLine * bps )
     ParallelFor( iPool, iDst->Height(), iPerf, ULIS2_PF_CALL { InvokeSwapMTProcessScanline_MEM( DST, w, iC1, iC2, bpc, bpp ); } );
 }
-
-
-void
-SwapMono( FBlock*   iDst
-        , uint8     iC1
-        , uint8     iC2 )
-{
-    const tSize bpc = iDst->BytesPerSample();
-    const tSize spp = iDst->SamplesPerPixel();
-    const tSize bpp = bpc * spp;
-    const tSize w   = iDst->Width();
-    const tSize h   = iDst->Height();
-    const tSize num = w * h;
-    tByte*      dst = iDst->DataPtr();
-
-    tByte* tmp = new tByte[bpc];
-    for( uint32 i = 0; i < num; ++i )
-    {
-        memcpy( tmp, dst + iC1, bpc );
-        memcpy( dst + iC1, dst + iC2, bpc );
-        memcpy( dst + iC2, tmp, bpc );
-        dst += bpp;
-    }
-    delete [] tmp;
-}
-
 
 void
 Swap( FThreadPool&  iPool
@@ -92,11 +66,7 @@ Swap( FThreadPool&  iPool
     if( iC1 == iC2 )
         return;
 
-    if( iPerf.UseMT() )
-        SwapMT( iPool, iDst, iC1, iC2, iPerf );
-    else
-        SwapMono( iDst, iC1, iC2 );
-
+    Swap_imp( iPool, iDst, iC1, iC2, iPerf );
     iDst->Invalidate( iCallInvalidCB );
 }
 

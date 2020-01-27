@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Blend/BlendHelpers.h"
+#include "Blend/Func/BlendHelpers.ipp"
 #include "Blend/BlendingPRNGSeed.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.ipp"
@@ -31,7 +31,7 @@ float gBayer8x8Matrix[8][8] = {
     { 0.671875f, 0.421875f, 0.609375f, 0.359375f, 0.65625f, 0.40625f, 0.59375f, 0.34375f } };
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+template< typename T > void BlendMono_Misc_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -124,7 +124,7 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM_Subpixel( ULIS2_BLENDSPEC_P
     delete [] xidt;
 }
 
-ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_Misc_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+template< typename T > void BlendMono_Misc_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;

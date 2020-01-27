@@ -55,7 +55,9 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 /////////////////////////////////////////////////////
 // Named booleans literals
 #define ULIS2_BLOCKING      true
-#define ULIS2_NON_BLOCKING  false
-#define ULIS2_CALL_CB       true
-#define ULIS2_NO_CB         false
+#define ULIS2_NONBLOCKING   false
+#define ULIS2_CALLCB        true
+#define ULIS2_NOCB          false
+#define ULIS2_SUBPIXEL      true
+#define ULIS2_NOSUBPIXEL    false
 

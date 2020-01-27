@@ -17,26 +17,21 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
+#include <vectorclass.h>
 using namespace ::ul2;
 
 int
 main( int argc, char *argv[] )
 {
+    /*
     {
-        int size = 64;
-        FBlock blockGreyA( 12, 5, ULIS2_FORMAT_G8 );
-        FBlock blockGreyB( 12, 5, ULIS2_FORMAT_G8 );
-
-        FThreadPool pool;
-        FPerf perf_mono_sse( Perf_SSE4_2 );
-
-        Clear( &pool, &blockGreyA, FPerf(), ULIS2_NO_CB );
-        Clear( &pool, &blockGreyB, FPerf(), ULIS2_NO_CB );
-
-        Blend( &pool, ULIS2_BLOCKING, &blockGreyB, &blockGreyA, glm::vec2( 0 ), BM_NORMAL, AM_NORMAL, 1.f, perf_mono_sse, ULIS2_CALL_CB );
+        Vec16uc src( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 );
+        Vec16us ex16 = extend( src );
+        Vec16ui ex32 = extend( ex16 );
+        Vec16f  dst = to_float( ex32 );
+        auto dummy = 0;
     }
-
-
+    */
 
     QApplication app( argc, argv );
     int width   = 512;
@@ -49,8 +44,8 @@ main( int argc, char *argv[] )
     FPerf perf_best( Perf_Best_CPU );
     FPixel green(   ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
     FPixel red(     ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
-    Fill( &pool, &blockA, green, perf_best, ULIS2_NO_CB );
-    Fill( &pool, &blockB, red,   perf_best, ULIS2_NO_CB );
+    Fill( &pool, &blockA, green, perf_best, ULIS2_NOCB );
+    Fill( &pool, &blockB, red,   perf_best, ULIS2_NOCB );
 
     for( int x = 0; x < 512; ++x ) {
         float t = (float)x / (float)512;
@@ -59,7 +54,7 @@ main( int argc, char *argv[] )
         }
     }
 
-    BlendSubpixelRect( &pool, ULIS2_BLOCKING, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_BAYERDITHER8x8, AM_NORMAL, 0.8f, perf_low, ULIS2_CALL_CB );
+    BlendRect( &pool, ULIS2_BLOCKING, ULIS2_NOSUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_NORMAL, AM_NORMAL, 0.8f, perf_low, ULIS2_CALLCB );
 
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

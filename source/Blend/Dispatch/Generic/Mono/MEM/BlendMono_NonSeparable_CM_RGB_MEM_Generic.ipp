@@ -21,7 +21,7 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_NonSeparable_CM_RGB_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+template< typename T > void BlendMono_NonSeparable_CM_RGB_MEM_Subpixel( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -82,7 +82,7 @@ ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_NonSeparable_CM_RGB_MEM_Subpixel( UL
     delete [] xidt;
 }
 
-ULIS2_BLENDSPEC_TEMPLATE_SIG void BlendMono_NonSeparable_CM_RGB_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
+template< typename T > void BlendMono_NonSeparable_CM_RGB_MEM( ULIS2_BLENDSPEC_PARAMS_SIG ) {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;

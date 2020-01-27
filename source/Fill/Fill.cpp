@@ -62,11 +62,11 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCount, t
 
 
 void
-FillMT( FThreadPool*   iPool
-      , FBlock*        iDst
-      , const tByte*   iSrc
-      , const FRect&   iRoi
-      , const FPerf&   iPerf )
+Fill_imp( FThreadPool*   iPool
+        , FBlock*        iDst
+        , const tByte*   iSrc
+        , const FRect&   iRoi
+        , const FPerf&   iPerf )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -110,29 +110,6 @@ FillMT( FThreadPool*   iPool
     }
 }
 
-
-void
-FillMono( FBlock*      iDst
-        , const tByte* iSrc
-        , const FRect& iRoi )
-{
-    const tSize bpc = iDst->BytesPerSample();
-    const tSize spp = iDst->SamplesPerPixel();
-    const tSize bpp = bpc * spp;
-    const tSize w   = iDst->Width();
-    const tSize h   = iDst->Height();
-    const tSize bps = bpp * w;
-    const tSize num = w * h;
-    tByte*      dst = iDst->DataPtr() + iRoi.y * bps + iRoi.x * bpp;
-
-    for( uint32 i = 0; i < num; ++i )
-    {
-        memcpy( dst, iSrc, bpp );
-        dst += bpp;
-    }
-}
-
-
 void
 Fill( FThreadPool*     iPool
     , FBlock*          iDst
@@ -161,11 +138,7 @@ FillRect( FThreadPool*     iPool
     if( roi.Area() <= 0 )
         return;
 
-    if( iPerf.UseMT() )
-        FillMT( iPool, iDst, src, roi, iPerf );
-    else
-        FillMono( iDst, src, roi );
-
+    Fill_imp( iPool, iDst, src, roi, iPerf );
     iDst->Invalidate( roi, iCallInvalidCB );
 }
 

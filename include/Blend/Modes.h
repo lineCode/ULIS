@@ -240,7 +240,7 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
 //#define ULIS2_DELETE_COMP_OP_INSTANCIATION_IMP( _TYPE, _BM, _AM, _FUNCTION ) template<> void _FUNCTION < _TYPE, _BM, _AM >( const FBlock*, FBlock*, const FRect&, const FRect&, const glm::vec2&, ufloat, const FPerf& ) = delete;
 //#define ULIS2_DELETE_COMP_OP_INSTANCIATION( _SUBSET, _FUNCTION ) ULIS2_ENUMERATE_TYPES_BM_SUBSET_AM_COMBINATIONS_DO( _SUBSET, ULIS2_DELETE_COMP_OP_INSTANCIATION_IMP, _FUNCTION, 0 )
 
-#define ULIS2_SELECT_COMP_OP( iSubpixel, _FUNCTION )    iSubpixel ? & _FUNCTION ## _Subpixel < T > : & _FUNCTION < T >
+#define ULIS2_SELECT_COMP_OP( iSubpixel, _FUNCTION, _T )    iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
 
 #define ULIS2_ENUM_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )  case _CASE: _ACTION( _CASE, _E1, _E2, _E3 ); break;
 #define ULIS2_SWITCH_FOR_ALL_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )  switch( iValue ) { _SUBSET( ULIS2_ENUM_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
