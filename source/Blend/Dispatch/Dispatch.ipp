@@ -46,11 +46,11 @@ QueryDispatchedBlendFunctionForParameters_Generic( uint32 iFormat, eBlendingMode
         case BMQ_NONSEPARABLE   :
             switch( static_cast< eColorModel >( ULIS2_R_MODEL( iFormat ) ) ) {
                 case CM_ANY:    ULIS2_ASSERT( false, "Bad input model" ); return  nullptr;
-                case CM_GREY:   return  nullptr; //ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_Grey_MEM       , T );
-                case CM_RGB:    return  nullptr; //ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_RGB_MEM        , T );
-                case CM_CMYK:   return  nullptr; //ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_CMYK_MEM       , T );
-                case CM_Lab:    return  nullptr; //ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_Lab_MEM        , T );
-                default:        return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic, T );
+                case CM_GREY:   return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_Grey_MEM_Generic,      T );
+                case CM_RGB:    return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_RGB_MEM_Generic,       T );
+                case CM_CMYK:   return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_CMYK_MEM_Generic,      T );
+                case CM_Lab:    return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_Lab_MEM_Generic,       T );
+                default:        return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic,   T );
             }
     }
     ULIS2_ASSERT( false, "Bad input no dispatch path found" );

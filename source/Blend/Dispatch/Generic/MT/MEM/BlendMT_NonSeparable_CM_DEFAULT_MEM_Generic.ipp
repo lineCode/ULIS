@@ -20,6 +20,7 @@
 #include "Color/ModelStructs.h"
 #include "Conv/Conv.h"
 #include "Maths/Geometry.h"
+#include "Thread/ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
