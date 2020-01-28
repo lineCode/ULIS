@@ -50,7 +50,7 @@ QueryDispatchedBlendFunctionForParameters_Generic( uint32 iFormat, eBlendingMode
                 case CM_RGB:    return  nullptr; //ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_RGB_MEM        , T );
                 case CM_CMYK:   return  nullptr; //ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_CMYK_MEM       , T );
                 case CM_Lab:    return  nullptr; //ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_Lab_MEM        , T );
-                default:        return  nullptr; //ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_DEFAULT_MEM    , T );
+                default:        return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic, T );
             }
     }
     ULIS2_ASSERT( false, "Bad input no dispatch path found" );

@@ -23,16 +23,7 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
-    {
-        FBlock test( 1, 1, ULIS2_FORMAT_RGBA8 );
-        FPixelProxy prox = test.PixelProxy( 0, 0 );
-        FPixelValue valu0( ULIS2_FORMAT_RGBA8 );
-        FPixelValue valu1( ULIS2_FORMAT_RGBA8, { 255_u8, 255_u8, 255_u8, 255_u8 } );
-        IPixel* pix = &prox;
-        FPixelValue t0 = prox;
-        auto dummy = 0;
-    }
-
+    //8bit to float
     /*
     {
         Vec16uc src( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 );
@@ -54,7 +45,6 @@ main( int argc, char *argv[] )
     }
     */
 
-    QApplication app( argc, argv );
     int width   = 512;
     int height  = 512;
     FBlock blockA( width, height, ULIS2_FORMAT_RGBA8 );
@@ -64,10 +54,10 @@ main( int argc, char *argv[] )
     FPerf perf_low( Perf_Lowest );
     FPerf perf_best( Perf_Best_CPU );
     FCPU cpu_info;
-    FPixel green(   ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
-    FPixel red(     ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
-    Fill( &pool, ULIS2_BLOCKING, perf_best, cpu_info, &blockA, green, ULIS2_NOCB );
-    Fill( &pool, ULIS2_BLOCKING, perf_best, cpu_info, &blockB, red, ULIS2_NOCB );
+    FPixel green( ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
+    FPixel red(   ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
+    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, green, ULIS2_NOCB );
+    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, red, ULIS2_NOCB );
 
     for( int x = 0; x < 512; ++x ) {
         float t = (float)x / (float)512;
@@ -78,12 +68,13 @@ main( int argc, char *argv[] )
 
     BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_LIGHTEN, AM_NORMAL, 0.8f, ULIS2_CALLCB );
 
+    // Qt Window
+    QApplication app( argc, argv );
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap  pixmap = QPixmap::fromImage( *image );
     QLabel*  label  = new  QLabel( widget );
     label->setPixmap( pixmap );
-
     widget->resize( pixmap.size() );
     widget->show();
 
