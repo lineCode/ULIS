@@ -59,14 +59,7 @@ main( int argc, char *argv[] )
     Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, green, ULIS2_NOCB );
     Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, red, ULIS2_NOCB );
 
-    for( int x = 0; x < 512; ++x ) {
-        float t = (float)x / (float)512;
-        for( int y = 0; y < 512; ++y ) {
-            blockB.PixelProxy( x, y ).SetAlpha8( t * 255 );
-        }
-    }
-
-    BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_LIGHTEN, AM_NORMAL, 0.8f, ULIS2_CALLCB );
+    BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_COLOR, AM_NORMAL, 1.f, ULIS2_CALLCB );
 
     // Qt Window
     QApplication app( argc, argv );
