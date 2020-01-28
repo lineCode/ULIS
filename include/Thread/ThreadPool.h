@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Base/Perf.h"
 #include <iostream>
 #include <deque>
 #include <functional>

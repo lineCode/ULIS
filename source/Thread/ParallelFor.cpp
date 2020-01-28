@@ -12,18 +12,21 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Thread/ParallelFor.h"
+#include "Base/Perf.h"
 #include "Thread/ThreadPool.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ParallelFor
-void ParallelFor( FThreadPool& iPool, int32 iNum, const FPerf& iPerf, const std::function< void( int32 ) >& iFun )
+void ParallelFor( FThreadPool& iPool, bool iBlocking, const FPerf& iPerf, int32 iNum, const std::function< void( int32 ) >& iFun )
 {
     if( iPerf.UseMT() && iPool.GetNumWorkers() > 1 )
     {
         for( int i = 0; i < iNum; ++i )
             iPool.ScheduleJob( iFun, i );
-        iPool.WaitForCompletion();
+
+        if( iBlocking )
+            iPool.WaitForCompletion();
     }
     else
     {

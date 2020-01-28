@@ -18,12 +18,14 @@
 #include <glm/vec2.hpp>
 
 ULIS2_NAMESPACE_BEGIN
-/// @fn         void Blend( FThreadPool* iPool, const FBlock* iSource, FBlock* iBackdrop, const glm::ivec2& DstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity, const FPerf& iPerf, bool iCallInvalidCB )
+/// @fn         void Blend( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, const FBlock* iSource, FBlock* iBackdrop, const glm::ivec2& DstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity, bool iCallInvalidCB )
 /// @brief      Blend two block together.
 /// @details    The source block will be blended on the backdrop block, according to the specified parameters.
 ///             Warning ! Both blocks should be the same underlying format in order for the function to succeed, else the function will fail and crash.
 /// @param      iPool           The pool to process the image in.
 /// @param      iBlocking       Weither the MT process should wait for completion or not
+/// @param      iPerf           The Performance Options for this operation, see \e FPerf.
+/// @param      iCPU            The CPU info for this runtime environment, see \e FCPU.
 /// @param      iSubpixel       Weither the blend process should use subpixel.
 /// @param      iSource         The pointer to the source \e FBlock ( remains untouched ).
 /// @param      iBackdrop       The pointer to the backdrop \e FBlock ( receives the blend ).
@@ -31,10 +33,11 @@ ULIS2_NAMESPACE_BEGIN
 /// @param      iBlendingMode   The blending mode ( see \e eBlendingMode ).
 /// @param      iAlphaMode      The alpha mode ( see \e eAlphaMode ).
 /// @param      iOpacity        The opacity used to perform the blend, beetween 0.0f and 1.0f.
-/// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
 ULIS2_API void Blend( FThreadPool*      iPool
                     , bool              iBlocking
+                    , const FPerf&      iPerf
+                    , const FCPU&       iCPU
                     , bool              iSubpixel
                     , const FBlock*     iSource
                     , FBlock*           iBackdrop
@@ -42,14 +45,15 @@ ULIS2_API void Blend( FThreadPool*      iPool
                     , eBlendingMode     iBlendingMode
                     , eAlphaMode        iAlphaMode
                     , float             iOpacity
-                    , const FPerf&      iPerf
                     , bool              iCallInvalidCB );
 
-/// @fn         void BlendSubpixelRect( FThreadPool* iPool, const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcRect, const glm::vec2& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity, const FPerf& iPerf, bool iCallInvalidCB )
+/// @fn         void BlendSubpixelRect( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcRect, const glm::vec2& iDstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity, bool iCallInvalidCB )
 /// @details    The source block will be blended on the backdrop block, according to the specified parameters.
 ///             Warning ! Both blocks should be the same underlying format in order for the function to succeed, else the function will fail and crash.
 /// @param      iPool           The pool to process the image in
 /// @param      iBlocking       Weither the MT process should wait for completion or not
+/// @param      iPerf           The Performance Options for this operation, see \e FPerf.
+/// @param      iCPU            The CPU info for this runtime environment, see \e FCPU.
 /// @param      iSubpixel       Weither the blend process should use subpixel.
 /// @param      iSource         The pointer to the source \e FBlock ( remains untouched ).
 /// @param      iBackdrop       The pointer to the backdrop \e FBlock ( receives the blend ).
@@ -58,10 +62,11 @@ ULIS2_API void Blend( FThreadPool*      iPool
 /// @param      iBlendingMode   The blending mode ( see \e eBlendingMode ).
 /// @param      iAlphaMode      The alpha mode ( see \e eAlphaMode ).
 /// @param      iOpacity        The opacity used to perform the blend, beetween 0 and 1.
-/// @param      iPerf           The Performance Options for this operation, see \e FPerf.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the back block after the operation finished.
 ULIS2_API void BlendRect( FThreadPool*      iPool
                         , bool              iBlocking
+                        , const FPerf&      iPerf
+                        , const FCPU&       iCPU
                         , bool              iSubpixel
                         , const FBlock*     iSource
                         , FBlock*           iBackdrop
@@ -70,11 +75,10 @@ ULIS2_API void BlendRect( FThreadPool*      iPool
                         , eBlendingMode     iBlendingMode
                         , eAlphaMode        iAlphaMode
                         , float             iOpacity
-                        , const FPerf&      iPerf
                         , bool              iCallInvalidCB );
 
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
-typedef void (*fpDispatchedBlendFunc)( FThreadPool* iPool, const FBlock*, FBlock*, const FRect&, const FRect&, const glm::vec2&, eBlendingMode, eAlphaMode, ufloat, const FPerf& );
+typedef void (*fpDispatchedBlendFunc)( FThreadPool*, bool, const FPerf&, const FBlock*, FBlock*, const FRect&, const FRect&, const glm::vec2&, eBlendingMode, eAlphaMode, ufloat );
 ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf );
 
 ULIS2_NAMESPACE_END

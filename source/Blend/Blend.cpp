@@ -11,8 +11,9 @@
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Base/Perf.h"
 #include "Blend/Blend.h"
+#include "Base/CPU.h"
+#include "Base/Perf.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
@@ -24,6 +25,8 @@ ULIS2_NAMESPACE_BEGIN
 void
 Blend( FThreadPool*         iPool
      , bool                 iBlocking
+     , const FPerf&         iPerf
+     , const FCPU&          iCPU
      , bool                 iSubpixel
      , const FBlock*        iSource
      , FBlock*              iBackdrop
@@ -31,11 +34,12 @@ Blend( FThreadPool*         iPool
      , eBlendingMode        iBlendingMode
      , eAlphaMode           iAlphaMode
      , float                iOpacity
-     , const FPerf&         iPerf
      , bool                 iCallInvalidCB )
 {
     BlendRect( iPool
              , iBlocking
+             , iPerf
+             , iCPU
              , iSubpixel
              , iSource
              , iBackdrop
@@ -44,7 +48,6 @@ Blend( FThreadPool*         iPool
              , iBlendingMode
              , iAlphaMode
              , iOpacity
-             , iPerf
              , iCallInvalidCB );
 }
 
@@ -52,6 +55,8 @@ Blend( FThreadPool*         iPool
 void
 BlendRect( FThreadPool*         iPool
          , bool                 iBlocking
+         , const FPerf&         iPerf
+         , const FCPU&          iCPU
          , bool                 iSubpixel
          , const FBlock*        iSource
          , FBlock*              iBackdrop
@@ -60,13 +65,13 @@ BlendRect( FThreadPool*         iPool
          , eBlendingMode        iBlendingMode
          , eAlphaMode           iAlphaMode
          , float                iOpacity
-         , const FPerf&         iPerf
          , bool                 iCallInvalidCB )
 {
     ULIS2_ASSERT( iPool,                                    "Bad pool" );
     ULIS2_ASSERT( iSource,                                  "Bad source" );
     ULIS2_ASSERT( iBackdrop,                                "Bad destination" );
     ULIS2_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match" );
+    ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
     ULIS2_WARNING( iSource != iBackdrop,                    "Blending a block on itself may trigger data race, use at your own risk or ensure written areas do not overlap." );
     // Ensure the selected source rect actually fits in source dimensions.
     FRect src_roi = iSrcRect & iSource->Rect();
@@ -87,7 +92,7 @@ BlendRect( FThreadPool*         iPool
     glm::vec2   subpixel_component = iSubpixel ? glm::abs( FMaths::FloatingPart( iDstPos ) ) : glm::vec2( 0.f );
 
     fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iSource->Format(), iBlendingMode, iAlphaMode, iSubpixel, iPerf );
-    if( fptr ) fptr( iPool, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity, iPerf );
+    if( fptr ) fptr( iPool, iBlocking, iPerf, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity );
 
     iBackdrop->Invalidate( dst_fit, iCallInvalidCB );
 }

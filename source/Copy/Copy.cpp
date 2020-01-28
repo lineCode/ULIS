@@ -12,7 +12,10 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Copy/Copy.h"
+#include "Base/CPU.h"
+#include "Base/Perf.h"
 #include "Data/Block.h"
+#include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
 #include <immintrin.h>
 
@@ -52,12 +55,14 @@ void InvokeCopyMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCou
 
 
 void
-Copy_imp( FThreadPool*    iPool
-        , const FBlock*   iSrc
-        , FBlock*         iDst
-        , const FRect&    iSrcRoi
-        , const FRect&    iDstRoi
-        , const FPerf&    iPerf )
+Copy_imp( FThreadPool*  iPool
+        , bool          iBlocking
+        , const FPerf&  iPerf
+        , const FCPU&   iCPU
+        , const FBlock* iSrc
+        , FBlock*       iDst
+        , const FRect&  iSrcRoi
+        , const FRect&  iDstRoi )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -70,53 +75,57 @@ Copy_imp( FThreadPool*    iPool
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define SRC srb + ( ( iSrcRoi.y + iLine ) * bps )
     #define DST dsb + ( ( iDstRoi.y + iLine ) * bps )
-    if( iPerf.UseAVX2() )
+    if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 )
     {
         const tSize stride = 32;
         const tSize count = iSrcRoi.w * bpp;
-        ParallelFor( *iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_AX2( DST, SRC, count, stride ); } );
+        ParallelFor( *iPool, iBlocking, iPerf, iSrcRoi.h, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_AX2( DST, SRC, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() )
+    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 )
     {
         const tSize stride = 16;
         const tSize count = iSrcRoi.w * bpp;
-        ParallelFor( *iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_SSE( DST, SRC, count, stride ); } );
+        ParallelFor( *iPool, iBlocking, iPerf, iSrcRoi.h, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_SSE( DST, SRC, count, stride ); } );
     }
     else
     {
         const tSize count = iSrcRoi.w * bpp;
-        ParallelFor( *iPool, iSrcRoi.h, iPerf, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_MEM( DST, SRC, iSrcRoi.w ); } );
+        ParallelFor( *iPool, iBlocking, iPerf, iSrcRoi.h, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_MEM( DST, SRC, iSrcRoi.w ); } );
     }
 }
 
 
 void
 Copy( FThreadPool*      iPool
+    , bool              iBlocking
+    , const FPerf&      iPerf
+    , const FCPU&       iCPU
     , const FBlock*     iSrc
     , FBlock*           iDst
     , const glm::ivec2& iDstPos
-    , const FPerf&      iPerf
     , bool              iCallInvalidCB )
 {
-    CopyRect( iPool, iSrc, iDst, iSrc->Rect(), iDstPos, iPerf, iCallInvalidCB );
+    CopyRect( iPool, iBlocking, iPerf, iCPU, iSrc, iDst, iSrc->Rect(), iDstPos, iCallInvalidCB );
 }
 
 
 void
 CopyRect( FThreadPool*      iPool
+        , bool              iBlocking
+        , const FPerf&      iPerf
+        , const FCPU&       iCPU
         , const FBlock*     iSrc
         , FBlock*           iDst
         , const FRect&      iSrcRect
         , const glm::ivec2& iDstPos
-        , const FPerf&      iPerf
         , bool              iCallInvalidCB )
 {
-    ULIS2_ASSERT( iPool,                            "Bad pool" );
-    ULIS2_ASSERT( iSrc,                             "Bad source" );
-    ULIS2_ASSERT( iDst,                             "Bad destination" );
-    ULIS2_ASSERT( iSrc->Format() == iDst->Format(), "Formats do not match" );
-    ULIS2_WARNING( iSrc != iDst,                    "Copying a block on itself may trigger data race, use at your own risk or ensure written areas do not overlap." );
-
+    ULIS2_ASSERT( iPool,                                    "Bad pool" );
+    ULIS2_ASSERT( iSrc,                                     "Bad source" );
+    ULIS2_ASSERT( iDst,                                     "Bad destination" );
+    ULIS2_ASSERT( iSrc->Format() == iDst->Format(),         "Formats do not match" );
+    ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
+    ULIS2_WARNING( iSrc != iDst,                            "Copying a block on itself may trigger data race, use at your own risk or ensure written areas do not overlap." );
     // Ensure the selected source rect actually fits in source dimensions.
     FRect src_roi = iSrcRect & iSrc->Rect();
 
@@ -131,7 +140,7 @@ CopyRect( FThreadPool*      iPool
     FRect dst_fit = dst_target & iDst->Rect();
     if( dst_fit.Area() <= 0 ) return;
 
-    Copy_imp( iPool, iSrc, iDst, src_roi, dst_fit, iPerf );
+    Copy_imp( iPool, iBlocking, iPerf, iCPU, iSrc, iDst, src_roi, dst_fit );
     iDst->Invalidate( dst_fit, iCallInvalidCB );
 }
 

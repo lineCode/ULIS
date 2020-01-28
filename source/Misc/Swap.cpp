@@ -11,7 +11,8 @@
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Conv/Swap.h"
+#include "Misc/Swap.h"
+#include "Base/Perf.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
@@ -36,11 +37,13 @@ InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2
 
 
 void
-Swap_imp( FThreadPool*    iPool
-        , FBlock*         iDst
-        , uint8           iC1
-        , uint8           iC2
-        , const FPerf&    iPerf )
+Swap_imp( FThreadPool*  iPool
+        , bool          iBlocking
+        , const FPerf&  iPerf
+        , const FCPU&   iCPU
+        , FBlock*       iDst
+        , uint8         iC1
+        , uint8         iC2 )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -49,25 +52,28 @@ Swap_imp( FThreadPool*    iPool
     const tSize bps = bpp * w;
     tByte*      dsb = iDst->DataPtr();
     #define DST dsb + ( iLine * bps )
-    ParallelFor( *iPool, iDst->Height(), iPerf, ULIS2_PF_CALL { InvokeSwapMTProcessScanline_MEM( DST, w, iC1, iC2, bpc, bpp ); } );
+    ParallelFor( *iPool, iBlocking, iPerf, iDst->Height(), ULIS2_PF_CALL { InvokeSwapMTProcessScanline_MEM( DST, w, iC1, iC2, bpc, bpp ); } );
 }
 
 void
 Swap( FThreadPool*  iPool
+    , bool          iBlocking
+    , const FPerf&  iPerf
+    , const FCPU&   iCPU
     , FBlock*       iDst
     , uint8         iC1
     , uint8         iC2
-    , const FPerf&  iPerf
     , bool          iCallInvalidCB )
 {
-    ULIS2_ASSERT( iPool,                            "Bad pool" );
-    ULIS2_ASSERT( iDst,                             "Bad destination" );
-    ULIS2_ASSERT( iC1 < iDst->SamplesPerPixel(),    "Bad channel" );
-    ULIS2_ASSERT( iC2 < iDst->SamplesPerPixel(),    "Bad channel" );
+    ULIS2_ASSERT( iPool,                                    "Bad pool" );
+    ULIS2_ASSERT( iDst,                                     "Bad destination" );
+    ULIS2_ASSERT( iC1 < iDst->SamplesPerPixel(),            "Bad channel" );
+    ULIS2_ASSERT( iC2 < iDst->SamplesPerPixel(),            "Bad channel" );
+    ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
     if( iC1 == iC2 )
         return;
 
-    Swap_imp( iPool, iDst, iC1, iC2, iPerf );
+    Swap_imp( iPool, iBlocking, iPerf, iCPU, iDst, iC1, iC2 );
     iDst->Invalidate( iCallInvalidCB );
 }
 

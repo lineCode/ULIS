@@ -21,6 +21,9 @@
 // Base
 #include "Base/CPU.h"
 #include "Base/Perf.h"
+// Maths
+#include "Maths/Geometry.h"
+#include "Maths/Maths.h"
 // Thread
 #include "Thread/ThreadPool.h"
 #include "Thread/ParallelFor.h"

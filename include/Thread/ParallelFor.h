@@ -13,8 +13,6 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Base/Perf.h"
-#include "Thread/ThreadPool.h"
 #include <functional>
 
 ULIS2_NAMESPACE_BEGIN
@@ -22,7 +20,7 @@ class FThreadPool;
 /////////////////////////////////////////////////////
 // ParallelFor
 #define ULIS2_PF_CALL [&]( int32 iLine )
-ULIS2_API void ParallelFor( FThreadPool& iPool, int32 iNum, const FPerf& iPerf, const std::function< void( int32 ) >& iFun );
+ULIS2_API void ParallelFor( FThreadPool& iPool, bool iBlocking, const FPerf& iPerf, int32 iNum, const std::function< void( int32 ) >& iFun );
 
 ULIS2_NAMESPACE_END
 

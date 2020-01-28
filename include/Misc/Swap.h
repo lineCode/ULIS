@@ -13,24 +13,27 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Base/Perf.h"
 
 ULIS2_NAMESPACE_BEGIN
 class FThreadPool;
 
-/// @fn         void Swap( FThreadPool* iPool, FBlock* iDst, const FPerf& iPerf, bool iCallInvalidCB )
+/// @fn         void Swap( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, FBlock* iDst, uint8 iC1, uint8 iC2, bool iCallInvalidCB )
 /// @brief      swap specified channels together in dst block.
 /// @details    The dst block will see its channels swapped.
 /// @param      iPool           The pool to process the image in.
-/// @param      iDst            The block destination to swap channels.
+/// @param      iBlocking       Weither the MT process should wait for completion or not
 /// @param      iPerf           The Performance Options for this operation, see \e FPerf.
+/// @param      iCPU            The CPU info for this runtime environment, see \e FCPU.
+/// @param      iDst            The block destination to swap channels.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void Swap( FThreadPool*  iPool
-                    , FBlock*       iDst
-                    , uint8         iC1
-                    , uint8         iC2
-                    , const FPerf&  iPerf
-                    , bool          iCallInvalidCB );
+ULIS2_API void Swap( FThreadPool*   iPool
+                   , bool           iBlocking
+                   , const FPerf&   iPerf
+                   , const FCPU&    iCPU
+                   , FBlock*        iDst
+                   , uint8          iC1
+                   , uint8          iC2
+                   , bool           iCallInvalidCB );
 
 ULIS2_NAMESPACE_END
 

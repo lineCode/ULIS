@@ -12,9 +12,11 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Fill/Fill.h"
+#include "Base/CPU.h"
+#include "Base/Perf.h"
+#include "Conv/Conv.h"
 #include "Data/Block.h"
 #include "Data/Pixel.h"
-#include "Conv/Conv.h"
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
 #include <immintrin.h>
@@ -62,11 +64,13 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCount, t
 
 
 void
-Fill_imp( FThreadPool*   iPool
-        , FBlock*        iDst
-        , const tByte*   iSrc
-        , const FRect&   iRoi
-        , const FPerf&   iPerf )
+Fill_imp( FThreadPool*  iPool
+        , bool          iBlocking
+        , const FPerf&  iPerf
+        , const FCPU&   iCPU
+        , FBlock*       iDst
+        , const tByte*  iSrc
+        , const FRect&  iRoi )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -76,7 +80,7 @@ Fill_imp( FThreadPool*   iPool
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
-    if( iPerf.UseAVX2() && bpp <= 32 )
+    if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bpp <= 32 )
     {
         const tSize stride = 32 - ( 32 % bpp );
         tByte* srcb = new tByte[32];
@@ -88,9 +92,9 @@ Fill_imp( FThreadPool*   iPool
         __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
         delete [] srcb;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, src, count, stride ); } );
+        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, src, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() && bpp <= 16 )
+    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bpp <= 16 )
     {
         const tSize stride = 16 - ( 16 % bpp );
         tByte* srcb = new tByte[16];
@@ -102,35 +106,40 @@ Fill_imp( FThreadPool*   iPool
         __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
         delete [] srcb;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE( DST, src, count, stride ); } );
+        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE( DST, src, count, stride ); } );
     }
     else
     {
-        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iSrc, iRoi.w, bpp ); } );
+        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iSrc, iRoi.w, bpp ); } );
     }
 }
 
 void
-Fill( FThreadPool*     iPool
-    , FBlock*          iDst
-    , const IPixel&    iColor
-    , const FPerf&     iPerf
-    , bool             iCallInvalidCB )
+Fill( FThreadPool*  iPool
+    , bool          iBlocking
+    , const FPerf&  iPerf
+    , const FCPU&   iCPU
+    , FBlock*       iDst
+    , const IPixel& iColor
+    , bool          iCallInvalidCB )
 {
-    FillRect( iPool, iDst, iColor, iDst->Rect(), iPerf, iCallInvalidCB );
+    FillRect( iPool, iBlocking, iPerf, iCPU, iDst, iColor, iDst->Rect(), iCallInvalidCB );
 }
 
 
 void
-FillRect( FThreadPool*     iPool
-        , FBlock*          iDst
-        , const IPixel&    iColor
-        , const FRect&     iRect
-        , const FPerf&     iPerf
-        , bool             iCallInvalidCB )
+FillRect( FThreadPool*  iPool
+        , bool          iBlocking
+        , const FPerf&  iPerf
+        , const FCPU&   iCPU
+        , FBlock*       iDst
+        , const IPixel& iColor
+        , const FRect&  iRect
+        , bool          iCallInvalidCB )
 {
-    ULIS2_ASSERT( iPool, "Bad pool" );
-    ULIS2_ASSERT( iDst, "Bad destination" );
+    ULIS2_ASSERT( iPool,                                    "Bad pool" );
+    ULIS2_ASSERT( iDst,                                     "Bad destination" );
+    ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
     FPixel color( iDst->Format() );
     Conv( iColor, color );
     const tByte* src = color.Ptr();
@@ -139,7 +148,7 @@ FillRect( FThreadPool*     iPool
     if( roi.Area() <= 0 )
         return;
 
-    Fill_imp( iPool, iDst, src, roi, iPerf );
+    Fill_imp( iPool, iBlocking, iPerf, iCPU, iDst, src, roi );
     iDst->Invalidate( roi, iCallInvalidCB );
 }
 

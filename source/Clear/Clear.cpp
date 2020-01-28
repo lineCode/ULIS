@@ -12,6 +12,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
+#include "Base/CPU.h"
+#include "Base/Perf.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
@@ -56,10 +58,12 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, tSize iStride )
 
 
 void
-Clear_imp( FThreadPool*   iPool
-         , FBlock*        iDst
-         , const FRect&   iRoi
-         , const FPerf&   iPerf )
+Clear_imp( FThreadPool* iPool
+         , bool         iBlocking
+         , const FPerf& iPerf
+         , const FCPU&  iCPU
+         , FBlock*      iDst
+         , const FRect& iRoi )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -69,49 +73,54 @@ Clear_imp( FThreadPool*   iPool
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
-    if( iPerf.UseAVX2() )
+    if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 )
     {
         const tSize stride = 32;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, count, stride ); } );
+        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() )
+    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 )
     {
         const tSize stride = 16;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE4_2( DST, count, stride ); } );
+        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE4_2( DST, count, stride ); } );
     }
     else
     {
-        ParallelFor( *iPool, iRoi.h, iPerf, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iRoi.w, bpp ); } );
+        ParallelFor( *iPool, iBlocking , iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iRoi.w, bpp ); } );
     }
 }
 
 void
-Clear( FThreadPool*     iPool
-     , FBlock*          iDst
-     , const FPerf&     iPerf
-     , bool             iCallInvalidCB )
+Clear( FThreadPool* iPool
+     , bool         iBlocking
+     , const FPerf& iPerf
+     , const FCPU&  iCPU
+     , FBlock*      iDst
+     , bool         iCallInvalidCB )
 {
-    ClearRect( iPool, iDst, iDst->Rect(), iPerf, iCallInvalidCB );
+    ClearRect( iPool, iBlocking, iPerf, iCPU, iDst, iDst->Rect(), iCallInvalidCB );
 }
 
 
 void
 ClearRect( FThreadPool* iPool
+         , bool         iBlocking
+         , const FPerf& iPerf
+         , const FCPU&  iCPU
          , FBlock*      iDst
          , const FRect& iRect
-         , const FPerf& iPerf
          , bool         iCallInvalidCB )
 {
-    ULIS2_ASSERT( iPool, "Bad pool" );
-    ULIS2_ASSERT( iDst, "Bad destination" );
+    ULIS2_ASSERT( iPool,                                    "Bad pool" );
+    ULIS2_ASSERT( iDst,                                     "Bad destination" );
+    ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
     FRect roi = iRect & iDst->Rect();
 
     if( roi.Area() <= 0 )
         return;
 
-    Clear_imp( iPool, iDst, roi, iPerf );
+    Clear_imp( iPool, iBlocking, iPerf, iCPU, iDst, roi );
     iDst->Invalidate( roi, iCallInvalidCB );
 }
 

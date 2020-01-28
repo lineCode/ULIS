@@ -63,10 +63,11 @@ main( int argc, char *argv[] )
     FThreadPool pool;
     FPerf perf_low( Perf_Lowest );
     FPerf perf_best( Perf_Best_CPU );
+    FCPU cpu_info;
     FPixel green(   ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
     FPixel red(     ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
-    Fill( &pool, &blockA, green, perf_best, ULIS2_NOCB );
-    Fill( &pool, &blockB, red,   perf_best, ULIS2_NOCB );
+    Fill( &pool, ULIS2_BLOCKING, perf_best, cpu_info, &blockA, green, ULIS2_NOCB );
+    Fill( &pool, ULIS2_BLOCKING, perf_best, cpu_info, &blockB, red, ULIS2_NOCB );
 
     for( int x = 0; x < 512; ++x ) {
         float t = (float)x / (float)512;
@@ -75,7 +76,7 @@ main( int argc, char *argv[] )
         }
     }
 
-    BlendRect( &pool, ULIS2_BLOCKING, ULIS2_SUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_LIGHTEN, AM_NORMAL, 0.8f, perf_low, ULIS2_CALLCB );
+    BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_LIGHTEN, AM_NORMAL, 0.8f, ULIS2_CALLCB );
 
     QWidget* widget = new  QWidget();
     QImage*  image  = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

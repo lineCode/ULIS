@@ -132,24 +132,26 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( int32               iLIN
 
 template< typename T >
 void
-BlendMT_Misc_MEM_Generic_Subpixel( FThreadPool*         iPool
-                                  , const FBlock*       iSource
-                                  , FBlock*             iBackdrop
-                                  , const FRect&        iSrcROI
-                                  , const FRect&        iBdpROI
-                                  , const glm::vec2&    iSubpixelComponent
-                                  , eBlendingMode       iBlendingMode
-                                  , eAlphaMode          iAlphaMode
-                                  , ufloat              iOpacity
-                                  , const FPerf&        iPerf )
+BlendMT_Misc_MEM_Generic_Subpixel( FThreadPool*     iPool
+                                 , bool             iBlocking
+                                 , const FPerf&     iPerf
+                                 , const FBlock*    iSource
+                                 , FBlock*          iBackdrop
+                                 , const FRect&     iSrcROI
+                                 , const FRect&     iBdpROI
+                                 , const glm::vec2& iSubpixelComponent
+                                 , eBlendingMode    iBlendingMode
+                                 , eAlphaMode       iAlphaMode
+                                 , ufloat           iOpacity )
 {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
     XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
     ParallelFor( *iPool
-               , iBdpROI.h
+               , iBlocking
                , iPerf
+               , iBdpROI.h
                , ULIS2_PF_CALL {
                     InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel< T >( iLine
                                                                                , iSource->DataPtr()   + ( ( iSrcROI.y + iLine ) * src_bps ) + ( iSrcROI.x * bpp )
@@ -232,6 +234,8 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( int32            iLINE
 template< typename T >
 void
 BlendMT_Misc_MEM_Generic( FThreadPool*      iPool
+                        , bool              iBlocking
+                        , const FPerf&      iPerf
                         , const FBlock*     iSource
                         , FBlock*           iBackdrop
                         , const FRect&      iSrcROI
@@ -239,16 +243,16 @@ BlendMT_Misc_MEM_Generic( FThreadPool*      iPool
                         , const glm::vec2&  iSubpixelComponent
                         , eBlendingMode     iBlendingMode
                         , eAlphaMode        iAlphaMode
-                        , ufloat            iOpacity
-                        , const FPerf&      iPerf )
+                        , ufloat            iOpacity )
 {
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
     XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
     ParallelFor( *iPool
-               , iBdpROI.h
+               , iBlocking
                , iPerf
+               , iBdpROI.h
                , ULIS2_PF_CALL {
                     InvokeBlendMTProcessScanline_Misc_MEM_Generic< T >( iLine
                                                                       , iSource->DataPtr()   + ( ( iSrcROI.y + iLine ) * src_bps ) + ( iSrcROI.x * bpp )
