@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         Pçdes.h
+* @file         Modes.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the Blend and Alpha modes enums and related info.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.

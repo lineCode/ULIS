@@ -1,12 +1,16 @@
 // Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
- * @file        FPerf.h
- * @author      Clement Berthaud
- * @copyright   Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
- * @license     Please refer to LICENSE.md
- * @brief       This file provides the definition for the FPerf struct.
- */
+*
+*   ULIS2
+*__________________
+*
+* @file         Perf.h
+* @author       Clement Berthaud
+* @brief        This file provides the declaration for the FPerf struct.
+* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 #pragma once
 #include "Base/Core.h"
 
