@@ -16,13 +16,13 @@
 #include "Blend/Blend.h"
 #include "Blend/Modes.h"
 // MT Mem Generic
-#include "Blend/Dispatch/Generic/MT/MEM/BlendMT_Separable_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/MT/MEM/BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/MT/MEM/BlendMT_NonSeparable_CM_Grey_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/MT/MEM/BlendMT_NonSeparable_CM_RGB_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/MT/MEM/BlendMT_NonSeparable_CM_CMYK_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/MT/MEM/BlendMT_NonSeparable_CM_Lab_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/MT/MEM/BlendMT_Misc_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/BlendMT_Separable_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_Grey_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_RGB_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_CMYK_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_Lab_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/BlendMT_Misc_MEM_Generic.ipp"
 
 // Note on dispatch:
 // First, the type is selected for instancing the appropriate template instanciation
