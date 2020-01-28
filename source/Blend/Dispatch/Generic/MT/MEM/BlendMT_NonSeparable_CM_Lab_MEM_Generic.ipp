@@ -42,6 +42,56 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_Lab_MEM_Generic_Subpixel( int32    
                                                                      , eAlphaMode       iAlphaMode
                                                                      , ufloat           iOpacity )
 {
+    const tByte*        src = iSRC;
+    tByte*              bdp = iBDP;
+    const glm::vec2&    sub = iSubpixelComponent;
+    glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
+
+    //  -------------
+    //  | m00 | m10 |
+    //  |_____|_____|___
+    //  | m01 | m11 |
+    //  |_____|_____|
+    //     |  |  |
+    //    vv0 | vv1  -> res
+    float m11, m01, m10, m00, vv0, vv1, res;
+    m11 = m10 = vv1 = 0.f;
+    for( int x = 0; x < iBdpROI.w; ++x ) {
+        m00 = m10;
+        m01 = m11;
+        vv0 = vv1;
+        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+        const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
+        const float alpha_src       = res * iOpacity;
+        const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+        const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+        float alpha_result;
+        ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
+
+        float subpixel_L = SampleSubpixelChannelPremult< T >( src, iXIDT[0], iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+        float subpixel_a = SampleSubpixelChannelPremult< T >( src, iXIDT[1], iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+        float subpixel_b = SampleSubpixelChannelPremult< T >( src, iXIDT[2], iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+        FLabF src_lab = { subpixel_L, subpixel_a, subpixel_b };
+        FLabF bdp_lab = { TYPE2FLOAT( bdp, iXIDT[0] ), TYPE2FLOAT( bdp, iXIDT[1] ), TYPE2FLOAT( bdp, iXIDT[2] ) };
+        FLChF src_lch = LabToLCh( src_lab );
+        FLChF bdp_lch = LabToLCh( bdp_lab );
+        FLChF result_lch;
+        #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_lch = NonSeparableOpF< _BM >( src_lch, bdp_lch );
+        ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        #undef TMP_ASSIGN
+        FLabF result_lab = LChToLab( result_lch );
+
+        // Compose
+        for( uint8 j = 0; j < iNCC; ++j )
+            FLOAT2TYPE( bdp, iXIDT[j], ComposeF( *( &(src_lab.L) + j ), *( &(bdp_lab.L) + j ), alpha_bdp, var, *( &(result_lab.L) + j ) ) );
+
+        // Assign alpha
+        if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+
+        // Increment ptrs by one pixel
+        src += iBPP;
+        bdp += iBPP;
+    }
 }
 
 template< typename T >
@@ -96,6 +146,39 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_Lab_MEM_Generic( int32             
                                                             , eAlphaMode        iAlphaMode
                                                             , ufloat            iOpacity )
 {
+    const tByte*    src = iSRC;
+    tByte*          bdp = iBDP;
+
+    for( int x = 0; x < iBdpROI.w; ++x ) {
+        // Compose Alpha
+        const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
+        const float alpha_src       = iHEA ? TYPE2FLOAT( src, iAID ) * iOpacity : iOpacity;
+        const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
+        const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+        float alpha_result;
+        ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
+
+        FLabF src_lab = { TYPE2FLOAT( src, iXIDT[0] ), TYPE2FLOAT( src, iXIDT[1] ), TYPE2FLOAT( src, iXIDT[2] ) };
+        FLabF bdp_lab = { TYPE2FLOAT( bdp, iXIDT[0] ), TYPE2FLOAT( bdp, iXIDT[1] ), TYPE2FLOAT( bdp, iXIDT[2] ) };
+        FLChF src_lch = LabToLCh( src_lab );
+        FLChF bdp_lch = LabToLCh( bdp_lab );
+        FLChF result_lch;
+        #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_lch = NonSeparableOpF< _BM >( src_lch, bdp_lch );
+        ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        #undef TMP_ASSIGN
+        FLabF result_lab = LChToLab( result_lch );
+
+        // Compose
+        for( uint8 j = 0; j < iNCC; ++j )
+            FLOAT2TYPE( bdp, iXIDT[j], ComposeF( *( &(src_lab.L) + j ), *( &(bdp_lab.L) + j ), alpha_bdp, var, *( &(result_lab.L) + j ) ) );
+
+        // Assign alpha
+        if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+
+        // Increment ptrs by one pixel
+        src += iBPP;
+        bdp += iBPP;
+    }
 }
 
 template< typename T >
