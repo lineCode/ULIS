@@ -51,10 +51,11 @@ Dependencies are redistributed directly within the repository under the 3rdparty
         - Little-CMS
         - VCL ( Agner Fog's Vector Class Library )
         - FeatureDetector
+        - FreeType
+        - OpenCL
 
 Additional Optional library can be used with ULIS2 to test or extend capabilities:
 
-        - OpenCL
         - Qt
 
 ## Getting Started
