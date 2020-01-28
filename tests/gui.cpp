@@ -54,12 +54,21 @@ main( int argc, char *argv[] )
     FPerf perf_low( Perf_Lowest );
     FPerf perf_best( Perf_Best_CPU );
     FCPU cpu_info;
-    FPixel green( ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
-    FPixel red(   ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
-    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, green, ULIS2_NOCB );
-    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, red, ULIS2_NOCB );
+    FPixel white( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
+    FPixel black( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
+    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, white, ULIS2_NOCB );
+    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, black, ULIS2_NOCB );
 
-    BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_COLOR, AM_NORMAL, 1.f, ULIS2_CALLCB );
+    for( int x = 0; x < 512; ++x )
+    {
+        float t = x / 512.f;
+        for( int y = 0; y < 512; ++y )
+        {
+            blockB.PixelProxy( x, y ).SetAlpha( t );
+        }
+    }
+
+    BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_BAYERDITHER8x8, AM_NORMAL, 1.f, ULIS2_CALLCB );
 
     // Qt Window
     QApplication app( argc, argv );
