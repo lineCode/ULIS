@@ -95,6 +95,7 @@ target_include_directories(
     ULIS2
     PUBLIC
     "include/"
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/

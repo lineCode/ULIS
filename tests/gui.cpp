@@ -20,15 +20,51 @@
 #include <vectorclass.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
+#include <Windows.h>
+#include <filesystem>
 using namespace ::ul2;
+
+bool replace(std::string& str, const std::string& from, const std::string& to) {
+    size_t start_pos = str.find(from);
+    if(start_pos == std::string::npos)
+        return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+}
 
 int
 main( int argc, char *argv[] )
 {
+    // Windows
+    // On Windows newer than 3.1, the font directory is located in %WINDIR%\fonts.
+    // 
+    // Mac OS X
+    // /System/Library/Fonts - Fonts necessary for the system. Do not touch these.
+    // /Library/Fonts - Additional fonts that can be used by all users. This is generally where fonts go if they are to be used by other applications.
+    // ~/Library/Fonts - Fonts specific to each user.
+    // /Network/Library/Fonts - Fonts shared for users on a network.
+    // 
+    // Linux
+    // /usr/share/fonts, /usr/local/share/fonts, and user-specific ~/.fonts
+    // /etc/fonts/fonts.conf or /etc/fonts/local.conf.
+
+    std::string font_path;
+
+    #ifdef ULIS2_WIN
+        CHAR windir[MAX_PATH];
+        GetWindowsDirectoryA( windir, MAX_PATH );
+        font_path = std::string( windir );
+    #elif defined ULIS2_MACOS
+        font_path = "";
+    #elif defined ULIS2_LINUX
+        font_path = "";
+    #endif
+
+    while( replace( font_path, "\\", "/" ) ) {}
+
     FT_Library  library;
     FT_Error error = FT_Init_FreeType( &library );
-    if ( error )
+    if( error )
     {
       std::cout << "an error occurred during freetype library initialization ..." << std::endl;
     }
