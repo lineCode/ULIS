@@ -18,11 +18,22 @@
 #include <QPixmap>
 #include <QLabel>
 #include <vectorclass.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 using namespace ::ul2;
 
 int
 main( int argc, char *argv[] )
 {
+    FT_Library  library;
+    FT_Error error = FT_Init_FreeType( &library );
+    if ( error )
+    {
+      std::cout << "an error occurred during freetype library initialization ..." << std::endl;
+    }
+
+
     //8bit to float
     /*
     {

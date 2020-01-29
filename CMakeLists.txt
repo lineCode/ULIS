@@ -58,6 +58,7 @@ endif()
 
 # Add Dependencies
 include(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/CMakeLists.txt)
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2 ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/build_freetype2 )
 
 ####################################
 # Add Main Project
@@ -79,20 +80,27 @@ else()
 endif()
 
 target_compile_definitions( ULIS2 PUBLIC UNICODE )
-#find_package(OpenCL)
+
+if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
+    set( OpenCL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/lightOCLSDK/include/"                 )
+    set( OpenCL_LIBRARY     "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/lightOCLSDK/lib/x86_64/OpenCL.lib"    )
+endif()
+find_package(OpenCL)
 set_target_properties( ULIS2 PROPERTIES OUTPUT_NAME "ULIS2.0" )
 target_link_libraries( ULIS2 PUBLIC lcms2 )
-#target_link_libraries( ULIS2 PUBLIC ${OpenCL_LIBRARY} )
+target_link_libraries( ULIS2 PUBLIC freetype )
+target_link_libraries( ULIS2 PUBLIC ${OpenCL_LIBRARY} )
 
 target_include_directories(
     ULIS2
     PUBLIC
     "include/"
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
-    #${OpenCL_INCLUDE_DIR}
+    ${OpenCL_INCLUDE_DIR}
     PRIVATE
     "source/"
 )
