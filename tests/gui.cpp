@@ -21,7 +21,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <Windows.h>
-#include <cppfs/FilePath.h>
 using namespace ::ul2;
 
 bool replace(std::string& str, const std::string& from, const std::string& to) {
@@ -55,10 +54,6 @@ main( int argc, char *argv[] )
     HDC hDC = ::GetDC(0);
     EnumFontFamiliesEx(hDC, &lf, (FONTENUMPROC)&EnumFontFamExProc, 0, 0);
     ReleaseDC(0,hDC);
-
-    cppfs::FilePath path("data/readme.txt");
-    std::string pathOut = path.toNative();
-    std::cout << pathOut << std::endl;
 // Related to the earlier posts, this seems to be a reliable way:
 // 
 // 1) Read the registered Windows font list from HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Fonts\ You will obtain file names and alternate file paths here. The Font names are not useful as they can change with user's locale.
@@ -103,6 +98,11 @@ main( int argc, char *argv[] )
     {
       std::cout << "an error occurred during freetype library initialization ..." << std::endl;
     }
+
+    FFilePathRegistry reg;
+    reg.AddLookupPath( "C:/Windows/Fonts/" );
+    reg.AddFilter( "ttf" );
+    reg.Parse();
 
 
     //8bit to float

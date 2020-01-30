@@ -20,6 +20,7 @@
 #include "Color/ProfileRegistry.h"
 // Base
 #include "Base/CPU.h"
+#include "Base/FilePathRegistry.h"
 #include "Base/Perf.h"
 // Maths
 #include "Maths/Geometry.h"
