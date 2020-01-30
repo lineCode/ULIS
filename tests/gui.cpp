@@ -32,9 +32,43 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
     return true;
 }
 
+int CALLBACK EnumFontFamExProc(
+   ENUMLOGFONTEX *lpelfe,
+  NEWTEXTMETRICEX *lpntme,
+  DWORD FontType,
+  LPARAM lParam
+  )
+{
+    std::wstring tmp( lpelfe->elfFullName );
+    std::wcout << lpelfe->elfFullName << L" " << lpelfe->elfStyle << L" " << lpelfe->elfScript << std::endl;
+
+    //Return non--zero to continue enumeration
+    return 1;
+}
+
 int
 main( int argc, char *argv[] )
 {
+    LOGFONT lf;
+    lf.lfFaceName[0] = '\0';
+    lf.lfCharSet = DEFAULT_CHARSET;
+    HDC hDC = ::GetDC(0);
+    EnumFontFamiliesEx(hDC, &lf, (FONTENUMPROC)&EnumFontFamExProc, 0, 0);
+    ReleaseDC(0,hDC);
+
+// Related to the earlier posts, this seems to be a reliable way:
+// 
+// 1) Read the registered Windows font list from HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Fonts\ You will obtain file names and alternate file paths here. The Font names are not useful as they can change with user's locale.
+// 
+// 2) Load the TrueType files (.ttf, .ttc, .otf): Use FreeType https://www.freetype.org/). Just initialize the freetype library and load face with FT_New_Face(library, path, 0, &face).
+// 
+// 3) Obtain the font Family name using FreeType. Use FT_Get_Sfnt_Name_Count() and FT_Get_Sfnt_Name() to obtain the string table. You will need to check if the encoding is Ansi, UTF16 or other, as some strings will be in multiple different languages and encodings.
+// 
+// 4) Obtain the OS2 TrueType properties. Use (TT_OS2 *) FT_Get_Sfnt_Table (face, ft_sfnt_os2) to get the OS2 structure. Interpret the structure using docs like https://www.microsoft.com/typography/otspec/os2.htm#fc
+// 
+// 5) Now you have font file path, family name, style properties and other information. Build a list of these and function to search for a file based on font family and style.
+
+
     // Windows
     // On Windows newer than 3.1, the font directory is located in %WINDIR%\fonts.
     // 
@@ -47,7 +81,6 @@ main( int argc, char *argv[] )
     // Linux
     // /usr/share/fonts, /usr/local/share/fonts, and user-specific ~/.fonts
     // /etc/fonts/fonts.conf or /etc/fonts/local.conf.
-
     std::string font_path;
 
     #ifdef ULIS2_WIN

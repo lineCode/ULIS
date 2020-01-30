@@ -58,7 +58,7 @@ endif()
 
 # Add Dependencies
 include(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/CMakeLists.txt)
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2 ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/build_freetype2 )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/build_freetype2 )
 
 ####################################
 # Add Main Project
