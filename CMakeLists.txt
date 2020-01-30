@@ -58,7 +58,8 @@ endif()
 
 # Add Dependencies
 include(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/CMakeLists.txt)
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/build_freetype2 )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/build_freetype2    )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/build_cppfs        )
 
 ####################################
 # Add Main Project
@@ -89,6 +90,7 @@ find_package(OpenCL)
 set_target_properties( ULIS2 PROPERTIES OUTPUT_NAME "ULIS2.0" )
 target_link_libraries( ULIS2 PUBLIC lcms2 )
 target_link_libraries( ULIS2 PUBLIC freetype )
+target_link_libraries( ULIS2 PUBLIC cppfs )
 target_link_libraries( ULIS2 PUBLIC ${OpenCL_LIBRARY} )
 
 target_include_directories(
@@ -98,6 +100,7 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs/source/cppfs/include
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/

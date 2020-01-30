@@ -21,7 +21,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <Windows.h>
-#include <filesystem>
+#include <cppfs/FilePath.h>
 using namespace ::ul2;
 
 bool replace(std::string& str, const std::string& from, const std::string& to) {
@@ -56,6 +56,9 @@ main( int argc, char *argv[] )
     EnumFontFamiliesEx(hDC, &lf, (FONTENUMPROC)&EnumFontFamExProc, 0, 0);
     ReleaseDC(0,hDC);
 
+    cppfs::FilePath path("data/readme.txt");
+    std::string pathOut = path.toNative();
+    std::cout << pathOut << std::endl;
 // Related to the earlier posts, this seems to be a reliable way:
 // 
 // 1) Read the registered Windows font list from HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Fonts\ You will obtain file names and alternate file paths here. The Font names are not useful as they can change with user's locale.
@@ -68,10 +71,9 @@ main( int argc, char *argv[] )
 // 
 // 5) Now you have font file path, family name, style properties and other information. Build a list of these and function to search for a file based on font family and style.
 
-
     // Windows
     // On Windows newer than 3.1, the font directory is located in %WINDIR%\fonts.
-    // 
+    //
     // Mac OS X
     // /System/Library/Fonts - Fonts necessary for the system. Do not touch these.
     // /Library/Fonts - Additional fonts that can be used by all users. This is generally where fonts go if they are to be used by other applications.
