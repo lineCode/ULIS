@@ -517,6 +517,7 @@ public:
     */
 };
 typedef FPixelValue FPixel;
+typedef FPixelValue FColor;
 
 /////////////////////////////////////////////////////
 /// @class      FPixelProxy
