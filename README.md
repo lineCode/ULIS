@@ -47,12 +47,14 @@ Additionally, the library dependencies changed and are now embedded in the repos
 ## Library Dependencies
 Dependencies are redistributed directly within the repository under the 3rdparty directory.
 
-        - glm
-        - Little-CMS
-        - VCL ( Agner Fog's Vector Class Library )
+        - cppfs
         - FeatureDetector
-        - FreeType
+        - freetype2
+        - glm
         - OpenCL
+        - Little-CMS
+        - stb
+        - VCL ( Agner Fog's Vector Class Library )
 
 Additional Optional library can be used with ULIS2 to test or extend capabilities:
 

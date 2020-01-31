@@ -31,29 +31,10 @@ bool replace(std::string& str, const std::string& from, const std::string& to) {
     return true;
 }
 
-int CALLBACK EnumFontFamExProc(
-   ENUMLOGFONTEX *lpelfe,
-  NEWTEXTMETRICEX *lpntme,
-  DWORD FontType,
-  LPARAM lParam
-  )
-{
-    std::wstring tmp( lpelfe->elfFullName );
-    std::wcout << lpelfe->elfFullName << L" " << lpelfe->elfStyle << L" " << lpelfe->elfScript << std::endl;
-
-    //Return non--zero to continue enumeration
-    return 1;
-}
 
 int
 main( int argc, char *argv[] )
 {
-    LOGFONT lf;
-    lf.lfFaceName[0] = '\0';
-    lf.lfCharSet = DEFAULT_CHARSET;
-    HDC hDC = ::GetDC(0);
-    EnumFontFamiliesEx(hDC, &lf, (FONTENUMPROC)&EnumFontFamExProc, 0, 0);
-    ReleaseDC(0,hDC);
 // Related to the earlier posts, this seems to be a reliable way:
 // 
 // 1) Read the registered Windows font list from HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Fonts\ You will obtain file names and alternate file paths here. The Font names are not useful as they can change with user's locale.
@@ -79,7 +60,6 @@ main( int argc, char *argv[] )
     // /usr/share/fonts, /usr/local/share/fonts, and user-specific ~/.fonts
     // /etc/fonts/fonts.conf or /etc/fonts/local.conf.
     std::string font_path;
-
     #ifdef ULIS2_WIN
         CHAR windir[MAX_PATH];
         GetWindowsDirectoryA( windir, MAX_PATH );
@@ -89,20 +69,31 @@ main( int argc, char *argv[] )
     #elif defined ULIS2_LINUX
         font_path = "";
     #endif
-
     while( replace( font_path, "\\", "/" ) ) {}
 
     FT_Library  library;
     FT_Error error = FT_Init_FreeType( &library );
-    if( error )
-    {
-      std::cout << "an error occurred during freetype library initialization ..." << std::endl;
-    }
+    if( error ) std::cout << "an error occurred during freetype library initialization ..." << std::endl;
 
     FFilePathRegistry reg;
     reg.AddLookupPath( "C:/Windows/Fonts/" );
-    reg.AddFilter( "ttf" );
+    reg.AddFilter( ".ttf" );
+    reg.AddFilter( ".ttc" );
+    reg.AddFilter( ".otf" );
     reg.Parse();
+    for( auto it : reg.GetMap() )
+    {
+        std::cout << it.first << "  " << it.second << std::endl;
+        FT_Face face;
+        FT_New_Face(library, it.second.c_str(), 0, &face );
+        std::cout << "num_faces             " << face->num_faces           << std::endl;
+        std::cout << "face_index            " << face->face_index          << std::endl;
+        std::cout << "style_flags           " << face->style_flags         << std::endl;
+        std::cout << "family_name           " << face->family_name         << std::endl;
+        std::cout << "style_name            " << face->style_name          << std::endl;
+        std::cout << std::endl;
+    }
+
 
 
     //8bit to float

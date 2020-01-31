@@ -12,9 +12,9 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Base/FilePathRegistry.h"
-#include <cppfs/FilePath.h>
+#include <cppfs/fs.h>
 #include <cppfs/FileHandle.h>
-#include <cppfs/windows/LocalFileHandle.h>
+#include <cppfs/FilePath.h>
 #include <iostream>
 #include <cstring>
 #include <cassert>
@@ -27,23 +27,23 @@ using namespace cppfs;
 size_t
 LevenshteinDistance( const char* s, size_t n, const char* t, size_t m )
 {
-   ++n; ++m;
-   size_t* d = new size_t[n * m];
-   memset(d, 0, sizeof(size_t) * n * m);
-   for( size_t i = 1, im = 0; i < m; ++i, ++im ) {
-      for( size_t j = 1, jn = 0; j < n; ++j, ++jn ) {
-         if( s[jn] == t[im] ) {
+    ++n; ++m;
+    size_t* d = new size_t[n * m];
+    memset(d, 0, sizeof(size_t) * n * m);
+    for( size_t i = 1, im = 0; i < m; ++i, ++im ) {
+        for( size_t j = 1, jn = 0; j < n; ++j, ++jn ) {
+            if( s[jn] == t[im] ) {
             d[(i * n) + j] = d[((i - 1) * n) + (j - 1)];
-         } else {
+            } else {
             d[(i * n) + j] = min(d[(i - 1) * n + j] + 1,        /* A deletion. */
-                             min(d[i * n + (j - 1)] + 1,        /* An insertion. */
-                             d[(i - 1) * n + (j - 1)] + 1));    /* A substitution. */
-         }
-      }
-   }
-   size_t r = d[n * m - 1];
-   delete [] d;
-   return  r;
+                                min(d[i * n + (j - 1)] + 1,        /* An insertion. */
+                                d[(i - 1) * n + (j - 1)] + 1));    /* A substitution. */
+            }
+        }
+    }
+    size_t r = d[n * m - 1];
+    delete [] d;
+    return  r;
 }
 
 ULIS2_NAMESPACE_BEGIN
@@ -112,8 +112,7 @@ FFilePathRegistry::Parse()
 {
     std::vector< string > list;
     for( auto it : mLookupPaths ) {
-        FileHandle dir;
-        dir.open( it );
+        FileHandle dir = fs::open( it );
         if( ( !dir.exists() ) || ( !dir.isDirectory() ) )
             continue;
         GatherEntriesRecursive( dir, &list );
@@ -127,10 +126,14 @@ FFilePathRegistry::Parse()
 std::string
 FFilePathRegistry::GetFilePathForClosestMatchingName( const std::string& iName )
 {
+    std::string lowercase_name = iName;
+    std::transform( lowercase_name.begin(), lowercase_name.end(), lowercase_name.begin(), ::tolower);
     std::vector< std::tuple< int, std::string > > matches;
     for( auto it : mMap ) {
         std::string key = it.first;
-        int dist = LevenshteinDistance( iName.c_str(), iName.size(), key.c_str(), key.size() );
+        std::string lowercase_key = key;
+        std::transform( lowercase_key.begin(), lowercase_key.end(), lowercase_key.begin(), ::tolower);
+        int dist = static_cast< int >( LevenshteinDistance( lowercase_name.c_str(), lowercase_name.size(), lowercase_key.c_str(), lowercase_key.size() ) );
         matches.push_back( std::tuple< int, std::string >( dist, key ) );
     }
     std::sort( matches.begin(), matches.end() );
@@ -161,10 +164,11 @@ void
 FFilePathRegistry::GatherEntriesRecursive( const cppfs::FileHandle& iDir, std::vector< std::string >* oList )
 {
     std::vector< std::string > entries = iDir.listFiles();
+    std::string dir_path = iDir.path();
 
     for( auto it : entries ) {
-        FileHandle entry;
-        entry.open( it );
+        std::string full_entry_path = dir_path + it;
+        FileHandle entry = fs::open( full_entry_path );
 
         if( entry.isDirectory() )
             GatherEntriesRecursive( entry, oList );
@@ -179,7 +183,7 @@ FFilePathRegistry::GatherEntriesRecursive( const cppfs::FileHandle& iDir, std::v
             }
 
             if( match )
-                oList->push_back( it );
+                oList->push_back( full_entry_path );
         }
     }
 }
@@ -188,7 +192,7 @@ std::string
 FFilePathRegistry::CreateName( const std::string& iFile )
 {
     FilePath path( iFile );
-    return  path.fileName();
+    return  path.baseName();
 }
 
 ULIS2_NAMESPACE_END
