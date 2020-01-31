@@ -148,6 +148,27 @@ Available formats:
         ULIS2_FORMAT_ZYX32      ULIS2_FORMAT_AXYZD      ULIS2_FORMAT_yxY32      ULIS2_FORMAT_AYxyD                                                 
         ULIS2_FORMAT_XYZA32     ULIS2_FORMAT_ZYXAD      ULIS2_FORMAT_YxyA32     ULIS2_FORMAT_yxYAD                                                 
 
+Available blending modes:
+
+        BM_NORMAL           BM_DARKERCOLOR      BM_LINEARLIGHT      BM_DIVIDE
+        BM_TOP              BM_LIGHTEN          BM_PINLIGHT         BM_AVERAGE
+        BM_BACK             BM_SCREEN           BM_HARDMIX          BM_HUE
+        BM_BEHIND           BM_COLORDODGE       BM_PHOENIX          BM_SATURATION
+        BM_DISSOLVE         BM_LINEARDODGE      BM_REFLECT          BM_COLOR
+        BM_BAYERDITHER8x8   BM_LIGHTERCOLOR     BM_GLOW             BM_LUMINOSITY
+        BM_DARKEN           BM_OVERLAY          BM_DIFFERENCE
+        BM_MULTIPY          BM_SOFTLIGHT        BM_EXCLUSION
+        BM_COLORBURN        BM_HARDLIGHT        BM_ADD
+        BM_LINEARBURN       BM_VIVIDLIGHT       BM_SUBSTRACT
+
+Available alpha modes:
+
+        AM_NORMAL           AM_ADD
+        AM_ERASE            AM_MUL
+        AM_TOP              AM_MIN
+        AM_BACK             AM_MAX
+        AM_SUB              AM_INVMAX
+
 Create colors in different models:
 
         FColor color_rgb8_red(      ULIS2_FORMAT_RGB8,  { 255, 0, 0 } );            // Red, constructed from int clamped in range 0-255.
@@ -183,24 +204,49 @@ Create colors in different models:
         Conv( color_RGBA8, color_AbaLF );   // perform model conversion and value conversion from RGBA uint8 to Lab float with specified memory layout AbaLffff.
         // etc ...
 
+Get info from pixel colors in different models:
+
+        FPixel rgba8( ULIS2_FORMAT_RGBA8 );
+        pixelcolor.BytesPerSample()     // 8
+        pixelcolor.Depth()              // 32
+        pixelcolor.Format()             // ULIS2_FORMAT_RGBA8
+        pixelcolor.Model()              // CM_RGB
+        pixelcolor.Type()               // TYPE_UINT8
+        pixelcolor.HasAlpha()           // true
+        pixelcolor.NumSamples()         // 4
+        pixelcolor.NumColorChannels()   // 3
+
 Create and manipulate Images in various formats:
 
-        // Preparing
         int         width   = 512;
         int         height  = 512;
+        // Allocate blocks of size 512x512, with format layout in memory RGBA8888, memory is uninitialized
         FBlock      image_A( width, height, ULIS2_FORMAT_RGBA8 );
         FBlock      image_B( width, height, ULIS2_FORMAT_RGBA8 );
+        // Create a thread pool with as many threads as supported by the system, and launch these threads
         FThreadPool threadPool;
+        // Specify performances intent for operations.
+        // User may want to not multithreading or AVX optimisation for benchmark purpose
         FPerf       perfIntent( Perf_MT | Perf_SSE4_2 | Perf_AVX2 );
+        // Runtime collected information about the system and cpu support for SIMD optimisations
         FCPU        cpuInfo;
+        // Pixel colors in RGB8
         FColor      colorWhite( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
         FColor      colorBlack( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
 
-        // Processing
+        // Clear image using performance intent and cpu info, processing in threadpool if intent allows it.
+        // The non blocking parameters tells the pool to not wait for completion directly, the user must call it manually.
+        // Beware of launching multiple concurrent operations on the same data with non blocking.
+        // Here we are clearing different data and waiting for completion afterwards.
         Clear( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_A, ULIS2_NOCB );
         Clear( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_B, ULIS2_NOCB );
-        pool.WaitForCompletion();
+        threadPool.WaitForCompletion();
+
+        // Fill image with specified color, the color can be in any format or model, it will be converted to the image format before filling.
         Fill( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_A, colorWhite, ULIS2_NOCB );
         Fill( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_B, colorBlack, ULIS2_NOCB );
-        pool.WaitForCompletion();
+        threadPool.WaitForCompletion();
+
+        // Blend two image_B onto image_A according to the into parameters.
+        // A normal blend will be performed with normal alpha at 50% opacity.
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOSUBPIXEL, &image_B, &image_A, glm::vec2( 0.f ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
