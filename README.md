@@ -79,6 +79,7 @@ ULIS2 GPU capabilities and interop with Direct3D or OpenGL in the context of a g
 Include ULIS2 headers:
 
         #include <ULIS2>
+        using namespace ul2;
         // Ready to go !
 
 Available formats:
@@ -149,8 +150,6 @@ Available formats:
 
 Create colors in different models:
 
-        #include <ULIS2>
-        // ...
         FColor color_rgb8_red(      ULIS2_FORMAT_RGB8,  { 255, 0, 0 } );            // Red, constructed from int clamped in range 0-255.
         FColor color_rgba8_blue(    ULIS2_FORMAT_RGBA8, { 0, 0, 255, 127 } );       // Blue with semi transparent alpha information, constructed from int clamped in range 0-255.
         FColor color_rgba8_green(   ULIS2_FORMAT_RGBA8, { 0.f, 1.f, 0.f, 0.5f } );  // Green with semi transparent alpha information, constructed from float scaled to range 0-255
@@ -183,3 +182,25 @@ Create colors in different models:
         Conv( color_RGBA8, color_BGRAD );   // perform layout conversion from RGBA to BGRA and value conversion from range 0-255 to 0.0-1.0
         Conv( color_RGBA8, color_AbaLF );   // perform model conversion and value conversion from RGBA uint8 to Lab float with specified memory layout AbaLffff.
         // etc ...
+
+Create and manipulate Images in various formats:
+
+        // Preparing
+        int         width   = 512;
+        int         height  = 512;
+        FBlock      image_A( width, height, ULIS2_FORMAT_RGBA8 );
+        FBlock      image_B( width, height, ULIS2_FORMAT_RGBA8 );
+        FThreadPool threadPool;
+        FPerf       perfIntent( Perf_MT | Perf_SSE4_2 | Perf_AVX2 );
+        FCPU        cpuInfo;
+        FColor      colorWhite( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
+        FColor      colorBlack( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
+
+        // Processing
+        Clear( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_A, ULIS2_NOCB );
+        Clear( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_B, ULIS2_NOCB );
+        pool.WaitForCompletion();
+        Fill( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_A, colorWhite, ULIS2_NOCB );
+        Fill( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_B, colorBlack, ULIS2_NOCB );
+        pool.WaitForCompletion();
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOSUBPIXEL, &image_B, &image_A, glm::vec2( 0.f ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
