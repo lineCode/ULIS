@@ -22,6 +22,7 @@
 #include "Base/CPU.h"
 #include "Base/FilePathRegistry.h"
 #include "Base/Perf.h"
+#include "Base/String.h"
 // Maths
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
@@ -35,4 +36,5 @@
 #include "Fill/Fill.h"
 #include "Clear/Clear.h"
 #include "Copy/Copy.h"
+#include "Text/Reg.h"
 

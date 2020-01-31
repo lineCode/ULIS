@@ -23,15 +23,6 @@
 #include <Windows.h>
 using namespace ::ul2;
 
-bool replace(std::string& str, const std::string& from, const std::string& to) {
-    size_t start_pos = str.find(from);
-    if(start_pos == std::string::npos)
-        return false;
-    str.replace(start_pos, from.length(), to);
-    return true;
-}
-
-
 int
 main( int argc, char *argv[] )
 {
@@ -69,11 +60,14 @@ main( int argc, char *argv[] )
     #elif defined ULIS2_LINUX
         font_path = "";
     #endif
-    while( replace( font_path, "\\", "/" ) ) {}
+    replace( font_path, "\\", "/" );
 
     FT_Library  library;
     FT_Error error = FT_Init_FreeType( &library );
     if( error ) std::cout << "an error occurred during freetype library initialization ..." << std::endl;
+
+    FFontRegistry refgf;
+    refgf.Parse( library );
 
     FFilePathRegistry reg;
     reg.AddLookupPath( "C:/Windows/Fonts/" );

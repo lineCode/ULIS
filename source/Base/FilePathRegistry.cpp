@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Base/FilePathRegistry.h"
+#include "Base/String.h"
 #include <cppfs/fs.h>
 #include <cppfs/FileHandle.h>
 #include <cppfs/FilePath.h>
@@ -23,28 +24,6 @@
 namespace std {   };
 using namespace std;
 using namespace cppfs;
-
-size_t
-LevenshteinDistance( const char* s, size_t n, const char* t, size_t m )
-{
-    ++n; ++m;
-    size_t* d = new size_t[n * m];
-    memset(d, 0, sizeof(size_t) * n * m);
-    for( size_t i = 1, im = 0; i < m; ++i, ++im ) {
-        for( size_t j = 1, jn = 0; j < n; ++j, ++jn ) {
-            if( s[jn] == t[im] ) {
-            d[(i * n) + j] = d[((i - 1) * n) + (j - 1)];
-            } else {
-            d[(i * n) + j] = min(d[(i - 1) * n + j] + 1,        /* A deletion. */
-                                min(d[i * n + (j - 1)] + 1,        /* An insertion. */
-                                d[(i - 1) * n + (j - 1)] + 1));    /* A substitution. */
-            }
-        }
-    }
-    size_t r = d[n * m - 1];
-    delete [] d;
-    return  r;
-}
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -110,6 +89,7 @@ FFilePathRegistry::AddFilters( const std::vector< std::string >& iFilters )
 void
 FFilePathRegistry::Parse()
 {
+    mMap.clear();
     std::vector< string > list;
     for( auto it : mLookupPaths ) {
         FileHandle dir = fs::open( it );
