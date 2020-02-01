@@ -61,7 +61,7 @@ FBlock::FBlock( tByte* iData
               , FColorProfile* iProfile
               , const FOnInvalid& iOnInvalid
               , const FOnCleanup& iOnCleanup )
-    : mData( nullptr )
+    : mData( iData )
     , mWidth( iWidth )
     , mHeight( iHeight )
     , mFormat( iFormat )

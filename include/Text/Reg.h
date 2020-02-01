@@ -15,8 +15,6 @@
 #include "Base/Core.h"
 #include <map>
 #include <vector>
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 ULIS2_NAMESPACE_BEGIN
 class FFontRegistry;
@@ -32,6 +30,12 @@ public:
     // Construction / Destruction
     ~FFontStyleKey();
     FFontStyleKey( const std::string& iFamilyName, const std::string& iStyleName, const std::string& iFontPath );
+
+public:
+    // Public API
+    const std::string& GetFamilyName() const;
+    const std::string& GetStyleName() const;
+    const std::string& GetFontPath() const;
 
 private:
     // Private Data Members
@@ -53,6 +57,10 @@ public:
 public:
     // Public API
     void AddFontStyleKey( const std::string& iStyle, const FFontStyleKey& iFontStyleKey );
+    int NumStyles() const;
+    const std::map< std::string, FFontStyleKey >& GetStyles() const;
+    const std::string& GetFamilyName() const;
+    FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iName );
 
 private:
     // Private Data Members
@@ -74,7 +82,14 @@ public:
     // Public API
     void AddLookupPath( const std::string& iPath );
     void AddLookupPaths( const std::vector< std::string >& iPaths );
-    void Parse( FT_Library iFT_Library );
+    void Load();
+    int NumFamilies() const;
+    int NumStyles() const;
+    const std::map< std::string, FFontFamilyKey >& GetFamilies() const;
+    const std::vector< std::string >& GetLookupPaths() const;
+    FFontFamilyKey* FuzzyFindFontFamily( const std::string& iName );
+    FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iFamily, const std::string& iStyle );
+    std::string FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle );
 
 private:
     // Private Data Members

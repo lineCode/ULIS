@@ -21,6 +21,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <Windows.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 using namespace ::ul2;
 
 int
@@ -62,12 +64,13 @@ main( int argc, char *argv[] )
     #endif
     replace( font_path, "\\", "/" );
 
-    FT_Library  library;
-    FT_Error error = FT_Init_FreeType( &library );
+    FT_Library  freetypeLib;
+    FT_Error error = FT_Init_FreeType( &freetypeLib );
     if( error ) std::cout << "an error occurred during freetype library initialization ..." << std::endl;
 
-    FFontRegistry refgf;
-    refgf.Parse( library );
+    FFontRegistry fontRegistry;
+    fontRegistry.Load();
+    std::string ariabl_black_path = fontRegistry.FuzzyFindFontPath( "Arial", "Black" );
 
     FFilePathRegistry reg;
     reg.AddLookupPath( "C:/Windows/Fonts/" );
@@ -79,7 +82,7 @@ main( int argc, char *argv[] )
     {
         std::cout << it.first << "  " << it.second << std::endl;
         FT_Face face;
-        FT_New_Face(library, it.second.c_str(), 0, &face );
+        FT_New_Face(freetypeLib, it.second.c_str(), 0, &face );
         std::cout << "num_faces             " << face->num_faces           << std::endl;
         std::cout << "face_index            " << face->face_index          << std::endl;
         std::cout << "style_flags           " << face->style_flags         << std::endl;
@@ -112,30 +115,36 @@ main( int argc, char *argv[] )
     }
     */
 
-    int width   = 512;
-    int height  = 512;
-    FBlock blockA( width, height, ULIS2_FORMAT_RGBA8 );
-    FBlock blockB( width, height, ULIS2_FORMAT_RGBA8 );
+    int width;
+    int height;
+    int channels;
+    unsigned char *rawtest = stbi_load( "C:/Users/PRAXINOS/Documents/work/TEST.png", &width, &height, &channels, STBI_rgb_alpha );
+
+    FBlock blockA( 512, 512, ULIS2_FORMAT_RGBA8 );
+    FBlock blockB( rawtest, width, height, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
 
     FThreadPool pool;
     FPerf perf_low( Perf_Lowest );
     FPerf perf_best( Perf_Best_CPU );
     FCPU cpu_info;
-    FPixel white( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
-    FPixel black( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
-    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, white, ULIS2_NOCB );
-    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, black, ULIS2_NOCB );
+    FPixel red( ULIS2_FORMAT_RGB8, { 211, 46, 46 } );
+    FPixel green( ULIS2_FORMAT_RGB8, { 79, 184, 46 } );
+    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, red, ULIS2_NOCB );
+    //Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, green, ULIS2_NOCB );
 
-    for( int x = 0; x < 512; ++x )
-    {
-        float t = x / 512.f;
-        for( int y = 0; y < 512; ++y )
-        {
+    /*
+    for( int y = 0; y < 64; ++y ) {
+        float t = FMaths::Clamp( ( 1.f - y / 64.f ) + 0.5f, 0.f, 1.f );
+        for( int x = 0; x < 64; ++x )
             blockB.PixelProxy( x, y ).SetAlpha( t );
-        }
     }
+    */
 
-    BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, FRect( 0, 0, 256, 256 ), glm::vec2( 32.5f, 32.5f ), BM_BAYERDITHER8x8, AM_NORMAL, 1.f, ULIS2_CALLCB );
+    for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
+        int y = ( i / 8 ) * 64;
+        int x = ( i % 8 ) * 64;
+        BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_NOSUBPIXEL, &blockB, &blockA, FRect( 0, 0, 64, 64 ), glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 0.5f, ULIS2_CALLCB );
+    }
 
     // Qt Window
     QApplication app( argc, argv );

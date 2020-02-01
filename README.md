@@ -220,17 +220,22 @@ Create and manipulate Images in various formats:
 
         int         width   = 512;
         int         height  = 512;
+        
         // Allocate blocks of size 512x512, with format layout in memory RGBA8888, memory is uninitialized
         FBlock      image_A( width, height, ULIS2_FORMAT_RGBA8 );
         FBlock      image_B( width, height, ULIS2_FORMAT_RGBA8 );
+        
         // Create a thread pool with as many threads as supported by the system, and launch these threads
         FThreadPool threadPool;
+        
         // Specify performances intent for operations.
-        // User may want to not multithreading or AVX optimisation for benchmark purpose
+        // User may want to not use multithreading or AVX optimisation for benchmark purpose
         FPerf       perfIntent( Perf_MT | Perf_SSE4_2 | Perf_AVX2 );
+        
         // Runtime collected information about the system and cpu support for SIMD optimisations
         FCPU        cpuInfo;
         // Pixel colors in RGB8
+        
         FColor      colorWhite( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
         FColor      colorBlack( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
 
@@ -247,6 +252,7 @@ Create and manipulate Images in various formats:
         Fill( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &image_B, colorBlack, ULIS2_NOCB );
         threadPool.WaitForCompletion();
 
-        // Blend two image_B onto image_A according to the into parameters.
+        // Blend image_B onto image_A according to the input parameters.
         // A normal blend will be performed with normal alpha at 50% opacity.
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOSUBPIXEL, &image_B, &image_A, glm::vec2( 0.f ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
+        

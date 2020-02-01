@@ -35,8 +35,8 @@ FOnInvalid::FOnInvalid()
 
 
 FOnInvalid::FOnInvalid( fpInvalidateFunction iInvalidateFunction, void* iInvalidateInfo )
-    : execute( nullptr )
-    , info( nullptr )
+    : execute( iInvalidateFunction )
+    , info( iInvalidateInfo )
 {
 }
 
@@ -59,8 +59,8 @@ FOnCleanup::FOnCleanup()
 
 
 FOnCleanup::FOnCleanup( fpCleanupFunction iCleanupFunction, void* iCleanupInfo )
-    : execute( nullptr )
-    , info( nullptr )
+    : execute( iCleanupFunction )
+    , info( iCleanupInfo )
 {
 }
 
