@@ -207,8 +207,8 @@ Create colors in different models:
 Get info from pixel colors in different models:
 
         FPixel rgba8( ULIS2_FORMAT_RGBA8 );
-        pixelcolor.BytesPerSample()     // 8
-        pixelcolor.Depth()              // 32
+        pixelcolor.BytesPerSample()     // 1
+        pixelcolor.Depth()              // 4
         pixelcolor.Format()             // ULIS2_FORMAT_RGBA8
         pixelcolor.Model()              // CM_RGB
         pixelcolor.Type()               // TYPE_UINT8
@@ -234,8 +234,8 @@ Create and manipulate Images in various formats:
         
         // Runtime collected information about the system and cpu support for SIMD optimisations
         FCPU        cpuInfo;
-        // Pixel colors in RGB8
         
+        // Pixel colors in RGB8
         FColor      colorWhite( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
         FColor      colorBlack( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
 
