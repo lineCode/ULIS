@@ -79,7 +79,7 @@ ULIS2_API void BlendRect( FThreadPool*      iPool
 
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedBlendFunc)( FThreadPool*, bool, const FPerf&, const FBlock*, FBlock*, const FRect&, const FRect&, const glm::vec2&, eBlendingMode, eAlphaMode, ufloat );
-ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf );
+ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU );
 
 ULIS2_NAMESPACE_END
 

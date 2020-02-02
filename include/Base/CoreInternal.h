@@ -60,4 +60,6 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 #define ULIS2_NOCB          false
 #define ULIS2_SUBPIXEL      true
 #define ULIS2_NOSUBPIXEL    false
+#define ULIS2_AA            true
+#define ULIS2_NOAA          false
 

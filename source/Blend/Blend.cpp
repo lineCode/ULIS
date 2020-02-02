@@ -91,7 +91,7 @@ BlendRect( FThreadPool*         iPool
     float       opacity = FMaths::Clamp( iOpacity, 0.f, 1.f );
     glm::vec2   subpixel_component = iSubpixel ? glm::abs( FMaths::FloatingPart( iDstPos ) ) : glm::vec2( 0.f );
 
-    fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iSource->Format(), iBlendingMode, iAlphaMode, iSubpixel, iPerf );
+    fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iSource->Format(), iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
     if( fptr ) fptr( iPool, iBlocking, iPerf, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity );
 
     iBackdrop->Invalidate( dst_fit, iCallInvalidCB );

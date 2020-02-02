@@ -39,4 +39,5 @@
 #include "Text/Reg.h"
 #include "Text/FontEngine.h"
 #include "Text/Font.h"
+#include "Text/Text.h"
 

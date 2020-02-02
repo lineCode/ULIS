@@ -66,7 +66,7 @@ static const char* kwBlendingMode[] =
     , "Back"
     , "Behind"
     , "Dissolve"
-    , "OrderedDitheringBayer8x8"
+    , "Dither"
     , "Darken"
     , "Multiply"
     , "ColorBurn"

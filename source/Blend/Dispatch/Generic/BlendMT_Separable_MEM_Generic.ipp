@@ -14,7 +14,7 @@
 #pragma once
 #include "Base/Core.h"
 #include "Blend/Blend.h"
-#include "Blend/Func/BlendHelpers.ipp"
+#include "Base/Helpers.ipp"
 #include "Blend/Modes.h"
 #include "Blend/Func/SeparableBlendFuncF.ipp"
 #include "Blend/Func/AlphaFuncF.ipp"
@@ -34,7 +34,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( int32              
                                                            , uint8              iSPP
                                                            , uint8              iBPP
                                                            , uint8              iAID
-                                                           , tSize               iSRC_BPS
+                                                           , tSize              iSRC_BPS
                                                            , const FRect&       iSrcROI
                                                            , const FRect&       iBdpROI
                                                            , const glm::vec2&   iSubpixelComponent

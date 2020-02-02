@@ -21,7 +21,11 @@
 #include <Windows.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 using namespace ::ul2;
+
+#include <glm/gtx/matrix_transform_2d.hpp> 
 
 int
 main( int argc, char *argv[] )
@@ -33,6 +37,7 @@ main( int argc, char *argv[] )
 
     FBlock blockA( 512, 512, ULIS2_FORMAT_RGBA8 );
     FBlock blockB( rawtest, width, height, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
+    FBlock blockC( 64, 12, ULIS2_FORMAT_RGBA8 );
 
     FThreadPool pool;
     FPerf perf_low( Perf_Lowest );
@@ -40,7 +45,11 @@ main( int argc, char *argv[] )
     FCPU cpu_info;
     FPixel red( ULIS2_FORMAT_RGB8, { 198, 145, 46 } );
     FPixel green( ULIS2_FORMAT_RGB8, { 79, 184, 46 } );
+    FPixel black( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
+    FPixel blue( ULIS2_FORMAT_RGB8, { 46, 124, 220 } );
+    FPixel white( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
     Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, red, ULIS2_NOCB );
+    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockC, black, ULIS2_NOCB );
     //Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, green, ULIS2_NOCB );
 
     for( int y = 0; y < 64; ++y ) {
@@ -52,32 +61,14 @@ main( int argc, char *argv[] )
     FFontEngine fontEngine;
     FFontRegistry fontRegistry;
     fontRegistry.Load( fontEngine );
-    FFont font( fontEngine, fontRegistry, "Arial", "Black" );
-    FT_Face face = font.Handle();
-    FT_Error error = FT_Set_Pixel_Sizes( face, 0, 16 );
-    FT_UInt glyph_index = FT_Get_Char_Index( face, 'A' );
-    error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-    /* convert to an anti-aliased bitmap */
-    error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-
-    FT_Int  x_max = face->glyph->bitmap.width;
-    FT_Int  y_max = face->glyph->bitmap.rows;
-
-    for( int x = 0; x < x_max; ++x ) {
-        for( int y = 0; y < y_max; ++y ) {
-            FPixelProxy prox = blockB.PixelProxy( x, y );
-            uint8 val = face->glyph->bitmap.buffer[ y * x_max + x ];
-            prox.SetR8 ( 0 );
-            prox.SetG8 ( 0 );
-            prox.SetB8 ( 0 );
-            prox.SetA8 ( val );
-        }
-    }
+    FFont font_arialRegular( fontEngine, fontRegistry, "Segoe UI", "Regular" );
 
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int y = ( i / 8 ) * 64;
         int x = ( i % 8 ) * 64;
-        BlendRect( &pool, ULIS2_BLOCKING, perf_low, cpu_info, ULIS2_NOSUBPIXEL, &blockB, &blockA, FRect( 0, 0, 64, 64 ), glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 0.5f, ULIS2_CALLCB );
+        BlendRect( &pool, ULIS2_BLOCKING, perf_best, cpu_info, ULIS2_NOSUBPIXEL, &blockB, &blockA, FRect( 0, 0, 64, 64 ), glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 1.f, ULIS2_CALLCB );
+        Blend( &pool, ULIS2_BLOCKING, perf_best, cpu_info, ULIS2_NOSUBPIXEL, &blockC, &blockA, glm::vec2( x, y + 64.f - 12 ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
+        TraceText( &pool, ULIS2_NONBLOCKING, perf_best, cpu_info, ULIS2_AA, &blockA, kwBlendingMode[ i ], font_arialRegular, 10, white, glm::vec2( x, y + 64.f - 12 ), glm::mat2( 1.f ), ULIS2_NOCB );
     }
 
     // Qt Window

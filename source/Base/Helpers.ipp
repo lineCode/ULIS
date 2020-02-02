@@ -79,6 +79,37 @@ ULIS2_API ULIS2_FORCEINLINE void  XBuildBlendParams( const FRect&   iROI
     *oBDP_JMP = ( iBDP->Width() - ( *oROI_W ) ) * ( *oBPP );
 }
 
+ULIS2_API ULIS2_FORCEINLINE void  XBuildTraceTextParams( const FBlock*  iDST
+                                                       , uint8*         oBPC
+                                                       , uint8*         oNCC
+                                                       , uint8*         oHEA
+                                                       , uint8*         oSPP
+                                                       , uint8*         oBPP
+                                                       , uint8*         oAID
+                                                       , uint8**        oIDT
+                                                       , tSize*         oBPS )
+{
+    tFormat fmt = iDST->Format();
+    // BPC: Bytes Per Channel
+    // NCC: Num Color Channel ( Without Alpha )
+    // HEA: Has Extra Alpha ( 0 = false, else true )
+    // SPP: Samples Per Pixel ( Number of Channels with Alpha )
+    // BPP: Bytes Per Pixel ( With Alpha )
+    // NUM: Number or Pixels to treat in ROI
+    // AID: Alpha redirected Index
+    // IDT: Redirected channels Index table, allocated here, don't forget to delete [] it outside.
+    // BPS: Bytes per scanline for src
+    *oBPC = ULIS2_R_DEPTH(    fmt );
+    *oNCC = ULIS2_R_CHANNELS( fmt );
+    *oHEA = ULIS2_R_ALPHA(    fmt );
+    *oSPP = (*oNCC) + (*oHEA);
+    *oBPP = (*oBPC) * (*oSPP);
+    uint8 cod = ULIS2_R_RS( fmt ); // Reverse-Swapped layout identifier
+    *oIDT = new uint8[*oSPP];
+    BuildIndexTable( cod, *oSPP, *oIDT, oAID );
+    *oBPS = iDST->Width() * ( *oBPP );
+}
+
 template< typename T >
 ULIS2_API ULIS2_FORCEINLINE
 void
