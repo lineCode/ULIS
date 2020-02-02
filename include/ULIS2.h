@@ -37,4 +37,6 @@
 #include "Clear/Clear.h"
 #include "Copy/Copy.h"
 #include "Text/Reg.h"
+#include "Text/FontEngine.h"
+#include "Text/Font.h"
 

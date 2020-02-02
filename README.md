@@ -255,4 +255,31 @@ Create and manipulate Images in various formats:
         // Blend image_B onto image_A according to the input parameters.
         // A normal blend will be performed with normal alpha at 50% opacity.
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOSUBPIXEL, &image_B, &image_A, glm::vec2( 0.f ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
-        
+
+Full program for rendering simple black text on white background:
+
+        #include <ULIS2>
+
+        int
+        main( int argc, char *argv[] )
+        {
+            FBlock          block( 512, 512, ULIS2_FORMAT_BGRA8 );
+            FThreadPool     threadPool;
+            FPerf           perfIntent( Perf_Best_CPU );
+            FCPU            cpuInfo
+            FPixel          white( ULIS2_FORMAT_BGRA8, { 255_u8, 255_u8, 255_u8, 255_u8 } );
+            FPixel          black( ULIS2_FORMAT_BGRA8, { 0_u8, 0_u8, 0_u8, 0_u8 } );
+
+            Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &block, white, ULIS2_NOCB );
+
+            FFontEngine     fontEngine;
+            FFontRegistry   fontRegistry;
+            fontRegistry.Load( fontEngine );
+
+            FFont font_Arial_Black( fontEngine, fontRegistry, "Arial", "Black" );
+
+            DrawText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &block, "Hello World !", glm::vec2( 0.f ), black, font_Arial_Black, 16px, ULIS2_NOCB );
+
+            return  0;
+        }
+

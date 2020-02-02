@@ -14,15 +14,13 @@
 #include "Text/Reg.h"
 #include "Base/FilePathRegistry.h"
 #include "Base/String.h"
+#include "Text/FontEngine.h"
 
 #include <iostream>
 #include <cstring>
 #include <cassert>
 #include <algorithm>
 #include <tuple>
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 #ifdef ULIS2_WIN
 #include <Windows.h>
@@ -114,8 +112,8 @@ FFontFamilyKey::GetFamilyName() const
 }
 
 
-FFontStyleKey*
-FFontFamilyKey::FuzzyFindFontStyleKey( const std::string& iName )
+const FFontStyleKey*
+FFontFamilyKey::FuzzyFindFontStyleKey( const std::string& iName ) const
 {
     std::string lowercase_name = iName;
     std::transform( lowercase_name.begin(), lowercase_name.end(), lowercase_name.begin(), ::tolower);
@@ -188,12 +186,8 @@ FFontRegistry::AddLookupPaths( const std::vector< std::string >& iPaths )
 
 
 void
-FFontRegistry::Load()
+FFontRegistry::Load( const FFontEngine& iFontEngine )
 {
-    FT_Library  freetypeLib;
-    FT_Error error = FT_Init_FreeType( &freetypeLib );
-    if( error ) std::cout << "an error occurred during freetype library initialization ..." << std::endl;
-
     mFamilies.clear();
     FFilePathRegistry reg;
     reg.AddLookupPaths( mLookupPaths );
@@ -202,17 +196,18 @@ FFontRegistry::Load()
     reg.AddFilter( ".otf" );
     reg.Parse();
 
-    for( auto it : reg.GetMap() )
-    {
+    for( auto it : reg.GetMap() ) {
         FT_Face face;
-        FT_New_Face( freetypeLib, it.second.c_str(), 0, &face );
+        FT_Error load_error = FT_New_Face( iFontEngine.Handle(), it.second.c_str(), 0, &face );
+        ULIS2_WARNING( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
+        if( load_error ) continue;
         std::string familyName( face->family_name );
         std::string style( face->style_name );
         mFamilies.try_emplace( familyName, FFontFamilyKey( familyName ) );
         mFamilies.at( familyName ).AddFontStyleKey( style, FFontStyleKey( familyName, style, it.second ) );
+        // Free face
+        FT_Done_Face( face );
     }
-
-    auto dummy = 0;
 }
 
 
@@ -248,8 +243,8 @@ FFontRegistry::GetLookupPaths() const
 }
 
 
-FFontFamilyKey*
-FFontRegistry::FuzzyFindFontFamily( const std::string& iName )
+const FFontFamilyKey*
+FFontRegistry::FuzzyFindFontFamily( const std::string& iName ) const
 {
     std::string lowercase_name = iName;
     std::transform( lowercase_name.begin(), lowercase_name.end(), lowercase_name.begin(), ::tolower);
@@ -266,15 +261,15 @@ FFontRegistry::FuzzyFindFontFamily( const std::string& iName )
     if( mFamilies.find( std::get< 1 >( matches[0] ) ) == mFamilies.end() ) {
         return  nullptr;
     } else {
-        return  &mFamilies.at( std::get< 1 >( matches[0] ) );
+        return  &( mFamilies.at( std::get< 1 >( matches[0] ) ) );
     }
 }
 
 
-FFontStyleKey*
-FFontRegistry::FuzzyFindFontStyleKey( const std::string& iFamily, const std::string& iStyle )
+const FFontStyleKey*
+FFontRegistry::FuzzyFindFontStyleKey( const std::string& iFamily, const std::string& iStyle ) const
 {
-    FFontFamilyKey* fam = FuzzyFindFontFamily( iFamily );
+    const FFontFamilyKey* fam = FuzzyFindFontFamily( iFamily );
 
     if( !fam )
         return  nullptr;
@@ -284,9 +279,9 @@ FFontRegistry::FuzzyFindFontStyleKey( const std::string& iFamily, const std::str
 
 
 std::string
-FFontRegistry::FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle )
+FFontRegistry::FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle ) const
 {
-    FFontStyleKey* stk = FuzzyFindFontStyleKey( iFamily, iStyle );
+    const FFontStyleKey* stk = FuzzyFindFontStyleKey( iFamily, iStyle );
 
     if( !stk )
         return  "";

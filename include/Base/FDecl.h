@@ -27,5 +27,8 @@ struct FRect;
 class FThreadPool;
 class FPerf;
 struct FCPU;
+class FFontRegistry;
+class FFontEngine;
+class FFont;
 ULIS2_NAMESPACE_END
 

@@ -60,7 +60,7 @@ public:
     int NumStyles() const;
     const std::map< std::string, FFontStyleKey >& GetStyles() const;
     const std::string& GetFamilyName() const;
-    FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iName );
+    const FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iName ) const;
 
 private:
     // Private Data Members
@@ -82,14 +82,14 @@ public:
     // Public API
     void AddLookupPath( const std::string& iPath );
     void AddLookupPaths( const std::vector< std::string >& iPaths );
-    void Load();
+    void Load( const FFontEngine& iFontEngine );
     int NumFamilies() const;
     int NumStyles() const;
     const std::map< std::string, FFontFamilyKey >& GetFamilies() const;
     const std::vector< std::string >& GetLookupPaths() const;
-    FFontFamilyKey* FuzzyFindFontFamily( const std::string& iName );
-    FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iFamily, const std::string& iStyle );
-    std::string FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle );
+    const FFontFamilyKey* FuzzyFindFontFamily( const std::string& iName ) const;
+    const FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iFamily, const std::string& iStyle ) const;
+    std::string FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle ) const;
 
 private:
     // Private Data Members

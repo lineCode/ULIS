@@ -160,7 +160,7 @@ ULIS2_FORCEINLINE ufloat BlendSubstractF( ufloat iCs, ufloat iCb ) {
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Divide
 ULIS2_FORCEINLINE ufloat BlendDivideF( ufloat iCs, ufloat iCb ) {
-    return  iCs == 0.f && iCb == 0.f ? 0.f : iCs == 0.f && iCb != 0.f ? 1.f : iCb / iCs;
+    return  iCs == 0.f && iCb == 0.f ? 0.f : iCs == 0.f && iCb != 0.f ? 1.f : FMaths::Clamp( iCb / iCs, 0.f, 1.f );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Phoenix
