@@ -5,13 +5,13 @@
 *   ULIS2
 *__________________
 *
-* @file         Reg.cpp
+* @file         FontRegistry.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the registry classes for the Font Registry tools.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Text/Reg.h"
+#include "Text/FontRegistry.h"
 #include "Base/FilePathRegistry.h"
 #include "Base/String.h"
 #include "Text/FontEngine.h"

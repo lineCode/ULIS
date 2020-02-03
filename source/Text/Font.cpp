@@ -13,7 +13,7 @@
 */
 #include "Text/Font.h"
 #include "Text/FontEngine.h"
-#include "Text/Reg.h"
+#include "Text/FontRegistry.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

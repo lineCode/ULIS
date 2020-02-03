@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         Reg.h
+* @file         FontRegistry.h
 * @author       Clement Berthaud
 * @brief        This file provides the registry classes for the Font Registry tools.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.

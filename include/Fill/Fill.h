@@ -15,8 +15,6 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-class FThreadPool;
-
 /// @fn         void Fill( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, FBlock* iDst, const FColor& iColor, const FPerf& iPerf, bool iCallInvalidCB )
 /// @brief      Fill dst block with specified color.
 /// @details    The dst block will be filled entirely with a solid color.

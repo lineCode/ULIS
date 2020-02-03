@@ -35,7 +35,7 @@ main( int argc, char *argv[] )
     int channels;
     unsigned char *rawtest = stbi_load( "C:/Users/PRAXINOS/Documents/work/TEST.png", &width, &height, &channels, STBI_rgb_alpha );
 
-    FBlock blockA( 512, 512, ULIS2_FORMAT_RGBA8 );
+    FBlock blockA( 512, 320, ULIS2_FORMAT_RGBA8 );
     FBlock blockB( rawtest, width, height, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
     FBlock blockC( 64, 12, ULIS2_FORMAT_RGBA8 );
 
