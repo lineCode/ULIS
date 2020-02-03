@@ -546,6 +546,7 @@ public:
 #define X_DO_H( i, _E0, _E1, _E2, _E3 ) ULIS2_API_TEMPLATE const i& IPixel::GetConstRef< i >( uint8 ) const;
 #define X_DO_I( i, _E0, _E1, _E2, _E3 ) ULIS2_API_TEMPLATE void IPixel::SetValueRaw< i >( uint8, i iValue );
 #define X_DO_J( i, _E0, _E1, _E2, _E3 ) ULIS2_API_TEMPLATE void IPixel::SetValue< i >( uint8, i iValue );
+#ifdef ULIS2_MSVC
 ULIS2_FOR_ALL_TYPES_DO( X_DO_A, 0, 0, 0, 0 )
 ULIS2_FOR_ALL_TYPES_DO( X_DO_B, 0, 0, 0, 0 )
 ULIS2_FOR_ALL_TYPES_DO( X_DO_C, 0, 0, 0, 0 )
@@ -556,6 +557,7 @@ ULIS2_FOR_ALL_TYPES_DO( X_DO_G, 0, 0, 0, 0 )
 ULIS2_FOR_ALL_TYPES_DO( X_DO_H, 0, 0, 0, 0 )
 ULIS2_FOR_ALL_TYPES_DO( X_DO_I, 0, 0, 0, 0 )
 ULIS2_FOR_ALL_TYPES_DO( X_DO_J, 0, 0, 0, 0 )
+#endif // ULIS2_MSVC
 #undef X_DO_A
 #undef X_DO_B
 #undef X_DO_C

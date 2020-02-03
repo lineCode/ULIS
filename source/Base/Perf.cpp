@@ -11,7 +11,6 @@
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "Base/Perf.h"
 
 ULIS2_NAMESPACE_BEGIN

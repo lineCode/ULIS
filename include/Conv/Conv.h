@@ -56,6 +56,7 @@ template< typename T1, typename T2 > void ConvToYxy(    const IPixel& iSrc, IPix
 #define X_DO_I( t1, t2 ) ULIS2_API_TEMPLATE void ConvToLab<  t1, t2 >( const IPixel& iSrc, IPixel& iDst );
 #define X_DO_J( t1, t2 ) ULIS2_API_TEMPLATE void ConvToXYZ<  t1, t2 >( const IPixel& iSrc, IPixel& iDst );
 #define X_DO_K( t1, t2 ) ULIS2_API_TEMPLATE void ConvToYxy<  t1, t2 >( const IPixel& iSrc, IPixel& iDst );
+#ifdef ULIS2_MSVC
 ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X_DO_A )
 ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X_DO_B )
 ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X_DO_C )
@@ -67,6 +68,7 @@ ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X_DO_H )
 ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X_DO_I )
 ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X_DO_J )
 ULIS2_FOR_ALL_TYPES_COMBINATIONS_DO( X_DO_K )
+#endif // ULIS2_MSVC
 #undef X_DO_A
 #undef X_DO_B
 #undef X_DO_C
