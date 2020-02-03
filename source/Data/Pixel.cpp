@@ -335,8 +335,411 @@ FPixelValue::FPixelValue( const FPixelValue& iValue )
     memcpy( mData, iValue.Ptr(), Depth() );
 }
 
+
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------ Named static constructors
+//static
+FPixelValue
+FPixelValue::FromGreyA8( uint8 iGrey, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_GA8, { iGrey, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromGreyA16( uint16 iGrey, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_GA16, { iGrey, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromGreyA32( uint32 iGrey, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_GA32, { iGrey, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromGreyAF( float iGrey, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_GAF, { iGrey, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromGreyAD( double iGrey, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_GAD, { iGrey, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromRGBA8( uint8 iR, uint8 iG, uint8 iB, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_RGBA8, { iR, iG, iB, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromRGBA16( uint16 iR, uint16 iG, uint16 iB, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_RGBA16, { iR, iG, iB, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromRGBA32( uint32 iR, uint32 iG, uint32 iB, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_RGBA32, { iR, iG, iB, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromRGBAF( float iR, float iG, float iB, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_RGBAF, { iR, iG, iB, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromRGBAD( double iR, double iG, double iB, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_RGBAD, { iR, iG, iB, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSVA8( uint8 iH, uint8 iS, uint8 iV, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSVA8, { iH, iS, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSVA16( uint16 iH, uint16 iS, uint16 iV, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSVA16, { iH, iS, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSVA32( uint32 iH, uint32 iS, uint32 iV, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSVA32, { iH, iS, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSVAF( float iH, float iS, float iV, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSVAF, { iH, iS, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSVAD( double iH, double iS, double iV, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSVAD, { iH, iS, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSLA8( uint8 iH, uint8 iS, uint8 iL, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSLA8, { iH, iS, iL, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSLA16( uint16 iH, uint16 iS, uint16 iL, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSLA16, { iH, iS, iL, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSLA32( uint32 iH, uint32 iS, uint32 iL, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSLA32, { iH, iS, iL, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSLAF( float iH, float iS, float iL, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSLAF, { iH, iS, iL, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromHSLAD( double iH, double iS, double iL, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_HSLAD, { iH, iS, iL, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYA8( uint8 iC, uint8 iM, uint8 iY, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYA8, { iC, iM, iY, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYA16( uint16 iC, uint16 iM, uint16 iY, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYA16, { iC, iM, iY, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYA32( uint32 iC, uint32 iM, uint32 iY, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYA32, { iC, iM, iY, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYAF( float iC, float iM, float iY, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYAF, { iC, iM, iY, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYAD( double iC, double iM, double iY, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYAD, { iC, iM, iY, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYKA8( uint8 iC, uint8 iM, uint8 iY, uint8 iK, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYKA8, { iC, iM, iY, iK, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYKA16( uint16 iC, uint16 iM, uint16 iY, uint16 iK, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYKA16, { iC, iM, iY, iK, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYKA32( uint32 iC, uint32 iM, uint32 iY, uint32 iK, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYKA32, { iC, iM, iY, iK, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYKAF( float iC, float iM, float iY, float iK, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYKAF, { iC, iM, iY, iK, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromCMYKAD( double iC, double iM, double iY, double iK, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_CMYKAD, { iC, iM, iY, iK, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYUVA8( uint8 iY, uint8 iU, uint8 iV, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YUVA8, { iY, iU, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYUVA16( uint16 iY, uint16 iU, uint16 iV, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YUVA16, { iY, iU, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYUVA32( uint32 iY, uint32 iU, uint32 iV, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YUVA32, { iY, iU, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYUVAF( float iY, float iU, float iV, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YUVAF, { iY, iU, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYUVAD( double iY, double iU, double iV, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YUVAD, { iY, iU, iV, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromLabA8( uint8 iL, uint8 ia, uint8 ib, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_Lab8, { iL, ia, ib, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromLabA16( uint16 iL, uint16 ia, uint16 ib, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_Lab16, { iL, ia, ib, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromLabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_Lab32, { iL, ia, ib, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromLabAF( float iL, float ia, float ib, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_LabF, { iL, ia, ib, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromLabAD( double iL, double ia, double ib, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_LabD, { iL, ia, ib, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromXYZA8( uint8 iX, uint8 iY, uint8 iZ, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_XYZA8, { iX, iY, iZ, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromXYZA16( uint16 iX, uint16 iY, uint16 iZ, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_XYZA16, { iX, iY, iZ, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromXYZA32( uint32 iX, uint32 iY, uint32 iZ, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_XYZA32, { iX, iY, iZ, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromXYZAF( float iX, float iY, float iZ, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_XYZAF, { iX, iY, iZ, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromXYZAD( double iX, double iY, double iZ, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_XYZAD, { iX, iY, iZ, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYxyA8( uint8 iY, uint8 ix, uint8 iy, uint8 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YxyA8, { iY, ix, iy, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYxyA16( uint16 iY, uint16 ix, uint16 iy, uint16 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YxyA16, { iY, ix, iy, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYxyA32( uint32 iY, uint32 ix, uint32 iy, uint32 iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YxyA32, { iY, ix, iy, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYxyAF( float iY, float ix, float iy, float iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YxyAF, { iY, ix, iy, iA } );
+}
+
+
+//static
+FPixelValue
+FPixelValue::FromYxyAD( double iY, double ix, double iy, double iA )
+{
+    return  FPixelValue( ULIS2_FORMAT_YxyAD, { iY, ix, iy, iA } );
+}
+
+
 /////////////////////////////////////////////////////
-// FPixelValue
+// FPixelProxy
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
 FPixelProxy::~FPixelProxy()

@@ -55,7 +55,7 @@ TraceText( FThreadPool*         iPool
     matrix.yy = (FT_Fixed)( iTransform[1].y * 0x10000L );
 
     fpDispatchedTextFunc fptr = QueryDispatchedTextFunctionForParameters( iDst->Format(), iAntialiasing, iPerf, iCPU );
-    if( fptr ) fptr( iPool, iBlocking, iPerf, iDst, iText, iFont, iSize, color, iPos.x, iPos.y, matrix );
+    if( fptr ) fptr( iPool, iBlocking, iPerf, iDst, iText, iFont, iSize, color, (int)iPos.x, (int)iPos.y, matrix );
 
     iDst->Invalidate( iCallInvalidCB );
 }
