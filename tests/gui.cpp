@@ -30,51 +30,17 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
-    int width;
-    int height;
-    int channels;
-    unsigned char *base = stbi_load( "C:/Users/PRAXINOS/Documents/work/base_160.png",   &width, &height, &channels, STBI_rgb_alpha );
-    unsigned char *over = stbi_load( "C:/Users/PRAXINOS/Documents/work/detail_160.png", &width, &height, &channels, STBI_rgb_alpha );
-
     FBlock blockA( 1280, 800, ULIS2_FORMAT_RGBA8 );
-    FBlock blockBase( base, width, height, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
-    FBlock blockOver( over, width, height, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
-    FBlock blockC( 160, 20, ULIS2_FORMAT_RGBA8 );
-
-    FThreadPool pool( 1 );
-    FPerf perf_low( Perf_Lowest );
+    FBlock blockB( 64, 64, ULIS2_FORMAT_RGBA8 );
+    FThreadPool pool( 4 );
     FPerf perf_best( Perf_Best_CPU );
     FCPU cpu_info;
     FPixel red( ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
     FPixel green( ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
-    FPixel black( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
-    FPixel blue( ULIS2_FORMAT_RGB8, { 46, 124, 220 } );
-    FPixel white( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
-    //Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockBase, red, ULIS2_NOCB );
-    //Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockOver, green, ULIS2_NOCB );
-    Clear( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, ULIS2_NOCB );
-    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockC, black, ULIS2_NOCB );
-    /*
-    for( int y = 0; y < 64; ++y ) {
-        float t = ( 1.f - y / 64.f );
-        for( int x = 0; x < 64; ++x )
-            blockB.PixelProxy( x, y ).SetAlpha( t );
-    }
-    */
+    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, green, ULIS2_NOCB );
+    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, red, ULIS2_NOCB );
 
-    FFontEngine fontEngine;
-    FFontRegistry fontRegistry;
-    fontRegistry.Load( fontEngine );
-    FFont font_arialRegular( fontEngine, fontRegistry, "Segoe UI", "Regular" );
-
-    for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
-        int y = ( i / 8 ) * 160;
-        int x = ( i % 8 ) * 160;
-        Blend( &pool, ULIS2_BLOCKING, perf_best, cpu_info, ULIS2_NOSUBPIXEL, &blockBase, &blockA, glm::vec2( x, y ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
-        Blend( &pool, ULIS2_BLOCKING, perf_best, cpu_info, ULIS2_NOSUBPIXEL, &blockOver, &blockA, glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 0.5f, ULIS2_CALLCB );
-        Blend( &pool, ULIS2_BLOCKING, perf_best, cpu_info, ULIS2_NOSUBPIXEL, &blockC, &blockA, glm::vec2( x, y + 160.f - 20 ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
-        TraceText( &pool, ULIS2_NONBLOCKING, perf_best, cpu_info, ULIS2_AA, &blockA, kwBlendingMode[ i ], font_arialRegular, 16, white, glm::vec2( x, y + 160.f - 20 ), glm::mat2( 1.f ), ULIS2_NOCB );
-    }
+    Blend( &pool, ULIS2_BLOCKING, perf_best, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, glm::vec2( 64.5f, 64.5f ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_NOCB );
 
     // Qt Window
     QApplication app( argc, argv );

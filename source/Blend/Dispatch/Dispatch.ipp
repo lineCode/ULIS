@@ -61,6 +61,7 @@ QueryDispatchedBlendFunctionForParameters_Generic( uint32 iFormat, eBlendingMode
     return  nullptr;
 }
 
+/*
 // RGBA8 Dispatcher
 template<>
 fpDispatchedBlendFunc
@@ -73,6 +74,7 @@ QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( uint32 iFormat, eBle
     ULIS2_ASSERT( false, "Bad input no dispatch path found" );
     return  nullptr;
 }
+*/
 
 // Generic Dispatcher Selector
 template< typename T >

@@ -22,25 +22,70 @@
 #include "Thread/ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
+struct _FBMTPSSSSERGBA8SP {
+    const int32          mCoverageX;
+    const int32          mCoverageY;
+    const tSize          mSrcBps;
+    const uint8          mAid;
+    const Vec4f          mTX;
+    const Vec4f          mTY;
+    const Vec4f          mUX;
+    const Vec4f          mUY;
+    const eBlendingMode  mBlendingMode;
+    const eAlphaMode     mAlphaMode;
+    const ufloat         mOpacity;
+};
+
 void
-InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( int32              iLINE
-                                                         , const tByte*       iSRC
-                                                         , tByte*             iBDP
-                                                         , uint8*             iXIDT
-                                                         , uint8              iBPC
-                                                         , uint8              iNCC
-                                                         , uint8              iHEA
-                                                         , uint8              iSPP
-                                                         , uint8              iBPP
-                                                         , uint8              iAID
-                                                         , tSize              iSRC_BPS
-                                                         , const FRect&       iSrcROI
-                                                         , const FRect&       iBdpROI
-                                                         , const glm::vec2&   iSubpixelComponent
-                                                         , eBlendingMode      iBlendingMode
-                                                         , eAlphaMode         iAlphaMode
-                                                         , ufloat             iOpacity )
+InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const int32                  iLine
+                                                         , const tByte*                 iSrc
+                                                         , tByte*                       iBdp
+                                                         , int32                        iW
+                                                         , const _FBMTPSSSSERGBA8SP&    iParams )
 {
+    //  -------------
+    //  | m00 | m10 |
+    //  |_____|_____|___
+    //  | m01 | m11 |
+    //  |_____|_____|
+    //     |  |  |
+    //    vv0 | vv1  -> res
+    Vec4f alpha_m11, alpha_m01, alpha_m10, alpha_m00, alpha_vv0, alpha_vv1, alpha_smp;
+    Vec4f smpch_m11, smpch_m01, smpch_m10, smpch_m00, smpch_vv0, smpch_vv1, smpch_smp;
+    alpha_m11 = alpha_m10 = alpha_vv1 = 0.f;
+    smpch_m11 = smpch_m10 = smpch_vv1 = 0.f;
+    int x = 0;
+    while( --iW ) {
+        alpha_m00 = alpha_m10;  smpch_m00 = smpch_m10;
+        alpha_m01 = alpha_m11;  smpch_m01 = smpch_m11;
+        alpha_vv0 = alpha_vv1;  smpch_vv0 = smpch_vv1;
+        alpha_m11 = iLine > iParams.mCoverageY ? 0.f : *( iSrc + iParams.mAid ) / 255.f;
+        alpha_m10 = iLine < 1 ? 0.f : *( ( iSrc - iParams.mSrcBps ) + iParams.mAid ) / 255.f;
+        alpha_vv1 = alpha_m10 * iParams.mTY + alpha_m11 * iParams.mUY;
+        alpha_smp = alpha_vv0 * iParams.mTX + alpha_vv1 * iParams.mUX;
+        smpch_m11 = iLine > iParams.mCoverageY ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc ) ) ) ) ) / 255.f;
+        smpch_m10 = iLine < 1 ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc - iParams.mSrcBps ) ) ) ) ) / 255.f;
+        smpch_vv1 = ( smpch_m10 * alpha_m10 ) * iParams.mTY + ( smpch_m11 * alpha_m11 )  * iParams.mUY;
+        smpch_smp = select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * iParams.mTX + smpch_vv1 * iParams.mUX ) / alpha_smp );
+        Vec4f alpha_bdp     = *( iBdp + iParams.mAid ) / 255.f;
+        Vec4f alpha_src     = alpha_smp * iParams.mOpacity;
+        Vec4f alpha_comp    = AlphaNormalSSEF( alpha_src, alpha_bdp );
+        Vec4f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
+        Vec4f alpha_result;
+        ULIS2_ASSIGN_ALPHASSEF( iParams.mAlphaMode, alpha_result, alpha_src, alpha_bdp );
+        Vec4f bdp_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f;
+        Vec4f res_chan;
+        #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpSSEF< _BM >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
+        ULIS2_SWITCH_FOR_ALL_DO( iParams.mBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        #undef TMP_ASSIGN
+        auto _pack = _mm_cvtps_epi32( res_chan );
+        _pack = _mm_packus_epi32( _pack, _pack );
+        _pack = _mm_packus_epi16( _pack, _pack );
+        *( uint32* )iBdp = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
+        *( iBdp + iParams.mAid ) = uint8( alpha_result[0] * 0xFF );
+        iSrc += 4;
+        iBdp += 4;
+    }
 }
 
 void
@@ -56,18 +101,35 @@ BlendMT_Separable_SSE_RGBA8_Subpixel( FThreadPool*        iPool
                                     , eAlphaMode          iAlphaMode
                                     , ufloat              iOpacity )
 {
+    tFormat fmt = iSource->Format();
+    uint8   aid = ( ( ( ~( ( ULIS2_R_RS( fmt ) + 0x1 ) & 0x2 ) ) & 0x2 ) >> 1 ) * 3;
+    tSize   src_bps = 4 * iSource->Width();
+    tSize   bdp_bps = 4 * iBackdrop->Width();
+    Vec4f   TX( iSubpixelComponent.x ); Vec4f TY( iSubpixelComponent.y );
+    Vec4f   UX = 1.f - TX;              Vec4f UY = 1.f - TY;
+    _FBMTPSSSSERGBA8SP params { iSrcROI.w, iSrcROI.h, src_bps, aid, TX, TY, UX, UY, iBlendingMode, iAlphaMode, iOpacity };
+    ParallelFor( *iPool
+               , iBlocking
+               , iPerf
+               , iBdpROI.h
+               , ULIS2_PF_CALL {
+                    InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( iLine
+                    , iSource->DataPtr()    + ( ( iSrcROI.y + iLine ) * src_bps ) + ( iSrcROI.x * 4 )
+                    , iBackdrop->DataPtr()  + ( ( iBdpROI.y + iLine ) * bdp_bps ) + ( iBdpROI.x * 4 )
+                    , iBdpROI.w, params );
+               } );
 }
 
 void
 InvokeBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte*          iSrc
                                                 , tByte*                iBdp
-                                                , int                   iW
+                                                , int32                 iW
                                                 , const uint8           iAid
                                                 , const eBlendingMode   iBlendingMode
                                                 , const eAlphaMode      iAlphaMode
-                                                , float                 iOpacity )
+                                                , const ufloat          iOpacity )
 {
-    while( iW-- ) {
+    while( --iW ) {
         ufloat alpha_bdp    = *( iBdp + iAid ) / 255.f;
         ufloat alpha_src    = ( *( iSrc + iAid ) / 255.f ) * iOpacity;
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
@@ -79,6 +141,7 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte*          iSrc
         Vec4f res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpSSEF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
         ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        #undef TMP_ASSIGN
         auto _pack = _mm_cvtps_epi32( res_chan );
         _pack = _mm_packus_epi32( _pack, _pack );
         _pack = _mm_packus_epi16( _pack, _pack );
@@ -102,14 +165,8 @@ BlendMT_Separable_SSE_RGBA8( FThreadPool*     iPool
                            , eAlphaMode       iAlphaMode
                            , ufloat           iOpacity )
 {
-    // bpc = 1;
-    // ncc = 3;
-    // hea = true;
-    // spp = 4;
-    // bpp = 4;
     tFormat fmt = iSource->Format();
     uint8   aid = ( ( ( ~( ( ULIS2_R_RS( fmt ) + 0x1 ) & 0x2 ) ) & 0x2 ) >> 1 ) * 3;
-
     tSize   src_bps = 4 * iSource->Width();
     tSize   bdp_bps = 4 * iBackdrop->Width();
     ParallelFor( *iPool
@@ -119,7 +176,7 @@ BlendMT_Separable_SSE_RGBA8( FThreadPool*     iPool
                , ULIS2_PF_CALL {
                     InvokeBlendMTProcessScanline_Separable_SSE_RGBA8( iSource->DataPtr()    + ( ( iSrcROI.y + iLine ) * src_bps ) + ( iSrcROI.x * 4 )
                                                                     , iBackdrop->DataPtr()  + ( ( iBdpROI.y + iLine ) * bdp_bps ) + ( iBdpROI.x * 4 )
-                                                                    , iBdpROI.w, aid, iBlendingMode, iAlphaMode, iOpacity );
+                                                                    , iBdpROI.w + 1, aid, iBlendingMode, iAlphaMode, iOpacity );
                } );
 }
 
