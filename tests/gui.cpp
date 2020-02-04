@@ -31,12 +31,13 @@ int
 main( int argc, char *argv[] )
 {
     FBlock blockA( 1280, 800, ULIS2_FORMAT_RGBA8 );
-    FBlock blockB( 64, 64, ULIS2_FORMAT_RGBA8 );
-    FThreadPool pool( 4 );
+    FBlock blockB( 541, 124, ULIS2_FORMAT_RGBA8 );
+    FThreadPool pool(1);
     FPerf perf_best( Perf_Best_CPU );
     FCPU cpu_info;
     FPixel red( ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
     FPixel green( ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
+    FPixel black( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
     Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, green, ULIS2_NOCB );
     Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, red, ULIS2_NOCB );
 

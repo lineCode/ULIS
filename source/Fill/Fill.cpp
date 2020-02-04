@@ -80,7 +80,7 @@ Fill_imp( FThreadPool*  iPool
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
-    if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bpp <= 32 )
+    if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bpp <= 32 && bps > 32 )
     {
         const tSize stride = 32 - ( 32 % bpp );
         tByte* srcb = new tByte[32];
@@ -94,7 +94,7 @@ Fill_imp( FThreadPool*  iPool
         const tSize count = iRoi.w * bpp;
         ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, src, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bpp <= 16 )
+    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bpp <= 16 && bps > 32 )
     {
         const tSize stride = 16 - ( 16 % bpp );
         tByte* srcb = new tByte[16];
