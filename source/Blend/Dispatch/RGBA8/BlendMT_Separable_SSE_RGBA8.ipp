@@ -59,12 +59,12 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const int32          
         alpha_m00 = alpha_m10;  smpch_m00 = smpch_m10;
         alpha_m01 = alpha_m11;  smpch_m01 = smpch_m11;
         alpha_vv0 = alpha_vv1;  smpch_vv0 = smpch_vv1;
-        alpha_m11 = iLine > iParams.mCoverageY ? 0.f : *( iSrc + iParams.mAid ) / 255.f;
-        alpha_m10 = iLine < 1 ? 0.f : *( ( iSrc - iParams.mSrcBps ) + iParams.mAid ) / 255.f;
+        alpha_m11 = x >= iParams.mCoverageX || iLine >= iParams.mCoverageY ? 0.f : *( iSrc + iParams.mAid ) / 255.f;
+        alpha_m10 = x >= iParams.mCoverageX || iLine < 1 ? 0.f : *( ( iSrc - iParams.mSrcBps ) + iParams.mAid ) / 255.f;
         alpha_vv1 = alpha_m10 * iParams.mTY + alpha_m11 * iParams.mUY;
         alpha_smp = alpha_vv0 * iParams.mTX + alpha_vv1 * iParams.mUX;
-        smpch_m11 = iLine > iParams.mCoverageY ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc ) ) ) ) ) / 255.f;
-        smpch_m10 = iLine < 1 ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc - iParams.mSrcBps ) ) ) ) ) / 255.f;
+        smpch_m11 = x >= iParams.mCoverageX || iLine >= iParams.mCoverageY ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc ) ) ) ) ) / 255.f;
+        smpch_m10 = x >= iParams.mCoverageX || iLine < 1 ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc - iParams.mSrcBps ) ) ) ) ) / 255.f;
         smpch_vv1 = ( smpch_m10 * alpha_m10 ) * iParams.mTY + ( smpch_m11 * alpha_m11 )  * iParams.mUY;
         smpch_smp = select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * iParams.mTX + smpch_vv1 * iParams.mUX ) / alpha_smp );
         Vec4f alpha_bdp     = *( iBdp + iParams.mAid ) / 255.f;
@@ -85,6 +85,7 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const int32          
         *( iBdp + iParams.mAid ) = uint8( alpha_result[0] * 0xFF );
         iSrc += 4;
         iBdp += 4;
+        ++x;
     }
 }
 
@@ -116,7 +117,7 @@ BlendMT_Separable_SSE_RGBA8_Subpixel( FThreadPool*        iPool
                     InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( iLine
                     , iSource->DataPtr()    + ( ( iSrcROI.y + iLine ) * src_bps ) + ( iSrcROI.x * 4 )
                     , iBackdrop->DataPtr()  + ( ( iBdpROI.y + iLine ) * bdp_bps ) + ( iBdpROI.x * 4 )
-                    , iBdpROI.w, params );
+                    , iBdpROI.w + 1, params );
                } );
 }
 

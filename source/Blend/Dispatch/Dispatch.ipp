@@ -61,11 +61,9 @@ QueryDispatchedBlendFunctionForParameters_Generic( uint32 iFormat, eBlendingMode
     return  nullptr;
 }
 
-/*
 // RGBA8 Dispatcher
-template<>
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU ) {
+QueryDispatchedBlendFunctionForParameters_RGBA8( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU ) {
     switch( BlendingModeQualifier( iBlendingMode ) ) {
         case BMQ_MISC           : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Misc_SSE_RGBA8 );
         case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Separable_SSE_RGBA8 );
@@ -74,7 +72,6 @@ QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( uint32 iFormat, eBle
     ULIS2_ASSERT( false, "Bad input no dispatch path found" );
     return  nullptr;
 }
-*/
 
 // Generic Dispatcher Selector
 template< typename T >
@@ -92,7 +89,7 @@ QueryDispatchedBlendFunctionForParameters_imp< uint8 >( uint32 iFormat, eBlendin
         &&  static_cast< eColorModel >( ULIS2_R_MODEL( iFormat )    ) == CM_RGB
         &&  static_cast< uint8 >(       ULIS2_R_CHANNELS( iFormat ) ) == 3_u8   ) {
         // Dispatch optimisation RGBA8
-        return  QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( iFormat, iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
+        return  QueryDispatchedBlendFunctionForParameters_RGBA8( iFormat, iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
     }
 
     // Fallback Generic
