@@ -15,6 +15,7 @@
 //#include <CL/cl.hpp>
 //#include <vectorclass.h>
 using namespace ::ul2;
+#include <Windows.h>
 
 int
 main()

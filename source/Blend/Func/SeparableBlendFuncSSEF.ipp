@@ -60,7 +60,7 @@ ULIS2_FORCEINLINE Vec4f BlendMultiplySSEF( Vec4f iCs, Vec4f iCb ) {
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- ColorBurn
 ULIS2_FORCEINLINE Vec4f BlendColorBurnSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  select( iCs == 0.f, 0.f, 1.f - min( 1.f, ( 1.f - iCb ) / iCs ) );
+    return  select( iCb == 1.f, 1.f, select( iCs == 0.f, 0.f, 1.f - min( 1.f, ( 1.f - iCb ) / iCs ) ) );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Lighten
@@ -85,7 +85,7 @@ ULIS2_FORCEINLINE Vec4f BlendScreenSSEF( Vec4f iCs, Vec4f iCb ) {
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- ColorDodge
 ULIS2_FORCEINLINE Vec4f BlendColorDodgeSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  select( iCs == 1.f, 1.f, min( 1.f, iCb / ( 1.f - iCs ) ) );
+    return  select( iCb == 0.f, 0.f, select( iCs ==1.f, 1.f, min( 1.f, iCb / ( 1.f - iCs ) ) ) );
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Add
@@ -126,22 +126,22 @@ ULIS2_FORCEINLINE Vec4f BlendOverlaySSEF( Vec4f iCs, Vec4f iCb ) {
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- VividLight
 ULIS2_FORCEINLINE Vec4f BlendVividLightSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  select( iCs <= 0.5f, BlendColorBurnSSEF( iCb, 2.f * iCs ), BlendColorDodgeSSEF( iCb, 2 * iCs - 0.5f ) );
+    return  select( iCs <= 0.5f, BlendColorBurnSSEF( iCb, 2.f * iCs ), BlendColorDodgeSSEF( iCb, 2 * ( iCs - 0.5f ) ) );
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- LinearLight
 ULIS2_FORCEINLINE Vec4f BlendLinearLightSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  select( iCs <= 0.5f, BlendLinearBurnSSEF( iCb, 2.f * iCs ), BlendLinearDodgeSSEF( iCb, 2 * iCs - 0.5f ) );
+    return  max( 0.f, min( iCb + 2.f * iCs - 1.f, 1.f ) );
 }
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- PinLight
 ULIS2_FORCEINLINE Vec4f BlendPinLightSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  select( iCs <= 0.5f, BlendDarkenSSEF( iCb, 2 * iCb ), BlendLightenSSEF( iCb, 2 * ( iCs - 0.5f ) ) );
+    return  select( iCs > 0.f, max( iCb, 2.f * iCs - 1.f ), min( iCs, 2.f * iCs ) );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ HardMix
 ULIS2_FORCEINLINE Vec4f BlendHardMixSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  select( BlendVividLightSSEF( iCs, iCb ) < 0.5f, 0.f, 1.f );
+    return  select( iCs + iCb < 0.999f, 0.f, select( iCs + iCb > 1.001f, 1.f, select( iCb > iCs, 1.f, 0.f ) ) );
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Difference
@@ -161,7 +161,7 @@ ULIS2_FORCEINLINE Vec4f BlendSubstractSSEF( Vec4f iCs, Vec4f iCb ) {
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Divide
 ULIS2_FORCEINLINE Vec4f BlendDivideSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  select( iCs == 0.f, 1.f, min( 1.f, iCb / iCs ) );
+    return  select( iCs == 0.f && iCb == 0.f, 0.f, select( iCs == 0.f && iCb != 0.f, 1.f, max( 0.f, min( iCb / iCs, 1.f ) ) ) );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Phoenix
@@ -171,14 +171,13 @@ ULIS2_FORCEINLINE Vec4f BlendPhoenixSSEF( Vec4f iCs, Vec4f iCb ) {
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Reflect
 ULIS2_FORCEINLINE Vec4f BlendReflectSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  select( iCb ==1.f, 1.f, min( 1.f, iCs * iCs / 1.f - iCb ) );
+    return  select( iCb == 1.f, 1.f, min( 1.f, iCs * iCs / ( 1.f - iCb ) ) );
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------- Glow
 ULIS2_FORCEINLINE Vec4f BlendGlowSSEF( Vec4f iCs, Vec4f iCb ) {
     return  BlendReflectSSEF( iCb, iCs );
 }
-
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------- SeparableCompOpSSEF Template Selector
@@ -214,6 +213,7 @@ template<> ULIS2_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_ADD         >( Vec4f 
 template<> ULIS2_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_SUBSTRACT   >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeSSEF( iCs, iCb, iAb, iVar, BlendSubstractSSEF( iCs, iCb ) ); }
 template<> ULIS2_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_DIVIDE      >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeSSEF( iCs, iCb, iAb, iVar, BlendDivideSSEF( iCs, iCb ) ); }
 template<> ULIS2_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_AVERAGE     >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeSSEF( iCs, iCb, iAb, iVar, BlendAverageSSEF( iCs, iCb ) ); }
+template<> ULIS2_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_NEGATION    >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeSSEF( iCs, iCb, iAb, iVar, BlendNegationSSEF( iCs, iCb ) ); }
 template<> ULIS2_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_TOP         >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  iCs; }
 template<> ULIS2_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_BACK        >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  iCb; }
 

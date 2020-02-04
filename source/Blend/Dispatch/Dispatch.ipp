@@ -23,9 +23,13 @@
 #include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_CMYK_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_Lab_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_Misc_MEM_Generic.ipp"
+// MT SSE RGBA8
+#include "Blend/Dispatch/RGBA8/BlendMT_Separable_SSE_RGBA8.ipp"
+#include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp"
+#include "Blend/Dispatch/RGBA8/BlendMT_Misc_SSE_RGBA8.ipp"
 
 // Note on dispatch:
-// First, the type is selected for instancing the appropriate template instanciation
+// First, the appropriate template instanciation is selected for type
 // The type dispatcher calls the Generic Dispatcher Selector for T
 // Type specialisation can be hooked to select a specialized dispatcher for type
 // Such dispatchers may select specific implementations according to layout, format, color model
@@ -41,17 +45,30 @@ template< typename T >
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_Generic( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU ) {
     switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BMQ_MISC           : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Misc_MEM_Generic, T );
-        case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Separable_MEM_Generic, T );
+        case BMQ_MISC           : return  ULIS2_SELECT_COMP_OPT( iSubpixel, BlendMT_Misc_MEM_Generic, T );
+        case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OPT( iSubpixel, BlendMT_Separable_MEM_Generic, T );
         case BMQ_NONSEPARABLE   :
             switch( static_cast< eColorModel >( ULIS2_R_MODEL( iFormat ) ) ) {
                 case CM_ANY:    ULIS2_ASSERT( false, "Bad input model" ); return  nullptr;
-                case CM_GREY:   return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_Grey_MEM_Generic,      T );
-                case CM_RGB:    return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_RGB_MEM_Generic,       T );
-                case CM_CMYK:   return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_CMYK_MEM_Generic,      T );
-                case CM_Lab:    return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_Lab_MEM_Generic,       T );
-                default:        return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic,   T );
+                case CM_GREY:   return  ULIS2_SELECT_COMP_OPT( iSubpixel, BlendMT_NonSeparable_CM_Grey_MEM_Generic,      T );
+                case CM_RGB:    return  ULIS2_SELECT_COMP_OPT( iSubpixel, BlendMT_NonSeparable_CM_RGB_MEM_Generic,       T );
+                case CM_CMYK:   return  ULIS2_SELECT_COMP_OPT( iSubpixel, BlendMT_NonSeparable_CM_CMYK_MEM_Generic,      T );
+                case CM_Lab:    return  ULIS2_SELECT_COMP_OPT( iSubpixel, BlendMT_NonSeparable_CM_Lab_MEM_Generic,       T );
+                default:        return  ULIS2_SELECT_COMP_OPT( iSubpixel, BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic,   T );
             }
+    }
+    ULIS2_ASSERT( false, "Bad input no dispatch path found" );
+    return  nullptr;
+}
+
+// RGBA8 Dispatcher
+template<>
+fpDispatchedBlendFunc
+QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU ) {
+    switch( BlendingModeQualifier( iBlendingMode ) ) {
+        case BMQ_MISC           : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Misc_SSE_RGBA8 );
+        case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Separable_SSE_RGBA8 );
+        case BMQ_NONSEPARABLE   : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_SSE_RGBA8 );
     }
     ULIS2_ASSERT( false, "Bad input no dispatch path found" );
     return  nullptr;
@@ -64,7 +81,7 @@ QueryDispatchedBlendFunctionForParameters_imp( uint32 iFormat, eBlendingMode iBl
     return  QueryDispatchedBlendFunctionForParameters_Generic< T >( iFormat, iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
 }
 
-// U8 Dispatcher Selector
+// RGBA8 Dispatcher Selector
 template<>
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_imp< uint8 >( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU ) {
@@ -75,11 +92,9 @@ QueryDispatchedBlendFunctionForParameters_imp< uint8 >( uint32 iFormat, eBlendin
         // Dispatch optimisation RGBA8
         return  QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( iFormat, iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
     }
-    else
-    {
-        // Fallback Generic
-        return  QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( iFormat, iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
-    }
+
+    // Fallback Generic
+    return  QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( iFormat, iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
 }
 
 // Type Dispatcher Selector

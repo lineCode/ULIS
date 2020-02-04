@@ -178,7 +178,6 @@ ULIS2_FORCEINLINE ufloat BlendGlowF( ufloat iCs, ufloat iCb ) {
     return  BlendReflectF( iCb, iCs );
 }
 
-
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------- SeparableCompOpF Template Selector
 template< eBlendingMode _BM >
@@ -213,6 +212,7 @@ template<> ULIS2_FORCEINLINE ufloat SeparableCompOpF< BM_ADD         >( ufloat i
 template<> ULIS2_FORCEINLINE ufloat SeparableCompOpF< BM_SUBSTRACT   >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendSubstractF( iCs, iCb ) ); }
 template<> ULIS2_FORCEINLINE ufloat SeparableCompOpF< BM_DIVIDE      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendDivideF( iCs, iCb ) ); }
 template<> ULIS2_FORCEINLINE ufloat SeparableCompOpF< BM_AVERAGE     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendAverageF( iCs, iCb ) ); }
+template<> ULIS2_FORCEINLINE ufloat SeparableCompOpF< BM_NEGATION    >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendNegationF( iCs, iCb ) ); }
 template<> ULIS2_FORCEINLINE ufloat SeparableCompOpF< BM_TOP         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  iCs; }
 template<> ULIS2_FORCEINLINE ufloat SeparableCompOpF< BM_BACK        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  iCb; }
 

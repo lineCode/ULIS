@@ -73,7 +73,11 @@ ULIS2_FORCEINLINE ufloat AlphaInvMaxF( ufloat iCs, ufloat iCb ) {
     ufloat res = max == 0.f ? 0.f : 1.f / max;
     return  res;
 }
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------ Average
+ULIS2_FORCEINLINE ufloat AlphaAverageF( ufloat iCs, ufloat iCb ) {
+    return  ( iCs + iCb ) / 2.f;
+}
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------- AlphaF Template Selector
 template< eAlphaMode _AM >

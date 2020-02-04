@@ -31,4 +31,4 @@
 #define GLM_FORCE_SSE2
 #define GLM_FORCE_SSE
 #define GLM_FORCE_INTRINSICS
-
+#define GLM_FORCE_SWIZZLE

@@ -12,10 +12,15 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+#define GLM_FORCE_SWIZZLE
 #include "Base/Core.h"
 #include "Blend/Modes.h"
 #include "Color/ModelStructs.h"
 #include "Maths/Maths.h"
+#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -115,6 +120,36 @@ ULIS2_FORCEINLINE FRGBF BlendColorF( const FRGBF& iCs, const FRGBF& iCb ) {
 ULIS2_FORCEINLINE FRGBF BlendLuminosityF( const FRGBF& iCs, const FRGBF& iCb ) {
     return  SetLumF( iCb, LumF( iCs ) );
 }
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------- Partial Derivative
+ULIS2_FORCEINLINE FRGBF BlendPartialDerivativeF( const FRGBF& iCs, const FRGBF& iCb ) {
+    glm::vec3 ns( iCs.R, iCs.G, iCs.B );
+    glm::vec3 nb( iCb.R, iCb.G, iCb.B );
+    ns = ns * 2.f - 1.f;
+    nb = nb * 2.f - 1.f;
+    auto res = glm::normalize( glm::vec3( ns.xy * nb.z + nb.xy * ns.z, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    return  FRGBF{ res.x, res.y, res.z };
+}
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------- Whiteout
+ULIS2_FORCEINLINE FRGBF BlendWhiteoutF( const FRGBF& iCs, const FRGBF& iCb ) {
+    glm::vec3 ns( iCs.R, iCs.G, iCs.B );
+    glm::vec3 nb( iCb.R, iCb.G, iCb.B );
+    ns = ns * 2.f - 1.f;
+    nb = nb * 2.f - 1.f;
+    auto res = glm::normalize( glm::vec3( ns.xy + nb.xy, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    return  FRGBF{ res.x, res.y, res.z };
+}
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------------------- AngleCorrected
+ULIS2_FORCEINLINE FRGBF BlendAngleCorrectedF( const FRGBF& iCs, const FRGBF& iCb ) {
+    glm::vec3 ns( iCs.R, iCs.G, iCs.B );
+    glm::vec3 nb( iCb.R, iCb.G, iCb.B );
+    ns = ns * 2.f - 1.f;
+    nb = nb * 2.f - 1.f;
+    auto res = glm::normalize( glm::vec3( ns.xy + nb.xy, ns.z ) ) * 0.5f + 0.5f;
+    return  FRGBF{ res.x, res.y, res.z };
+}
 
 /////////////////////////////////////////////////////
 // Non Separable Blending Modes for Grey, these are actually separable
@@ -189,12 +224,16 @@ ULIS2_FORCEINLINE FRGBF NonSeparableOpF( const FRGBF& iCs, const FRGBF& iCb ) {
     return  {};
 }
 
-template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_DARKERCOLOR  >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendDarkerColorF( iCs, iCb ); }
-template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_LIGHTERCOLOR >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLighterColorF( iCs, iCb ); }
-template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_HUE          >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendHueF( iCs, iCb ); }
-template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_SATURATION   >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendSaturationF( iCs, iCb ); }
-template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_COLOR        >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendColorF( iCs, iCb ); }
-template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_LUMINOSITY   >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLuminosityF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_DARKERCOLOR          >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendDarkerColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_LIGHTERCOLOR         >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLighterColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_HUE                  >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendHueF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_SATURATION           >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendSaturationF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_COLOR                >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_LUMINOSITY           >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLuminosityF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_PARTIALDERIVATIVE    >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendPartialDerivativeF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_WHITEOUT             >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendWhiteoutF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_ANGLECORRECTED       >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendAngleCorrectedF( iCs, iCb ); }
+
 //--------------------------------------------------------------------------------------
 //------------------------------------------- NonSeparableOpF Template Selector for Grey
 template< eBlendingMode _BM >
