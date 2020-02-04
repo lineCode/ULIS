@@ -37,9 +37,9 @@ main( int argc, char *argv[] )
     FBlock  blockA( wb * 8, wb * 5, ULIS2_FORMAT_RGBA8 );
     FBlock  blockBase( base, wb, hb, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
     FBlock  blockOver( over, wo, ho, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
-    FBlock  blockC( wb, 20, ULIS2_FORMAT_RGBA8 );
+    FBlock  blockC( wb, 20, ULIS2_FORMAT_RGBA8 ); 
 
-    FThreadPool     threadPool( 1 );
+    FThreadPool     threadPool(64);
     FPerf           perfIntent( Perf_Best_CPU );
     FCPU            cpuInfo;
 
@@ -50,19 +50,19 @@ main( int argc, char *argv[] )
 
     Fill( &threadPool,  ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockA, black, ULIS2_NOCB );
     Fill( &threadPool,  ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockC, black, ULIS2_NOCB );
+    threadPool.WaitForCompletion();
+
 
     FFontEngine     fontEngine;
     FFontRegistry   fontRegistry;
     fontRegistry.Load( fontEngine );
-    FFont font( fontEngine, fontRegistry, "Segoe UI", "Regular" );
-
-    threadPool.WaitForCompletion();
+    FFont font( fontEngine, fontRegistry, "Arial", "Regular" );
 
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int y = ( i / 8 ) * wb;
         int x = ( i % 8 ) * wb;
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockBase, &blockA, glm::vec2( x, y ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockOver, &blockA, glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 1.f, ULIS2_CALLCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockOver, &blockA, glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 0.5f, ULIS2_CALLCB );
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockC, &blockA, glm::vec2( x, y + hb - 20 ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockC, &blockA, glm::vec2( x, y + hb - 20 ), BM_BAYERDITHER8x8, AM_NORMAL, 0.5f, ULIS2_NOCB );
         TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwBlendingMode[ i ], font, 16, white, glm::vec2( x, y + hb - 20 ), glm::mat2( 1.f ), ULIS2_NOCB );

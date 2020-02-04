@@ -19,7 +19,8 @@ ULIS2_NAMESPACE_BEGIN
 class FThreadPool;
 /////////////////////////////////////////////////////
 // ParallelFor
-#define ULIS2_PF_CALL [&]( int32 iLine )
+#define ULIS2_PF_CALL [=]( int32 iLine )
+#define ULIS2_PF_CALL_CAPTURE_VALUE_SAFE_NONBLOCKING( ... ) [ __VA_ARGS__ ]( int32 iLine )
 ULIS2_API void ParallelFor( FThreadPool& iPool, bool iBlocking, const FPerf& iPerf, int32 iNum, const std::function< void( int32 ) >& iFun );
 
 ULIS2_NAMESPACE_END

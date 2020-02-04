@@ -23,7 +23,7 @@
 
 ULIS2_NAMESPACE_BEGIN
 void
-InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i& iSrc, const tSize iCount, const tSize iStride )
+InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, const tSize iStride )
 {
     tSize index;
     for( index = 0; index < ( iCount - 32 ); index += iStride )
@@ -38,7 +38,7 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i& iSrc, const tSize iCount,
 
 
 void
-InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i& iSrc, const tSize iCount, const tSize iStride )
+InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, const tSize iStride )
 {
     tSize index;
     for( index = 0; index < ( iCount - 16 ); index += iStride )
@@ -80,6 +80,7 @@ Fill_imp( FThreadPool*  iPool
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
+
     if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bpp <= 32 && bps > 32 )
     {
         const tSize stride = 32 - ( 32 % bpp );
