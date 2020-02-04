@@ -30,18 +30,43 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
-    FBlock blockA( 1280, 800, ULIS2_FORMAT_RGBA8 );
-    FBlock blockB( 541, 124, ULIS2_FORMAT_RGBA8 );
-    FThreadPool pool(1);
-    FPerf perf_best( Perf_Best_CPU );
-    FCPU cpu_info;
-    FPixel red( ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
-    FPixel green( ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
-    FPixel black( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
-    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockA, green, ULIS2_NOCB );
-    Fill( &pool,  ULIS2_BLOCKING, perf_best, cpu_info, &blockB, red, ULIS2_NOCB );
+    int wb, hb, wo, ho, cb, co;
+    unsigned char *base = stbi_load( "C:/Users/PRAXINOS/Documents/work/base_160.png",   &wb, &hb, &cb, STBI_rgb_alpha );
+    unsigned char *over = stbi_load( "C:/Users/PRAXINOS/Documents/work/detail_160.png", &wo, &ho, &co, STBI_rgb_alpha );
 
-    Blend( &pool, ULIS2_BLOCKING, perf_best, cpu_info, ULIS2_SUBPIXEL, &blockB, &blockA, glm::vec2( 64.5f, 64.5f ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_NOCB );
+    FBlock  blockA( wb * 8, wb * 5, ULIS2_FORMAT_RGBA8 );
+    FBlock  blockBase( base, wb, hb, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
+    FBlock  blockOver( over, wo, ho, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
+    FBlock  blockC( wb, 20, ULIS2_FORMAT_RGBA8 );
+
+    FThreadPool     threadPool( 1 );
+    FPerf           perfIntent( Perf_Best_CPU );
+    FCPU            cpuInfo;
+
+    FPixel  red(    ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
+    FPixel  green(  ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
+    FPixel  black(  ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
+    FPixel  white(  ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
+
+    Fill( &threadPool,  ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockA, black, ULIS2_NOCB );
+    Fill( &threadPool,  ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockC, black, ULIS2_NOCB );
+
+    FFontEngine     fontEngine;
+    FFontRegistry   fontRegistry;
+    fontRegistry.Load( fontEngine );
+    FFont font( fontEngine, fontRegistry, "Segoe UI", "Regular" );
+
+    threadPool.WaitForCompletion();
+
+    for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
+        int y = ( i / 8 ) * wb;
+        int x = ( i % 8 ) * wb;
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockBase, &blockA, glm::vec2( x, y ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockOver, &blockA, glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 1.f, ULIS2_CALLCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockC, &blockA, glm::vec2( x, y + hb - 20 ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockC, &blockA, glm::vec2( x, y + hb - 20 ), BM_BAYERDITHER8x8, AM_NORMAL, 0.5f, ULIS2_NOCB );
+        TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwBlendingMode[ i ], font, 16, white, glm::vec2( x, y + hb - 20 ), glm::mat2( 1.f ), ULIS2_NOCB );
+    }
 
     // Qt Window
     QApplication app( argc, argv );

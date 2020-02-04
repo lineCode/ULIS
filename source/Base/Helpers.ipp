@@ -14,10 +14,25 @@
 #pragma once
 #include "Base/Core.h"
 #include "Base/Utils.h"
+#include "Blend/Modes.h"
 #include "glm/vec2.hpp"
 #include <vectorclass.h>
 
 ULIS2_NAMESPACE_BEGIN
+
+struct _FBMTPSSSSERGBA8SP {
+    const int32          mCoverageX;
+    const int32          mCoverageY;
+    const tSize          mSrcBps;
+    const uint8          mAid;
+    const Vec4f          mTX;
+    const Vec4f          mTY;
+    const Vec4f          mUX;
+    const Vec4f          mUY;
+    const eBlendingMode  mBlendingMode;
+    const eAlphaMode     mAlphaMode;
+    const ufloat         mOpacity;
+};
 
 #define ULIS2_BLENDSPEC_PARAMS_SIG      FThreadPool* iPool, const FBlock* iSource, FBlock* iBackdrop, const FRect& iSrcROI, const FRect& iBdpROI, const glm::vec2& iSubpixelComponent, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, ufloat iOpacity, const FPerf& iPerf
 
@@ -28,6 +43,16 @@ ULIS2_API ULIS2_FORCEINLINE void BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8*
         case 2:  for( int i = 0; i < iSPP; ++i ) oIDT[i] = ( i + 1 ) > msp ? 0 : i + 1;                 *oAID = 0;   break;
         case 3:  for( int i = 0; i < iSPP; ++i ) oIDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1; *oAID = msp; break;
         default: for( int i = 0; i < iSPP; ++i ) oIDT[i] = i;                                           *oAID = msp; break;
+    }
+}
+
+ULIS2_API ULIS2_FORCEINLINE void BuildRGBA8IndexTable( tFormat iFmt, Vec4i* oIDT, uint8* oAID ) {
+    uint8 cod = ULIS2_R_RS( iFmt );
+    switch( cod ) {
+        case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); *oAID = 0; break;
+        case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); *oAID = 0; break;
+        case 3:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); *oAID = 3; break;
+        default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); *oAID = 3; break;
     }
 }
 

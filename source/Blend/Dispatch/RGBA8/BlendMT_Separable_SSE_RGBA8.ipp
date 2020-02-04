@@ -22,20 +22,6 @@
 #include "Thread/ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
-struct _FBMTPSSSSERGBA8SP {
-    const int32          mCoverageX;
-    const int32          mCoverageY;
-    const tSize          mSrcBps;
-    const uint8          mAid;
-    const Vec4f          mTX;
-    const Vec4f          mTY;
-    const Vec4f          mUX;
-    const Vec4f          mUY;
-    const eBlendingMode  mBlendingMode;
-    const eAlphaMode     mAlphaMode;
-    const ufloat         mOpacity;
-};
-
 void
 InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const int32                  iLine
                                                          , const tByte*                 iSrc
@@ -56,9 +42,12 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const int32          
     smpch_m11 = smpch_m10 = smpch_vv1 = 0.f;
     int x = 0;
     while( --iW ) {
-        alpha_m00 = alpha_m10;  smpch_m00 = smpch_m10;
-        alpha_m01 = alpha_m11;  smpch_m01 = smpch_m11;
-        alpha_vv0 = alpha_vv1;  smpch_vv0 = smpch_vv1;
+        alpha_m00 = alpha_m10;
+        alpha_m01 = alpha_m11;
+        alpha_vv0 = alpha_vv1;
+        smpch_m00 = smpch_m10;
+        smpch_m01 = smpch_m11;
+        smpch_vv0 = smpch_vv1;
         alpha_m11 = x >= iParams.mCoverageX || iLine >= iParams.mCoverageY ? 0.f : *( iSrc + iParams.mAid ) / 255.f;
         alpha_m10 = x >= iParams.mCoverageX || iLine < 1 ? 0.f : *( ( iSrc - iParams.mSrcBps ) + iParams.mAid ) / 255.f;
         alpha_vv1 = alpha_m10 * iParams.mTY + alpha_m11 * iParams.mUY;
