@@ -20,6 +20,7 @@
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
 #include <immintrin.h>
+#include <memory>
 
 ULIS2_NAMESPACE_BEGIN
 void
@@ -53,24 +54,24 @@ InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, 
 
 
 void
-InvokeFillMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCount, tSize iStride )
+InvokeFillMTProcessScanline_MEM( tByte* iDst, std::shared_ptr< tByte >  iSrc, tSize iCount, tSize iStride )
 {
     for( uint32 i = 0; i < iCount; ++i )
     {
-        memcpy( iDst, iSrc, iStride );
+        memcpy( iDst, iSrc.get(), iStride );
         iDst += iStride;
     }
 }
 
 
 void
-Fill_imp( FThreadPool*  iPool
-        , bool          iBlocking
-        , const FPerf&  iPerf
-        , const FCPU&   iCPU
-        , FBlock*       iDst
-        , const tByte*  iSrc
-        , const FRect&  iRoi )
+Fill_imp( FThreadPool*              iPool
+        , bool                      iBlocking
+        , const FPerf&              iPerf
+        , const FCPU&               iCPU
+        , FBlock*                   iDst
+        , std::shared_ptr< tByte >  iSrc
+        , const FRect&              iRoi )
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
@@ -89,7 +90,7 @@ Fill_imp( FThreadPool*  iPool
         memset( srcb, 0, 32 );
         #endif // ULIS2_DEBUG
         for( tSize i = 0; i < stride; i+= bpp )
-            memcpy( (void*)( ( srcb ) + i ), iSrc, bpp );
+            memcpy( (void*)( ( srcb ) + i ), iSrc.get(), bpp );
         __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
         delete [] srcb;
         const tSize count = iRoi.w * bpp;
@@ -103,7 +104,7 @@ Fill_imp( FThreadPool*  iPool
         memset( srcb, 0, 16 );
         #endif // ULIS2_DEBUG
         for( tSize i = 0; i < stride; i+= bpp )
-            memcpy( (void*)( ( srcb ) + i ), iSrc, bpp );
+            memcpy( (void*)( ( srcb ) + i ), iSrc.get(), bpp );
         __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
         delete [] srcb;
         const tSize count = iRoi.w * bpp;
@@ -143,7 +144,8 @@ FillRect( FThreadPool*  iPool
     ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
     FPixel color( iDst->Format() );
     Conv( iColor, color );
-    const tByte* src = color.Ptr();
+    std::shared_ptr< tByte > src( new tByte[ color.Depth() ], std::default_delete< tByte[] >() );
+    memcpy( src.get(), color.Ptr(), color.Depth() );
 
     FRect roi = iRect & iDst->Rect();
 
