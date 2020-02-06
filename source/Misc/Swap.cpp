@@ -47,9 +47,9 @@ Swap_imp( FThreadPool*  iPool
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
-    const tSize bpp = bpc * spp;
+    const tSize bpp = iDst->BytesPerPixel();
     const tSize w   = iDst->Width();
-    const tSize bps = bpp * w;
+    const tSize bps = iDst->BytesPerScanLine();
     tByte*      dsb = iDst->DataPtr();
     #define DST dsb + ( iLine * bps )
     ParallelFor( *iPool, iBlocking, iPerf, iDst->Height(), ULIS2_PF_CALL { InvokeSwapMTProcessScanline_MEM( DST, w, iC1, iC2, bpc, bpp ); } );

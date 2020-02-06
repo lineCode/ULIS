@@ -69,7 +69,7 @@ TraceTextMono_Generic( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, F
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize bps;
-    XBuildTraceTextParams( iDst, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &bps );
+    BuildTraceTextParams( iDst, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &bps );
     tSize width = iDst->Width();
     tSize height = iDst->Height();
 
@@ -103,8 +103,6 @@ TraceTextMono_Generic( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, F
         pen.x += slot->advance.x;
         pen.y += slot->advance.y;
     }
-
-    delete [] xidt;
 }
 ULIS2_NAMESPACE_END
 

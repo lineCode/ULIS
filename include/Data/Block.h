@@ -46,12 +46,12 @@ public:
 public:
     // Public API
     tByte*                  DataPtr();
-    tByte*                  PixelPtr( tIndex iX, tIndex iY );
-    tByte*                  ScanlinePtr( tIndex iRow );
+    tByte*                  PixelPtr( int iX, int iY );
+    tByte*                  ScanlinePtr( int iRow );
     void                    AssignProfile( FColorProfile* iProfile );
     const tByte*            DataPtr()                                           const;
-    const tByte*            PixelPtr( tIndex iX, tIndex iY )                    const;
-    const tByte*            ScanlinePtr( tIndex iRow )                          const;
+    const tByte*            PixelPtr( int iX, int iY )                          const;
+    const tByte*            ScanlinePtr( int iRow )                             const;
     tSize                   Width()                                             const;
     tSize                   Height()                                            const;
     tSize                   BytesPerSample()                                    const;
@@ -72,11 +72,17 @@ public:
     void                    Invalidate( bool iCall = true )                     const;
     void                    Invalidate( const FRect& iRect, bool iCall = true ) const;
     FRect                   Rect()                                              const;
-    FPixelValue             PixelValue( tIndex iX, tIndex iY )                  const;
-    FPixelProxy             PixelProxy( tIndex iX, tIndex iY );
-    const FPixelProxy       PixelProxy( tIndex iX, tIndex iY )                  const;
+    FPixelValue             PixelValue( int iX, int iY )                        const;
+    FPixelProxy             PixelProxy( int iX, int iY );
+    const FPixelProxy       PixelProxy( int iX, int iY )                        const;
     uint32                  CRC32()                                             const;
     std::string             MD5()                                               const;
+    uint8*                  IndexTable()                                        const;
+
+private:
+    // Private Internals
+    void BuildCachedInfo();
+
 private:
     // Private Data Members
     tByte*          mData;
@@ -87,6 +93,18 @@ private:
     FOnCleanup      mOnCleanup;
     FColorProfile*  mProfile;
     std::string     mUUID;
+
+    // cached block info
+    uint8           mBPC;
+    uint8           mNCC;
+    uint8           mHEA;
+    uint8           mCOD;
+    uint8           mSPP;
+    uint8           mBPP;
+    uint8*          mIDT;
+    uint8           mAID;
+    tSize           mBPS;
+    tSize           mBTT;
 };
 
 ULIS2_NAMESPACE_END

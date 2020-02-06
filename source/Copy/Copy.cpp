@@ -66,22 +66,22 @@ Copy_imp( FThreadPool*  iPool
 {
     const tSize bpc = iDst->BytesPerSample();
     const tSize spp = iDst->SamplesPerPixel();
-    const tSize bpp = bpc * spp;
+    const tSize bpp = iDst->BytesPerPixel();
     const tSize w   = iDst->Width();
-    const tSize bps = bpp * w;
+    const tSize bps = iDst->BytesPerScanLine();
     const tSize srh = iSrcRoi.x * bpp;
     const tSize dsh = iDstRoi.x * bpp;
     const tByte*srb = iSrc->DataPtr() + srh;
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define SRC srb + ( ( iSrcRoi.y + iLine ) * bps )
     #define DST dsb + ( ( iDstRoi.y + iLine ) * bps )
-    if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 )
+    if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bpp <= 32 && bps >= 32 )
     {
         const tSize stride = 32;
         const tSize count = iSrcRoi.w * bpp;
         ParallelFor( *iPool, iBlocking, iPerf, iSrcRoi.h, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_AX2( DST, SRC, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 )
+    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bpp <= 16 && bps >= 16 )
     {
         const tSize stride = 16;
         const tSize count = iSrcRoi.w * bpp;

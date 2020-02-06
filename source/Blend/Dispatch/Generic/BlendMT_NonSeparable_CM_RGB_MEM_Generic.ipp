@@ -34,7 +34,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_RGB_MEM_Generic_Subpixel( int32    
                                                                      , uint8            iSPP
                                                                      , uint8            iBPP
                                                                      , uint8            iAID
-                                                                     , tSize             iSRC_BPS
+                                                                     , tSize            iSRC_BPS
                                                                      , const FRect&     iSrcROI
                                                                      , const FRect&     iBdpROI
                                                                      , const glm::vec2& iSubpixelComponent
@@ -108,7 +108,7 @@ BlendMT_NonSeparable_CM_RGB_MEM_Generic_Subpixel( FThreadPool*      iPool
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
-    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
     ParallelFor( *iPool
                , iBlocking
                , iPerf
@@ -120,7 +120,6 @@ BlendMT_NonSeparable_CM_RGB_MEM_Generic_Subpixel( FThreadPool*      iPool
                                                                                               , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
                                                                                               , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
                } );
-    delete [] xidt;
 }
 
 template< typename T >
@@ -192,7 +191,7 @@ BlendMT_NonSeparable_CM_RGB_MEM_Generic( FThreadPool*       iPool
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
-    XBuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
+    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
     ParallelFor( *iPool
                , iBlocking
                , iPerf
@@ -204,7 +203,6 @@ BlendMT_NonSeparable_CM_RGB_MEM_Generic( FThreadPool*       iPool
                                                                                      , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
                                                                                      , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
                } );
-    delete [] xidt;
 }
 
 ULIS2_NAMESPACE_END

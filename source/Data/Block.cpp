@@ -26,6 +26,7 @@ ULIS2_NAMESPACE_BEGIN
 FBlock::~FBlock()
 {
     mOnCleanup.ExecuteIfBound( mData );
+    if( mIDT ) delete [] mIDT;
 }
 
 
@@ -43,9 +44,11 @@ FBlock::FBlock( tSize iWidth
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
     , mUUID( GenerateWeakUUID( 16 ) )
+    , mIDT( nullptr )
 {
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    BuildCachedInfo();
 
     if( mProfile )
         ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
@@ -69,7 +72,9 @@ FBlock::FBlock( tByte* iData
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
     , mUUID( GenerateWeakUUID( 16 ) )
+    , mIDT( nullptr )
 {
+    BuildCachedInfo();
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
 
@@ -88,19 +93,19 @@ FBlock::DataPtr()
 
 
 tByte*
-FBlock::PixelPtr( tIndex iX, tIndex iY )
+FBlock::PixelPtr( int iX, int iY )
 {
-    ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
-    ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
-    return  DataPtr() + ( uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
+    ULIS2_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
+    ULIS2_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" );
+    return  mData + ( iX * mBPP + iY * mBPS );
 }
 
 
 tByte*
-FBlock::ScanlinePtr( tIndex iRow )
+FBlock::ScanlinePtr( int iRow )
 {
-    ULIS2_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
-    return  DataPtr() + ( uint64( iRow ) * uint64( BytesPerScanLine() ) );
+    ULIS2_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" );
+    return  mData + ( iRow * mBPS );
 }
 
 
@@ -122,19 +127,19 @@ FBlock::AssignProfile( FColorProfile* iProfile )
 
 
 const tByte*
-FBlock::PixelPtr( tIndex iX, tIndex iY ) const
+FBlock::PixelPtr( int iX, int iY ) const
 {
-    ULIS2_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
-    ULIS2_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
-    return  DataPtr() + ( uint64( iX ) * uint64( BytesPerPixel() ) + uint64( iY ) * uint64( BytesPerScanLine() ) );
+    ULIS2_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
+    ULIS2_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" );
+    return  mData + ( iX * mBPP + iY * mBPS );
 }
 
 
 const tByte*
-FBlock::ScanlinePtr( tIndex iRow ) const
+FBlock::ScanlinePtr( int iRow ) const
 {
-    ULIS2_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
-    return  DataPtr() + (uint64( iRow ) * uint64( BytesPerScanLine() ) );
+    ULIS2_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" );
+    return  mData + ( iRow * mBPS );
 }
 
 
@@ -155,28 +160,28 @@ FBlock::Height() const
 tSize
 FBlock::BytesPerSample() const
 {
-    return  ULIS2_R_DEPTH( mFormat );
+    return  mBPC;
 }
 
 
 tSize
 FBlock::BytesPerPixel() const
 {
-    return  BytesPerSample() * SamplesPerPixel();
+    return  mBPP;
 }
 
 
 tSize
 FBlock::BytesPerScanLine() const
 {
-    return  BytesPerPixel() * mWidth;
+    return  mBPS;
 }
 
 
 tSize
 FBlock::BytesTotal() const
 {
-    return  BytesPerScanLine() * mHeight;
+    return  mBTT;
 }
 
 
@@ -204,7 +209,7 @@ FBlock::Type() const
 bool
 FBlock::HasAlpha() const
 {
-    return  static_cast< bool >( ULIS2_R_ALPHA( mFormat ) );
+    return  mHEA;
 }
 
 
@@ -225,14 +230,14 @@ FBlock::Reversed() const
 uint8
 FBlock::SamplesPerPixel() const
 {
-    return  NumColorChannels() + static_cast< uint8 >( HasAlpha() );
+    return  mSPP;
 }
 
 
 uint8
 FBlock::NumColorChannels() const
 {
-    return  static_cast< uint8 >( ULIS2_R_CHANNELS( mFormat ) );
+    return  mNCC;
 }
 
 
@@ -246,31 +251,16 @@ FBlock::Profile() const
 uint8
 FBlock::RedirectedIndex( uint8 iIndex ) const
 {
-    uint8 max_sample = SamplesPerPixel() - 1;
-    uint8 code = ULIS2_R_RS( mFormat );
-    switch( code )
-    {
-        case 1:     return  ( max_sample - iIndex );
-        case 2:     return  ( iIndex + 1 ) > max_sample ? 0 : iIndex + 1;
-        case 3:     return  ( max_sample - iIndex ) - 1 < 0 ? max_sample : ( max_sample - iIndex ) - 1;
-        default:    return  iIndex;
-    }
+    ULIS2_ASSERT( iIndex >= 0 && iIndex < mSPP, "Bad Index" );
+    return  mIDT[ iIndex ];
 }
 
 
 uint8
 FBlock::AlphaIndex() const
 {
-    ULIS2_ASSERT( HasAlpha(), "Bad Call" );
-    uint8 max_sample = SamplesPerPixel() - 1;
-    uint8 code = ULIS2_R_RS( mFormat );
-    switch( code )
-    {
-        case 1:     return  0;
-        case 2:     return  0;
-        case 3:     return  max_sample;
-        default:    return  max_sample;
-    }
+    ULIS2_ASSERT( mHEA, "Bad Call" );
+    return  mAID;
 }
 
 
@@ -302,21 +292,21 @@ FBlock::Rect() const
 }
 
 FPixelValue
-FBlock::PixelValue( tIndex iX, tIndex iY ) const
+FBlock::PixelValue( int iX, int iY ) const
 {
     return  FPixelValue( PixelPtr( iX, iY ), Format(), Profile() );
 }
 
 
 FPixelProxy
-FBlock::PixelProxy( tIndex iX, tIndex iY )
+FBlock::PixelProxy( int iX, int iY )
 {
     return  FPixelProxy( PixelPtr( iX, iY ), Format(), Profile() );
 }
 
 
 const FPixelProxy
-FBlock::PixelProxy( tIndex iX, tIndex iY ) const
+FBlock::PixelProxy( int iX, int iY ) const
 {
     return  FPixelProxy( PixelPtr( iX, iY ), Format(), Profile() );
 }
@@ -335,6 +325,36 @@ FBlock::MD5() const
     return  ::ULIS2::MD5( mData, BytesTotal() );
 }
 
+uint8*
+FBlock::IndexTable() const
+{
+    return  mIDT;
+}
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------- Private Internals
+void
+FBlock::BuildCachedInfo()
+{
+    mBPC = ULIS2_R_DEPTH(       mFormat );
+    mNCC = ULIS2_R_CHANNELS(    mFormat );
+    mHEA = ULIS2_R_ALPHA(       mFormat );
+    mCOD = ULIS2_R_RS(          mFormat );
+    mSPP = mNCC + mHEA;
+    mBPP = mSPP * mBPC;
+    mBPS = mWidth * mBPP;
+    mBTT = mHeight * mBPS;
+    if( mIDT ) delete [] mIDT;
+    mIDT = new uint8[ mSPP ];
+    mAID;
+
+    uint8 msp = mSPP - 1;
+    switch( mCOD ) {
+        case 1:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( msp - i );                                 mAID = 0;   break;
+        case 2:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( i + 1 ) > msp ? 0 : i + 1;                 mAID = 0;   break;
+        case 3:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1; mAID = msp; break;
+        default: for( int i = 0; i < mSPP; ++i ) mIDT[i] = i;                                           mAID = msp; break;
+    }
+}
 
 ULIS2_NAMESPACE_END
 

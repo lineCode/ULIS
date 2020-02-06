@@ -22,6 +22,7 @@ ULIS2_NAMESPACE_BEGIN
 //----------------------------------------------------------- Construction / Destruction
 IPixel::~IPixel()
 {
+    if( mIDT ) delete [] mIDT;
 }
 
 
@@ -29,7 +30,9 @@ IPixel::IPixel( tFormat iFormat, FColorProfile* iProfile )
     : mData( nullptr )
     , mFormat( iFormat )
     , mProfile( iProfile )
+    , mIDT( nullptr )
 {
+    BuildCachedInfo();
     if( mProfile )
         ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 }
@@ -64,14 +67,14 @@ IPixel::Ptr() const
 uint8
 IPixel::BytesPerSample() const
 {
-    return  ULIS2_R_DEPTH( mFormat );
+    return  mBPC;
 }
 
 
 uint8
 IPixel::Depth() const
 {
-    return  BytesPerSample() * NumSamples();
+    return  mBPP;
 }
 
 
@@ -99,7 +102,7 @@ IPixel::Type() const
 bool
 IPixel::HasAlpha() const
 {
-    return  static_cast< bool >( ULIS2_R_ALPHA( mFormat ) );
+    return  mHEA;
 }
 
 
@@ -120,14 +123,14 @@ IPixel::Reversed() const
 uint8
 IPixel::NumSamples() const
 {
-    return  NumColorChannels() + static_cast< uint8 >( HasAlpha() );
+    return  mSPP;
 }
 
 
 uint8
 IPixel::NumColorChannels() const
 {
-    return  static_cast< uint8 >( ULIS2_R_CHANNELS( mFormat ) );
+    return  mNCC;
 }
 
 
@@ -141,32 +144,16 @@ IPixel::Profile() const
 uint8
 IPixel::RedirectedIndex( uint8 iIndex ) const
 {
-    int max_sample = NumSamples() - 1;
-    int index = iIndex;
-    uint8 code = ULIS2_R_RS( mFormat );
-    switch( code )
-    {
-        case 1:     return  ( max_sample - index );
-        case 2:     return  ( index + 1 ) > max_sample ? 0 : index + 1;
-        case 3:     return  ( max_sample - index ) - 1 < 0 ? max_sample : ( max_sample - index ) - 1;
-        default:    return  index;
-    }
+    ULIS2_ASSERT( iIndex >= 0 && iIndex < mSPP, "Bad Index" );
+    return  mIDT[ iIndex ];
 }
 
 
 uint8
 IPixel::AlphaIndex() const
 {
-    ULIS2_ASSERT( HasAlpha(), "Bad Call" );
-    uint8 max_sample = NumSamples() - 1;
-    uint8 code = ULIS2_R_RS( mFormat );
-    switch( code )
-    {
-        case 1:     return  0;
-        case 2:     return  0;
-        case 3:     return  max_sample;
-        default:    return  max_sample;
-    }
+    ULIS2_ASSERT( mHEA, "Bad Call" );
+    return  mAID;
 }
 
 
@@ -290,9 +277,30 @@ IPixel::SetValue( uint8 iIndex, T iValue )
 }
 
 
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------- Model Accesss API
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------- Private Internals
+void
+IPixel::BuildCachedInfo()
+{
+    mBPC = ULIS2_R_DEPTH(       mFormat );
+    mNCC = ULIS2_R_CHANNELS(    mFormat );
+    mHEA = ULIS2_R_ALPHA(       mFormat );
+    mCOD = ULIS2_R_RS(          mFormat );
+    mSPP = mNCC + mHEA;
+    mBPP = mSPP * mBPC;
+    if( mIDT ) delete [] mIDT;
+    mIDT = new uint8[ mSPP ];
+    mAID;
+
+    uint8 msp = mSPP - 1;
+    switch( mCOD ) {
+        case 1:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( msp - i );                                 mAID = 0;   break;
+        case 2:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( i + 1 ) > msp ? 0 : i + 1;                 mAID = 0;   break;
+        case 3:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1; mAID = msp; break;
+        default: for( int i = 0; i < mSPP; ++i ) mIDT[i] = i;                                           mAID = msp; break;
+    }
+}
 
 
 /////////////////////////////////////////////////////

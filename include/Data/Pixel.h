@@ -414,11 +414,25 @@ public:
     ULIS2_FORCEINLINE void SetxD(                               double iValue ) { SetValue< double >( 1, iValue );              }
     ULIS2_FORCEINLINE void SetyD(                               double iValue ) { SetValue< double >( 2, iValue );              }
 
+private:
+    // Private Internals
+    void BuildCachedInfo();
+
 protected:
     // Protected Data Members
     tByte*          mData;
     tFormat         mFormat;
     FColorProfile*  mProfile;
+
+    // cached block info
+    uint8           mBPC;
+    uint8           mNCC;
+    uint8           mHEA;
+    uint8           mCOD;
+    uint8           mSPP;
+    uint8           mBPP;
+    uint8*          mIDT;
+    uint8           mAID;
 };
 
 /////////////////////////////////////////////////////

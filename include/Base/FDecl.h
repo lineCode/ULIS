@@ -18,6 +18,7 @@
 // Typedefs and enums
 ULIS2_NAMESPACE_BEGIN
 // FDecl
+class FProfileRegistry;
 class FColorProfile;
 class FBlock;
 class IPixel;

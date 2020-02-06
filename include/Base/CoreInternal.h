@@ -36,7 +36,7 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Crash Behaviours
-#define ULIS2_CRASH              *((int*)0) = 0
+#define ULIS2_CRASH              *((volatile int*)0) = 0
 #define ULIS2_CRASH_DELIBERATE   ULIS2_CRASH
 #define ULIS2_CRASH_TODO         ULIS2_CRASH
 #define ULIS2_CRASH_CHECK        ULIS2_CRASH
