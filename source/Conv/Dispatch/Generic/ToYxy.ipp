@@ -18,54 +18,53 @@
 #include "Data/Pixel.h"
 
 ULIS2_NAMESPACE_BEGIN
-template< typename T1, typename T2 > void ConvBufferGreyToYxy( const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferGreyToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferRGBToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferRGBToYxy(   const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferHSVToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferHSVToYxy(   const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferHSLToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferHSLToYxy(   const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferCMYToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferCMYToYxy(   const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferCMYKToYxy( const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferCMYKToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferYUVToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferYUVToYxy(   const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferLabToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferLabToYxy(   const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferXYZToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferXYZToYxy(   const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
 
 
-template< typename T1, typename T2 > void ConvBufferYxyToYxy(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferYxyToYxy(   const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
 
 }
-
 
 ULIS2_NAMESPACE_END

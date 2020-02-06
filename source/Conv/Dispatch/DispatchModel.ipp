@@ -45,16 +45,16 @@ QueryDispatchedConvInvokeForParameters_SelectGrey( tFormat iSrcFormat, tFormat i
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  &ConvBufferGreyToGrey  < T1, T2 >;
-        case CM_RGB     : return  &ConvBufferGreyToRGB   < T1, T2 >;
-        case CM_HSV     : return  &ConvBufferGreyToHSV   < T1, T2 >;
-        case CM_HSL     : return  &ConvBufferGreyToHSL   < T1, T2 >;
-        case CM_CMY     : return  &ConvBufferGreyToCMY   < T1, T2 >;
-        case CM_CMYK    : return  &ConvBufferGreyToCMYK  < T1, T2 >;
-        case CM_YUV     : return  &ConvBufferGreyToYUV   < T1, T2 >;
-        case CM_Lab     : return  &ConvBufferGreyToLab   < T1, T2 >;
-        case CM_XYZ     : return  &ConvBufferGreyToXYZ   < T1, T2 >;
-        case CM_Yxy     : return  &ConvBufferGreyToYxy   < T1, T2 >;
+        case CM_GREY    : return  &ConvBufferGreyToGrey < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToGrey  < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToGrey  < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToGrey  < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToGrey  < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToGrey < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToGrey  < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToGrey  < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToGrey  < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToGrey  < T1, T2 >;
     }
     return  nullptr;
 }
@@ -67,16 +67,16 @@ QueryDispatchedConvInvokeForParameters_SelectRGB( tFormat iSrcFormat, tFormat iD
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToRGB  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToRGB   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToRGB   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToRGB   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToRGB   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToRGB  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToRGB   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToRGB   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToRGB   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToRGB   < T1, T2 >;
     }
     return  nullptr;
 }
@@ -89,16 +89,16 @@ QueryDispatchedConvInvokeForParameters_SelectHSV( tFormat iSrcFormat, tFormat iD
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToHSV  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToHSV   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToHSV   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToHSV   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToHSV   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToHSV  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToHSV   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToHSV   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToHSV   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToHSV   < T1, T2 >;
     }
     return  nullptr;
 }
@@ -111,16 +111,16 @@ QueryDispatchedConvInvokeForParameters_SelectHSL( tFormat iSrcFormat, tFormat iD
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToHSL  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToHSL   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToHSL   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToHSL   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToHSL   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToHSL  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToHSL   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToHSL   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToHSL   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToHSL   < T1, T2 >;
     }
     return  nullptr;
 }
@@ -133,16 +133,16 @@ QueryDispatchedConvInvokeForParameters_SelectCMY( tFormat iSrcFormat, tFormat iD
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToCMY  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToCMY   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToCMY   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToCMY   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToCMY   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToCMY  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToCMY   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToCMY   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToCMY   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToCMY   < T1, T2 >;
     }
     return  nullptr;
 }
@@ -155,16 +155,16 @@ QueryDispatchedConvInvokeForParameters_SelectCMYK( tFormat iSrcFormat, tFormat i
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToCMYK < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToCMYK  < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToCMYK  < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToCMYK  < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToCMYK  < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToCMYK < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToCMYK  < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToCMYK  < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToCMYK  < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToCMYK  < T1, T2 >;
     }
     return  nullptr;
 }
@@ -177,16 +177,16 @@ QueryDispatchedConvInvokeForParameters_SelectYUV( tFormat iSrcFormat, tFormat iD
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToYUV  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToYUV   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToYUV   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToYUV   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToYUV   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToYUV  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToYUV   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToYUV   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToYUV   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToYUV   < T1, T2 >;
     }
     return  nullptr;
 }
@@ -199,16 +199,16 @@ QueryDispatchedConvInvokeForParameters_SelectLab( tFormat iSrcFormat, tFormat iD
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToLab  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToLab   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToLab   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToLab   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToLab   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToLab  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToLab   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToLab   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToLab   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToLab   < T1, T2 >;
     }
     return  nullptr;
 }
@@ -221,16 +221,16 @@ QueryDispatchedConvInvokeForParameters_SelectXYZ( tFormat iSrcFormat, tFormat iD
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToXYZ  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToXYZ   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToXYZ   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToXYZ   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToXYZ   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToXYZ  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToXYZ   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToXYZ   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToXYZ   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToXYZ   < T1, T2 >;
     }
     return  nullptr;
 }
@@ -243,16 +243,16 @@ QueryDispatchedConvInvokeForParameters_SelectYxy( tFormat iSrcFormat, tFormat iD
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
         case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
-        case CM_GREY    : return  nullptr;
-        case CM_RGB     : return  nullptr;
-        case CM_HSV     : return  nullptr;
-        case CM_HSL     : return  nullptr;
-        case CM_CMY     : return  nullptr;
-        case CM_CMYK    : return  nullptr;
-        case CM_YUV     : return  nullptr;
-        case CM_Lab     : return  nullptr;
-        case CM_XYZ     : return  nullptr;
-        case CM_Yxy     : return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToYxy  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferRGBToYxy   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferHSVToYxy   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferHSLToYxy   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferCMYToYxy   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferCMYKToYxy  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferYUVToYxy   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferLabToYxy   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferXYZToYxy   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferYxyToYxy   < T1, T2 >;
     }
     return  nullptr;
 }
