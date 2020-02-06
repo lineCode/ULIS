@@ -27,9 +27,9 @@ FFont::~FFont()
 }
 
 
-FFont::FFont( const FFontEngine& iFontEngine, const FFontRegistry& iFontRegistry, const std::string& iFamily, const std::string& iStyle )
+FFont::FFont( const FFontRegistry& iFontRegistry, const std::string& iFamily, const std::string& iStyle )
     : mHandle( nullptr )
-    , mFontEngine( iFontEngine )
+    , mFontEngine( iFontRegistry.FontEngine() )
     , mFontRegistry( iFontRegistry )
 {
     std::string fpath = mFontRegistry.FuzzyFindFontPath( iFamily, iStyle );
@@ -37,6 +37,14 @@ FFont::FFont( const FFontEngine& iFontEngine, const FFontRegistry& iFontRegistry
     ULIS2_ERROR( !error, "Error initializing font handle" );
 }
 
+
+FFont::FFont( FFont& iOther )
+    : mHandle( iOther.Handle() )
+    , mFontEngine( iOther.FontEngine() )
+    , mFontRegistry( iOther.FontRegistry() )
+{
+    iOther.mHandle = nullptr;
+}
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API

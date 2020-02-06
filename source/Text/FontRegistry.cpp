@@ -15,6 +15,7 @@
 #include "Base/FilePathRegistry.h"
 #include "Base/String.h"
 #include "Text/FontEngine.h"
+#include "Text/Font.h"
 
 #include <iostream>
 #include <cstring>
@@ -87,7 +88,7 @@ FFontFamilyKey::FFontFamilyKey( const std::string& iFamilyName )
 void
 FFontFamilyKey::AddFontStyleKey( const std::string& iStyle, const FFontStyleKey& iFontStyleKey )
 {
-    mStyles.try_emplace( iStyle, iFontStyleKey );
+    mStyles.emplace( iStyle, iFontStyleKey );
 }
 
 
@@ -143,7 +144,8 @@ FFontRegistry::~FFontRegistry()
 }
 
 
-FFontRegistry::FFontRegistry()
+FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
+    : mFontEngine( iFontEngine )
 {
     #ifdef ULIS2_WIN
         std::string sysfpath;
@@ -186,7 +188,7 @@ FFontRegistry::AddLookupPaths( const std::vector< std::string >& iPaths )
 
 
 void
-FFontRegistry::Load( const FFontEngine& iFontEngine )
+FFontRegistry::Load()
 {
     mFamilies.clear();
     FFilePathRegistry reg;
@@ -198,12 +200,12 @@ FFontRegistry::Load( const FFontEngine& iFontEngine )
 
     for( auto it : reg.GetMap() ) {
         FT_Face face;
-        FT_Error load_error = FT_New_Face( iFontEngine.Handle(), it.second.c_str(), 0, &face );
+        FT_Error load_error = FT_New_Face( mFontEngine.Handle(), it.second.c_str(), 0, &face );
         ULIS2_WARNING( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );
         std::string style( face->style_name );
-        mFamilies.try_emplace( familyName, FFontFamilyKey( familyName ) );
+        mFamilies.emplace( familyName, FFontFamilyKey( familyName ) );
         mFamilies.at( familyName ).AddFontStyleKey( style, FFontStyleKey( familyName, style, it.second ) );
         // Free face
         FT_Done_Face( face );
@@ -287,6 +289,18 @@ FFontRegistry::FuzzyFindFontPath( const std::string& iFamily, const std::string&
         return  "";
 
     return  stk->GetFontPath();
+}
+
+const FFontEngine&
+FFontRegistry::FontEngine() const
+{
+    return  mFontEngine;
+}
+
+FFont
+FFontRegistry::LoadFont( const std::string& iFamily, const std::string& iStyle ) const
+{
+    return  FFont( *this, iFamily, iStyle );
 }
 
 ULIS2_NAMESPACE_END

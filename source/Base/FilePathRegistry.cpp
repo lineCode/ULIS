@@ -99,7 +99,7 @@ FFilePathRegistry::Parse()
     }
 
     for( auto it : list )
-        mMap.try_emplace( CreateName( it ), it );
+        mMap.emplace( CreateName( it ), it );
 }
 
 

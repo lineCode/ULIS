@@ -17,8 +17,6 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
-#include <vectorclass.h>
-#include <Windows.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -52,11 +50,10 @@ main( int argc, char *argv[] )
     Fill( &threadPool,  ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockC, black, ULIS2_NOCB );
     threadPool.WaitForCompletion();
 
-
     FFontEngine     fontEngine;
-    FFontRegistry   fontRegistry;
-    fontRegistry.Load( fontEngine );
-    FFont font( fontEngine, fontRegistry, "Arial", "Regular" );
+    FFontRegistry   fontRegistry( fontEngine );
+    fontRegistry.Load();
+    FFont font = fontRegistry.LoadFont( "Arial", "Regular" );
 
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int y = ( i / 8 ) * wb;

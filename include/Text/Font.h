@@ -26,8 +26,8 @@ class ULIS2_API FFont
 public:
     // Construction / Destruction
     ~FFont();
-    FFont( const FFontEngine& iFontEngine, const FFontRegistry& iFontRegistry, const std::string& iFamily = "Arial", const std::string& iStyle = "Regular" );
-    FFont( const FFont& ) = delete;
+    FFont( const FFontRegistry& iFontRegistry, const std::string& iFamily = "Arial", const std::string& iStyle = "Regular" );
+    FFont( FFont& iOther );
 
 public:
     // Public API
