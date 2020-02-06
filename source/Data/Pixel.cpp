@@ -22,17 +22,14 @@ ULIS2_NAMESPACE_BEGIN
 //----------------------------------------------------------- Construction / Destruction
 IPixel::~IPixel()
 {
-    if( mIDT ) delete [] mIDT;
 }
 
 
 IPixel::IPixel( tFormat iFormat, FColorProfile* iProfile )
     : mData( nullptr )
-    , mFormat( iFormat )
+    , mInfo( iFormat )
     , mProfile( iProfile )
-    , mIDT( nullptr )
 {
-    BuildCachedInfo();
     if( mProfile )
         ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 }
@@ -67,72 +64,83 @@ IPixel::Ptr() const
 uint8
 IPixel::BytesPerSample() const
 {
-    return  mBPC;
+    return  mInfo.BPC;
 }
 
 
 uint8
 IPixel::Depth() const
 {
-    return  mBPP;
+    return  mInfo.BPP;
 }
 
 
 tFormat
 IPixel::Format() const
 {
-    return  mFormat;
+    return  mInfo.FMT;
 }
 
 
 eColorModel
 IPixel::Model() const
 {
-    return  static_cast< eColorModel >( ULIS2_R_MODEL( mFormat ) );
+    return  static_cast< eColorModel >( ULIS2_R_MODEL( mInfo.FMT ) );
 }
 
 
 eType
 IPixel::Type() const
 {
-    return  static_cast< eType >( ULIS2_R_TYPE( mFormat ) );
+    return  static_cast< eType >( ULIS2_R_TYPE( mInfo.FMT ) );
 }
 
 
 bool
 IPixel::HasAlpha() const
 {
-    return  mHEA;
+    return  mInfo.HEA;
 }
 
 
 bool
 IPixel::Swapped() const
 {
-    return  static_cast< bool >( ULIS2_R_SWAP( mFormat ) );
+    return  static_cast< bool >( ULIS2_R_SWAP( mInfo.FMT ) );
 }
 
 
 bool
 IPixel::Reversed() const
 {
-    return  static_cast< bool >( ULIS2_R_REVERSE( mFormat ) );
+    return  static_cast< bool >( ULIS2_R_REVERSE( mInfo.FMT ) );
 }
 
 
 uint8
 IPixel::NumSamples() const
 {
-    return  mSPP;
+    return  mInfo.SPP;
 }
 
 
 uint8
 IPixel::NumColorChannels() const
 {
-    return  mNCC;
+    return  mInfo.NCC;
 }
 
+uint8*
+IPixel::IndexTable() const
+{
+    return  mInfo.IDT;
+}
+
+const FFormatInfo&
+IPixel::FormatInfo() const
+{
+    return  mInfo;
+}
 
 FColorProfile*
 IPixel::Profile() const
@@ -144,16 +152,16 @@ IPixel::Profile() const
 uint8
 IPixel::RedirectedIndex( uint8 iIndex ) const
 {
-    ULIS2_ASSERT( iIndex >= 0 && iIndex < mSPP, "Bad Index" );
-    return  mIDT[ iIndex ];
+    ULIS2_ASSERT( iIndex >= 0 && iIndex < mInfo.SPP, "Bad Index" );
+    return  mInfo.IDT[ iIndex ];
 }
 
 
 uint8
 IPixel::AlphaIndex() const
 {
-    ULIS2_ASSERT( mHEA, "Bad Call" );
-    return  mAID;
+    ULIS2_ASSERT( mInfo.HEA, "Bad Call" );
+    return  mInfo.AID;
 }
 
 
@@ -274,32 +282,6 @@ void
 IPixel::SetValue( uint8 iIndex, T iValue )
 {
     SetValueRaw< T >( RedirectedIndex( iIndex ), iValue );
-}
-
-
-
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------- Private Internals
-void
-IPixel::BuildCachedInfo()
-{
-    mBPC = ULIS2_R_DEPTH(       mFormat );
-    mNCC = ULIS2_R_CHANNELS(    mFormat );
-    mHEA = ULIS2_R_ALPHA(       mFormat );
-    mCOD = ULIS2_R_RS(          mFormat );
-    mSPP = mNCC + mHEA;
-    mBPP = mSPP * mBPC;
-    if( mIDT ) delete [] mIDT;
-    mIDT = new uint8[ mSPP ];
-    mAID;
-
-    uint8 msp = mSPP - 1;
-    switch( mCOD ) {
-        case 1:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( msp - i );                                 mAID = 0;   break;
-        case 2:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( i + 1 ) > msp ? 0 : i + 1;                 mAID = 0;   break;
-        case 3:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1; mAID = msp; break;
-        default: for( int i = 0; i < mSPP; ++i ) mIDT[i] = i;                                           mAID = msp; break;
-    }
 }
 
 

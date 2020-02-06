@@ -26,7 +26,6 @@ ULIS2_NAMESPACE_BEGIN
 FBlock::~FBlock()
 {
     mOnCleanup.ExecuteIfBound( mData );
-    if( mIDT ) delete [] mIDT;
 }
 
 
@@ -39,16 +38,16 @@ FBlock::FBlock( tSize iWidth
     : mData( nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
-    , mFormat( iFormat )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
     , mUUID( GenerateWeakUUID( 16 ) )
-    , mIDT( nullptr )
+    , mInfo( iFormat )
 {
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
-    BuildCachedInfo();
+    mBPS = mWidth * mInfo.BPP;
+    mBTT = mHeight * mBPS;
 
     if( mProfile )
         ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
@@ -67,16 +66,16 @@ FBlock::FBlock( tByte* iData
     : mData( iData )
     , mWidth( iWidth )
     , mHeight( iHeight )
-    , mFormat( iFormat )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
     , mUUID( GenerateWeakUUID( 16 ) )
-    , mIDT( nullptr )
+    , mInfo( iFormat )
 {
-    BuildCachedInfo();
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    mBPS = mWidth * mInfo.BPP;
+    mBTT = mHeight * mBPS;
 
     if( mProfile )
         ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
@@ -97,7 +96,7 @@ FBlock::PixelPtr( int iX, int iY )
 {
     ULIS2_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
     ULIS2_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" );
-    return  mData + ( iX * mBPP + iY * mBPS );
+    return  mData + ( iX * mInfo.BPP + iY * mBPS );
 }
 
 
@@ -131,7 +130,7 @@ FBlock::PixelPtr( int iX, int iY ) const
 {
     ULIS2_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
     ULIS2_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" );
-    return  mData + ( iX * mBPP + iY * mBPS );
+    return  mData + ( iX * mInfo.BPP + iY * mBPS );
 }
 
 
@@ -160,14 +159,14 @@ FBlock::Height() const
 tSize
 FBlock::BytesPerSample() const
 {
-    return  mBPC;
+    return  mInfo.BPC;
 }
 
 
 tSize
 FBlock::BytesPerPixel() const
 {
-    return  mBPP;
+    return  mInfo.BPP;
 }
 
 
@@ -188,56 +187,56 @@ FBlock::BytesTotal() const
 tFormat
 FBlock::Format() const
 {
-    return  mFormat;
+    return  mInfo.FMT;
 }
 
 
 eColorModel
 FBlock::Model() const
 {
-    return  static_cast< eColorModel >( ULIS2_R_MODEL( mFormat ) );
+    return  static_cast< eColorModel >( ULIS2_R_MODEL( mInfo.FMT ) );
 }
 
 
 eType
 FBlock::Type() const
 {
-    return  static_cast< eType >( ULIS2_R_TYPE( mFormat ) );
+    return  static_cast< eType >( ULIS2_R_TYPE( mInfo.FMT ) );
 }
 
 
 bool
 FBlock::HasAlpha() const
 {
-    return  mHEA;
+    return  mInfo.HEA;
 }
 
 
 bool
 FBlock::Swapped() const
 {
-    return  static_cast< bool >( ULIS2_R_SWAP( mFormat ) );
+    return  static_cast< bool >( ULIS2_R_SWAP( mInfo.FMT ) );
 }
 
 
 bool
 FBlock::Reversed() const
 {
-    return  static_cast< bool >( ULIS2_R_REVERSE( mFormat ) );
+    return  static_cast< bool >( ULIS2_R_REVERSE( mInfo.FMT ) );
 }
 
 
 uint8
 FBlock::SamplesPerPixel() const
 {
-    return  mSPP;
+    return  mInfo.SPP;
 }
 
 
 uint8
 FBlock::NumColorChannels() const
 {
-    return  mNCC;
+    return  mInfo.NCC;
 }
 
 
@@ -251,16 +250,16 @@ FBlock::Profile() const
 uint8
 FBlock::RedirectedIndex( uint8 iIndex ) const
 {
-    ULIS2_ASSERT( iIndex >= 0 && iIndex < mSPP, "Bad Index" );
-    return  mIDT[ iIndex ];
+    ULIS2_ASSERT( iIndex >= 0 && iIndex < mInfo.SPP, "Bad Index" );
+    return  mInfo.IDT[ iIndex ];
 }
 
 
 uint8
 FBlock::AlphaIndex() const
 {
-    ULIS2_ASSERT( mHEA, "Bad Call" );
-    return  mAID;
+    ULIS2_ASSERT( mInfo.HEA, "Bad Call" );
+    return  mInfo.AID;
 }
 
 
@@ -328,32 +327,14 @@ FBlock::MD5() const
 uint8*
 FBlock::IndexTable() const
 {
-    return  mIDT;
+    return  mInfo.IDT;
 }
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------- Private Internals
-void
-FBlock::BuildCachedInfo()
-{
-    mBPC = ULIS2_R_DEPTH(       mFormat );
-    mNCC = ULIS2_R_CHANNELS(    mFormat );
-    mHEA = ULIS2_R_ALPHA(       mFormat );
-    mCOD = ULIS2_R_RS(          mFormat );
-    mSPP = mNCC + mHEA;
-    mBPP = mSPP * mBPC;
-    mBPS = mWidth * mBPP;
-    mBTT = mHeight * mBPS;
-    if( mIDT ) delete [] mIDT;
-    mIDT = new uint8[ mSPP ];
-    mAID;
 
-    uint8 msp = mSPP - 1;
-    switch( mCOD ) {
-        case 1:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( msp - i );                                 mAID = 0;   break;
-        case 2:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( i + 1 ) > msp ? 0 : i + 1;                 mAID = 0;   break;
-        case 3:  for( int i = 0; i < mSPP; ++i ) mIDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1; mAID = msp; break;
-        default: for( int i = 0; i < mSPP; ++i ) mIDT[i] = i;                                           mAID = msp; break;
-    }
+
+const FFormatInfo&
+FBlock::FormatInfo() const
+{
+    return  mInfo;
 }
 
 ULIS2_NAMESPACE_END

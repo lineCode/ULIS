@@ -13,238 +13,270 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Conv/ConvBuffer.h"
+
+// Macro utils for implementations
+#define U2_DREF_RED_CHAN( T, iPtr, iFmt, iChan )    ( *( ( T* )( iPtr ) + iFmt.IDT[ iChan ] ) )
+#define U2_DREF_CHAN( T, iPtr, iChan )              ( *( ( T* )( iPtr ) + iChan ) )
+#define U2_FWD_ALPHA                                if( iDstFormat.HEA ) { U2_DREF_CHAN( T2, iDst, iDstFormat.AID ) = iSrcFormat.HEA? ConvType< T1, T2 >( U2_DREF_CHAN( T1, iSrc, iSrcFormat.AID ) ) : MaxType< T2 >(); }
+
+#define U2_DREF_SRC( iChan )                        U2_DREF_RED_CHAN( T1, iSrc, iSrcFormat, iChan )
+#define U2_DREF_DST( iChan )                        U2_DREF_RED_CHAN( T2, iDst, iDstFormat, iChan )
+#define U2_DREF_TEMP( iChan )                       U2_DREF_RED_CHAN( ufloat, temp.Ptr(), temp.FormatInfo(), iChan )
+
 //Dispatch
 #include "Conv/Dispatch/Generic/ToGrey.ipp"
+#include "Conv/Dispatch/Generic/ToRGB.ipp"
+#include "Conv/Dispatch/Generic/ToHSV.ipp"
+#include "Conv/Dispatch/Generic/ToHSL.ipp"
+#include "Conv/Dispatch/Generic/ToCMY.ipp"
+#include "Conv/Dispatch/Generic/ToCMYK.ipp"
+#include "Conv/Dispatch/Generic/ToYUV.ipp"
+#include "Conv/Dispatch/Generic/ToLab.ipp"
+#include "Conv/Dispatch/Generic/ToXYZ.ipp"
+#include "Conv/Dispatch/Generic/ToYxy.ipp"
 
 ULIS2_NAMESPACE_BEGIN
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToGrey( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectGrey( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return;
-        case CM_GREY    : ConvBufferGreyToGrey  < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_RGB     : ConvBufferGreyToRGB   < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_HSV     : ConvBufferGreyToHSV   < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_HSL     : ConvBufferGreyToHSL   < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_CMY     : ConvBufferGreyToCMY   < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_CMYK    : ConvBufferGreyToCMYK  < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_YUV     : ConvBufferGreyToYUV   < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_Lab     : ConvBufferGreyToLab   < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_XYZ     : ConvBufferGreyToXYZ   < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_Yxy     : ConvBufferGreyToYxy   < T1, T2 >  ( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  &ConvBufferGreyToGrey  < T1, T2 >;
+        case CM_RGB     : return  &ConvBufferGreyToRGB   < T1, T2 >;
+        case CM_HSV     : return  &ConvBufferGreyToHSV   < T1, T2 >;
+        case CM_HSL     : return  &ConvBufferGreyToHSL   < T1, T2 >;
+        case CM_CMY     : return  &ConvBufferGreyToCMY   < T1, T2 >;
+        case CM_CMYK    : return  &ConvBufferGreyToCMYK  < T1, T2 >;
+        case CM_YUV     : return  &ConvBufferGreyToYUV   < T1, T2 >;
+        case CM_Lab     : return  &ConvBufferGreyToLab   < T1, T2 >;
+        case CM_XYZ     : return  &ConvBufferGreyToXYZ   < T1, T2 >;
+        case CM_Yxy     : return  &ConvBufferGreyToYxy   < T1, T2 >;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToRGB( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectRGB( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToHSV( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectHSV( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToHSL( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectHSL( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToCMY( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectCMY( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToCMYK( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectCMYK( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToYUV( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectYUV( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToLab( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectLab( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToXYZ( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectXYZ( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void
-ConvToYxy( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectYxy( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : break;
-        case CM_GREY    : break;
-        case CM_RGB     : break;
-        case CM_HSV     : break;
-        case CM_HSL     : break;
-        case CM_CMY     : break;
-        case CM_CMYK    : break;
-        case CM_YUV     : break;
-        case CM_Lab     : break;
-        case CM_XYZ     : break;
-        case CM_Yxy     : break;
+        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    : return  nullptr;
+        case CM_RGB     : return  nullptr;
+        case CM_HSV     : return  nullptr;
+        case CM_HSL     : return  nullptr;
+        case CM_CMY     : return  nullptr;
+        case CM_CMYK    : return  nullptr;
+        case CM_YUV     : return  nullptr;
+        case CM_Lab     : return  nullptr;
+        case CM_XYZ     : return  nullptr;
+        case CM_Yxy     : return  nullptr;
     }
+    return  nullptr;
 }
 
 template< typename T1, typename T2 >
 ULIS2_FORCEINLINE
-void ConvBufferT( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke
+QueryDispatchedConvInvokeForParameters_SelectModel( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iDstFormat ) ) )
     {
-        case CM_ANY     :   ULIS2_CRASH_DELIBERATE; return;
-        case CM_GREY    :   ConvToGrey< T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_RGB     :   ConvToRGB<  T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_HSV     :   ConvToHSV<  T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_HSL     :   ConvToHSL<  T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_CMY     :   ConvToCMY<  T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_CMYK    :   ConvToCMYK< T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_YUV     :   ConvToYUV<  T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_Lab     :   ConvToLab<  T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_XYZ     :   ConvToXYZ<  T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
-        case CM_Yxy     :   ConvToYxy<  T1, T2 >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );   return;
+        case CM_ANY     :   ULIS2_CRASH_DELIBERATE; return  nullptr;
+        case CM_GREY    :   return  QueryDispatchedConvInvokeForParameters_SelectGrey< T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_RGB     :   return  QueryDispatchedConvInvokeForParameters_SelectRGB<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_HSV     :   return  QueryDispatchedConvInvokeForParameters_SelectHSV<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_HSL     :   return  QueryDispatchedConvInvokeForParameters_SelectHSL<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_CMY     :   return  QueryDispatchedConvInvokeForParameters_SelectCMY<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_CMYK    :   return  QueryDispatchedConvInvokeForParameters_SelectCMYK< T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_YUV     :   return  QueryDispatchedConvInvokeForParameters_SelectYUV<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_Lab     :   return  QueryDispatchedConvInvokeForParameters_SelectLab<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_XYZ     :   return  QueryDispatchedConvInvokeForParameters_SelectXYZ<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_Yxy     :   return  QueryDispatchedConvInvokeForParameters_SelectYxy<  T1, T2 >( iSrcFormat, iDstFormat );
     }
+    return  nullptr;
 }
 
 ULIS2_NAMESPACE_END

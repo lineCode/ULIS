@@ -25,8 +25,8 @@ void ParallelFor( FThreadPool& iPool, bool iBlocking, const FPerf& iPerf, int32 
         for( int i = 0; i < iNum; ++i )
             iPool.ScheduleJob( iFun, i );
 
-        if( iBlocking )
-            iPool.WaitForCompletion();
+        //if( iBlocking )
+        iPool.WaitForCompletion();
     }
     else
     {

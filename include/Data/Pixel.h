@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Data/FormatInfo.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -28,22 +29,24 @@ public:
 
 public:
     // Public API
-    tByte*          Ptr();
-    void            AssignProfile( FColorProfile* iProfile );
-    const tByte*    Ptr()               const;
-    uint8           BytesPerSample()    const;
-    uint8           Depth()             const;
-    tFormat         Format()            const;
-    eColorModel     Model()             const;
-    eType           Type()              const;
-    bool            HasAlpha()          const;
-    bool            Swapped()           const;
-    bool            Reversed()          const;
-    uint8           NumSamples()        const;
-    uint8           NumColorChannels()  const;
-    FColorProfile*  Profile()           const;
-    uint8           RedirectedIndex( uint8 iIndex ) const;
-    uint8           AlphaIndex()                    const;
+    tByte*              Ptr();
+    void                AssignProfile( FColorProfile* iProfile );
+    const tByte*        Ptr()                           const;
+    uint8               BytesPerSample()                const;
+    uint8               Depth()                         const;
+    tFormat             Format()                        const;
+    eColorModel         Model()                         const;
+    eType               Type()                          const;
+    bool                HasAlpha()                      const;
+    bool                Swapped()                       const;
+    bool                Reversed()                      const;
+    uint8               NumSamples()                    const;
+    uint8               NumColorChannels()              const;
+    uint8*              IndexTable()                    const;
+    const FFormatInfo&  FormatInfo()                    const;
+    FColorProfile*      Profile()                       const;
+    uint8               RedirectedIndex( uint8 iIndex ) const;
+    uint8               AlphaIndex()                    const;
 
     void AssignMemoryUnsafe( const IPixel& iOther );
 
@@ -414,25 +417,11 @@ public:
     ULIS2_FORCEINLINE void SetxD(                               double iValue ) { SetValue< double >( 1, iValue );              }
     ULIS2_FORCEINLINE void SetyD(                               double iValue ) { SetValue< double >( 2, iValue );              }
 
-private:
-    // Private Internals
-    void BuildCachedInfo();
-
 protected:
     // Protected Data Members
     tByte*          mData;
-    tFormat         mFormat;
+    FFormatInfo     mInfo;
     FColorProfile*  mProfile;
-
-    // cached block info
-    uint8           mBPC;
-    uint8           mNCC;
-    uint8           mHEA;
-    uint8           mCOD;
-    uint8           mSPP;
-    uint8           mBPP;
-    uint8*          mIDT;
-    uint8           mAID;
 };
 
 /////////////////////////////////////////////////////

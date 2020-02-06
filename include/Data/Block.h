@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Data/FormatInfo.h"
 #include "Data/Pixel.h"
 #include "Base/Callbacks.h"
 
@@ -78,31 +79,18 @@ public:
     uint32                  CRC32()                                             const;
     std::string             MD5()                                               const;
     uint8*                  IndexTable()                                        const;
-
-private:
-    // Private Internals
-    void BuildCachedInfo();
+    const FFormatInfo&      FormatInfo()                                        const;
 
 private:
     // Private Data Members
     tByte*          mData;
     tSize           mWidth;
     tSize           mHeight;
-    tFormat         mFormat;
     FOnInvalid      mOnInvalid;
     FOnCleanup      mOnCleanup;
     FColorProfile*  mProfile;
     std::string     mUUID;
-
-    // cached block info
-    uint8           mBPC;
-    uint8           mNCC;
-    uint8           mHEA;
-    uint8           mCOD;
-    uint8           mSPP;
-    uint8           mBPP;
-    uint8*          mIDT;
-    uint8           mAID;
+    FFormatInfo     mInfo;
     tSize           mBPS;
     tSize           mBTT;
 };

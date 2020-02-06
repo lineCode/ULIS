@@ -13,45 +13,47 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Conv/ConvBuffer.h"
 //Dispatch
 #include "Conv/Dispatch/DispatchModel.ipp"
 
 ULIS2_NAMESPACE_BEGIN
-void
-ConvBufferDispatchType( tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes, tFormat iDstFormat, tByte* iDst, tSize iDstBytes )
+fpDispatchedConvInvoke QueryDispatchedConvInvokeForParameters( uint32 iSrcFormat, uint32 iDstFormat )
 {
         switch( static_cast< eType >( ULIS2_R_TYPE( iSrcFormat ) ) ) {
         case TYPE_UINT8: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    ConvBufferT< uint8, uint8       >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT16:   ConvBufferT< uint8, uint16      >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT32:   ConvBufferT< uint8, uint32      >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UFLOAT:   ConvBufferT< uint8, ufloat      >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UDOUBLE:  ConvBufferT< uint8, udouble     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return; }
+                case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, uint8       >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, uint16      >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, uint32      >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, ufloat      >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, udouble     >( iSrcFormat, iDstFormat ); }
         case TYPE_UINT16: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    ConvBufferT< uint16, uint8      >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT16:   ConvBufferT< uint16, uint16     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT32:   ConvBufferT< uint16, uint32     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UFLOAT:   ConvBufferT< uint16, ufloat     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UDOUBLE:  ConvBufferT< uint16, udouble    >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return; }
+                case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, uint8      >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, uint16     >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, uint32     >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, ufloat     >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, udouble    >( iSrcFormat, iDstFormat ); }
         case TYPE_UINT32: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    ConvBufferT< uint32, uint8      >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT16:   ConvBufferT< uint32, uint16     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT32:   ConvBufferT< uint32, uint32     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UFLOAT:   ConvBufferT< uint32, ufloat     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UDOUBLE:  ConvBufferT< uint32, udouble    >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return; }
+                case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, uint8      >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, uint16     >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, uint32     >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, ufloat     >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, udouble    >( iSrcFormat, iDstFormat ); }
         case TYPE_UFLOAT: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    ConvBufferT< ufloat, uint8      >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT16:   ConvBufferT< ufloat, uint16     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT32:   ConvBufferT< ufloat, uint32     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UFLOAT:   ConvBufferT< ufloat, ufloat     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UDOUBLE:  ConvBufferT< ufloat, udouble    >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return; }
+                case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, uint8      >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, uint16     >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, uint32     >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, ufloat     >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, udouble    >( iSrcFormat, iDstFormat ); }
         case TYPE_UDOUBLE: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    ConvBufferT< udouble, uint8     >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT16:   ConvBufferT< udouble, uint16    >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UINT32:   ConvBufferT< udouble, uint32    >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UFLOAT:   ConvBufferT< udouble, ufloat    >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return;
-                case TYPE_UDOUBLE:  ConvBufferT< udouble, udouble   >( iSrcFormat, iSrc, iSrcBytes, iDstFormat, iDst, iDstBytes );  return; }
+                case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< udouble, uint8     >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< udouble, uint16    >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< udouble, uint32    >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< udouble, ufloat    >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< udouble, udouble   >( iSrcFormat, iDstFormat ); }
     }
+
+    return  nullptr;
 }
 ULIS2_NAMESPACE_END
 
