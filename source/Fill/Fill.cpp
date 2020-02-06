@@ -23,6 +23,7 @@
 #include <memory>
 
 ULIS2_NAMESPACE_BEGIN
+#ifdef __AVX2__
 void
 InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, const tSize iStride )
 {
@@ -36,8 +37,9 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, 
     // avoid concurrent write on 256 bit with avx and perform a memcpy instead
     memcpy( iDst, &iSrc, iCount - index );
 }
+#endif // __AVX2__
 
-
+#ifdef __SSE4_2__
 void
 InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, const tSize iStride )
 {
@@ -51,7 +53,7 @@ InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, 
     // avoid concurrent write on 128 bit with SSE and perform a memcpy instead
     memcpy( iDst, &iSrc, iCount - index );
 }
-
+#endif // __SE4_2__
 
 void
 InvokeFillMTProcessScanline_MEM( tByte* iDst, std::shared_ptr< tByte >  iSrc, tSize iCount, tSize iStride )
@@ -82,6 +84,7 @@ Fill_imp( FThreadPool*              iPool
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
 
+    #ifdef __AVX2__
     if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bpp <= 32 && bps >= 32 )
     {
         const tSize stride = 32 - ( 32 % bpp );
@@ -96,7 +99,10 @@ Fill_imp( FThreadPool*              iPool
         const tSize count = iRoi.w * bpp;
         ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, src, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bpp <= 16 && bps >= 16 )
+    else
+    #endif // __AVX2__
+    #ifdef __SSE4_2__
+    if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bpp <= 16 && bps >= 16 )
     {
         const tSize stride = 16 - ( 16 % bpp );
         tByte* srcb = new tByte[16];
@@ -111,6 +117,7 @@ Fill_imp( FThreadPool*              iPool
         ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE( DST, src, count, stride ); } );
     }
     else
+    #endif // __SSE4_2__
     {
         ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iSrc, iRoi.w, bpp ); } );
     }

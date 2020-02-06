@@ -20,6 +20,7 @@
 #include <immintrin.h>
 
 ULIS2_NAMESPACE_BEGIN
+#ifdef __AVX2__
 void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSize iCount, const tSize iStride )
 {
     tSize index;
@@ -32,8 +33,9 @@ void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSiz
     // avoid concurrent write on 256 bit with AVS and perform a memcpy instead
     memcpy( iDst, &iSrc, iCount - index );
 }
+#endif // __AVX2__
 
-
+#ifdef __SSE4_2__
 void InvokeCopyMTProcessScanline_SSE( tByte* iDst, const tByte* iSrc, const tSize iCount, const tSize iStride )
 {
     tSize index;
@@ -46,7 +48,7 @@ void InvokeCopyMTProcessScanline_SSE( tByte* iDst, const tByte* iSrc, const tSiz
     // avoid concurrent write on 128 bit with SSE and perform a memcpy instead
     memcpy( iDst, &iSrc, iCount - index );
 }
-
+#endif // __SE4_2__
 
 void InvokeCopyMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCount )
 {
@@ -75,19 +77,24 @@ Copy_imp( FThreadPool*  iPool
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define SRC srb + ( ( iSrcRoi.y + iLine ) * bps )
     #define DST dsb + ( ( iDstRoi.y + iLine ) * bps )
+    #ifdef __AVX2__
     if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bpp <= 32 && bps >= 32 )
     {
         const tSize stride = 32;
         const tSize count = iSrcRoi.w * bpp;
         ParallelFor( *iPool, iBlocking, iPerf, iSrcRoi.h, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_AX2( DST, SRC, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bpp <= 16 && bps >= 16 )
+    else
+    #endif // __AVX2__
+    #ifdef __SSE4_2__
+    if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bpp <= 16 && bps >= 16 )
     {
         const tSize stride = 16;
         const tSize count = iSrcRoi.w * bpp;
         ParallelFor( *iPool, iBlocking, iPerf, iSrcRoi.h, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_SSE( DST, SRC, count, stride ); } );
     }
     else
+    #endif // __SSE4_2__
     {
         const tSize count = iSrcRoi.w * bpp;
         ParallelFor( *iPool, iBlocking, iPerf, iSrcRoi.h, ULIS2_PF_CALL { InvokeCopyMTProcessScanline_MEM( DST, SRC, iSrcRoi.w ); } );

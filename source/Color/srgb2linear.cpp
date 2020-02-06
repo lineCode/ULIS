@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Color/srgb2linear.h"
+#include <cmath>
 
 ULIS2_NAMESPACE_BEGIN
 ufloat LUT_sRGBU8_TO_LINEARF[256] = {

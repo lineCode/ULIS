@@ -14,7 +14,6 @@
 #pragma once
 #include "Base/Core.h"
 #include <cmath>
-#include <cmath>
 #include <immintrin.h>
 #include <glm/vec2.hpp>
 

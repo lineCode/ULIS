@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Conv/Conv.h"
+#include <cmath>
 //Dispatch
 #include "Conv/Dispatch/DispatchType.ipp"
 

@@ -20,6 +20,7 @@
 #include <immintrin.h>
 
 ULIS2_NAMESPACE_BEGIN
+#ifdef __AVX2__
 void
 InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iStride )
 {
@@ -33,8 +34,9 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iS
     // avoid concurrent write on 256 bit with avx and perform a memset instead
     memset( iDst, 0, iCount - index );
 }
+#endif // __AVX2__
 
-
+#ifdef __SSE4_2__
 void
 InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const tSize iStride )
 {
@@ -48,7 +50,7 @@ InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const tSize
     // avoid concurrent write on 128 bit with SSE and perform a memset instead
     memset( iDst, 0, iCount - index );
 }
-
+#endif // __SE4_2__
 
 void
 InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, tSize iStride )
@@ -73,19 +75,25 @@ Clear_imp( FThreadPool* iPool
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
     #define DST dsb + ( ( iRoi.y + iLine ) * bps )
+
+    #ifdef __AVX2__
     if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bps >= 32 )
     {
         const tSize stride = 32;
         const tSize count = iRoi.w * bpp;
         ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, count, stride ); } );
     }
-    else if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bps >= 16 )
+    else
+    #endif // __AVX2__
+    #ifdef __SSE4_2__
+    if( iPerf.UseSSE4_2() && iCPU.info.HW_SSE42 && bps >= 16 )
     {
         const tSize stride = 16;
         const tSize count = iRoi.w * bpp;
         ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE4_2( DST, count, stride ); } );
     }
     else
+    #endif // __SSE4_2__
     {
         ParallelFor( *iPool, iBlocking , iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iRoi.w, bpp ); } );
     }

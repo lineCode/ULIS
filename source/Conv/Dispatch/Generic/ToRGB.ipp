@@ -107,9 +107,9 @@ template< typename T1, typename T2 > void ConvBufferHSLToRGB(  const FFormatInfo
         else if ( var_i == 3 ) { r = 0; g = X; b = C; }
         else if ( var_i == 4 ) { r = X; g = 0; b = C; }
         else                   { r = C; g = 0; b = X; }
-        U2_DREF_DST( 0 ) = ConvType< ufloat, T2 >( r );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, T2 >( g );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, T2 >( b );
+        U2_DREF_DST( 0 ) = ConvType< ufloat, T2 >( r + m );
+        U2_DREF_DST( 1 ) = ConvType< ufloat, T2 >( g + m );
+        U2_DREF_DST( 2 ) = ConvType< ufloat, T2 >( b + m );
         U2_FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
