@@ -15,7 +15,6 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-class FProfileRegistry;
 /// @fn         void ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent = INTENT_PERCEPTUAL )
 /// @brief      Conv a pixel from source to destination with color space and intent.
 /// @param      iSrc                A const reference to the source Pixel.
@@ -30,18 +29,24 @@ ULIS2_API void ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegi
 /// @param      iDst                A reference to the destination Pixel.
 ULIS2_API void Conv( const IPixel& iSrc, IPixel& iDst );
 
-// Pixel Template implementations
-template< typename T1, typename T2 > void ConvT( const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToGrey(   const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToRGB(    const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToHSV(    const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToHSL(    const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToCMY(    const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToCMYK(   const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToYUV(    const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToLab(    const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToXYZ(    const IPixel& iSrc, IPixel& iDst );
-template< typename T1, typename T2 > void ConvToYxy(    const IPixel& iSrc, IPixel& iDst );
+
+/// @fn         void Conv( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, const FBlock* iSrc, FBlock* iDst, bool iCallInvalidCB )
+/// @brief      Convert from source to destination
+/// @details    The blocks must match in size.
+/// @param      iPool           The pool to process the image in.
+/// @param      iBlocking       Weither the MT process should wait for completion or not
+/// @param      iPerf           The Performance Options for this operation, see \e FPerf.
+/// @param      iCPU            The CPU info for this runtime environment, see \e FCPU.
+/// @param      iSrc            The block source to convert.
+/// @param      iDst            The block destination to write.
+/// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
+ULIS2_API void Conv( FThreadPool*   iPool
+                   , bool           iBlocking
+                   , const FPerf&   iPerf
+                   , const FCPU&    iCPU
+                   , const FBlock*  iSrc
+                   , FBlock*        iDst
+                   , bool           iCallInvalidCB );
 
 ULIS2_NAMESPACE_END
 

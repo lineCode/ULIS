@@ -82,8 +82,8 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel( int32
             FLOAT2TYPE( src_sample.Ptr(), r, srcvf );
         }
         bdp_proxy.SetPtr( bdp );
-        ConvToRGB< T, ufloat >( src_sample, src_conv );
-        ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
+        Conv( src_sample, src_conv );
+        Conv( bdp_proxy, bdp_conv );
         FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
         FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
         FRGBF result_rgbf;
@@ -93,7 +93,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel( int32
         res_conv.SetRF( result_rgbf.R );
         res_conv.SetGF( result_rgbf.G );
         res_conv.SetBF( result_rgbf.B );
-        ConvT< ufloat, T >( res_conv, result );
+        Conv( res_conv, result );
 
         // Compose
         for( uint8 j = 0; j < iNCC; ++j ) {
@@ -182,8 +182,8 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic( int32         
 
         src_proxy.SetPtr( src );
         bdp_proxy.SetPtr( bdp );
-        ConvToRGB< T, ufloat >( src_proxy, src_conv );
-        ConvToRGB< T, ufloat >( bdp_proxy, bdp_conv );
+        Conv( src_proxy, src_conv );
+        Conv( bdp_proxy, bdp_conv );
         FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
         FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
         FRGBF result_rgbf;
@@ -193,7 +193,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic( int32         
         res_conv.SetRF( result_rgbf.R );
         res_conv.SetGF( result_rgbf.G );
         res_conv.SetBF( result_rgbf.B );
-        ConvT< ufloat, T >( res_conv, result );
+        Conv( res_conv, result );
 
         // Compose
         for( uint8 j = 0; j < iNCC; ++j ) {
