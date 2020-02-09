@@ -90,7 +90,6 @@ TraceTextMono_Generic( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, F
     int autobaseline = (int)( iSize / 1 );
 
     for( int n = 0; n < len; ++n ) {
-
         FT_Set_Transform( face, &iTransform, &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );

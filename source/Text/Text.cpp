@@ -24,6 +24,8 @@
 
 #include "Text/Dispatch/Dispatch.ipp"
 
+#include FT_GLYPH_H
+
 ULIS2_NAMESPACE_BEGIN
 void
 TraceText( FThreadPool*         iPool
@@ -58,6 +60,54 @@ TraceText( FThreadPool*         iPool
     if( fptr ) fptr( iPool, iBlocking, iPerf, iDst, iText, iFont, iSize, color, (int)iPos.x, (int)iPos.y, matrix );
 
     iDst->Invalidate( iCallInvalidCB );
+}
+
+
+FRect
+TextMetrics( const std::string&    iText
+           , const FFont&          iFont
+           , int                   iSize
+           , const glm::vec2&      iPos
+           , const glm::mat2&      iTransform )
+{
+    FRect result;
+
+    FT_Matrix matrix;
+    matrix.xx = (FT_Fixed)( iTransform[0].x * 0x10000L );
+    matrix.xy = (FT_Fixed)( iTransform[0].y * 0x10000L );
+    matrix.yx = (FT_Fixed)( iTransform[1].x * 0x10000L );
+    matrix.yy = (FT_Fixed)( iTransform[1].y * 0x10000L );
+
+    const char* str = iText.c_str();
+    int len = (int)iText.size();
+
+    FT_GlyphSlot  slot;
+    FT_Vector     pen;
+
+    FT_Error error = 0;
+    FT_Face face = iFont.Handle();
+    error = FT_Set_Pixel_Sizes( face, 0, iSize );
+    ULIS2_ERROR( !error, "Error setting face size" );
+
+    slot = face->glyph;
+    pen.x = 0;
+    pen.y = 0;
+    int autobaseline = (int)( iSize / 1 );
+
+    for( int n = 0; n < len; ++n ) {
+        FT_Set_Transform( face, &matrix, &pen );
+        FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
+        error = FT_Load_Glyph( face, glyph_index, FT_LOAD_BITMAP_METRICS_ONLY );
+        ULIS2_ERROR( !error, "Error loading glyph" );
+
+        FRect box = FRect::FromXYWH( (int)iPos.x + slot->bitmap_left, (int)iPos.y + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
+        result = n == 0 ? box : result | box;
+
+        pen.x += slot->advance.x;
+        pen.y += slot->advance.y;
+    }
+
+    return  result;
 }
 
 ULIS2_NAMESPACE_END

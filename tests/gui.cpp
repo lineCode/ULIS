@@ -37,7 +37,7 @@ main( int argc, char *argv[] )
     FBlock  blockOver( over, wo, ho, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
     FBlock  blockC( wb, 20, ULIS2_FORMAT_RGBA8 );
 
-    FThreadPool     threadPool(1);
+    FThreadPool     threadPool(64);
     FPerf           perfIntent( Perf_Best_CPU );
     FCPU            cpuInfo;
 
@@ -65,20 +65,10 @@ main( int argc, char *argv[] )
         TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwBlendingMode[ i ], font, 16, white, glm::vec2( x, y + hb - 20 ), glm::mat2( 1.f ), ULIS2_NOCB );
     }
 
-    FBlock blockLab( blockA.Width(), blockA.Height(), ULIS2_FORMAT_LabAD );
-    FColor labGreen     = Conv( green,  ULIS2_FORMAT_LabAD );
-    FColor labRed       = Conv( red,    ULIS2_FORMAT_LabAD );
-    FColor labInterp    = Conv( red,    ULIS2_FORMAT_LabAD );
-    for( int x = 0; x < blockLab.Width(); ++x ) {
-        udouble t = x / static_cast< udouble >( blockLab.Width() );
-        labInterp.SetLD( labGreen.LD() * ( 1 - t ) + labRed.LD() * t );
-        labInterp.SetaD( labGreen.aD() * ( 1 - t ) + labRed.aD() * t );
-        labInterp.SetbD( labGreen.bD() * ( 1 - t ) + labRed.bD() * t );
-        for( int y = 0; y < blockLab.Height(); ++y ) {
-            blockLab.PixelProxy( x, y ).AssignMemoryUnsafe( labInterp );
-        }
-    }
-    Conv( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockLab, &blockA, ULIS2_NOCB );
+    glm::mat2 mat = glm::rotate( glm::mat3( 1.f ), 0.785f );
+    FRect metrics = TextMetrics( "Hello World", font, 16, glm::vec2( 64 ), mat );
+    FillRect( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, red, metrics, ULIS2_NOCB );
+    TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, "Hello World", font, 16, white, glm::vec2( 64 ), mat, ULIS2_NOCB );
 
     // Qt Window
     QApplication app( argc, argv );

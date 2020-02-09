@@ -47,6 +47,20 @@ ULIS2_API void TraceText( FThreadPool*          iPool
                         , const glm::mat2&      iTransform
                         , bool                  iCallInvalidCB );
 
+
+/// @fn         FRect TextMetrics( const std::string& iText, const FFont& iFont, int iSize, const glm::mat2& iTransform )
+/// @brief      Quickly precompute text metrics according to params for layout and placement.
+/// @param      iText           The text to draw
+/// @param      iFont           The font to use
+/// @param      iSize           The text size
+/// @param      iTransform      The text transform.
+/// @return                     A rectangular area containing all the text.
+ULIS2_API FRect TextMetrics( const std::string&    iText
+                           , const FFont&          iFont
+                           , int                   iSize
+                           , const glm::vec2&      iPos
+                           , const glm::mat2&      iTransform );
+
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedTextFunc)( FThreadPool*, bool, const FPerf&, FBlock*, const std::string&, const FFont&, int, const tByte*, int, int, FT_Matrix& );
 ULIS2_API fpDispatchedTextFunc QueryDispatchedTextFunctionForParameters( uint32 iFormat, bool iAntialiasing, const FPerf& iPerf, const FCPU& iCPU );
