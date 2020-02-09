@@ -14,6 +14,7 @@
 #pragma once
 #include "Base/Core.h"
 #include <glm/mat2x2.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

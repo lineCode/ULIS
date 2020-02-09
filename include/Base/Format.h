@@ -20,7 +20,7 @@
 //          1098 7654 3210 9876     5432 1098 7654 3210
 //          •••• •••• ••EE DDDD     ASRF MMMM CCCC TTTT
 //    Example: RGBA8
-//                                  1000 0010 0011 0001
+//                            1     1000 0010 0011 0000
 //
 //    B: Bytes per sample
 //    C: Num Channels
@@ -41,6 +41,16 @@
 #define ULIS2_W_ALPHA( i )      ( i << 15 )
 #define ULIS2_W_DEPTH( i )      ( i << 16 )
 #define ULIS2_W_EXTRA( i )      ( i << 20 )
+
+#define ULIS2_E_TYPE        ( ~0xF )
+#define ULIS2_E_CHANNELS    ( ~( 0xF << 4 ) )
+#define ULIS2_E_MODEL       ( ~( 0xF << 8 ) )
+#define ULIS2_E_FLOATING    ( ~( 0x1 << 12 ) )
+#define ULIS2_E_REVERSE     ( ~( 0x1 << 13 ) )
+#define ULIS2_E_SWAP        ( ~( 0x1 << 14 ) )
+#define ULIS2_E_ALPHA       ( ~( 0x1 << 15 ) )
+#define ULIS2_E_DEPTH       ( ~( 0xF << 16 )
+#define ULIS2_E_EXTRA       ( ~( 0x3 << 20 )
 
 #define ULIS2_R_TYPE( i )       ( i & 0xF )
 #define ULIS2_R_CHANNELS( i )   ( ( i >> 4 ) & 0xF )

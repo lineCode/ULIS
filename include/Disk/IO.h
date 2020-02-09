@@ -15,6 +15,7 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
+
 enum eImageFormat {
       IM_PNG
     , IM_BMP
@@ -23,8 +24,7 @@ enum eImageFormat {
     , IM_HDR
 };
 
-static const char* kwImageFormat[] =
-{
+static const char* kwImageFormat[] = {
       "PNG"
     , "BMP"
     , "TGA"
@@ -32,19 +32,20 @@ static const char* kwImageFormat[] =
     , "HDR"
 };
 
-ULIS2_API FBlock* XLoad( FThreadPool*       iPool
-                       , bool               iBlocking
-                       , const FPerf&       iPerf
-                       , const FCPU&        iCPU
-                       , const std::string& iPath
-                       , tFormat            iDesiredFormat = 0 );
+ULIS2_API FBlock* XLoadFromFile( FThreadPool*       iPool
+                               , bool               iBlocking
+                               , const FPerf&       iPerf
+                               , const FCPU&        iCPU
+                               , const std::string& iPath
+                               , tFormat            iDesiredFormat = 0 );
 
-ULIS2_API void Save( FThreadPool*       iPool
-                   , bool               iBlocking
-                   , const FPerf&       iPerf
-                   , const FCPU&        iCPU
-                   , const FBlock*      iSource
-                   , const std::string& iPath
-                   , eImageFormat       iImageFormat );
+ULIS2_API void SaveToFile( FThreadPool*       iPool
+                         , bool               iBlocking
+                         , const FPerf&       iPerf
+                         , const FCPU&        iCPU
+                         , const FBlock*      iSource
+                         , const std::string& iPath
+                         , eImageFormat       iImageFormat );
+
 ULIS2_NAMESPACE_END
 

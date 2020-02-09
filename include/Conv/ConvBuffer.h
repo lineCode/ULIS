@@ -131,7 +131,3 @@ ULIS2_API fpDispatchedConvInvoke QueryDispatchedConvInvokeForParameters( uint32 
 
 ULIS2_NAMESPACE_END
 
-/*
-ULIS2_API void ProfileConvBuffer( FColorProfile* iSrcProfile, tFormat iSrcFormat, const tByte* iSrc, tSize iSrcBytes
-                                , FColorProfile* iDstProfile, tFormat iDstFormat,       tByte* iDst, tSize iDstBytes, uint32 iIntent = 0 );
-*/

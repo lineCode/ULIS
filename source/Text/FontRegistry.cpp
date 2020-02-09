@@ -167,6 +167,8 @@ FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
         mLookupPaths.push_back( "/etc/fonts/fonts.conf/" );
         mLookupPaths.push_back( "/etc/fonts/local.conf./" );
     #endif
+
+    Load();
 }
 
 

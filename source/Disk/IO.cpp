@@ -37,12 +37,12 @@
 
 ULIS2_NAMESPACE_BEGIN
 FBlock*
-XLoad( FThreadPool*       iPool
-     , bool               iBlocking
-     , const FPerf&       iPerf
-     , const FCPU&        iCPU
-     , const std::string& iPath
-     , tFormat            iDesiredFormat )
+XLoadFromFile( FThreadPool*       iPool
+             , bool               iBlocking
+             , const FPerf&       iPerf
+             , const FCPU&        iCPU
+             , const std::string& iPath
+             , tFormat            iDesiredFormat )
 {
     //cppfs::FilePath     path( iPath );
     //std::string         ext = path.extension();
@@ -113,14 +113,20 @@ XLoad( FThreadPool*       iPool
     return  ret;
 }
 
-void Save( FThreadPool*         iPool
-         , bool                 iBlocking
-         , const FPerf&         iPerf
-         , const FCPU&          iCPU
-         , const FBlock*        iSource
-         , const std::string&   iPath
-         , eImageFormat         iImageFormat )
+void SaveToFile( FThreadPool*         iPool
+               , bool                 iBlocking
+               , const FPerf&         iPerf
+               , const FCPU&          iCPU
+               , const FBlock*        iSource
+               , const std::string&   iPath
+               , eImageFormat         iImageFormat )
 {
+    tFormat     format  = iSource->Format();
+    eColorModel model   = iSource->Model();
+    eType       type    = iSource->Type();
+
+    //tFormat tweak = ULIS2_E_SWAP & ULIS2_E_REVERSE & format;
+    auto dummy = 0;
 }
 
 ULIS2_NAMESPACE_END
