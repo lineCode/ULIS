@@ -169,16 +169,16 @@ template< typename T1, typename T2 > void ConvBufferYUVToRGB(  const FFormatInfo
 
 template< typename T1, typename T2 > void ConvBufferLabToRGB(  const FFormatInfo& iSrcFormat, const tByte* iSrc, const FFormatInfo& iDstFormat, tByte* iDst, tSize iLen ) {
     while( iLen-- ) {
-        cmsCIELab Lab;
+        cmsCIELab Lab; 
         cmsCIEXYZ XYZ;
         cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-        Lab.L = ConvType< T1, udouble >( U2_DREF_SRC( 0 ) );
-        Lab.a = ConvType< T1, udouble >( U2_DREF_SRC( 1 ) );
-        Lab.b = ConvType< T1, udouble >( U2_DREF_SRC( 2 ) );
+        Lab.L = ConvType< T1, udouble >( U2_DREF_SRC( 0 ) ) * 100.0;
+        Lab.a = ( ConvType< T1, udouble >( U2_DREF_SRC( 1 ) ) - 0.5 ) * 255.0;
+        Lab.b = ( ConvType< T1, udouble >( U2_DREF_SRC( 2 ) ) - 0.5 ) * 255.0;
         cmsLab2XYZ( &D65, &XYZ, &Lab );
-        ufloat x = static_cast< ufloat >( XYZ.X / 100.f );
-        ufloat y = static_cast< ufloat >( XYZ.Y / 100.f );
-        ufloat z = static_cast< ufloat >( XYZ.Z / 100.f );
+        ufloat x = static_cast< ufloat >( XYZ.X ) / 100.f;
+        ufloat y = static_cast< ufloat >( XYZ.Y ) / 100.f;
+        ufloat z = static_cast< ufloat >( XYZ.Z ) / 100.f;
         float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
         float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
         float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );

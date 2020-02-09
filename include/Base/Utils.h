@@ -64,7 +64,7 @@ template<> uint8    constexpr ULIS2_FORCEINLINE MaxType< uint8   >() { return UI
 template<> uint16   constexpr ULIS2_FORCEINLINE MaxType< uint16  >() { return UINT16_MAX;   }
 template<> uint32   constexpr ULIS2_FORCEINLINE MaxType< uint32  >() { return UINT32_MAX;   }
 template<> ufloat   constexpr ULIS2_FORCEINLINE MaxType< ufloat  >() { return 1.f;          }
-template<> udouble  constexpr ULIS2_FORCEINLINE MaxType< udouble >() { return 0.0;          }
+template<> udouble  constexpr ULIS2_FORCEINLINE MaxType< udouble >() { return 1.0;          }
 
 // User define literal oprators
 constexpr uint8     operator "" _u8(  unsigned long long int i ) { return  (uint8)_clamp( i, (unsigned long long int)0, (unsigned long long int)UINT8_MAX ); }

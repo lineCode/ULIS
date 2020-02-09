@@ -84,7 +84,15 @@ Conv( FThreadPool*   iPool
     ULIS2_ASSERT( fptr, "No Conversion invocation found" );
     if( !fptr ) return;
 
-    ParallelFor( *iPool, iBlocking, iPerf, iSrc->Height(), ULIS2_PF_CALL { fptr( iSrc->FormatInfo(), iSrc->DataPtr(), iDst->FormatInfo(), iDst->DataPtr(), iSrc->Width() ); } );
+    const tByte*    srb = iSrc->DataPtr();
+    tByte*          dsb = iDst->DataPtr();
+    tSize           src_bps = iSrc->BytesPerScanLine();
+    tSize           dst_bps = iDst->BytesPerScanLine();
+    #define SRC srb + ( iLine * src_bps )
+    #define DST dsb + ( iLine * dst_bps )
+    ParallelFor( *iPool, iBlocking, iPerf, iSrc->Height(), ULIS2_PF_CALL { fptr( iSrc->FormatInfo(), SRC, iDst->FormatInfo(), DST, iSrc->Width() ); } );
+
+    iDst->Invalidate( iCallInvalidCB );
 }
 
 
