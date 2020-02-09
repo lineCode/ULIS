@@ -113,20 +113,50 @@ XLoadFromFile( FThreadPool*       iPool
     return  ret;
 }
 
-void SaveToFile( FThreadPool*         iPool
-               , bool                 iBlocking
-               , const FPerf&         iPerf
-               , const FCPU&          iCPU
-               , const FBlock*        iSource
-               , const std::string&   iPath
-               , eImageFormat         iImageFormat )
+void SaveToFile( FThreadPool*       iPool
+               , bool               iBlocking
+               , const FPerf&       iPerf
+               , const FCPU&        iCPU
+               , const FBlock*      iSource
+               , const std::string& iPath
+               , eImageFormat       iImageFormat
+               , int                iQuality )
 {
     tFormat     format  = iSource->Format();
     eColorModel model   = iSource->Model();
     eType       type    = iSource->Type();
 
-    //tFormat tweak = ULIS2_E_SWAP & ULIS2_E_REVERSE & format;
-    auto dummy = 0;
+    bool layout_valid   = ULIS2_R_RS( format ) == 0;
+    bool model_valid    = model == CM_GREY || model == CM_RGB;
+    bool type_valid     = ( iImageFormat != IM_HDR && type == TYPE_UINT8 ) || ( iImageFormat == IM_HDR && type == TYPE_UFLOAT && model == CM_RGB );
+
+    int w = iSource->Width();
+    int h = iSource->Height();
+    int c = iSource->SamplesPerPixel();
+    const uint8* dat = iSource->DataPtr();
+    FBlock* conv = nullptr;
+    if( !( layout_valid && model_valid && type_valid ) ) {
+        if( iImageFormat == IM_HDR ) {
+            conv = XConv( iPool, iBlocking, iPerf, iCPU, iSource, ULIS2_FORMAT_RGBF );
+        } else if( model == CM_GREY ) {
+            conv = XConv( iPool, iBlocking, iPerf, iCPU, iSource, ULIS2_FORMAT_G8 | ULIS2_W_ALPHA( iSource->HasAlpha() ) );
+        } else {
+            conv = XConv( iPool, iBlocking, iPerf, iCPU, iSource, ULIS2_FORMAT_RGB8 | ULIS2_W_ALPHA( iSource->HasAlpha() ) );
+        }
+
+        dat = conv->DataPtr();
+    }
+
+    switch( iImageFormat ) {
+        case IM_PNG: stbi_write_png( iPath.c_str(), w, h, c, dat, 0         );  break;
+        case IM_BMP: stbi_write_bmp( iPath.c_str(), w, h, c, dat            );  break;
+        case IM_TGA: stbi_write_tga( iPath.c_str(), w, h, c, dat            );  break;
+        case IM_JPG: stbi_write_jpg( iPath.c_str(), w, h, c, dat, iQuality  );  break; // Quality: 0 - 100;
+        case IM_HDR: stbi_write_hdr( iPath.c_str(), w, h, c, (float*)dat );     break;
+    }
+
+    if( conv )
+        delete  conv;
 }
 
 ULIS2_NAMESPACE_END

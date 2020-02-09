@@ -39,13 +39,14 @@ ULIS2_API FBlock* XLoadFromFile( FThreadPool*       iPool
                                , const std::string& iPath
                                , tFormat            iDesiredFormat = 0 );
 
-ULIS2_API void SaveToFile( FThreadPool*       iPool
-                         , bool               iBlocking
-                         , const FPerf&       iPerf
-                         , const FCPU&        iCPU
-                         , const FBlock*      iSource
-                         , const std::string& iPath
-                         , eImageFormat       iImageFormat );
+ULIS2_API void SaveToFile( FThreadPool*         iPool
+                         , bool                 iBlocking
+                         , const FPerf&         iPerf
+                         , const FCPU&          iCPU
+                         , const FBlock*        iSource
+                         , const std::string&   iPath
+                         , eImageFormat         iImageFormat
+                         , int                  iQuality = 100 );
 
 ULIS2_NAMESPACE_END
 
