@@ -80,6 +80,7 @@ public:
     std::string             MD5()                                               const;
     uint8*                  IndexTable()                                        const;
     const FFormatInfo&      FormatInfo()                                        const;
+    void                    TweakFormat( tFormat iFormat );
 
 private:
     // Private Data Members

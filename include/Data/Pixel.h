@@ -47,6 +47,7 @@ public:
     FColorProfile*      Profile()                       const;
     uint8               RedirectedIndex( uint8 iIndex ) const;
     uint8               AlphaIndex()                    const;
+    void                TweakFormat( tFormat iFormat );
 
     void AssignMemoryUnsafe( const IPixel& iOther );
 
@@ -439,6 +440,7 @@ public:
     FPixelValue( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelValue( const FPixelProxy& iProxy );
     FPixelValue( const FPixelValue& iValue );
+    FPixelValue( FPixelValue&& iValue );
 
     template< typename T >
     FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile = nullptr )

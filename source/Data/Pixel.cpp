@@ -166,6 +166,15 @@ IPixel::AlphaIndex() const
 
 
 void
+IPixel::TweakFormat( tFormat iFormat )
+{
+    FFormatInfo newInfo( iFormat );
+    ULIS2_ASSERT( newInfo.BPP == mInfo.BPP, "Bad tweak operation" );
+    mInfo = newInfo;
+}
+
+
+void
 IPixel::AssignMemoryUnsafe( const IPixel& iOther )
 {
     memcpy( mData, iOther.Ptr(), Depth() );
@@ -291,7 +300,8 @@ IPixel::SetValue( uint8 iIndex, T iValue )
 //----------------------------------------------------------- Construction / Destruction
 FPixelValue::~FPixelValue()
 {
-    delete [] mData;
+    if( mData )
+        delete [] mData;
 }
 
 
@@ -325,6 +335,13 @@ FPixelValue::FPixelValue( const FPixelValue& iValue )
     memcpy( mData, iValue.Ptr(), Depth() );
 }
 
+
+FPixelValue::FPixelValue( FPixelValue&& iValue )
+    : tParent( iValue.Format(), iValue.Profile() )
+{
+    mData = iValue.mData;
+    iValue.mData = nullptr;
+}
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------ Named static constructors

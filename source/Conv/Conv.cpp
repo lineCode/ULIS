@@ -56,6 +56,14 @@ void Conv( const IPixel& iSrc, IPixel& iDst ) {
 }
 
 
+FPixelValue Conv( const IPixel& iSrc, tFormat iDst ) {
+    FPixelValue dst( iDst );
+    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst );
+    if( fptr ) fptr( iSrc.FormatInfo(), iSrc.Ptr(), dst.FormatInfo(), dst.Ptr(), 1 );
+    return  dst;
+}
+
+
 void
 Conv( FThreadPool*   iPool
     , bool           iBlocking
@@ -77,6 +85,20 @@ Conv( FThreadPool*   iPool
     if( !fptr ) return;
 
     ParallelFor( *iPool, iBlocking, iPerf, iSrc->Height(), ULIS2_PF_CALL { fptr( iSrc->FormatInfo(), iSrc->DataPtr(), iDst->FormatInfo(), iDst->DataPtr(), iSrc->Width() ); } );
+}
+
+
+FBlock* XConv( FThreadPool*   iPool
+             , bool           iBlocking
+             , const FPerf&   iPerf
+             , const FCPU&    iCPU
+             , const FBlock*  iSrc
+             , tFormat        iDst )
+{
+    ULIS2_ASSERT( iSrc, "Bad source" );
+    FBlock* ret = new FBlock( iSrc->Width(), iSrc->Height(), iDst );
+    Conv( iPool, iBlocking, iPerf, iCPU, iSrc, ret, ULIS2_NOCB );
+    return  ret;
 }
 
 ULIS2_NAMESPACE_END

@@ -15,11 +15,68 @@
 //#include <CL/cl.hpp>
 //#include <vectorclass.h>
 using namespace ::ul2;
-#include <Windows.h>
 
 int
 main()
 {
+    FColor rgb8( ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
+    FColor bgr8( ULIS2_FORMAT_BGR8 );
+    FColor GreyA16( ULIS2_FORMAT_GA16 );
+    FColor HSVA8( ULIS2_FORMAT_HSVA8 );
+    FColor HSLF( ULIS2_FORMAT_HSLF );
+    FColor CMYA8( ULIS2_FORMAT_CMYA8 );
+    FColor CMYK8( ULIS2_FORMAT_CMYK8 );
+    FColor LabD( ULIS2_FORMAT_LabD );
+    Conv( rgb8, bgr8 );
+    Conv( rgb8, GreyA16 );
+    Conv( rgb8, HSVA8 );
+    Conv( rgb8, HSLF );
+    Conv( rgb8, CMYA8 );
+    Conv( rgb8, CMYK8 );
+    Conv( rgb8, LabD );
+    std::cout << "____________________________" << std::endl;
+    std::cout << "rgb8:" << std::endl;
+    std::cout << (int)rgb8.R8() << std::endl;
+    std::cout << (int)rgb8.G8() << std::endl;
+    std::cout << (int)rgb8.B8() << std::endl;
+    std::cout << "____________________________" << std::endl;
+    std::cout << "bgr8:" << std::endl;
+    std::cout << (int)bgr8.R8() << std::endl;
+    std::cout << (int)bgr8.G8() << std::endl;
+    std::cout << (int)bgr8.B8() << std::endl;
+    std::cout << "____________________________" << std::endl;
+    std::cout << "GreyA16:" << std::endl;
+    std::cout << (int)GreyA16.Grey16() << std::endl;
+    std::cout << (int)GreyA16.A16() << std::endl;
+    std::cout << "____________________________" << std::endl;
+    std::cout << "HSVA8:" << std::endl;
+    std::cout << (int)HSVA8.Hue8() << std::endl;
+    std::cout << (int)HSVA8.Saturation8() << std::endl;
+    std::cout << (int)HSVA8.Value8() << std::endl;
+    std::cout << (int)HSVA8.A8() << std::endl;
+    std::cout << "____________________________" << std::endl;
+    std::cout << "HSLF:" << std::endl;
+    std::cout << (float)HSLF.HueF() << std::endl;
+    std::cout << (float)HSLF.SaturationF() << std::endl;
+    std::cout << (float)HSLF.LightnessF() << std::endl;
+    std::cout << "____________________________" << std::endl;
+    std::cout << "CMYA8:" << std::endl;
+    std::cout << (int)CMYA8.Cyan8() << std::endl;
+    std::cout << (int)CMYA8.Magenta8() << std::endl;
+    std::cout << (int)CMYA8.Yellow8() << std::endl;
+    std::cout << (int)CMYA8.A8() << std::endl;
+    std::cout << "____________________________" << std::endl;
+    std::cout << "CMYK8:" << std::endl;
+    std::cout << (int)CMYK8.Cyan8() << std::endl;
+    std::cout << (int)CMYK8.Magenta8() << std::endl;
+    std::cout << (int)CMYK8.Yellow8() << std::endl;
+    std::cout << (int)CMYK8.Key8() << std::endl;
+    std::cout << "____________________________" << std::endl;
+    std::cout << "LabD:" << std::endl;
+    std::cout << (double)LabD.LD() << std::endl;
+    std::cout << (double)LabD.aD() << std::endl;
+    std::cout << (double)LabD.bD() << std::endl;
+
     /*
     FBlock blockA( 256, 256, ULIS2_FORMAT_ARGB8 );
     FBlock blockB( 256, 256, ULIS2_FORMAT_ARGB8 );

@@ -29,6 +29,13 @@ ULIS2_API void ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegi
 /// @param      iDst                A reference to the destination Pixel.
 ULIS2_API void Conv( const IPixel& iSrc, IPixel& iDst );
 
+/// @fn         void Conv( const IPixel& iSrc, tFormat iDst )
+/// @brief      Create a converted a pixel from source to destination format.
+/// @param      iSrc                A const reference to the source Pixel.
+/// @param      iDst                The destination format.
+/// @return                         A new FPixelValue object with converted data.
+ULIS2_API FPixelValue Conv( const IPixel& iSrc, tFormat iDst );
+
 
 /// @fn         void Conv( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, const FBlock* iSrc, FBlock* iDst, bool iCallInvalidCB )
 /// @brief      Convert from source to destination
@@ -47,6 +54,24 @@ ULIS2_API void Conv( FThreadPool*   iPool
                    , const FBlock*  iSrc
                    , FBlock*        iDst
                    , bool           iCallInvalidCB );
+
+/// @fn         void XConv( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, const FBlock* iSrc, tFormat iDst )
+/// @brief      Convert from source to destination format. The X calling convention means a block is allocated and the called is responsible for dealloc.
+/// @details    The result block will match in size.
+/// @param      iPool           The pool to process the image in.
+/// @param      iBlocking       Weither the MT process should wait for completion or not
+/// @param      iPerf           The Performance Options for this operation, see \e FPerf.
+/// @param      iCPU            The CPU info for this runtime environment, see \e FCPU.
+/// @param      iSrc            The block source to convert.
+/// @param      iDst            The destination format to create.
+/// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
+/// @return                     A newly allocated block holding the result conversion.
+ULIS2_API FBlock* XConv( FThreadPool*   iPool
+                       , bool           iBlocking
+                       , const FPerf&   iPerf
+                       , const FCPU&    iCPU
+                       , const FBlock*  iSrc
+                       , tFormat        iDst );
 
 ULIS2_NAMESPACE_END
 

@@ -337,5 +337,15 @@ FBlock::FormatInfo() const
     return  mInfo;
 }
 
+void
+FBlock::TweakFormat( tFormat iFormat )
+{
+    FFormatInfo newInfo( iFormat );
+    ULIS2_ASSERT( newInfo.BPP == mInfo.BPP, "Bad tweak operation" );
+    mInfo = newInfo;
+    mBPS = mWidth * mInfo.BPP;
+    mBTT = mHeight * mBPS;
+}
+
 ULIS2_NAMESPACE_END
 
