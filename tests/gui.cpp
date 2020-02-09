@@ -91,10 +91,10 @@ main( int argc, char *argv[] )
 
     // Qt Window
     QApplication    app( argc, argv );
-    QWidget*        widget  = new  QWidget();
-    QImage*         image   = new  QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    QWidget*        widget  = new QWidget();
+    QImage*         image   = new QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
-    QLabel*         label   = new  QLabel( widget );
+    QLabel*         label   = new QLabel( widget );
     label->setPixmap( pixmap );
     widget->resize( pixmap.size() );
     widget->show();
