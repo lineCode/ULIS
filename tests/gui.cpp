@@ -70,6 +70,23 @@ main( int argc, char *argv[] )
     FillRect( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, red, metrics, ULIS2_NOCB );
     TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, "Hello World", font, 16, white, glm::vec2( 64 ), mat, ULIS2_NOCB );
 
+    FBlock blockLab( blockA.Width(), blockA.Height(), ULIS2_FORMAT_Lab32 );
+    FColor labGreen = Conv( green, ULIS2_FORMAT_Lab32 );
+    FColor labRed = Conv( red, ULIS2_FORMAT_Lab32 );
+    FColor interp = Conv( red, ULIS2_FORMAT_Lab32 );
+    for( int x = 0; x < blockLab.Width(); ++x ) {
+        udouble t = x / static_cast< udouble >( blockLab.Width() );
+        interp.SetL32( labGreen.L32() * ( 1 - t ) + labRed.L32() * t );
+        interp.Seta32( labGreen.a32() * ( 1 - t ) + labRed.a32() * t );
+        interp.Setb32( labGreen.b32() * ( 1 - t ) + labRed.b32() * t );
+        for( int y = 0; y < blockLab.Height(); ++y ) {
+            blockLab.PixelProxy( x, y ).AssignMemoryUnsafe( interp );
+        }
+    }
+    FBlock* grad = XConv( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockLab, ULIS2_FORMAT_RGBA8 );
+    Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, grad, &blockA, ULIS2_NODELTA, BM_COLOR, AM_NORMAL, 0.9f, ULIS2_NOCB );
+    delete grad;
+
     // Qt Window
     QApplication app( argc, argv );
     QWidget* widget = new  QWidget();
