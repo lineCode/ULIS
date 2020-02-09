@@ -13,6 +13,7 @@
 */
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
+#include "Copy/Copy.h"
 #include "Data/Pixel.h"
 #include "Data/Block.h"
 #include "Maths/Maths.h"
@@ -105,7 +106,11 @@ FBlock* XConv( FThreadPool*   iPool
 {
     ULIS2_ASSERT( iSrc, "Bad source" );
     FBlock* ret = new FBlock( iSrc->Width(), iSrc->Height(), iDst );
-    Conv( iPool, iBlocking, iPerf, iCPU, iSrc, ret, ULIS2_NOCB );
+
+    if( iSrc->Format() == iDst )
+        Copy( iPool, iBlocking, iPerf, iCPU, iSrc, ret, ULIS2_NODELTA, ULIS2_NOCB );
+    else
+        Conv( iPool, iBlocking, iPerf, iCPU, iSrc, ret, ULIS2_NOCB );
     return  ret;
 }
 

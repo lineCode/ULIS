@@ -17,9 +17,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 using namespace ::ul2;
 
@@ -28,26 +26,24 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
-    int wb, hb, wo, ho, cb, co;
-    unsigned char *base = stbi_load( "C:/Users/PRAXINOS/Documents/work/base_160.png",   &wb, &hb, &cb, STBI_rgb_alpha );
-    unsigned char *over = stbi_load( "C:/Users/PRAXINOS/Documents/work/detail_160.png", &wo, &ho, &co, STBI_rgb_alpha );
+    FThreadPool threadPool(64);
+    FPerf       perfIntent( Perf_Best_CPU );
+    FCPU        cpuInfo;
 
-    FBlock  blockA( wb * 8, wb * 5, ULIS2_FORMAT_RGBA8 );
-    FBlock  blockBase( base, wb, hb, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
-    FBlock  blockOver( over, wo, ho, ULIS2_FORMAT_RGBA8, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
+    FBlock* blockBase = XLoad( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, "C:/Users/PRAXINOS/Documents/work/base_160.png",    ULIS2_FORMAT_RGBA8 );
+    FBlock* blockOver = XLoad( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, "C:/Users/PRAXINOS/Documents/work/detail_160.png",  ULIS2_FORMAT_RGBA8 );
+    int wb = blockBase->Width();
+    int hb = blockBase->Height();
+    FBlock  blockA( wb * 8, hb * 5, ULIS2_FORMAT_RGBA8 );
     FBlock  blockC( wb, 20, ULIS2_FORMAT_RGBA8 );
 
-    FThreadPool     threadPool(64);
-    FPerf           perfIntent( Perf_Best_CPU );
-    FCPU            cpuInfo;
+    FPixel  red(    ULIS2_FORMAT_RGB8, { 255,   0,      0   } );
+    FPixel  green(  ULIS2_FORMAT_RGB8, { 0,     255,    0   } );
+    FPixel  black(  ULIS2_FORMAT_RGB8, { 0,     0,      0   } );
+    FPixel  white(  ULIS2_FORMAT_RGB8, { 255,   255,    255 } );
 
-    FPixel  red(    ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
-    FPixel  green(  ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
-    FPixel  black(  ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
-    FPixel  white(  ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
-
-    Fill( &threadPool,  ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockA, black, ULIS2_NOCB );
-    Fill( &threadPool,  ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockC, black, ULIS2_NOCB );
+    Fill( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockA, black, ULIS2_NOCB );
+    Fill( &threadPool, ULIS2_NONBLOCKING, perfIntent, cpuInfo, &blockC, black, ULIS2_NOCB );
     threadPool.WaitForCompletion();
 
     FFontEngine     fontEngine;
@@ -56,10 +52,10 @@ main( int argc, char *argv[] )
     FFont font = fontRegistry.LoadFont( "Arial", "Regular" );
 
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
-        int y = ( i / 8 ) * wb;
         int x = ( i % 8 ) * wb;
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockBase, &blockA, glm::vec2( x, y ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockOver, &blockA, glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 0.75f, ULIS2_CALLCB );
+        int y = ( i / 8 ) * hb;
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, blockBase, &blockA, glm::vec2( x, y ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, blockOver, &blockA, glm::vec2( x, y ), eBlendingMode( i ), AM_NORMAL, 0.75f, ULIS2_CALLCB );
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockC, &blockA, glm::vec2( x, y + hb - 20 ), BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_NOCB );
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, &blockC, &blockA, glm::vec2( x, y + hb - 20 ), BM_BAYERDITHER8x8, AM_NORMAL, 0.5f, ULIS2_NOCB );
         TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwBlendingMode[ i ], font, 16, white, glm::vec2( x, y + hb - 20 ), glm::mat2( 1.f ), ULIS2_NOCB );
@@ -102,6 +98,9 @@ main( int argc, char *argv[] )
     delete  label;
     delete  image;
     delete  widget;
+
+    delete blockBase;
+    delete blockOver;
 
     return  exit_code;
 }

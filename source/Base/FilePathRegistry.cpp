@@ -21,8 +21,6 @@
 #include <cassert>
 #include <algorithm>
 
-namespace std {   };
-using namespace std;
 using namespace cppfs;
 
 ULIS2_NAMESPACE_BEGIN
@@ -90,7 +88,7 @@ void
 FFilePathRegistry::Parse()
 {
     mMap.clear();
-    std::vector< string > list;
+    std::vector< std::string > list;
     for( auto it : mLookupPaths ) {
         FileHandle dir = fs::open( it );
         if( ( !dir.exists() ) || ( !dir.isDirectory() ) )
@@ -117,7 +115,7 @@ FFilePathRegistry::GetFilePathForClosestMatchingName( const std::string& iName )
         matches.push_back( std::tuple< int, std::string >( dist, key ) );
     }
     std::sort( matches.begin(), matches.end() );
-    return  GetFilePathForExactMatchingName( get< 1 >( matches[0] ) );
+    return  GetFilePathForExactMatchingName( std::get< 1 >( matches[0] ) );
 }
 
 
