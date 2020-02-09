@@ -28,19 +28,19 @@
 
 ULIS2_NAMESPACE_BEGIN
 void
-TraceText( FThreadPool*         iPool
-         , bool                 iBlocking
-         , const FPerf&         iPerf
-         , const FCPU&          iCPU
-         , bool                 iAntialiasing
-         , FBlock*              iDst
-         , const std::string&   iText
-         , const FFont&         iFont
-         , int                  iSize
-         , const IPixel&        iColor
-         , const glm::vec2&     iPos
-         , const glm::mat2&     iTransform
-         , bool                 iCallInvalidCB )
+RenderText( FThreadPool*          iPool
+    , bool                  iBlocking
+    , const FPerf&          iPerf
+    , const FCPU&           iCPU
+    , bool                  iAntialiasing
+    , FBlock*               iDst
+    , const std::string&    iText
+    , const FFont&          iFont
+    , int                   iSize
+    , const IPixel&         iColor
+    , const glm::vec2&      iPos
+    , const glm::mat2&      iTransform
+    , bool                  iCallInvalidCB )
 {
     ULIS2_ASSERT( iPool,                                    "Bad pool" );
     ULIS2_ASSERT( iDst,                                     "Bad destination" );
@@ -64,13 +64,17 @@ TraceText( FThreadPool*         iPool
 
 
 FRect
-TextMetrics( const std::string&    iText
-           , const FFont&          iFont
-           , int                   iSize
-           , const glm::vec2&      iPos
-           , const glm::mat2&      iTransform )
+Metrics( const std::string& iText
+       , const FFont&       iFont
+       , int                iSize
+       , const glm::vec2&   iPos
+       , const glm::mat2&   iTransform )
 {
     FRect result;
+    result.x = static_cast< int >( iPos.x );
+    result.y = static_cast< int >( iPos.y );
+    result.w = 1;
+    result.h = 1;
 
     FT_Matrix matrix;
     matrix.xx = (FT_Fixed)( iTransform[0].x * 0x10000L );
@@ -92,7 +96,7 @@ TextMetrics( const std::string&    iText
     slot = face->glyph;
     pen.x = 0;
     pen.y = 0;
-    int autobaseline = (int)( iSize / 1 );
+    int autobaseline = (int)( iSize * 0.7 );
 
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, &matrix, &pen );
@@ -101,7 +105,7 @@ TextMetrics( const std::string&    iText
         ULIS2_ERROR( !error, "Error loading glyph" );
 
         FRect box = FRect::FromXYWH( (int)iPos.x + slot->bitmap_left, (int)iPos.y + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
-        result = n == 0 ? box : result | box;
+        result = result | box;
 
         pen.x += slot->advance.x;
         pen.y += slot->advance.y;

@@ -87,7 +87,7 @@ TraceTextMono_Generic( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, F
     slot = face->glyph;
     pen.x = 0;
     pen.y = 0;
-    int autobaseline = (int)( iSize / 1 );
+    int autobaseline = (int)( iSize * 0.7 );
 
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, &iTransform, &pen );

@@ -43,3 +43,7 @@
 #include "Disk/IO.h"
 #include "Raster/Draw.h"
 
+using FVec2 = glm::vec2;
+using FMat2 = glm::mat2;
+using FMat3 = glm::mat3;
+

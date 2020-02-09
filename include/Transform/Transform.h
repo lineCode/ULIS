@@ -13,7 +13,28 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include <glm/mat3x3.hpp>
 
 ULIS2_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// eResamplingMethod
+enum eResamplingMethod
+{
+      INTERP_NN
+    , INTERP_BILINEAR
+    , INTERP_BICUBIC
+    , INTERP_AREA
+};
+
+ULIS2_API void Transform( FThreadPool*      iPool
+                        , bool              iBlocking
+                        , const FPerf&      iPerf
+                        , const FCPU&       iCPU
+                        , const FBlock*     iSrc
+                        , FBlock*           iDst
+                        , const  glm::mat3& iMat
+                        , eResamplingMethod iInterpolationType
+                        , bool              iCallInvalidCB );
+
 ULIS2_NAMESPACE_END
 

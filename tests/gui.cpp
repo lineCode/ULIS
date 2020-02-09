@@ -22,8 +22,6 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
-    //SaveToFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockC, "C:/Users/PRAXINOS/Documents/work/coop.png", IM_PNG );
-
     FThreadPool     threadPool( 64 );
     FPerf           perfIntent( Perf_Best_CPU );
     FCPU            cpuInfo;
@@ -47,21 +45,20 @@ main( int argc, char *argv[] )
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int x = ( i % 8 ) * wb;
         int y = ( i / 8 ) * hb;
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockBase,  &blockA, glm::vec2( x, y ),              BM_NORMAL,          AM_NORMAL, 1.0f, ULIS2_NOCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockOver,  &blockA, glm::vec2( x, y ),              eBlendingMode( i ), AM_NORMAL, 0.5f, ULIS2_NOCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, glm::vec2( x, y + hb - 20 ),    BM_NORMAL,          AM_NORMAL, 0.5f, ULIS2_NOCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, glm::vec2( x, y + hb - 20 ),    BM_BAYERDITHER8x8,  AM_NORMAL, 0.5f, ULIS2_NOCB );
-        TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA,    kwBlendingMode[ i ], font, 16, white, glm::vec2( x, y + hb - 20 ), glm::mat2( 1.f ), ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockBase,  &blockA, FVec2( x, y ),              BM_NORMAL,          AM_NORMAL, 1.0f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockOver,  &blockA, FVec2( x, y ),              eBlendingMode( i ), AM_NORMAL, 0.5f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_NORMAL,          AM_NORMAL, 0.5f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_BAYERDITHER8x8,  AM_NORMAL, 0.5f, ULIS2_NOCB );
+        RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwBlendingMode[ i ], font, 16, white, FVec2( x, y + hb - 16 ), FMat2( 1.f ), ULIS2_NOCB );
     }
 
-    /*
     glm::mat2 mat = glm::rotate( glm::mat3( 1.f ), 0.785f );
     FRect metrics = TextMetrics( "Rise of the robots !", font, 16, glm::vec2( 64 ), mat );
     FillRect( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, red, metrics, ULIS2_NOCB );
-    TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, "Rise of the robots !", font, 16, white, glm::vec2( 64 ), mat, ULIS2_NOCB );
+    RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, "Rise of the robots !", font, 16, white, glm::vec2( 64 ), mat, ULIS2_NOCB );
 
     std::string ulis2text = "ULIS2";
-    int ulis2size = 30;
+    int ulis2size = 500;
     FFont arialblack = fontRegistry.LoadFont( "Arial", "Bluck" );
     FRect metrics2 = TextMetrics( ulis2text, arialblack, ulis2size, glm::vec2( 0.f ), ULIS2_NOTRANSFORM );
     int x = ( blockA.Width() / 2 - metrics2.w / 2 ) - metrics2.x;
@@ -69,7 +66,7 @@ main( int argc, char *argv[] )
     metrics2.x = x + metrics2.x;
     metrics2.y = y + metrics2.y;
     FillRect( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, red, metrics2, ULIS2_NOCB );
-    TraceText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, ulis2text, arialblack, ulis2size, white, glm::vec2( x, y ), glm::mat2( 1.f ), ULIS2_NOCB );
+    RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, ulis2text, arialblack, ulis2size, white, glm::vec2( x, y ), glm::mat2( 1.f ), ULIS2_NOCB );
 
     FBlock blockLab( blockA.Width(), blockA.Height(), ULIS2_FORMAT_Lab32 );
     FColor labGreen = Conv( green, ULIS2_FORMAT_Lab32 );
@@ -87,7 +84,6 @@ main( int argc, char *argv[] )
     FBlock* grad = XConv( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockLab, ULIS2_FORMAT_RGBA8 );
     Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, grad, &blockA, ULIS2_NODELTA, BM_BAYERDITHER8x8, AM_NORMAL, 0.25f, ULIS2_NOCB );
     delete grad;
-    */
 
     // Qt Window
     QApplication    app( argc, argv );

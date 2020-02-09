@@ -14,13 +14,14 @@
 #pragma once
 #include "Base/Core.h"
 #include <glm/mat2x2.hpp>
+#include <glm/vec2.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 ULIS2_NAMESPACE_BEGIN
-/// @fn         void TraceText( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, bool iAntialiasing, FBlock* iDst, const std::string& iText, const FFont& iFont, int iSize, const IPixel& iColor, const glm::mat2& iTransform, bool iCallInvalidCB )
+/// @fn         void RenderText( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, bool iAntialiasing, FBlock* iDst, const std::string& iText, const FFont& iFont, int iSize, const IPixel& iColor, const glm::mat2& iTransform, bool iCallInvalidCB )
 /// @brief      Draw text in dst block with specified color size and transform.
 /// @param      iPool           The pool to process the image in.
 /// @param      iBlocking       Weither the MT process should wait for completion or not
@@ -34,19 +35,19 @@ ULIS2_NAMESPACE_BEGIN
 /// @param      iColor          The color to fill.
 /// @param      iTransform      The text transform.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void TraceText( FThreadPool*          iPool
-                        , bool                  iBlocking
-                        , const FPerf&          iPerf
-                        , const FCPU&           iCPU
-                        , bool                  iAntialiasing
-                        , FBlock*               iDst
-                        , const std::string&    iText
-                        , const FFont&          iFont
-                        , int                   iSize
-                        , const IPixel&         iColor
-                        , const glm::vec2&      iPos
-                        , const glm::mat2&      iTransform
-                        , bool                  iCallInvalidCB );
+ULIS2_API void RenderText( FThreadPool*       iPool
+                   , bool               iBlocking
+                   , const FPerf&       iPerf
+                   , const FCPU&        iCPU
+                   , bool               iAntialiasing
+                   , FBlock*            iDst
+                   , const std::string& iText
+                   , const FFont&       iFont
+                   , int                iSize
+                   , const IPixel&      iColor
+                   , const glm::vec2&   iPos
+                   , const glm::mat2&   iTransform
+                   , bool               iCallInvalidCB );
 
 
 /// @fn         FRect TextMetrics( const std::string& iText, const FFont& iFont, int iSize, const glm::mat2& iTransform )
@@ -56,11 +57,11 @@ ULIS2_API void TraceText( FThreadPool*          iPool
 /// @param      iSize           The text size
 /// @param      iTransform      The text transform.
 /// @return                     A rectangular area containing all the text.
-ULIS2_API FRect TextMetrics( const std::string&    iText
-                           , const FFont&          iFont
-                           , int                   iSize
-                           , const glm::vec2&      iPos
-                           , const glm::mat2&      iTransform );
+ULIS2_API FRect TextMetrics( const std::string& iText
+                           , const FFont&       iFont
+                           , int                iSize
+                           , const glm::vec2&   iPos
+                           , const glm::mat2&   iTransform );
 
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedTextFunc)( FThreadPool*, bool, const FPerf&, FBlock*, const std::string&, const FFont&, int, const tByte*, int, int, FT_Matrix& );
