@@ -189,27 +189,25 @@ if( ${ULIS2_BUILD_PYTHON_MODULE} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "PyULIS2/*"
+        "pymodule/*"
     )
 
-    add_library( PyULIS2 SHARED ${source_list} )
-    target_compile_definitions( PyULIS2 PRIVATE PyULIS2_BUILD_SHARED )
+    add_library( _PyULIS2 SHARED ${source_list} )
+    target_compile_definitions( _PyULIS2 PRIVATE PyULIS2_BUILD_SHARED )
 
     target_link_libraries(
-        PyULIS2
+        _PyULIS2
         ULIS2
         optimized   ${ULIS2_PYTHON_REL_LIB}
         debug       ${ULIS2_PYTHON_DEB_LIB}
     )
 
     target_include_directories(
-        PyULIS2
+        _PyULIS2
         PUBLIC
-        "PyULIS2/"
+        "pymodule/"
         ${ULIS2_PYTHON_INCLUDE_PATH}
         ${ULIS2_PYTHON_ADD_INCLUDE_PATH}
-        PRIVATE
-        "PyULIS2/"
     )
 
     # For MSVC parse pretty filter names
