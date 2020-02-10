@@ -192,18 +192,19 @@ if( ${ULIS2_BUILD_PYTHON_MODULE} )
         "pymodule/*"
     )
 
-    add_library( _PyULIS2 SHARED ${source_list} )
-    target_compile_definitions( _PyULIS2 PRIVATE PyULIS2_BUILD_SHARED )
+    add_library( PyULIS2 SHARED ${source_list} )
+    set_target_properties( PyULIS2 PROPERTIES SUFFIX ".pyd" )
+    target_compile_definitions( PyULIS2 PRIVATE PyULIS2_BUILD_SHARED )
 
     target_link_libraries(
-        _PyULIS2
+        PyULIS2
         ULIS2
         optimized   ${ULIS2_PYTHON_REL_LIB}
         debug       ${ULIS2_PYTHON_DEB_LIB}
     )
 
     target_include_directories(
-        _PyULIS2
+        PyULIS2
         PUBLIC
         "pymodule/"
         ${ULIS2_PYTHON_INCLUDE_PATH}

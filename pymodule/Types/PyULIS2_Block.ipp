@@ -15,9 +15,8 @@
 #include <ULIS2>
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-#include "Types/_PyULIS2_AbstractPixel.ipp"
-#include "Types/_PyULIS2_PixelProxy.ipp"
-#include "Types/_PyULIS2_PixelValue.ipp"
+#include "Types/PyULIS2_PixelValue.ipp"
+#include "Types/PyULIS2_PixelProxy.ipp"
 
 /////////////////////////////////////////////////////
 /// Object Structure
@@ -105,12 +104,11 @@ _PyULIS2Object_Block_PixelProxy( _PyULIS2Object_Block* self, PyObject* args ) {
     int x, y;
     if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return  NULL;
 
-    PyObject* inst = _PyULIS2Object_PixelProxy_new( &_PyULIS2Type_PixelProxy, nullptr, nullptr );
+    PyObject* inst = _PyULIS2Object_PixelProxy_new( &FPixelProxy, nullptr, nullptr );
     _PyULIS2Object_PixelProxy* O = (_PyULIS2Object_PixelProxy*)inst;
     O->super._mPixel = new ::ul2::FPixelProxy( self->_mBlock->PixelProxy( x, y ) );
     return  inst;
 }
-
 
 static PyObject*
 _PyULIS2Object_Block_PixelValue( _PyULIS2Object_Block* self, PyObject* args ) {
@@ -118,7 +116,7 @@ _PyULIS2Object_Block_PixelValue( _PyULIS2Object_Block* self, PyObject* args ) {
     int x, y;
     if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return  NULL;
 
-    PyObject* inst = _PyULIS2Object_PixelValue_new( &_PyULIS2Type_PixelValue, nullptr, nullptr );
+    PyObject* inst = _PyULIS2Object_PixelValue_new( &FPixelValue, nullptr, nullptr );
     _PyULIS2Object_PixelValue* O = (_PyULIS2Object_PixelValue*)inst;
     O->super._mPixel = new ::ul2::FPixelValue( self->_mBlock->PixelProxy( x, y ) );
     return  inst;
@@ -146,16 +144,15 @@ static PyMethodDef _PyULIS2Object_Block_methods[] = {
     { "CRC32"               , (PyCFunction)_PyULIS2Object_Block_CRC32               , METH_NOARGS, "CRC32"              },
     { "MD5"                 , (PyCFunction)_PyULIS2Object_Block_MD5                 , METH_NOARGS, "MD5"                },
     { "UUID"                , (PyCFunction)_PyULIS2Object_Block_UUID                , METH_NOARGS, "UUID"               },
-    { "PixelProxy"          , (PyCFunction)_PyULIS2Object_Block_PixelProxy          , METH_VARARGS, "PixelProxy"        },
     { "PixelValue"          , (PyCFunction)_PyULIS2Object_Block_PixelValue          , METH_VARARGS, "PixelValue"        },
     { NULL } // Sentinel
 };
 
 /////////////////////////////////////////////////////
 /// Meta Types
-static PyTypeObject _PyULIS2Type_Block = {
+static PyTypeObject FBlock = {
 PyVarObject_HEAD_INIT(NULL, 0)
-    "_PyULIS2._PyULIS2Object_Block", /* tp_name */
+    "PyULIS2.FBlock", /* tp_name */
     sizeof( _PyULIS2Object_Block ), /* tp_basicsize */
     0, /* tp_itemsize */
     (destructor)_PyULIS2Object_Block_dealloc, /* tp_dealloc */

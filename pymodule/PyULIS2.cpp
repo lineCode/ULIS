@@ -15,13 +15,13 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include "macros.h"
-#include "Types/_PyULIS2_Block.ipp"
-#include "Types/_PyULIS2_AbstractPixel.ipp"
-#include "Types/_PyULIS2_PixelProxy.ipp"
-#include "Types/_PyULIS2_PixelValue.ipp"
+#include "Types/PyULIS2_Block.ipp"
+#include "Types/PyULIS2_AbstractPixel.ipp"
+#include "Types/PyULIS2_PixelProxy.ipp"
+#include "Types/PyULIS2_PixelValue.ipp"
 
 PyObject*
-spam_system(PyObject *self, PyObject *args) {
+spam_system( PyObject *self, PyObject *args ) {
     const char *command; int sts;
     if (!PyArg_ParseTuple(args, "s", &command)) return NULL;
     sts = system(command);
@@ -30,26 +30,26 @@ spam_system(PyObject *self, PyObject *args) {
 }
 
 
-static PyMethodDef _PyULIS2Methods[] = {
+static PyMethodDef PyULIS2Methods[] = {
     { "system",  spam_system, METH_VARARGS, "Execute a shell command." },
     { NULL, NULL, 0, NULL } // Sentinel
 };
 
-static struct PyModuleDef _PyULIS2Module  = {
+static struct PyModuleDef PyULIS2Module  = {
       PyModuleDef_HEAD_INIT
-    , "_PyULIS2"                // name of module
+    , "PyULIS2"                 // name of module
     , NULL                      // module documentation, may be NULL
     , -1                        // size of per-interpreter state of the module, or -1 if the module keeps state in global variables.
-    , _PyULIS2Methods
+    , PyULIS2Methods
 };
 
 PyMODINIT_FUNC
-PyInit__PyULIS2(void) {
+PyInit_PyULIS2(void) {
     PyObject *m;
 
     PYULIS2_CHECK_FOR_ALL_TYPES_READY
 
-    m = PyModule_Create( &_PyULIS2Module );
+    m = PyModule_Create( &PyULIS2Module );
     if( m == NULL )
         return  NULL;
 

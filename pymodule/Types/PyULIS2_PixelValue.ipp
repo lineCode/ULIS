@@ -15,7 +15,7 @@
 #include <ULIS2>
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-#include "Types/_PyULIS2_AbstractPixel.ipp"
+#include "Types/PyULIS2_AbstractPixel.ipp"
 
 /////////////////////////////////////////////////////
 /// Object Structure
@@ -68,9 +68,9 @@ static PyMethodDef _PyULIS2Object_PixelValue_methods[] = {
 
 /////////////////////////////////////////////////////
 /// Meta Types
-static PyTypeObject _PyULIS2Type_PixelValue = {
+static PyTypeObject FPixelValue = {
 PyVarObject_HEAD_INIT(NULL, 0)
-    "_PyULIS2._PyULIS2Object_PixelValue", /* tp_name */
+    "PyULIS2.FPixelValue", /* tp_name */
     sizeof( _PyULIS2Object_PixelValue ), /* tp_basicsize */
     0, /* tp_itemsize */
     (destructor)_PyULIS2Object_PixelValue_dealloc, /* tp_dealloc */
@@ -88,7 +88,7 @@ PyVarObject_HEAD_INIT(NULL, 0)
     0, /* tp_getattro */
     0, /* tp_setattro */
     0, /* tp_as_buffer */
-    Py_TPFLAGS_BASETYPE | Py_TPFLAGS_IS_ABSTRACT, /* tp_flags */
+    Py_TPFLAGS_BASETYPE | Py_TPFLAGS_DEFAULT, /* tp_flags */
     "ULIS2 Pixel Value Object.", /* tp_doc */
     0, /* tp_traverse */
     0, /* tp_clear */
@@ -99,7 +99,7 @@ PyVarObject_HEAD_INIT(NULL, 0)
     _PyULIS2Object_PixelValue_methods, /* tp_methods */
     0, /* tp_members */
     0, /* tp_getset */
-    &_PyULIS2Type_AbstractPixel, /* tp_base */
+    &IPixel, /* tp_base */
     0, /* tp_dict */
     0, /* tp_descr_get */
     0, /* tp_descr_set */

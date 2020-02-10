@@ -15,7 +15,7 @@
 #include <ULIS2>
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-#include "Types/_PyULIS2_AbstractPixel.ipp"
+#include "Types/PyULIS2_AbstractPixel.ipp"
 
 /////////////////////////////////////////////////////
 /// Object Structure
@@ -68,9 +68,9 @@ static PyMethodDef _PyULIS2Object_PixelProxy_methods[] = {
 
 /////////////////////////////////////////////////////
 /// Meta Types
-static PyTypeObject _PyULIS2Type_PixelProxy = {
+static PyTypeObject FPixelProxy = {
 PyVarObject_HEAD_INIT(NULL, 0)
-    "_PyULIS2._PyULIS2Object_PixelProxy", /* tp_name */
+    "PyULIS2.FPixelProxy", /* tp_name */
     sizeof( _PyULIS2Object_PixelProxy ), /* tp_basicsize */
     0, /* tp_itemsize */
     (destructor)_PyULIS2Object_PixelProxy_dealloc, /* tp_dealloc */
@@ -99,7 +99,7 @@ PyVarObject_HEAD_INIT(NULL, 0)
     _PyULIS2Object_PixelProxy_methods, /* tp_methods */
     0, /* tp_members */
     0, /* tp_getset */
-    &_PyULIS2Type_AbstractPixel, /* tp_base */
+    &IPixel, /* tp_base */
     0, /* tp_dict */
     0, /* tp_descr_get */
     0, /* tp_descr_set */
