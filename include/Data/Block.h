@@ -78,6 +78,7 @@ public:
     const FPixelProxy       PixelProxy( int iX, int iY )                        const;
     uint32                  CRC32()                                             const;
     std::string             MD5()                                               const;
+    std::string             UUID()                                              const;
     uint8*                  IndexTable()                                        const;
     const FFormatInfo&      FormatInfo()                                        const;
     void                    TweakFormat( tFormat iFormat );

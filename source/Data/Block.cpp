@@ -324,6 +324,13 @@ FBlock::MD5() const
     return  ::ULIS2::MD5( mData, BytesTotal() );
 }
 
+
+std::string
+FBlock::UUID() const
+{
+    return  mUUID;
+}
+
 uint8*
 FBlock::IndexTable() const
 {

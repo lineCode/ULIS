@@ -72,26 +72,46 @@ _PyULIS2Object_Block_init( _PyULIS2Object_Block* self, PyObject* args, PyObject*
 #define _PyULIS2Object_Block_GetterMethod_End }
 
 // Width
-_PyULIS2Object_Block_GetterMethod_Begin( Width )
-    return  PyLong_FromLong( self->_mBlock->Width() );
-_PyULIS2Object_Block_GetterMethod_End
-
-// Height
-_PyULIS2Object_Block_GetterMethod_Begin( Height )
-    return  PyLong_FromLong( self->_mBlock->Height() );
-_PyULIS2Object_Block_GetterMethod_End
-
-// Format
-_PyULIS2Object_Block_GetterMethod_Begin( Format )
-    return  PyLong_FromLong( self->_mBlock->Format() );
-_PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( Width              )   return  PyLong_FromLong( self->_mBlock->Width() );              _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( Height             )   return  PyLong_FromLong( self->_mBlock->Height() );             _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( Format             )   return  PyLong_FromLong( self->_mBlock->Format() );             _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( BytesPerSample     )   return  PyLong_FromLong( self->_mBlock->BytesPerSample() );     _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( BytesPerPixel      )   return  PyLong_FromLong( self->_mBlock->BytesPerPixel() );      _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( BytesPerScanLine   )   return  PyLong_FromLong( self->_mBlock->BytesPerScanLine() );   _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( BytesTotal         )   return  PyLong_FromLong( self->_mBlock->BytesTotal() );         _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( Model              )   return  PyLong_FromLong( self->_mBlock->Model() );              _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( Type               )   return  PyLong_FromLong( self->_mBlock->Type() );               _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( HasAlpha           )   return  PyLong_FromLong( self->_mBlock->HasAlpha() );           _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( Swapped            )   return  PyLong_FromLong( self->_mBlock->Swapped() );            _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( Reversed           )   return  PyLong_FromLong( self->_mBlock->Reversed() );           _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( SamplesPerPixel    )   return  PyLong_FromLong( self->_mBlock->SamplesPerPixel() );    _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( NumColorChannels   )   return  PyLong_FromLong( self->_mBlock->NumColorChannels() );   _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( AlphaIndex         )   return  PyLong_FromLong( self->_mBlock->AlphaIndex() );         _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( CRC32              )   return  PyFloat_FromDouble( self->_mBlock->CRC32() );           _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( MD5                )   return  PyUnicode_FromString( self->_mBlock->MD5().c_str() );   _PyULIS2Object_Block_GetterMethod_End
+_PyULIS2Object_Block_GetterMethod_Begin( UUID               )   return  PyUnicode_FromString( self->_mBlock->UUID().c_str() );  _PyULIS2Object_Block_GetterMethod_End
 
 /////////////////////////////////////////////////////
 /// Meta Methods
 static PyMethodDef Custom_methods[] = {
-    { "Width", (PyCFunction)_PyULIS2Object_Block_Width,     METH_NOARGS, "Return the Width of the Block."   },
-    { "Height", (PyCFunction)_PyULIS2Object_Block_Height,   METH_NOARGS, "Return the Height of the Block."  },
-    { "Format", (PyCFunction)_PyULIS2Object_Block_Format,   METH_NOARGS, "Return the Format of the Block."  },
+    { "Width"               , (PyCFunction)_PyULIS2Object_Block_Width               , METH_NOARGS, "Width"            },
+    { "Height"              , (PyCFunction)_PyULIS2Object_Block_Height              , METH_NOARGS, "Height"           },
+    { "Format"              , (PyCFunction)_PyULIS2Object_Block_Format              , METH_NOARGS, "Format"           },
+    { "BytesPerSample"      , (PyCFunction)_PyULIS2Object_Block_BytesPerSample      , METH_NOARGS, "BytesPerSample"   },
+    { "BytesPerPixel"       , (PyCFunction)_PyULIS2Object_Block_BytesPerPixel       , METH_NOARGS, "BytesPerPixel"    },
+    { "BytesPerScanLine"    , (PyCFunction)_PyULIS2Object_Block_BytesPerScanLine    , METH_NOARGS, "BytesPerScanLine" },
+    { "BytesTotal"          , (PyCFunction)_PyULIS2Object_Block_BytesTotal          , METH_NOARGS, "BytesTotal"       },
+    { "Model"               , (PyCFunction)_PyULIS2Object_Block_Model               , METH_NOARGS, "Model"            },
+    { "Type"                , (PyCFunction)_PyULIS2Object_Block_Type                , METH_NOARGS, "Type"             },
+    { "HasAlpha"            , (PyCFunction)_PyULIS2Object_Block_HasAlpha            , METH_NOARGS, "HasAlpha"         },
+    { "Swapped"             , (PyCFunction)_PyULIS2Object_Block_Swapped             , METH_NOARGS, "Swapped"          },
+    { "Reversed"            , (PyCFunction)_PyULIS2Object_Block_Reversed            , METH_NOARGS, "Reversed"         },
+    { "SamplesPerPixel"     , (PyCFunction)_PyULIS2Object_Block_SamplesPerPixel     , METH_NOARGS, "SamplesPerPixel"  },
+    { "NumColorChannels"    , (PyCFunction)_PyULIS2Object_Block_NumColorChannels    , METH_NOARGS, "NumColorChannels" },
+    { "AlphaIndex"          , (PyCFunction)_PyULIS2Object_Block_AlphaIndex          , METH_NOARGS, "AlphaIndex"       },
+    { "CRC32"               , (PyCFunction)_PyULIS2Object_Block_CRC32               , METH_NOARGS, "CRC32"            },
+    { "MD5"                 , (PyCFunction)_PyULIS2Object_Block_MD5                 , METH_NOARGS, "MD5"              },
+    { "UUID"                , (PyCFunction)_PyULIS2Object_Block_UUID                , METH_NOARGS, "UUID"             },
     { NULL } // Sentinel
 };
 
