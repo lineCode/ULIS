@@ -1,7 +1,7 @@
 import sys, os
 sys.path.append( os.path.dirname(__file__) )
 import _PyULIS2
-from Types      import *
+from Types import *
 
 class FBlock:
     def __init__( self, width, height, format ): self._data = _PyULIS2._PyULIS2Type_Block( width, height, format )
@@ -92,4 +92,8 @@ class FBlock:
         print( "LayoutStr           : ", self.LayoutStr() )
         print( "TypeSuffixStr       : ", self.TypeSuffixStr() )
         print( "FormatStr           : ", self.FormatStr() )
+
+    def PixelProxy( self, x, y ):
+        return  self._data.PixelProxy( x, y )
+
 

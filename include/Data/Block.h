@@ -29,16 +29,16 @@ public:
     // Construction / Destruction
     ~FBlock();
 
-    FBlock( tSize iWidth
-          , tSize iHeight
+    FBlock( int iWidth
+          , int iHeight
           , tFormat iFormat
           , FColorProfile* iProfile = nullptr
           , const FOnInvalid& iOnInvalid = FOnInvalid()
           , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory ) );
 
     FBlock( tByte* iData
-          , tSize iWidth
-          , tSize iHeight
+          , int iWidth
+          , int iHeight
           , tFormat iFormat
           , FColorProfile* iProfile = nullptr
           , const FOnInvalid& iOnInvalid = FOnInvalid()

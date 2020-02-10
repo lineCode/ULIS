@@ -17,11 +17,17 @@
 #include <Python.h>
 
 // Macro for all types for template instanciation
-#define PYULIS2_FOR_ALL_OBJECTS_DO( X, ... )    \
-    X( _PyULIS2Object_Block , __VA_ARGS__ )
+#define PYULIS2_FOR_ALL_OBJECTS_DO( X, ... )            \
+    X( _PyULIS2Object_Block , __VA_ARGS__ )             \
+    X( _PyULIS2Object_AbstractPixel , __VA_ARGS__ )     \
+    X( _PyULIS2Object_PixelProxy, __VA_ARGS__ )         \
+    X( _PyULIS2Object_PixelValue, __VA_ARGS__ )
 
-#define PYULIS2_FOR_ALL_TYPES_DO( X, ... )      \
-    X( _PyULIS2Type_Block , __VA_ARGS__ )
+#define PYULIS2_FOR_ALL_TYPES_DO( X, ... )              \
+    X( _PyULIS2Type_Block, __VA_ARGS__ )                \
+    X( _PyULIS2Type_AbstractPixel, __VA_ARGS__ )        \
+    X( _PyULIS2Type_PixelProxy, __VA_ARGS__ )           \
+    X( _PyULIS2Type_PixelValue, __VA_ARGS__ )
 
 #define PYULIS2_CHECK_TYPE_READY( _TYPE, ... )  if( PyType_Ready( & _TYPE ) < 0 ) return NULL;
 #define PYULIS2_CHECK_FOR_ALL_TYPES_READY       PYULIS2_FOR_ALL_TYPES_DO( PYULIS2_CHECK_TYPE_READY )

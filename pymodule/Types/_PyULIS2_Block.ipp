@@ -15,6 +15,9 @@
 #include <ULIS2>
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include "Types/_PyULIS2_AbstractPixel.ipp"
+#include "Types/_PyULIS2_PixelProxy.ipp"
+#include "Types/_PyULIS2_PixelValue.ipp"
 
 /////////////////////////////////////////////////////
 /// Object Structure
@@ -27,6 +30,7 @@ typedef struct {
 /// Dealloc
 static void
 _PyULIS2Object_Block_dealloc( _PyULIS2Object_Block* self ) {
+    delete  self->_mBlock;
     Py_TYPE( self )->tp_free( ( PyObject * ) self );
 }
 
@@ -37,7 +41,7 @@ static PyObject* _PyULIS2Object_Block_new( PyTypeObject* type, PyObject* args, P
     _PyULIS2Object_Block *self;
     self = (_PyULIS2Object_Block*)type->tp_alloc( type, 0 );
     if (self != NULL) self->_mBlock = nullptr;
-    return (PyObject *) self;
+    return  (PyObject*)self;
 }
 
 /////////////////////////////////////////////////////
@@ -71,6 +75,8 @@ _PyULIS2Object_Block_init( _PyULIS2Object_Block* self, PyObject* args, PyObject*
         }
 #define _PyULIS2Object_Block_GetterMethod_End }
 
+#define _PyULIS2Object_Block_CheckError_SelfNULL if( self->_mBlock == nullptr ) { PyErr_SetString( PyExc_AttributeError, "Bad Access to uninitialized _PyULIS2Object_Block object" ); return NULL; }
+
 // Width
 _PyULIS2Object_Block_GetterMethod_Begin( Width              )   return  PyLong_FromLong( self->_mBlock->Width() );              _PyULIS2Object_Block_GetterMethod_End
 _PyULIS2Object_Block_GetterMethod_Begin( Height             )   return  PyLong_FromLong( self->_mBlock->Height() );             _PyULIS2Object_Block_GetterMethod_End
@@ -91,27 +97,57 @@ _PyULIS2Object_Block_GetterMethod_Begin( CRC32              )   return  PyFloat_
 _PyULIS2Object_Block_GetterMethod_Begin( MD5                )   return  PyUnicode_FromString( self->_mBlock->MD5().c_str() );   _PyULIS2Object_Block_GetterMethod_End
 _PyULIS2Object_Block_GetterMethod_Begin( UUID               )   return  PyUnicode_FromString( self->_mBlock->UUID().c_str() );  _PyULIS2Object_Block_GetterMethod_End
 
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------ Getters
+static PyObject*
+_PyULIS2Object_Block_PixelProxy( _PyULIS2Object_Block* self, PyObject* args ) {
+    _PyULIS2Object_Block_CheckError_SelfNULL
+    int x, y;
+    if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return  NULL;
+
+    PyObject* inst = _PyULIS2Object_PixelProxy_new( &_PyULIS2Type_PixelProxy, nullptr, nullptr );
+    _PyULIS2Object_PixelProxy* O = (_PyULIS2Object_PixelProxy*)inst;
+    O->super._mPixel = new ::ul2::FPixelProxy( self->_mBlock->PixelProxy( x, y ) );
+    return  inst;
+}
+
+
+static PyObject*
+_PyULIS2Object_Block_PixelValue( _PyULIS2Object_Block* self, PyObject* args ) {
+    _PyULIS2Object_Block_CheckError_SelfNULL
+    int x, y;
+    if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return  NULL;
+
+    PyObject* inst = _PyULIS2Object_PixelValue_new( &_PyULIS2Type_PixelValue, nullptr, nullptr );
+    _PyULIS2Object_PixelValue* O = (_PyULIS2Object_PixelValue*)inst;
+    O->super._mPixel = new ::ul2::FPixelValue( self->_mBlock->PixelProxy( x, y ) );
+    return  inst;
+}
+
+
 /////////////////////////////////////////////////////
 /// Meta Methods
-static PyMethodDef Custom_methods[] = {
-    { "Width"               , (PyCFunction)_PyULIS2Object_Block_Width               , METH_NOARGS, "Width"            },
-    { "Height"              , (PyCFunction)_PyULIS2Object_Block_Height              , METH_NOARGS, "Height"           },
-    { "Format"              , (PyCFunction)_PyULIS2Object_Block_Format              , METH_NOARGS, "Format"           },
-    { "BytesPerSample"      , (PyCFunction)_PyULIS2Object_Block_BytesPerSample      , METH_NOARGS, "BytesPerSample"   },
-    { "BytesPerPixel"       , (PyCFunction)_PyULIS2Object_Block_BytesPerPixel       , METH_NOARGS, "BytesPerPixel"    },
-    { "BytesPerScanLine"    , (PyCFunction)_PyULIS2Object_Block_BytesPerScanLine    , METH_NOARGS, "BytesPerScanLine" },
-    { "BytesTotal"          , (PyCFunction)_PyULIS2Object_Block_BytesTotal          , METH_NOARGS, "BytesTotal"       },
-    { "Model"               , (PyCFunction)_PyULIS2Object_Block_Model               , METH_NOARGS, "Model"            },
-    { "Type"                , (PyCFunction)_PyULIS2Object_Block_Type                , METH_NOARGS, "Type"             },
-    { "HasAlpha"            , (PyCFunction)_PyULIS2Object_Block_HasAlpha            , METH_NOARGS, "HasAlpha"         },
-    { "Swapped"             , (PyCFunction)_PyULIS2Object_Block_Swapped             , METH_NOARGS, "Swapped"          },
-    { "Reversed"            , (PyCFunction)_PyULIS2Object_Block_Reversed            , METH_NOARGS, "Reversed"         },
-    { "SamplesPerPixel"     , (PyCFunction)_PyULIS2Object_Block_SamplesPerPixel     , METH_NOARGS, "SamplesPerPixel"  },
-    { "NumColorChannels"    , (PyCFunction)_PyULIS2Object_Block_NumColorChannels    , METH_NOARGS, "NumColorChannels" },
-    { "AlphaIndex"          , (PyCFunction)_PyULIS2Object_Block_AlphaIndex          , METH_NOARGS, "AlphaIndex"       },
-    { "CRC32"               , (PyCFunction)_PyULIS2Object_Block_CRC32               , METH_NOARGS, "CRC32"            },
-    { "MD5"                 , (PyCFunction)_PyULIS2Object_Block_MD5                 , METH_NOARGS, "MD5"              },
-    { "UUID"                , (PyCFunction)_PyULIS2Object_Block_UUID                , METH_NOARGS, "UUID"             },
+static PyMethodDef _PyULIS2Object_Block_methods[] = {
+    { "Width"               , (PyCFunction)_PyULIS2Object_Block_Width               , METH_NOARGS, "Width"              },
+    { "Height"              , (PyCFunction)_PyULIS2Object_Block_Height              , METH_NOARGS, "Height"             },
+    { "Format"              , (PyCFunction)_PyULIS2Object_Block_Format              , METH_NOARGS, "Format"             },
+    { "BytesPerSample"      , (PyCFunction)_PyULIS2Object_Block_BytesPerSample      , METH_NOARGS, "BytesPerSample"     },
+    { "BytesPerPixel"       , (PyCFunction)_PyULIS2Object_Block_BytesPerPixel       , METH_NOARGS, "BytesPerPixel"      },
+    { "BytesPerScanLine"    , (PyCFunction)_PyULIS2Object_Block_BytesPerScanLine    , METH_NOARGS, "BytesPerScanLine"   },
+    { "BytesTotal"          , (PyCFunction)_PyULIS2Object_Block_BytesTotal          , METH_NOARGS, "BytesTotal"         },
+    { "Model"               , (PyCFunction)_PyULIS2Object_Block_Model               , METH_NOARGS, "Model"              },
+    { "Type"                , (PyCFunction)_PyULIS2Object_Block_Type                , METH_NOARGS, "Type"               },
+    { "HasAlpha"            , (PyCFunction)_PyULIS2Object_Block_HasAlpha            , METH_NOARGS, "HasAlpha"           },
+    { "Swapped"             , (PyCFunction)_PyULIS2Object_Block_Swapped             , METH_NOARGS, "Swapped"            },
+    { "Reversed"            , (PyCFunction)_PyULIS2Object_Block_Reversed            , METH_NOARGS, "Reversed"           },
+    { "SamplesPerPixel"     , (PyCFunction)_PyULIS2Object_Block_SamplesPerPixel     , METH_NOARGS, "SamplesPerPixel"    },
+    { "NumColorChannels"    , (PyCFunction)_PyULIS2Object_Block_NumColorChannels    , METH_NOARGS, "NumColorChannels"   },
+    { "AlphaIndex"          , (PyCFunction)_PyULIS2Object_Block_AlphaIndex          , METH_NOARGS, "AlphaIndex"         },
+    { "CRC32"               , (PyCFunction)_PyULIS2Object_Block_CRC32               , METH_NOARGS, "CRC32"              },
+    { "MD5"                 , (PyCFunction)_PyULIS2Object_Block_MD5                 , METH_NOARGS, "MD5"                },
+    { "UUID"                , (PyCFunction)_PyULIS2Object_Block_UUID                , METH_NOARGS, "UUID"               },
+    { "PixelProxy"          , (PyCFunction)_PyULIS2Object_Block_PixelProxy          , METH_VARARGS, "PixelProxy"        },
+    { "PixelValue"          , (PyCFunction)_PyULIS2Object_Block_PixelValue          , METH_VARARGS, "PixelValue"        },
     { NULL } // Sentinel
 };
 
@@ -145,7 +181,7 @@ PyVarObject_HEAD_INIT(NULL, 0)
     0, /* tp_weaklistoffset */
     0, /* tp_iter */
     0, /* tp_iternext */
-    Custom_methods, /* tp_methods */
+    _PyULIS2Object_Block_methods, /* tp_methods */
     0, /* tp_members */
     0, /* tp_getset */
     0, /* tp_base */

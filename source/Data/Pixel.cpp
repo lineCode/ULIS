@@ -753,6 +753,11 @@ FPixelProxy::~FPixelProxy()
 {
 }
 
+FPixelProxy::FPixelProxy( tFormat iFormat, FColorProfile* iProfile )
+    : tParent( iFormat, iProfile )
+{
+    mData = nullptr;
+}
 
 FPixelProxy::FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile )
     : tParent( iFormat, iProfile )

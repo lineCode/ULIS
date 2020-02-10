@@ -16,6 +16,9 @@
 #include <Python.h>
 #include "macros.h"
 #include "Types/_PyULIS2_Block.ipp"
+#include "Types/_PyULIS2_AbstractPixel.ipp"
+#include "Types/_PyULIS2_PixelProxy.ipp"
+#include "Types/_PyULIS2_PixelValue.ipp"
 
 PyObject*
 spam_system(PyObject *self, PyObject *args) {

@@ -29,8 +29,8 @@ FBlock::~FBlock()
 }
 
 
-FBlock::FBlock( tSize iWidth
-              , tSize iHeight
+FBlock::FBlock( int iWidth
+              , int iHeight
               , tFormat iFormat
               , FColorProfile* iProfile
               , const FOnInvalid& iOnInvalid
@@ -57,8 +57,8 @@ FBlock::FBlock( tSize iWidth
 
 
 FBlock::FBlock( tByte* iData
-              , tSize iWidth
-              , tSize iHeight
+              , int iWidth
+              , int iHeight
               , tFormat iFormat
               , FColorProfile* iProfile
               , const FOnInvalid& iOnInvalid
@@ -276,10 +276,10 @@ FBlock::Invalidate( const FRect& iRect, bool iCall ) const
     if( !iCall )
         return;
 
-    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < (int64)mWidth, "Index out of range" );
-    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < (int64)mHeight, "Index out of range" );
-    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int64)mWidth, "Index out of range" );
-    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= (int64)mHeight, "Index out of range" );
+    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < (int)mWidth, "Index out of range" );
+    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < (int)mHeight, "Index out of range" );
+    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int)mWidth, "Index out of range" );
+    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= (int)mHeight, "Index out of range" );
     mOnInvalid.ExecuteIfBound( this, iRect );
 }
 

@@ -533,6 +533,7 @@ class ULIS2_API FPixelProxy : public IPixel
 public:
     // Construction / Destruction
     virtual ~FPixelProxy();
+    FPixelProxy( tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     void SetPtr( tByte* iPtr );
