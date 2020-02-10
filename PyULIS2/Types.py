@@ -7,6 +7,7 @@ TYPE_UFLOAT     = 3
 TYPE_UDOUBLE    = 4
 TYPE_INVALID    = 5
 kwType = [ "UINT8", "UINT16", "UINT32", "UFLOAT", "UDOUBLE" ]
+kwTypeA = [ "8", "16", "32", "F", "D" ]
 
 # Enum ColorModel
 CM_ANY  = 0
@@ -21,3 +22,5 @@ CM_Lab  = 8
 CM_XYZ  = 9
 CM_Yxy  = 10
 kwColorModel = [ "ANY", "Grey", "RGB", "HSV", "HSL", "CMY", "CMYK", "YUV", "Lab", "XYZ", "Yxy" ]
+kwColorModelA = [ "_", "GA", "RGBA", "HSVA", "HSLA", "CMYA", "CMYKA", "YUVA", "LabA", "XYZA", "YxyA" ]
+

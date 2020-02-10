@@ -25,3 +25,71 @@ class FBlock:
     def UUID                (self): return  self._data.UUID()
     def TypeStr             (self): return  kwType[ self.Type() ]
     def ModelStr            (self): return  kwColorModel[ self.Model() ]
+
+    def LayoutIndex( self ):
+        spp = self.SamplesPerPixel()
+        msp = spp - 1
+        idt = [0] * spp
+        cod = self.Swapped() << 1 | self.Reversed()
+        if cod == 1:
+            for i in range( 0, spp ):
+                idt[i] = msp - i
+        elif cod == 2:
+            for i in range( 0, spp ):
+                if ( i + 1 ) > msp:
+                    idt[i] = 0
+                else:
+                    idt[i] = i + 1
+        elif cod == 3:
+            for i in range( 0, spp ):
+                if ( msp - i ) - 1 < 0:
+                    idt[i] = msp
+                else:
+                    idt[i] = msp - i - 1
+        else:
+            for i in range( 0, spp ):
+                idt[i] = i
+        return  idt
+
+    def LayoutStr( self ):
+        spp = self.SamplesPerPixel()
+        idt = self.LayoutIndex()
+        modelstr = kwColorModelA[ self.Model() ]
+        str = ""
+        for i in range( 0, spp ):
+            str = str + modelstr[i]
+        return  str
+
+    def TypeSuffixStr( self ):
+        return  kwTypeA[ self.Type() ]
+
+    def FormatStr( self ):
+        str = "Format_" + self.LayoutStr() + self.TypeSuffixStr()
+        return  str
+
+    def PrintInfo( self ):
+        print( "Width               : ", self.Width() )
+        print( "Height              : ", self.Height() )
+        print( "Format              : ", self.Format() )
+        print( "BytesPerSample      : ", self.BytesPerSample() )
+        print( "BytesPerPixel       : ", self.BytesPerPixel() )
+        print( "BytesPerScanLine    : ", self.BytesPerScanLine() )
+        print( "BytesTotal          : ", self.BytesTotal() )
+        print( "Model               : ", self.Model() )
+        print( "Type                : ", self.Type() )
+        print( "HasAlpha            : ", self.HasAlpha() )
+        print( "Swapped             : ", self.Swapped() )
+        print( "Reversed            : ", self.Reversed() )
+        print( "SamplesPerPixel     : ", self.SamplesPerPixel() )
+        print( "NumColorChannels    : ", self.NumColorChannels() )
+        print( "AlphaIndex          : ", self.AlphaIndex() )
+        print( "CRC32               : ", self.CRC32() )
+        print( "MD5                 : ", self.MD5() )
+        print( "UUID                : ", self.UUID() )
+        print( "TypeStr             : ", self.TypeStr() )
+        print( "ModelStr            : ", self.ModelStr() )
+        print( "LayoutIndex         : ", self.LayoutIndex() )
+        print( "LayoutStr           : ", self.LayoutStr() )
+        print( "TypeSuffixStr       : ", self.TypeSuffixStr() )
+        print( "FormatStr           : ", self.FormatStr() )
+
