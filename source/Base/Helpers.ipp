@@ -15,6 +15,7 @@
 #include "Base/Core.h"
 #include "Base/Utils.h"
 #include "Blend/Modes.h"
+#include "Data/Block.h"
 #include "glm/vec2.hpp"
 #include <vectorclass.h>
 

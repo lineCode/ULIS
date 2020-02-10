@@ -5,15 +5,17 @@
 *   ULIS2
 *__________________
 *
-* @file         Transform.cpp
+* @file         TransformMT_Bilinear_MEM_Generic.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the transform entry point functions.
+* @brief        This file provides the declaration for the generic transform entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Transform/Transform.h"
-// Dispatch
-#include "Transform/Dispatch/Dispatch.ipp"
+#pragma once
+#include "Base/Core.h"
+#include "Maths/Geometry.h"
+#include "Base/Helpers.ipp"
+#include "Thread/ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
 ULIS2_NAMESPACE_END

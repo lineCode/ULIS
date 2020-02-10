@@ -17,6 +17,7 @@
 #include <QPixmap>
 #include <QLabel>
 #include <ULIS2>
+
 using namespace ::ul2;
 
 int
@@ -58,7 +59,7 @@ main( int argc, char *argv[] )
     RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, "Rise of the robots !", font, 16, white, glm::vec2( 64 ), mat, ULIS2_NOCB );
 
     std::string ulis2text = "ULIS2";
-    int ulis2size = 500;
+    int ulis2size = 100;
     FFont arialblack = fontRegistry.LoadFont( "Arial", "Bluck" );
     FRect metrics2 = TextMetrics( ulis2text, arialblack, ulis2size, glm::vec2( 0.f ), ULIS2_NOTRANSFORM );
     int x = ( blockA.Width() / 2 - metrics2.w / 2 ) - metrics2.x;

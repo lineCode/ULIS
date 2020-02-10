@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.11.0)
 
-option( ULIS2_BUILD_SHARED "Build the library shared or statically" OFF )
-SET( ULIS2_QT_CMAKE_PATH "default" CACHE STRING "Indicates the path to Qt cmake package" )
+option( ULIS2_BUILD_SHARED          "Build the library shared or statically" OFF )
+option( ULIS2_BUILD_PYTHON_MODULE   "Build the library python module"        OFF )
+SET( ULIS2_QT_CMAKE_PATH            "default" CACHE STRING "Indicates the path to Qt cmake package" )
+SET( ULIS2_PYTHON_REL_LIB           "default" CACHE STRING "Indicates the path to python release static library" )
+SET( ULIS2_PYTHON_DEB_LIB           "default" CACHE STRING "Indicates the path to python debug static library" )
+SET( ULIS2_PYTHON_INCLUDE_PATH      "default" CACHE STRING "Indicates the path to python include path" )
+SET( ULIS2_PYTHON_ADD_INCLUDE_PATH  "default" CACHE STRING "Indicates the path to python include path" )
 
 # Display host & compiler
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
@@ -166,6 +171,45 @@ if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
         Qt5::Core
         Qt5::Widgets
         Qt5::Gui
+    )
+
+    # For MSVC parse pretty filter names
+    foreach(source IN LISTS source_list)
+        get_filename_component(source_path "${source}" PATH)
+        string(REPLACE "/" "\\" source_path_msvc "${source_path}")
+        source_group("${source_path_msvc}" FILES "${source}")
+    endforeach()
+endif()
+
+####################################
+# Add Python Project
+if( ${ULIS2_BUILD_PYTHON_MODULE} )
+    file(
+        GLOB_RECURSE
+        source_list
+        RELATIVE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "PyULIS2/*"
+    )
+
+    add_library( PyULIS2 SHARED ${source_list} )
+    target_compile_definitions( PyULIS2 PRIVATE PyULIS2_BUILD_SHARED )
+
+    target_link_libraries(
+        PyULIS2
+        ULIS2
+        optimized   ${ULIS2_PYTHON_REL_LIB}
+        debug       ${ULIS2_PYTHON_DEB_LIB}
+    )
+
+    target_include_directories(
+        PyULIS2
+        PUBLIC
+        "PyULIS2/"
+        ${ULIS2_PYTHON_INCLUDE_PATH}
+        ${ULIS2_PYTHON_ADD_INCLUDE_PATH}
+        PRIVATE
+        "PyULIS2/"
     )
 
     # For MSVC parse pretty filter names

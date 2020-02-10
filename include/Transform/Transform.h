@@ -13,19 +13,10 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Transform/Methods.h"
 #include <glm/mat3x3.hpp>
 
 ULIS2_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// eResamplingMethod
-enum eResamplingMethod
-{
-      INTERP_NN
-    , INTERP_BILINEAR
-    , INTERP_BICUBIC
-    , INTERP_AREA
-};
-
 ULIS2_API void Transform( FThreadPool*      iPool
                         , bool              iBlocking
                         , const FPerf&      iPerf
@@ -35,6 +26,10 @@ ULIS2_API void Transform( FThreadPool*      iPool
                         , const  glm::mat3& iMat
                         , eResamplingMethod iInterpolationType
                         , bool              iCallInvalidCB );
+
+// Transform Typedefs ( implemented in dispatch.ipp but available from public API )
+typedef void (*fpDispatchedTransformFunc)( FThreadPool*, bool, const FPerf&, const FBlock*, FBlock*, const glm::mat3& );
+ULIS2_API fpDispatchedTransformFunc QueryDispatchedTransformFunctionForParameters( uint32 iFormat, eResamplingMethod iInterpolationType, const FPerf& iPerf, const FCPU& iCPU );
 
 ULIS2_NAMESPACE_END
 

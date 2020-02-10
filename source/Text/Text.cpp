@@ -29,18 +29,18 @@
 ULIS2_NAMESPACE_BEGIN
 void
 RenderText( FThreadPool*          iPool
-    , bool                  iBlocking
-    , const FPerf&          iPerf
-    , const FCPU&           iCPU
-    , bool                  iAntialiasing
-    , FBlock*               iDst
-    , const std::string&    iText
-    , const FFont&          iFont
-    , int                   iSize
-    , const IPixel&         iColor
-    , const glm::vec2&      iPos
-    , const glm::mat2&      iTransform
-    , bool                  iCallInvalidCB )
+          , bool                  iBlocking
+          , const FPerf&          iPerf
+          , const FCPU&           iCPU
+          , bool                  iAntialiasing
+          , FBlock*               iDst
+          , const std::string&    iText
+          , const FFont&          iFont
+          , int                   iSize
+          , const IPixel&         iColor
+          , const glm::vec2&      iPos
+          , const glm::mat2&      iTransform
+          , bool                  iCallInvalidCB )
 {
     ULIS2_ASSERT( iPool,                                    "Bad pool" );
     ULIS2_ASSERT( iDst,                                     "Bad destination" );
@@ -64,11 +64,11 @@ RenderText( FThreadPool*          iPool
 
 
 FRect
-Metrics( const std::string& iText
-       , const FFont&       iFont
-       , int                iSize
-       , const glm::vec2&   iPos
-       , const glm::mat2&   iTransform )
+TextMetrics( const std::string& iText
+           , const FFont&       iFont
+           , int                iSize
+           , const glm::vec2&   iPos
+           , const glm::mat2&   iTransform )
 {
     FRect result;
     result.x = static_cast< int >( iPos.x );

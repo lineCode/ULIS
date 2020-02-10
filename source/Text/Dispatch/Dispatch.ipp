@@ -19,26 +19,26 @@ ULIS2_NAMESPACE_BEGIN
 // Generic Dispatcher
 template< typename T >
 fpDispatchedTextFunc
-QueryDispatchedBlendFunctionForParameters_Generic( uint32 iFormat, bool iAntialiasing, const FPerf& iPerf, const FCPU& iCPU ) {
+QueryDispatchedTextFunctionForParameters_Generic( uint32 iFormat, bool iAntialiasing, const FPerf& iPerf, const FCPU& iCPU ) {
     return  &TraceTextMono_Generic< T >;
 }
 
 // Generic Dispatcher Selector
 template< typename T >
 fpDispatchedTextFunc
-QueryDispatchedBlendFunctionForParameters_imp( uint32 iFormat, bool iAntialiasing, const FPerf& iPerf, const FCPU& iCPU ) {
-    return  QueryDispatchedBlendFunctionForParameters_Generic< T >( iFormat, iAntialiasing, iPerf, iCPU );
+QueryDispatchedTextFunctionForParameters_imp( uint32 iFormat, bool iAntialiasing, const FPerf& iPerf, const FCPU& iCPU ) {
+    return  QueryDispatchedTextFunctionForParameters_Generic< T >( iFormat, iAntialiasing, iPerf, iCPU );
 }
 
 // Type Dispatcher Selector
 fpDispatchedTextFunc
 QueryDispatchedTextFunctionForParameters( uint32 iFormat, bool iAntialiasing, const FPerf& iPerf, const FCPU& iCPU ) {
     switch( static_cast< eType >( ULIS2_R_TYPE( iFormat ) ) ) {
-        case TYPE_UINT8     : return  QueryDispatchedBlendFunctionForParameters_imp< uint8   >( iFormat, iAntialiasing, iPerf, iCPU ); break;
-        case TYPE_UINT16    : return  QueryDispatchedBlendFunctionForParameters_imp< uint16  >( iFormat, iAntialiasing, iPerf, iCPU ); break;
-        case TYPE_UINT32    : return  QueryDispatchedBlendFunctionForParameters_imp< uint32  >( iFormat, iAntialiasing, iPerf, iCPU ); break;
-        case TYPE_UFLOAT    : return  QueryDispatchedBlendFunctionForParameters_imp< ufloat  >( iFormat, iAntialiasing, iPerf, iCPU ); break;
-        case TYPE_UDOUBLE   : return  QueryDispatchedBlendFunctionForParameters_imp< udouble >( iFormat, iAntialiasing, iPerf, iCPU ); break;
+        case TYPE_UINT8     : return  QueryDispatchedTextFunctionForParameters_imp< uint8   >( iFormat, iAntialiasing, iPerf, iCPU ); break;
+        case TYPE_UINT16    : return  QueryDispatchedTextFunctionForParameters_imp< uint16  >( iFormat, iAntialiasing, iPerf, iCPU ); break;
+        case TYPE_UINT32    : return  QueryDispatchedTextFunctionForParameters_imp< uint32  >( iFormat, iAntialiasing, iPerf, iCPU ); break;
+        case TYPE_UFLOAT    : return  QueryDispatchedTextFunctionForParameters_imp< ufloat  >( iFormat, iAntialiasing, iPerf, iCPU ); break;
+        case TYPE_UDOUBLE   : return  QueryDispatchedTextFunctionForParameters_imp< udouble >( iFormat, iAntialiasing, iPerf, iCPU ); break;
         default             : ULIS2_ASSERT( false, "Bad input format !" ); return  nullptr;
     }
 }
