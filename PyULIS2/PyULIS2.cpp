@@ -15,9 +15,9 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-static PyObject *SpamError;
+static PyObject *PyULIS2Error;
 
-static PyObject *
+PyObject*
 spam_system(PyObject *self, PyObject *args)
 {
     const char *command;
@@ -27,46 +27,43 @@ spam_system(PyObject *self, PyObject *args)
         return NULL;
     sts = system(command);
     if (sts < 0) {
-        PyErr_SetString(SpamError, "System command failed");
+        PyErr_SetString(PyULIS2Error, "System command failed");
         return NULL;
     }
     return PyLong_FromLong(sts);
 }
 
 
-static PyMethodDef SpamMethods[] = {
-    {"system",  spam_system, METH_VARARGS,
-     "Execute a shell command."},
-    {NULL, NULL, 0, NULL}        /* Sentinel */
+static PyMethodDef PyULIS2Methods[] = {
+    { "system",  spam_system, METH_VARARGS, "Execute a shell command." },
+    { NULL, NULL, 0, NULL } /* Sentinel */
 };
 
-static struct PyModuleDef spammodule = {
-    PyModuleDef_HEAD_INIT,
-    "spam",   /* name of module */
-    NULL, /* module documentation, may be NULL */
-    -1,       /* size of per-interpreter state of the module,
-                 or -1 if the module keeps state in global variables. */
-    SpamMethods
+static struct PyModuleDef PyULIS2Module  = {
+      PyModuleDef_HEAD_INIT
+    , "PyULIS2"                 /* name of module */
+    , NULL                      /* module documentation, may be NULL */
+    , -1                        /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    , PyULIS2Methods
 };
-
 
 PyMODINIT_FUNC
-PyInit_spam(void)
+PyInit_PyULIS2(void)
 {
     PyObject *m;
 
-    m = PyModule_Create(&spammodule);
-    if (m == NULL)
-        return NULL;
+    m = PyModule_Create( &PyULIS2Module );
+    if( m == NULL )
+        return  NULL;
 
-    SpamError = PyErr_NewException("spam.error", NULL, NULL);
-    Py_XINCREF(SpamError);
-    if (PyModule_AddObject(m, "error", SpamError) < 0) {
-        Py_XDECREF(SpamError);
-        Py_CLEAR(SpamError);
-        Py_DECREF(m);
-        return NULL;
+    PyULIS2Error = PyErr_NewException(" PyULIS2.error", NULL, NULL );
+    Py_XINCREF( PyULIS2Error );
+    if( PyModule_AddObject( m, "error", PyULIS2Error ) < 0 ) {
+        Py_XDECREF( PyULIS2Error );
+        Py_CLEAR( PyULIS2Error );
+        Py_DECREF( m );
+        return  NULL;
     }
 
-    return m;
+    return  m;
 }
