@@ -23,14 +23,14 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
-    FThreadPool     threadPool( 64 );
+    FThreadPool     threadPool( 1 );
     FPerf           perfIntent( Perf_Best_CPU );
     FCPU            cpuInfo;
     FFontEngine     fontEngine;
     FFontRegistry   fontRegistry( fontEngine );
     FFont           font = fontRegistry.LoadFont( "Arial", "Regular" );
-    FBlock*         blockBase = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/PRAXINOS/Documents/work/base_160.png",    ULIS2_FORMAT_RGBA8 );
-    FBlock*         blockOver = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/PRAXINOS/Documents/work/detail_160.png",  ULIS2_FORMAT_RGBA8 );
+    FBlock*         blockBase = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/PRAXINOS/Documents/work/AlphaWet_Base160.png", ULIS2_FORMAT_RGBA8 );
+    FBlock*         blockOver = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/PRAXINOS/Documents/work/AlphaWet_Over1602.png", ULIS2_FORMAT_RGBA8 );
     int             wb = blockBase->Width();
     int             hb = blockBase->Height();
     FBlock          blockA( wb * 8, hb * 5, ULIS2_FORMAT_RGBA8 );
@@ -40,9 +40,20 @@ main( int argc, char *argv[] )
     FPixel green(  ULIS2_FORMAT_RGB8, { 0,     255,    0   } );
     FPixel black(  ULIS2_FORMAT_RGB8, { 0,     0,      0   } );
     FPixel white(  ULIS2_FORMAT_RGB8, { 255,   255,    255 } );
-    Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, black, ULIS2_NOCB );
+    Clear( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, ULIS2_NOCB );
     Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockC, black, ULIS2_NOCB );
 
+    for( int i = 0; i < NUM_ALPHA_MODES; ++i ) {
+        int x = ( i % 8 ) * wb;
+        int y = ( i / 8 ) * hb;
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockBase,  &blockA, FVec2( x, y ),              BM_NORMAL,          AM_NORMAL, 1.0f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockOver,  &blockA, FVec2( x, y ),              BM_NORMAL,          eAlphaMode( i ), 1.f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_NORMAL,          AM_NORMAL, 0.5f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_BAYERDITHER8x8,  AM_NORMAL, 0.5f, ULIS2_NOCB );
+        RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwAlphaMode[ i ], font, 16, white, FVec2( x, y + hb - 16 ), FMat2( 1.f ), ULIS2_NOCB );
+    }
+
+    /*
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int x = ( i % 8 ) * wb;
         int y = ( i / 8 ) * hb;
@@ -52,7 +63,9 @@ main( int argc, char *argv[] )
         Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_BAYERDITHER8x8,  AM_NORMAL, 0.5f, ULIS2_NOCB );
         RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwBlendingMode[ i ], font, 16, white, FVec2( x, y + hb - 16 ), FMat2( 1.f ), ULIS2_NOCB );
     }
+    */
 
+    /*
     glm::mat2 mat = glm::rotate( glm::mat3( 1.f ), 0.785f );
     FRect metrics = TextMetrics( "Rise of the robots !", font, 16, glm::vec2( 64 ), mat );
     FillRect( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, red, metrics, ULIS2_NOCB );
@@ -85,6 +98,7 @@ main( int argc, char *argv[] )
     FBlock* grad = XConv( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockLab, ULIS2_FORMAT_RGBA8 );
     Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_SUBPIXEL, grad, &blockA, ULIS2_NODELTA, BM_BAYERDITHER8x8, AM_NORMAL, 0.25f, ULIS2_NOCB );
     delete grad;
+    */
 
     // Qt Window
     QApplication    app( argc, argv );
