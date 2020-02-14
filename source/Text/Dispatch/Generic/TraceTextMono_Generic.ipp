@@ -45,7 +45,8 @@ RasterBitmap( FBlock* iDst, FT_Bitmap* iBitmap, int iW, int iH, FT_Int iX, FT_In
             }
 
             float srcAlpha = ConvType< uint8, float >( iBitmap->buffer[ q * iBitmap->width + p ] );
-            float dstAlpha = TYPE2FLOAT( dst, iAID );
+            if( iHEA ) srcAlpha = srcAlpha * TYPE2FLOAT( iColor, iAID );
+            float dstAlpha = iHEA ? TYPE2FLOAT( dst, iAID ) : 1.f;
             float resAlpha = AlphaBlendAlpha( srcAlpha, dstAlpha );
             for( uint8 j = 0; j < iNCC; ++j )
             {
