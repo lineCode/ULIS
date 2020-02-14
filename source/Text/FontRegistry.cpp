@@ -150,7 +150,7 @@ FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
     #ifdef ULIS2_WIN
         std::string sysfpath;
         CHAR windir[MAX_PATH];
-        GetWindowsDirectoryA( windir, MAX_PATH );
+        ULIS2_ASSERT( GetWindowsDirectoryA( windir, MAX_PATH ), "Error loading Windows directory path during font retrieval." );
         sysfpath = std::string( windir );
         replace( sysfpath, "\\", "/" );
         sysfpath += "/Fonts/";

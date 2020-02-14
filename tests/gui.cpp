@@ -56,9 +56,7 @@ main( int argc, char *argv[] )
     widget->resize( pixmap.size() );
     widget->show();
 
-    std::cout << "Show";
     int exit_code = app.exec();
-
     delete  label;
     delete  image;
     delete  widget;
