@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Base/FilePathRegistry.h"
-#include "Base/String.h"
+#include "Base/StringUtils.h"
 #include <cppfs/fs.h>
 #include <cppfs/FileHandle.h>
 #include <cppfs/FilePath.h>

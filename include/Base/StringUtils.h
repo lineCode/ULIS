@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         StringUtils.h
+* @file         String.h
 * @author       Clement Berthaud
 * @brief        This file provides string utility tools.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.

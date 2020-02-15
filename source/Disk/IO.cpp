@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Disk/IO.h"
-#include "Base/String.h"
+#include "Base/StringUtils.h"
 #include "Data/Block.h"
 #include "Base/Perf.h"
 #include "base/CPU.h"

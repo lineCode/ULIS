@@ -13,7 +13,7 @@
 */
 #include "Text/FontRegistry.h"
 #include "Base/FilePathRegistry.h"
-#include "Base/String.h"
+#include "Base/StringUtils.h"
 #include "Text/FontEngine.h"
 #include "Text/Font.h"
 
