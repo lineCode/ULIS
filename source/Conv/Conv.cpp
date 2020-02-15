@@ -24,6 +24,8 @@
 #include "Color/ProfileRegistry.h"
 #include "Color/srgb2linear.h"
 #include "Thread/ParallelFor.h"
+#include "Thread/ThreadPool.h"
+#include "Base/Perf.h"
 #include "lcms2.h"
 
 ULIS2_NAMESPACE_BEGIN
@@ -89,9 +91,15 @@ Conv( FThreadPool*   iPool
     tByte*          dsb = iDst->DataPtr();
     tSize           src_bps = iSrc->BytesPerScanLine();
     tSize           dst_bps = iDst->BytesPerScanLine();
-    #define SRC srb + ( iLine * src_bps )
-    #define DST dsb + ( iLine * dst_bps )
-    ParallelFor( *iPool, iBlocking, iPerf, iSrc->Height(), ULIS2_PF_CALL { fptr( iSrc->FormatInfo(), SRC, iDst->FormatInfo(), DST, iSrc->Width() ); } );
+    #define SRC srb + ( pLINE * src_bps )
+    #define DST dsb + ( pLINE * dst_bps )
+
+    const int max = iSrc->Height();
+    const FFormatInfo srcnfo = iSrc->FormatInfo();
+    const FFormatInfo dstnfo = iDst->FormatInfo();
+    const tSize len = iSrc->Width();
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, max, fptr, srcnfo, SRC, dstnfo, DST, len );
+    //ParallelFor( *iPool, iBlocking, iPerf, iSrc->Height(), ULIS2_PF_CALL { fptr( iSrc->FormatInfo(), SRC, iDst->FormatInfo(), DST, iSrc->Width() ); } );
 
     iDst->Invalidate( iCallInvalidCB );
 }

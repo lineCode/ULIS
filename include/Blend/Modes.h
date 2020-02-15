@@ -266,8 +266,10 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
 
 #define ULIS2_ACTION_ASSIGN_ALPHAF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaF< _AM >( iSrc, iBdp );
 #define ULIS2_ACTION_ASSIGN_ALPHASSEF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaSSEF< _AM >( iSrc, iBdp );
+#define ULIS2_ACTION_ASSIGN_ALPHAAVXF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaAVXF< _AM >( iSrc, iBdp );
 #define ULIS2_ASSIGN_ALPHAF( iAlphaMode, iTarget, iSrc, iBdp )  ULIS2_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS2_FOR_ALL_AM_DO, ULIS2_ACTION_ASSIGN_ALPHAF, iTarget, iSrc, iBdp )
 #define ULIS2_ASSIGN_ALPHASSEF( iAlphaMode, iTarget, iSrc, iBdp )  ULIS2_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS2_FOR_ALL_AM_DO, ULIS2_ACTION_ASSIGN_ALPHASSEF, iTarget, iSrc, iBdp )
+#define ULIS2_ASSIGN_ALPHAAVXF( iAlphaMode, iTarget, iSrc, iBdp )  ULIS2_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS2_FOR_ALL_AM_DO, ULIS2_ACTION_ASSIGN_ALPHAAVXF, iTarget, iSrc, iBdp )
 
 ULIS2_NAMESPACE_END
 
