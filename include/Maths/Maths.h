@@ -97,6 +97,11 @@ struct ULIS2_API FMaths
         return ( iDeg * FMaths::kPId / 180 );
     }
 
+    static ULIS2_FORCEINLINE float DegToRadF( float iDeg )
+    {
+        return ( iDeg * FMaths::kPIf / 180.f );
+    }
+
     static ULIS2_FORCEINLINE int IntegerPartOfNumber( float iNumber )
     {
         return (int)iNumber;

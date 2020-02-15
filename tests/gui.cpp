@@ -24,27 +24,25 @@ using namespace ::ul2;
 int
 main( int argc, char *argv[] )
 {
-
-
-    FThreadPool     threadPool(1);
+    FThreadPool     threadPool(12);
     FPerf           clearPerfIntent(    0           );
     FPerf           FillPerfIntent(     Perf_AVX2   );
     FPerf           blendMemperfIntent( Perf_MT           );
-    FPerf           perfIntent(         Perf_MT | Perf_TSPEC | Perf_AVX2 );
+    FPerf           perfIntent(         Perf_TSPEC | Perf_AVX2 );
     FCPU            cpuInfo;
     FFontEngine     fontEngine;
     FFontRegistry   fontRegistry( fontEngine );
     FFont           font = fontRegistry.LoadFont( "Arial", "Black" );
     FBlock*         blockDamas = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/conta/Documents/work/wallpaper/Damas_SMALL.png", ULIS2_FORMAT_RGBA8 );
-    FBlock          TEST( 64, 64, ULIS2_FORMAT_RGBA8 );
-    FBlock          blockBlack( 64, 64, ULIS2_FORMAT_RGBA8 );
+    FBlock          TEST( 512, 64, ULIS2_FORMAT_RGBA8 );
+    FBlock          blockBlack( 512, 64, ULIS2_FORMAT_RGBA8 );
 
     FColor bg( ULIS2_FORMAT_RGB8, { 20, 20, 20 } );
     FColor red( ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
     Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockBlack, bg, ULIS2_NOCB );
 
     auto start_time = std::chrono::steady_clock::now();
-    int num = 20000;
+    int num = 1000;
 
     fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( blockBlack.Format(), BM_NORMAL, AM_NORMAL, ULIS2_NOAA, perfIntent, cpuInfo );
 
@@ -58,7 +56,7 @@ main( int argc, char *argv[] )
 
     auto end_time   = std::chrono::steady_clock::now();
     auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
-    float average   = delta / (float)num;
+    float average   = delta;
     std::cout << average << std::endl;
 
     Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOSUBPIXEL, &blockBlack, blockDamas, ULIS2_NODELTA, BM_NORMAL, AM_NORMAL, 0.75f, ULIS2_NOCB );
