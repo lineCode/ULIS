@@ -5,13 +5,13 @@
 *   ULIS2
 *__________________
 *
-* @file         String.cpp
+* @file         StringUtils.cpp
 * @author       Clement Berthaud
 * @brief        This file provides string utility tools.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Base/String.h"
+#include "Base/StringUtils.h"
 #include <iostream>
 #include <cstring>
 #include <cassert>

@@ -22,10 +22,11 @@
 #include "Base/CPU.h"
 #include "Base/FilePathRegistry.h"
 #include "Base/Perf.h"
-#include "Base/String.h"
+#include "Base/StringUtils.h"
 // Maths
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
+#include "Maths/Camera3D.h"
 // Thread
 #include "Thread/ThreadPool.h"
 #include "Thread/ParallelFor.h"
