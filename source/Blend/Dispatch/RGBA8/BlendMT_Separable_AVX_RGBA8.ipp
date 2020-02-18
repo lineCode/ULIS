@@ -97,7 +97,6 @@ BlendMT_Separable_AVX_RGBA8_Subpixel( FThreadPool*        iPool
                                     , eAlphaMode          iAlphaMode
                                     , ufloat              iOpacity )
 {
-    /*
     tFormat fmt = iSource->Format();
     uint8   aid = ( ( ( ~( ( ULIS2_R_RS( fmt ) + 0x1 ) & 0x2 ) ) & 0x2 ) >> 1 ) * 3;
     const tByte* src    = iSource->DataPtr();
@@ -112,7 +111,6 @@ BlendMT_Separable_AVX_RGBA8_Subpixel( FThreadPool*        iPool
                                                                        , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * 4 )
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * 4 )
                                                                        , iBdpROI.w, params );
-    */
 }
 
 void
@@ -131,7 +129,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte*          iSrc
     //  |_____|_____|_____|_____|
     //  | m00 | m10 | m20 | m30 |
     //  |_____|_____|_____|_____|
-    // The implementation is thread safe, there is not thread concurrency
+    // The implementation is thread safe, there is no thread concurrency
     // no read / write overlap, even the sse loads do not overflow the bounding
     // rect, because of memcpy load.
     for( uint32 i = 0; i < iW/2; ++i ) {
