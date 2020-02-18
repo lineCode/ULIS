@@ -30,11 +30,12 @@ main( int argc, char *argv[] )
     FFontEngine     fontEngine;
     FFontRegistry   fontRegistry( fontEngine );
     FFont           font = fontRegistry.LoadFont( "Arial", "Regular" );
-    FBlock*         blockBase = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/PRAXINOS/Documents/work/AlphaWet_Base160.png", ULIS2_FORMAT_RGBA8 );
-    FBlock*         blockOver = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/PRAXINOS/Documents/work/AlphaWet_Over1602.png", ULIS2_FORMAT_RGBA8 );
+    FBlock*         blockBase = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/conta/Documents/work/Base.png", ULIS2_FORMAT_RGBA8 );
+    FBlock*         blockOver = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/conta/Documents/work/Over.png", ULIS2_FORMAT_RGBA8 );
     int             wb = blockBase->Width();
     int             hb = blockBase->Height();
-    FBlock          blockA( wb * 8, hb * 5, ULIS2_FORMAT_RGBA8 );
+    FBlock          blockA( wb * 8+1, hb * 5, ULIS2_FORMAT_RGBA8 );
+    FBlock          blockB( wb * 8+1, hb * 5, ULIS2_FORMAT_RGBA8 );
     FBlock          blockC( wb, 20, ULIS2_FORMAT_RGBA8 );
 
     FPixel red(    ULIS2_FORMAT_RGB8, { 255,   0,      0   } );
@@ -44,13 +45,16 @@ main( int argc, char *argv[] )
     Clear( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, ULIS2_NOCB );
     Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockC, black, ULIS2_NOCB );
 
+    for( int i = 0; i < 45; ++i ) {
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOAA, &blockB, &blockA, ULIS2_NODELTA, BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_CALLCB );
+    }
+
     for( int i = 0; i < NUM_ALPHA_MODES; ++i ) {
         int x = ( i % 8 ) * wb;
         int y = ( i / 8 ) * hb;
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockBase,  &blockA, FVec2( x, y ),              BM_NORMAL,          AM_NORMAL, 1.0f, ULIS2_NOCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockOver,  &blockA, FVec2( x, y ),              BM_NORMAL,          eAlphaMode( i ), 1.f, ULIS2_NOCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_NORMAL,          AM_NORMAL, 0.5f, ULIS2_NOCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_BAYERDITHER8x8,  AM_NORMAL, 0.5f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOAA, blockBase,  &blockA, FVec2( x, y ),              BM_NORMAL,          AM_NORMAL, 1.0f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOAA, blockOver,  &blockA, FVec2( x, y ),              BM_NORMAL,          eAlphaMode( i ), 1.f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOAA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_NORMAL,          AM_NORMAL, 0.5f, ULIS2_NOCB );
         RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwAlphaMode[ i ], font, 16, white, FVec2( x, y + hb - 16 ), FMat2( 1.f ), ULIS2_NOCB );
     }
 

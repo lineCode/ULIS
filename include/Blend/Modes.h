@@ -122,8 +122,6 @@ enum eAlphaMode
     , AM_MUL
     , AM_MIN
     , AM_MAX
-    , AM_INVMAX
-    , AM_AVERAGE
     , NUM_ALPHA_MODES
 };
 
@@ -139,8 +137,6 @@ static const char* kwAlphaMode[] =
     , "Mul"
     , "Min"
     , "Max"
-    , "InvMax"
-    , "Average"
     , "Invalid"
 };
 
@@ -240,9 +236,7 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( AM_ADD           , _E0, _E1, _E2, _E3 )          \
     X( AM_MUL           , _E0, _E1, _E2, _E3 )          \
     X( AM_MIN           , _E0, _E1, _E2, _E3 )          \
-    X( AM_MAX           , _E0, _E1, _E2, _E3 )          \
-    X( AM_INVMAX        , _E0, _E1, _E2, _E3 )          \
-    X( AM_AVERAGE       , _E0, _E1, _E2, _E3 )
+    X( AM_MAX           , _E0, _E1, _E2, _E3 )
 
 //#define ULIS2_ENUM_CASE_AM_DO( _AM, _BM, _ACTION, _E2, _E3 )                                                        case _AM: _ACTION( _BM, _AM, _E2, _E3 ); break;
 //#define ULIS2_ENUM_CASE_BM_SWITCH_FOR_ALL_AM_DO( _BM, iAlphaMode, _ACTION, _E2, _E3 )                               case _BM: switch( iAlphaMode ) { ULIS2_FOR_ALL_AM_DO( ULIS2_ENUM_CASE_AM_DO, _BM, _ACTION, _E2, _E3 ) } break;

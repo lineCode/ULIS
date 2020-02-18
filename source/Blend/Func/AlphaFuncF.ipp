@@ -65,20 +65,6 @@ ULIS2_FORCEINLINE ufloat AlphaMaxF( ufloat iCs, ufloat iCb ) {
     return  FMaths::Max( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------- InvMax
-ULIS2_FORCEINLINE ufloat AlphaInvMaxF( ufloat iCs, ufloat iCb ) {
-    ufloat invCs = iCs == 0.f ? 0.f : 1.f / iCs;
-    ufloat invCb = iCb == 0.f ? 0.f : 1.f / iCb;
-    ufloat max = FMaths::Max( invCs, invCb );
-    ufloat res = max == 0.f ? 0.f : 1.f / max;
-    return  res;
-}
-//--------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------ Average
-ULIS2_FORCEINLINE ufloat AlphaAverageF( ufloat iCs, ufloat iCb ) {
-    return  ( iCs + iCb ) / 2.f;
-}
-//--------------------------------------------------------------------------------------
 //------------------------------------------------------------- AlphaF Template Selector
 template< eAlphaMode _AM >
 ULIS2_FORCEINLINE ufloat AlphaF( ufloat iCs, ufloat iCb ) {
@@ -94,6 +80,5 @@ template<> ULIS2_FORCEINLINE ufloat AlphaF< AM_ADD      >( ufloat iCs, ufloat iC
 template<> ULIS2_FORCEINLINE ufloat AlphaF< AM_MUL      >( ufloat iCs, ufloat iCb ) { return  AlphaMulF(    iCs, iCb ); }
 template<> ULIS2_FORCEINLINE ufloat AlphaF< AM_MIN      >( ufloat iCs, ufloat iCb ) { return  AlphaMinF(    iCs, iCb ); }
 template<> ULIS2_FORCEINLINE ufloat AlphaF< AM_MAX      >( ufloat iCs, ufloat iCb ) { return  AlphaMaxF(    iCs, iCb ); }
-template<> ULIS2_FORCEINLINE ufloat AlphaF< AM_INVMAX   >( ufloat iCs, ufloat iCb ) { return  AlphaInvMaxF( iCs, iCb ); }
 ULIS2_NAMESPACE_END
 

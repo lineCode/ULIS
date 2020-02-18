@@ -66,20 +66,6 @@ ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaMaxAVXF( Vec8f iCs, Vec8f iCb ) {
     return  max( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------ Average
-ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaAverageAVXF( Vec8f iCs, Vec8f iCb ) {
-    return  ( iCs + iCb ) / 2.f;
-}
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------- InvMax
-ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaInvMaxAVXF( Vec8f iCs, Vec8f iCb ) {
-    Vec8f invCs = select( iCs == 0.0f, 0.f, 1.f / iCs );
-    Vec8f invCb = select( iCb == 0.0f, 0.f, 1.f / iCb );
-    Vec8f maxv = max( invCs, invCb );
-    Vec8f invmax = select( maxv == 0.f, 0.f, 1.f / maxv );
-    return  invmax;
-}
-//--------------------------------------------------------------------------------------
 //------------------------------------------------------------- AlphaF Template Selector
 template< eAlphaMode _AM >
 ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaAVXF( Vec8f iCs, Vec8f iCb ) {
@@ -95,7 +81,5 @@ template<> ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaAVXF< AM_ADD      >( Ve
 template<> ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaAVXF< AM_MUL      >( Vec8f iCs, Vec8f iCb ) { return  AlphaMulAVXF(    iCs, iCb ); }
 template<> ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaAVXF< AM_MIN      >( Vec8f iCs, Vec8f iCb ) { return  AlphaMinAVXF(    iCs, iCb ); }
 template<> ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaAVXF< AM_MAX      >( Vec8f iCs, Vec8f iCb ) { return  AlphaMaxAVXF(    iCs, iCb ); }
-template<> ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaAVXF< AM_INVMAX   >( Vec8f iCs, Vec8f iCb ) { return  AlphaInvMaxAVXF( iCs, iCb ); }
-template<> ULIS2_FORCEINLINE Vec8f ULIS2_VECTORCALL AlphaAVXF< AM_AVERAGE  >( Vec8f iCs, Vec8f iCb ) { return  AlphaAverageAVXF( iCs, iCb ); }
 ULIS2_NAMESPACE_END
 

@@ -66,40 +66,6 @@ ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaMaxSSEF( Vec4f iCs, Vec4f iCb ) {
     return  max( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------ Average
-ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaAverageSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  ( iCs + iCb ) / 2.f;
-}
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------- InvMax
-ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaInvMaxSSEF( Vec4f iCs, Vec4f iCb ) {
-    /*
-float AlphaBlendChannel( float iCs, float iCb, float iAs, float iAb, float iAr ) {
-    ( iCs * iAs + iCb * iAb * ( 1.f - iAs ) )
-}
-*/
-    //return  select( iCs == 0.f || iCb == 0.f, select( iCs == 0.f, iCb, iCs * iCs + iCb * iCb * ( 1.f - iCs ) ), select( iCb == 0.f, iCs, iCs * iCs + iCb * iCb * ( 1.f - iCs ) ) );
-
-    // BEST:
-    /*
-    return  select( iCs != 0.f && iCb != 0.f
-                  , min( iCs, iCb )
-                  , max( iCs, iCb ) );
-    */
-
-    //return  max( iCs, iCb ) - iCs & iCb;
-    //return  select( ( iCs | iCb ) > 1.f, ( iCs & iCb ) + iCs * iCb, iCs | iCb ) ;
-
-    //return  1 - max( 1 - select( iCs == 0.f, 1.f, iCs ), 1 - select( iCb == 0.f, 1.f, iCb ) );
-    //return  select( iCs == 0.f, select( iCb == 0.f, 0.f, iCb ), select( iCb == 0.f, iCs, /* */ min( iCs, iCb ) /* */ ) );
-    Vec4f invCs = select( iCs == 0.0f, 0.f, 1.f / iCs );
-    Vec4f invCb = select( iCb == 0.0f, 0.f, 1.f / iCb );
-    Vec4f maxv = max( invCs, invCb );
-    Vec4f invmax = select( maxv == 0.f, 0.f, 1.f / maxv );
-    return  invmax;
-    //return  max( invmax, select( ( iCs | iCb ) > 1.f, iCs * iCs + iCb * iCb * ( 1.f - iCs ), min( iCs, iCb ) ) );
-}
-//--------------------------------------------------------------------------------------
 //------------------------------------------------------------- AlphaF Template Selector
 template< eAlphaMode _AM >
 ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaSSEF( Vec4f iCs, Vec4f iCb ) {
@@ -115,7 +81,5 @@ template<> ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaSSEF< AM_ADD      >( Ve
 template<> ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaSSEF< AM_MUL      >( Vec4f iCs, Vec4f iCb ) { return  AlphaMulSSEF(    iCs, iCb ); }
 template<> ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaSSEF< AM_MIN      >( Vec4f iCs, Vec4f iCb ) { return  AlphaMinSSEF(    iCs, iCb ); }
 template<> ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaSSEF< AM_MAX      >( Vec4f iCs, Vec4f iCb ) { return  AlphaMaxSSEF(    iCs, iCb ); }
-template<> ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaSSEF< AM_INVMAX   >( Vec4f iCs, Vec4f iCb ) { return  AlphaInvMaxSSEF( iCs, iCb ); }
-template<> ULIS2_FORCEINLINE Vec4f ULIS2_VECTORCALL AlphaSSEF< AM_AVERAGE  >( Vec4f iCs, Vec4f iCb ) { return  AlphaAverageSSEF( iCs, iCb ); }
 ULIS2_NAMESPACE_END
 

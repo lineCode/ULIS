@@ -139,9 +139,9 @@ public:
     float  TranslationZ()  const;
 
     // Rotation Getter
-    FAxisAngle RotationAsAxisAngle()  const;
-    FEulerSet RotationAsEulerSet()  const;
-    glm::quat  RotationAsQuaternion()  const;
+    FAxisAngle  RotationAsAxisAngle()  const;
+    FEulerSet   RotationAsEulerSet()  const;
+    glm::quat   RotationAsQuaternion()  const;
 
     // Scale Getter
     glm::vec3  Scale()  const;
