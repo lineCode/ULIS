@@ -19,6 +19,7 @@
 #include "Data/Pixel.h"
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
+#include "Thread/ThreadPool.h"
 #include <immintrin.h>
 #include <memory>
 
@@ -82,7 +83,7 @@ Fill_imp( FThreadPool*              iPool
     const tSize bps = iDst->BytesPerScanLine();
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
-    #define DST dsb + ( ( iRoi.y + iLine ) * bps )
+    #define DST dsb + ( ( iRoi.y + pLINE ) * bps )
 
     #ifdef __AVX2__
     if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bpp <= 32 && bps >= 32 )
@@ -97,7 +98,7 @@ Fill_imp( FThreadPool*              iPool
         __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
         delete [] srcb;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, src, count, stride ); } );
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iRoi.h, InvokeFillMTProcessScanline_AX2, DST, src, count, stride )
     }
     else
     #endif // __AVX2__
@@ -114,12 +115,12 @@ Fill_imp( FThreadPool*              iPool
         __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
         delete [] srcb;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE( DST, src, count, stride ); } );
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iRoi.h, InvokeFillMTProcessScanline_SSE, DST, src, count, stride )
     }
     else
     #endif // __SSE4_2__
     {
-        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iSrc, iRoi.w, bpp ); } );
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iRoi.h, InvokeFillMTProcessScanline_MEM, DST, iSrc, iRoi.w, bpp )
     }
 }
 

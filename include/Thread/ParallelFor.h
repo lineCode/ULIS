@@ -21,7 +21,7 @@ class FThreadPool;
 // ParallelFor
 #define ULIS2_PF_CALL [&]( int32 iLine )
 #define ULIS2_PF_CALL_CAPTURE_VALUE_SAFE_NONBLOCKING( ... ) [ __VA_ARGS__ ]( int32 iLine )
-ULIS2_API void ParallelFor( FThreadPool& iPool, bool iBlocking, const FPerf& iPerf, int32 iNum, const std::function< void( int32 ) >& iFun );
+ULIS2_API void _DEPRECATED_ParallelFor( FThreadPool& iPool, bool iBlocking, const FPerf& iPerf, int32 iNum, const std::function< void( int32 ) >& iFun );
 
 #define ULIS2_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
     if( _PERF.UseMT() && _POOL->GetNumWorkers() > 1 )                                   \

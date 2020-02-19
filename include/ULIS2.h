@@ -27,6 +27,7 @@
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
 #include "Maths/Camera3D.h"
+#include "Maths/Transform2D.h"
 // Thread
 #include "Thread/ThreadPool.h"
 #include "Thread/ParallelFor.h"

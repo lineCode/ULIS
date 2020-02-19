@@ -157,10 +157,10 @@ BlendMT_Separable_SSE_RGBA8( FThreadPool*     iPool
 {
     tFormat fmt = iSource->Format();
     uint8   aid = ( ( ( ~( ( ULIS2_R_RS( fmt ) + 0x1 ) & 0x2 ) ) & 0x2 ) >> 1 ) * 3;
-    const tByte* src    = iSource->DataPtr();
-    tByte*       bdp    = iBackdrop->DataPtr();
-    tSize       src_bps = 4 * iSource->Width();
-    tSize       bdp_bps = 4 * iBackdrop->Width();
+    const tByte*    src     = iSource->DataPtr();
+    tByte*          bdp     = iBackdrop->DataPtr();
+    tSize           src_bps = 4 * iSource->Width();
+    tSize           bdp_bps = 4 * iBackdrop->Width();
 
     ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_Separable_SSE_RGBA8
                                                                        , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * 4 )

@@ -17,6 +17,7 @@
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
+#include "Thread/ThreadPool.h"
 #include <immintrin.h>
 
 ULIS2_NAMESPACE_BEGIN
@@ -74,14 +75,14 @@ Clear_imp( FThreadPool* iPool
     const tSize bps = iDst->BytesPerScanLine();
     const tSize dsh = iRoi.x * bpp;
     tByte*      dsb = iDst->DataPtr() + dsh;
-    #define DST dsb + ( ( iRoi.y + iLine ) * bps )
+    #define DST dsb + ( ( iRoi.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
     #ifdef __AVX2__
     if( iPerf.UseAVX2() && iCPU.info.HW_AVX2 && bps >= 32 )
     {
         const tSize stride = 32;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_AX2( DST, count, stride ); } );
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iRoi.h, InvokeFillMTProcessScanline_AX2, DST, count, stride )
     }
     else
     #endif // __AVX2__
@@ -90,12 +91,12 @@ Clear_imp( FThreadPool* iPool
     {
         const tSize stride = 16;
         const tSize count = iRoi.w * bpp;
-        ParallelFor( *iPool, iBlocking, iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_SSE4_2( DST, count, stride ); } );
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iRoi.h, InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
     }
     else
     #endif // __SSE4_2__
     {
-        ParallelFor( *iPool, iBlocking , iPerf, iRoi.h, ULIS2_PF_CALL { InvokeFillMTProcessScanline_MEM( DST, iRoi.w, bpp ); } );
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iRoi.h, InvokeFillMTProcessScanline_MEM, DST, iRoi.w, bpp )
     }
 }
 

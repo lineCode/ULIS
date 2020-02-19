@@ -18,7 +18,7 @@
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ParallelFor
-void ParallelFor( FThreadPool& iPool, bool iBlocking, const FPerf& iPerf, int32 iNum, const std::function< void( int32 ) >& iFun )
+void _DEPRECATED_ParallelFor( FThreadPool& iPool, bool iBlocking, const FPerf& iPerf, int32 iNum, const std::function< void( int32 ) >& iFun )
 {
     if( iPerf.UseMT() && iPool.GetNumWorkers() > 1 )
     {

@@ -16,6 +16,7 @@
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
+#include "Thread/ThreadPool.h"
 
 ULIS2_NAMESPACE_BEGIN
 // TODO: This could benefit from SSE / AVX with shuffle masks.
@@ -51,8 +52,9 @@ Swap_imp( FThreadPool*  iPool
     const tSize w   = iDst->Width();
     const tSize bps = iDst->BytesPerScanLine();
     tByte*      dsb = iDst->DataPtr();
-    #define DST dsb + ( iLine * bps )
-    ParallelFor( *iPool, iBlocking, iPerf, iDst->Height(), ULIS2_PF_CALL { InvokeSwapMTProcessScanline_MEM( DST, w, iC1, iC2, bpc, bpp ); } );
+    #define DST dsb + ( pLINE * bps )
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iDst->Height(), InvokeSwapMTProcessScanline_MEM, DST, w, iC1, iC2, bpc, bpp )
+
 }
 
 void
