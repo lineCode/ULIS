@@ -24,11 +24,24 @@ public:
     // Construction / Destruction
     FTransform2D();
 
-    std::string ID() const; // Str From Blob
+public:
+    // Public API
+    const std::string& ID() const; // Str From Blob
+    const glm::mat3& Matrix() const;
+    const glm::mat3& InverseMatrix() const;
+
+private:
+    // Private API
+    void UpdateID() const;
+    void UpdateInverseMatrix() const;
 
 private:
     // Private Data Members
-    glm::mat3 mMatrix;
+    glm::mat3           mMatrix;
+    mutable glm::mat3   mInverseMatrix;
+    mutable std::string mID;
+    mutable bool mDirtyID;
+    mutable bool mDirtyInverseMatrix;
 };
 
 ULIS2_API glm::mat3 MakeIdentityMatrix();
