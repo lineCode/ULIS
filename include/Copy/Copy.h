@@ -32,7 +32,8 @@ ULIS2_API void Copy( FThreadPool*       iPool
                    , const FCPU&        iCPU
                    , const FBlock*      iSrc
                    , FBlock*            iDst
-                   , const glm::ivec2&  iDstPos
+                   , int                iDstX
+                   , int                iDstY
                    , bool               iCallInvalidCB );
 
 /// @fn         void CopyRect( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, const FBlock* iSrc, FBlock* iDst, const FRect& iSrcRect, const FPoint& iDstPos, const FPerf& iPerf, bool iCallInvalidCB )
@@ -53,7 +54,8 @@ ULIS2_API void CopyRect( FThreadPool*       iPool
                        , const FBlock*      iSrc
                        , FBlock*            iDst
                        , const FRect&       iSrcRect
-                       , const glm::ivec2&  iDstPos
+                       , int                iDstX
+                       , int                iDstY
                        , bool               iCallInvalidCB );
 
 /// @fn         void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallInvalidCB = true )

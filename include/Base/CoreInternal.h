@@ -58,10 +58,6 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 #define ULIS2_NONBLOCKING   false
 #define ULIS2_CALLCB        true
 #define ULIS2_NOCB          false
-#define ULIS2_SUBPIXEL      true
-#define ULIS2_NOSUBPIXEL    false
 #define ULIS2_AA            true
 #define ULIS2_NOAA          false
-#define ULIS2_NOTRANSFORM   glm::mat2( 1.f )
-#define ULIS2_NODELTA       glm::vec2( 0.f )
 

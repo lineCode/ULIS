@@ -48,7 +48,7 @@ main( int argc, char *argv[] )
         auto start_time = std::chrono::steady_clock::now();
         for( int l = 0; l < testnum; ++l )
         {
-            Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, testAA, &block1, &block2, glm::vec2( 0.f ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+            Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, testAA, &block1, &block2, 0,0, BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
         }
 
         auto end_time   = std::chrono::steady_clock::now();
@@ -63,7 +63,7 @@ main( int argc, char *argv[] )
         auto start_time = std::chrono::steady_clock::now();
         for( int l = 0; l < testnum; ++l )
         {
-            Blend( &threadPool, ULIS2_BLOCKING, perfIntentSSE, cpuInfo, testAA, &block1, &block2, glm::vec2( 0.f ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+            Blend( &threadPool, ULIS2_BLOCKING, perfIntentSSE, cpuInfo, testAA, &block1, &block2, 0,0, BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
         }
 
         auto end_time   = std::chrono::steady_clock::now();
@@ -81,7 +81,7 @@ main( int argc, char *argv[] )
 
     Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockA, green, ULIS2_NOCB );
     Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockB, red, ULIS2_NOCB );
-    Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, testAA, blockBase, &blockA, glm::vec2( 64.1,64.5), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+    Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, testAA, blockBase, &blockA, 0,0, BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
 
     /*
     for( int i = 0; i < NUM_ALPHA_MODES; ++i ) {

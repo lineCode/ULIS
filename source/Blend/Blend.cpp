@@ -30,7 +30,8 @@ Blend( FThreadPool*         iPool
      , bool                 iSubpixel
      , const FBlock*        iSource
      , FBlock*              iBackdrop
-     , const glm::vec2&     iDstPos
+     , float                iDstX
+     , float                iDstY
      , eBlendingMode        iBlendingMode
      , eAlphaMode           iAlphaMode
      , float                iOpacity
@@ -44,7 +45,8 @@ Blend( FThreadPool*         iPool
              , iSource
              , iBackdrop
              , iSource->Rect()
-             , iDstPos
+             , iDstX
+             , iDstY
              , iBlendingMode
              , iAlphaMode
              , iOpacity
@@ -61,7 +63,8 @@ BlendRect( FThreadPool*         iPool
          , const FBlock*        iSource
          , FBlock*              iBackdrop
          , const FRect&         iSrcRect
-         , const glm::vec2&     iDstPos
+         , float                iDstX
+         , float                iDstY
          , eBlendingMode        iBlendingMode
          , eAlphaMode           iAlphaMode
          , float                iOpacity
@@ -76,10 +79,10 @@ BlendRect( FThreadPool*         iPool
     // Ensure the selected source rect actually fits in source dimensions.
     FRect src_roi = iSrcRect & iSource->Rect();
     // Compute coordinates of target rect in destination, with source rect dimension
-    int target_xmin = iSubpixel ? static_cast< int >( FMaths::RoundToNegativeInfinity( iDstPos.x ) )                : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstPos.x ) );
-    int target_ymin = iSubpixel ? static_cast< int >( FMaths::RoundToNegativeInfinity( iDstPos.y ) )                : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstPos.y ) );
-    int target_xmax = iSubpixel ? static_cast< int >( FMaths::RoundToPositiveInfinity( iDstPos.x + src_roi.w ) )    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstPos.x + src_roi.w ) );
-    int target_ymax = iSubpixel ? static_cast< int >( FMaths::RoundToPositiveInfinity( iDstPos.y + src_roi.h ) )    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstPos.y + src_roi.h ) );
+    int target_xmin = iSubpixel ? static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX ) )                : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX ) );
+    int target_ymin = iSubpixel ? static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY ) )                : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY ) );
+    int target_xmax = iSubpixel ? static_cast< int >( FMaths::RoundToPositiveInfinity( iDstX + src_roi.w ) )    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX + src_roi.w ) );
+    int target_ymax = iSubpixel ? static_cast< int >( FMaths::RoundToPositiveInfinity( iDstY + src_roi.h ) )    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY + src_roi.h ) );
     FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
     // Ensure the selected target actually fits in destination
     FRect dst_fit = dst_target & iBackdrop->Rect();
@@ -89,7 +92,7 @@ BlendRect( FThreadPool*         iPool
     src_roi.x -= dst_target.x - dst_fit.x;
     src_roi.y -= dst_target.y - dst_fit.y;
     float       opacity = FMaths::Clamp( iOpacity, 0.f, 1.f );
-    glm::vec2   subpixel_component = iSubpixel ? glm::abs( FMaths::FloatingPart( iDstPos ) ) : glm::vec2( 0.f );
+    glm::vec2   subpixel_component = iSubpixel ? glm::abs( FMaths::FloatingPart( glm::vec2( iDstX, iDstY ) ) ) : glm::vec2( 0.f );
 
     fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iSource->Format(), iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
     if( fptr ) fptr( iPool, iBlocking, iPerf, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity );

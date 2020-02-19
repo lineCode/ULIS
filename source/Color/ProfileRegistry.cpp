@@ -56,11 +56,13 @@ FProfileRegistry::~FProfileRegistry()
 FColorProfile*
 FProfileRegistry::GetProfile( const std::string iKey ) const
 {
-    if ( mLockedSoftwareProfiles.find( iKey ) != mLockedSoftwareProfiles.end() )
-        return  mLockedSoftwareProfiles.at( iKey );
+    auto it = mLockedSoftwareProfiles.find( iKey );
+    if( it != mLockedSoftwareProfiles.end() )
+        return  it->second;
 
-    if ( mFileBasedProfiles.find( iKey ) != mFileBasedProfiles.end() )
-        return  mFileBasedProfiles.at( iKey );
+    it = mFileBasedProfiles.find( iKey );
+    if ( it != mFileBasedProfiles.end() )
+        return  it->second;
 
     return  nullptr;
 }

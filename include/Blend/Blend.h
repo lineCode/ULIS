@@ -41,7 +41,8 @@ ULIS2_API void Blend( FThreadPool*      iPool
                     , bool              iSubpixel
                     , const FBlock*     iSource
                     , FBlock*           iBackdrop
-                    , const glm::vec2&  iDstPost
+                    , float             iDstX
+                    , float             iDstY
                     , eBlendingMode     iBlendingMode
                     , eAlphaMode        iAlphaMode
                     , float             iOpacity
@@ -71,7 +72,8 @@ ULIS2_API void BlendRect( FThreadPool*      iPool
                         , const FBlock*     iSource
                         , FBlock*           iBackdrop
                         , const FRect&      iSrcRect
-                        , const glm::vec2&  iDstPost
+                        , float             iDstX
+                        , float             iDstY
                         , eBlendingMode     iBlendingMode
                         , eAlphaMode        iAlphaMode
                         , float             iOpacity

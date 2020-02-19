@@ -25,6 +25,9 @@ using namespace cppfs;
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
+// ConstDefault
+const std::string gDefaultRet = "";
+/////////////////////////////////////////////////////
 // FFilePathRegistry
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
@@ -101,7 +104,7 @@ FFilePathRegistry::Parse()
 }
 
 
-std::string
+const std::string&
 FFilePathRegistry::GetFilePathForClosestMatchingName( const std::string& iName )
 {
     std::string lowercase_name = iName;
@@ -119,14 +122,11 @@ FFilePathRegistry::GetFilePathForClosestMatchingName( const std::string& iName )
 }
 
 
-std::string
+const std::string&
 FFilePathRegistry::GetFilePathForExactMatchingName( const std::string& iName )
 {
-    if( mMap.find( iName ) == mMap.end() ) {
-        return  "";
-    } else {
-        return  mMap.at( iName );
-    }
+    auto it = mMap.find( iName );
+    return  ( it == mMap.end() ) ? gDefaultRet : it->second;
 }
 
 

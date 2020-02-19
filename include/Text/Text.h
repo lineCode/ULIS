@@ -45,7 +45,8 @@ ULIS2_API void RenderText( FThreadPool*       iPool
                          , const FFont&       iFont
                          , int                iSize
                          , const IPixel&      iColor
-                         , const glm::vec2&   iPos
+                         , float              iDstX
+                         , float              iDstY
                          , const glm::mat2&   iTransform
                          , bool               iCallInvalidCB );
 
@@ -60,7 +61,8 @@ ULIS2_API void RenderText( FThreadPool*       iPool
 ULIS2_API FRect TextMetrics( const std::string& iText
                            , const FFont&       iFont
                            , int                iSize
-                           , const glm::vec2&   iPos
+                           , float              iDstX
+                           , float              iDstY
                            , const glm::mat2&   iTransform );
 
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )

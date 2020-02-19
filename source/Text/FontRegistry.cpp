@@ -128,11 +128,8 @@ FFontFamilyKey::FuzzyFindFontStyleKey( const std::string& iName ) const
     }
     std::sort( matches.begin(), matches.end() );
 
-    if( mStyles.find( std::get< 1 >( matches[0] ) ) == mStyles.end() ) {
-        return  nullptr;
-    } else {
-        return  &mStyles.at( std::get< 1 >( matches[0] ) );
-    }
+    auto it = mStyles.find( std::get< 1 >( matches[0] ) );
+    return  it == mStyles.end() ? nullptr : &mStyles.at( std::get< 1 >( matches[0] ) );
 }
 
 /////////////////////////////////////////////////////
@@ -262,11 +259,8 @@ FFontRegistry::FuzzyFindFontFamily( const std::string& iName ) const
     }
     std::sort( matches.begin(), matches.end() );
 
-    if( mFamilies.find( std::get< 1 >( matches[0] ) ) == mFamilies.end() ) {
-        return  nullptr;
-    } else {
-        return  &( mFamilies.at( std::get< 1 >( matches[0] ) ) );
-    }
+    auto it = mFamilies.find( std::get< 1 >( matches[0] ) );
+    return  it == mFamilies.end() ? nullptr : &( mFamilies.at( std::get< 1 >( matches[0] ) ) );
 }
 
 

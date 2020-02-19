@@ -116,7 +116,7 @@ FBlock* XConv( FThreadPool*   iPool
     FBlock* ret = new FBlock( iSrc->Width(), iSrc->Height(), iDst );
 
     if( iSrc->Format() == iDst )
-        Copy( iPool, iBlocking, iPerf, iCPU, iSrc, ret, ULIS2_NODELTA, ULIS2_NOCB );
+        Copy( iPool, iBlocking, iPerf, iCPU, iSrc, ret, 0, 0, ULIS2_NOCB );
     else
         Conv( iPool, iBlocking, iPerf, iCPU, iSrc, ret, ULIS2_NOCB );
     return  ret;

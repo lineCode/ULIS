@@ -38,7 +38,8 @@ RenderText( FThreadPool*          iPool
           , const FFont&          iFont
           , int                   iSize
           , const IPixel&         iColor
-          , const glm::vec2&      iPos
+          , float                 iDstX
+          , float                 iDstY
           , const glm::mat2&      iTransform
           , bool                  iCallInvalidCB )
 {
@@ -57,7 +58,7 @@ RenderText( FThreadPool*          iPool
     matrix.yy = (FT_Fixed)( iTransform[1].y * 0x10000L );
 
     fpDispatchedTextFunc fptr = QueryDispatchedTextFunctionForParameters( iDst->Format(), iAntialiasing, iPerf, iCPU );
-    if( fptr ) fptr( iPool, iBlocking, iPerf, iDst, iText, iFont, iSize, color, (int)iPos.x, (int)iPos.y, matrix );
+    if( fptr ) fptr( iPool, iBlocking, iPerf, iDst, iText, iFont, iSize, color, iDstX, iDstY, matrix );
 
     iDst->Invalidate( iCallInvalidCB );
 }
@@ -67,12 +68,13 @@ FRect
 TextMetrics( const std::string& iText
            , const FFont&       iFont
            , int                iSize
-           , const glm::vec2&   iPos
+           , float              iDstX
+           , float              iDstY
            , const glm::mat2&   iTransform )
 {
     FRect result;
-    result.x = static_cast< int >( iPos.x );
-    result.y = static_cast< int >( iPos.y );
+    result.x = static_cast< int >( iDstX );
+    result.y = static_cast< int >( iDstY );
     result.w = 1;
     result.h = 1;
 
@@ -104,7 +106,7 @@ TextMetrics( const std::string& iText
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_BITMAP_METRICS_ONLY );
         ULIS2_ERROR( !error, "Error loading glyph" );
 
-        FRect box = FRect::FromXYWH( (int)iPos.x + slot->bitmap_left, (int)iPos.y + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
+        FRect box = FRect::FromXYWH( iDstX + slot->bitmap_left, iDstY + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
         result = result | box;
 
         pen.x += slot->advance.x;

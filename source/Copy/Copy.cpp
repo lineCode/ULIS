@@ -110,10 +110,11 @@ Copy( FThreadPool*      iPool
     , const FCPU&       iCPU
     , const FBlock*     iSrc
     , FBlock*           iDst
-    , const glm::ivec2& iDstPos
+    , int               iDstX
+    , int               iDstY
     , bool              iCallInvalidCB )
 {
-    CopyRect( iPool, iBlocking, iPerf, iCPU, iSrc, iDst, iSrc->Rect(), iDstPos, iCallInvalidCB );
+    CopyRect( iPool, iBlocking, iPerf, iCPU, iSrc, iDst, iSrc->Rect(), iDstX, iDstY, iCallInvalidCB );
 }
 
 
@@ -125,7 +126,8 @@ CopyRect( FThreadPool*      iPool
         , const FBlock*     iSrc
         , FBlock*           iDst
         , const FRect&      iSrcRect
-        , const glm::ivec2& iDstPos
+        , int               iDstX
+        , int               iDstY
         , bool              iCallInvalidCB )
 {
     ULIS2_ASSERT( iPool,                                    "Bad pool" );
@@ -138,10 +140,10 @@ CopyRect( FThreadPool*      iPool
     FRect src_roi = iSrcRect & iSrc->Rect();
 
     // Compute coordinates of target rect in destination, with source rect dimension
-    int target_xmin = iDstPos.x;
-    int target_ymin = iDstPos.y;
-    int target_xmax = iDstPos.x + src_roi.w;
-    int target_ymax = iDstPos.y + src_roi.h;
+    int target_xmin = iDstX;
+    int target_ymin = iDstY;
+    int target_xmax = iDstX + src_roi.w;
+    int target_ymax = iDstY + src_roi.h;
     FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
 
     // Ensure the selected target actually fits in destination

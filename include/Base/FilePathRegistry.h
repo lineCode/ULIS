@@ -37,8 +37,8 @@ public:
     void AddFilter( const std::string& iFilter );
     void AddFilters( const std::vector< std::string >& iFilters );
     void Parse();
-    std::string GetFilePathForClosestMatchingName( const std::string& iName );
-    std::string GetFilePathForExactMatchingName( const std::string& iName );
+    const std::string& GetFilePathForClosestMatchingName( const std::string& iName );
+    const std::string& GetFilePathForExactMatchingName( const std::string& iName );
     const std::unordered_map< std::string, std::string >& GetMap() const;
 
 private:
