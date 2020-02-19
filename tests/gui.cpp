@@ -25,38 +25,74 @@ int
 main( int argc, char *argv[] )
 {
     FThreadPool     threadPool;
-    FPerf           perfIntent( Perf_Best_CPU );
+    FPerf           perfIntentSSE( Perf_MT | Perf_SSE4_2  | Perf_TSPEC );
+    FPerf           perfIntentAVX( Perf_MT |Perf_AVX2    | Perf_TSPEC );
     FCPU            cpuInfo;
     FFontEngine     fontEngine;
     FFontRegistry   fontRegistry( fontEngine );
     FFont           font = fontRegistry.LoadFont( "Arial", "Regular" );
-    FBlock*         blockBase = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/conta/Documents/work/Base.png", ULIS2_FORMAT_RGBA8 );
-    FBlock*         blockOver = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, "C:/Users/conta/Documents/work/Over.png", ULIS2_FORMAT_RGBA8 );
+    FBlock*         blockBase = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, "C:/Users/conta/Documents/work/pattern.png", ULIS2_FORMAT_RGBA8 );
+    FBlock*         blockOver = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, "C:/Users/conta/Documents/work/Over.png", ULIS2_FORMAT_RGBA8 );
     int             wb = blockBase->Width();
     int             hb = blockBase->Height();
     FBlock          blockA( wb * 8+1, hb * 5, ULIS2_FORMAT_RGBA8 );
-    FBlock          blockB( wb * 8+1, hb * 5, ULIS2_FORMAT_RGBA8 );
+    FBlock          blockB( 1, 1, ULIS2_FORMAT_RGBA8 );
     FBlock          blockC( wb, 20, ULIS2_FORMAT_RGBA8 );
+
+    int testsize = 1024;
+    int testnum = 5000;
+    bool testAA = true;
+    {
+        FBlock block1( testsize, testsize, ULIS2_FORMAT_RGBA8 );
+        FBlock block2( testsize, testsize, ULIS2_FORMAT_RGBA8 );
+        auto start_time = std::chrono::steady_clock::now();
+        for( int l = 0; l < testnum; ++l )
+        {
+            Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, testAA, &block1, &block2, glm::vec2( 0.f ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+        }
+
+        auto end_time   = std::chrono::steady_clock::now();
+        auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
+        float average   = delta / (float)testnum;
+        std::cout << "AVX AA:" << average << std::endl;
+    }
+
+    {
+        FBlock block1( testsize, testsize, ULIS2_FORMAT_RGBA8 );
+        FBlock block2( testsize, testsize, ULIS2_FORMAT_RGBA8 );
+        auto start_time = std::chrono::steady_clock::now();
+        for( int l = 0; l < testnum; ++l )
+        {
+            Blend( &threadPool, ULIS2_BLOCKING, perfIntentSSE, cpuInfo, testAA, &block1, &block2, glm::vec2( 0.f ), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+        }
+
+        auto end_time   = std::chrono::steady_clock::now();
+        auto delta      = std::chrono::duration_cast< std::chrono::milliseconds>(end_time - start_time ).count();
+        float average   = delta / (float)testnum;
+        std::cout << "SSE AA:" << average << std::endl;
+    }
 
     FPixel red(    ULIS2_FORMAT_RGB8, { 255,   0,      0   } );
     FPixel green(  ULIS2_FORMAT_RGB8, { 0,     255,    0   } );
     FPixel black(  ULIS2_FORMAT_RGB8, { 0,     0,      0   } );
     FPixel white(  ULIS2_FORMAT_RGB8, { 255,   255,    255 } );
-    Clear( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockA, ULIS2_NOCB );
-    Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &blockC, black, ULIS2_NOCB );
+    Clear( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockA, ULIS2_NOCB );
+    Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockC, black, ULIS2_NOCB );
 
-    for( int i = 0; i < 45; ++i ) {
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOAA, &blockB, &blockA, ULIS2_NODELTA, BM_NORMAL, AM_NORMAL, 0.5f, ULIS2_CALLCB );
-    }
+    Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockA, green, ULIS2_NOCB );
+    Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockB, red, ULIS2_NOCB );
+    Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, testAA, blockBase, &blockA, glm::vec2( 64.1,64.5), BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
 
+    /*
     for( int i = 0; i < NUM_ALPHA_MODES; ++i ) {
         int x = ( i % 8 ) * wb;
         int y = ( i / 8 ) * hb;
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOAA, blockBase,  &blockA, FVec2( x, y ),              BM_NORMAL,          AM_NORMAL, 1.0f, ULIS2_NOCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOAA, blockOver,  &blockA, FVec2( x, y ),              BM_NORMAL,          eAlphaMode( i ), 1.f, ULIS2_NOCB );
-        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_NOAA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_NORMAL,          AM_NORMAL, 0.5f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockBase,  &blockA, FVec2( x, y ),              BM_NORMAL,          AM_NORMAL, 1.0f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, blockOver,  &blockA, FVec2( x, y ),              BM_NORMAL,          eAlphaMode( i ), 1.f, ULIS2_NOCB );
+        Blend( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockC,    &blockA, FVec2( x, y + hb - 20 ),    BM_NORMAL,          AM_NORMAL, 0.5f, ULIS2_NOCB );
         RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwAlphaMode[ i ], font, 16, white, FVec2( x, y + hb - 16 ), FMat2( 1.f ), ULIS2_NOCB );
     }
+    */
 
     // Qt Window
     QApplication    app( argc, argv );

@@ -35,6 +35,20 @@ struct _FBMTPSSSSERGBA8SP {
     const ufloat         mOpacity;
 };
 
+struct _FBMTPSSAVXRGBA8SP {
+    const int32          mCoverageX;
+    const int32          mCoverageY;
+    const tSize          mSrcBps;
+    const uint8          mAid;
+    const Vec8f          mTX;
+    const Vec8f          mTY;
+    const Vec8f          mUX;
+    const Vec8f          mUY;
+    const eBlendingMode  mBlendingMode;
+    const eAlphaMode     mAlphaMode;
+    const ufloat         mOpacity;
+};
+
 ULIS2_API ULIS2_FORCEINLINE void BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8* oIDT, uint8* oAID ) {
     uint8 msp = iSPP - 1;
     switch( iCOD ) {

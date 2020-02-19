@@ -28,60 +28,100 @@ void
 InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const int32                  iLine
                                                          , const tByte*                 iSrc
                                                          , tByte*                       iBdp
-                                                         , const uint32                 iW
-                                                         , const _FBMTPSSSSERGBA8SP&    iParams )
+                                                         , const int32                  iW
+                                                         , const _FBMTPSSAVXRGBA8SP&    iParams )
 {
-    /*
-    // ___|___________________________
-    //    | m00 | m10 | m20 | m30 |     ...
-    // ___|_____|_____|_____|_____|___
-    //    | m00 | m10 | m20 | m30 |     ...
-    // ___|_____|_____|_____|_____|___
-    //       |     |     |
-    //       v     v     v
-    //       v0    v1    v2     -> r0, r1
-    //
-    Vec4f alpha_m11, alpha_m01, alpha_m10, alpha_m00, alpha_vv0, alpha_vv1, alpha_smp;
-    Vec4f smpch_m11, smpch_m01, smpch_m10, smpch_m00, smpch_vv0, smpch_vv1, smpch_smp;
-    alpha_m11 = alpha_m10 = alpha_vv1 = 0.f;
-    smpch_m11 = smpch_m10 = smpch_vv1 = 0.f;
-    int x = 0;
-    for( uint32 i = 0; i < iW; ++i ) {
-        alpha_m00 = alpha_m10;
-        alpha_m01 = alpha_m11;
-        alpha_vv0 = alpha_vv1;
-        smpch_m00 = smpch_m10;
-        smpch_m01 = smpch_m11;
-        smpch_vv0 = smpch_vv1;
-        alpha_m11 = x >= iParams.mCoverageX || iLine >= iParams.mCoverageY ? 0.f : *( iSrc + iParams.mAid ) / 255.f;
-        alpha_m10 = x >= iParams.mCoverageX || iLine < 1 ? 0.f : *( ( iSrc - iParams.mSrcBps ) + iParams.mAid ) / 255.f;
-        alpha_vv1 = alpha_m10 * iParams.mTY + alpha_m11 * iParams.mUY;
+    const bool firstLine    = iLine < 1;
+    const bool lastLine     = iLine >= iParams.mCoverageY;
+    //   The gain is not huge compared to SSE
+    //   _X_ | _X_ | _X_ | _X_ | _X_ | ...
+    //  _____|_____|_____|_____|_____|_
+    //   _X_ | m00 | m10 | m20 | m30 | ...
+    //  _____|_____|_____|_____|_____|_
+    //   _X_ | m01 | m11 | m21 | m31 | ...
+    //  _____|_____|_____|_____|_____|_
+    //        \     \   /     /
+    //         \     \ /     /
+    //          \     X     /
+    //           \   / \   /
+    //            \ /   \ /
+    //             |     |
+    //          vv0vv1 vv1vv2 -> res
+    Vec8f alpha_m00m10, alpha_m10m20, alpha_m01m11, alpha_m11m21, alpha_vv0, alpha_vv1, alpha_smp;
+    Vec8f smpch_m00m10, smpch_m10m20, smpch_m01m11, smpch_m11m21, smpch_vv0, smpch_vv1, smpch_smp;
+
+    alpha_m10m20 = alpha_m11m21 = alpha_vv1 = 0.f;
+    smpch_m10m20 = smpch_m11m21 = smpch_vv1 = 0.f;
+
+    const tByte* p00 = iSrc - iParams.mSrcBps;
+    const tByte* p10 = iSrc - iParams.mSrcBps + 4;
+    const tByte* p01 = iSrc;
+    const tByte* p11 = iSrc + 4;
+
+    for( int32 x = 0; x < iW; x+=2 ) {
+        const bool condA = x     >= iParams.mCoverageX || firstLine   ;
+        const bool condB = x+1   >= iParams.mCoverageX || firstLine   ;
+        const bool condC = x     >= iParams.mCoverageX || lastLine    ;
+        const bool condD = x+1   >= iParams.mCoverageX || lastLine    ;
+
+        // Load Alpha
+        Vec4f la00 = condA ? 0.f : p00[iParams.mAid] / 255.f;
+        Vec4f la10 = condB ? 0.f : p10[iParams.mAid] / 255.f;
+        Vec4f la01 = condC ? 0.f : p01[iParams.mAid] / 255.f;
+        Vec4f la11 = condD ? 0.f : p11[iParams.mAid] / 255.f;
+        alpha_m00m10 = Vec8f( alpha_m10m20.get_high(), la00 );
+        alpha_m01m11 = Vec8f( alpha_m11m21.get_high(), la01 );
+        alpha_m10m20 = Vec8f( la00, la10 );
+        alpha_m11m21 = Vec8f( la01, la11 );
+        alpha_vv0 = alpha_m00m10 * iParams.mTY + alpha_m01m11 * iParams.mUY;
+        alpha_vv1 = alpha_m10m20 * iParams.mTY + alpha_m11m21 * iParams.mUY;
         alpha_smp = alpha_vv0 * iParams.mTX + alpha_vv1 * iParams.mUX;
-        smpch_m11 = x >= iParams.mCoverageX || iLine >= iParams.mCoverageY ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc ) ) ) ) ) / 255.f;
-        smpch_m10 = x >= iParams.mCoverageX || iLine < 1 ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc - iParams.mSrcBps ) ) ) ) ) / 255.f;
-        smpch_vv1 = ( smpch_m10 * alpha_m10 ) * iParams.mTY + ( smpch_m11 * alpha_m11 )  * iParams.mUY;
+
+        // Load Channels
+        Vec4f fc00 = condA ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( p00 ) ) ) ) / 255.f;
+        Vec4f fc10 = condB ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( p10 ) ) ) ) / 255.f;
+        Vec4f fc01 = condC ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( p01 ) ) ) ) / 255.f;
+        Vec4f fc11 = condD ? 0.f : Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( p11 ) ) ) ) / 255.f;
+
+        smpch_m00m10 = Vec8f( smpch_m10m20.get_high(), fc00 );
+        smpch_m01m11 = Vec8f( smpch_m11m21.get_high(), fc01 );
+        smpch_m10m20 = Vec8f( fc00, fc10 );
+        smpch_m11m21 = Vec8f( fc01, fc11 );
+        smpch_vv0 = ( smpch_m00m10 * alpha_m00m10 ) * iParams.mTY + ( smpch_m01m11 * alpha_m01m11 )  * iParams.mUY;
+        smpch_vv1 = ( smpch_m10m20 * alpha_m10m20 ) * iParams.mTY + ( smpch_m11m21 * alpha_m11m21 )  * iParams.mUY;
         smpch_smp = select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * iParams.mTX + smpch_vv1 * iParams.mUX ) / alpha_smp );
-        Vec4f alpha_bdp     = *( iBdp + iParams.mAid ) / 255.f;
-        Vec4f alpha_src     = alpha_smp * iParams.mOpacity;
-        Vec4f alpha_comp    = AlphaNormalSSEF( alpha_src, alpha_bdp );
-        Vec4f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
-        Vec4f alpha_result;
-        ULIS2_ASSIGN_ALPHASSEF( iParams.mAlphaMode, alpha_result, alpha_src, alpha_bdp );
-        Vec4f bdp_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f;
-        Vec4f res_chan;
-        #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpSSEF< _BM >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
+
+        // Comp Alpha
+        Vec8f alpha_bdp     = *( iBdp + iParams.mAid ) / 255.f;
+        Vec8f alpha_src     = alpha_smp * iParams.mOpacity;
+        Vec8f alpha_comp    = AlphaNormalAVXF( alpha_src, alpha_bdp );
+        Vec8f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
+        Vec8f alpha_result;
+        ULIS2_ASSIGN_ALPHAAVXF( iParams.mAlphaMode, alpha_result, alpha_src, alpha_bdp );
+        alpha_result *= 255.f;
+
+        // Comp Channels
+        __m128i bdp128 = _mm_setzero_si128();
+        memcpy( &bdp128, iBdp, 8 );
+        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( bdp128 ) ) ) / 255.f;
+        Vec8f   res_chan;
+        #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpAVXF< _BM >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
         ULIS2_SWITCH_FOR_ALL_DO( iParams.mBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        auto _pack = _mm_cvtps_epi32( res_chan );
-        _pack = _mm_packus_epi32( _pack, _pack );
-        _pack = _mm_packus_epi16( _pack, _pack );
-        *( uint32* )iBdp = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
-        *( iBdp + iParams.mAid ) = uint8( alpha_result[0] * 0xFF );
-        iSrc += 4;
-        iBdp += 4;
-        ++x;
+
+        Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
+        Vec8us _pack1 = compress( _pack0 );
+        auto _pack = _mm_packus_epi16( _pack1, _pack1 );
+        _mm_storeu_si64( iBdp, _pack );
+        iBdp[iParams.mAid]      = static_cast< uint8 >( alpha_result[0] );
+        iBdp[iParams.mAid+4]    = static_cast< uint8 >( alpha_result[4] );
+
+        iBdp += 8;
+        p00 += 8;
+        p10 += 8;
+        p01 += 8;
+        p11 += 8;
     }
-    */
 }
 
 void
@@ -103,11 +143,11 @@ BlendMT_Separable_AVX_RGBA8_Subpixel( FThreadPool*        iPool
     tByte*       bdp    = iBackdrop->DataPtr();
     tSize       src_bps = 4 * iSource->Width();
     tSize       bdp_bps = 4 * iBackdrop->Width();
-    Vec4f   TX( iSubpixelComponent.x ); Vec4f TY( iSubpixelComponent.y );
-    Vec4f   UX = 1.f - TX;              Vec4f UY = 1.f - TY;
-    _FBMTPSSSSERGBA8SP params { iSrcROI.w, iSrcROI.h, src_bps, aid, TX, TY, UX, UY, iBlendingMode, iAlphaMode, iOpacity };
+    Vec8f   TX( iSubpixelComponent.x ); Vec8f TY( iSubpixelComponent.y );
+    Vec8f   UX = 1.f - TX;              Vec8f UY = 1.f - TY;
+    _FBMTPSSAVXRGBA8SP params { iSrcROI.w, iSrcROI.h, src_bps, aid, TX, TY, UX, UY, iBlendingMode, iAlphaMode, iOpacity };
 
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel, pLINE
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel, pLINE
                                                                        , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * 4 )
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * 4 )
                                                                        , iBdpROI.w, params );
@@ -132,33 +172,29 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte*          iSrc
     // The implementation is thread safe, there is no thread concurrency
     // no read / write overlap, even the sse loads do not overflow the bounding
     // rect, because of memcpy load.
-    for( uint32 i = 0; i < iW/2; ++i ) {
+    const uint32 len = iW/2;
+    for( uint32 i = 0; i < len; ++i ) {
         Vec8f   alpha_bdp   = Vec8f( iBdp[iAid], iBdp[iAid + 4] ) / 255.f;
-        Vec8f   alpha_src   = ( Vec8f( iSrc[iAid], iSrc[iAid + 4] ) / 255.f ) * iOpacity;
+        Vec8f   alpha_src   = Vec8f( iSrc[iAid], iSrc[iAid + 4] ) / 255.f * iOpacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_bdp ) );
         Vec8f   alpha_result;
         ULIS2_ASSIGN_ALPHAAVXF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
-        _mm256_loadu_si256( reinterpret_cast< const __m256i* >( iSrc ) );
-        __m128i src128 = _mm_setzero_si128();
-        __m128i bdp128 = _mm_setzero_si128();
-        memcpy( &src128, iSrc, 8 );
-        memcpy( &bdp128, iBdp, 8 );
-        //Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( iSrc ) ) ) ) ) / 255.f;
-        //Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( iBdp ) ) ) ) ) / 255.f;
-        Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( src128 ) ) ) / 255.f;
-        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( bdp128 ) ) ) / 255.f;
+        alpha_result *= 255.f;
+
+        Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( iSrc ) ) ) ) / 255.f;
+        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( iBdp ) ) ) ) / 255.f;
         Vec8f   res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpAVXF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
         ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
-        auto _pack = _mm256_cvtps_epi32( res_chan );
-        _pack = _mm256_packus_epi32( _pack, _pack );
-        _pack = _mm256_packus_epi16( _pack, _pack );
-        memcpy( iBdp, &_pack, 8 );
-        *( iBdp + iAid )        = uint8( alpha_result[0] * 0xFF );
-        *( iBdp + iAid + 4 )    = uint8( alpha_result[4] * 0xFF );
+        Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
+        Vec8us _pack1 = compress( _pack0 );
+        auto _pack = _mm_packus_epi16( _pack1, _pack1 );
+        _mm_storeu_si64( iBdp, _pack );
+        iBdp[iAid]      = static_cast< uint8 >( alpha_result[0] );
+        iBdp[iAid+4]    = static_cast< uint8 >( alpha_result[4] );
 
         iSrc += 8;
         iBdp += 8;
@@ -167,31 +203,25 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte*          iSrc
     // In case W is odd, process one last pixel.
     if( iW%2 ) {
         Vec8f   alpha_bdp   = Vec8f( iBdp[iAid], 0 ) / 255.f;
-        Vec8f   alpha_src   = ( Vec8f( iSrc[iAid], 0 ) / 255.f ) * iOpacity;
+        Vec8f   alpha_src   = Vec8f( iSrc[iAid], 0 ) / 255.f * iOpacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_bdp ) );
         Vec8f   alpha_result;
         ULIS2_ASSIGN_ALPHAAVXF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
-        _mm256_loadu_si256( reinterpret_cast< const __m256i* >( iSrc ) );
-        __m128i src128 = _mm_setzero_si128();
-        __m128i bdp128 = _mm_setzero_si128();
-        memcpy( &src128, iSrc, 4 );
-        memcpy( &bdp128, iBdp, 4 );
-        Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( src128 ) ) ) / 255.f;
-        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( bdp128 ) ) ) / 255.f;
+        alpha_result *= 255.f;
+
+        Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( iSrc ) ) ) ) / 255.f;
+        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( iBdp ) ) ) ) / 255.f;
         Vec8f   res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpAVXF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
         ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
-        auto _pack = _mm256_cvtps_epi32( res_chan );
-        _pack = _mm256_packus_epi32( _pack, _pack );
-        _pack = _mm256_packus_epi16( _pack, _pack );
-        memcpy( iBdp, &_pack, 4 );
-        *( iBdp + iAid )        = uint8( alpha_result[0] * 0xFF );
-
-        iSrc += 4;
-        iBdp += 4;
+        Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
+        Vec8us _pack1 = compress( _pack0 );
+        auto _pack = _mm_packus_epi16( _pack1, _pack1 );
+        _mm_storeu_si32( iBdp, _pack );
+        iBdp[iAid] = static_cast< uint8 >( alpha_result[0] );
     }
 }
 
