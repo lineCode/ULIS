@@ -32,6 +32,7 @@ class FFontRegistry;
 class FFontEngine;
 struct FFormatInfo;
 class FFont;
+class FTransform2D;
 
 ULIS2_NAMESPACE_END
 

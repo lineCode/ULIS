@@ -35,20 +35,18 @@ ULIS2_NAMESPACE_BEGIN
 /// @param      iColor          The color to fill.
 /// @param      iTransform      The text transform.
 /// @param      iCallInvalidCB  Whether or not the function should call the invalid call back in the backdrop block after the operation finished.
-ULIS2_API void RenderText( FThreadPool*       iPool
-                         , bool               iBlocking
-                         , const FPerf&       iPerf
-                         , const FCPU&        iCPU
-                         , bool               iAntialiasing
-                         , FBlock*            iDst
-                         , const std::string& iText
-                         , const FFont&       iFont
-                         , int                iSize
-                         , const IPixel&      iColor
-                         , float              iDstX
-                         , float              iDstY
-                         , const glm::mat2&   iTransform
-                         , bool               iCallInvalidCB );
+ULIS2_API void RenderText( FThreadPool*         iPool
+                         , bool                 iBlocking
+                         , const FPerf&         iPerf
+                         , const FCPU&          iCPU
+                         , bool                 iAntialiasing
+                         , FBlock*              iDst
+                         , const std::string&   iText
+                         , const FFont&         iFont
+                         , int                  iSize
+                         , const IPixel&        iColor
+                         , const FTransform2D&  iTransform
+                         , bool                 iCallInvalidCB );
 
 
 /// @fn         FRect TextMetrics( const std::string& iText, const FFont& iFont, int iSize, const glm::mat2& iTransform )
@@ -58,12 +56,10 @@ ULIS2_API void RenderText( FThreadPool*       iPool
 /// @param      iSize           The text size
 /// @param      iTransform      The text transform.
 /// @return                     A rectangular area containing all the text.
-ULIS2_API FRect TextMetrics( const std::string& iText
-                           , const FFont&       iFont
-                           , int                iSize
-                           , float              iDstX
-                           , float              iDstY
-                           , const glm::mat2&   iTransform );
+ULIS2_API FRect TextMetrics( const std::string&     iText
+                           , const FFont&           iFont
+                           , int                    iSize
+                           , const FTransform2D&    iTransform );
 
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedTextFunc)( FThreadPool*, bool, const FPerf&, FBlock*, const std::string&, const FFont&, int, const tByte*, int, int, FT_Matrix& );

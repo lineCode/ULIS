@@ -20,6 +20,7 @@
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
 #include "Text/Font.h"
+#include "Maths/Transform2D.h"
 #include <immintrin.h>
 
 #include "Text/Dispatch/Dispatch.ipp"
@@ -28,20 +29,18 @@
 
 ULIS2_NAMESPACE_BEGIN
 void
-RenderText( FThreadPool*          iPool
-          , bool                  iBlocking
-          , const FPerf&          iPerf
-          , const FCPU&           iCPU
-          , bool                  iAntialiasing
-          , FBlock*               iDst
-          , const std::string&    iText
-          , const FFont&          iFont
-          , int                   iSize
-          , const IPixel&         iColor
-          , float                 iDstX
-          , float                 iDstY
-          , const glm::mat2&      iTransform
-          , bool                  iCallInvalidCB )
+RenderText( FThreadPool*        iPool
+          , bool                iBlocking
+          , const FPerf&        iPerf
+          , const FCPU&         iCPU
+          , bool                iAntialiasing
+          , FBlock*             iDst
+          , const std::string&  iText
+          , const FFont&        iFont
+          , int                 iSize
+          , const IPixel&       iColor
+          , const FTransform2D& iTransform
+          , bool                iCallInvalidCB )
 {
     ULIS2_ASSERT( iPool,                                    "Bad pool" );
     ULIS2_ASSERT( iDst,                                     "Bad destination" );
@@ -51,38 +50,42 @@ RenderText( FThreadPool*          iPool
     Conv( iColor, nativeColor );
     const tByte* color = nativeColor.Ptr();
 
+    const glm::mat3& _mat = iTransform.Matrix();
     FT_Matrix matrix;
-    matrix.xx = (FT_Fixed)( iTransform[0].x * 0x10000L );
-    matrix.xy = (FT_Fixed)( iTransform[0].y * 0x10000L );
-    matrix.yx = (FT_Fixed)( iTransform[1].x * 0x10000L );
-    matrix.yy = (FT_Fixed)( iTransform[1].y * 0x10000L );
+    matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
+    matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
+    matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
+    matrix.yy = (FT_Fixed)( _mat[1].y * 0x10000L );
+    float dx = _mat[2].x;
+    float dy = _mat[2].y;
 
     fpDispatchedTextFunc fptr = QueryDispatchedTextFunctionForParameters( iDst->Format(), iAntialiasing, iPerf, iCPU );
-    if( fptr ) fptr( iPool, iBlocking, iPerf, iDst, iText, iFont, iSize, color, iDstX, iDstY, matrix );
+    if( fptr ) fptr( iPool, iBlocking, iPerf, iDst, iText, iFont, iSize, color, dx, dy, matrix );
 
     iDst->Invalidate( iCallInvalidCB );
 }
 
 
 FRect
-TextMetrics( const std::string& iText
-           , const FFont&       iFont
-           , int                iSize
-           , float              iDstX
-           , float              iDstY
-           , const glm::mat2&   iTransform )
+TextMetrics( const std::string&     iText
+           , const FFont&           iFont
+           , int                    iSize
+           , const FTransform2D&    iTransform )
 {
+    const glm::mat3& _mat = iTransform.Matrix();
+    FT_Matrix matrix;
+    matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
+    matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
+    matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
+    matrix.yy = (FT_Fixed)( _mat[1].y * 0x10000L );
+    float dx = _mat[2].x;
+    float dy = _mat[2].y;
+
     FRect result;
-    result.x = static_cast< int >( iDstX );
-    result.y = static_cast< int >( iDstY );
+    result.x = static_cast< int >( dx );
+    result.y = static_cast< int >( dy );
     result.w = 1;
     result.h = 1;
-
-    FT_Matrix matrix;
-    matrix.xx = (FT_Fixed)( iTransform[0].x * 0x10000L );
-    matrix.xy = (FT_Fixed)( iTransform[0].y * 0x10000L );
-    matrix.yx = (FT_Fixed)( iTransform[1].x * 0x10000L );
-    matrix.yy = (FT_Fixed)( iTransform[1].y * 0x10000L );
 
     const char* str = iText.c_str();
     int len = (int)iText.size();
@@ -106,7 +109,7 @@ TextMetrics( const std::string& iText
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_BITMAP_METRICS_ONLY );
         ULIS2_ERROR( !error, "Error loading glyph" );
 
-        FRect box = FRect::FromXYWH( iDstX + slot->bitmap_left, iDstY + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
+        FRect box = FRect::FromXYWH( dx + slot->bitmap_left, dy + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
         result = result | box;
 
         pen.x += slot->advance.x;

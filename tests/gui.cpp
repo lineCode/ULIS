@@ -47,7 +47,6 @@ main( int argc, char *argv[] )
     FTransform2D trans( comp );
     trans.DecomposeMatrix( &tx, &ty, &r, &sx, &sy, &skx, &sky );
 
-
     int testsize = 1024;
     int testnum = 50;
     bool testAA = true;
