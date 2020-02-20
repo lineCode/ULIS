@@ -129,7 +129,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( int32 iLINE, const tByte*   
     tByte*       bdp = iBDP;
 
     for( int x = 0; x < iBdpROI.w; ++x ) {
-        src = iSRC + ( ( x + iSrcROI.x ) % iSrcROI.w ) * iFmtInfo->BPP;
+        src = iSRC + ( ( x + iSrcROI.x + iSrcShift.x ) % iSrcROI.w ) * iFmtInfo->BPP;
 
         // Compose Alpha
         const float alpha_bdp       = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
@@ -180,7 +180,7 @@ BlendMT_Separable_MEM_Generic( FThreadPool*         iPool
     const FFormatInfo*  srcFmtInfo  = &iSource->FormatInfo();
     uint8               bpp         = srcFmtInfo->BPP;
     ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >, pLINE
-                                                                       , src + ( ( ( iSrcROI.y + pLINE ) % iSrcROI.h ) * src_bps )
+                                                                       , src + ( ( ( iSrcROI.y + iSrcShift.y + pLINE ) % iSrcROI.h ) * src_bps )
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
                                                                        , srcFmtInfo, iSrcROI, iBdpROI, iSrcShift, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
 }

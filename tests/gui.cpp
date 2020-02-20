@@ -93,6 +93,9 @@ main( int argc, char *argv[] )
     Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockB, red, ULIS2_NOCB );
     //Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, ULIS2_NOAA, blockBase, &blockA, 64.5, 64.5, BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
 
+    int a = (-1)%64;
+
+
     BlendRect( &threadPool
              , ULIS2_BLOCKING
              , 0
@@ -101,7 +104,7 @@ main( int argc, char *argv[] )
              , blockBase
              , &blockA
              , FRect( 0, 0, 65, 64 )
-             , 0, 0, -40, -40, 251, 151
+             , 0, 1, 0, 0, 65*2, 64*2
              , BM_NORMAL
              , AM_NORMAL
              , 1.f
@@ -117,6 +120,7 @@ main( int argc, char *argv[] )
         RenderText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, ULIS2_AA, &blockA, kwAlphaMode[ i ], font, 16, white, FVec2( x, y + hb - 16 ), FMat2( 1.f ), ULIS2_NOCB );
     }
     */
+
 
     // Qt Window
     QApplication    app( argc, argv );
