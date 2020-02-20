@@ -19,8 +19,6 @@
 #include "Thread/ThreadPool.h"
 
 ULIS2_NAMESPACE_BEGIN
-// TODO: This could benefit from SSE / AVX with shuffle masks.
-// This would still require special handling for scanline ends to avoid concurrency issues.
 void
 InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2, tSize iBPC, tSize iBPP )
 {
@@ -34,27 +32,6 @@ InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2
         dst += iBPP;
     }
     delete [] tmp;
-}
-
-
-void
-Swap_imp( FThreadPool*  iPool
-        , bool          iBlocking
-        , const FPerf&  iPerf
-        , const FCPU&   iCPU
-        , FBlock*       iDst
-        , uint8         iC1
-        , uint8         iC2 )
-{
-    const tSize bpc = iDst->BytesPerSample();
-    const tSize spp = iDst->SamplesPerPixel();
-    const tSize bpp = iDst->BytesPerPixel();
-    const tSize w   = iDst->Width();
-    const tSize bps = iDst->BytesPerScanLine();
-    tByte*      dsb = iDst->DataPtr();
-    #define DST dsb + ( pLINE * bps )
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iDst->Height(), InvokeSwapMTProcessScanline_MEM, DST, w, iC1, iC2, bpc, bpp )
-
 }
 
 void
@@ -75,7 +52,14 @@ Swap( FThreadPool*  iPool
     if( iC1 == iC2 )
         return;
 
-    Swap_imp( iPool, iBlocking, iPerf, iCPU, iDst, iC1, iC2 );
+    const tSize bpc = iDst->BytesPerSample();
+    const tSize spp = iDst->SamplesPerPixel();
+    const tSize bpp = iDst->BytesPerPixel();
+    const tSize w   = iDst->Width();
+    const tSize bps = iDst->BytesPerScanLine();
+    tByte*      dsb = iDst->DataPtr();
+    #define DST dsb + ( pLINE * bps )
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iDst->Height(), InvokeSwapMTProcessScanline_MEM, DST, w, iC1, iC2, bpc, bpp )
     iDst->Invalidate( iCallInvalidCB );
 }
 
