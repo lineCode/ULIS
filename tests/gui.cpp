@@ -39,8 +39,17 @@ main( int argc, char *argv[] )
     FBlock          blockB( 1, 1, ULIS2_FORMAT_RGBA8 );
     FBlock          blockC( wb, 20, ULIS2_FORMAT_RGBA8 );
 
+    float tx, ty, r, sx, sy, skx, sky;
+    auto _t = MakeTranslationMatrix( 50, 20 );
+    auto _r = MakeRotationMatrix( 1.57 );
+    auto _s = MakeScaleMatrix( 5, 8 );
+    auto comp = ComposeMatrix( ComposeMatrix( _s, _r ), _t );
+    FTransform2D trans( comp );
+    trans.DecomposeMatrix( &tx, &ty, &r, &sx, &sy, &skx, &sky );
+
+
     int testsize = 1024;
-    int testnum = 5000;
+    int testnum = 50;
     bool testAA = true;
     {
         FBlock block1( testsize, testsize, ULIS2_FORMAT_RGBA8 );

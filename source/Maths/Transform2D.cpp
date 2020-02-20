@@ -27,13 +27,17 @@ ULIS2_NAMESPACE_BEGIN
 //------------------------------------------------------------------- Construction / Destruction
 FTransform2D::FTransform2D()
     : mMatrix( 1.f )
-    , mInverseMatrix( 1.f )
-    , mID("")
     , mDirtyID( true )
     , mDirtyInverseMatrix( true )
 {
-    UpdateID();
-    UpdateInverseMatrix();
+}
+
+
+FTransform2D::FTransform2D( const glm::mat3& iMat )
+    : mMatrix( iMat )
+    , mDirtyID( true )
+    , mDirtyInverseMatrix( true )
+{
 }
 
 
@@ -57,6 +61,59 @@ FTransform2D::InverseMatrix() const {
     UpdateInverseMatrix();
     return  mInverseMatrix;
 }
+
+void
+FTransform2D::DecomposeMatrix( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const {
+    float a = mMatrix[0][0];
+    float b = mMatrix[0][1];
+    float c = mMatrix[1][0];
+    float d = mMatrix[1][1];
+    float e = mMatrix[2][0];
+    float f = mMatrix[2][1];
+    float delta = a * d - b * c;
+
+    float tx = e;
+    float ty = f;
+    float rot = 0.f;
+    float scx = 0.f;
+    float scy = 0.f;
+    float skx = 0.f;
+    float sky = 0.f;
+    // Apply the QR-like decomposition.
+    if( a != 0.f || b != 0.f ) {
+        float r = sqrtf( a * a + b * b );
+        rot = FMaths::Sign( b ) * acosf( a / r );
+        scx = r;
+        scy = delta / r;
+        skx = atanf( ( a * c + b * d ) / ( r * r ) );
+        sky = 0.f;
+    } else if( c != 0.f || d != 0.f ) {
+        float s = sqrtf( c * c + d * d );
+        rot = FMaths::kPIf / 2.f - ( d > 0 ? acosf( -c / s) : - acosf( c / s ) );
+        scx = delta / s;
+        scy = s;
+        skx = 0.f;
+        sky = atanf( ( a * c + b * d ) / ( s * s ) );
+    } else {
+    }
+    *iTx        = tx;
+    *iTy        = ty;
+    *iRotation  = rot;
+    *iScaleX    = scx;
+    *iScaleY    = scy;
+    *iSkewX     = skx;
+    *iSkewY     = sky;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 //----------------------------------------------------------------------------------------------

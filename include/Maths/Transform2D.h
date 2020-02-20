@@ -23,12 +23,14 @@ ULIS2_API class FTransform2D
 public:
     // Construction / Destruction
     FTransform2D();
+    FTransform2D( const glm::mat3& iMat );
 
 public:
     // Public API
     const std::string& ID() const; // Str From Blob
     const glm::mat3& Matrix() const;
     const glm::mat3& InverseMatrix() const;
+    void DecomposeMatrix( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const;
 
 private:
     // Private API
