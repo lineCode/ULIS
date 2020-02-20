@@ -33,5 +33,19 @@ static const char* kwResamplingMethod[] =
     , "Area"
 };
 
+/////////////////////////////////////////////////////
+// eMipsLayout
+enum eMipsLayout
+{
+      MPL_STANDARD
+    , MPL_MIPSONLY
+};
+
+static const char* kwMipsLayout[] =
+{
+      "Standard"
+    , "MipsOnly"
+};
+
 ULIS2_NAMESPACE_END
 
