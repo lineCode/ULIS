@@ -41,4 +41,6 @@ FFormatInfo::FFormatInfo( tFormat iFMT )
         default: for( int i = 0; i < SPP; ++i ) IDT[i] = i;                                           AID = msp; break;
     }
 }
+
 ULIS2_NAMESPACE_END
+

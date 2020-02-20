@@ -119,6 +119,7 @@ BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel( FThreadPool*      iPool
                                                     , FBlock*           iBackdrop
                                                     , const FRect&      iSrcROI
                                                     , const FRect&      iBdpROI
+                                                    , const glm::ivec2& iSrcShift
                                                     , const glm::vec2&  iSubpixelComponent
                                                     , eBlendingMode     iBlendingMode
                                                     , eAlphaMode        iAlphaMode
@@ -217,6 +218,7 @@ BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic( FThreadPool*       iPool
                                            , FBlock*            iBackdrop
                                            , const FRect&       iSrcROI
                                            , const FRect&       iBdpROI
+                                           , const glm::ivec2& iSrcShift
                                            , const glm::vec2&   iSubpixelComponent
                                            , eBlendingMode      iBlendingMode
                                            , eAlphaMode         iAlphaMode

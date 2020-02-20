@@ -35,7 +35,7 @@ main( int argc, char *argv[] )
     FBlock*         blockOver = XLoadFromFile( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, "C:/Users/conta/Documents/work/Over.png", ULIS2_FORMAT_RGBA8 );
     int             wb = blockBase->Width();
     int             hb = blockBase->Height();
-    FBlock          blockA( wb * 8+1, hb * 5, ULIS2_FORMAT_RGBA8 );
+    FBlock          blockA( 800, 600, ULIS2_FORMAT_RGBA8 );
     FBlock          blockB( 1, 1, ULIS2_FORMAT_RGBA8 );
     FBlock          blockC( wb, 20, ULIS2_FORMAT_RGBA8 );
 
@@ -91,7 +91,21 @@ main( int argc, char *argv[] )
 
     Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockA, green, ULIS2_NOCB );
     Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockB, red, ULIS2_NOCB );
-    Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, ULIS2_AA, blockBase, &blockA, 456.7, 300.5, BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+    //Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, ULIS2_NOAA, blockBase, &blockA, 64.5, 64.5, BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+
+    BlendRect( &threadPool
+             , ULIS2_BLOCKING
+             , 0
+             , cpuInfo
+             , ULIS2_NOAA
+             , blockBase
+             , &blockA
+             , FRect( 0, 0, 65, 64 )
+             , 0, 0, -40, -40, 251, 151
+             , BM_NORMAL
+             , AM_NORMAL
+             , 1.f
+             , ULIS2_CALLCB );
 
     /*
     for( int i = 0; i < NUM_ALPHA_MODES; ++i ) {

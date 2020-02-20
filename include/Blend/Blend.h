@@ -72,16 +72,53 @@ ULIS2_API void BlendRect( FThreadPool*      iPool
                         , const FBlock*     iSource
                         , FBlock*           iBackdrop
                         , const FRect&      iSrcRect
+                        , int32             iSrcShiftX
+                        , int32             iSrcShiftY
                         , float             iDstX
                         , float             iDstY
+                        , int32             iDstCoverageW
+                        , int32             iDstCoverageH
                         , eBlendingMode     iBlendingMode
                         , eAlphaMode        iAlphaMode
                         , float             iOpacity
                         , bool              iCallInvalidCB );
 
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
-typedef void (*fpDispatchedBlendFunc)( FThreadPool*, bool, const FPerf&, const FBlock*, FBlock*, const FRect&, const FRect&, const glm::vec2&, eBlendingMode, eAlphaMode, ufloat );
+typedef void (*fpDispatchedBlendFunc)( FThreadPool*, bool, const FPerf&, const FBlock*, FBlock*, const FRect&, const FRect&, const glm::ivec2&, const glm::vec2&, eBlendingMode, eAlphaMode, ufloat );
 ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU );
+
+/*
+struct FPerfParams {
+    FThreadPool*    pool;
+    bool            blocking;
+    const FPerf&    perf;
+    const FCPU&     cpu;
+};
+
+struct FBlendSrcParams {
+    const FBlock*   src;
+    const FRect     rect;
+    int32           shiftx;
+    int32           shifty;
+};
+
+struct FBlendDstParams {
+    FBlock*         dst;
+    float           dstx;
+    float           dsty;
+    int32           coverw;
+    int32           coverh;
+};
+
+struct FBlendParams {
+    bool            subpixel;
+    eBlendingMode   bm;
+    eAlphaMode      am;
+    float           opacity;
+};
+
+ULIS2_API void BlendRect( const FPerfParams&, const FBlendSrcParams&, const FBlendDstParams&, const FBlendParams&, bool );
+*/
 
 ULIS2_NAMESPACE_END
 

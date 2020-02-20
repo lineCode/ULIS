@@ -45,8 +45,12 @@ Blend( FThreadPool*         iPool
              , iSource
              , iBackdrop
              , iSource->Rect()
+             , 0
+             , 0
              , iDstX
              , iDstY
+             , iSource->Width()
+             , iSource->Height()
              , iBlendingMode
              , iAlphaMode
              , iOpacity
@@ -63,8 +67,12 @@ BlendRect( FThreadPool*         iPool
          , const FBlock*        iSource
          , FBlock*              iBackdrop
          , const FRect&         iSrcRect
+         , int32                iSrcShiftX
+         , int32                iSrcShiftY
          , float                iDstX
          , float                iDstY
+         , int32                iDstCoverageW
+         , int32                iDstCoverageH
          , eBlendingMode        iBlendingMode
          , eAlphaMode           iAlphaMode
          , float                iOpacity
@@ -74,28 +82,28 @@ BlendRect( FThreadPool*         iPool
     ULIS2_ASSERT( iSource,                                  "Bad source" );
     ULIS2_ASSERT( iBackdrop,                                "Bad destination" );
     ULIS2_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match" );
-    ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
+    ULIS2_ASSERT( !( (!iBlocking) && ( iCallInvalidCB ) ),  "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
     ULIS2_WARNING( iSource != iBackdrop,                    "Blending a block on itself may trigger data race, use at your own risk or ensure written areas do not overlap." );
     // Ensure the selected source rect actually fits in source dimensions.
     FRect src_roi = iSrcRect & iSource->Rect();
     // Compute coordinates of target rect in destination, with source rect dimension
-    int target_xmin = iSubpixel ? static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX ) )                : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX ) );
-    int target_ymin = iSubpixel ? static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY ) )                : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY ) );
-    int target_xmax = iSubpixel ? static_cast< int >( FMaths::RoundToPositiveInfinity( iDstX + src_roi.w ) )    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX + src_roi.w ) );
-    int target_ymax = iSubpixel ? static_cast< int >( FMaths::RoundToPositiveInfinity( iDstY + src_roi.h ) )    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY + src_roi.h ) );
+    int target_xmin = iSubpixel ? static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX ) )                    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX ) );
+    int target_ymin = iSubpixel ? static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY ) )                    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY ) );
+    int target_xmax = iSubpixel ? static_cast< int >( FMaths::RoundToPositiveInfinity( iDstX + iDstCoverageW ) )    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstX + iDstCoverageW ) );
+    int target_ymax = iSubpixel ? static_cast< int >( FMaths::RoundToPositiveInfinity( iDstY + iDstCoverageH ) )    : static_cast< int >( FMaths::RoundToNegativeInfinity( iDstY + iDstCoverageH ) );
     FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
+
     // Ensure the selected target actually fits in destination
     FRect dst_fit = dst_target & iBackdrop->Rect();
+
     if( dst_fit.Area() <= 0 ) return;
-    int fx = dst_target.x - dst_fit.x;
-    int fy = dst_target.y - dst_fit.y;
     src_roi.x -= dst_target.x - dst_fit.x;
     src_roi.y -= dst_target.y - dst_fit.y;
     float       opacity = FMaths::Clamp( iOpacity, 0.f, 1.f );
-    glm::vec2   subpixel_component = iSubpixel ? glm::abs( FMaths::FloatingPart( glm::vec2( iDstX, iDstY ) ) ) : glm::vec2( 0.f );
+    glm::vec2   subpixel_component = glm::abs( FMaths::FloatingPart( glm::vec2( iDstX, iDstY ) ) );
 
     fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iSource->Format(), iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
-    if( fptr ) fptr( iPool, iBlocking, iPerf, iSource, iBackdrop, src_roi, dst_fit, subpixel_component, iBlendingMode, iAlphaMode, opacity );
+    if( fptr ) fptr( iPool, iBlocking, iPerf, iSource, iBackdrop, src_roi, dst_fit, glm::ivec2( iSrcShiftX, iSrcShiftY ), subpixel_component, iBlendingMode, iAlphaMode, opacity );
 
     iBackdrop->Invalidate( dst_fit, iCallInvalidCB );
 }

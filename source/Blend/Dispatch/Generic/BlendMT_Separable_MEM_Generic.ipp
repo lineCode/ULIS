@@ -24,32 +24,18 @@
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( int32              iLINE
-                                                           , const tByte*       iSRC
-                                                           , tByte*             iBDP
-                                                           , uint8*             iXIDT
-                                                           , uint8              iBPC
-                                                           , uint8              iNCC
-                                                           , uint8              iHEA
-                                                           , uint8              iSPP
-                                                           , uint8              iBPP
-                                                           , uint8              iAID
-                                                           , tSize              iSRC_BPS
-                                                           , const FRect&       iSrcROI
-                                                           , const FRect&       iBdpROI
-                                                           , const glm::vec2&   iSubpixelComponent
-                                                           , eBlendingMode      iBlendingMode
-                                                           , eAlphaMode         iAlphaMode
-                                                           , ufloat             iOpacity )
+InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const int32            iLINE
+                                                           , const tByte*           iSRC
+                                                           , tByte*                 iBDP
+                                                           , const FFormatInfo*     iFmtInfo
+                                                           , const tSize            iSRC_BPS
+                                                           , const FRect            iSrcROI
+                                                           , const FRect            iBdpROI
+                                                           , const glm::vec2        iSubpixelComponent
+                                                           , const eBlendingMode    iBlendingMode
+                                                           , const eAlphaMode       iAlphaMode
+                                                           , const ufloat           iOpacity )
 {
-    const tByte* src = iSRC;
-    tByte*       bdp = iBDP;
-    const glm::vec2&    sub = iSubpixelComponent;
-    glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
-
-    const int maxsrcw = iSrcROI.w - iSrcROI.x >= iBdpROI.w ? iBdpROI.w : static_cast< int >( iBdpROI.w - ceil( sub.x ) );
-    const int maxsrch = iSrcROI.h - iSrcROI.y >= iBdpROI.h ? iBdpROI.h : static_cast< int >( iBdpROI.h - ceil( sub.y ) );
-
     //  -------------
     //  | m00 | m10 |
     //  |_____|_____|___
@@ -57,30 +43,33 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( int32              
     //  |_____|_____|
     //     |  |  |
     //    vv0 | vv1  -> res
+    const tByte*        src = iSRC;
+    tByte*              bdp = iBDP;
+    const glm::vec2     bus = glm::vec2( 1.f ) - iSubpixelComponent;
+    const int           coverageX = iSrcROI.w - iSrcROI.x >= iBdpROI.w ? iBdpROI.w : static_cast< int >( iBdpROI.w - ceil( iSubpixelComponent.x ) );
+    const int           coverageY = iSrcROI.h - iSrcROI.y >= iBdpROI.h ? iBdpROI.h : static_cast< int >( iBdpROI.h - ceil( iSubpixelComponent.y ) );
     float m11, m01, m10, m00, vv0, vv1, res;
     m11 = m10 = vv1 = 0.f;
-
-    m11 = ( iLINE < maxsrch && iSrcROI.x > 0 && iBdpROI.x == 0 )                   ? TYPE2FLOAT( src - iBPP, iAID )             : 0.f;
-    m10 = ( iSrcROI.x > 0 && ( iLINE > 0 || iSrcROI.y > 0 ) )   ? TYPE2FLOAT( src - iBPP - iSRC_BPS, iAID )  : 0.f;
-
-    vv1 = m10 * sub.y + m11 * bus.y;
+    m11 = ( iLINE < coverageY && iSrcROI.x > 0 && iBdpROI.x == 0 )  ? TYPE2FLOAT( src - iFmtInfo->BPP, iFmtInfo->AID )             : 0.f;
+    m10 = ( iSrcROI.x > 0 && ( iLINE > 0 || iSrcROI.y > 0 ) )       ? TYPE2FLOAT( src - iFmtInfo->BPP - iSRC_BPS, iFmtInfo->AID )  : 0.f;
+    vv1 = m10 * iSubpixelComponent.y + m11 * bus.y;
 
     for( int x = 0; x < iBdpROI.w; ++x ) {
         m00 = m10;
         m01 = m11;
         vv0 = vv1;
-        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.x, iSrcROI.y, maxsrcw, maxsrch, sub, bus, vv0, &m11, &m10, &vv1, &res );
-        const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
+        SampleSubpixelAlphaOpt< T >( src, iFmtInfo->HEA, iFmtInfo->AID, iFmtInfo->BPP, iSRC_BPS, x, iLINE, iSrcROI.x, iSrcROI.y, coverageX, coverageY, iSubpixelComponent, bus, vv0, &m11, &m10, &vv1, &res );
+        const float alpha_bdp       = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
         const float alpha_src       = res * iOpacity;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
         const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         float alpha_result;
         ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        for( uint8 j = 0; j < iNCC; ++j )
+        for( uint8 j = 0; j < iFmtInfo->NCC; ++j )
         {
-            uint8 r = iXIDT[j];
-            float srcvf = SampleSubpixelChannelPremult< T >( src, r, iBPP, iSRC_BPS, x, iLINE, iSrcROI.x, iSrcROI.y, maxsrcw, maxsrch, sub, bus, m11, m01, m10, m00, res );
+            uint8 r = iFmtInfo->IDT[j];
+            float srcvf = SampleSubpixelChannelPremult< T >( src, r, iFmtInfo->BPP, iSRC_BPS, x, iLINE, iSrcROI.x, iSrcROI.y, coverageX, coverageY, iSubpixelComponent, bus, m11, m01, m10, m00, res );
             float bdpvf = TYPE2FLOAT( bdp, r );
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
             ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
@@ -88,11 +77,11 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( int32              
         }
 
         // Assign alpha
-        if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+        if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
 
         // Increment ptrs by one pixel
-        src += iBPP;
-        bdp += iBPP;
+        src += iFmtInfo->BPP;
+        bdp += iFmtInfo->BPP;
     }
 }
 
@@ -105,60 +94,55 @@ BlendMT_Separable_MEM_Generic_Subpixel( FThreadPool*        iPool
                                       , FBlock*             iBackdrop
                                       , const FRect&        iSrcROI
                                       , const FRect&        iBdpROI
+                                      , const glm::ivec2&   iSrcShift
                                       , const glm::vec2&    iSubpixelComponent
                                       , eBlendingMode       iBlendingMode
                                       , eAlphaMode          iAlphaMode
                                       , ufloat              iOpacity )
 {
-    uint8* xidt;
-    uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
-    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
-    const tByte*    src = iSource->DataPtr();
-    tByte*          bdp = iBackdrop->DataPtr();
+    const tByte*        src         = iSource->DataPtr();
+    tByte*              bdp         = iBackdrop->DataPtr();
+    tSize               src_bps     = iSource->BytesPerScanLine();
+    tSize               bdp_bps     = iBackdrop->BytesPerScanLine();
+    const FFormatInfo*  srcFmtInfo  = &iSource->FormatInfo();
+    uint8               bpp         = srcFmtInfo->BPP;
     ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T >, pLINE
                                                                        , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * bpp )
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
-                                                                       , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
-                                                                       , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
+                                                                       , srcFmtInfo, src_bps, iSrcROI, iBdpROI, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
 }
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic( int32               iLINE
-                                                  , const tByte*        iSRC
+InvokeBlendMTProcessScanline_Separable_MEM_Generic( int32 iLINE, const tByte*        iSRC
                                                   , tByte*              iBDP
-                                                  , uint8*              iXIDT
-                                                  , uint8               iBCP
-                                                  , uint8               iNCC
-                                                  , uint8               iHEA
-                                                  , uint8               iSPP
-                                                  , uint8               iBPP
-                                                  , uint8               iAID
-                                                  , tSize               iSRC_BPS
+                                                  , const FFormatInfo*  iFmtInfo
                                                   , const FRect&        iSrcROI
                                                   , const FRect&        iBdpROI
+                                                  , const glm::ivec2&   iSrcShift
                                                   , const glm::vec2&    iSubpixelComponent
-                                                  , eBlendingMode       iBlendingMode
-                                                  , eAlphaMode          iAlphaMode
-                                                  , ufloat              iOpacity )
+                                                  , const eBlendingMode iBlendingMode
+                                                  , const eAlphaMode    iAlphaMode
+                                                  , const ufloat        iOpacity )
 {
     const tByte* src = iSRC;
     tByte*       bdp = iBDP;
 
     for( int x = 0; x < iBdpROI.w; ++x ) {
+        src = iSRC + ( ( x + iSrcROI.x ) % iSrcROI.w ) * iFmtInfo->BPP;
+
         // Compose Alpha
-        const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
-        const float alpha_src       = iHEA ? TYPE2FLOAT( src, iAID ) * iOpacity : iOpacity;
+        const float alpha_bdp       = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
+        const float alpha_src       = iFmtInfo->HEA ? TYPE2FLOAT( src, iFmtInfo->AID ) * iOpacity : iOpacity;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
         const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         float alpha_result;
         ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
         // Compose Channels
-        for( uint8 j = 0; j < iNCC; ++j )
+        for( uint8 j = 0; j < iFmtInfo->NCC; ++j )
         {
-            uint8 r = iXIDT[j];
+            uint8 r = iFmtInfo->IDT[j];
             float srcvf = TYPE2FLOAT( src, r );
             float bdpvf = TYPE2FLOAT( bdp, r );
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
@@ -167,39 +151,38 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( int32               iLINE
         }
 
         // Assign alpha
-        if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+        if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
 
         // Increment ptrs by one pixel
-        src += iBPP;
-        bdp += iBPP;
+        bdp += iFmtInfo->BPP;
     }
 }
 
 template< typename T >
 void
-BlendMT_Separable_MEM_Generic( FThreadPool*     iPool
-                             , bool             iBlocking
-                             , const FPerf&     iPerf
-                             , const FBlock*    iSource
-                             , FBlock*          iBackdrop
-                             , const FRect&     iSrcROI
-                             , const FRect&     iBdpROI
-                             , const glm::vec2& iSubpixelComponent
-                             , eBlendingMode    iBlendingMode
-                             , eAlphaMode       iAlphaMode
-                             , ufloat           iOpacity )
+BlendMT_Separable_MEM_Generic( FThreadPool*         iPool
+                             , bool                 iBlocking
+                             , const FPerf&         iPerf
+                             , const FBlock*        iSource
+                             , FBlock*              iBackdrop
+                             , const FRect&         iSrcROI
+                             , const FRect&         iBdpROI
+                             , const glm::ivec2&    iSrcShift
+                             , const glm::vec2&     iSubpixelComponent
+                             , eBlendingMode        iBlendingMode
+                             , eAlphaMode           iAlphaMode
+                             , ufloat               iOpacity )
 {
-    uint8* xidt;
-    uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
-    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
-    const tByte*    src = iSource->DataPtr();
-    tByte*          bdp = iBackdrop->DataPtr();
+    const tByte*        src         = iSource->DataPtr();
+    tByte*              bdp         = iBackdrop->DataPtr();
+    tSize               src_bps     = iSource->BytesPerScanLine();
+    tSize               bdp_bps     = iBackdrop->BytesPerScanLine();
+    const FFormatInfo*  srcFmtInfo  = &iSource->FormatInfo();
+    uint8               bpp         = srcFmtInfo->BPP;
     ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >, pLINE
-                                                                       , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * bpp )
+                                                                       , src + ( ( ( iSrcROI.y + pLINE ) % iSrcROI.h ) * src_bps )
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
-                                                                       , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
-                                                                       , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
+                                                                       , srcFmtInfo, iSrcROI, iBdpROI, iSrcShift, iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
 }
 
 ULIS2_NAMESPACE_END
