@@ -366,12 +366,10 @@ FBlock::SetOnCleanup( const FOnCleanup& iOnCleanup )
     mOnCleanup = iOnCleanup;
 }
 
-
 void
 FBlock::TakeOwnership() {
     mOnCleanup = FOnCleanup( &OnCleanup_FreeMemory );
 }
-
 
 void
 FBlock::ReleaseOwnership() {
