@@ -63,8 +63,8 @@ endif()
 
 # Add Dependencies
 include(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/CMakeLists.txt)
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/build_freetype2    )
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/build_cppfs        )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2    )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs        )
 
 ####################################
 # Add Main Project
@@ -189,7 +189,7 @@ if( ${ULIS2_BUILD_PYTHON_MODULE} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "pymodule/*"
+        "python/*"
     )
 
     add_library( PyULIS2 SHARED ${source_list} )
@@ -206,7 +206,7 @@ if( ${ULIS2_BUILD_PYTHON_MODULE} )
     target_include_directories(
         PyULIS2
         PUBLIC
-        "pymodule/"
+        "python/"
         ${ULIS2_PYTHON_INCLUDE_PATH}
         ${ULIS2_PYTHON_ADD_INCLUDE_PATH}
     )
