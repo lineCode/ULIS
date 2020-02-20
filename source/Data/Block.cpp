@@ -354,5 +354,29 @@ FBlock::TweakFormat( tFormat iFormat )
     mBTT = mHeight * mBPS;
 }
 
+void
+FBlock::SetOnInvalid( const FOnInvalid& iOnInvalid )
+{
+    mOnInvalid = iOnInvalid;
+}
+
+void
+FBlock::SetOnCleanup( const FOnCleanup& iOnCleanup )
+{
+    mOnCleanup = iOnCleanup;
+}
+
+
+void
+FBlock::TakeOwnership() {
+    mOnCleanup = FOnCleanup( &OnCleanup_FreeMemory );
+}
+
+
+void
+FBlock::ReleaseOwnership() {
+    mOnCleanup = FOnCleanup( &OnCleanup_DoNothing );
+}
+
 ULIS2_NAMESPACE_END
 

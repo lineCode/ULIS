@@ -82,6 +82,10 @@ public:
     uint8*                  IndexTable()                                        const;
     const FFormatInfo&      FormatInfo()                                        const;
     void                    TweakFormat( tFormat iFormat );
+    void                    SetOnInvalid( const FOnInvalid& iOnInvalid );
+    void                    SetOnCleanup( const FOnCleanup& iOnCleanup );
+    void                    TakeOwnership();
+    void                    ReleaseOwnership();
 
 private:
     // Private Data Members
