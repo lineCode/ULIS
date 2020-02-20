@@ -75,5 +75,7 @@ public:
     FCPUInfo info;    ///< public member info of type FCPUInfo, all fields should be initialized by constructor.
 };
 
+ULIS2_API extern const FCPU gCpuInfo;
+
 ULIS2_NAMESPACE_END
 

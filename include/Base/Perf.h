@@ -63,5 +63,12 @@ private:
     uint32 flags;
 };
 
+ULIS2_API struct FPerfParams {
+    FThreadPool*    pool;
+    FPerf           intent;
+    bool            blocking;
+    bool            callCB;
+};
+
 ULIS2_NAMESPACE_END
 

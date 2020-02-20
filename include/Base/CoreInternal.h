@@ -15,6 +15,7 @@
 #include "Base/Platform.h"
 #include <cstring>
 #include <iostream>
+#include <memory>
 
 /////////////////////////////////////////////////////
 // Define Namespaces
@@ -51,9 +52,12 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 
 #define ULIS2_WARNING( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " <<  "Warning: " << log << std::endl; }
 #define ULIS2_ERROR( cond, log )    if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Error: " << log << std::endl; ULIS2_CRASH; }
+#define ULIS2_FAIL( log )           { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Error: " << log << std::endl; ULIS2_CRASH; }
+#define ULIS2_FAIL_RET( log, ret )  { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Error: " << log << std::endl; ULIS2_CRASH; } return  ret;
 
 /////////////////////////////////////////////////////
 // Named booleans literals
+#define ULIS2_PASS          true
 #define ULIS2_BLOCKING      true
 #define ULIS2_NONBLOCKING   false
 #define ULIS2_CALLCB        true

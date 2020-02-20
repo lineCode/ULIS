@@ -194,14 +194,14 @@ FBlock::Format() const
 eColorModel
 FBlock::Model() const
 {
-    return  static_cast< eColorModel >( ULIS2_R_MODEL( mInfo.FMT ) );
+    return  mInfo.CM;
 }
 
 
 eType
 FBlock::Type() const
 {
-    return  static_cast< eType >( ULIS2_R_TYPE( mInfo.FMT ) );
+    return  mInfo.TP;
 }
 
 
@@ -215,14 +215,14 @@ FBlock::HasAlpha() const
 bool
 FBlock::Swapped() const
 {
-    return  static_cast< bool >( ULIS2_R_SWAP( mInfo.FMT ) );
+    return  static_cast< bool >( mInfo.SWA );
 }
 
 
 bool
 FBlock::Reversed() const
 {
-    return  static_cast< bool >( ULIS2_R_REVERSE( mInfo.FMT ) );
+    return  static_cast< bool >( mInfo.REV );
 }
 
 

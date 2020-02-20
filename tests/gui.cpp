@@ -110,6 +110,25 @@ main( int argc, char *argv[] )
              , 1.f
              , ULIS2_CALLCB );
 
+    FPerfParams perfParams = {};
+    perfParams.pool       = &threadPool;
+    perfParams.intent     = FPerf( 0 );
+    perfParams.blocking   = ULIS2_BLOCKING;
+    perfParams.callCB     = ULIS2_CALLCB;
+
+    FBlendInfo blendParams = {};
+    blendParams.source              = blockBase;
+    blendParams.backdrop            = &blockA;
+    blendParams.sourceRect          = FRect( 0, 0, 65, 64 );
+    blendParams.tilingTranslation   = FVec2I( -1, -1 );
+    blendParams.backdropPosition    = FVec2F( -20.5, -20.5 );
+    blendParams.backdropCoverage    = FVec2I( 211, 5643 );
+    blendParams.subpixelFlag        = ULIS2_NOAA;
+    blendParams.blendingMode        = BM_NORMAL;
+    blendParams.alphaMode           = AM_NORMAL;
+    blendParams.opacityValue        = 1.f;
+    BlendRect( perfParams, blendParams );
+
     /*
     for( int i = 0; i < NUM_ALPHA_MODES; ++i ) {
         int x = ( i % 8 ) * wb;

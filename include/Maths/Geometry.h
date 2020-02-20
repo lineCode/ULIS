@@ -17,6 +17,24 @@
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
+// TVec2
+template< typename T >
+struct ULIS2_API TVec2
+{
+    T x;
+    T y;
+
+    TVec2() : x( 0 ), y( 0 ) {}
+    TVec2( T iX, T iY ) : x( iX ), y( iY ) {};
+};
+typedef TVec2< unsigned int >   FVec2U;
+typedef TVec2< int >            FVec2I;
+typedef TVec2< float >          FVec2F;
+typedef TVec2< double >         FVec2D;
+typedef TVec2< uint8 >          FVec2U8;
+typedef TVec2< uint16 >         FVec2U16;
+typedef TVec2< uint32 >         FVec2U32;
+/////////////////////////////////////////////////////
 // FRect
 struct ULIS2_API FRect
 {

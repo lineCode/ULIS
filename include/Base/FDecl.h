@@ -27,6 +27,7 @@ class FPixelProxy;
 struct FRect;
 class FThreadPool;
 class FPerf;
+struct FPerfParams;
 struct FCPU;
 class FFontRegistry;
 class FFontEngine;

@@ -15,6 +15,8 @@
 #include "cpu_x86.h"
 
 ULIS2_NAMESPACE_BEGIN
+ULIS2_API const FCPU gCpuInfo = FCPU();
+
 /////////////////////////////////////////////////////
 /// FCPU
 FCPU::FCPU()

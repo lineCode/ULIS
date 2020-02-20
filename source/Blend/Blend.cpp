@@ -106,10 +106,64 @@ BlendRect( FThreadPool*         iPool
     int srcshifty = -iSrcShiftY;
     while( srcshiftx < 0 ) srcshiftx+=src_roi.w;
     while( srcshifty < 0 ) srcshifty+=src_roi.h;
+    /*
     fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iSource->Format(), iBlendingMode, iAlphaMode, iSubpixel, iPerf, iCPU );
     if( fptr ) fptr( iPool, iBlocking, iPerf, iSource, iBackdrop, src_roi, dst_fit, glm::ivec2( srcshiftx, srcshifty ), subpixel_component, iBlendingMode, iAlphaMode, opacity );
-
     iBackdrop->Invalidate( dst_fit, iCallInvalidCB );
+    */
+}
+
+void BlendRect( const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams ) {
+    // Assertions
+    ULIS2_ASSERT( iBlendParams.source,                                              "Bad source." );
+    ULIS2_ASSERT( iBlendParams.backdrop,                                            "Bad destination." );
+    ULIS2_ASSERT( iBlendParams.source->Format() == iBlendParams.backdrop->Format(), "Formats do not match." );
+    ULIS2_ASSERT( !iPerfParams.intent.UseMT() || iPerfParams.pool,                  "Multithreading flag is specified but no thread pool is provided." );
+    ULIS2_ASSERT( !iPerfParams.callCB || iPerfParams.blocking,                      "Callback flag is specified on non-blocking operation." );
+
+    // Compute coordinates of target rect in destination, with source rect dimension
+    FRect src_roi = iBlendParams.sourceRect & iBlendParams.source->Rect();
+    FVec2I dstCoverage = FMaths::Max( iBlendParams.backdropCoverage, 0 );
+    int target_xmin, target_ymin, target_xmax, target_ymax;
+
+    if( iBlendParams.subpixelFlag ) {
+        target_xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( iBlendParams.backdropPosition.x ) );
+        target_ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( iBlendParams.backdropPosition.y ) );
+        target_xmax = static_cast< int >( FMaths::RoundToPositiveInfinity( iBlendParams.backdropPosition.x + dstCoverage.x ) );
+        target_ymax = static_cast< int >( FMaths::RoundToPositiveInfinity( iBlendParams.backdropPosition.y + dstCoverage.y ) );
+    } else {
+        target_xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( iBlendParams.backdropPosition.x ) );
+        target_ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( iBlendParams.backdropPosition.y ) );
+        target_xmax = static_cast< int >( FMaths::RoundToNegativeInfinity( iBlendParams.backdropPosition.x + dstCoverage.x ) );
+        target_ymax = static_cast< int >( FMaths::RoundToNegativeInfinity( iBlendParams.backdropPosition.y + dstCoverage.y ) );
+    }
+
+    // Ensure the selected target actually fits in destination
+    FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
+    FRect dst_fit    = dst_target & iBlendParams.backdrop->Rect();
+    src_roi.x       -= dst_target.x - dst_fit.x;
+    src_roi.y       -= dst_target.y - dst_fit.y;
+
+    // Check no-op
+    if( dst_fit.Area() <= 0 )
+        return;
+
+    // Bake forward params.
+    // Shared Ptr for thread safety and scope life time extension.
+    // Use for non blocking multithreaded processing.
+    std::shared_ptr< FBlendInfo > forwardBlendInfo = std::make_shared< FBlendInfo >( iBlendParams );
+    forwardBlendInfo->sourceRect            = src_roi;
+    forwardBlendInfo->tilingTranslation     = FMaths::PyModulo( iBlendParams.tilingTranslation, src_roi.w );
+    forwardBlendInfo->backdropPosition      = FMaths::AbsFloatingPart( iBlendParams.backdropPosition );
+    forwardBlendInfo->backdropCoverage      = dstCoverage;
+    forwardBlendInfo->opacityValue          = FMaths::Clamp( iBlendParams.opacityValue, 0.f, 1.f );
+    forwardBlendInfo->_backdropWorkingRect  = dst_fit;
+
+    // Query dispatched method
+    fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iBlendParams.source->FormatInfo(), iPerfParams, *forwardBlendInfo );
+    if( fptr ) fptr( forwardBlendInfo->source->FormatInfo(), iPerfParams, forwardBlendInfo );
+
+    forwardBlendInfo->backdrop->Invalidate( forwardBlendInfo->_backdropWorkingRect, iPerfParams.callCB );
 }
 
 ULIS2_NAMESPACE_END

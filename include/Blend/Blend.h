@@ -15,7 +15,8 @@
 #include "Base/Core.h"
 #include "Blend/BlendingPRNGSeed.h"
 #include "Blend/Modes.h"
-#include <glm/vec2.hpp>
+#include "Maths/Geometry.h"
+#include <memory>
 
 ULIS2_NAMESPACE_BEGIN
 /// @fn         void Blend( FThreadPool* iPool, bool iBlocking, const FPerf& iPerf, const FCPU& iCPU, const FBlock* iSource, FBlock* iBackdrop, const glm::ivec2& DstPos, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, float iOpacity, bool iCallInvalidCB )
@@ -83,42 +84,28 @@ ULIS2_API void BlendRect( FThreadPool*      iPool
                         , float             iOpacity
                         , bool              iCallInvalidCB );
 
+
+ULIS2_API struct FBlendInfo {
+    const FBlock*   source;
+    FBlock*         backdrop;
+    FRect           sourceRect;
+    FVec2I          tilingTranslation;
+    FVec2F          backdropPosition;
+    FVec2I          backdropCoverage;
+    bool            subpixelFlag;
+    eBlendingMode   blendingMode;
+    eAlphaMode      alphaMode;
+    float           opacityValue;
+
+    // Internal
+    FRect           _backdropWorkingRect;
+};
+
+ULIS2_API void BlendRect( const FPerfParams&, const FBlendInfo& );
+
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
-typedef void (*fpDispatchedBlendFunc)( FThreadPool*, bool, const FPerf&, const FBlock*, FBlock*, const FRect&, const FRect&, const glm::ivec2&, const glm::vec2&, eBlendingMode, eAlphaMode, ufloat );
-ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU );
-
-/*
-struct FPerfParams {
-    FThreadPool*    pool;
-    bool            blocking;
-    const FPerf&    perf;
-    const FCPU&     cpu;
-};
-
-struct FBlendSrcParams {
-    const FBlock*   src;
-    const FRect     rect;
-    int32           shiftx;
-    int32           shifty;
-};
-
-struct FBlendDstParams {
-    FBlock*         dst;
-    float           dstx;
-    float           dsty;
-    int32           coverw;
-    int32           coverh;
-};
-
-struct FBlendParams {
-    bool            subpixel;
-    eBlendingMode   bm;
-    eAlphaMode      am;
-    float           opacity;
-};
-
-ULIS2_API void BlendRect( const FPerfParams&, const FBlendSrcParams&, const FBlendDstParams&, const FBlendParams&, bool );
-*/
+typedef void (*fpDispatchedBlendFunc)( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams );
+ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams );
 
 ULIS2_NAMESPACE_END
 

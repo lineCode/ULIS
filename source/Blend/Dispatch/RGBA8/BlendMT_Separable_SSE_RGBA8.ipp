@@ -15,6 +15,7 @@
 #include "Base/Core.h"
 #include "Blend/Blend.h"
 #include "Base/Helpers.ipp"
+#include "Blend/Func/AlphaFuncF.ipp"
 #include "Blend/Func/AlphaFuncSSEF.ipp"
 #include "Blend/Func/SeparableBlendFuncSSEF.ipp"
 #include "Blend/Modes.h"

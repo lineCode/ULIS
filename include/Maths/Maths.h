@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Maths/Geometry.h"
 #include <cmath>
 #include <immintrin.h>
 #include <glm/vec2.hpp>
@@ -63,6 +64,11 @@ struct ULIS2_API FMaths
     }
 
     template< typename T >
+    static ULIS2_FORCEINLINE TVec2< T > Max( const TVec2< T >& iValue, T iMax ) {
+        return  TVec2< T >( Max< T >( iValue.x, iMax ), Max< T >( iValue.y, iMax ) );
+    }
+
+    template< typename T >
     static ULIS2_FORCEINLINE T Min3( T iA, T iB, T iC ) {
         return  Min( iA, Min( iB, iC ) );
     }
@@ -85,6 +91,16 @@ struct ULIS2_API FMaths
     template< typename T >
     static ULIS2_FORCEINLINE T Sign( T iValue ) {
         return  iValue < T(0) ? T(-1) : T(1);
+    }
+
+    template< typename T >
+    static ULIS2_FORCEINLINE T PyModulo( T iValue, T iMod ) {
+        return  ( iMod + ( iValue % iMod ) ) % iMod;
+    }
+
+    template< typename T >
+    static ULIS2_FORCEINLINE TVec2< T > PyModulo( const TVec2< T >& iValue, T iMod ) {
+        return  TVec2< T >( PyModulo( iValue.x, iMod ), PyModulo( iValue.y, iMod ) );
     }
 
     static ULIS2_FORCEINLINE double RadToDeg( double iRad )
@@ -117,6 +133,18 @@ struct ULIS2_API FMaths
 
     static ULIS2_FORCEINLINE glm::vec2 FloatingPart( const glm::vec2& iVec ) {
         return  glm::vec2( FloatingPartOfNumber( iVec.x ), FloatingPartOfNumber( iVec.y ) );
+    }
+
+    static ULIS2_FORCEINLINE FVec2F FloatingPart( const FVec2F& iVec ) {
+        return  FVec2F( FloatingPartOfNumber( iVec.x ), FloatingPartOfNumber( iVec.y ) );
+    }
+
+    static ULIS2_FORCEINLINE FVec2F Abs( const FVec2F& iVec ) {
+        return  FVec2F( Abs( iVec.x ), Abs( iVec.y ) );
+    }
+
+    static ULIS2_FORCEINLINE FVec2F AbsFloatingPart( const FVec2F& iVec ) {
+        return  Abs( FloatingPart( iVec ) );
     }
 
     static ULIS2_FORCEINLINE int RoundNumber( float iNumber )
