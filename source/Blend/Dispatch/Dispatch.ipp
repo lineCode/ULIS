@@ -28,7 +28,6 @@
 #include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp"
 // MT AVX RGBA8
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_AVX_RGBA8.ipp"
-#include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_AVX_RGBA8.ipp"
 
 // Note on dispatch:
 // First, the appropriate template instanciation is selected for type
@@ -68,8 +67,8 @@ fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_RGBA8( uint32 iFormat, eBlendingMode iBlendingMode, eAlphaMode iAlphaMode, bool iSubpixel, const FPerf& iPerf, const FCPU& iCPU ) {
     switch( BlendingModeQualifier( iBlendingMode ) ) {
         case BMQ_MISC           : return  ULIS2_SELECT_COMP_OPT(    iSubpixel, BlendMT_Misc_MEM_Generic, uint8  );
-        case BMQ_SEPARABLE      : return  iPerf.UseAVX2() ? ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Separable_AVX_RGBA8 )      : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Separable_SSE_RGBA8 );
-        case BMQ_NONSEPARABLE   : return  iPerf.UseAVX2() ? ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_AVX_RGBA8 )   : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_SSE_RGBA8 );
+        case BMQ_SEPARABLE      : return  iPerf.UseAVX2() ? ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Separable_AVX_RGBA8 ) : ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_Separable_SSE_RGBA8 );
+        case BMQ_NONSEPARABLE   : return  ULIS2_SELECT_COMP_OP( iSubpixel, BlendMT_NonSeparable_SSE_RGBA8 );
     }
     ULIS2_ASSERT( false, "Bad input no dispatch path found" );
     return  nullptr;
