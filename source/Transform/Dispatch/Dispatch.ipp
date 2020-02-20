@@ -16,7 +16,7 @@
 #include "Transform/Transform.h"
 #include "Transform/Methods.h"
 // Dispatch
-#include "Transform/Dispatch/Generic/TransformMT_NearestNeighbour_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformMT_NN_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformMT_Bilinear_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformMT_Bicubic_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformMT_Area_MEM_Generic.ipp"

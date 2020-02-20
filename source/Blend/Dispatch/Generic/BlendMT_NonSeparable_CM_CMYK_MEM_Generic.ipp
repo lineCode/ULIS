@@ -60,7 +60,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_CMYK_MEM_Generic_Subpixel( int32   
         m00 = m10;
         m01 = m11;
         vv0 = vv1;
-        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
         const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
         const float alpha_src       = res * iOpacity;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
@@ -68,10 +68,10 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_CMYK_MEM_Generic_Subpixel( int32   
         float alpha_result;
         ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        float subpixel_C = SampleSubpixelChannelPremult< T >( src, iXIDT[0], iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
-        float subpixel_M = SampleSubpixelChannelPremult< T >( src, iXIDT[1], iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
-        float subpixel_Y = SampleSubpixelChannelPremult< T >( src, iXIDT[2], iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
-        float subpixel_K = SampleSubpixelChannelPremult< T >( src, iXIDT[2], iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+        float subpixel_C = SampleSubpixelChannelPremult< T >( src, iXIDT[0], iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+        float subpixel_M = SampleSubpixelChannelPremult< T >( src, iXIDT[1], iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+        float subpixel_Y = SampleSubpixelChannelPremult< T >( src, iXIDT[2], iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+        float subpixel_K = SampleSubpixelChannelPremult< T >( src, iXIDT[2], iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
         FCMYKF  src_cmykf = { subpixel_C, subpixel_M, subpixel_Y, subpixel_K };
         FCMYKF  bdp_cmykf = { TYPE2FLOAT( bdp, iXIDT[0] ), TYPE2FLOAT( bdp, iXIDT[1] ), TYPE2FLOAT( bdp, iXIDT[2] ), TYPE2FLOAT( bdp, iXIDT[3] ) };
         FRGBF   src_rgbf = CMYKToRGB( src_cmykf );

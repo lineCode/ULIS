@@ -149,10 +149,10 @@ ULIS2_API ULIS2_FORCEINLINE void  BuildTraceTextParams( const FBlock*   iDST
 template< typename T >
 ULIS2_API ULIS2_FORCEINLINE
 void
-SampleSubpixelAlphaOpt( const tByte* iPtr, bool iHEA, uint8 iChannel, int64 iBPP, int64 iBPS, int64 iX, int64 iY, int64 iROI_W, int64 iROI_H, const glm::vec2& iT, const glm::vec2& iU, float iVV0, float* oM11, float* oM10, float* oVV1, float* oRES ) {
+SampleSubpixelAlphaOpt( const tByte* iPtr, bool iHEA, uint8 iChannel, int64 iBPP, int64 iBPS, int64 iX, int64 iY, int64 iROI_X, int64 iROI_Y, int64 iROI_W, int64 iROI_H, const glm::vec2& iT, const glm::vec2& iU, float iVV0, float* oM11, float* oM10, float* oVV1, float* oRES ) {
     if( iHEA ) {
-        *oM11 = ( iY >= iROI_H || iX >= iROI_W )    ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
-        *oM10 = ( iX >= iROI_W || iY - 1 < 0 )      ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
+        *oM11 = ( iY < iROI_H && iX < iROI_W )              ? TYPE2FLOAT( iPtr, iChannel ) : 0.f;
+        *oM10 = ( iX < iROI_W && ( iY > 0 || iROI_Y > 0 ) ) ? TYPE2FLOAT( iPtr - iBPS,        iChannel ) : 0.f;
     } else {
         *oM11 = ( iY >= iROI_H || iX >= iROI_W )    ? 0.f : 1.f;
         *oM10 = ( iX >= iROI_W || iY - 1 < 0 )      ? 0.f : 1.f;
@@ -170,6 +170,8 @@ SampleSubpixelChannelPremult( const tByte* iPtr
                             , int64 iBPS
                             , int64 iX
                             , int64 iY
+                            , int64 iROI_X
+                            , int64 iROI_Y
                             , int64 iROI_W
                             , int64 iROI_H
                             , const glm::vec2& iT
@@ -179,10 +181,19 @@ SampleSubpixelChannelPremult( const tByte* iPtr
                             , float iA10
                             , float iA00
                             , float iRES ) {
+
+    float m11 = ( iY < iROI_H && iX < iROI_W )              ?               TYPE2FLOAT( iPtr,               iChannel ) : 0.f;
+    float m01 = ( iY < iROI_H && ( iX > 0 || iROI_X > 0 ) ) ?               TYPE2FLOAT( iPtr - iBPP,        iChannel ) : 0.f;
+    float m10 = ( iX < iROI_W && ( iY > 0 || iROI_Y > 0 ) ) ?               TYPE2FLOAT( iPtr - iBPS,        iChannel ) : 0.f;
+    float m00 = ( ( iX > 0 || iROI_X > 0 ) && ( iY > 0 || iROI_Y > 0 ) ) ?  TYPE2FLOAT( iPtr - iBPS - iBPP, iChannel ) : 0.f;
+
+    /*
     float m11 = ( iY >= iROI_H || iX >= iROI_W )    ? 0.f : TYPE2FLOAT( iPtr,               iChannel );
     float m01 = ( iY >= iROI_H || iX - 1 < 0 )      ? 0.f : TYPE2FLOAT( iPtr - iBPP,        iChannel );
     float m10 = ( iX >= iROI_W || iY - 1 < 0 )      ? 0.f : TYPE2FLOAT( iPtr - iBPS,        iChannel );
     float m00 = ( iX - 1 < 0 || iY - 1 < 0 )        ? 0.f : TYPE2FLOAT( iPtr - iBPS - iBPP, iChannel );
+    */
+
     float v1 = ( m00 * iA00 ) * iT.y + ( m01 * iA01 ) * iU.y;
     float v2 = ( m10 * iA10 ) * iT.y + ( m11 * iA11 ) * iU.y;
     return  iRES == 0.f ? 0.f : ( ( v1 ) * iT.x + ( v2 ) * iU.x ) / iRES;

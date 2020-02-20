@@ -68,7 +68,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel( int32
         m00 = m10;
         m01 = m11;
         vv0 = vv1;
-        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
         const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
         const float alpha_src       = res * iOpacity;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
@@ -78,7 +78,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel( int32
 
         for( uint8 j = 0; j < iNCC; ++j ) {
             uint8 r = iXIDT[j];
-            float srcvf = SampleSubpixelChannelPremult< T >( src, r, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            float srcvf = SampleSubpixelChannelPremult< T >( src, r, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
             FLOAT2TYPE( src_sample.Ptr(), r, srcvf );
         }
         bdp_proxy.SetPtr( bdp );

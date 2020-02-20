@@ -47,6 +47,9 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( int32              
     const glm::vec2&    sub = iSubpixelComponent;
     glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
 
+    const int maxsrcw = iSrcROI.w - iSrcROI.x >= iBdpROI.w ? iBdpROI.w : static_cast< int >( iBdpROI.w - ceil( sub.x ) );
+    const int maxsrch = iSrcROI.h - iSrcROI.y >= iBdpROI.h ? iBdpROI.h : static_cast< int >( iBdpROI.h - ceil( sub.y ) );
+
     //  -------------
     //  | m00 | m10 |
     //  |_____|_____|___
@@ -56,11 +59,17 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( int32              
     //    vv0 | vv1  -> res
     float m11, m01, m10, m00, vv0, vv1, res;
     m11 = m10 = vv1 = 0.f;
+
+    m11 = ( iLINE < maxsrch && iSrcROI.x > 0 && iBdpROI.x == 0 )                   ? TYPE2FLOAT( src - iBPP, iAID )             : 0.f;
+    m10 = ( iSrcROI.x > 0 && ( iLINE > 0 || iSrcROI.y > 0 ) )   ? TYPE2FLOAT( src - iBPP - iSRC_BPS, iAID )  : 0.f;
+
+    vv1 = m10 * sub.y + m11 * bus.y;
+
     for( int x = 0; x < iBdpROI.w; ++x ) {
         m00 = m10;
         m01 = m11;
         vv0 = vv1;
-        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.x, iSrcROI.y, maxsrcw, maxsrch, sub, bus, vv0, &m11, &m10, &vv1, &res );
         const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
         const float alpha_src       = res * iOpacity;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
@@ -71,7 +80,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( int32              
         for( uint8 j = 0; j < iNCC; ++j )
         {
             uint8 r = iXIDT[j];
-            float srcvf = SampleSubpixelChannelPremult< T >( src, r, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+            float srcvf = SampleSubpixelChannelPremult< T >( src, r, iBPP, iSRC_BPS, x, iLINE, iSrcROI.x, iSrcROI.y, maxsrcw, maxsrch, sub, bus, m11, m01, m10, m00, res );
             float bdpvf = TYPE2FLOAT( bdp, r );
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
             ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )

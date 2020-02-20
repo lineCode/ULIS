@@ -25,8 +25,8 @@ int
 main( int argc, char *argv[] )
 {
     FThreadPool     threadPool;
-    FPerf           perfIntentSSE( Perf_MT | Perf_SSE4_2  | Perf_TSPEC );
-    FPerf           perfIntentAVX( Perf_MT |Perf_AVX2    | Perf_TSPEC );
+    FPerf           perfIntentSSE( 0 );
+    FPerf           perfIntentAVX( 0 );
     FCPU            cpuInfo;
     FFontEngine     fontEngine;
     FFontRegistry   fontRegistry( fontEngine );
@@ -47,6 +47,7 @@ main( int argc, char *argv[] )
     FTransform2D trans( comp );
     trans.DecomposeMatrix( &tx, &ty, &r, &sx, &sy, &skx, &sky );
 
+    /*
     int testsize = 1024;
     int testnum = 50;
     bool testAA = true;
@@ -79,6 +80,7 @@ main( int argc, char *argv[] )
         float average   = delta / (float)testnum;
         std::cout << "SSE AA:" << average << std::endl;
     }
+    */
 
     FPixel red(    ULIS2_FORMAT_RGB8, { 255,   0,      0   } );
     FPixel green(  ULIS2_FORMAT_RGB8, { 0,     255,    0   } );
@@ -89,7 +91,7 @@ main( int argc, char *argv[] )
 
     Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockA, green, ULIS2_NOCB );
     Fill( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, &blockB, red, ULIS2_NOCB );
-    Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, testAA, blockBase, &blockA, 0,0, BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
+    Blend( &threadPool, ULIS2_BLOCKING, perfIntentAVX, cpuInfo, ULIS2_AA, blockBase, &blockA, 456.7, 300.5, BM_NORMAL, AM_NORMAL, 1.f, ULIS2_CALLCB );
 
     /*
     for( int i = 0; i < NUM_ALPHA_MODES; ++i ) {

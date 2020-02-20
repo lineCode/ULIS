@@ -76,7 +76,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( int32               iLIN
                 m00 = m10;
                 m01 = m11;
                 vv0 = vv1;
-                SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+                SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
                 const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
                 const float alpha_src       = res * iOpacity;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
@@ -108,7 +108,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( int32               iLIN
                 m00 = m10;
                 m01 = m11;
                 vv0 = vv1;
-                SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
+                SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
                 const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
                 const float alpha_src       = res * iOpacity;
                 const tSize bayerX          = ( iBdpROI.x + x )     % 8;
