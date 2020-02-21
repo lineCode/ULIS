@@ -109,11 +109,9 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iB
     const FBlendInfo&   blendInfo   = *iBlendParams;
     const tByte*        src         = iSrc;
     tByte*              bdp         = iBdp;
-    const tSize         src_decal_x = blendInfo.sourceRect.x + blendInfo.tilingTranslation.x;
-    const tSize         carriageReturn = 0;
 
     for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
-        src = iSrc + ( ( x + src_decal_x ) % blendInfo.sourceRect.w ) * iFmtInfo->BPP;
+        src = iSrc + ( blendInfo.sourceRect.x + ( x + blendInfo.tilingTranslation.x ) % blendInfo.sourceRect.w ) * iFmtInfo->BPP;
 
         // Compose Alpha
         const float alpha_src       = iFmtInfo->HEA ? TYPE2FLOAT( src, iFmtInfo->AID ) * blendInfo.opacityValue : blendInfo.opacityValue;

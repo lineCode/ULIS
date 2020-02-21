@@ -100,7 +100,7 @@ struct ULIS2_API FMaths
 
     template< typename T >
     static ULIS2_FORCEINLINE TVec2< T > PyModulo( const TVec2< T >& iValue, const TVec2< T >& iMod ) {
-        return  TVec2< T >( PyModulo( -iValue.x, iMod.x ), PyModulo( -iValue.y, iMod.y ) );
+        return  TVec2< T >( PyModulo( iValue.x, iMod.x ), PyModulo( iValue.y, iMod.y ) );
     }
 
     static ULIS2_FORCEINLINE double RadToDeg( double iRad )

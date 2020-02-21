@@ -141,23 +141,23 @@ void BlendRect( const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     // Ensure the selected target actually fits in destination
     FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
     FRect dst_fit    = dst_target & iBlendParams.backdrop->Rect();
-    src_roi.x       -= dst_target.x - dst_fit.x;
-    src_roi.y       -= dst_target.y - dst_fit.y;
 
     // Check no-op
     if( dst_fit.Area() <= 0 )
         return;
 
-    FVec2F subpixelComponent = FMaths::AbsFloatingPart( iBlendParams.backdropPosition );
-    const int   coverageX = src_roi.w - src_roi.x >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );
-    const int   coverageY = src_roi.h - src_roi.y >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
+    FVec2F      subpixelComponent   = FMaths::AbsFloatingPart( iBlendParams.backdropPosition );
+    const int   coverageX           = src_roi.w - src_roi.x >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );
+    const int   coverageY           = src_roi.h - src_roi.y >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
+    const int   translationX        = FMaths::PyModulo( iBlendParams.tilingTranslation.x - ( dst_target.x - dst_fit.x ), src_roi.w );
+    const int   translationY        = FMaths::PyModulo( iBlendParams.tilingTranslation.y - ( dst_target.y - dst_fit.y ), src_roi.h );
 
     // Bake forward params.
     // Shared Ptr for thread safety and scope life time extension.
     // Use for non blocking multithreaded processing.
     std::shared_ptr< FBlendInfo > forwardBlendInfo = std::make_shared< FBlendInfo >( iBlendParams );
     forwardBlendInfo->sourceRect            = src_roi;
-    forwardBlendInfo->tilingTranslation     = FMaths::PyModulo( iBlendParams.tilingTranslation, FVec2I( src_roi.w, src_roi.h ) );
+    forwardBlendInfo->tilingTranslation     = FVec2I( translationX, translationY );
     forwardBlendInfo->backdropPosition      = subpixelComponent;
     forwardBlendInfo->backdropCoverage      = FVec2I( coverageX, coverageY );
     forwardBlendInfo->opacityValue          = FMaths::Clamp( iBlendParams.opacityValue, 0.f, 1.f );
