@@ -78,7 +78,7 @@ QueryDispatchedBlendFunctionForParameters_RGBA8( const FFormatInfo& iFormatInfo,
                     return  ULIS2_SELECT_COMP_OP( iBlendParams.subpixelFlag, BlendMT_NonSeparable_SSE_RGBA8 );
                 else
             #endif // __SSE4_2__
-                    ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_CM_RGB_MEM_Generic, uint8 );
+                    return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_CM_RGB_MEM_Generic, uint8 );
     }
     ULIS2_FAIL_RET( "Bad input no dispatch path found", nullptr );
 }
