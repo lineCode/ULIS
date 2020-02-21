@@ -62,9 +62,9 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
 endif()
 
 # Add Dependencies
-include(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/CMakeLists.txt)
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2    )
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs        )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS	${PROJECT_BINARY_DIR}/3rdparty/build_lcms2    	)
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs      )
 
 ####################################
 # Add Main Project

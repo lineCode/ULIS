@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.11.0)
 
+project(lcms2 C)
+
 file(
     GLOB_RECURSE
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "3rdparty/Little-CMS/include/*"
-    "3rdparty/Little-CMS/src/*"
+    "include/*"
+    "src/*"
 )
 
 add_library( lcms2 ${source_list} )
@@ -16,9 +18,9 @@ target_compile_definitions( lcms2 PUBLIC UNICODE )
 target_include_directories(
     lcms2
     PUBLIC
-    "3rdparty/Little-CMS/include/"
+    "include/"
     PRIVATE
-    "3rdparty/Little-CMS/src/"
+    "src/"
 )
 
 # For MSVC parse pretty filter names
