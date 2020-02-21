@@ -101,11 +101,11 @@ ULIS2_API struct FBlendInfo {
     FRect           _backdropWorkingRect;
 };
 
-ULIS2_API void BlendRect( const FPerfParams&, const FBlendInfo& );
+ULIS2_API void BlendRect( const FPerfInfo&, const FBlendInfo& );
 
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
-typedef void (*fpDispatchedBlendFunc)( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams );
-ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams );
+typedef void (*fpDispatchedBlendFunc)( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams );
+ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams );
 
 ULIS2_NAMESPACE_END
 

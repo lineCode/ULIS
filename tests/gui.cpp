@@ -96,6 +96,7 @@ main( int argc, char *argv[] )
     int a = (-1)%64;
 
 
+    /*
     BlendRect( &threadPool
              , ULIS2_BLOCKING
              , 0
@@ -109,8 +110,9 @@ main( int argc, char *argv[] )
              , AM_NORMAL
              , 1.f
              , ULIS2_CALLCB );
+             */
 
-    FPerfParams perfParams = {};
+    FPerfInfo perfParams = {};
     perfParams.pool       = &threadPool;
     perfParams.intent     = FPerf( 0 );
     perfParams.blocking   = ULIS2_BLOCKING;
@@ -119,16 +121,16 @@ main( int argc, char *argv[] )
     FBlendInfo blendParams = {};
     blendParams.source              = blockBase;
     blendParams.backdrop            = &blockA;
-    blendParams.sourceRect          = FRect( 0, 0, 65, 64 );
-    blendParams.tilingTranslation   = FVec2I( -1, -1 );
-    blendParams.backdropPosition    = FVec2F( -20.5, -20.5 );
-    blendParams.backdropCoverage    = FVec2I( 211, 5643 );
+    blendParams.sourceRect          = FRect( 1, 0, 65, 65 );
+    blendParams.tilingTranslation   = FVec2I( 0, 0 );
+    blendParams.backdropPosition    = FVec2F( 20, 20 );
+    blendParams.backdropCoverage    = FVec2I( 100, 100 );
     blendParams.subpixelFlag        = ULIS2_NOAA;
     blendParams.blendingMode        = BM_NORMAL;
     blendParams.alphaMode           = AM_NORMAL;
     blendParams.opacityValue        = 1.f;
     BlendRect( perfParams, blendParams );
-
+    Perf_TSPEC
     /*
     for( int i = 0; i < NUM_ALPHA_MODES; ++i ) {
         int x = ( i % 8 ) * wb;

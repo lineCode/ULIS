@@ -81,19 +81,8 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const int32          
 }
 
 void
-BlendMT_Separable_SSE_RGBA8_Subpixel( FThreadPool*        iPool
-                                    , bool                iBlocking
-                                    , const FPerf&        iPerf
-                                    , const FBlock*       iSource
-                                    , FBlock*             iBackdrop
-                                    , const FRect&        iSrcROI
-                                    , const FRect&        iBdpROI
-                                    , const glm::ivec2& iSrcShift
-                                    , const glm::vec2&    iSubpixelComponent
-                                    , eBlendingMode       iBlendingMode
-                                    , eAlphaMode          iAlphaMode
-                                    , ufloat              iOpacity )
-{
+BlendMT_Separable_SSE_RGBA8_Subpixel( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+        /*
     tFormat fmt = iSource->Format();
     uint8   aid = ( ( ( ~( ( ULIS2_R_RS( fmt ) + 0x1 ) & 0x2 ) ) & 0x2 ) >> 1 ) * 3;
     const tByte* src    = iSource->DataPtr();
@@ -108,6 +97,7 @@ BlendMT_Separable_SSE_RGBA8_Subpixel( FThreadPool*        iPool
                                                                        , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * 4 )
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * 4 )
                                                                        , iBdpROI.w, params );
+                                                                       */
 }
 
 void
@@ -145,19 +135,8 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte*          iSrc
 }
 
 void
-BlendMT_Separable_SSE_RGBA8( FThreadPool*     iPool
-                           , bool             iBlocking
-                           , const FPerf&     iPerf
-                           , const FBlock*    iSource
-                           , FBlock*          iBackdrop
-                           , const FRect&     iSrcROI
-                           , const FRect&     iBdpROI
-                           , const glm::ivec2& iSrcShift
-                           , const glm::vec2& iSubpixelComponent
-                           , eBlendingMode    iBlendingMode
-                           , eAlphaMode       iAlphaMode
-                           , ufloat           iOpacity )
-{
+BlendMT_Separable_SSE_RGBA8( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+/*
     tFormat fmt = iSource->Format();
     uint8   aid = ( ( ( ~( ( ULIS2_R_RS( fmt ) + 0x1 ) & 0x2 ) ) & 0x2 ) >> 1 ) * 3;
     const tByte*    src     = iSource->DataPtr();
@@ -169,6 +148,7 @@ BlendMT_Separable_SSE_RGBA8( FThreadPool*     iPool
                                                                        , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * 4 )
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * 4 )
                                                                        , iBdpROI.w, aid, iBlendingMode, iAlphaMode, iOpacity );
+                                                                       */
 }
 
 ULIS2_NAMESPACE_END

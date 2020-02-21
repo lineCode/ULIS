@@ -97,19 +97,8 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_CMYK_MEM_Generic_Subpixel( int32   
 
 template< typename T >
 void
-BlendMT_NonSeparable_CM_CMYK_MEM_Generic_Subpixel( FThreadPool*     iPool
-                                                 , bool             iBlocking
-                                                 , const FPerf&     iPerf
-                                                 , const FBlock*    iSource
-                                                 , FBlock*          iBackdrop
-                                                 , const FRect&     iSrcROI
-                                                 , const FRect&     iBdpROI
-                                                 , const glm::ivec2& iSrcShift
-                                                 , const glm::vec2& iSubpixelComponent
-                                                 , eBlendingMode    iBlendingMode
-                                                 , eAlphaMode       iAlphaMode
-                                                 , ufloat           iOpacity )
-{
+BlendMT_NonSeparable_CM_CMYK_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+    /*
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -121,6 +110,7 @@ BlendMT_NonSeparable_CM_CMYK_MEM_Generic_Subpixel( FThreadPool*     iPool
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
                                                                        , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
                                                                        , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
+                                                                       */
 }
 
 template< typename T >
@@ -180,19 +170,8 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_CMYK_MEM_Generic( int32            
 
 template< typename T >
 void
-BlendMT_NonSeparable_CM_CMYK_MEM_Generic( FThreadPool*      iPool
-                                        , bool              iBlocking
-                                        , const FPerf&      iPerf
-                                        , const FBlock*     iSource
-                                        , FBlock*           iBackdrop
-                                        , const FRect&      iSrcROI
-                                        , const FRect&      iBdpROI
-                                        , const glm::ivec2& iSrcShift
-                                        , const glm::vec2&  iSubpixelComponent
-                                        , eBlendingMode     iBlendingMode
-                                        , eAlphaMode        iAlphaMode
-                                        , ufloat            iOpacity )
-{
+BlendMT_NonSeparable_CM_CMYK_MEM_Generic( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+    /*
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
     tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
@@ -204,6 +183,7 @@ BlendMT_NonSeparable_CM_CMYK_MEM_Generic( FThreadPool*      iPool
                                                                        , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
                                                                        , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
                                                                        , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
+                                                                       */
 }
 
 ULIS2_NAMESPACE_END

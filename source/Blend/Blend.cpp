@@ -113,7 +113,7 @@ BlendRect( FThreadPool*         iPool
     */
 }
 
-void BlendRect( const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams ) {
+void BlendRect( const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     // Assertions
     ULIS2_ASSERT( iBlendParams.source,                                              "Bad source." );
     ULIS2_ASSERT( iBlendParams.backdrop,                                            "Bad destination." );
@@ -148,14 +148,18 @@ void BlendRect( const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams )
     if( dst_fit.Area() <= 0 )
         return;
 
+    FVec2F subpixelComponent = FMaths::AbsFloatingPart( iBlendParams.backdropPosition );
+    const int   coverageX = src_roi.w - src_roi.x >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );
+    const int   coverageY = src_roi.h - src_roi.y >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
+
     // Bake forward params.
     // Shared Ptr for thread safety and scope life time extension.
     // Use for non blocking multithreaded processing.
     std::shared_ptr< FBlendInfo > forwardBlendInfo = std::make_shared< FBlendInfo >( iBlendParams );
     forwardBlendInfo->sourceRect            = src_roi;
-    forwardBlendInfo->tilingTranslation     = FMaths::PyModulo( iBlendParams.tilingTranslation, src_roi.w );
-    forwardBlendInfo->backdropPosition      = FMaths::AbsFloatingPart( iBlendParams.backdropPosition );
-    forwardBlendInfo->backdropCoverage      = dstCoverage;
+    forwardBlendInfo->tilingTranslation     = FMaths::PyModulo( iBlendParams.tilingTranslation, FVec2I( src_roi.w, src_roi.h ) );
+    forwardBlendInfo->backdropPosition      = subpixelComponent;
+    forwardBlendInfo->backdropCoverage      = FVec2I( coverageX, coverageY );
     forwardBlendInfo->opacityValue          = FMaths::Clamp( iBlendParams.opacityValue, 0.f, 1.f );
     forwardBlendInfo->_backdropWorkingRect  = dst_fit;
 

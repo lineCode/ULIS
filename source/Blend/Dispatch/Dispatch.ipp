@@ -34,7 +34,7 @@ ULIS2_NAMESPACE_BEGIN
 // Generic Dispatcher
 template< typename T >
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_Generic( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters_Generic( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     switch( BlendingModeQualifier( iBlendParams.blendingMode ) ) {
         case BMQ_MISC           : return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_Misc_MEM_Generic,       T );
         case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_Separable_MEM_Generic,  T );
@@ -54,7 +54,7 @@ QueryDispatchedBlendFunctionForParameters_Generic( const FFormatInfo& iFormatInf
 /////////////////////////////////////////////////////
 // RGBA8 Dispatcher
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_RGBA8( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters_RGBA8( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     switch( BlendingModeQualifier( iBlendParams.blendingMode ) ) {
         case BMQ_MISC:
             return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_Misc_MEM_Generic, uint8  );
@@ -87,7 +87,7 @@ QueryDispatchedBlendFunctionForParameters_RGBA8( const FFormatInfo& iFormatInfo,
 // Generic Dispatcher Selector
 template< typename T >
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_imp( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters_imp( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     return  QueryDispatchedBlendFunctionForParameters_Generic< T >( iFormatInfo, iPerfParams, iBlendParams );
 }
 
@@ -95,7 +95,7 @@ QueryDispatchedBlendFunctionForParameters_imp( const FFormatInfo& iFormatInfo, c
 // RGBA8 Dispatcher Selector Specialization
 template<>
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     // RGBA8 Signature, any layout
     if( iFormatInfo.HEA     == 1
      && iFormatInfo.NCC     == 3
@@ -113,7 +113,7 @@ QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const FFormatInfo& iForm
 /////////////////////////////////////////////////////
 // Type Dispatcher Selector
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FPerfParams& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     switch( iFormatInfo.TP ) {
         case TYPE_UINT8     : return  QueryDispatchedBlendFunctionForParameters_imp< uint8   >( iFormatInfo, iPerfParams, iBlendParams ); break;
         case TYPE_UINT16    : return  QueryDispatchedBlendFunctionForParameters_imp< uint16  >( iFormatInfo, iPerfParams, iBlendParams ); break;
