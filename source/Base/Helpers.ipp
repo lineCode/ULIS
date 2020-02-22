@@ -69,53 +69,6 @@ ULIS2_API ULIS2_FORCEINLINE void BuildRGBA8IndexTable( tFormat iFmt, Vec4i* oIDT
     }
 }
 
-ULIS2_API ULIS2_FORCEINLINE void  BuildBlendParams( const FRect&   iROI
-                                                  , const FBlock*  iSRC
-                                                  , FBlock*        iBDP
-                                                  , uint8*         oBPC
-                                                  , uint8*         oNCC
-                                                  , uint8*         oHEA
-                                                  , uint8*         oSPP
-                                                  , uint8*         oBPP
-                                                  , uint8*         oAID
-                                                  , uint8**        oIDT
-                                                  , tSize*         oROI_W
-                                                  , tSize*         oROI_H
-                                                  , tSize*         oSRC_BPS
-                                                  , tSize*         oBDP_BPS
-                                                  , tSize*         oSRC_JMP
-                                                  , tSize*         oBDP_JMP )
-{
-    tFormat fmt = iSRC->Format();
-    // BPC: Bytes Per Channel
-    // NCC: Num Color Channel ( Without Alpha )
-    // HEA: Has Extra Alpha ( 0 = false, else true )
-    // SPP: Samples Per Pixel ( Number of Channels with Alpha )
-    // BPP: Bytes Per Pixel ( With Alpha )
-    // NUM: Number or Pixels to treat in ROI
-    // AID: Alpha redirected Index
-    // IDT: Redirected channels Index table, allocated here, don't forget to delete [] it outside.
-    // ROI_W: Width of region of interest
-    // ROI_H: Height of region of interest
-    // SRC_BPS: Bytes per scanline for src
-    // BDP_BPS: Bytes per scanline for bdp
-    // SRC_JMP: Jump stride in bytes for src
-    // BDP_JMP: Jump stride in bytes for bdp
-    *oBPC = iBDP->BytesPerSample();
-    *oNCC = iBDP->NumColorChannels();
-    *oHEA = iBDP->HasAlpha();
-    *oSPP = iBDP->SamplesPerPixel();
-    *oBPP = iBDP->BytesPerPixel();
-    *oIDT = iBDP->IndexTable();
-    *oAID = iBDP->AlphaIndex();
-    *oROI_W = iROI.w;
-    *oROI_H = iROI.h;
-    *oSRC_BPS = iSRC->BytesPerScanLine();
-    *oBDP_BPS = iBDP->BytesPerScanLine();
-    *oSRC_JMP = ( iSRC->Width() - ( *oROI_W ) ) * ( *oBPP );
-    *oBDP_JMP = ( iBDP->Width() - ( *oROI_W ) ) * ( *oBPP );
-}
-
 ULIS2_API ULIS2_FORCEINLINE void  BuildTraceTextParams( const FBlock*   iDST
                                                        , uint8*         oBPC
                                                        , uint8*         oNCC

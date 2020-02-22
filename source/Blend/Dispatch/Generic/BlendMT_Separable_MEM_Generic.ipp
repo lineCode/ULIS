@@ -14,18 +14,17 @@
 #pragma once
 #include "Base/Core.h"
 #include "Blend/Blend.h"
-#include "Base/Helpers.ipp"
 #include "Blend/Modes.h"
-#include "Blend/Func/SeparableBlendFuncF.ipp"
 #include "Blend/Func/AlphaFuncF.ipp"
+#include "Blend/Func/CompositingHelpers.ipp"
+#include "Blend/Func/SeparableBlendFuncF.ipp"
 #include "Maths/Geometry.h"
 #include "Thread/ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams )
-{
+InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
     const FBlendInfo&   blendInfo       = *iBlendParams;
     const tByte*        src             = iSrc;
     tByte*              bdp             = iBdp;
@@ -45,17 +44,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, 
         m00 = m10;
         m01 = m11;
         vv0 = vv1;
-
-        if( iFmtInfo->HEA ) {
-            m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,              iFmtInfo->AID ) : 0.f;
-            m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - iSrcBps,    iFmtInfo->AID ) : 0.f;
-        } else {
-            m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;
-            m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;
-        }
-
-        vv1 = m10 * blendInfo.backdropPosition.y + m11 * blendInfo._buspixelComponent.y;
-        res = vv0 * blendInfo.backdropPosition.x + vv1 * blendInfo._buspixelComponent.x;
+        SampleSubpixelAlpha( res );
         const float alpha_bdp   = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
         const float alpha_src   = res * blendInfo.opacityValue;
         const float alpha_comp  = AlphaNormalF( alpha_src, alpha_bdp );
@@ -65,13 +54,8 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, 
 
         for( uint8 j = 0; j < iFmtInfo->NCC; ++j ) {
             uint8 r = iFmtInfo->IDT[j];
-            float s11 = ( notLastCol  && notLastLine )                                      ?   TYPE2FLOAT( src,                            r ) : 0.f;
-            float s01 = ( notLastLine && ( x > 0 || hasLeftData ) )                         ?   TYPE2FLOAT( src - iFmtInfo->BPP,            r ) : 0.f;
-            float s10 = ( notLastCol && ( notFirstLine || hasTopData ) )                    ?   TYPE2FLOAT( src - iSrcBps,                  r ) : 0.f;
-            float s00 = ( ( x > 0 || hasLeftData ) && ( notFirstLine || hasTopData ) )      ?   TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,  r ) : 0.f;
-            float v1 = ( s00 * m00 ) * blendInfo.backdropPosition.y + ( s01 * m01 ) * blendInfo._buspixelComponent.y;
-            float v2 = ( s10 * m10 ) * blendInfo.backdropPosition.y + ( s11 * m11 ) * blendInfo._buspixelComponent.y;
-            float srcvf = res == 0.f ? 0.f : ( ( v1 ) * blendInfo.backdropPosition.x + ( v2 ) * blendInfo._buspixelComponent.x ) / res;
+            float s11, s01, s10, s00, v1, v2, srcvf;
+            SampleSubpixelChannel( srcvf, r );
             float bdpvf = TYPE2FLOAT( bdp, r );
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
             ULIS2_SWITCH_FOR_ALL_DO( blendInfo.blendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
@@ -105,8 +89,7 @@ BlendMT_Separable_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, std::sha
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iBdp, int32 iLine, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams )
-{
+InvokeBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iBdp, int32 iLine, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
     const FBlendInfo&   blendInfo   = *iBlendParams;
     const tByte*        src         = iSrc;
     tByte*              bdp         = iBdp;
