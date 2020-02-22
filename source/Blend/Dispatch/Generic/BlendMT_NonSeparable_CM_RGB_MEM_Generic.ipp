@@ -110,6 +110,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_RGB_MEM_Generic( const tByte* iSrc,
         FRGBF src_rgbf = { TYPE2FLOAT( src, iFmtInfo->IDT[0] ), TYPE2FLOAT( src, iFmtInfo->IDT[1] ), TYPE2FLOAT( src, iFmtInfo->IDT[2] ) };
         FRGBF bdp_rgbf = { TYPE2FLOAT( bdp, iFmtInfo->IDT[0] ), TYPE2FLOAT( bdp, iFmtInfo->IDT[1] ), TYPE2FLOAT( bdp, iFmtInfo->IDT[2] ) };
         FRGBF result_rgbf;
+
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
         ULIS2_SWITCH_FOR_ALL_DO( blendInfo.blendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN

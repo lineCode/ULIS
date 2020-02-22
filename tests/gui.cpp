@@ -22,11 +22,15 @@
 int
 main( int argc, char *argv[] )
 {
-    ::ul2::FThreadPool  threadPool( 1 );
+    ::ul2::FThreadPool  threadPool;
+    ::ul2::FPerf perfIntent_NONE( 0 );
+    ::ul2::FPerf perfIntent_MT( ::ul2::Perf_MT );
+    ::ul2::FPerf perfIntent_MT_SSE_TSPEC( ::ul2::Perf_MT | ::ul2::Perf_SSE4_2 | ::ul2::Perf_TSPEC );
+    ::ul2::FPerf perfIntent_MT_AVX_TSPEC( ::ul2::Perf_MT | ::ul2::Perf_AVX2   | ::ul2::Perf_TSPEC );
 
     ::ul2::FPerfInfo perfInfo = {};
     perfInfo.pool       = &threadPool;
-    perfInfo.intent     = ::ul2::FPerf( ::ul2::Perf_MT | ::ul2::Perf_AVX2 );
+    perfInfo.intent     = perfIntent_NONE;
     perfInfo.blocking   = ULIS2_NONBLOCKING;
     perfInfo.callCB     = ULIS2_NOCB;
 
@@ -71,7 +75,6 @@ main( int argc, char *argv[] )
     widget->resize( pixmap.size() );
     widget->show();
 
-    std::cout << "Show";
     int exit_code = app.exec();
 
     delete  label;
