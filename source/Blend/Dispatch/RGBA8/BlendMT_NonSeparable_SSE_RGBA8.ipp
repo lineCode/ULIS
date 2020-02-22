@@ -83,7 +83,7 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const int32       
 }
 
 void
-BlendMT_NonSeparable_SSE_RGBA8_Subpixel( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_NonSeparable_SSE_RGBA8_Subpixel( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
 /*
     tFormat fmt = iSource->Format();
     Vec4i idt;
@@ -143,7 +143,7 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const tByte*          iSrc
 }
 
 void
-BlendMT_NonSeparable_SSE_RGBA8( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_NonSeparable_SSE_RGBA8( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
 /*
     tFormat fmt = iSource->Format();
     Vec4i idt;

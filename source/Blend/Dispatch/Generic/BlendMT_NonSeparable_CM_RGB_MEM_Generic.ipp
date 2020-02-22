@@ -93,7 +93,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_RGB_MEM_Generic_Subpixel( int32    
 
 template< typename T >
 void
-BlendMT_NonSeparable_CM_RGB_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_NonSeparable_CM_RGB_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
     /*
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
@@ -163,7 +163,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_RGB_MEM_Generic( int32             
 
 template< typename T >
 void
-BlendMT_NonSeparable_CM_RGB_MEM_Generic( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_NonSeparable_CM_RGB_MEM_Generic( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
 /*
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;

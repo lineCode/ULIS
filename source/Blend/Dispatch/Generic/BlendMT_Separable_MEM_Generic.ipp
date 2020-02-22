@@ -86,7 +86,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, 
 
 template< typename T >
 void
-BlendMT_Separable_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_Separable_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
     const FBlendInfo&   blendInfo   = *iBlendParams;
     const tByte*        src         = iBlendParams->source->DataPtr();
     tByte*              bdp         = iBlendParams->backdrop->DataPtr();
@@ -95,7 +95,7 @@ BlendMT_Separable_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, const FP
     const tSize         src_decal_y = blendInfo._shift.y + blendInfo.sourceRect.y;
     const tSize         src_decal_x = ( blendInfo._shift.x + blendInfo.sourceRect.x )   * iFormatInfo.BPP;
     const tSize         bdp_decal_x = ( blendInfo._backdropWorkingRect.x )              * iFormatInfo.BPP;
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfParams.intent, iPerfParams.pool, iPerfParams.blocking
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
                                    , iBlendParams->_backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T >
                                    , src + ( ( src_decal_y + pLINE )                        * src_bps ) + src_decal_x
@@ -134,7 +134,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iB
 
 template< typename T >
 void
-BlendMT_Separable_MEM_Generic( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_Separable_MEM_Generic( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
     const FBlendInfo&   blendInfo   = *iBlendParams;
     const tByte*        src         = iBlendParams->source->DataPtr();
     tByte*              bdp         = iBlendParams->backdrop->DataPtr();
@@ -142,7 +142,7 @@ BlendMT_Separable_MEM_Generic( const FFormatInfo& iFormatInfo, const FPerfInfo& 
     const tSize         bdp_bps     = iBlendParams->backdrop->BytesPerScanLine();
     const tSize         src_decal_x = blendInfo.sourceRect.x            * iFormatInfo.BPP;
     const tSize         bdp_decal_x = blendInfo._backdropWorkingRect.x  * iFormatInfo.BPP;
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfParams.intent, iPerfParams.pool, iPerfParams.blocking
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
                                    , iBlendParams->_backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >
                                    , src + ( ( blendInfo.sourceRect.y           + pLINE ) * src_bps ) + src_decal_x

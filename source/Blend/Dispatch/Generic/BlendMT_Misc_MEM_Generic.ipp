@@ -132,7 +132,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( int32               iLIN
 
 template< typename T >
 void
-BlendMT_Misc_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_Misc_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
         /*
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;
@@ -219,7 +219,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( int32            iLINE
 
 template< typename T >
 void
-BlendMT_Misc_MEM_Generic( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_Misc_MEM_Generic( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
     /*
     uint8* xidt;
     uint8 bpc, ncc, hea, spp, bpp, aid;

@@ -23,13 +23,13 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-void BlendRect( const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
+void Blend( const FBlendInfo& iBlendParams ) {
     // Assertions
-    ULIS2_ASSERT( iBlendParams.source,                                              "Bad source." );
-    ULIS2_ASSERT( iBlendParams.backdrop,                                            "Bad destination." );
-    ULIS2_ASSERT( iBlendParams.source->Format() == iBlendParams.backdrop->Format(), "Formats do not match." );
-    ULIS2_ASSERT( !iPerfParams.intent.UseMT() || iPerfParams.pool,                  "Multithreading flag is specified but no thread pool is provided." );
-    ULIS2_ASSERT( !iPerfParams.callCB || iPerfParams.blocking,                      "Callback flag is specified on non-blocking operation." );
+    ULIS2_ASSERT( iBlendParams.source,                                                  "Bad source."                                                       );
+    ULIS2_ASSERT( iBlendParams.backdrop,                                                "Bad destination."                                                  );
+    ULIS2_ASSERT( iBlendParams.source->Format() == iBlendParams.backdrop->Format(),     "Formats do not match."                                             );
+    ULIS2_ASSERT( !iBlendParams.perfInfo.intent.UseMT() || iBlendParams.perfInfo.pool,  "Multithreading flag is specified but no thread pool is provided."  );
+    ULIS2_ASSERT( !iBlendParams.perfInfo.callCB || iBlendParams.perfInfo.blocking,      "Callback flag is specified on non-blocking operation."             );
 
     // Compute coordinates of target rect in destination, with source rect dimension
     FRect src_roi = iBlendParams.sourceRect & iBlendParams.source->Rect();
@@ -55,6 +55,7 @@ void BlendRect( const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     if( dst_fit.Area() <= 0 )
         return;
 
+    // Forward arguments baking
     FVec2F      subpixelComponent   = FMaths::AbsFloatingPart( iBlendParams.backdropPosition );
     const int   translationX        = dst_fit.x - dst_target.x;
     const int   translationY        = dst_fit.y - dst_target.y;
@@ -64,11 +65,9 @@ void BlendRect( const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     buspixelComponent.x = 1.f - subpixelComponent.x;
     buspixelComponent.y = 1.f - subpixelComponent.y;
 
-    // Bake forward params.
-    // Shared Ptr for thread safety and scope life time extension.
-    // Use for non blocking multithreaded processing.
+    // Bake forward params,  shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
     std::shared_ptr< FBlendInfo > forwardBlendInfo = std::make_shared< FBlendInfo >( iBlendParams );
-    FBlendInfo& _fbi = *forwardBlendInfo;
+    FBlendInfo& _fbi            = *forwardBlendInfo;
     _fbi.sourceRect             = src_roi;
     _fbi.backdropPosition       = subpixelComponent;
     _fbi.opacityValue           = FMaths::Clamp( iBlendParams.opacityValue, 0.f, 1.f );
@@ -78,10 +77,14 @@ void BlendRect( const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
     _fbi._buspixelComponent     = buspixelComponent;
 
     // Query dispatched method
-    fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iBlendParams.source->FormatInfo(), iPerfParams, _fbi );
-    if( fptr ) fptr( forwardBlendInfo->source->FormatInfo(), iPerfParams, forwardBlendInfo );
+    fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( iBlendParams.source->FormatInfo(), _fbi );
 
-    forwardBlendInfo->backdrop->Invalidate( forwardBlendInfo->_backdropWorkingRect, iPerfParams.callCB );
+    // Call
+    if( fptr )
+        fptr( forwardBlendInfo->source->FormatInfo(), forwardBlendInfo );
+
+    // Invalid
+    forwardBlendInfo->backdrop->Invalidate( forwardBlendInfo->_backdropWorkingRect, iBlendParams.perfInfo.callCB );
 }
 
 ULIS2_NAMESPACE_END

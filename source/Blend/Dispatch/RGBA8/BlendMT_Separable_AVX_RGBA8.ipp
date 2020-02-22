@@ -125,7 +125,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const int32          
 }
 
 void
-BlendMT_Separable_AVX_RGBA8_Subpixel( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_Separable_AVX_RGBA8_Subpixel( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
     /*
     tFormat fmt = iSource->Format();
     uint8   aid = ( ( ( ~( ( ULIS2_R_RS( fmt ) + 0x1 ) & 0x2 ) ) & 0x2 ) >> 1 ) * 3;
@@ -217,7 +217,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte*          iSrc
 }
 
 void
-BlendMT_Separable_AVX_RGBA8( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+BlendMT_Separable_AVX_RGBA8( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
 /*
     tFormat fmt = iSource->Format();
     uint8   aid = ( ( ( ~( ( ULIS2_R_RS( fmt ) + 0x1 ) & 0x2 ) ) & 0x2 ) >> 1 ) * 3;

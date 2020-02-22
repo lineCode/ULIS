@@ -18,22 +18,22 @@
 // Typedefs and enums
 ULIS2_NAMESPACE_BEGIN
 // FDecl
-class FProfileRegistry;
-class FColorProfile;
-class FBlock;
-class IPixel;
-class FPixelValue;
-class FPixelProxy;
-struct FRect;
-class FThreadPool;
-class FPerf;
-struct FPerfInfo;
-struct FCPU;
-class FFontRegistry;
-class FFontEngine;
-struct FFormatInfo;
-class FFont;
-class FTransform2D;
+class   FBlock;
+class   IPixel;
+class   FPixelValue;
+class   FPixelProxy;
+class   FProfileRegistry;
+class   FColorProfile;
+class   FThreadPool;
+class   FPerf;
+struct  FRect;
+struct  FPerfInfo;
+struct  FCPU;
+class   FFontRegistry;
+class   FFontEngine;
+struct  FFormatInfo;
+class   FFont;
+class   FTransform2D;
 
 ULIS2_NAMESPACE_END
 

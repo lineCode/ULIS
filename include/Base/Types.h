@@ -32,29 +32,48 @@ typedef  uint32_t   tFormat;
 typedef  uint32_t   tSize;
 typedef  uint32_t   tIndex;
 
+
+#define ULIS2_TYPE_UINT8    0x0
+#define ULIS2_TYPE_UINT16   0x1
+#define ULIS2_TYPE_UINT32   0x2
+#define ULIS2_TYPE_UFLOAT   0x3
+#define ULIS2_TYPE_UDOUBLE  0x4
+
 // Types
 enum eType {
-      TYPE_UINT8     = 0x0
-    , TYPE_UINT16    = 0x1
-    , TYPE_UINT32    = 0x2
-    , TYPE_UFLOAT    = 0x3
-    , TYPE_UDOUBLE   = 0x4
+      TYPE_UINT8     = ULIS2_TYPE_UINT8
+    , TYPE_UINT16    = ULIS2_TYPE_UINT16
+    , TYPE_UINT32    = ULIS2_TYPE_UINT32
+    , TYPE_UFLOAT    = ULIS2_TYPE_UFLOAT
+    , TYPE_UDOUBLE   = ULIS2_TYPE_UDOUBLE
     , TYPE_INVALID
 };
 
+#define ULIS2_CM_ANY    0
+#define ULIS2_CM_GREY   1
+#define ULIS2_CM_RGB    2
+#define ULIS2_CM_HSV    3
+#define ULIS2_CM_HSL    4
+#define ULIS2_CM_CMY    5
+#define ULIS2_CM_CMYK   6
+#define ULIS2_CM_YUV    7
+#define ULIS2_CM_Lab    8
+#define ULIS2_CM_XYZ    9
+#define ULIS2_CM_Yxy    10
+
 // Models
 enum eColorModel {
-      CM_ANY
-    , CM_GREY
-    , CM_RGB
-    , CM_HSV
-    , CM_HSL
-    , CM_CMY
-    , CM_CMYK
-    , CM_YUV
-    , CM_Lab
-    , CM_XYZ
-    , CM_Yxy
+      CM_ANY    = ULIS2_CM_ANY
+    , CM_GREY   = ULIS2_CM_GREY
+    , CM_RGB    = ULIS2_CM_RGB
+    , CM_HSV    = ULIS2_CM_HSV
+    , CM_HSL    = ULIS2_CM_HSL
+    , CM_CMY    = ULIS2_CM_CMY
+    , CM_CMYK   = ULIS2_CM_CMYK
+    , CM_YUV    = ULIS2_CM_YUV
+    , CM_Lab    = ULIS2_CM_Lab
+    , CM_XYZ    = ULIS2_CM_XYZ
+    , CM_Yxy    = ULIS2_CM_Yxy
 };
 
 // Macro for all types for template instanciation

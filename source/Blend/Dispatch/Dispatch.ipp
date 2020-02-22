@@ -34,7 +34,7 @@ ULIS2_NAMESPACE_BEGIN
 // Generic Dispatcher
 template< typename T >
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_Generic( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters_Generic( const FFormatInfo& iFormatInfo, const FBlendInfo& iBlendParams ) {
     switch( BlendingModeQualifier( iBlendParams.blendingMode ) ) {
         case BMQ_MISC           : return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_Misc_MEM_Generic,       T );
         case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_Separable_MEM_Generic,  T );
@@ -54,14 +54,14 @@ QueryDispatchedBlendFunctionForParameters_Generic( const FFormatInfo& iFormatInf
 /////////////////////////////////////////////////////
 // RGBA8 Dispatcher
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_RGBA8( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters_RGBA8( const FFormatInfo& iFormatInfo, const FBlendInfo& iBlendParams ) {
     switch( BlendingModeQualifier( iBlendParams.blendingMode ) ) {
         case BMQ_MISC:
             return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_Misc_MEM_Generic, uint8  );
 
         case BMQ_SEPARABLE:
             #ifdef __AVX2__
-                if( iPerfParams.intent.UseAVX2() && gCpuInfo.info.HW_AVX2 )
+                if( iBlendParams.perfInfo.intent.UseAVX2() && gCpuInfo.info.HW_AVX2 )
                     return  ULIS2_SELECT_COMP_OP( iBlendParams.subpixelFlag, BlendMT_Separable_AVX_RGBA8 );
                 else
             #endif // __AVX2__
@@ -87,39 +87,39 @@ QueryDispatchedBlendFunctionForParameters_RGBA8( const FFormatInfo& iFormatInfo,
 // Generic Dispatcher Selector
 template< typename T >
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_imp( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
-    return  QueryDispatchedBlendFunctionForParameters_Generic< T >( iFormatInfo, iPerfParams, iBlendParams );
+QueryDispatchedBlendFunctionForParameters_imp( const FFormatInfo& iFormatInfo, const FBlendInfo& iBlendParams ) {
+    return  QueryDispatchedBlendFunctionForParameters_Generic< T >( iFormatInfo, iBlendParams );
 }
 
 /////////////////////////////////////////////////////
 // RGBA8 Dispatcher Selector Specialization
 template<>
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const FFormatInfo& iFormatInfo, const FBlendInfo& iBlendParams ) {
     // RGBA8 Signature, any layout
     if( iFormatInfo.HEA     == 1
      && iFormatInfo.NCC     == 3
      && iFormatInfo.CM      == CM_RGB
-     && iPerfParams.intent.UseTSPEC()
-     && ( iPerfParams.intent.UseSSE4_2() || iPerfParams.intent.UseAVX2() )
+     && iBlendParams.perfInfo.intent.UseTSPEC()
+     && ( iBlendParams.perfInfo.intent.UseSSE4_2() || iBlendParams.perfInfo.intent.UseAVX2() )
      && ( gCpuInfo.info.HW_SSE42 || gCpuInfo.info.HW_AVX2 ) ) {
-        return  QueryDispatchedBlendFunctionForParameters_RGBA8( iFormatInfo, iPerfParams, iBlendParams );
+        return  QueryDispatchedBlendFunctionForParameters_RGBA8( iFormatInfo, iBlendParams );
     }
 
     // Generic Fallback
-    return  QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( iFormatInfo, iPerfParams, iBlendParams );
+    return  QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( iFormatInfo, iBlendParams );
 }
 
 /////////////////////////////////////////////////////
 // Type Dispatcher Selector
 fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FPerfInfo& iPerfParams, const FBlendInfo& iBlendParams ) {
+QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FBlendInfo& iBlendParams ) {
     switch( iFormatInfo.TP ) {
-        case TYPE_UINT8     : return  QueryDispatchedBlendFunctionForParameters_imp< uint8   >( iFormatInfo, iPerfParams, iBlendParams ); break;
-        case TYPE_UINT16    : return  QueryDispatchedBlendFunctionForParameters_imp< uint16  >( iFormatInfo, iPerfParams, iBlendParams ); break;
-        case TYPE_UINT32    : return  QueryDispatchedBlendFunctionForParameters_imp< uint32  >( iFormatInfo, iPerfParams, iBlendParams ); break;
-        case TYPE_UFLOAT    : return  QueryDispatchedBlendFunctionForParameters_imp< ufloat  >( iFormatInfo, iPerfParams, iBlendParams ); break;
-        case TYPE_UDOUBLE   : return  QueryDispatchedBlendFunctionForParameters_imp< udouble >( iFormatInfo, iPerfParams, iBlendParams ); break;
+        case TYPE_UINT8     : return  QueryDispatchedBlendFunctionForParameters_imp< uint8   >( iFormatInfo, iBlendParams ); break;
+        case TYPE_UINT16    : return  QueryDispatchedBlendFunctionForParameters_imp< uint16  >( iFormatInfo, iBlendParams ); break;
+        case TYPE_UINT32    : return  QueryDispatchedBlendFunctionForParameters_imp< uint32  >( iFormatInfo, iBlendParams ); break;
+        case TYPE_UFLOAT    : return  QueryDispatchedBlendFunctionForParameters_imp< ufloat  >( iFormatInfo, iBlendParams ); break;
+        case TYPE_UDOUBLE   : return  QueryDispatchedBlendFunctionForParameters_imp< udouble >( iFormatInfo, iBlendParams ); break;
         default             : ULIS2_FAIL_RET( "Bad input format !", nullptr );
     }
 }
