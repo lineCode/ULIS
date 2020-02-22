@@ -21,25 +21,23 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-namespace { // Anonymous namespace to disable ADL ( Argument Dependent Lookup ) on Blend func.
-    ULIS2_API struct FBlendInfo {
-        const FBlock*   source;
-        FBlock*         backdrop;
-        FRect           sourceRect;
-        FVec2F          backdropPosition;
-        bool            subpixelFlag;
-        eBlendingMode   blendingMode;
-        eAlphaMode      alphaMode;
-        float           opacityValue;
-        FPerfInfo       perfInfo;
+ULIS2_API struct FBlendInfo {
+    const FBlock*   source;
+    FBlock*         backdrop;
+    FRect           sourceRect;
+    FVec2F          backdropPosition;
+    bool            subpixelFlag;
+    eBlendingMode   blendingMode;
+    eAlphaMode      alphaMode;
+    float           opacityValue;
+    FPerfInfo       perfInfo;
 
-        // Internal
-        FVec2I          _shift;
-        FVec2I          _backdropCoverage;
-        FRect           _backdropWorkingRect;
-        FVec2F          _buspixelComponent;
-    };
-}
+    // Internal
+    FVec2I          _shift;
+    FVec2I          _backdropCoverage;
+    FRect           _backdropWorkingRect;
+    FVec2F          _buspixelComponent;
+};
 
 ULIS2_API void Blend( const FBlendInfo& );
 

@@ -25,197 +25,180 @@
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel( int32            iLINE
-                                                                         , tFormat          iFMT
-                                                                         , const tByte*     iSRC
-                                                                         , tByte*           iBDP
-                                                                         , uint8*           iXIDT
-                                                                         , uint8            iBPC
-                                                                         , uint8            iNCC
-                                                                         , uint8            iHEA
-                                                                         , uint8            iSPP
-                                                                         , uint8            iBPP
-                                                                         , uint8            iAID
-                                                                         , tSize             iSRC_BPS
-                                                                         , const FRect&     iSrcROI
-                                                                         , const FRect&     iBdpROI
-                                                                         , const glm::vec2& iSubpixelComponent
-                                                                         , eBlendingMode    iBlendingMode
-                                                                         , eAlphaMode       iAlphaMode
-                                                                         , ufloat           iOpacity )
+InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel( const tByte*                         iSrc
+                                                                         , tByte*                               iBdp
+                                                                         , int32                                iLine
+                                                                         , const tSize                          iSrcBps
+                                                                         , const FFormatInfo*                   iFmtInfo
+                                                                         , std::shared_ptr< const FBlendInfo >  iBlendParams )
 {
-    const tByte*        src = iSRC;
-    tByte*              bdp = iBDP;
-    const glm::vec2&    sub = iSubpixelComponent;
-    glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
-    FPixelValue         src_sample( iFMT );             // Subpixel sample on source
-    FPixelProxy         bdp_proxy( bdp, iFMT );         // Proxy on backdrop
-    FPixelValue         src_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl source
-    FPixelValue         bdp_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl backdrop
-    FPixelValue         res_conv( ULIS2_FORMAT_RGBF );  // conv buffer for hsl result
-    FPixelValue         result( iFMT );                 // result buffer in native model format
+    const FBlendInfo&   blendInfo       = *iBlendParams;
+    const tByte*        src             = iSrc;
+    tByte*              bdp             = iBdp;
 
-    //  -------------
-    //  | m00 | m10 |
-    //  |_____|_____|___
-    //  | m01 | m11 |
-    //  |_____|_____|
-    //     |  |  |
-    //    vv0 | vv1  -> res
+    const bool notLastLine  = iLine < blendInfo._backdropCoverage.y;
+    const bool notFirstLine = iLine > 0;
+    const bool onLeftBorder = blendInfo._backdropWorkingRect.x == 0;
+    const bool hasLeftData  = blendInfo.sourceRect.x + blendInfo._shift.x > 0;
+    const bool hasTopData   = blendInfo.sourceRect.y + blendInfo._shift.y > 0;
+
+    FPixelValue src_sample( iFmtInfo->FMT );
+    FPixelValue src_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue bdp_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue res_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue result( iFmtInfo->FMT );
+
     float m11, m01, m10, m00, vv0, vv1, res;
-    m11 = m10 = vv1 = 0.f;
-    for( int x = 0; x < iBdpROI.w; ++x ) {
+    m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - iFmtInfo->BPP,              iFmtInfo->AID ) : 0.f;
+    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,    iFmtInfo->AID ) : 0.f;
+    vv1 = m10 * blendInfo.backdropPosition.y + m11 * blendInfo._buspixelComponent.y;
+
+    for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
+        const bool notLastCol = x < blendInfo._backdropCoverage.x;
         m00 = m10;
         m01 = m11;
         vv0 = vv1;
-        SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
-        const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
-        const float alpha_src       = res * iOpacity;
-        const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
-        const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-        float alpha_result;
-        ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
+        
+        if( iFmtInfo->HEA ) {
+            m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,              iFmtInfo->AID ) : 0.f;
+            m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - iSrcBps,    iFmtInfo->AID ) : 0.f;
+        } else {
+            m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;
+            m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;
+        }
 
-        for( uint8 j = 0; j < iNCC; ++j ) {
-            uint8 r = iXIDT[j];
-            float srcvf = SampleSubpixelChannelPremult< T >( src, r, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, m11, m01, m10, m00, res );
+        vv1 = m10 * blendInfo.backdropPosition.y + m11 * blendInfo._buspixelComponent.y;
+        res = vv0 * blendInfo.backdropPosition.x + vv1 * blendInfo._buspixelComponent.x;
+        const float alpha_bdp   = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
+        const float alpha_src   = res * blendInfo.opacityValue;
+        const float alpha_comp  = AlphaNormalF( alpha_src, alpha_bdp );
+        const float var         = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+        float alpha_result;
+        ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
+
+        for( uint8 j = 0; j < iFmtInfo->NCC; ++j ) {
+            uint8 r = iFmtInfo->IDT[j];
+            float s11 = ( notLastCol  && notLastLine )                                      ?   TYPE2FLOAT( src,                            r ) : 0.f;
+            float s01 = ( notLastLine && ( x > 0 || hasLeftData ) )                         ?   TYPE2FLOAT( src - iFmtInfo->BPP,            r ) : 0.f;
+            float s10 = ( notLastCol && ( notFirstLine || hasTopData ) )                    ?   TYPE2FLOAT( src - iSrcBps,                  r ) : 0.f;
+            float s00 = ( ( x > 0 || hasLeftData ) && ( notFirstLine || hasTopData ) )      ?   TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,  r ) : 0.f;
+            float v1 = ( s00 * m00 ) * blendInfo.backdropPosition.y + ( s01 * m01 ) * blendInfo._buspixelComponent.y;
+            float v2 = ( s10 * m10 ) * blendInfo.backdropPosition.y + ( s11 * m11 ) * blendInfo._buspixelComponent.y;
+            float srcvf = res == 0.f ? 0.f : ( ( v1 ) * blendInfo.backdropPosition.x + ( v2 ) * blendInfo._buspixelComponent.x ) / res;
             FLOAT2TYPE( src_sample.Ptr(), r, srcvf );
         }
-        bdp_proxy.SetPtr( bdp );
+
+        FPixelProxy bdp_proxy( bdp, iFmtInfo->FMT );
         Conv( src_sample, src_conv );
         Conv( bdp_proxy, bdp_conv );
         FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
         FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
         FRGBF result_rgbf;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
-        ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS2_SWITCH_FOR_ALL_DO( blendInfo.blendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
+
         res_conv.SetRF( result_rgbf.R );
         res_conv.SetGF( result_rgbf.G );
         res_conv.SetBF( result_rgbf.B );
         Conv( res_conv, result );
 
-        // Compose
-        for( uint8 j = 0; j < iNCC; ++j ) {
-            uint8 r = iXIDT[j];
+        for( uint8 j = 0; j < iFmtInfo->NCC; ++j ) {
+            uint8 r = iFmtInfo->IDT[j];
             FLOAT2TYPE( bdp, r, ComposeF( TYPE2FLOAT( src_sample.Ptr(), r ), TYPE2FLOAT( bdp_proxy.Ptr(), r ), alpha_bdp, var, TYPE2FLOAT( result.Ptr(), r ) ) );
         }
 
-        // Assign alpha
-        if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
-
-        // Increment ptrs by one pixel
-        src += iBPP;
-        bdp += iBPP;
+        if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
+        src += iFmtInfo->BPP;
+        bdp += iFmtInfo->BPP;
     }
 }
 
 template< typename T >
 void
 BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
-    /*
-    uint8* xidt;
-    uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
-    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
-    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
-    const tByte*    src = iSource->DataPtr();
-    tByte*          bdp = iBackdrop->DataPtr();
-    tFormat fmt = iSource->Format();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel< T >, pLINE, fmt
-                                                                       , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * bpp )
-                                                                       , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
-                                                                       , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
-                                                                       , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
-                                                                       */
+    const FBlendInfo&   blendInfo   = *iBlendParams;
+    const tByte*        src         = iBlendParams->source->DataPtr();
+    tByte*              bdp         = iBlendParams->backdrop->DataPtr();
+    const tSize         src_bps     = iBlendParams->source->BytesPerScanLine();
+    const tSize         bdp_bps     = iBlendParams->backdrop->BytesPerScanLine();
+    const tSize         src_decal_y = blendInfo._shift.y + blendInfo.sourceRect.y;
+    const tSize         src_decal_x = ( blendInfo._shift.x + blendInfo.sourceRect.x )   * iFormatInfo.BPP;
+    const tSize         bdp_decal_x = ( blendInfo._backdropWorkingRect.x )              * iFormatInfo.BPP;
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
+                                   , blendInfo._backdropWorkingRect.h
+                                   , InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic_Subpixel< T >
+                                   , src + ( ( src_decal_y + pLINE )                        * src_bps ) + src_decal_x
+                                   , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE )   * bdp_bps ) + bdp_decal_x
+                                   , pLINE , src_bps, &iFormatInfo, iBlendParams );
 }
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic( int32             iLINE
-                                                                , tFormat           iFMT
-                                                                , const tByte*      iSRC
-                                                                , tByte*            iBDP
-                                                                , uint8*            iXIDT
-                                                                , uint8             iBPC
-                                                                , uint8             iNCC
-                                                                , uint8             iHEA
-                                                                , uint8             iSPP
-                                                                , uint8             iBPP
-                                                                , uint8             iAID
-                                                                , tSize             iSRC_BPS
-                                                                , const FRect&      iSrcROI
-                                                                , const FRect&      iBdpROI
-                                                                , const glm::vec2&  iSubpixelComponent
-                                                                , eBlendingMode     iBlendingMode
-                                                                , eAlphaMode        iAlphaMode
-                                                                , ufloat            iOpacity )
+InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic( const tByte*                          iSrc
+                                                                , tByte*                                iBdp
+                                                                , int32                                 iLine
+                                                                , const FFormatInfo*                    iFmtInfo
+                                                                , std::shared_ptr< const FBlendInfo >   iBlendParams )
 {
-    const tByte*    src = iSRC;
-    tByte*          bdp = iBDP;
-    FPixelProxy     src_proxy( src, iFMT );         // Proxy on source
-    FPixelProxy     bdp_proxy( bdp, iFMT );         // Proxy on backdrop
-    FPixelValue     src_conv( ULIS2_FORMAT_RGBF );  // conv buffer for rgb source
-    FPixelValue     bdp_conv( ULIS2_FORMAT_RGBF );  // conv buffer for rgb backdrop
-    FPixelValue     res_conv( ULIS2_FORMAT_RGBF );  // conv buffer for rgb result
-    FPixelValue     result( iFMT );                 // result buffer in native model format
-
-    for( int x = 0; x < iBdpROI.w; ++x ) {
-        // Compose Alpha
-        const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
-        const float alpha_src       = iHEA ? TYPE2FLOAT( src, iAID ) * iOpacity : iOpacity;
+    const FBlendInfo&   blendInfo   = *iBlendParams;
+    const tByte*        src         = iSrc;
+    tByte*              bdp         = iBdp;
+    FPixelValue src_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue bdp_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue res_conv( ULIS2_FORMAT_RGBF );
+    FPixelValue result( iFmtInfo->FMT );
+    for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
+        const float alpha_src       = iFmtInfo->HEA ? TYPE2FLOAT( src, iFmtInfo->AID ) * blendInfo.opacityValue : blendInfo.opacityValue;
+        const float alpha_bdp       = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
         const float alpha_comp      = AlphaNormalF( alpha_src, alpha_bdp );
         const float var             = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         float alpha_result;
-        ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        src_proxy.SetPtr( src );
-        bdp_proxy.SetPtr( bdp );
+        const FPixelProxy src_proxy( src, iFmtInfo->FMT );
+              FPixelProxy bdp_proxy( bdp, iFmtInfo->FMT );
         Conv( src_proxy, src_conv );
         Conv( bdp_proxy, bdp_conv );
         FRGBF src_rgbf = { src_conv.RF(), src_conv.GF(), src_conv.BF() };
         FRGBF bdp_rgbf = { bdp_conv.RF(), bdp_conv.GF(), bdp_conv.BF() };
         FRGBF result_rgbf;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) result_rgbf = NonSeparableOpF< _BM >( src_rgbf, bdp_rgbf );
-        ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS2_SWITCH_FOR_ALL_DO( blendInfo.blendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
+
         res_conv.SetRF( result_rgbf.R );
         res_conv.SetGF( result_rgbf.G );
         res_conv.SetBF( result_rgbf.B );
         Conv( res_conv, result );
 
-        // Compose
-        for( uint8 j = 0; j < iNCC; ++j ) {
-            uint8 r = iXIDT[j];
+        for( uint8 j = 0; j < iFmtInfo->NCC; ++j ) {
+            uint8 r = iFmtInfo->IDT[j];
             FLOAT2TYPE( bdp, r, ComposeF( TYPE2FLOAT( src_proxy.Ptr(), r ), TYPE2FLOAT( bdp_proxy.Ptr(), r ), alpha_bdp, var, TYPE2FLOAT( result.Ptr(), r ) ) );
         }
 
-        // Assign alpha
-        if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
-
-        // Increment ptrs by one pixel
-        src += iBPP;
-        bdp += iBPP;
+        if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
+        src += iFmtInfo->BPP;
+        bdp += iFmtInfo->BPP;
     }
 }
 
 template< typename T >
 void
 BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
-/*
-    uint8* xidt;
-    uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
-    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
-    const tByte*    src = iSource->DataPtr();
-    tByte*          bdp = iBackdrop->DataPtr();
-    tFormat fmt = iSource->Format();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic< T >, pLINE, fmt
-                                                                       , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * bpp )
-                                                                       , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
-                                                                       , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
-                                                                       , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
-                                                                       */
+    const FBlendInfo&   blendInfo   = *iBlendParams;
+    const tByte*        src         = iBlendParams->source->DataPtr();
+    tByte*              bdp         = iBlendParams->backdrop->DataPtr();
+    const tSize         src_bps     = iBlendParams->source->BytesPerScanLine();
+    const tSize         bdp_bps     = iBlendParams->backdrop->BytesPerScanLine();
+    const tSize         src_decal_x = blendInfo.sourceRect.x            * iFormatInfo.BPP;
+    const tSize         bdp_decal_x = blendInfo._backdropWorkingRect.x  * iFormatInfo.BPP;
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
+                                   , blendInfo._backdropWorkingRect.h
+                                   , InvokeBlendMTProcessScanline_NonSeparable_CM_DEFAULT_MEM_Generic< T >
+                                   , src + ( ( blendInfo.sourceRect.y           + pLINE ) * src_bps ) + src_decal_x
+                                   , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                   , pLINE , &iFormatInfo, iBlendParams );
 }
 
 ULIS2_NAMESPACE_END

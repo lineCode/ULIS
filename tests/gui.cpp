@@ -11,19 +11,20 @@
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include <ULIS2>
+#include <chrono>
 #include <QApplication>
 #include <QWidget>
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
-#include <ULIS2>
 
 int
 main( int argc, char *argv[] )
 {
     ::ul2::FThreadPool  threadPool;
     ::ul2::FBlock       blockA( 800, 600,   ULIS2_FORMAT_RGBA8 );
-    ::ul2::FBlock       blockB( 54, 55,     ULIS2_FORMAT_RGBA8 );
+    ::ul2::FBlock       blockB( 55, 55,     ULIS2_FORMAT_RGBA8 );
 
     ::ul2::FPerfInfo perfInfo = {};
     perfInfo.pool       = &threadPool;

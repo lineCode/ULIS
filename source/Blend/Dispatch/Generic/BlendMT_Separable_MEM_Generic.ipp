@@ -68,7 +68,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, 
             float s11 = ( notLastCol  && notLastLine )                                      ?   TYPE2FLOAT( src,                            r ) : 0.f;
             float s01 = ( notLastLine && ( x > 0 || hasLeftData ) )                         ?   TYPE2FLOAT( src - iFmtInfo->BPP,            r ) : 0.f;
             float s10 = ( notLastCol && ( notFirstLine || hasTopData ) )                    ?   TYPE2FLOAT( src - iSrcBps,                  r ) : 0.f;
-            float s00 = ( ( x > 0 || hasLeftData > 0 ) && ( notFirstLine || hasTopData ) )  ?   TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,  r ) : 0.f;
+            float s00 = ( ( x > 0 || hasLeftData ) && ( notFirstLine || hasTopData ) )      ?   TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,  r ) : 0.f;
             float v1 = ( s00 * m00 ) * blendInfo.backdropPosition.y + ( s01 * m01 ) * blendInfo._buspixelComponent.y;
             float v2 = ( s10 * m10 ) * blendInfo.backdropPosition.y + ( s11 * m11 ) * blendInfo._buspixelComponent.y;
             float srcvf = res == 0.f ? 0.f : ( ( v1 ) * blendInfo.backdropPosition.x + ( v2 ) * blendInfo._buspixelComponent.x ) / res;
@@ -96,7 +96,7 @@ BlendMT_Separable_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, std::sha
     const tSize         src_decal_x = ( blendInfo._shift.x + blendInfo.sourceRect.x )   * iFormatInfo.BPP;
     const tSize         bdp_decal_x = ( blendInfo._backdropWorkingRect.x )              * iFormatInfo.BPP;
     ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
-                                   , iBlendParams->_backdropWorkingRect.h
+                                   , blendInfo._backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T >
                                    , src + ( ( src_decal_y + pLINE )                        * src_bps ) + src_decal_x
                                    , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE )   * bdp_bps ) + bdp_decal_x
@@ -143,7 +143,7 @@ BlendMT_Separable_MEM_Generic( const FFormatInfo& iFormatInfo, std::shared_ptr< 
     const tSize         src_decal_x = blendInfo.sourceRect.x            * iFormatInfo.BPP;
     const tSize         bdp_decal_x = blendInfo._backdropWorkingRect.x  * iFormatInfo.BPP;
     ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
-                                   , iBlendParams->_backdropWorkingRect.h
+                                   , blendInfo._backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >
                                    , src + ( ( blendInfo.sourceRect.y           + pLINE ) * src_bps ) + src_decal_x
                                    , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x

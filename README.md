@@ -166,12 +166,12 @@ Full program for rendering simple black text on white background (API is subject
 int
 main( int argc, char *argv[] )
 {
-    FBlock          block( 512, 512, ULIS2_FORMAT_BGRA8 );
-    FThreadPool     threadPool;
-    FPerf           perfIntent( Perf_Best_CPU );
-    FCPU            cpuInfo
-    FPixel          white( ULIS2_FORMAT_BGRA8, { 255_u8, 255_u8, 255_u8, 255_u8 } );
-    FPixel          black( ULIS2_FORMAT_BGRA8, { 0_u8, 0_u8, 0_u8, 0_u8 } );
+    FBlock      block( 512, 512, ULIS2_FORMAT_BGRA8 );
+    FThreadPool threadPool;
+    FPerf       perfIntent( Perf_Best_CPU );
+    FCPU        cpuInfo
+    FPixel      white( ULIS2_FORMAT_BGRA8, { 255_u8, 255_u8, 255_u8, 255_u8 } );
+    FPixel      black( ULIS2_FORMAT_BGRA8, { 0_u8, 0_u8, 0_u8, 0_u8 } );
 
     Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &block, white, ULIS2_NOCB );
 
@@ -187,7 +187,7 @@ main( int argc, char *argv[] )
 }
 ```
 
-The new API for complex blend operations:
+The new API for blend operations:
 ```cpp
 #include <ULIS2>
 
@@ -195,8 +195,8 @@ int
 main( int argc, char *argv[] )
 {
     // Bake data
-    FBlock          blockBase( 1024, 1024, ULIS2_FORMAT_BGRA8 );
-    FBlock          blockOver( 512, 512, ULIS2_FORMAT_BGRA8 );
+    FBlock  blockBase( 1024, 1024, ULIS2_FORMAT_BGRA8 );
+    FBlock  blockOver( 512, 512, ULIS2_FORMAT_BGRA8 );
 
     // Bake perf info
     FPerfInfo perfInfo = {};
