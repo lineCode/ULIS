@@ -24,24 +24,7 @@
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_NonSeparable_CM_Lab_MEM_Generic_Subpixel( int32            iLINE
-                                                                     , const tByte*     iSRC
-                                                                     , tByte*           iBDP
-                                                                     , uint8*           iXIDT
-                                                                     , uint8            iBPC
-                                                                     , uint8            iNCC
-                                                                     , uint8            iHEA
-                                                                     , uint8            iSPP
-                                                                     , uint8            iBPP
-                                                                     , uint8            iAID
-                                                                     , tSize             iSRC_BPS
-                                                                     , const FRect&     iSrcROI
-                                                                     , const FRect&     iBdpROI
-                                                                     , const glm::vec2& iSubpixelComponent
-                                                                     , eBlendingMode    iBlendingMode
-                                                                     , eAlphaMode       iAlphaMode
-                                                                     , ufloat           iOpacity )
-{
+InvokeBlendMTProcessScanline_NonSeparable_CM_Lab_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
     const FBlendInfo&   blendInfo       = *iBlendParams;
     const tByte*        src             = iSrc;
     tByte*              bdp             = iBdp;
@@ -75,7 +58,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_Lab_MEM_Generic_Subpixel( int32    
         SampleSubpixelChannel( subpixel_a, iFmtInfo->IDT[1] );
         SampleSubpixelChannel( subpixel_b, iFmtInfo->IDT[2] );
         FLabF src_lab = { subpixel_L, subpixel_a, subpixel_b };
-        FLabF bdp_lab = { TYPE2FLOAT( bdp, iXIDT[0] ), TYPE2FLOAT( bdp, iXIDT[1] ), TYPE2FLOAT( bdp, iXIDT[2] ) };
+        FLabF bdp_lab = { TYPE2FLOAT( bdp, iFmtInfo->IDT[0] ), TYPE2FLOAT( bdp, iFmtInfo->IDT[1] ), TYPE2FLOAT( bdp, iFmtInfo->IDT[2] ) };
         FLChF src_lch = LabToLCh( src_lab );
         FLChF bdp_lch = LabToLCh( bdp_lab );
         FLChF result_lch;

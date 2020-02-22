@@ -57,7 +57,7 @@ InvokeBlendMTProcessScanline_NonSeparable_CM_Grey_MEM_Generic_Subpixel( const tB
         SampleSubpixelChannel( srcvf, iFmtInfo->IDT[0] );
         float bdp_greyf = TYPE2FLOAT( bdp, iFmtInfo->IDT[0] );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, iFmtInfo->IDT[0], ComposeF( srcvf, bdp_greyf, alpha_bdp, var, NonSeparableOpF< _BM >( srcvf, bdp_greyf ) ) );
-        ULIS2_SWITCH_FOR_ALL_DO( iBlendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS2_SWITCH_FOR_ALL_DO( blendInfo.blendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
