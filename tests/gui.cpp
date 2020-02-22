@@ -22,23 +22,40 @@
 int
 main( int argc, char *argv[] )
 {
-    ::ul2::FThreadPool  threadPool;
-    ::ul2::FBlock       blockA( 800, 600,   ULIS2_FORMAT_RGBA8 );
-    ::ul2::FBlock       blockB( 55, 55,     ULIS2_FORMAT_RGBA8 );
+    ::ul2::FThreadPool  threadPool( 1 );
 
     ::ul2::FPerfInfo perfInfo = {};
     perfInfo.pool       = &threadPool;
-    perfInfo.intent     = ::ul2::FPerf( 0 );
-    perfInfo.blocking   = ULIS2_BLOCKING;
+    perfInfo.intent     = ::ul2::FPerf( ::ul2::Perf_MT | ::ul2::Perf_AVX2 );
+    perfInfo.blocking   = ULIS2_NONBLOCKING;
     perfInfo.callCB     = ULIS2_NOCB;
+
+    ::ul2::FBlock       blockA( 800, 600,   ULIS2_FORMAT_RGBA8 );
+    ::ul2::FBlock       blockB( 55, 55,     ULIS2_FORMAT_RGBA8 );
+    ::ul2::FPixelValue  red(    ULIS2_FORMAT_RGBA8, { 255, 0, 0, 255 } );
+    ::ul2::FPixelValue  green(  ULIS2_FORMAT_RGBA8, { 0, 255, 0, 255 } );
+
+    ::ul2::FFillInvo fillInfo = {};
+    fillInfo.destination    = &blockA;
+    fillInfo.color          = &green;
+    fillInfo.area           = blockA.Rect();
+    fillInfo.perfInfo       = perfInfo;
+    ::ul2::Fill( fillInfo );
+
+    fillInfo.destination    = &blockB;
+    fillInfo.color          = &red;
+    fillInfo.area           = blockB.Rect();
+    ::ul2::Fill( fillInfo );
+
+    ::ul2::Fence( threadPool );
 
     ::ul2::FBlendInfo blendInfo = {};
     blendInfo.source            = &blockB;
     blendInfo.backdrop          = &blockA;
     blendInfo.sourceRect        = ::ul2::FRect( 0, 0, 65, 65 );
-    blendInfo.backdropPosition  = ::ul2::FVec2F( -20.5, -20.5 );
+    blendInfo.backdropPosition  = ::ul2::FVec2F( 60.5, 60.5 );
     blendInfo.subpixelFlag      = ULIS2_AA;
-    blendInfo.blendingMode      = ::ul2::BM_NORMAL;
+    blendInfo.blendingMode      = ::ul2::BM_COLOR;
     blendInfo.alphaMode         = ::ul2::AM_NORMAL;
     blendInfo.opacityValue      = 1.f;
     blendInfo.perfInfo          = perfInfo;

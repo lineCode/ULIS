@@ -17,7 +17,6 @@
 #include "Blend/BlendingPRNGSeed.h"
 #include "Blend/Modes.h"
 #include "Maths/Geometry.h"
-#include <memory>
 
 ULIS2_NAMESPACE_BEGIN
 

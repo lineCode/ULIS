@@ -73,5 +73,9 @@ private:
     std::condition_variable             cv_finished;
 };
 
+ULIS2_API ULIS2_FORCEINLINE void Fence( FThreadPool& iPool ) {
+    iPool.WaitForCompletion();
+}
+
 ULIS2_NAMESPACE_END
 
