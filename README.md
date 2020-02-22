@@ -11,6 +11,7 @@ Check LICENSE.md, ULIS2 is not available for commerical use.
         Build as static or dynamic library
         Very lightweight, good performance
         Generic Digital Image Processing
+        Python3x binding
 
 Details:
 
@@ -39,7 +40,7 @@ The library needed to mature a bit, and the changes to make were so drastic that
 ULIS2 was scheduled for release in February 2020, and comes with a much simpler API, drastically reduced compile times and output binary sizes, better performances, and a lot of additional features such as support for more models, actual support for AVX2 optimisations, color mix, smudge, new blending modes and alpha modes, new interpolation types, etc.  
 The build framework was also simplified and extended to conform to the typical cmake build process.  
 Support for GPU image processing with OpenCL was introduced.  
-Additionally, the library dependencies changed and are now embedded in the repository. The library doesn't rely on preprocessor so much anymore so boost_preprocessor and coal were removed, Qt and OpenCL are now fully optional, and VCL was added for handling SSE / AVX optimisations in a simpler way.  
+Additionally, the library dependencies changed and are now embedded in the repository. The library doesn't rely on preprocessor trickery so much anymore so boost_preprocessor and coal were removed, Qt and OpenCL are now fully optional, and VCL was added for handling SSE / AVX optimisations in a simpler way.  
 
 ## Software Requirements Specification ( SRS )
 
@@ -54,16 +55,17 @@ Dependencies are redistributed directly within the repository under the 3rdparty
 
         cppfs
         FeatureDetector
-        freetype2
+        Freetype2
         glm
         OpenCL
-        Little-CMS
+        Little-CMS2
         stb
         VCL ( Agner Fog's Vector Class Library )
 
 Additional Optional library can be used with ULIS2 to test or extend capabilities:
 
         Qt
+        Python3x
 
 ## Getting Started
 
@@ -88,73 +90,73 @@ using namespace ul2;
 
 Create colors in different models:
 ```cpp
-	FColor color_rgb8_red(  	ULIS2_FORMAT_RGB8,  { 255, 0, 0 } 			); 	// Red, constructed from int clamped in range 0-255.
-	FColor color_rgba8_blue(    ULIS2_FORMAT_RGBA8, { 0, 0, 255, 127 } 		);  // Blue with semi transparent alpha information, constructed from int clamped in range 0-255.
-	FColor color_rgba8_green(   ULIS2_FORMAT_RGBA8, { 0.f, 1.f, 0.f, 0.5f } );  // Green with semi transparent alpha information, constructed from float scaled to range 0-255
-	FColor color_bgraF_red(     ULIS2_FORMAT_RGBAF, { 1.f, 0.f, 0.f, 0.5f } );  // Red with semi transparent alpha information, constructed from float, not clamped.
-	FColor color_LabD(          ULIS2_FORMAT_LabD );    // Lab double color, initialized with zero values.
-	FColor color_LabF(          ULIS2_FORMAT_LabF );    // Lab float color, initialized with zero values.
-	FColor color_HSVAF(         ULIS2_FORMAT_HSVAF );   // HSV float color with alpha information, initialized with zero values.
-	FColor color_CMYKA16(       ULIS2_FORMAT_CMYKA16 ); // CMYK 16bit uint color with alpha information, initialized with zero values.
-	FColor color_ABGR8(         ULIS2_FORMAT_ABGR8 );   // Rgb 8bit uint color with alpha information, ABGR8888 memory layout, initialized with zero values.
-	FColor color_BGRA8(         ULIS2_FORMAT_BGRA8 );   // Rgb 8bit uint color with alpha information, BGRA8888 memory layout, initialized with zero values.
-	// etc ...
-	
-	FColor color( ULIS2_FORMAT_RGBA8 );
-	color.SetR8( 255 );
-	color.SetG8( 255 );
-	color.SetB8( 255 );
-	color.SetA8( 255 );
-	// Color will be white.
-	// Other accessors can be used too:
-	color.SetRF( 0.5 );
-	color.SetGF( 0.2 );
-	color.SetBF( 0.0 );
-	color.SetA8( 1.f );
-	
-	// Conversion of any combinations of models can be performed with Conv( Src, Dst )
-	FColor color_RGBA8( ULIS2_FORMAT_RGBA8 		);
-	FColor color_RGBA16( ULIS2_FORMAT_RGBA16 	);
-	FColor color_BGRAD( ULIS2_FORMAT_BGRAD 		);
-	FColor color_AbaLF( ULIS2_FORMAT_AbaLF 		);
-	Conv( color_RGBA8, color_RGBA16 );  // perform value conversion from range 0-255 to 0-65535
-	Conv( color_RGBA8, color_BGRAD );   // perform layout conversion from RGBA to BGRA and value conversion from range 0-255 to 0.0-1.0
-	Conv( color_RGBA8, color_AbaLF );   // perform model conversion and value conversion from RGBA uint8 to Lab float with specified memory layout AbaLffff.
-	// etc ...
+    FColor color_rgb8_red(      ULIS2_FORMAT_RGB8,  { 255, 0, 0 }           );  // Red, constructed from int clamped in range 0-255.
+    FColor color_rgba8_blue(    ULIS2_FORMAT_RGBA8, { 0, 0, 255, 127 }      );  // Blue with semi transparent alpha information, constructed from int clamped in range 0-255.
+    FColor color_rgba8_green(   ULIS2_FORMAT_RGBA8, { 0.f, 1.f, 0.f, 0.5f } );  // Green with semi transparent alpha information, constructed from float scaled to range 0-255
+    FColor color_bgraF_red(     ULIS2_FORMAT_RGBAF, { 1.f, 0.f, 0.f, 0.5f } );  // Red with semi transparent alpha information, constructed from float, not clamped.
+    FColor color_LabD(          ULIS2_FORMAT_LabD );    // Lab double color, initialized with zero values.
+    FColor color_LabF(          ULIS2_FORMAT_LabF );    // Lab float color, initialized with zero values.
+    FColor color_HSVAF(         ULIS2_FORMAT_HSVAF );   // HSV float color with alpha information, initialized with zero values.
+    FColor color_CMYKA16(       ULIS2_FORMAT_CMYKA16 ); // CMYK 16bit uint color with alpha information, initialized with zero values.
+    FColor color_ABGR8(         ULIS2_FORMAT_ABGR8 );   // Rgb 8bit uint color with alpha information, ABGR8888 memory layout, initialized with zero values.
+    FColor color_BGRA8(         ULIS2_FORMAT_BGRA8 );   // Rgb 8bit uint color with alpha information, BGRA8888 memory layout, initialized with zero values.
+    // etc ...
+
+    FColor color( ULIS2_FORMAT_RGBA8 );
+    color.SetR8( 255 );
+    color.SetG8( 255 );
+    color.SetB8( 255 );
+    color.SetA8( 255 );
+    // Color will be white.
+    // Other accessors can be used too:
+    color.SetRF( 0.5 );
+    color.SetGF( 0.2 );
+    color.SetBF( 0.0 );
+    color.SetA8( 1.f );
+
+    // Conversion of any combinations of models can be performed with Conv( Src, Dst )
+    FColor color_RGBA8( ULIS2_FORMAT_RGBA8      );
+    FColor color_RGBA16( ULIS2_FORMAT_RGBA16    );
+    FColor color_BGRAD( ULIS2_FORMAT_BGRAD      );
+    FColor color_AbaLF( ULIS2_FORMAT_AbaLF      );
+    Conv( color_RGBA8, color_RGBA16 );  // perform value conversion from range 0-255 to 0-65535
+    Conv( color_RGBA8, color_BGRAD );   // perform layout conversion from RGBA to BGRA and value conversion from range 0-255 to 0.0-1.0
+    Conv( color_RGBA8, color_AbaLF );   // perform model conversion and value conversion from RGBA uint8 to Lab float with specified memory layout AbaLffff.
+    // etc ...
 ```
 
 Get info from pixel colors in different models:
 ```cpp
-	FPixel rgba8( ULIS2_FORMAT_RGBA8 );
-	pixelcolor.BytesPerSample()     // 1
-	pixelcolor.Depth()              // 4
-	pixelcolor.Format()             // ULIS2_FORMAT_RGBA8
-	pixelcolor.Model()              // CM_RGB
-	pixelcolor.Type()               // TYPE_UINT8
-	pixelcolor.HasAlpha()           // true
-	pixelcolor.NumSamples()         // 4
-	pixelcolor.NumColorChannels()   // 3
+    FPixel rgba8( ULIS2_FORMAT_RGBA8 );
+    pixelcolor.BytesPerSample()     // 1
+    pixelcolor.Depth()              // 4
+    pixelcolor.Format()             // ULIS2_FORMAT_RGBA8
+    pixelcolor.Model()              // CM_RGB
+    pixelcolor.Type()               // TYPE_UINT8
+    pixelcolor.HasAlpha()           // true
+    pixelcolor.NumSamples()         // 4
+    pixelcolor.NumColorChannels()   // 3
 ```
 
 Create and manipulate Images in various formats:
 ```cpp
-	int         width   = 512;
-	int         height  = 512;
-	
-	// Allocate blocks of size 512x512, with format layout in memory RGBA8888, memory is uninitialized
-	FBlock      image_A( width, height, ULIS2_FORMAT_RGBA8 );
-	FBlock      image_B( width, height, ULIS2_FORMAT_RGBA8 );
-	
-	// Create a thread pool with as many threads as supported by the system, and launch these threads
-	FThreadPool threadPool;
+    int         width   = 512;
+    int         height  = 512;
 
-	// Specify performances intent for operations.
-	// User may want to not use multithreading or AVX optimisation for benchmark purpose
-	FPerf       perfIntent( Perf_MT | Perf_SSE4_2 | Perf_AVX2 );
-	
-	// Pixel colors in RGB8
-	FColor      colorWhite( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
-	FColor      colorBlack( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
+    // Allocate blocks of size 512x512, with format layout in memory RGBA8888, memory is uninitialized
+    FBlock      image_A( width, height, ULIS2_FORMAT_RGBA8 );
+    FBlock      image_B( width, height, ULIS2_FORMAT_RGBA8 );
+ 
+    // Create a thread pool with as many threads as supported by the system, and launch these threads
+    FThreadPool threadPool;
+
+    // Specify performances intent for operations.
+    // User may want to not use multithreading or AVX optimisation for benchmark purpose
+    FPerf       perfIntent( Perf_MT | Perf_SSE4_2 | Perf_AVX2 );
+
+    // Pixel colors in RGB8
+    FColor      colorWhite( ULIS2_FORMAT_RGB8, { 255, 255, 255 } );
+    FColor      colorBlack( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
 ```
 
 Full program for rendering simple black text on white background (API is subject to changes):
@@ -164,24 +166,24 @@ Full program for rendering simple black text on white background (API is subject
 int
 main( int argc, char *argv[] )
 {
-	FBlock          block( 512, 512, ULIS2_FORMAT_BGRA8 );
-	FThreadPool     threadPool;
-	FPerf           perfIntent( Perf_Best_CPU );
-	FCPU            cpuInfo
-	FPixel          white( ULIS2_FORMAT_BGRA8, { 255_u8, 255_u8, 255_u8, 255_u8 } );
-	FPixel          black( ULIS2_FORMAT_BGRA8, { 0_u8, 0_u8, 0_u8, 0_u8 } );
+    FBlock          block( 512, 512, ULIS2_FORMAT_BGRA8 );
+    FThreadPool     threadPool;
+    FPerf           perfIntent( Perf_Best_CPU );
+    FCPU            cpuInfo
+    FPixel          white( ULIS2_FORMAT_BGRA8, { 255_u8, 255_u8, 255_u8, 255_u8 } );
+    FPixel          black( ULIS2_FORMAT_BGRA8, { 0_u8, 0_u8, 0_u8, 0_u8 } );
 
-	Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &block, white, ULIS2_NOCB );
+    Fill( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &block, white, ULIS2_NOCB );
 
-	FFontEngine     fontEngine;
-	FFontRegistry   fontRegistry;
-	fontRegistry.Load( fontEngine );
+    FFontEngine     fontEngine;
+    FFontRegistry   fontRegistry;
+    fontRegistry.Load( fontEngine );
 
-	FFont font_Arial_Black( fontEngine, fontRegistry, "Arial", "Black" );
+    FFont font_Arial_Black( fontEngine, fontRegistry, "Arial", "Black" );
 
-	DrawText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &block, "Hello World !", glm::vec2( 0.f ), black, font_Arial_Black, 16px, ULIS2_NOCB );
+    DrawText( &threadPool, ULIS2_BLOCKING, perfIntent, cpuInfo, &block, "Hello World !", glm::vec2( 0.f ), black, font_Arial_Black, 16px, ULIS2_NOCB );
 
-	return  0;
+    return  0;
 }
 ```
 
@@ -192,34 +194,34 @@ The new API for complex blend operations:
 int
 main( int argc, char *argv[] )
 {
-	// Bake data
-	FBlock          blockBase( 1024, 1024, ULIS2_FORMAT_BGRA8 );
-	FBlock          blockOver( 512, 512, ULIS2_FORMAT_BGRA8 );
-	
-	// Bake perf info
-	FPerfInfo perfInfo = {};
-    perfInfo.pool    	= &threadPool;
+    // Bake data
+    FBlock          blockBase( 1024, 1024, ULIS2_FORMAT_BGRA8 );
+    FBlock          blockOver( 512, 512, ULIS2_FORMAT_BGRA8 );
+
+    // Bake perf info
+    FPerfInfo perfInfo = {};
+    perfInfo.pool       = &threadPool;
     perfInfo.intent     = FPerf( Perf_MT | Perf_TSPEC | Perf_AVX2 );
     perfInfo.blocking   = ULIS2_NONBLOCKING;
     perfInfo.callCB     = ULIS2_NOCB;
 
-	// Bake blend info
+    // Bake blend info
     FBlendInfo blendInfo = {};
-    blendInfo.source          	= &blockBase;
-    blendInfo.backdrop         	= &blockOver;
-    blendInfo.sourceRect       	= FRect( 64, 64, 128, 128 );
-    blendInfo.tilingTranslation	= FVec2I( 32, 0 );
-    blendInfo.backdropPosition 	= FVec2F( 200.2, 430.34 );
-    blendInfo.backdropCoverage 	= FVec2I( 256, 256 );
-    blendInfo.subpixelFlag     	= ULIS2_AA;
-    blendInfo.blendingMode     	= BM_NORMAL;
-    blendInfo.alphaMode        	= AM_NORMAL;
+    blendInfo.source            = &blockBase;
+    blendInfo.backdrop          = &blockOver;
+    blendInfo.sourceRect        = FRect( 64, 64, 128, 128 );
+    blendInfo.tilingTranslation = FVec2I( 32, 0 );
+    blendInfo.backdropPosition  = FVec2F( 200.2, 430.34 );
+    blendInfo.backdropCoverage  = FVec2I( 256, 256 );
+    blendInfo.subpixelFlag      = ULIS2_AA;
+    blendInfo.blendingMode      = BM_NORMAL;
+    blendInfo.alphaMode         = AM_NORMAL;
     blendInfo.opacityValue      = 0.85f;
-	
-	// Apply operation
+
+    // Apply operation
     BlendRect( perfInfo, blendInfo );
 
-	return  0;
+    return  0;
 }
 ```
 
