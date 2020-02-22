@@ -25,12 +25,12 @@ main( int argc, char *argv[] )
     ::ul2::FThreadPool  threadPool;
     ::ul2::FPerf perfIntent_NONE( 0 );
     ::ul2::FPerf perfIntent_MT( ::ul2::Perf_MT );
-    ::ul2::FPerf perfIntent_MT_SSE_TSPEC( ::ul2::Perf_MT | ::ul2::Perf_SSE4_2 | ::ul2::Perf_TSPEC );
+    ::ul2::FPerf perfIntent_SSE_TSPEC( ::ul2::Perf_SSE4_2 | ::ul2::Perf_TSPEC );
     ::ul2::FPerf perfIntent_MT_AVX_TSPEC( ::ul2::Perf_MT | ::ul2::Perf_AVX2   | ::ul2::Perf_TSPEC );
 
     ::ul2::FPerfInfo perfInfo = {};
     perfInfo.pool       = &threadPool;
-    perfInfo.intent     = perfIntent_NONE;
+    perfInfo.intent     = perfIntent_SSE_TSPEC;
     perfInfo.blocking   = ULIS2_NONBLOCKING;
     perfInfo.callCB     = ULIS2_NOCB;
 
@@ -57,8 +57,8 @@ main( int argc, char *argv[] )
     blendInfo.source            = &blockB;
     blendInfo.backdrop          = &blockA;
     blendInfo.sourceRect        = ::ul2::FRect( 0, 0, 65, 65 );
-    blendInfo.backdropPosition  = ::ul2::FVec2F( 60.5, 60.5 );
-    blendInfo.subpixelFlag      = ULIS2_AA;
+    blendInfo.backdropPosition  = ::ul2::FVec2F( 20.5f, 20.5f );
+    blendInfo.subpixelFlag      = ULIS2_NOAA;
     blendInfo.blendingMode      = ::ul2::BM_COLOR;
     blendInfo.alphaMode         = ::ul2::AM_NORMAL;
     blendInfo.opacityValue      = 1.f;

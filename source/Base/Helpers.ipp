@@ -59,15 +59,7 @@ ULIS2_API ULIS2_FORCEINLINE void BuildIndexTable( uint8 iCOD, uint8 iSPP, uint8*
     }
 }
 
-ULIS2_API ULIS2_FORCEINLINE void BuildRGBA8IndexTable( tFormat iFmt, Vec4i* oIDT, uint8* oAID ) {
-    uint8 cod = ULIS2_R_RS( iFmt );
-    switch( cod ) {
-        case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); *oAID = 0; break;
-        case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); *oAID = 0; break;
-        case 3:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); *oAID = 3; break;
-        default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); *oAID = 3; break;
-    }
-}
+
 
 ULIS2_API ULIS2_FORCEINLINE void  BuildTraceTextParams( const FBlock*   iDST
                                                        , uint8*         oBPC

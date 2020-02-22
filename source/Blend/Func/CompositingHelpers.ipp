@@ -12,6 +12,10 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+#include "Base/Core.h"
+#include <vectorclass.h>
+
+ULIS2_NAMESPACE_BEGIN
 
 #define SampleSubpixelAlpha( _DST )                                                                                 \
 if( iFmtInfo->HEA ) {                                                                                               \
@@ -32,3 +36,15 @@ s00 = ( ( x > 0 || hasLeftData ) && ( notFirstLine || hasTopData ) )    ?   TYPE
 v1 = ( s00 * m00 ) * blendInfo.backdropPosition.y + ( s01 * m01 ) * blendInfo._buspixelComponent.y;                                     \
 v2 = ( s10 * m10 ) * blendInfo.backdropPosition.y + ( s11 * m11 ) * blendInfo._buspixelComponent.y;                                     \
 _DST = res == 0.f ? 0.f : ( ( v1 ) * blendInfo.backdropPosition.x + ( v2 ) * blendInfo._buspixelComponent.x ) / res;
+
+ULIS2_API ULIS2_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
+    switch( iRS ) {
+        case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
+        case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); break;
+        case 3:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); break;
+        default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); break;
+    }
+}
+
+ULIS2_NAMESPACE_END
+
