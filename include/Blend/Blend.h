@@ -38,7 +38,24 @@ ULIS2_API struct FBlendInfo {
     FVec2F          _buspixelComponent;
 };
 
+ULIS2_API struct FComposeAlphaInfo {
+    const FBlock*   source;
+    FBlock*         backdrop;
+    FRect           sourceRect;
+    FVec2F          backdropPosition;
+    bool            subpixelFlag;
+    float           opacityValue;
+    FPerfInfo       perfInfo;
+
+    // Internal
+    FVec2I          _shift;
+    FVec2I          _backdropCoverage;
+    FRect           _backdropWorkingRect;
+    FVec2F          _buspixelComponent;
+};
+
 ULIS2_API void Blend( const FBlendInfo& );
+ULIS2_API void ComposeAlphaOver( const FComposeAlphaInfo& );
 
 typedef void (*fpDispatchedBlendFunc)( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams );
 ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FBlendInfo& iBlendParams );

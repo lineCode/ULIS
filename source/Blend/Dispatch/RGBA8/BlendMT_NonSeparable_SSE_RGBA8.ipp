@@ -40,14 +40,10 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const tByte* iSrc,
 
     Vec4f alpha_m11, alpha_m01, alpha_m10, alpha_m00, alpha_vv0, alpha_vv1, alpha_smp;
     Vec4f smpch_m11, smpch_m01, smpch_m10, smpch_m00, smpch_vv0, smpch_vv1, smpch_smp;
-    alpha_m11 = alpha_m10 = alpha_vv1 = 0.f;
-    smpch_m11 = smpch_m10 = smpch_vv1 = 0.f;
-
-    alpha_m11 =( notLastLine && onLeftBorder && hasLeftData )       ? *( iSrc - iFmtInfo->BPP + iFmtInfo->AID           ) / 255.f : 0.f;
+    alpha_m11 = ( notLastLine && onLeftBorder && hasLeftData )      ? *( iSrc - iFmtInfo->BPP + iFmtInfo->AID           ) / 255.f : 0.f;
     alpha_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? *( iSrc - iFmtInfo->BPP + iFmtInfo->AID - iSrcBps ) / 255.f : 0.f;
     alpha_vv1 = alpha_m10 * TY + alpha_m11 * UY;
-
-    smpch_m11 =( notLastLine && onLeftBorder && hasLeftData )       ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc - iFmtInfo->BPP            ) ) ) ) ) / 255.f : 0.f;
+    smpch_m11 = ( notLastLine && onLeftBorder && hasLeftData )      ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc - iFmtInfo->BPP            ) ) ) ) ) / 255.f : 0.f;
     smpch_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc - iFmtInfo->BPP - iSrcBps  ) ) ) ) ) / 255.f : 0.f;
     smpch_vv1 = ( smpch_m10 * alpha_m10 ) * TY + ( smpch_m11 * alpha_m11 )  * UY;
 
