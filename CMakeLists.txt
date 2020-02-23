@@ -94,6 +94,7 @@ if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
 endif()
 find_package(OpenCL)
 set_target_properties( ULIS2 PROPERTIES OUTPUT_NAME "ULIS2.0" )
+target_link_libraries( ULIS2 PUBLIC clip )
 target_link_libraries( ULIS2 PUBLIC lcms2 )
 target_link_libraries( ULIS2 PUBLIC freetype )
 target_link_libraries( ULIS2 PUBLIC cppfs )
@@ -103,6 +104,7 @@ target_include_directories(
     ULIS2
     PUBLIC
     "include/"
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/
