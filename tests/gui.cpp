@@ -21,50 +21,52 @@
 
 int
 main( int argc, char *argv[] ) {
-    ::ul2::FThreadPool  threadPool;
-    ::ul2::FPerf perfIntent_NONE( 0 );
-    ::ul2::FPerf perfIntent_MT( ::ul2::Perf_MT );
-    ::ul2::FPerf perfIntent_SSE_TSPEC( ::ul2::Perf_SSE4_2 | ::ul2::Perf_TSPEC );
-    ::ul2::FPerf perfIntent_AVX_TSPEC( ::ul2::Perf_AVX2   | ::ul2::Perf_TSPEC );
+    using namespace ::ul2;
 
-    ::ul2::FPerfInfo perfInfo = {};
+    FThreadPool  threadPool;
+    FPerf perfIntent_NONE( 0 );
+    FPerf perfIntent_MT( Perf_MT );
+    FPerf perfIntent_SSE_TSPEC( Perf_SSE4_2 | Perf_TSPEC );
+    FPerf perfIntent_AVX_TSPEC( Perf_AVX2   | Perf_TSPEC );
+
+    FPerfInfo perfInfo = {};
     perfInfo.pool       = &threadPool;
     perfInfo.intent     = perfIntent_AVX_TSPEC;
     perfInfo.blocking   = ULIS2_NONBLOCKING;
     perfInfo.callCB     = ULIS2_NOCB;
 
-    ::ul2::FBlock       blockA( 800, 600,   ULIS2_FORMAT_RGBA8 );
-    ::ul2::FBlock       blockB( 55, 55,     ULIS2_FORMAT_RGBA8 );
-    ::ul2::FPixelValue  red(    ULIS2_FORMAT_RGBA8, { 255, 0, 0, 255 } );
-    ::ul2::FPixelValue  green(  ULIS2_FORMAT_RGBA8, { 0, 255, 0, 255 } );
+    FBlock       blockA( 800, 600,   ULIS2_FORMAT_RGBA8 );
+    FPixelValue  red(    ULIS2_FORMAT_RGBA8, { 255, 0, 0, 255 } );
+    FPixelValue  green(  ULIS2_FORMAT_RGBA8, { 0, 255, 0, 255 } );
 
-    ::ul2::FFillInfo fillInfo = {};
+    FFillInfo fillInfo = {};
     fillInfo.destination    = &blockA;
     fillInfo.color          = &green;
     fillInfo.area           = blockA.Rect();
     fillInfo.perfInfo       = perfInfo;
-    ::ul2::Fill( fillInfo );
+    Fill( fillInfo );
 
-    fillInfo.destination    = &blockB;
-    fillInfo.color          = &red;
-    fillInfo.area           = blockB.Rect();
-    ::ul2::Fill( fillInfo );
+    FXLoadFromFileInfo loadInfo = {};
+    loadInfo.path           = "C:/Users/conta/Documents/work/pattern.png";
+    loadInfo.desiredFormat  = ULIS2_FORMAT_RGBA8;
+    loadInfo.perfInfo       = perfInfo;
+    FBlock* blockB = XLoadFromFile( loadInfo );
 
-    ::ul2::Fence( threadPool );
+    Fence( threadPool );
 
-    //::ul2::SaveToFile( &threadPool, true, perfIntent_AVX_TSPEC, ::ul2::gCpuInfo, &blockB, "here.png", ::ul2::eImageFormat::IM_PNG );
+    //SaveToFile( &threadPool, true, perfIntent_AVX_TSPEC, gCpuInfo, &blockB, "here.png", eImageFormat::IM_PNG );
 
-    ::ul2::FBlendInfo blendInfo = {};
-    blendInfo.source            = &blockB;
+    FBlendInfo blendInfo = {};
+    blendInfo.source            = blockB;
     blendInfo.backdrop          = &blockA;
-    blendInfo.sourceRect        = ::ul2::FRect( 0, 0, 65, 65 );
-    blendInfo.backdropPosition  = ::ul2::FVec2F( -20.5f, -20.5f );
+    blendInfo.sourceRect        = FRect( 0, 0, 65, 65 );
+    blendInfo.backdropPosition  = FVec2F( 64.5f, 64 );
     blendInfo.subpixelFlag      = ULIS2_AA;
-    blendInfo.blendingMode      = ::ul2::BM_NORMAL;
-    blendInfo.alphaMode         = ::ul2::AM_NORMAL;
+    blendInfo.blendingMode      = BM_NORMAL;
+    blendInfo.alphaMode         = AM_NORMAL;
     blendInfo.opacityValue      = 1.f;
     blendInfo.perfInfo          = perfInfo;
-    ::ul2::Blend( blendInfo );
+    Blend( blendInfo );
 
     // Qt Window
     QApplication    app( argc, argv );
@@ -81,6 +83,9 @@ main( int argc, char *argv[] ) {
     delete  label;
     delete  image;
     delete  widget;
+
+    delete  blockB;
+
     return  exit_code;
 }
 

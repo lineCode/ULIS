@@ -59,8 +59,8 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const tByte* iSrc, tB
     const tByte* p11 = iSrc + 4;
     Vec8f alpha_m00m10, alpha_m10m20, alpha_m01m11, alpha_m11m21, alpha_vv0, alpha_vv1, alpha_smp;
     Vec8f smpch_m00m10, smpch_m10m20, smpch_m01m11, smpch_m11m21, smpch_vv0, smpch_vv1, smpch_smp;
-    Vec4f alpha_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? *( iSrc - 4 - iSrcBps   ) / 255.f : 0.f;
-    Vec4f alpha_m11 = ( notLastLine && onLeftBorder && hasLeftData )      ? *( iSrc - 4             ) / 255.f : 0.f;
+    Vec4f alpha_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? *( iSrc - 4 + iFmtInfo->AID - iSrcBps   ) / 255.f : 0.f;
+    Vec4f alpha_m11 = ( notLastLine && onLeftBorder && hasLeftData )      ? *( iSrc - 4 + iFmtInfo->AID             ) / 255.f : 0.f;
     alpha_m10m20 = Vec8f( 0.f, alpha_m10 );
     alpha_m11m21 = Vec8f( 0.f, alpha_m11 );
     Vec4f fc10 = ( hasLeftData && ( notFirstLine || hasTopData ) )      ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( iSrc - 4 - iSrcBps     ) ) ) ) / 255.f : 0.f;

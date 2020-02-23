@@ -47,7 +47,7 @@ Swap( const FSwapInfo& iSwapParams ) {
     const tSize bpc = dst->BytesPerSample();
     const tSize bpp = dst->BytesPerPixel();
     const tSize w   = dst->Width();
-    const tSize bps = dst->BytesPerScanLine();
+    const int64 bps = dst->BytesPerScanLine();
     tByte*      dsb = dst->DataPtr();
     #define DST dsb + ( pLINE * bps )
     const int max = dst->Height();

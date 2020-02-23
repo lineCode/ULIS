@@ -35,13 +35,13 @@ endif()
 project( ULIS2 )
 
 # Check Endianness
-include( TestBigEndian )
-TEST_BIG_ENDIAN( IS_BIG_ENDIAN )
-if( IS_BIG_ENDIAN )
-    message( STATUS "BIG_ENDIAN" )
-else()
-    message( STATUS "LITTLE_ENDIAN" )
-endif()
+#include( TestBigEndian )
+#TEST_BIG_ENDIAN( IS_BIG_ENDIAN )
+#if( IS_BIG_ENDIAN )
+#    message( STATUS "BIG_ENDIAN" )
+#else()
+#    message( STATUS "LITTLE_ENDIAN" )
+#endif()
 
 # Flags for Compiler / Platforms
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
