@@ -21,65 +21,74 @@
 #include "Thread/ParallelFor.h"
 #include "Text/Font.h"
 #include "Maths/Transform2D.h"
-#include <immintrin.h>
 
-#include "Text/Dispatch/Dispatch.ipp"
+#include <immintrin.h>
+#include <glm/mat2x2.hpp>
+#include <glm/vec2.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
 
 #include FT_GLYPH_H
 
+#include "Text/Dispatch/Dispatch.ipp"
+
+
 ULIS2_NAMESPACE_BEGIN
 void
-RenderText( FThreadPool*        iPool
-          , bool                iBlocking
-          , const FPerf&        iPerf
-          , const FCPU&         iCPU
-          , bool                iAntialiasing
-          , FBlock*             iDst
-          , const std::string&  iText
-          , const FFont&        iFont
-          , int                 iSize
-          , const IPixel&       iColor
-          , const FTransform2D& iTransform
-          , bool                iCallInvalidCB )
-{
-    ULIS2_ASSERT( iPool,                                    "Bad pool" );
-    ULIS2_ASSERT( iDst,                                     "Bad destination" );
-    ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
+RenderText( const FTextInfo& iTextParams ) {
+    // Assertions
+    ULIS2_ASSERT( iTextParams.destination,                                              "Bad source."                                                       );
+    ULIS2_ASSERT( !iTextParams.perfInfo.intent.UseMT() || iTextParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
+    ULIS2_ASSERT( !iTextParams.perfInfo.callCB || iTextParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
 
-    FPixel nativeColor( iDst->Format() );
-    Conv( iColor, nativeColor );
-    const tByte* color = nativeColor.Ptr();
+    // Bake color param in destination model
+    FPixelValue nativeColor( iTextParams.destination->Format() );
+    Conv( *iTextParams.color, nativeColor );
+    const tByte* colorBytes = nativeColor.Ptr();
 
-    const glm::mat3& _mat = iTransform.Matrix();
+    // Translate Matrix param
+    const glm::mat3& _mat = iTextParams.transform->Matrix();
     FT_Matrix matrix;
     matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
     matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
     matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
     matrix.yy = (FT_Fixed)( _mat[1].y * 0x10000L );
-    float dx = _mat[2].x;
-    float dy = _mat[2].y;
+    int dx = static_cast< int >( _mat[2].x );
+    int dy = static_cast< int >( _mat[2].y );
 
-    fpDispatchedTextFunc fptr = QueryDispatchedTextFunctionForParameters( iDst->Format(), iAntialiasing, iPerf, iCPU );
-    if( fptr ) fptr( iPool, iBlocking, iPerf, iDst, iText, iFont, iSize, color, dx, dy, matrix );
+    // Bake forward params
+    _FPrivateTextInfo forwardParams = {};
+    forwardParams.destination       = iTextParams.destination;
+    forwardParams.text              = iTextParams.text;
+    forwardParams.font              = iTextParams.font;
+    forwardParams.size              = iTextParams.size;
+    forwardParams.color             = colorBytes;
+    forwardParams.matrix            = &matrix;
+    forwardParams.position          = FVec2I( dx, dy );
+    forwardParams.antialiasingFlag  = iTextParams.antialiasingFlag;
+    forwardParams.perfInfo          = iTextParams.perfInfo;
 
-    iDst->Invalidate( iCallInvalidCB );
+    // Query
+    fpDispatchedTextFunc fptr = QueryDispatchedTextFunctionForParameters( iTextParams );
+
+    // Call
+    if( fptr )
+        fptr( forwardParams );
+
+    // Invalidate
+    iTextParams.destination->Invalidate( iTextParams.perfInfo.callCB );
 }
 
 
 FRect
-TextMetrics( const std::string&     iText
-           , const FFont&           iFont
-           , int                    iSize
-           , const FTransform2D&    iTransform )
-{
-    const glm::mat3& _mat = iTransform.Matrix();
+TextMetrics( const FTextMetricsInfo& iTextMetricsParams ) {
+    const glm::mat3& _mat = iTextMetricsParams.transform->Matrix();
     FT_Matrix matrix;
     matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
     matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
     matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
     matrix.yy = (FT_Fixed)( _mat[1].y * 0x10000L );
-    float dx = _mat[2].x;
-    float dy = _mat[2].y;
+    int dx = static_cast< int >( _mat[2].x );
+    int dy = static_cast< int >( _mat[2].y );
 
     FRect result;
     result.x = static_cast< int >( dx );
@@ -87,21 +96,21 @@ TextMetrics( const std::string&     iText
     result.w = 1;
     result.h = 1;
 
-    const char* str = iText.c_str();
-    int len = (int)iText.size();
+    const char* str = iTextMetricsParams.text.c_str();
+    int len = (int)iTextMetricsParams.text.size();
 
     FT_GlyphSlot  slot;
     FT_Vector     pen;
 
     FT_Error error = 0;
-    FT_Face face = iFont.Handle();
-    error = FT_Set_Pixel_Sizes( face, 0, iSize );
+    FT_Face face = iTextMetricsParams.font->Handle();
+    error = FT_Set_Pixel_Sizes( face, 0, iTextMetricsParams.size );
     ULIS2_ERROR( !error, "Error setting face size" );
 
     slot = face->glyph;
     pen.x = 0;
     pen.y = 0;
-    int autobaseline = (int)( iSize * 0.7 );
+    int autobaseline = (int)( iTextMetricsParams.size * 0.7 );
 
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, &matrix, &pen );

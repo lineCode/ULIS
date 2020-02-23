@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Base/Core.h"
-#include "Base/Helpers.ipp"
 #include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.ipp"
 #include "Blend/Func/NonSeparableBlendFuncF.ipp"

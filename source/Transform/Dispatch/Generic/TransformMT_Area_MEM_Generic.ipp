@@ -14,7 +14,6 @@
 #pragma once
 #include "Base/Core.h"
 #include "Maths/Geometry.h"
-#include "Base/Helpers.ipp"
 #include "Thread/ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN

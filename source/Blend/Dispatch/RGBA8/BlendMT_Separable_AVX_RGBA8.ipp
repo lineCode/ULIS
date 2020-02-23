@@ -14,7 +14,6 @@
 #pragma once
 #include "Base/Core.h"
 #include "Blend/Blend.h"
-#include "Base/Helpers.ipp"
 #include "Base/Perf.h"
 #include "Blend/Modes.h"
 #include "Maths/Geometry.h"
