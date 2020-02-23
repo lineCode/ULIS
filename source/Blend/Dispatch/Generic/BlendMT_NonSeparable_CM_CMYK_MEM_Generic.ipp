@@ -137,13 +137,14 @@ BlendMT_NonSeparable_CM_CMYK_MEM_Generic( const FFormatInfo& iFormatInfo, std::s
     tByte*              bdp         = iBlendParams->backdrop->DataPtr();
     const tSize         src_bps     = iBlendParams->source->BytesPerScanLine();
     const tSize         bdp_bps     = iBlendParams->backdrop->BytesPerScanLine();
-    const tSize         src_decal_x = blendInfo.sourceRect.x            * iFormatInfo.BPP;
-    const tSize         bdp_decal_x = blendInfo._backdropWorkingRect.x  * iFormatInfo.BPP;
+    const tSize         src_decal_y = blendInfo._shift.y + blendInfo.sourceRect.y;
+    const tSize         src_decal_x = ( blendInfo._shift.x + blendInfo.sourceRect.x )   * iFormatInfo.BPP;
+    const tSize         bdp_decal_x = ( blendInfo._backdropWorkingRect.x )              * iFormatInfo.BPP;
     ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
                                    , blendInfo._backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_NonSeparable_CM_CMYK_MEM_Generic< T >
-                                   , src + ( ( blendInfo.sourceRect.y           + pLINE ) * src_bps ) + src_decal_x
-                                   , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                   , src + ( ( src_decal_y + pLINE )                        * src_bps ) + src_decal_x
+                                   , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE )   * bdp_bps ) + bdp_decal_x
                                    , pLINE , &iFormatInfo, iBlendParams );
 }
 

@@ -34,95 +34,75 @@ float gBayer8x8Matrix[8][8] = {
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( int32               iLINE
-                                                      , const tByte*        iSRC
-                                                      , tByte*              iBDP
-                                                      , uint8*              iXIDT
-                                                      , uint8               iBPC
-                                                      , uint8               iNCC
-                                                      , uint8               iHEA
-                                                      , uint8               iSPP
-                                                      , uint8               iBPP
-                                                      , uint8               iAID
-                                                      , tSize                iSRC_BPS
-                                                      , const FRect&        iSrcROI
-                                                      , const FRect&        iBdpROI
-                                                      , const glm::vec2&    iSubpixelComponent
-                                                      , eBlendingMode       iBlendingMode
-                                                      , eAlphaMode          iAlphaMode
-                                                      , ufloat              iOpacity )
-{
-    const tByte* src = iSRC;
-    tByte*       bdp = iBDP;
-    const glm::vec2&    sub = iSubpixelComponent;
-    glm::vec2           bus = glm::vec2( 1.f ) - iSubpixelComponent;
+InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+    const FBlendInfo&   blendInfo       = *iBlendParams;
+    const tByte*        src             = iSrc;
+    tByte*              bdp             = iBdp;
+    const bool          notLastLine     = iLine < blendInfo._backdropCoverage.y;
+    const bool          notFirstLine    = iLine > 0;
+    const bool          onLeftBorder    = blendInfo._backdropWorkingRect.x == 0;
+    const bool          hasLeftData     = blendInfo.sourceRect.x + blendInfo._shift.x > 0;
+    const bool          hasTopData      = blendInfo.sourceRect.y + blendInfo._shift.y > 0;
 
-    switch( iBlendingMode ) {
+    switch( blendInfo.blendingMode ) {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_DISSOLVE: {
             uint32 localPRNGSeed = gBlendingPRNGSeed;
-            int32 seedy = iBdpROI.y + iLINE + 1;
+            int32 seedy = blendInfo._backdropWorkingRect.y + iLine + 1;
             localPRNGSeed = ( 8253729 % seedy ) * localPRNGSeed + ( 2396403 % ( seedy + 64578 ) * seedy );
-            //  -------------
-            //  | m00 | m10 |
-            //  |_____|_____|___
-            //  | m01 | m11 |
-            //  |_____|_____|
-            //     |  |  |
-            //    vv0 | vv1  -> res
+
             float m11, m01, m10, m00, vv0, vv1, res;
-            m11 = m10 = vv1 = 0.f;
-            for( int x = 0; x < iBdpROI.w; ++x ) {
+            m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - iFmtInfo->BPP,              iFmtInfo->AID ) : 0.f;
+            m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,    iFmtInfo->AID ) : 0.f;
+            vv1 = m10 * blendInfo.backdropPosition.y + m11 * blendInfo._buspixelComponent.y;
+
+            for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
+                const bool notLastCol = x < blendInfo._backdropCoverage.x;
                 m00 = m10;
                 m01 = m11;
                 vv0 = vv1;
-                SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
-                const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
-                const float alpha_src       = res * iOpacity;
+                SampleSubpixelAlpha( res );
+                const float alpha_bdp   = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
+                const float alpha_src   = res * blendInfo.opacityValue;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
-                    memcpy( bdp, src, iBPP );
-                    if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+                    ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, iFmtInfo->BPP );
+                    if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
                 }
-                // Increment ptrs by one pixel
-                src += iBPP;
-                bdp += iBPP;
+                src += iFmtInfo->BPP;
+                bdp += iFmtInfo->BPP;
             }
             break;
         } // BM_DISSOLVE
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_BAYERDITHER8x8: {
-            //  -------------
-            //  | m00 | m10 |
-            //  |_____|_____|___
-            //  | m01 | m11 |
-            //  |_____|_____|
-            //     |  |  |
-            //    vv0 | vv1  -> res
             float m11, m01, m10, m00, vv0, vv1, res;
-            m11 = m10 = vv1 = 0.f;
-            for( int x = 0; x < iBdpROI.w; ++x ) {
+            m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - iFmtInfo->BPP,              iFmtInfo->AID ) : 0.f;
+            m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,    iFmtInfo->AID ) : 0.f;
+            vv1 = m10 * blendInfo.backdropPosition.y + m11 * blendInfo._buspixelComponent.y;
+
+            for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
+                const bool notLastCol = x < blendInfo._backdropCoverage.x;
                 m00 = m10;
                 m01 = m11;
                 vv0 = vv1;
-                SampleSubpixelAlphaOpt< T >( src, iHEA, iAID, iBPP, iSRC_BPS, x, iLINE, 0000, 0000, iSrcROI.w, iSrcROI.h, sub, bus, vv0, &m11, &m10, &vv1, &res );
-                const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
-                const float alpha_src       = res * iOpacity;
-                const tSize bayerX          = ( iBdpROI.x + x )     % 8;
-                const tSize bayerY          = ( iBdpROI.y + iLINE ) % 8;
+                SampleSubpixelAlpha( res );
+                const float alpha_bdp   = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
+                const float alpha_src   = res * blendInfo.opacityValue;
+                const tSize bayerX          = ( blendInfo._backdropWorkingRect.x + x )     % 8;
+                const tSize bayerY          = ( blendInfo._backdropWorkingRect.y + iLine ) % 8;
                 const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
-                    memcpy( bdp, src, iBPP );
-                    if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+                    ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, iFmtInfo->BPP );
+                    if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
                 }
-                // Increment ptrs by one pixel
-                src += iBPP;
-                bdp += iBPP;
+                src += iFmtInfo->BPP;
+                bdp += iFmtInfo->BPP;
             }
             break;
         } // BM_DISSOLVE
@@ -133,83 +113,69 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( int32               iLIN
 template< typename T >
 void
 BlendMT_Misc_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
-        /*
-    uint8* xidt;
-    uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
-    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
-    const tByte*    src = iSource->DataPtr();
-    tByte*          bdp = iBackdrop->DataPtr();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel< T >, pLINE
-                                                                       , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * bpp )
-                                                                       , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
-                                                                       , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
-                                                                       , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
-                                                                       */
+    const FBlendInfo&   blendInfo   = *iBlendParams;
+    const tByte*        src         = iBlendParams->source->DataPtr();
+    tByte*              bdp         = iBlendParams->backdrop->DataPtr();
+    const tSize         src_bps     = iBlendParams->source->BytesPerScanLine();
+    const tSize         bdp_bps     = iBlendParams->backdrop->BytesPerScanLine();
+    const tSize         src_decal_y = blendInfo._shift.y + blendInfo.sourceRect.y;
+    const tSize         src_decal_x = ( blendInfo._shift.x + blendInfo.sourceRect.x )   * iFormatInfo.BPP;
+    const tSize         bdp_decal_x = ( blendInfo._backdropWorkingRect.x )              * iFormatInfo.BPP;
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
+                                   , blendInfo._backdropWorkingRect.h
+                                   , InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel< T >
+                                   , src + ( ( src_decal_y + pLINE )                        * src_bps ) + src_decal_x
+                                   , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE )   * bdp_bps ) + bdp_decal_x
+                                   , pLINE , src_bps, &iFormatInfo, iBlendParams );
 }
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Misc_MEM_Generic( int32            iLINE
-                                             , const tByte*     iSRC
-                                             , tByte*           iBDP
-                                             , uint8*           iXIDT
-                                             , uint8            iBCP
-                                             , uint8            iNCC
-                                             , uint8            iHEA
-                                             , uint8            iSPP
-                                             , uint8            iBPP
-                                             , uint8            iAID
-                                             , tSize            iSRC_BPS
-                                             , const FRect&     iSrcROI
-                                             , const FRect&     iBdpROI
-                                             , const glm::vec2& iSubpixelComponent
-                                             , eBlendingMode    iBlendingMode
-                                             , eAlphaMode       iAlphaMode
-                                             , ufloat           iOpacity )
-{
-    const tByte* src = iSRC;
-    tByte*       bdp = iBDP;
-    switch( iBlendingMode ) {
+InvokeBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iBdp, int32 iLine, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
+    const FBlendInfo&   blendInfo   = *iBlendParams;
+    const tByte*        src         = iSrc;
+    tByte*              bdp         = iBdp;
+
+    switch( blendInfo.blendingMode ) {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_DISSOLVE: {
             uint32 localPRNGSeed = gBlendingPRNGSeed;
-            int32 seedy = iBdpROI.y + iLINE + 1;
+            int32 seedy = blendInfo._backdropWorkingRect.y + iLine + 1;
             localPRNGSeed = ( 8253729 % seedy ) * localPRNGSeed + ( 2396403 % ( seedy + 64578 ) * seedy );
-            for( int x = 0; x < iBdpROI.w; ++x ) {
-                const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
-                const float alpha_src       = iHEA ? TYPE2FLOAT( src, iAID ) * iOpacity : iOpacity;
+            for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
+                const float alpha_bdp       = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
+                const float alpha_src       = iFmtInfo->HEA ? TYPE2FLOAT( src, iFmtInfo->AID ) * blendInfo.opacityValue : blendInfo.opacityValue;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
-                    memcpy( bdp, src, iBPP );
-                    if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+                    ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, iFmtInfo->BPP );
+                    if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
                 }
                 // Increment ptrs by one pixel
-                src += iBPP;
-                bdp += iBPP;
+                src += iFmtInfo->BPP;
+                bdp += iFmtInfo->BPP;
             }
             break;
         } // BM_DISSOLVE
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_BAYERDITHER8x8: {
-            for( int x = 0; x < iBdpROI.w; ++x ) {
-                const float alpha_bdp       = iHEA ? TYPE2FLOAT( bdp, iAID ) : 1.f;
-                const float alpha_src       = iHEA ? TYPE2FLOAT( src, iAID ) * iOpacity : iOpacity;
-                const tSize bayerX          = ( iBdpROI.x + x )     % 8;
-                const tSize bayerY          = ( iBdpROI.y + iLINE ) % 8;
+            for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
+                const float alpha_bdp       = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
+                const float alpha_src       = iFmtInfo->HEA ? TYPE2FLOAT( src, iFmtInfo->AID ) * blendInfo.opacityValue : blendInfo.opacityValue;
+                const tSize bayerX          = ( blendInfo._backdropWorkingRect.x + x )     % 8;
+                const tSize bayerY          = ( blendInfo._backdropWorkingRect.y + iLine ) % 8;
                 const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS2_ASSIGN_ALPHAF( iAlphaMode, alpha_result, alpha_src, alpha_bdp );
-                    memcpy( bdp, src, iBPP );
-                    if( iHEA ) FLOAT2TYPE( bdp, iAID, alpha_result );
+                    ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, iFmtInfo->BPP );
+                    if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
                 }
                 // Increment ptrs by one pixel
-                src += iBPP;
-                bdp += iBPP;
+                src += iFmtInfo->BPP;
+                bdp += iFmtInfo->BPP;
             }
             break;
         } // BM_DISSOLVE
@@ -220,19 +186,20 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( int32            iLINE
 template< typename T >
 void
 BlendMT_Misc_MEM_Generic( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
-    /*
-    uint8* xidt;
-    uint8 bpc, ncc, hea, spp, bpp, aid;
-    tSize roi_w, roi_h, src_bps, bdp_bps, src_jmp, bdp_jmp;
-    BuildBlendParams( iBdpROI, iSource, iBackdrop, &bpc, &ncc, &hea, &spp, &bpp, &aid, &xidt, &roi_w, &roi_h, &src_bps, &bdp_bps, &src_jmp, &bdp_jmp );
-    const tByte*    src = iSource->DataPtr();
-    tByte*          bdp = iBackdrop->DataPtr();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iBdpROI.h, InvokeBlendMTProcessScanline_Misc_MEM_Generic< T >, pLINE
-                                                                       , src + ( ( iSrcROI.y + pLINE ) * src_bps ) + ( iSrcROI.x * bpp )
-                                                                       , bdp + ( ( iBdpROI.y + pLINE ) * bdp_bps ) + ( iBdpROI.x * bpp )
-                                                                       , xidt, bpc, ncc, hea, spp, bpp, aid, src_bps, iSrcROI, iBdpROI
-                                                                       , iSubpixelComponent, iBlendingMode, iAlphaMode, iOpacity );
-                                                                       */
+    const FBlendInfo&   blendInfo   = *iBlendParams;
+    const tByte*        src         = iBlendParams->source->DataPtr();
+    tByte*              bdp         = iBlendParams->backdrop->DataPtr();
+    const tSize         src_bps     = iBlendParams->source->BytesPerScanLine();
+    const tSize         bdp_bps     = iBlendParams->backdrop->BytesPerScanLine();
+    const tSize         src_decal_y = blendInfo._shift.y + blendInfo.sourceRect.y;
+    const tSize         src_decal_x = ( blendInfo._shift.x + blendInfo.sourceRect.x )   * iFormatInfo.BPP;
+    const tSize         bdp_decal_x = ( blendInfo._backdropWorkingRect.x )              * iFormatInfo.BPP;
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
+                                   , blendInfo._backdropWorkingRect.h
+                                   , InvokeBlendMTProcessScanline_Misc_MEM_Generic< T >
+                                   , src + ( ( src_decal_y + pLINE )                        * src_bps ) + src_decal_x
+                                   , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE )   * bdp_bps ) + bdp_decal_x
+                                   , pLINE , &iFormatInfo, iBlendParams );
 }
 
 ULIS2_NAMESPACE_END
