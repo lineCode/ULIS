@@ -29,9 +29,8 @@
 #include "lcms2.h"
 
 ULIS2_NAMESPACE_BEGIN
-void
-ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent )
-{
+/*
+void ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileRegistry, uint32 iIntent ) {
     tFormat src_ul2_format = iSrc.Format();
     tFormat dst_ul2_format = iDst.Format();
     tFormat src_lcms2_format = F42( src_ul2_format );
@@ -52,12 +51,12 @@ ProfileConv( const IPixel& iSrc, IPixel& iDst, const FProfileRegistry& iProfileR
     cmsDoTransform( hTransform, iSrc.Ptr(), iDst.Ptr(), 1 );
     cmsDeleteTransform( hTransform );
 }
+*/
 
 void Conv( const IPixel& iSrc, IPixel& iDst ) {
     fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst.Format() );
     if( fptr ) fptr( iSrc.FormatInfo(), iSrc.Ptr(), iDst.FormatInfo(), iDst.Ptr(), 1 );
 }
-
 
 FPixelValue Conv( const IPixel& iSrc, tFormat iDst ) {
     FPixelValue dst( iDst );
@@ -66,59 +65,68 @@ FPixelValue Conv( const IPixel& iSrc, tFormat iDst ) {
     return  dst;
 }
 
+void Conv( const FConvInfo& iConvParams ) {
+    // Assertions
+    ULIS2_ASSERT( iConvParams.source,                                                   "Bad source."                                                       );
+    ULIS2_ASSERT( iConvParams.destination,                                              "Bad destination."                                                  );
+    ULIS2_ASSERT( !iConvParams.perfInfo.intent.UseMT() || iConvParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
+    ULIS2_ASSERT( !iConvParams.perfInfo.callCB || iConvParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
+    ULIS2_ASSERT( iConvParams.source->Width() == iConvParams.destination->Width(),      "Blocks sizes don't match"                                          );
+    ULIS2_ASSERT( iConvParams.source->Height() == iConvParams.destination->Height(),    "Blocks sizes don't match"                                          );
 
-void
-Conv( FThreadPool*   iPool
-    , bool           iBlocking
-    , const FPerf&   iPerf
-    , const FCPU&    iCPU
-    , const FBlock*  iSrc
-    , FBlock*        iDst
-    , bool           iCallInvalidCB )
-{
-    ULIS2_ASSERT( iPool,                                    "Bad pool" );
-    ULIS2_ASSERT( iSrc,                                     "Bad source" );
-    ULIS2_ASSERT( iDst,                                     "Bad destination" );
-    ULIS2_ASSERT( !( (!iBlocking) && (iCallInvalidCB ) ),   "Calling invalid CB on non-blocking operation may induce race condition and undefined behaviours." );
-    ULIS2_ASSERT( iSrc != iDst,                             "Converting a block on itself may trigger data race, use at your own risk or ensure written areas do not overlap." );
-    ULIS2_ASSERT( iSrc->Width() == iDst->Width() && iSrc->Height() == iDst->Height(), "Blocks sizes don't match" );
+    // Check no-op
+    if( iConvParams.source == iConvParams.destination )
+        return;
 
-    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc->Format(), iDst->Format() );
+    // Query dispatched method
+    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iConvParams.source->Format(), iConvParams.destination->Format() );
+
+    // Check dispatched method
     ULIS2_ASSERT( fptr, "No Conversion invocation found" );
-    if( !fptr ) return;
+    if( !fptr )
+        return;
 
-    const tByte*    srb = iSrc->DataPtr();
-    tByte*          dsb = iDst->DataPtr();
-    tSize           src_bps = iSrc->BytesPerScanLine();
-    tSize           dst_bps = iDst->BytesPerScanLine();
+    // Bake Params
+    const tByte*    srb = iConvParams.source->DataPtr();
+    tByte*          dsb = iConvParams.destination->DataPtr();
+    tSize           src_bps = iConvParams.source->BytesPerScanLine();
+    tSize           dst_bps = iConvParams.destination->BytesPerScanLine();
     #define SRC srb + ( pLINE * src_bps )
     #define DST dsb + ( pLINE * dst_bps )
+    const int   max = iConvParams.source->Height();
+    const tSize len = iConvParams.source->Width();
+    const FFormatInfo& srcnfo = iConvParams.source->FormatInfo();
+    const FFormatInfo& dstnfo = iConvParams.destination->FormatInfo();
 
-    const int max = iSrc->Height();
-    const FFormatInfo srcnfo = iSrc->FormatInfo();
-    const FFormatInfo dstnfo = iDst->FormatInfo();
-    const tSize len = iSrc->Width();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, max, fptr, srcnfo, SRC, dstnfo, DST, len );
-    //ParallelFor( *iPool, iBlocking, iPerf, iSrc->Height(), ULIS2_PF_CALL { fptr( iSrc->FormatInfo(), SRC, iDst->FormatInfo(), DST, iSrc->Width() ); } );
+    // Call
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iConvParams.perfInfo.intent, iConvParams.perfInfo.pool, iConvParams.perfInfo.blocking
+                                   , max
+                                   , fptr, srcnfo, SRC, dstnfo, DST, len );
 
-    iDst->Invalidate( iCallInvalidCB );
+    // Invalid
+    iConvParams.destination->Invalidate( iConvParams.destination->Rect(), iConvParams.perfInfo.callCB );
 }
 
+FBlock* XConv( const FXConvInfo& iConvParams ) {
+    // Assertions
+    ULIS2_ASSERT( iConvParams.source, "Bad source." );
 
-FBlock* XConv( FThreadPool*   iPool
-             , bool           iBlocking
-             , const FPerf&   iPerf
-             , const FCPU&    iCPU
-             , const FBlock*  iSrc
-             , tFormat        iDst )
-{
-    ULIS2_ASSERT( iSrc, "Bad source" );
-    FBlock* ret = new FBlock( iSrc->Width(), iSrc->Height(), iDst );
+    // Alloc return buffer in desired format, same size
+    FBlock* ret = new FBlock( iConvParams.source->Width(), iConvParams.source->Height(), iConvParams.destinationFormat );
 
-    if( iSrc->Format() == iDst )
-        Copy( iPool, iBlocking, iPerf, iCPU, iSrc, ret, 0, 0, ULIS2_NOCB );
-    else
-        Conv( iPool, iBlocking, iPerf, iCPU, iSrc, ret, ULIS2_NOCB );
+    if( iConvParams.source->Format() == iConvParams.destinationFormat ) {
+        // If same formats, just perform a copy
+        //Copy( iPool, iBlocking, iPerf, iCPU, iSrc, ret, 0, 0, ULIS2_NOCB );
+    } else {
+        // Else delegate call to regular Conv into ret buffer
+        FConvInfo convInfo = {};
+        convInfo.source         = iConvParams.source;
+        convInfo.destination    = ret;
+        convInfo.perfInfo       = iConvParams.perfInfo;
+        convInfo.perfInfo       = iConvParams.perfInfo;
+        Conv( convInfo );
+    }
+
     return  ret;
 }
 
