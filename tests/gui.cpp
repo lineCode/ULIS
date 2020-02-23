@@ -19,9 +19,19 @@
 #include <QPixmap>
 #include <QLabel>
 
+#include <Windows.h>
+
 int
 main( int argc, char *argv[] )
 {
+    bool success = OpenClipboard( NULL );
+    if( !success ) std::cout << "Error: Cannot open clipboard." << std::endl;
+
+    success = EmptyClipboard();
+    if( !success ) std::cout << "Error: Cannot empty clipboard." << std::endl;
+
+    success = CloseClipboard();
+    if( !success ) std::cout << "Error: Cannot close clipboard." << std::endl;
     ::ul2::FThreadPool  threadPool;
     ::ul2::FPerf perfIntent_NONE( 0 );
     ::ul2::FPerf perfIntent_MT( ::ul2::Perf_MT );

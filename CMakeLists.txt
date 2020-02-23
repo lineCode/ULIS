@@ -28,7 +28,7 @@ set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_CXX_EXTENSIONS OFF )
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
-	set( CMAKE_CXX_FLAGS "-std=c++14" )
+    set( CMAKE_CXX_FLAGS "-std=c++14" )
 endif()
 
 # Create global solution
@@ -62,7 +62,8 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
 endif()
 
 # Add Dependencies
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS	${PROJECT_BINARY_DIR}/3rdparty/build_lcms2    	)
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip         ${PROJECT_BINARY_DIR}/3rdparty/build_clip       )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs      )
 
