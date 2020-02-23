@@ -59,7 +59,8 @@ Swap( FThreadPool*  iPool
     const tSize bps = iDst->BytesPerScanLine();
     tByte*      dsb = iDst->DataPtr();
     #define DST dsb + ( pLINE * bps )
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, iDst->Height(), InvokeSwapMTProcessScanline_MEM, DST, w, iC1, iC2, bpc, bpp )
+    const int max = iDst->Height();
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerf, iPool, iBlocking, max, InvokeSwapMTProcessScanline_MEM, DST, w, iC1, iC2, bpc, bpp )
     iDst->Invalidate( iCallInvalidCB );
 }
 

@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Base/Perf.h"
 
 ULIS2_NAMESPACE_BEGIN
 
@@ -25,28 +26,29 @@ enum eImageFormat {
 };
 
 static const char* kwImageFormat[] = {
-      "PNG"
-    , "BMP"
-    , "TGA"
-    , "JPG"
-    , "HDR"
+      "png"
+    , "bmp"
+    , "tga"
+    , "jpg"
+    , "hdr"
 };
 
-ULIS2_API FBlock* XLoadFromFile( FThreadPool*       iPool
-                               , bool               iBlocking
-                               , const FPerf&       iPerf
-                               , const FCPU&        iCPU
-                               , const std::string& iPath
-                               , tFormat            iDesiredFormat = 0 );
+ULIS2_API struct FXLoadFromFileInfo {
+    std::string     path;
+    tFormat         desiredFormat;
+    FPerfInfo       perfInfo;
+};
 
-ULIS2_API void SaveToFile( FThreadPool*         iPool
-                         , bool                 iBlocking
-                         , const FPerf&         iPerf
-                         , const FCPU&          iCPU
-                         , const FBlock*        iSource
-                         , const std::string&   iPath
-                         , eImageFormat         iImageFormat
-                         , int                  iQuality = 100 );
+ULIS2_API struct FSaveToFileInfo {
+    const FBlock*   source;
+    std::string     path;
+    eImageFormat    imageFormat;
+    int             quality;
+    FPerfInfo       perfInfo;
+};
+
+ULIS2_API FBlock* XLoadFromFile( const FXLoadFromFileInfo& );
+ULIS2_API void SaveToFile( const FSaveToFileInfo& );
 
 ULIS2_NAMESPACE_END
 

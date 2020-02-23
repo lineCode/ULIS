@@ -57,7 +57,7 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, std::shared_ptr< const FPixelValue
 }
 
 void
-Fill_imp( const FFormatInfo& iFmtInfo, const FFillInvo& iFillParams, std::shared_ptr< const FPixelValue > iColor ) {
+Fill_imp( const FFormatInfo& iFmtInfo, const FFillInfo& iFillParams, std::shared_ptr< const FPixelValue > iColor ) {
     // Bake Params
     const tSize bpp     = iFmtInfo.BPP;
     const tSize bps     = iFillParams.destination->BytesPerScanLine();
@@ -110,7 +110,7 @@ Fill_imp( const FFormatInfo& iFmtInfo, const FFillInvo& iFillParams, std::shared
 }
 
 void
-Fill( const FFillInvo& iFillParams ) {
+Fill( const FFillInfo& iFillParams ) {
     // Assertions
     ULIS2_ASSERT( iFillParams.destination,                                              "Bad source."                                                       );
     ULIS2_ASSERT( !iFillParams.perfInfo.intent.UseMT() || iFillParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
@@ -128,7 +128,7 @@ Fill( const FFillInvo& iFillParams ) {
     Conv( *iFillParams.color, *color );
 
     // Bake forward param
-    FFillInvo forwardFillInfo = iFillParams;
+    FFillInfo forwardFillInfo = iFillParams;
     forwardFillInfo.area = roi;
 
     // Call

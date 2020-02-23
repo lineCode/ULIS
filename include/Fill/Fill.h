@@ -17,14 +17,14 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_API struct FFillInvo {
+ULIS2_API struct FFillInfo {
     FBlock*         destination;
     const IPixel*   color;
     FRect           area;
     FPerfInfo       perfInfo;
 };
 
-ULIS2_API void Fill( const FFillInvo& );
+ULIS2_API void Fill( const FFillInfo& );
 
 ULIS2_NAMESPACE_END
 

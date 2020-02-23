@@ -32,21 +32,6 @@ ULIS2_API struct FXConvInfo {
 ULIS2_API void Conv( const IPixel& iSrc, IPixel& iDst );
 ULIS2_API FPixelValue Conv( const IPixel& iSrc, tFormat iDst );
 
-ULIS2_API void Conv( FThreadPool*   iPool
-                   , bool           iBlocking
-                   , const FPerf&   iPerf
-                   , const FCPU&    iCPU
-                   , const FBlock*  iSrc
-                   , FBlock*        iDst
-                   , bool           iCallInvalidCB );
-
-ULIS2_API FBlock* XConv( FThreadPool*   iPool
-                       , bool           iBlocking
-                       , const FPerf&   iPerf
-                       , const FCPU&    iCPU
-                       , const FBlock*  iSrc
-                       , tFormat        iDst );
-
 ULIS2_API void Conv( const FConvInfo& );
 ULIS2_API FBlock* XConv( const FXConvInfo& );
 

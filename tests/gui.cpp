@@ -39,7 +39,7 @@ main( int argc, char *argv[] )
     ::ul2::FPixelValue  red(    ULIS2_FORMAT_RGBA8, { 255, 0, 0, 255 } );
     ::ul2::FPixelValue  green(  ULIS2_FORMAT_RGBA8, { 0, 255, 0, 255 } );
 
-    ::ul2::FFillInvo fillInfo = {};
+    ::ul2::FFillInfo fillInfo = {};
     fillInfo.destination    = &blockA;
     fillInfo.color          = &green;
     fillInfo.area           = blockA.Rect();
@@ -52,6 +52,8 @@ main( int argc, char *argv[] )
     ::ul2::Fill( fillInfo );
 
     ::ul2::Fence( threadPool );
+
+    //::ul2::SaveToFile( &threadPool, true, perfIntent_AVX_TSPEC, ::ul2::gCpuInfo, &blockB, "here.png", ::ul2::eImageFormat::IM_PNG );
 
     ::ul2::FBlendInfo blendInfo = {};
     blendInfo.source            = &blockB;
