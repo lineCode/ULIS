@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         IO.h
+* @file         Disk.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the disk IO entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.

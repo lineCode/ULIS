@@ -42,5 +42,6 @@
 #include "Text/FontEngine.h"
 #include "Text/Font.h"
 #include "Text/Text.h"
-#include "Disk/IO.h"
+#include "IO/Disk.h"
+#include "IO/Clipboard.h"
 #include "Raster/Draw.h"

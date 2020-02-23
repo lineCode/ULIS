@@ -20,8 +20,7 @@
 #include <QLabel>
 
 int
-main( int argc, char *argv[] )
-{
+main( int argc, char *argv[] ) {
     ::ul2::FThreadPool  threadPool;
     ::ul2::FPerf perfIntent_NONE( 0 );
     ::ul2::FPerf perfIntent_MT( ::ul2::Perf_MT );
@@ -84,3 +83,4 @@ main( int argc, char *argv[] )
     delete  widget;
     return  exit_code;
 }
+
