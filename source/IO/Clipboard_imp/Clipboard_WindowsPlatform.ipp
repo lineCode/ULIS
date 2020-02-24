@@ -99,23 +99,23 @@ void SaveToClipboard( const FSaveToClipboardInfo& iSaveParams ) {
 
     FXConvInfo convInfo = {};
     convInfo.source             = iSaveParams.source;
-    convInfo.destinationFormat  = ULIS2_FORMAT_ABGR8;
+    convInfo.destinationFormat  = ULIS2_FORMAT_BGRA8;
     convInfo.perfInfo           = iSaveParams.perfInfo;
     FBlock* tmpConv = XConv( convInfo );
 
     clip::image_spec spec;
-      spec.width = tmpConv->Width();
-      spec.height = tmpConv->Height();
-      spec.bits_per_pixel = tmpConv->BytesPerPixel() * 8;
-      spec.bytes_per_row = tmpConv->BytesPerScanLine();
-      spec.red_mask = 0xff;
-      spec.green_mask = 0xff00;
-      spec.blue_mask = 0xff0000;
-      spec.alpha_mask = 0xff000000;
-      spec.red_shift = 0;
-      spec.green_shift = 8;
-      spec.blue_shift = 16;
-      spec.alpha_shift = 24;
+    spec.width = tmpConv->Width();
+    spec.height = tmpConv->Height();
+    spec.bits_per_pixel = tmpConv->BytesPerPixel() * 8;
+    spec.bytes_per_row = tmpConv->BytesPerScanLine();
+    spec.red_mask = 0xff0000;
+    spec.green_mask = 0xff00;
+    spec.blue_mask = 0xff;
+    spec.alpha_mask = 0xff000000;
+    spec.red_shift = 16;
+    spec.green_shift = 8;
+    spec.blue_shift = 0;
+    spec.alpha_shift = 24;
       
   clip::image img( tmpConv->DataPtr(), spec );
   clip::set_image(img);

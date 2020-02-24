@@ -49,12 +49,10 @@ main( int argc, char *argv[] ) {
     loadInfo.path = "C:/Users/conta/Documents/work/pattern.png";
     FBlock* blockB = XLoadFromFile( loadInfo );
 
-    /*
     FSaveToClipboardInfo saveToClipboardInfo = {};
     saveToClipboardInfo.source      = blockB;
     saveToClipboardInfo.perfInfo    = perfInfo;
     SaveToClipboard( saveToClipboardInfo );
-    */
 
     Fence( threadPool );
 
