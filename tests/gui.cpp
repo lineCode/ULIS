@@ -22,7 +22,6 @@
 int
 main( int argc, char *argv[] ) {
     using namespace ::ul2;
-
     FThreadPool  threadPool;
     FPerf perfIntent_NONE( 0 );
     FPerf perfIntent_MT( Perf_MT );

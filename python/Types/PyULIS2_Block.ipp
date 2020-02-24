@@ -58,6 +58,8 @@ _PyULIS2Object_Block_init( _PyULIS2Object_Block* self, PyObject* args, PyObject*
         return -1;
     }
 
+    assert( w > 0 && h > 0 );
+
     self->_mBlock = new ::ul2::FBlock( w, h, fmt );
     return 0;
 }
@@ -104,6 +106,9 @@ _PyULIS2Object_Block_PixelProxy( _PyULIS2Object_Block* self, PyObject* args ) {
     int x, y;
     if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return  NULL;
 
+    assert( x >= 0 && x < self->_mBlock->Width() );
+    assert( y >= 0 && x < self->_mBlock->Height() );
+
     PyObject* inst = _PyULIS2Object_PixelProxy_new( &FPixelProxy, nullptr, nullptr );
     _PyULIS2Object_PixelProxy* O = (_PyULIS2Object_PixelProxy*)inst;
     O->super._mPixel = new ::ul2::FPixelProxy( self->_mBlock->PixelProxy( x, y ) );
@@ -116,12 +121,14 @@ _PyULIS2Object_Block_PixelValue( _PyULIS2Object_Block* self, PyObject* args ) {
     int x, y;
     if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return  NULL;
 
+    assert( x >= 0 && x < self->_mBlock->Width() );
+    assert( y >= 0 && x < self->_mBlock->Height() );
+
     PyObject* inst = _PyULIS2Object_PixelValue_new( &FPixelValue, nullptr, nullptr );
     _PyULIS2Object_PixelValue* O = (_PyULIS2Object_PixelValue*)inst;
     O->super._mPixel = new ::ul2::FPixelValue( self->_mBlock->PixelProxy( x, y ) );
     return  inst;
 }
-
 
 /////////////////////////////////////////////////////
 /// Meta Methods
@@ -144,6 +151,7 @@ static PyMethodDef _PyULIS2Object_Block_methods[] = {
     { "CRC32"               , (PyCFunction)_PyULIS2Object_Block_CRC32               , METH_NOARGS, "CRC32"              },
     { "MD5"                 , (PyCFunction)_PyULIS2Object_Block_MD5                 , METH_NOARGS, "MD5"                },
     { "UUID"                , (PyCFunction)_PyULIS2Object_Block_UUID                , METH_NOARGS, "UUID"               },
+    { "PixelProxy"          , (PyCFunction)_PyULIS2Object_Block_PixelProxy          , METH_VARARGS, "PixelProxy"        },
     { "PixelValue"          , (PyCFunction)_PyULIS2Object_Block_PixelValue          , METH_VARARGS, "PixelValue"        },
     { NULL } // Sentinel
 };

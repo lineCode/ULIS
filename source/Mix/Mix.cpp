@@ -78,15 +78,15 @@ MixLab( ufloat iT, IPixel* iA, IPixel* iB )
     ULIS2_ASSERT( iA, "Bad input A" );
     ULIS2_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FPixelValue LabA( ULIS2_FORMAT_LabAD );
-    FPixelValue LabB( ULIS2_FORMAT_LabAD );
-    FPixelValue LabResult( ULIS2_FORMAT_LabAD );
+    FPixelValue LabA( ULIS2_FORMAT_LabAF );
+    FPixelValue LabB( ULIS2_FORMAT_LabAF );
+    FPixelValue LabResult( ULIS2_FORMAT_LabAF );
     Conv( *iA, LabA );
     Conv( *iB, LabB );
-    LabResult.SetLD( ( 1.f - t ) * LabA.LD() + t * LabB.LD() );
-    LabResult.SetaD( ( 1.f - t ) * LabA.aD() + t * LabB.aD() );
-    LabResult.SetbD( ( 1.f - t ) * LabA.bD() + t * LabB.bD() );
-    LabResult.SetAD( ( 1.f - t ) * LabA.AD() + t * LabB.AD() );
+    LabResult.SetLF( ( 1.f - t ) * LabA.LF() + t * LabB.LF() );
+    LabResult.SetaF( ( 1.f - t ) * LabA.aF() + t * LabB.aF() );
+    LabResult.SetbF( ( 1.f - t ) * LabA.bF() + t * LabB.bF() );
+    LabResult.SetAF( ( 1.f - t ) * LabA.AF() + t * LabB.AF() );
     return  LabResult;
 }
 

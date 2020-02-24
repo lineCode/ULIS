@@ -45,3 +45,4 @@
 #include "IO/Disk.h"
 #include "IO/Clipboard.h"
 #include "Raster/Draw.h"
+#include "Mix/Mix.h"
