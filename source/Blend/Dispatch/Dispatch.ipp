@@ -16,11 +16,7 @@
 #include "Blend/Blend.h"
 #include "Blend/Modes.h"
 #include "Blend/Dispatch/Generic/BlendMT_Separable_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_Grey_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_RGB_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_CMYK_MEM_Generic.ipp"
-#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_CM_Lab_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/BlendMT_NonSeparable_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_Misc_MEM_Generic.ipp"
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_SSE_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp"
@@ -36,15 +32,7 @@ QueryDispatchedBlendFunctionForParameters_Generic( const FFormatInfo& iFormatInf
     switch( BlendingModeQualifier( iBlendParams.blendingMode ) ) {
         case BMQ_MISC           : return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_Misc_MEM_Generic,       T );
         case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_Separable_MEM_Generic,  T );
-        case BMQ_NONSEPARABLE   :
-            switch( iFormatInfo.CM ) {
-                case CM_ANY:    ULIS2_FAIL_RET( "Bad input model", nullptr );
-                case CM_GREY:   return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_CM_Grey_MEM_Generic,     T );
-                case CM_RGB:    return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_CM_RGB_MEM_Generic,      T );
-                case CM_CMYK:   return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_CM_CMYK_MEM_Generic,     T );
-                case CM_Lab:    return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_CM_Lab_MEM_Generic,      T );
-                default:        return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_CM_DEFAULT_MEM_Generic,  T );
-            }
+        case BMQ_NONSEPARABLE   : return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_MEM_Generic,  T );
     }
     ULIS2_FAIL_RET( "Bad input no dispatch path found", nullptr );
 }
@@ -76,7 +64,7 @@ QueryDispatchedBlendFunctionForParameters_RGBA8( const FFormatInfo& iFormatInfo,
                     return  ULIS2_SELECT_COMP_OP( iBlendParams.subpixelFlag, BlendMT_NonSeparable_SSE_RGBA8 );
                 else
             #endif // __SSE4_2__
-                    return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_CM_RGB_MEM_Generic, uint8 );
+                    return  ULIS2_SELECT_COMP_OPT( iBlendParams.subpixelFlag, BlendMT_NonSeparable_MEM_Generic, uint8 );
     }
     ULIS2_FAIL_RET( "Bad input no dispatch path found", nullptr );
 }

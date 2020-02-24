@@ -14,6 +14,7 @@
 #include "IO/Clipboard.h"
 #include "Data/Block.h"
 #include "Base/CPU.h"
+#include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
 #include "Thread/ParallelFor.h"
 
@@ -91,7 +92,34 @@ FBlock* XLoadFromClipboard( const FXLoadFromClipboardInfo& iLoadParams ) {
 
 
 void SaveToClipboard( const FSaveToClipboardInfo& iSaveParams ) {
-    return  void();
+    // Assertions
+    ULIS2_ASSERT( iSaveParams.source,                                                   "Bad source."                                                       );
+    ULIS2_ASSERT( !iSaveParams.perfInfo.intent.UseMT() || iSaveParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
+    ULIS2_ASSERT( !iSaveParams.perfInfo.callCB || iSaveParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
+
+    FXConvInfo convInfo = {};
+    convInfo.source             = iSaveParams.source;
+    convInfo.destinationFormat  = ULIS2_FORMAT_ABGR8;
+    convInfo.perfInfo           = iSaveParams.perfInfo;
+    FBlock* tmpConv = XConv( convInfo );
+
+    clip::image_spec spec;
+      spec.width = tmpConv->Width();
+      spec.height = tmpConv->Height();
+      spec.bits_per_pixel = tmpConv->BytesPerPixel() * 8;
+      spec.bytes_per_row = tmpConv->BytesPerScanLine();
+      spec.red_mask = 0xff;
+      spec.green_mask = 0xff00;
+      spec.blue_mask = 0xff0000;
+      spec.alpha_mask = 0xff000000;
+      spec.red_shift = 0;
+      spec.green_shift = 8;
+      spec.blue_shift = 16;
+      spec.alpha_shift = 24;
+      
+  clip::image img( tmpConv->DataPtr(), spec );
+  clip::set_image(img);
+
 }
 
 bool ClipboardHasImageData() {

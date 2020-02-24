@@ -23,6 +23,7 @@ ULIS2_API struct FXLoadFromClipboardInfo {
 };
 
 ULIS2_API struct FSaveToClipboardInfo {
+    const FBlock*   source;
     FPerfInfo       perfInfo;
 };
 

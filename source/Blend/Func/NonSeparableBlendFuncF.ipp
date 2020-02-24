@@ -152,6 +152,134 @@ ULIS2_FORCEINLINE FRGBF BlendAngleCorrectedF( const FRGBF& iCs, const FRGBF& iCb
 }
 
 /////////////////////////////////////////////////////
+// Non Separable Blending Modes for FRGBF_arr
+static ULIS2_FORCEINLINE ufloat LumF( const FRGBF_arr& iC ) {
+    return  0.3f * iC.m[0] + 0.59f * iC.m[1] + 0.11f * iC.m[2];
+}
+
+static ULIS2_FORCEINLINE FRGBF_arr ClipColorF( FRGBF_arr iC ) {
+    ufloat l = LumF( iC );
+    ufloat n = FMaths::Min3( iC.m[0], iC.m[1], iC.m[2] );
+    ufloat x = FMaths::Max3( iC.m[0], iC.m[1], iC.m[2] );
+    if( n < 0.0f )
+    {
+        ufloat ln = l - n;
+        iC.m[0] = l + ( ( ( iC.m[0] - l ) * l ) / ( ln ) );
+        iC.m[1] = l + ( ( ( iC.m[1] - l ) * l ) / ( ln ) );
+        iC.m[2] = l + ( ( ( iC.m[2] - l ) * l ) / ( ln ) );
+    }
+
+    if( x > 1.0f )
+    {
+        ufloat xl = x - l;
+        ufloat ml = 1.f - l;
+        iC.m[0] = l + ( ( ( iC.m[0] - l ) * ( ml ) ) / ( xl ) );
+        iC.m[1] = l + ( ( ( iC.m[1] - l ) * ( ml ) ) / ( xl ) );
+        iC.m[2] = l + ( ( ( iC.m[2] - l ) * ( ml ) ) / ( xl ) );
+    }
+
+    return  iC;
+}
+
+static ULIS2_FORCEINLINE FRGBF_arr SetLumF( const FRGBF_arr& iC, ufloat iL ) {
+    ufloat d = iL - LumF( iC );
+    FRGBF_arr C;
+    C.m[0] = iC.m[0] + d;
+    C.m[1] = iC.m[1] + d;
+    C.m[2] = iC.m[2] + d;
+    return  ClipColorF( C );
+}
+
+static ULIS2_FORCEINLINE ufloat SatF( const FRGBF_arr& iC ) {
+    return  FMaths::Max3( iC.m[0], iC.m[1], iC.m[2] ) - FMaths::Min3( iC.m[0], iC.m[1], iC.m[2] );
+}
+
+static ULIS2_FORCEINLINE FRGBF_arr SetSatF( const FRGBF_arr& iC, ufloat iS ) {
+    uint8 maxIndex = iC.m[0] > iC.m[1] ? ( iC.m[0] > iC.m[2] ? 0 : 2 ) : ( iC.m[1] > iC.m[2] ? 1 : 2 );
+    uint8 minIndex = iC.m[0] < iC.m[1] ? ( iC.m[0] < iC.m[2] ? 0 : 2 ) : ( iC.m[1] < iC.m[2] ? 1 : 2 );
+    uint8 midIndex = 3 - maxIndex - minIndex;
+    ufloat Cmax = iC.m[maxIndex];
+    ufloat Cmin = iC.m[minIndex];
+    ufloat Cmid = iC.m[midIndex];
+    if( Cmax > Cmin )
+    {
+        Cmid = ( ( ( Cmid - Cmin ) * iS ) / ( Cmax - Cmin ) );
+        Cmax = iS;
+    }
+    else
+    {
+        Cmid = Cmax = 0.f;
+    }
+    Cmin = 0.f;
+    FRGBF_arr ret;
+    ret.m[maxIndex] = Cmax;
+    ret.m[minIndex] = Cmin;
+    ret.m[midIndex] = Cmid;
+    return  ret;
+}
+
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------- DarkerColor
+ULIS2_FORCEINLINE FRGBF_arr BlendDarkerColorF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    return  LumF( iCb ) < LumF( iCs ) ? iCb : iCs;
+}
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------- LighterColor
+ULIS2_FORCEINLINE FRGBF_arr BlendLighterColorF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    return  LumF( iCb ) > LumF( iCs ) ? iCb : iCs;
+}
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- Hue
+ULIS2_FORCEINLINE FRGBF_arr BlendHueF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    return  SetLumF( SetSatF( iCs, SatF( iCb ) ), LumF( iCb ) );
+}
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- Saturation
+ULIS2_FORCEINLINE FRGBF_arr BlendSaturationF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    return  SetLumF( SetSatF( iCb, SatF( iCs ) ), LumF( iCb ) );
+}
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- Color
+ULIS2_FORCEINLINE FRGBF_arr BlendColorF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    return  SetLumF( iCs, LumF( iCb ) );
+}
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- Luminosity
+ULIS2_FORCEINLINE FRGBF_arr BlendLuminosityF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    return  SetLumF( iCb, LumF( iCs ) );
+}
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------- Partial Derivative
+ULIS2_FORCEINLINE FRGBF_arr BlendPartialDerivativeF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    glm::vec3 ns( iCs.m[0], iCs.m[1], iCs.m[2] );
+    glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
+    ns = ns * 2.f - 1.f;
+    nb = nb * 2.f - 1.f;
+    auto res = glm::normalize( glm::vec3( ns.xy * nb.z + nb.xy * ns.z, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    return  FRGBF_arr{ res.x, res.y, res.z };
+}
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------- Whiteout
+ULIS2_FORCEINLINE FRGBF_arr BlendWhiteoutF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    glm::vec3 ns( iCs.m[0], iCs.m[1], iCs.m[2] );
+    glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
+    ns = ns * 2.f - 1.f;
+    nb = nb * 2.f - 1.f;
+    auto res = glm::normalize( glm::vec3( ns.xy + nb.xy, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    return  FRGBF_arr{ res.x, res.y, res.z };
+}
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------------------- AngleCorrected
+ULIS2_FORCEINLINE FRGBF_arr BlendAngleCorrectedF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    glm::vec3 ns( iCs.m[0], iCs.m[1], iCs.m[2] );
+    glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
+    ns = ns * 2.f - 1.f;
+    nb = nb * 2.f - 1.f;
+    auto res = glm::normalize( glm::vec3( ns.xy + nb.xy, ns.z ) ) * 0.5f + 0.5f;
+    return  FRGBF_arr{ res.x, res.y, res.z };
+}
+
+/////////////////////////////////////////////////////
 // Non Separable Blending Modes for Grey, these are actually separable
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- DarkerColor
@@ -233,6 +361,25 @@ template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_LUMINOSITY           >( c
 template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_PARTIALDERIVATIVE    >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendPartialDerivativeF( iCs, iCb ); }
 template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_WHITEOUT             >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendWhiteoutF( iCs, iCb ); }
 template<> ULIS2_FORCEINLINE FRGBF NonSeparableOpF< BM_ANGLECORRECTED       >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendAngleCorrectedF( iCs, iCb ); }
+
+//--------------------------------------------------------------------------------------
+//-------------------------------------------- NonSeparableOpF Template Selector for FRGBF_arr
+template< eBlendingMode _BM >
+ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) {
+    ULIS2_ASSERT( false, "Blend Specialization Not Implemented" );
+    return  {};
+}
+
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_DARKERCOLOR          >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendDarkerColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_LIGHTERCOLOR         >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendLighterColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_HUE                  >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendHueF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_SATURATION           >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendSaturationF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_COLOR                >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendColorF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_LUMINOSITY           >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendLuminosityF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_PARTIALDERIVATIVE    >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendPartialDerivativeF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_WHITEOUT             >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendWhiteoutF( iCs, iCb ); }
+template<> ULIS2_FORCEINLINE FRGBF_arr NonSeparableOpF< BM_ANGLECORRECTED       >( const FRGBF_arr& iCs, const FRGBF_arr& iCb ) { return  BlendAngleCorrectedF( iCs, iCb ); }
+
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------- NonSeparableOpF Template Selector for Grey

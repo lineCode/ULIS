@@ -31,20 +31,30 @@ main( int argc, char *argv[] ) {
 
     FPerfInfo perfInfo = {};
     perfInfo.pool       = &threadPool;
-    perfInfo.intent     = perfIntent_AVX_TSPEC;
+    perfInfo.intent     = perfIntent_NONE;
     perfInfo.blocking   = ULIS2_NONBLOCKING;
     perfInfo.callCB     = ULIS2_NOCB;
 
-    FXLoadFromClipboardInfo loadFromClipboardInfo = {};
+    /*FXLoadFromClipboardInfo loadFromClipboardInfo = {};
     loadFromClipboardInfo.desiredFormat = ULIS2_FORMAT_RGBA8;
     loadFromClipboardInfo.perfInfo      = perfInfo;
-    FBlock* blockA = XLoadFromClipboard( loadFromClipboardInfo );
+    FBlock* blockA = XLoadFromClipboard( loadFromClipboardInfo );*/
 
     FXLoadFromFileInfo loadInfo = {};
-    loadInfo.path           = "C:/Users/conta/Documents/work/pattern.png";
+    loadInfo.path           = "C:/Users/conta/Documents/work/bg.png";
     loadInfo.desiredFormat  = ULIS2_FORMAT_RGBA8;
     loadInfo.perfInfo       = perfInfo;
+    FBlock* blockA = XLoadFromFile( loadInfo );
+
+    loadInfo.path = "C:/Users/conta/Documents/work/pattern.png";
     FBlock* blockB = XLoadFromFile( loadInfo );
+
+    /*
+    FSaveToClipboardInfo saveToClipboardInfo = {};
+    saveToClipboardInfo.source      = blockB;
+    saveToClipboardInfo.perfInfo    = perfInfo;
+    SaveToClipboard( saveToClipboardInfo );
+    */
 
     Fence( threadPool );
 
@@ -54,9 +64,9 @@ main( int argc, char *argv[] ) {
     blendInfo.source            = blockB;
     blendInfo.backdrop          = blockA;
     blendInfo.sourceRect        = FRect( 0, 0, 65, 65 );
-    blendInfo.backdropPosition  = FVec2F( 64.5f, 64 );
+    blendInfo.backdropPosition  = FVec2F( 64.5f, 64.5f );
     blendInfo.subpixelFlag      = ULIS2_AA;
-    blendInfo.blendingMode      = BM_NORMAL;
+    blendInfo.blendingMode      = BM_COLOR;
     blendInfo.alphaMode         = AM_NORMAL;
     blendInfo.opacityValue      = 1.f;
     blendInfo.perfInfo          = perfInfo;

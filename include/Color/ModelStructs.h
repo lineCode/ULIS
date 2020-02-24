@@ -28,6 +28,11 @@ struct FRGBF
     float B;
 };
 
+struct FRGBF_arr
+{
+    float m[3];
+};
+
 struct FHSVF
 {
     float H;
