@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         Clipboard.cpp
+* @file         Clipboard_LinuxPlatform.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the clipboard IO entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -13,12 +13,19 @@
 */
 #include "IO/Clipboard.h"
 
-#if defined(ULIS2_WIN)
-#include "IO/Clipboard_imp/Clipboard_WindowsPlatform.ipp"
-#elif defined(ULIS2_MACOS)
-#include "IO/Clipboard_imp/Clipboard_MacOSPlatform.ipp"
-#elif defined(ULIS2_LINUX)
-#include "IO/Clipboard_imp/Clipboard_LinuxPlatform.ipp"
-#else
-#include "IO/Clipboard_imp/Clipboard_GenericPlatform.ipp"
-#endif
+ULIS2_NAMESPACE_BEGIN
+FBlock* XLoadFromClipboard_LinuxPlatform( const FXLoadFromClipboardInfo& iLoadParams ) {
+    return  nullptr;
+}
+
+
+void SaveToClipboard_LinuxPlatform( const FSaveToClipboardInfo& iSaveParams ) {
+    return  void();
+}
+
+bool ClipboardHasImageData_LinuxPlatform() {
+    return  false;
+}
+
+ULIS2_NAMESPACE_END
+

@@ -35,16 +35,10 @@ main( int argc, char *argv[] ) {
     perfInfo.blocking   = ULIS2_NONBLOCKING;
     perfInfo.callCB     = ULIS2_NOCB;
 
-    FBlock       blockA( 800, 600,   ULIS2_FORMAT_RGBA8 );
-    FPixelValue  red(    ULIS2_FORMAT_RGBA8, { 255, 0, 0, 255 } );
-    FPixelValue  green(  ULIS2_FORMAT_RGBA8, { 0, 255, 0, 255 } );
-
-    FFillInfo fillInfo = {};
-    fillInfo.destination    = &blockA;
-    fillInfo.color          = &green;
-    fillInfo.area           = blockA.Rect();
-    fillInfo.perfInfo       = perfInfo;
-    Fill( fillInfo );
+    FXLoadFromClipboardInfo loadFromClipboardInfo = {};
+    loadFromClipboardInfo.desiredFormat = ULIS2_FORMAT_RGBA8;
+    loadFromClipboardInfo.perfInfo      = perfInfo;
+    FBlock* blockA = XLoadFromClipboard( loadFromClipboardInfo );
 
     FXLoadFromFileInfo loadInfo = {};
     loadInfo.path           = "C:/Users/conta/Documents/work/pattern.png";
@@ -58,7 +52,7 @@ main( int argc, char *argv[] ) {
 
     FBlendInfo blendInfo = {};
     blendInfo.source            = blockB;
-    blendInfo.backdrop          = &blockA;
+    blendInfo.backdrop          = blockA;
     blendInfo.sourceRect        = FRect( 0, 0, 65, 65 );
     blendInfo.backdropPosition  = FVec2F( 64.5f, 64 );
     blendInfo.subpixelFlag      = ULIS2_AA;
@@ -67,11 +61,12 @@ main( int argc, char *argv[] ) {
     blendInfo.opacityValue      = 1.f;
     blendInfo.perfInfo          = perfInfo;
     Blend( blendInfo );
+    Fence( threadPool );
 
     // Qt Window
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( blockA.DataPtr(), blockA.Width(), blockA.Height(), blockA.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    QImage*         image   = new QImage( blockA->DataPtr(), blockA->Width(), blockA->Height(), blockA->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
     QLabel*         label   = new QLabel( widget );
     label->setPixmap( pixmap );

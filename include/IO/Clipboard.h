@@ -17,16 +17,17 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-ULIS2_API struct FXLoadFromClipboard {
+ULIS2_API struct FXLoadFromClipboardInfo {
+    tFormat         desiredFormat;
     FPerfInfo       perfInfo;
 };
 
-ULIS2_API struct FSaveToClipboard {
+ULIS2_API struct FSaveToClipboardInfo {
     FPerfInfo       perfInfo;
 };
 
-ULIS2_API FBlock* XLoadFromClipboard( const FXLoadFromClipboard& );
-ULIS2_API void SaveToClipboard( const FSaveToClipboard& );
+ULIS2_API FBlock* XLoadFromClipboard( const FXLoadFromClipboardInfo& );
+ULIS2_API void SaveToClipboard( const FSaveToClipboardInfo& );
 ULIS2_API bool ClipboardHasImageData();
 
 ULIS2_NAMESPACE_END
