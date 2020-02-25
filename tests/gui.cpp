@@ -1,4 +1,4 @@
-// Copyright � 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
@@ -8,7 +8,7 @@
 * @file         gui.cpp
 * @author       Clement Berthaud
 * @brief        Gui application for ULIS2.
-* @copyright    Copyright � 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS2>
@@ -69,6 +69,24 @@ main( int argc, char *argv[] ) {
     blendInfo.perfInfo          = perfInfo;
     Blend( blendInfo );
     Fence( threadPool );
+
+    FTextInfo textInfo = {};
+    FFontEngine fontEngine;
+    FFontRegistry fontReg( fontEngine );
+    FFont font = fontReg.LoadFont( "Yu Gothic", "Bold" );
+    FColor fontColor = FColor( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
+    glm::mat3 matrix = MakeTranslationMatrix( 40, 40 );
+    FTransform2D transform( matrix );
+    const wchar_t* a = L"とても面白い使い";
+    textInfo.destination        = blockA;
+    textInfo.text               = L"非常に興味深いメッセージ";
+    textInfo.font               = &font;
+    textInfo.size               = 30;
+    textInfo.color              = &fontColor;
+    textInfo.transform          = &transform;
+    textInfo.antialiasingFlag   = ULIS2_AA;
+    textInfo.perfInfo           = perfInfo;
+    RenderText( textInfo );
 
     // Qt Window
     QApplication    app( argc, argv );

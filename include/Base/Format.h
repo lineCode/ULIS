@@ -18,7 +18,7 @@
 //          DYNAMIC EXTRA INFO      FIXED FORMAT INFO
 //          32   28   24   20       16        8    4  0
 //          1098 7654 3210 9876     5432 1098 7654 3210
-//          •••• •••• ••EE DDDD     ASRF MMMM CCCC TTTT
+//          xxxx xxxx xxEE DDDD     ASRF MMMM CCCC TTTT
 //    Example: RGBA8
 //                            1     1000 0010 0011 0000
 //
@@ -31,7 +31,7 @@
 //    T: Type
 //    F: Floating
 //    E: Extra
-//    •: free space for dynamic extra info
+//    x: free space for dynamic extra info
 #define ULIS2_W_TYPE( i )       ( i )
 #define ULIS2_W_CHANNELS( i )   ( i << 4 )
 #define ULIS2_W_MODEL( i )      ( i << 8 )
@@ -78,3 +78,11 @@
 #define ULIS2_FORMAT_MASK_HI 0xFFF00000
 
 #define ULIS2_MAX_CHANNELS  5
+
+#define ULIS2_CHANNEL_1_BIT 1
+#define ULIS2_CHANNEL_2_BIT 2
+#define ULIS2_CHANNEL_3_BIT 4
+#define ULIS2_CHANNEL_4_BIT 8
+#define ULIS2_CHANNEL_5_BIT 16
+
+

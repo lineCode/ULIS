@@ -24,7 +24,7 @@ ULIS2_NAMESPACE_BEGIN
 
 ULIS2_API struct FTextInfo {
     FBlock*             destination;
-    std::string         text;
+    std::wstring        text;
     const FFont*        font;
     int                 size;
     const IPixel*       color;
@@ -42,7 +42,7 @@ ULIS2_API struct FTextMetricsInfo {
 
 ULIS2_API struct _FPrivateTextInfo {
     FBlock*             destination;
-    std::string         text;
+    std::wstring        text;
     const FFont*        font;
     int                 size;
     const tByte*        color;

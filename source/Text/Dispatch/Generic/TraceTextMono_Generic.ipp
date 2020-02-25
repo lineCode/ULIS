@@ -69,8 +69,8 @@ RasterBitmap( const _FPrivateTextInfo& iTextParams, FT_Bitmap* iBitmap, FT_Int i
 template< typename T >
 void
 TraceTextMono_Generic( const _FPrivateTextInfo& iTextParams ) {
-    const char* str = iTextParams.text.c_str();
-    int len = (int)iTextParams.text.size();
+    const wchar_t* str = iTextParams.text.c_str();
+    size_t len = (int)iTextParams.text.size();
 
     FT_GlyphSlot  slot;
     FT_Vector     pen;
