@@ -17,12 +17,12 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-ULIS2_API struct FXLoadFromClipboardInfo {
+struct ULIS2_API FXLoadFromClipboardInfo {
     tFormat         desiredFormat;
     FPerfInfo       perfInfo;
 };
 
-ULIS2_API struct FSaveToClipboardInfo {
+struct ULIS2_API FSaveToClipboardInfo {
     const FBlock*   source;
     FPerfInfo       perfInfo;
 };

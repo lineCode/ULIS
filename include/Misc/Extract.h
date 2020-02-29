@@ -18,7 +18,7 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-ULIS2_API struct FExtractInfo {
+struct ULIS2_API FExtractInfo {
     FBlock*     source;
     FBlock*     destination;
     bool        sourceRawIndicesFlag;
@@ -28,7 +28,7 @@ ULIS2_API struct FExtractInfo {
     FPerfInfo   perfInfo;
 };
 
-ULIS2_API struct FXExtractInfo {
+struct ULIS2_API FXExtractInfo {
     FBlock*     source;
     tFormat     destinationFormat;
     bool        sourceRawIndicesFlag;

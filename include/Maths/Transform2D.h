@@ -18,7 +18,7 @@
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransform2D
-ULIS2_API class FTransform2D
+class ULIS2_API FTransform2D
 {
 public:
     // Construction / Destruction

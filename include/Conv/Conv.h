@@ -16,13 +16,13 @@
 #include "Base/Perf.h"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_API struct FConvInfo {
+struct ULIS2_API FConvInfo {
     const FBlock*   source;
     FBlock*         destination;
     FPerfInfo       perfInfo;
 };
 
-ULIS2_API struct FXConvInfo {
+struct ULIS2_API FXConvInfo {
     const FBlock*   source;
     tFormat         destinationFormat;
     FPerfInfo       perfInfo;

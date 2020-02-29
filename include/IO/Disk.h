@@ -33,13 +33,13 @@ static const char* kwImageFormat[] = {
     , "hdr"
 };
 
-ULIS2_API struct FXLoadFromFileInfo {
+struct ULIS2_API FXLoadFromFileInfo {
     std::string     path;
     tFormat         desiredFormat;
     FPerfInfo       perfInfo;
 };
 
-ULIS2_API struct FSaveToFileInfo {
+struct ULIS2_API FSaveToFileInfo {
     const FBlock*   source;
     std::string     path;
     eImageFormat    imageFormat;

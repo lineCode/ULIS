@@ -22,7 +22,7 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-ULIS2_API struct FTextInfo {
+struct ULIS2_API FTextInfo {
     FBlock*             destination;
     std::wstring        text;
     const FFont*        font;
@@ -33,14 +33,14 @@ ULIS2_API struct FTextInfo {
     FPerfInfo           perfInfo;
 };
 
-ULIS2_API struct FTextMetricsInfo {
+struct ULIS2_API FTextMetricsInfo {
     std::string         text;
     const FFont*        font;
     int                 size;
     const FTransform2D* transform;
 };
 
-ULIS2_API struct _FPrivateTextInfo {
+struct ULIS2_API _FPrivateTextInfo {
     FBlock*             destination;
     std::wstring        text;
     const FFont*        font;

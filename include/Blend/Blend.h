@@ -20,7 +20,7 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-ULIS2_API struct FBlendInfo {
+struct ULIS2_API FBlendInfo {
     const FBlock*   source;
     FBlock*         backdrop;
     FRect           sourceRect;
@@ -38,7 +38,7 @@ ULIS2_API struct FBlendInfo {
     FVec2F          _buspixelComponent;
 };
 
-ULIS2_API struct FComposeAlphaInfo {
+struct ULIS2_API FComposeAlphaInfo {
     const FBlock*   source;
     FBlock*         backdrop;
     FRect           sourceRect;

@@ -17,7 +17,7 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_API struct FFillInfo {
+struct ULIS2_API FFillInfo {
     FBlock*         destination;
     const IPixel*   color;
     FRect           area;

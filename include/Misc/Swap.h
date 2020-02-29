@@ -17,7 +17,7 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-ULIS2_API struct FSwapInfo {
+struct ULIS2_API FSwapInfo {
     FBlock*     destination;
     uint8       channel1;
     uint8       channel2;

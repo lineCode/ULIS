@@ -27,7 +27,7 @@ class ULIS2_API FBlock
 {
 public:
     // Construction / Destruction
-    ~FBlock();
+    virtual ~FBlock();
 
     FBlock( int iWidth
           , int iHeight

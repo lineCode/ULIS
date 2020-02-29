@@ -17,7 +17,7 @@
 #include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_API struct FClearInfo {
+struct ULIS2_API FClearInfo {
     FBlock*         destination;
     FRect           area;
     FPerfInfo       perfInfo;

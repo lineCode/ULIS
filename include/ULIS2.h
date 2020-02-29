@@ -15,6 +15,7 @@
 // Data
 #include "Data/Block.h"
 #include "Data/Pixel.h"
+#include "Data/Kernel.h"
 // Color
 #include "Color/ColorProfile.h"
 #include "Color/ProfileRegistry.h"

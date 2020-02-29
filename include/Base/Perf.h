@@ -63,7 +63,7 @@ private:
     uint32 flags;
 };
 
-ULIS2_API struct FPerfInfo {
+struct ULIS2_API FPerfInfo {
     FThreadPool*    pool;
     FPerf           intent;
     bool            blocking;
