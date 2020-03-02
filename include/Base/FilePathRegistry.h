@@ -15,7 +15,6 @@
 #include "Base/Core.h"
 #include <unordered_map>
 #include <vector>
-namespace cppfs { class FileHandle; }
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -43,7 +42,6 @@ public:
 
 private:
     // Private API
-    void GatherEntriesRecursive( const cppfs::FileHandle& iDir, std::vector< std::string >* oList );
     virtual std::string CreateName( const std::string& iFile );
 
 private:

@@ -15,17 +15,9 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// PRNG
-/// @fn         ResetWeakPRNGSeed()
-/// @brief      Reset the PRNG seed.
 ULIS2_API void ResetWeakPRNGSeed();
-
-
-/// @fn         GenerateWeakPRNG()
-/// @brief      Reset the PRNG seed.
-/// @return     An uint32 representing a pseudo random number beetween 0 and 65537.
+ULIS2_API void SetWeakPRNGSeed( uint32 iVal );
+ULIS2_API uint32 GetWeakPRNGSeed();
 ULIS2_API uint32 GenerateWeakPRNG();
-
 ULIS2_NAMESPACE_END
 

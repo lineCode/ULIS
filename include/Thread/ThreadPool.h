@@ -77,5 +77,20 @@ ULIS2_API ULIS2_FORCEINLINE void Fence( FThreadPool& iPool ) {
     iPool.WaitForCompletion();
 }
 
+#define ULIS2_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
+    if( _PERF.UseMT() && _POOL->GetNumWorkers() > 1 )                                   \
+    {                                                                                   \
+        for( int pLINE = 0; pLINE < _MAX; ++pLINE )                                     \
+            _POOL->ScheduleJob( _FUNC, __VA_ARGS__ );                                   \
+        if( _BLOCKING )                                                                 \
+            _POOL->WaitForCompletion();                                                 \
+    }                                                                                   \
+    else                                                                                \
+    {                                                                                   \
+        for( int pLINE = 0; pLINE < _MAX; ++pLINE )                                     \
+            _FUNC( __VA_ARGS__ );                                                       \
+    }
+
+
 ULIS2_NAMESPACE_END
 

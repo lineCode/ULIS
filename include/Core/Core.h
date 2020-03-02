@@ -20,7 +20,6 @@
 #include "Base/FDecl.h"
 #include "Base/Utils.h"
 #include "Base/Format.h"
-#include "Base/Decl.h"
 
 /////////////////////////////////////////////////////
 // glm FORCE extensions, before any glm related includes

@@ -519,8 +519,6 @@ public:
     static FPixelValue FromYxyAF(    float  iY,  float  ix,  float  iy,  float  iA = 1.f         );
     static FPixelValue FromYxyAD(    double iY,  double ix,  double iy,  double iA = 1.0         );
 };
-typedef FPixelValue FPixel;
-typedef FPixelValue FColor;
 
 /////////////////////////////////////////////////////
 /// @class      FPixelProxy

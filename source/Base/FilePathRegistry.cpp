@@ -26,7 +26,36 @@ using namespace cppfs;
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ConstDefault
-const std::string gDefaultRet = "";
+static const std::string sDefaultRet = "";
+/////////////////////////////////////////////////////
+// details
+namespace details {
+void GatherEntriesRecursive( const cppfs::FileHandle& iDir, const std::vector< std::string >& iFilters, std::vector< std::string >* oList ) {
+    std::vector< std::string > entries = iDir.listFiles();
+    std::string dir_path = iDir.path();
+
+    for( auto it : entries ) {
+        std::string full_entry_path = dir_path + it;
+        FileHandle entry = fs::open( full_entry_path );
+
+        if( entry.isDirectory() )
+            GatherEntriesRecursive( entry, iFilters, oList );
+
+        if( entry.isFile() ) {
+            FilePath path( entry.path() );
+            std::string ext = path.extension();
+            bool match = false;
+            for( auto filter : iFilters ) {
+                if( ext == filter )
+                    match = true;
+            }
+
+            if( match )
+                oList->push_back( full_entry_path );
+        }
+    }
+}
+} // namespace details
 /////////////////////////////////////////////////////
 // FFilePathRegistry
 //--------------------------------------------------------------------------------------
@@ -96,7 +125,7 @@ FFilePathRegistry::Parse()
         FileHandle dir = fs::open( it );
         if( ( !dir.exists() ) || ( !dir.isDirectory() ) )
             continue;
-        GatherEntriesRecursive( dir, &list );
+        details::GatherEntriesRecursive( dir, mFilters, &list );
     }
 
     for( auto it : list )
@@ -107,6 +136,9 @@ FFilePathRegistry::Parse()
 const std::string&
 FFilePathRegistry::GetFilePathForClosestMatchingName( const std::string& iName )
 {
+    if( mMap.size() == 0 )
+        return  sDefaultRet;
+
     std::string lowercase_name = iName;
     std::transform( lowercase_name.begin(), lowercase_name.end(), lowercase_name.begin(), ::tolower);
     std::vector< std::tuple< int, std::string > > matches;
@@ -126,7 +158,7 @@ const std::string&
 FFilePathRegistry::GetFilePathForExactMatchingName( const std::string& iName )
 {
     auto it = mMap.find( iName );
-    return  ( it == mMap.end() ) ? gDefaultRet : it->second;
+    return  ( it == mMap.end() ) ? sDefaultRet : it->second;
 }
 
 
@@ -138,34 +170,6 @@ FFilePathRegistry::GetMap() const
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- Private API
-void
-FFilePathRegistry::GatherEntriesRecursive( const cppfs::FileHandle& iDir, std::vector< std::string >* oList )
-{
-    std::vector< std::string > entries = iDir.listFiles();
-    std::string dir_path = iDir.path();
-
-    for( auto it : entries ) {
-        std::string full_entry_path = dir_path + it;
-        FileHandle entry = fs::open( full_entry_path );
-
-        if( entry.isDirectory() )
-            GatherEntriesRecursive( entry, oList );
-
-        if( entry.isFile() ) {
-            FilePath path( entry.path() );
-            std::string ext = path.extension();
-            bool match = false;
-            for( auto filter : mFilters ) {
-                if( ext == filter )
-                    match = true;
-            }
-
-            if( match )
-                oList->push_back( full_entry_path );
-        }
-    }
-}
-
 std::string
 FFilePathRegistry::CreateName( const std::string& iFile )
 {

@@ -39,6 +39,19 @@ struct ULIS2_API FBlendInfo {
 };
 
 
+ULIS2_API void Blend( const FBlock* iSource
+                    , FBlock*       iBackdrop
+                    , const FRect&  iSourceRect
+                    , const FVec2F& iPosition
+                    , bool          iSubpixelFlag
+                    , eBlendingMode iBlendingMode
+                    , eAlphaMode    iAlphaMode
+                    , float         iOpacityValue
+                    , FThreadPool*  iThreadPool
+                    , FPerf         iPerfIntent
+                    , bool          iBlocking
+                    , bool          iCallCB );
+
 ULIS2_API void Blend( const FBlendInfo& );
 
 typedef void (*fpDispatchedBlendFunc)( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams );

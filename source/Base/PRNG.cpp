@@ -14,18 +14,21 @@
 #include "Base/PRNG.h"
 
 ULIS2_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// PRNG
-static uint32 sWeakPRNGSeed = 5323;  ///< An arbitrary base seed for Weak PRNG.
+static uint32 sWeakPRNGSeed = 5323; // Arbitrary
 
-void ResetWeakPRNGSeed()
-{
+void ResetWeakPRNGSeed() {
     sWeakPRNGSeed = 5323;
 }
 
+void SetWeakPRNGSeed( uint32 iVal ) {
+    sWeakPRNGSeed = iVal;
+}
 
-uint32 GenerateWeakPRNG()
-{
+uint32 GetWeakPRNGSeed() {
+    return  sWeakPRNGSeed;
+}
+
+uint32 GenerateWeakPRNG() {
     sWeakPRNGSeed = 8253729 * sWeakPRNGSeed + 2396403;
     return sWeakPRNGSeed % 65537;
 }

@@ -12,6 +12,10 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+#include <cstring>
+#include <iostream>
+#include <memory>
+
 /////////////////////////////////////////////////////
 // Detect Build Configuration
 #ifdef NDEBUG
@@ -81,7 +85,7 @@
     #else
     #define ULIS2_FORCEINLINE inline
     #endif
-#else // ULIS2_ENABLE_FORCEINLINE
+#else
     #define ULIS2_FORCEINLINE inline
 #endif // ULIS2_ENABLE_FORCEINLINE
 
@@ -95,7 +99,7 @@
     #else
     #define ULIS2_VECTORCALL __vectorcall
     #endif
-#else // ULIS2_ENABLE_FORCEINLINE
+#else
     #define ULIS2_VECTORCALL
 #endif // ULIS2_ENABLE_FORCEINLINE
 
@@ -124,4 +128,34 @@
 // Erors
 #pragma warning(disable : 4251)     // Shut down dll interface warnings.
 #pragma warning(disable : 26812)    // Shut non-class enum warnings.
+
+/////////////////////////////////////////////////////
+// Define Namespaces
+#define ULIS2_NAMESPACE_NAME        ULIS2
+#define ULIS2_SHORT_NAMESPACE_NAME  ul2
+#define ULIS2_NAMESPACE_BEGIN       namespace ULIS2_NAMESPACE_NAME {
+#define ULIS2_NAMESPACE_END         }
+#define ULIS2_FDECL_CLASS( i )      ULIS2_NAMESPACE_BEGIN class i ; ULIS2_NAMESPACE_END
+#define ULIS2_FDECL_STRUCT( i )     ULIS2_NAMESPACE_BEGIN struct i ; ULIS2_NAMESPACE_END
+namespace ULIS2_NAMESPACE_NAME {}
+namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
+
+/////////////////////////////////////////////////////
+// Version Specification
+#define ULIS2_VERSION_MAJOR      2
+#define ULIS2_VERSION_MINOR      0
+#define ULIS2_VERSION_MAJOR_STR  "2"
+#define ULIS2_VERSION_MINOR_STR  "0"
+
+/////////////////////////////////////////////////////
+// Crash Behaviours
+#define ULIS2_CRASH             *((volatile int*)0) = 0
+
+/////////////////////////////////////////////////////
+// Assert Behaviours
+#ifdef ULIS2_DEBUG
+    #define ULIS2_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS2_CRASH; }
+#else
+    #define ULIS2_ASSERT( cond, log )
+#endif
 

@@ -29,7 +29,7 @@ bool replace_imp( std::string& str, const std::string& from, const std::string& 
     return true;
 }
 
-void replace( std::string& str, const std::string& from, const std::string& to ) {
+void ReplaceAllOccurences( std::string& str, const std::string& from, const std::string& to ) {
     while( replace_imp( str, from, to ) ) {}
 }
 
