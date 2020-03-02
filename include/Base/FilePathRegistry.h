@@ -29,16 +29,16 @@ public:
 
 public:
     // Public API
-    const std::vector< std::string >& GetLookupPaths() const;
-    const std::vector< std::string >& GetFilters() const;
-    void AddLookupPath( const std::string& iPath );
-    void AddLookupPaths( const std::vector< std::string >& iPaths );
-    void AddFilter( const std::string& iFilter );
-    void AddFilters( const std::vector< std::string >& iFilters );
-    void Parse();
-    const std::string& GetFilePathForClosestMatchingName( const std::string& iName );
-    const std::string& GetFilePathForExactMatchingName( const std::string& iName );
-    const std::unordered_map< std::string, std::string >& GetMap() const;
+    const std::vector< std::string >&                       GetLookupPaths() const;
+    const std::vector< std::string >&                       GetFilters() const;
+    void                                                    AddLookupPath( const std::string& iPath );
+    void                                                    AddLookupPaths( const std::vector< std::string >& iPaths );
+    void                                                    AddFilter( const std::string& iFilter );
+    void                                                    AddFilters( const std::vector< std::string >& iFilters );
+    void                                                    Parse();
+    const std::string&                                      GetFilePathForClosestMatchingName( const std::string& iName );
+    const std::string&                                      GetFilePathForExactMatchingName( const std::string& iName );
+    const std::unordered_map< std::string, std::string >&   GetMap() const;
 
 private:
     // Private API
@@ -46,9 +46,9 @@ private:
 
 private:
     // Private Data Members
-    std::vector< std::string > mLookupPaths;
-    std::vector< std::string > mFilters;
-    std::unordered_map< std::string, std::string > mMap; // < Name, Path >
+    std::vector< std::string >                      mLookupPaths;
+    std::vector< std::string >                      mFilters;
+    std::unordered_map< std::string, std::string >  mMap; // < Name, Path >
 };
 
 ULIS2_NAMESPACE_END

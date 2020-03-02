@@ -16,13 +16,13 @@
 #include "Conv/ConvBuffer.h"
 
 // Macro utils for implementations
-#define U2_DREF_RED_CHAN( T, iPtr, iFmt, iChan )    ( *( ( T* )( iPtr ) + iFmt.IDT[ iChan ] ) )
+#define U2_DREF_RED_CHAN( T, iPtr, iFmt, iChan )    ( *( ( T* )( iPtr ) + iFmt->IDT[ iChan ] ) )
 #define U2_DREF_CHAN( T, iPtr, iChan )              ( *( ( T* )( iPtr ) + iChan ) )
-#define U2_FWD_ALPHA                                if( iDstFormat.HEA ) { U2_DREF_CHAN( T2, iDst, iDstFormat.AID ) = iSrcFormat.HEA? ConvType< T1, T2 >( U2_DREF_CHAN( T1, iSrc, iSrcFormat.AID ) ) : MaxType< T2 >(); }
+#define U2_FWD_ALPHA                                if( iDstFormat->HEA ) { U2_DREF_CHAN( T2, iDst, iDstFormat->AID ) = iSrcFormat->HEA? ConvType< T1, T2 >( U2_DREF_CHAN( T1, iSrc, iSrcFormat->AID ) ) : MaxType< T2 >(); }
 
 #define U2_DREF_SRC( iChan )                        U2_DREF_RED_CHAN( T1, iSrc, iSrcFormat, iChan )
 #define U2_DREF_DST( iChan )                        U2_DREF_RED_CHAN( T2, iDst, iDstFormat, iChan )
-#define U2_DREF_TEMP( iChan )                       U2_DREF_RED_CHAN( ufloat, temp.Ptr(), temp.FormatInfo(), iChan )
+#define U2_DREF_TEMP( iChan )                       U2_DREF_RED_CHAN( ufloat, temp.Ptr(), &temp.FormatInfo(), iChan )
 
 //Dispatch
 #include "Conv/Dispatch/Generic/ToGrey.ipp"
@@ -44,7 +44,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectGrey( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToGrey < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToGrey  < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToGrey  < T1, T2 >;
@@ -66,7 +65,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectRGB( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToRGB  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToRGB   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToRGB   < T1, T2 >;
@@ -88,7 +86,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectHSV( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToHSV  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToHSV   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToHSV   < T1, T2 >;
@@ -110,7 +107,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectHSL( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToHSL  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToHSL   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToHSL   < T1, T2 >;
@@ -132,7 +128,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectCMY( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToCMY  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToCMY   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToCMY   < T1, T2 >;
@@ -154,7 +149,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectCMYK( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToCMYK < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToCMYK  < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToCMYK  < T1, T2 >;
@@ -176,7 +170,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectYUV( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToYUV  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToYUV   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToYUV   < T1, T2 >;
@@ -198,7 +191,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectLab( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToLab  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToLab   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToLab   < T1, T2 >;
@@ -220,7 +212,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectXYZ( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToXYZ  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToXYZ   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToXYZ   < T1, T2 >;
@@ -242,7 +233,6 @@ fpDispatchedConvInvoke
 QueryDispatchedConvInvokeForParameters_SelectYxy( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iSrcFormat ) ) ) {
-        case CM_ANY     : ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    : return  &ConvBufferGreyToYxy  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToYxy   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToYxy   < T1, T2 >;
@@ -264,7 +254,6 @@ QueryDispatchedConvInvokeForParameters_SelectModel( tFormat iSrcFormat, tFormat 
 {
     switch( static_cast< eColorModel >( ULIS2_R_MODEL( iDstFormat ) ) )
     {
-        case CM_ANY     :   ULIS2_CRASH_DELIBERATE; return  nullptr;
         case CM_GREY    :   return  QueryDispatchedConvInvokeForParameters_SelectGrey< T1, T2 >( iSrcFormat, iDstFormat );
         case CM_RGB     :   return  QueryDispatchedConvInvokeForParameters_SelectRGB<  T1, T2 >( iSrcFormat, iDstFormat );
         case CM_HSV     :   return  QueryDispatchedConvInvokeForParameters_SelectHSV<  T1, T2 >( iSrcFormat, iDstFormat );

@@ -85,10 +85,11 @@ FRect::Area() const
     return  w * h;
 }
 
+
 void
 FRect::Transform( const FTransform2D& iTransform ) {
-    float src_x2 = x + w;
-    float src_y2 = y + h;
+    float src_x2 = static_cast< float >( x + w );
+    float src_y2 = static_cast< float >( y + h );
     const glm::mat3& mat = iTransform.Matrix();
     glm::vec3 m00 = mat * glm::vec3( x, y, 1 );
     glm::vec3 m10 = mat * glm::vec3( src_x2, y, 1 );

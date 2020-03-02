@@ -15,18 +15,10 @@
 #include "Core/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-
-// Callback Typedefs
 typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRect& /* rect */ );
 typedef void (*fpCleanupFunction)( tByte* /* data */, void* /* info */ );
-
-// Default Callbacks
 ULIS2_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
 ULIS2_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
-
-/////////////////////////////////////////////////////
-/// @class      FOnInvalid
-/// @brief      The FOnInvalid struct provides a mean of storing and executing an Invalid callback with extra info.
 struct ULIS2_API FOnInvalid
 {
     FOnInvalid();
@@ -38,10 +30,6 @@ private:
     void*                   info;
 };
 
-
-/////////////////////////////////////////////////////
-/// @class      FOnCleanup
-/// @brief      The FOnCleanup struct provides a mean of storing and executing a Cleanup callback with extra info.
 struct ULIS2_API FOnCleanup
 {
     FOnCleanup();

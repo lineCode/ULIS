@@ -14,18 +14,14 @@
 #include "Base/Callbacks.h"
 
 ULIS2_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// Default Cleanup Behaviour
 void OnCleanup_FreeMemory( tByte* iData, void* iInfo )
 {
     delete [] iData;
 }
 
-
 void OnCleanup_DoNothing( tByte* iData, void* iInfo )
 {
 }
-
 
 /////////////////////////////////////////////////////
 /// FOnInvalid

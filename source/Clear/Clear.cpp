@@ -12,7 +12,10 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
+#include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
+#include "Maths/Geometry.h"
+#include "Thread/ThreadPool.h"
 
 ULIS2_NAMESPACE_BEGIN
 #ifdef __AVX2__
@@ -43,67 +46,77 @@ void InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, tSize iStride )
     memset( iDst, 0, iCount );
 }
 
-void Clear_imp( const FClearInfo& iClearParams ) {
-    const FFormatInfo& fmtInfo = iClearParams.destination->FormatInfo();
-    const tSize bpp = fmtInfo.BPP;
-    const tSize w   = iClearParams.destination->Width();
-    const tSize bps = iClearParams.destination->BytesPerScanLine();
-    const tSize dsh = iClearParams.area.x * bpp;
-    tByte*      dsb = iClearParams.destination->DataPtr() + dsh;
-    #define DST dsb + ( ( iClearParams.area.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
+void Clear_imp( FThreadPool*            iThreadPool
+           , bool                       iBlocking
+           , uint32                     iPerfIntent
+           , const FHostDeviceInfo&     iHostDeviceInfo
+           , bool                       iCallCB
+           , FBlock*                    iDestination
+           , const FRect&               iArea )
+{
+    const FFormatInfo& fmt = iDestination->FormatInfo();
+    const tSize bpp = fmt.BPP;
+    const tSize w   = iDestination->Width();
+    const tSize bps = iDestination->BytesPerScanLine();
+    const tSize dsh = iArea.x * bpp;
+    tByte*      dsb = iDestination->DataPtr() + dsh;
+    #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
     #ifdef __AVX2__
-    if( iClearParams.perfInfo.intent.UseAVX2() && gCpuInfo.info.HW_AVX2 && bps >= 32 ) {
+    if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const tSize stride = 32;
-        const tSize count = iClearParams.area.w * bpp;
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iClearParams.perfInfo.intent, iClearParams.perfInfo.pool, iClearParams.perfInfo.blocking
-                                       , iClearParams.area.h
+        const tSize count = iArea.w * bpp;
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                       , iArea.h
                                        , InvokeFillMTProcessScanline_AX2, DST, count, stride )
     } else
     #endif
     #ifdef __SSE4_2__
-    if( iClearParams.perfInfo.intent.UseSSE4_2() && gCpuInfo.info.HW_SSE42 && bps >= 16 ) {
+    if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const tSize stride = 16;
-        const tSize count = iClearParams.area.w * bpp;
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iClearParams.perfInfo.intent, iClearParams.perfInfo.pool, iClearParams.perfInfo.blocking
-                                       , iClearParams.area.h
+        const tSize count = iArea.w * bpp;
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                       , iArea.h
                                        , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
     } else
     #endif
     {
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iClearParams.perfInfo.intent, iClearParams.perfInfo.pool, iClearParams.perfInfo.blocking
-                                       , iClearParams.area.h
-                                       , InvokeFillMTProcessScanline_MEM, DST, iClearParams.area.w, bpp )
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                       , iArea.h
+                                       , InvokeFillMTProcessScanline_MEM, DST, iArea.w, bpp )
     }
 }
 
-void Clear( const FClearInfo& iClearParams ) {
+ void Clear( FThreadPool*              iThreadPool
+           , bool                      iBlocking
+           , uint32                    iPerfIntent
+           , const FHostDeviceInfo&    iHostDeviceInfo
+           , bool                      iCallCB
+           , FBlock*                   iDestination
+           , const FRect&              iArea )
+{
     // Assertions
-    ULIS2_ASSERT( iClearParams.destination,                                             "Bad source."                                                       );
-    ULIS2_ASSERT( !iClearParams.perfInfo.intent.UseMT() || iClearParams.perfInfo.pool,  "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iClearParams.perfInfo.callCB || iClearParams.perfInfo.blocking,      "Callback flag is specified on non-blocking operation."             );
-
+    ULIS2_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
     // Fit region of interest
-    FRect roi = iClearParams.area & iClearParams.destination->Rect();
+    FRect roi = iArea & iDestination->Rect();
 
     // Check no-op
     if( roi.Area() <= 0 )
         return;
 
-    FClearInfo forwardClearInfo = iClearParams;
-    forwardClearInfo.area = roi;
-
     // Call
-    Clear_imp( forwardClearInfo );
+    Clear_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iDestination, iArea );
 
     // Invalid
-    iClearParams.destination->Invalidate( roi, iClearParams.perfInfo.callCB );
+    iDestination->Invalidate( roi, iCallCB );
 }
 
-void ClearRaw( FBlock* iDst, bool iCallInvalidCB ) {
+void ClearRaw( FBlock* iDst, bool iCallCB ) {
     ULIS2_ASSERT( iDst, "Bad destination" );
-    // One call, supposedly more efficient for small block.
     memset( iDst->DataPtr(), 0, iDst->BytesTotal() );
+    iDst->Invalidate( iCallCB );
 }
 
 ULIS2_NAMESPACE_END

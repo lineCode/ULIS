@@ -15,15 +15,15 @@
 #include "Core/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-struct ULIS2_API FClearInfo {
-    FBlock*         destination;
-    FRect           area;
-    FPerfInfo       perfInfo;
-};
+ULIS2_API void Clear( FThreadPool*              iThreadPool
+                    , bool                      iBlocking
+                    , uint32                    iPerfIntent
+                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , bool                      iCallCB
+                    , FBlock*                   iDestination
+                    , const FRect&              iArea );
 
-ULIS2_API void Clear( const FClearInfo& );
-
-ULIS2_API void ClearRaw( FBlock* iSrc, bool iCallInvalidCB );
+ULIS2_API void ClearRaw( FBlock* iSrc, bool iCallCB );
 
 ULIS2_NAMESPACE_END
 

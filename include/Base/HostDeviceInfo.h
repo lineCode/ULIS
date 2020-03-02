@@ -15,9 +15,6 @@
 #include "Core/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-/// @struct     FHostDeviceInfo
-/// @brief      The FHostDeviceInfo struct provides a small wrapper around the FeatureDetector interface.
 struct ULIS2_API FHostDeviceInfo
 {
 private:

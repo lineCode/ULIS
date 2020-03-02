@@ -13,9 +13,11 @@
 */
 #include "Base/FilePathRegistry.h"
 #include "Base/StringUtils.h"
+
 #include <cppfs/fs.h>
 #include <cppfs/FileHandle.h>
 #include <cppfs/FilePath.h>
+
 #include <iostream>
 #include <cstring>
 #include <cassert>
@@ -27,6 +29,7 @@ ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ConstDefault
 static const std::string sDefaultRet = "";
+
 /////////////////////////////////////////////////////
 // details
 namespace details {
@@ -56,6 +59,7 @@ void GatherEntriesRecursive( const cppfs::FileHandle& iDir, const std::vector< s
     }
 }
 } // namespace details
+
 /////////////////////////////////////////////////////
 // FFilePathRegistry
 //--------------------------------------------------------------------------------------

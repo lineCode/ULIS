@@ -35,11 +35,11 @@ void Blend( FThreadPool*            iThreadPool
           , float                   iOpacityValue )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                                  "Bad source."                                                       );
-    ULIS2_ASSERT( iBackdrop,                                "Bad destination."                                                  );
-    ULIS2_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                             );
-    ULIS2_ASSERT( iThreadPool,                              "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."             );
+    ULIS2_ASSERT( iSource,                                  "Bad source."                                               );
+    ULIS2_ASSERT( iBackdrop,                                "Bad destination."                                          );
+    ULIS2_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
+    ULIS2_ASSERT( iThreadPool,                              "Bad pool."                                                 );
+    ULIS2_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
