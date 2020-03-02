@@ -13,6 +13,9 @@
 */
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
+#include "Maths/Transform2D.h"
+#include <glm/vec3.hpp>
+#include <glm/mat3x3.hpp>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -80,6 +83,49 @@ int
 FRect::Area() const
 {
     return  w * h;
+}
+
+void
+FRect::Transform( const FTransform2D& iTransform ) {
+    float src_x2 = x + w;
+    float src_y2 = y + h;
+    const glm::mat3& mat = iTransform.Matrix();
+    glm::vec3 m00 = mat * glm::vec3( x, y, 1 );
+    glm::vec3 m10 = mat * glm::vec3( src_x2, y, 1 );
+    glm::vec3 m11 = mat * glm::vec3( src_x2, src_y2, 1 );
+    glm::vec3 m01 = mat * glm::vec3( x, src_y2, 1 );
+    x = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Min4( m00.x, m10.x, m11.x, m01.x ) ) );
+    y = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Min4( m00.y, m10.y, m11.y, m01.y ) ) );
+    w = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Max4( m00.x, m10.x, m11.x, m01.x ) ) ) - x;
+    h = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Max4( m00.y, m10.y, m11.y, m01.y ) ) ) - h;
+}
+
+
+FRect
+FRect::Transformed( const FTransform2D& iTransform ) const {
+    FRect ret = *this;
+    ret.Transform( iTransform );
+    return  ret;
+}
+
+
+void
+FRect::FitInPositiveRange() {
+    x = 0;
+    y = 0;
+}
+
+
+void
+FRect::Shift( const FVec2I& iVec ) {
+    x += iVec.x;
+    y += iVec.y;
+}
+
+
+FVec2I
+FRect::GetShift() const {
+    return  FVec2I( -x, -y );
 }
 
 ULIS2_NAMESPACE_END

@@ -30,10 +30,10 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Version Specification
-#define ULIS2_VERSION_MAJOR      0
-#define ULIS2_VERSION_MINOR      2
-#define ULIS2_VERSION_MAJOR_STR  "0"
-#define ULIS2_VERSION_MINOR_STR  "2"
+#define ULIS2_VERSION_MAJOR      2
+#define ULIS2_VERSION_MINOR      0
+#define ULIS2_VERSION_MAJOR_STR  "2"
+#define ULIS2_VERSION_MINOR_STR  "0"
 
 /////////////////////////////////////////////////////
 // Crash Behaviours
@@ -47,7 +47,7 @@ namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
 #ifdef ULIS2_DEBUG
     #define ULIS2_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed:" << log << std::endl; ULIS2_CRASH; }
 #else
-    #define ULIS2_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed:" << log << std::endl; ULIS2_CRASH; }
+    #define ULIS2_ASSERT( cond, log )
 #endif
 
 #define ULIS2_WARNING( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " <<  "Warning: " << log << std::endl; }

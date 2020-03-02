@@ -12,7 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS2>
-#include <chrono>
 #include <QApplication>
 #include <QWidget>
 #include <QImage>
@@ -23,70 +22,19 @@ int
 main( int argc, char *argv[] ) {
     using namespace ::ul2;
     FThreadPool  threadPool;
-    FPerf perfIntent_NONE( 0 );
-    FPerf perfIntent_MT( Perf_MT );
-    FPerf perfIntent_SSE_TSPEC( Perf_SSE4_2 | Perf_TSPEC );
-    FPerf perfIntent_AVX_TSPEC( Perf_AVX2   | Perf_TSPEC );
+    FPerf perfIntent( Perf_AVX2   | Perf_TSPEC );
 
     FPerfInfo perfInfo = {};
     perfInfo.pool       = &threadPool;
-    perfInfo.intent     = perfIntent_NONE;
+    perfInfo.intent     = perfIntent;
     perfInfo.blocking   = ULIS2_NONBLOCKING;
     perfInfo.callCB     = ULIS2_NOCB;
 
-    /*FXLoadFromClipboardInfo loadFromClipboardInfo = {};
+    FXLoadFromClipboardInfo loadFromClipboardInfo = {};
     loadFromClipboardInfo.desiredFormat = ULIS2_FORMAT_RGBA8;
     loadFromClipboardInfo.perfInfo      = perfInfo;
-    FBlock* blockA = XLoadFromClipboard( loadFromClipboardInfo );*/
-
-    FXLoadFromFileInfo loadInfo = {};
-    loadInfo.path           = "C:/Users/conta/Documents/work/bg.png";
-    loadInfo.desiredFormat  = ULIS2_FORMAT_RGBA8;
-    loadInfo.perfInfo       = perfInfo;
-    FBlock* blockA = XLoadFromFile( loadInfo );
-
-    loadInfo.path = "C:/Users/conta/Documents/work/pattern.png";
-    FBlock* blockB = XLoadFromFile( loadInfo );
-
-    FSaveToClipboardInfo saveToClipboardInfo = {};
-    saveToClipboardInfo.source      = blockB;
-    saveToClipboardInfo.perfInfo    = perfInfo;
-    SaveToClipboard( saveToClipboardInfo );
-
+    FBlock* blockA = XLoadFromClipboard( loadFromClipboardInfo );
     Fence( threadPool );
-
-    //SaveToFile( &threadPool, true, perfIntent_AVX_TSPEC, gCpuInfo, &blockB, "here.png", eImageFormat::IM_PNG );
-
-    FBlendInfo blendInfo = {};
-    blendInfo.source            = blockB;
-    blendInfo.backdrop          = blockA;
-    blendInfo.sourceRect        = FRect( 0, 0, 65, 65 );
-    blendInfo.backdropPosition  = FVec2F( 64.5f, 64.5f );
-    blendInfo.subpixelFlag      = ULIS2_AA;
-    blendInfo.blendingMode      = BM_COLOR;
-    blendInfo.alphaMode         = AM_NORMAL;
-    blendInfo.opacityValue      = 1.f;
-    blendInfo.perfInfo          = perfInfo;
-    Blend( blendInfo );
-    Fence( threadPool );
-
-    FTextInfo textInfo = {};
-    FFontEngine fontEngine;
-    FFontRegistry fontReg( fontEngine );
-    FFont font = fontReg.LoadFont( "Yu Gothic", "Bold" );
-    FColor fontColor = FColor( ULIS2_FORMAT_RGB8, { 0, 0, 0 } );
-    glm::mat3 matrix = MakeTranslationMatrix( 40, 40 );
-    FTransform2D transform( matrix );
-    const wchar_t* a = L"とても面白い使い";
-    textInfo.destination        = blockA;
-    textInfo.text               = L"非常に興味深いメッセージ";
-    textInfo.font               = &font;
-    textInfo.size               = 30;
-    textInfo.color              = &fontColor;
-    textInfo.transform          = &transform;
-    textInfo.antialiasingFlag   = ULIS2_AA;
-    textInfo.perfInfo           = perfInfo;
-    RenderText( textInfo );
 
     // Qt Window
     QApplication    app( argc, argv );
@@ -103,9 +51,7 @@ main( int argc, char *argv[] ) {
     delete  label;
     delete  image;
     delete  widget;
-
-    delete  blockB;
-
+    delete  blockA;
     return  exit_code;
 }
 

@@ -25,10 +25,5 @@
 /////////////////////////////////////////////////////
 // glm FORCE extensions, before any glm related includes
 #define GLM_FORCE_SSE42
-#define GLM_FORCE_SSE41
-#define GLM_FORCE_SSSE3
-#define GLM_FORCE_SSE3
-#define GLM_FORCE_SSE2
-#define GLM_FORCE_SSE
 #define GLM_FORCE_INTRINSICS
 #define GLM_FORCE_SWIZZLE

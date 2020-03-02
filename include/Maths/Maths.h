@@ -74,8 +74,18 @@ struct ULIS2_API FMaths
     }
 
     template< typename T >
+    static ULIS2_FORCEINLINE T Min4( T iA, T iB, T iC, T iD ) {
+        return  Min( iA, Min3( iB, iC, iD ) );
+    }
+
+    template< typename T >
     static ULIS2_FORCEINLINE T Max3( T iA, T iB, T iC ) {
         return  Max( iA, Max( iB, iC ) );
+    }
+
+    template< typename T >
+    static ULIS2_FORCEINLINE T Max4( T iA, T iB, T iC, T iD ) {
+        return  Max( iA, Max3( iB, iC, iD ) );
     }
 
     template< typename T >

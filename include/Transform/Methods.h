@@ -22,7 +22,6 @@ enum eResamplingMethod
       INTERP_NN
     , INTERP_BILINEAR
     , INTERP_BICUBIC
-    , INTERP_AREA
 };
 
 static const char* kwResamplingMethod[] =
@@ -30,7 +29,6 @@ static const char* kwResamplingMethod[] =
       "NearestNeighbour"
     , "Bilinear"
     , "Bicubic"
-    , "Area"
 };
 
 /////////////////////////////////////////////////////

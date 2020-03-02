@@ -238,20 +238,6 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( AM_MIN           , _E0, _E1, _E2, _E3 )          \
     X( AM_MAX           , _E0, _E1, _E2, _E3 )
 
-//#define ULIS2_ENUM_CASE_AM_DO( _AM, _BM, _ACTION, _E2, _E3 )                                                        case _AM: _ACTION( _BM, _AM, _E2, _E3 ); break;
-//#define ULIS2_ENUM_CASE_BM_SWITCH_FOR_ALL_AM_DO( _BM, iAlphaMode, _ACTION, _E2, _E3 )                               case _BM: switch( iAlphaMode ) { ULIS2_FOR_ALL_AM_DO( ULIS2_ENUM_CASE_AM_DO, _BM, _ACTION, _E2, _E3 ) } break;
-//#define ULIS2_SWITCH_FOR_ALL_BM_SUBSET_AM_COMBINATIONS_DO( iBlendingMode, iAlphaMode, _SUBSET, _ACTION, _E2, _E3 )  switch( iBlendingMode ) { _SUBSET( ULIS2_ENUM_CASE_BM_SWITCH_FOR_ALL_AM_DO, iAlphaMode, _ACTION, _E2, _E3 ) }
-//#define ULIS2_RET_COMP_OP( _BM, _AM, iSubpixel, _FUNCTION )                                                         return  iSubpixel ? & _FUNCTION ## _Subpixel < T, _BM, _AM > : & _FUNCTION < T, _BM, _AM >;
-//#define ULIS2_SELECT_COMP_OP( _SUBSET, iBlendingMode, iAlphaMode, iSubpixel, _FUNCTION )                            ULIS2_SWITCH_FOR_ALL_BM_SUBSET_AM_COMBINATIONS_DO( iBlendingMode, iAlphaMode, _SUBSET, ULIS2_RET_COMP_OP, iSubpixel, _FUNCTION )
-
-//#define ULIS2_COMBINE_DO( _AM, _BM, _TYPE, _ACTION, _E2 )                                   _ACTION( _TYPE, _BM, _AM, _E2 )
-//#define ULIS2_ENUMERATE_AM_DO( _BM, _TYPE, _ACTION, _E2, _E3 )                              ULIS2_FOR_ALL_AM_DO( ULIS2_COMBINE_DO, _BM, _TYPE, _ACTION, _E2 )
-//#define ULIS2_ENUMERATE_BM_SUBSET_AM_COMBINATIONS_DO( _TYPE, _SUBSET, _ACTION, _E2, _E3 )   _SUBSET( ULIS2_ENUMERATE_AM_DO, _TYPE, _ACTION, _E2, _E3 )
-//#define ULIS2_ENUMERATE_TYPES_BM_SUBSET_AM_COMBINATIONS_DO( _SUBSET, _ACTION, _E2, _E3 )    ULIS2_FOR_ALL_TYPES_DO( ULIS2_ENUMERATE_BM_SUBSET_AM_COMBINATIONS_DO, _SUBSET, _ACTION, _E2, _E3 )
-
-//#define ULIS2_DELETE_COMP_OP_INSTANCIATION_IMP( _TYPE, _BM, _AM, _FUNCTION ) template<> void _FUNCTION < _TYPE, _BM, _AM >( const FBlock*, FBlock*, const FRect&, const FRect&, const glm::vec2&, ufloat, const FPerf& ) = delete;
-//#define ULIS2_DELETE_COMP_OP_INSTANCIATION( _SUBSET, _FUNCTION ) ULIS2_ENUMERATE_TYPES_BM_SUBSET_AM_COMBINATIONS_DO( _SUBSET, ULIS2_DELETE_COMP_OP_INSTANCIATION_IMP, _FUNCTION, 0 )
-
 #define ULIS2_SELECT_COMP_OP( iSubpixel, _FUNCTION )        iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
 #define ULIS2_SELECT_COMP_OPT( iSubpixel, _FUNCTION, _T )   iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
 

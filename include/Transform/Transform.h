@@ -13,19 +13,29 @@
 */
 #pragma once
 #include "Base/Core.h"
+#include "Base/Perf.h"
 #include "Transform/Methods.h"
+#include "Maths/Geometry.h"
 #include <glm/mat3x3.hpp>
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_API void Transform( FThreadPool*      iPool
-                        , bool              iBlocking
-                        , const FPerf&      iPerf
-                        , const FCPU&       iCPU
-                        , const FBlock*     iSrc
-                        , FBlock*           iDst
-                        , const  glm::mat3& iMat
-                        , eResamplingMethod iInterpolationType
-                        , bool              iCallInvalidCB );
+struct ULIS2_API FTransformInfo {
+    const FBlock*       source;
+    FBlock*             destination;
+    const FTransform2D* transform;
+    eResamplingMethod   interpolationType;
+    FPerfInfo           perfInfo;
+};
+
+
+struct ULIS2_API FTransformMetricsInfo {
+    FRect               sourceRect;
+    const FTransform2D* transform;
+    eResamplingMethod   interpolationType;
+};
+
+ULIS2_API void Transform( const FTransformInfo& );
+ULIS2_API FRect TransformMetrics( const FTransformMetricsInfo& );
 
 // Transform Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedTransformFunc)( FThreadPool*, bool, const FPerf&, const FBlock*, FBlock*, const glm::mat3& );

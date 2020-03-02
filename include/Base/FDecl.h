@@ -15,9 +15,8 @@
 #include "Base/CoreInternal.h"
 
 /////////////////////////////////////////////////////
-// Typedefs and enums
+// FDecl Typedefs and enums
 ULIS2_NAMESPACE_BEGIN
-// FDecl
 class   FBlock;
 class   IPixel;
 class   FPixelValue;

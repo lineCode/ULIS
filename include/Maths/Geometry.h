@@ -51,6 +51,11 @@ struct ULIS2_API FRect
     FRect operator|( const FRect& iOther ) const;
     bool operator==( const FRect& iOther ) const;
     int Area() const;
+    void Transform( const FTransform2D& iTransform );
+    FRect Transformed( const FTransform2D& iTransform ) const;
+    void FitInPositiveRange();
+    void Shift( const FVec2I& iVec );
+    FVec2I GetShift() const;
 };
 
 ULIS2_NAMESPACE_END

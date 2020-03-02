@@ -53,7 +53,7 @@ struct ULIS2_API _FPrivateTextInfo {
 };
 
 ULIS2_API void RenderText( const FTextInfo& );
-ULIS2_API FRect TextMetrics( const FTextInfo& );
+ULIS2_API FRect TextMetrics( const FTextMetricsInfo& );
 
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedTextFunc)( const _FPrivateTextInfo& );

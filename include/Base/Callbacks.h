@@ -15,9 +15,11 @@
 #include "Base/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
+
 // Callback Typedefs
 typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRect& /* rect */ );
 typedef void (*fpCleanupFunction)( tByte* /* data */, void* /* info */ );
+
 // Default Callbacks
 ULIS2_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
 ULIS2_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
@@ -31,6 +33,7 @@ struct ULIS2_API FOnInvalid
     FOnInvalid( fpInvalidateFunction iInvalidateFunction, void* iInvalidateInfo = nullptr );
     void ExecuteIfBound( const FBlock* iBlock, const FRect& iRect ) const;
 
+private:
     fpInvalidateFunction    execute;
     void*                   info;
 };
@@ -45,6 +48,7 @@ struct ULIS2_API FOnCleanup
     FOnCleanup( fpCleanupFunction iCleanupFunction, void* iCleanupInfo = nullptr );
     void ExecuteIfBound( tByte* iData ) const;
 
+private:
     fpCleanupFunction       execute;
     void*                   info;
 };
