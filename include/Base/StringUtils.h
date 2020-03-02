@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
+#include "Core/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
 ULIS2_API void ReplaceAllOccurences( std::string& str, const std::string& from, const std::string& to );

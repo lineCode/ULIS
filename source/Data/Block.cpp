@@ -50,17 +50,18 @@ FBlock::FBlock( int iWidth
     mBTT = mHeight * mBPS;
 
     if( mProfile )
-        ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
+        ULIS2_ASSERT( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 
     tSize num = mWidth * mHeight * mInfo.SPP;
     ULIS2_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" );
+
+    // For proper alignment
     switch( Type() ) {
         case TYPE_UINT8     :   mData = reinterpret_cast< tByte* >( new uint8   [ num ] ); break;
         case TYPE_UINT16    :   mData = reinterpret_cast< tByte* >( new uint16  [ num ] ); break;
         case TYPE_UINT32    :   mData = reinterpret_cast< tByte* >( new uint32  [ num ] ); break;
         case TYPE_UFLOAT    :   mData = reinterpret_cast< tByte* >( new ufloat  [ num ] ); break;
         case TYPE_UDOUBLE   :   mData = reinterpret_cast< tByte* >( new udouble [ num ] ); break;
-        default             :   ULIS2_FAIL( "Bad input format !" );
     }
 }
 
@@ -87,7 +88,7 @@ FBlock::FBlock( tByte* iData
     mBTT = mHeight * mBPS;
 
     if( mProfile )
-        ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
+        ULIS2_ASSERT( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -130,7 +131,7 @@ FBlock::AssignProfile( FColorProfile* iProfile )
     mProfile = iProfile;
 
     if( mProfile )
-        ULIS2_ERROR( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
+        ULIS2_ASSERT( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
 }
 
 
@@ -285,10 +286,10 @@ FBlock::Invalidate( const FRect& iRect, bool iCall ) const
     if( !iCall )
         return;
 
-    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < (int)mWidth, "Index out of range" );
-    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < (int)mHeight, "Index out of range" );
-    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int)mWidth, "Index out of range" );
-    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= (int)mHeight, "Index out of range" );
+    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < (int)mWidth,                            "Index out of range" );
+    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < (int)mHeight,                           "Index out of range" );
+    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int)mWidth,       "Index out of range" );
+    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= (int)mHeight,      "Index out of range" );
     mOnInvalid.ExecuteIfBound( this, iRect );
 }
 

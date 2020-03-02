@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
+#include "Core/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -240,16 +240,8 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
 
 #define ULIS2_SELECT_COMP_OP( iSubpixel, _FUNCTION )        iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
 #define ULIS2_SELECT_COMP_OPT( iSubpixel, _FUNCTION, _T )   iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
-
-#define ULIS2_ENUM_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )  case _CASE: { _ACTION( _CASE, _E1, _E2, _E3 ); break; }
-#define ULIS2_SWITCH_FOR_ALL_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )  switch( iValue ) { _SUBSET( ULIS2_ENUM_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
-
-#define ULIS2_ACTION_ASSIGN_ALPHAF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaF< _AM >( iSrc, iBdp );
-#define ULIS2_ACTION_ASSIGN_ALPHASSEF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaSSEF< _AM >( iSrc, iBdp );
-#define ULIS2_ACTION_ASSIGN_ALPHAAVXF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaAVXF< _AM >( iSrc, iBdp );
-#define ULIS2_ASSIGN_ALPHAF( iAlphaMode, iTarget, iSrc, iBdp )  ULIS2_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS2_FOR_ALL_AM_DO, ULIS2_ACTION_ASSIGN_ALPHAF, iTarget, iSrc, iBdp )
-#define ULIS2_ASSIGN_ALPHASSEF( iAlphaMode, iTarget, iSrc, iBdp )  ULIS2_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS2_FOR_ALL_AM_DO, ULIS2_ACTION_ASSIGN_ALPHASSEF, iTarget, iSrc, iBdp )
-#define ULIS2_ASSIGN_ALPHAAVXF( iAlphaMode, iTarget, iSrc, iBdp )  ULIS2_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS2_FOR_ALL_AM_DO, ULIS2_ACTION_ASSIGN_ALPHAAVXF, iTarget, iSrc, iBdp )
+#define ULIS2_COMP_OP_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )  case _CASE: { _ACTION( _CASE, _E1, _E2, _E3 ); break; }
+#define ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )  switch( iValue ) { _SUBSET( ULIS2_ENUM_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
 
 ULIS2_NAMESPACE_END
 

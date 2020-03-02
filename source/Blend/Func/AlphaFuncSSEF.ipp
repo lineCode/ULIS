@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
+#include "Core/Core.h"
 #include "Blend/Modes.h"
 #include "Maths/Maths.h"
 #include <vectorclass.h>

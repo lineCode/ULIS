@@ -15,6 +15,8 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <cstdint>
+#include <immintrin.h>
 
 /////////////////////////////////////////////////////
 // Detect Build Configuration

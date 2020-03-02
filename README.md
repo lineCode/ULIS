@@ -2,7 +2,7 @@
 Unique Library for Imaging Systems
 
 ## License
-Check LICENSE.md, ULIS2 is not available for commerical use.
+Check LICENSE.md, ULIS2 is not available for commercial use.
 
 ## Description
 

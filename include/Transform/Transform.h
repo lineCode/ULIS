@@ -12,8 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
-#include "Base/Perf.h"
+#include "Core/Core.h"
 #include "Transform/Methods.h"
 #include "Maths/Geometry.h"
 #include <glm/mat3x3.hpp>

@@ -13,7 +13,7 @@
 */
 #pragma once
 #define GLM_FORCE_SWIZZLE
-#include "Base/Core.h"
+#include "Core/Core.h"
 #include "Blend/Modes.h"
 #include "Color/ModelStructs.h"
 #include "Maths/Maths.h"

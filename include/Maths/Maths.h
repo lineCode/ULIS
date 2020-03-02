@@ -12,11 +12,10 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
+#include "Core/Core.h"
 #include "Maths/Geometry.h"
 #include <cmath>
 #include <immintrin.h>
-#include <glm/vec2.hpp>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -28,7 +27,6 @@ struct ULIS2_API FMaths
     static constexpr double kPId = 3.1415926535897932;
     static constexpr float  kPIf = 3.14159265f;
 
-    // These functions are designed to be the same as UE4 implementation
     static ULIS2_FORCEINLINE int32 FloorToInt( ufloat iValue ) {
         return  _mm_cvt_ss2si( _mm_set_ss( iValue + iValue - 0.5f ) ) >> 1;
     }
@@ -138,11 +136,7 @@ struct ULIS2_API FMaths
         if ( iNumber > 0 )
             return iNumber - IntegerPartOfNumber( iNumber );
         else
-            return iNumber - IntegerPartOfNumber( iNumber );
-    }
-
-    static ULIS2_FORCEINLINE glm::vec2 FloatingPart( const glm::vec2& iVec ) {
-        return  glm::vec2( FloatingPartOfNumber( iVec.x ), FloatingPartOfNumber( iVec.y ) );
+            return 1.f - ( iNumber - IntegerPartOfNumber( iNumber ) );
     }
 
     static ULIS2_FORCEINLINE FVec2F FloatingPart( const FVec2F& iVec ) {
@@ -151,10 +145,6 @@ struct ULIS2_API FMaths
 
     static ULIS2_FORCEINLINE FVec2F Abs( const FVec2F& iVec ) {
         return  FVec2F( Abs( iVec.x ), Abs( iVec.y ) );
-    }
-
-    static ULIS2_FORCEINLINE FVec2F AbsFloatingPart( const FVec2F& iVec ) {
-        return  Abs( FloatingPart( iVec ) );
     }
 
     static ULIS2_FORCEINLINE int RoundNumber( float iNumber )

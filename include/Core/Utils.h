@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Types.h"
+#include "Core/Platform.h"
 
 ULIS2_NAMESPACE_BEGIN
 // eTypeFromT

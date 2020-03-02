@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/CoreInternal.h"
+#include "Core/Platform.h"
 
 /////////////////////////////////////////////////////
 // FDecl Typedefs and enums
@@ -32,6 +32,11 @@ class   FFontEngine;
 struct  FFormatInfo;
 class   FFont;
 class   FTransform2D;
+
+template< typename T >
+struct TVec2;
+typedef TVec2< int >            FVec2I;
+typedef TVec2< float >          FVec2F;
 
 ULIS2_NAMESPACE_END
 

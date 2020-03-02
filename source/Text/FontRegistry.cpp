@@ -149,7 +149,7 @@ FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
         CHAR windir[MAX_PATH];
         ULIS2_ASSERT( GetWindowsDirectoryA( windir, MAX_PATH ), "Error loading Windows directory path during font retrieval." );
         sysfpath = std::string( windir );
-        replace( sysfpath, "\\", "/" );
+        ReplaceAllOccurences( sysfpath, "\\", "/" );
         sysfpath += "/Fonts/";
         mLookupPaths.push_back( sysfpath );
     #elif defined ULIS2_MACOS
@@ -200,7 +200,7 @@ FFontRegistry::Load()
     for( auto it : reg.GetMap() ) {
         FT_Face face;
         FT_Error load_error = FT_New_Face( mFontEngine.Handle(), it.second.c_str(), 0, &face );
-        ULIS2_WARNING( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
+        ULIS2_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );
         std::string style( face->style_name );

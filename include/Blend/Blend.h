@@ -12,50 +12,23 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
-#include "Base/Perf.h"
-#include "Blend/BlendingPRNGSeed.h"
+#include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-
-struct ULIS2_API FBlendInfo {
-    const FBlock*   source;
-    FBlock*         backdrop;
-    FRect           sourceRect;
-    FVec2F          backdropPosition;
-    bool            subpixelFlag;
-    eBlendingMode   blendingMode;
-    eAlphaMode      alphaMode;
-    float           opacityValue;
-    FPerfInfo       perfInfo;
-
-    // Internal
-    FVec2I          _shift;
-    FVec2I          _backdropCoverage;
-    FRect           _backdropWorkingRect;
-    FVec2F          _buspixelComponent;
-};
-
-
-ULIS2_API void Blend( const FBlock* iSource
-                    , FBlock*       iBackdrop
-                    , const FRect&  iSourceRect
-                    , const FVec2F& iPosition
-                    , bool          iSubpixelFlag
-                    , eBlendingMode iBlendingMode
-                    , eAlphaMode    iAlphaMode
-                    , float         iOpacityValue
-                    , FThreadPool*  iThreadPool
-                    , FPerf         iPerfIntent
-                    , bool          iBlocking
-                    , bool          iCallCB );
-
-ULIS2_API void Blend( const FBlendInfo& );
-
-typedef void (*fpDispatchedBlendFunc)( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams );
-ULIS2_API fpDispatchedBlendFunc QueryDispatchedBlendFunctionForParameters( const FFormatInfo& iFormatInfo, const FBlendInfo& iBlendParams );
+ULIS2_API void Blend( FThreadPool*              iThreadPool
+                    , bool                      iBlocking
+                    , uint32                    iPerfIntent
+                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , bool                      iCallCB
+                    , const FBlock*             iSource
+                    , FBlock*                   iBackdrop
+                    , const FRect&              iSourceRect
+                    , const FVec2F&             iPosition
+                    , bool                      iSubpixelFlag
+                    , eBlendingMode             iBlendingMode
+                    , eAlphaMode                iAlphaMode
+                    , float                     iOpacityValue );
 
 ULIS2_NAMESPACE_END
 

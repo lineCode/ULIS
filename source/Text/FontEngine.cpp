@@ -28,7 +28,7 @@ FFontEngine::FFontEngine()
     : mHandle( nullptr )
 {
     FT_Error error = FT_Init_FreeType( &mHandle );
-    ULIS2_ERROR( !error, "Error initializing freetype2" );
+    ULIS2_ASSERT( !error, "Error initializing freetype2" );
 }
 
 

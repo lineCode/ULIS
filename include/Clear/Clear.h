@@ -12,9 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
-#include "Base/Perf.h"
-#include "Maths/Geometry.h"
+#include "Core/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
 struct ULIS2_API FClearInfo {

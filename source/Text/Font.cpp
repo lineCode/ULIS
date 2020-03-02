@@ -34,7 +34,7 @@ FFont::FFont( const FFontRegistry& iFontRegistry, const std::string& iFamily, co
 {
     std::string fpath = mFontRegistry.FuzzyFindFontPath( iFamily, iStyle );
     FT_Error error = FT_New_Face( mFontEngine.Handle(), fpath.c_str(), 0, &mHandle );
-    ULIS2_ERROR( !error, "Error initializing font handle" );
+    ULIS2_ASSERT( !error, "Error initializing font handle" );
 }
 
 

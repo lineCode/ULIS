@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
+#include "Core/Core.h"
 #include "Blend/Blend.h"
 #include "Blend/Func/AlphaFuncF.ipp"
 #include "Blend/Func/AlphaFuncSSEF.ipp"

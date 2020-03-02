@@ -2,7 +2,7 @@
 Here are some test applications for ULIS2
 
 ## License
-Check LICENSE.md, ULIS2 and tests applications are not available for commerical use.
+Check LICENSE.md, ULIS2 and tests applications are not available for commercial use.
 
 ## Description
 |Name                   |Description                                                |

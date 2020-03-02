@@ -12,11 +12,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Copy/Copy.h"
-#include "Base/CPU.h"
-#include "Base/Perf.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
-#include "Thread/ParallelFor.h"
 #include "Thread/ThreadPool.h"
 #include <immintrin.h>
 
@@ -122,7 +119,6 @@ void CopyRect( const FCopyInfo& iCopyParams ) {
     ULIS2_ASSERT( !iCopyParams.perfInfo.intent.UseMT() || iCopyParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
     ULIS2_ASSERT( !iCopyParams.perfInfo.callCB || iCopyParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
     ULIS2_ASSERT( iCopyParams.source->Format() == iCopyParams.destination->Format(),    "Formats do not match"                                              );
-    ULIS2_WARNING( iCopyParams.source != iCopyParams.destination,                       "Copying a block on itself is dangerous."                           );
 
     // Ensure the selected source rect actually fits in source dimensions.
     FRect src_roi = iCopyParams.area & iCopyParams.source->Rect();

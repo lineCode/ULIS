@@ -23,9 +23,7 @@
 #include "Color/ColorProfile.h"
 #include "Color/ProfileRegistry.h"
 #include "Color/srgb2linear.h"
-#include "Thread/ParallelFor.h"
 #include "Thread/ThreadPool.h"
-#include "Base/Perf.h"
 #include "lcms2.h"
 
 ULIS2_NAMESPACE_BEGIN

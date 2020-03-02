@@ -12,10 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
-#include "Base/Perf.h"
-#include "Maths/Geometry.h"
-#include <glm/vec2.hpp>
+#include "Core/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
 

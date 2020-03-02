@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
+#include "Core/Core.h"
 
 ULIS2_NAMESPACE_BEGIN
 ULIS2_API void ResetWeakPRNGSeed();

@@ -14,12 +14,11 @@
 #pragma once
 /////////////////////////////////////////////////////
 // Includes
-#include "Base/Platform.h"
-#include "Base/CoreInternal.h"
-#include "Base/Types.h"
-#include "Base/FDecl.h"
-#include "Base/Utils.h"
-#include "Base/Format.h"
+#include "Core/Platform.h"
+#include "Core/Types.h"
+#include "Core/FDecl.h"
+#include "Core/Utils.h"
+#include "Core/Format.h"
 
 /////////////////////////////////////////////////////
 // glm FORCE extensions, before any glm related includes

@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Types.h"
+#include "Core/Types.h"
 
 /////////////////////////////////////////////////////
 // Pixel format

@@ -12,10 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
-#include "Base/CPU.h"
 #include "Data/Block.h"
-#include "Thread/ParallelFor.h"
-#include <immintrin.h>
 
 ULIS2_NAMESPACE_BEGIN
 #ifdef __AVX2__

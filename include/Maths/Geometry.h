@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
+#include "Core/Core.h"
 #include <glm/vec2.hpp>
 
 ULIS2_NAMESPACE_BEGIN
@@ -27,13 +27,7 @@ struct ULIS2_API TVec2
     TVec2() : x( 0 ), y( 0 ) {}
     TVec2( T iX, T iY ) : x( iX ), y( iY ) {};
 };
-typedef TVec2< unsigned int >   FVec2U;
-typedef TVec2< int >            FVec2I;
-typedef TVec2< float >          FVec2F;
-typedef TVec2< double >         FVec2D;
-typedef TVec2< uint8 >          FVec2U8;
-typedef TVec2< uint16 >         FVec2U16;
-typedef TVec2< uint32 >         FVec2U32;
+
 /////////////////////////////////////////////////////
 // FRect
 struct ULIS2_API FRect

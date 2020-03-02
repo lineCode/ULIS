@@ -12,13 +12,13 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
-#include "Blend/BlendingPRNGSeed.h"
-#include "Blend/Modes.h"
+#include "Core/Core.h"
+#include "Base/PRNG.h"
+#include "Blend/Dispatch/BlendInfo.h"
 #include "Blend/Func/AlphaFuncF.ipp"
-#include "Color/ModelStructs.h"
+#include "Blend/Modes.h"
 #include "Maths/Geometry.h"
-#include "Thread/ParallelFor.h"
+#include "Thread/ThreadPool.h"
 
 float gBayer8x8Matrix[8][8] = {
     { 0.015625f, 0.765625f, 0.203125f, 0.953125f, 0.0625f, 0.8125f, 0.25f, 1.0f          },
@@ -33,75 +33,74 @@ float gBayer8x8Matrix[8][8] = {
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
-    const FBlendInfo&   blendInfo       = *iBlendParams;
-    const tByte*        src             = iSrc;
-    tByte*              bdp             = iBdp;
-    const bool          notLastLine     = iLine < blendInfo._backdropCoverage.y;
-    const bool          notFirstLine    = iLine > 0;
-    const bool          onLeftBorder    = blendInfo._backdropWorkingRect.x == 0;
-    const bool          hasLeftData     = blendInfo.sourceRect.x + blendInfo._shift.x > 0;
-    const bool          hasTopData      = blendInfo.sourceRect.y + blendInfo._shift.y > 0;
+InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
+    const _FBlendInfoPrivate&   info    = *iInfo;
+    const FFormatInfo&          fmt     = info.source->FormatInfo();
+    const tByte*                src     = iSrc;
+    tByte*                      bdp     = iBdp;
+    const bool notLastLine  = iLine < info.backdropCoverage.y;
+    const bool notFirstLine = iLine > 0;
+    const bool onLeftBorder = info.backdropWorkingRect.x == 0;
+    const bool hasLeftData  = info.sourceRect.x + info.shift.x > 0;
+    const bool hasTopData   = info.sourceRect.y + info.shift.y > 0;
 
-    switch( blendInfo.blendingMode ) {
+    switch( info.blendingMode ) {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_DISSOLVE: {
-            uint32 localPRNGSeed = gBlendingPRNGSeed;
-            int32 seedy = blendInfo._backdropWorkingRect.y + iLine + 1;
-            localPRNGSeed = ( 8253729 % seedy ) * localPRNGSeed + ( 2396403 % ( seedy + 64578 ) * seedy );
-
+            int32 seedy = info.backdropWorkingRect.y + iLine + 1;
+            uint32 localPRNGSeed = ( 8253729 % seedy ) * GetWeakPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
             float m11, m01, m10, m00, vv0, vv1, res;
-            m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - iFmtInfo->BPP,              iFmtInfo->AID ) : 0.f;
-            m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,    iFmtInfo->AID ) : 0.f;
-            vv1 = m10 * blendInfo.backdropPosition.y + m11 * blendInfo._buspixelComponent.y;
+            m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,              fmt.AID ) : 0.f;
+            m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - fmt.BPP,    fmt.AID ) : 0.f;
+            vv1 = m10 * info.subpixelComponent.y + m11 * info.buspixelComponent.y;
 
-            for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
-                const bool notLastCol = x < blendInfo._backdropCoverage.x;
+            for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
+                const bool notLastCol = x < info.backdropCoverage.x;
                 m00 = m10;
                 m01 = m11;
                 vv0 = vv1;
                 SampleSubpixelAlpha( res );
-                const float alpha_bdp   = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
-                const float alpha_src   = res * blendInfo.opacityValue;
+                const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
+                const float alpha_src   = res * info.opacityValue;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
-                    memcpy( bdp, src, iFmtInfo->BPP );
-                    if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
+                    ULIS2_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, fmt.BPP );
+                    if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
-                src += iFmtInfo->BPP;
-                bdp += iFmtInfo->BPP;
+                src += fmt.BPP;
+                bdp += fmt.BPP;
             }
             break;
         } // BM_DISSOLVE
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case BM_BAYERDITHER8x8: {
             float m11, m01, m10, m00, vv0, vv1, res;
-            m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - iFmtInfo->BPP,              iFmtInfo->AID ) : 0.f;
-            m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - iFmtInfo->BPP,    iFmtInfo->AID ) : 0.f;
-            vv1 = m10 * blendInfo.backdropPosition.y + m11 * blendInfo._buspixelComponent.y;
+            m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,              fmt.AID ) : 0.f;
+            m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - fmt.BPP,    fmt.AID ) : 0.f;
+            vv1 = m10 * info.subpixelComponent.y + m11 * info.buspixelComponent.y;
 
-            for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
-                const bool notLastCol = x < blendInfo._backdropCoverage.x;
+            for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
+                const bool notLastCol = x < info.backdropCoverage.x;
                 m00 = m10;
                 m01 = m11;
                 vv0 = vv1;
                 SampleSubpixelAlpha( res );
-                const float alpha_bdp   = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
-                const float alpha_src   = res * blendInfo.opacityValue;
-                const tSize bayerX          = ( blendInfo._backdropWorkingRect.x + x )     % 8;
-                const tSize bayerY          = ( blendInfo._backdropWorkingRect.y + iLine ) % 8;
+                const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
+                const float alpha_src   = res * info.opacityValue;
+                const tSize bayerX          = ( info.backdropWorkingRect.x + x )     % 8;
+                const tSize bayerY          = ( info.backdropWorkingRect.y + iLine ) % 8;
                 const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
-                    memcpy( bdp, src, iFmtInfo->BPP );
-                    if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
+                    ULIS2_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, fmt.BPP );
+                    if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
-                src += iFmtInfo->BPP;
-                bdp += iFmtInfo->BPP;
+                src += fmt.BPP;
+                bdp += fmt.BPP;
             }
             break;
         } // BM_DISSOLVE
@@ -111,94 +110,89 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const tByte* iSrc, tByte
 
 template< typename T >
 void
-BlendMT_Misc_MEM_Generic_Subpixel( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
-    const FBlendInfo&   blendInfo   = *iBlendParams;
-    const tByte*        src         = iBlendParams->source->DataPtr();
-    tByte*              bdp         = iBlendParams->backdrop->DataPtr();
-    const tSize         src_bps     = iBlendParams->source->BytesPerScanLine();
-    const tSize         bdp_bps     = iBlendParams->backdrop->BytesPerScanLine();
-    const tSize         src_decal_y = blendInfo._shift.y + blendInfo.sourceRect.y;
-    const tSize         src_decal_x = ( blendInfo._shift.x + blendInfo.sourceRect.x )   * iFormatInfo.BPP;
-    const tSize         bdp_decal_x = ( blendInfo._backdropWorkingRect.x )              * iFormatInfo.BPP;
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
-                                   , blendInfo._backdropWorkingRect.h
+BlendMT_Misc_MEM_Generic_Subpixel( std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
+    const _FBlendInfoPrivate&   info        = *iInfo;
+    const tByte*                src         = info.source->DataPtr();
+    tByte*                      bdp         = info.backdrop->DataPtr();
+    const tSize                 src_bps     = info.source->BytesPerScanLine();
+    const tSize                 bdp_bps     = info.backdrop->BytesPerScanLine();
+    const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
+    const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+                                   , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel< T >
-                                   , src + ( ( src_decal_y + pLINE )                        * src_bps ) + src_decal_x
-                                   , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE )   * bdp_bps ) + bdp_decal_x
-                                   , pLINE , src_bps, &iFormatInfo, iBlendParams );
+                                   , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
+                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                   , pLINE , src_bps, iInfo );
 }
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iBdp, int32 iLine, const FFormatInfo* iFmtInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
-    const FBlendInfo&   blendInfo   = *iBlendParams;
-    const tByte*        src         = iSrc;
-    tByte*              bdp         = iBdp;
+InvokeBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iBdp, int32 iLine, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
+    const _FBlendInfoPrivate&   info    = *iInfo;
+    const FFormatInfo&          fmt     = info.source->FormatInfo();
+    const tByte*                src     = iSrc;
+    tByte*                      bdp     = iBdp;
 
-    switch( blendInfo.blendingMode ) {
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    switch( info.blendingMode ) {
         case BM_DISSOLVE: {
-            uint32 localPRNGSeed = gBlendingPRNGSeed;
-            int32 seedy = blendInfo._backdropWorkingRect.y + iLine + 1;
-            localPRNGSeed = ( 8253729 % seedy ) * localPRNGSeed + ( 2396403 % ( seedy + 64578 ) * seedy );
-            for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
-                const float alpha_bdp       = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
-                const float alpha_src       = iFmtInfo->HEA ? TYPE2FLOAT( src, iFmtInfo->AID ) * blendInfo.opacityValue : blendInfo.opacityValue;
+            int32 seedy = info.backdropWorkingRect.y + iLine + 1;
+            uint32 localPRNGSeed = ( 8253729 % seedy ) * GetWeakPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
+
+            for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
+                const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
+                const float alpha_src   = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
-                    memcpy( bdp, src, iFmtInfo->BPP );
-                    if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
+                    ULIS2_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, fmt.BPP );
+                    if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
-                // Increment ptrs by one pixel
-                src += iFmtInfo->BPP;
-                bdp += iFmtInfo->BPP;
+                src += fmt.BPP;
+                bdp += fmt.BPP;
             }
             break;
-        } // BM_DISSOLVE
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        }
+
         case BM_BAYERDITHER8x8: {
-            for( int x = 0; x < blendInfo._backdropWorkingRect.w; ++x ) {
-                const float alpha_bdp       = iFmtInfo->HEA ? TYPE2FLOAT( bdp, iFmtInfo->AID ) : 1.f;
-                const float alpha_src       = iFmtInfo->HEA ? TYPE2FLOAT( src, iFmtInfo->AID ) * blendInfo.opacityValue : blendInfo.opacityValue;
-                const tSize bayerX          = ( blendInfo._backdropWorkingRect.x + x )     % 8;
-                const tSize bayerY          = ( blendInfo._backdropWorkingRect.y + iLine ) % 8;
-                const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
+            for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
+                const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
+                const float alpha_src   = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;
+                const float bayerEl     = gBayer8x8Matrix[ ( info.backdropWorkingRect.y + iLine ) % 8 ][ ( info.backdropWorkingRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS2_ASSIGN_ALPHAF( blendInfo.alphaMode, alpha_result, alpha_src, alpha_bdp );
-                    memcpy( bdp, src, iFmtInfo->BPP );
-                    if( iFmtInfo->HEA ) FLOAT2TYPE( bdp, iFmtInfo->AID, alpha_result );
+                    ULIS2_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    memcpy( bdp, src, fmt.BPP );
+                    if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
-                // Increment ptrs by one pixel
-                src += iFmtInfo->BPP;
-                bdp += iFmtInfo->BPP;
+                src += fmt.BPP;
+                bdp += fmt.BPP;
             }
             break;
-        } // BM_DISSOLVE
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        }
     }
 }
 
 template< typename T >
 void
-BlendMT_Misc_MEM_Generic( const FFormatInfo& iFormatInfo, std::shared_ptr< const FBlendInfo > iBlendParams ) {
-    const FBlendInfo&   blendInfo   = *iBlendParams;
-    const tByte*        src         = iBlendParams->source->DataPtr();
-    tByte*              bdp         = iBlendParams->backdrop->DataPtr();
-    const tSize         src_bps     = iBlendParams->source->BytesPerScanLine();
-    const tSize         bdp_bps     = iBlendParams->backdrop->BytesPerScanLine();
-    const tSize         src_decal_y = blendInfo._shift.y + blendInfo.sourceRect.y;
-    const tSize         src_decal_x = ( blendInfo._shift.x + blendInfo.sourceRect.x )   * iFormatInfo.BPP;
-    const tSize         bdp_decal_x = ( blendInfo._backdropWorkingRect.x )              * iFormatInfo.BPP;
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( blendInfo.perfInfo.intent, blendInfo.perfInfo.pool, blendInfo.perfInfo.blocking
-                                   , blendInfo._backdropWorkingRect.h
+BlendMT_Misc_MEM_Generic( std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
+    const _FBlendInfoPrivate&   info        = *iInfo;
+    const tByte*                src         = info.source->DataPtr();
+    tByte*                      bdp         = info.backdrop->DataPtr();
+    const tSize                 src_bps     = info.source->BytesPerScanLine();
+    const tSize                 bdp_bps     = info.backdrop->BytesPerScanLine();
+    const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
+    const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+                                   , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Misc_MEM_Generic< T >
-                                   , src + ( ( src_decal_y + pLINE )                        * src_bps ) + src_decal_x
-                                   , bdp + ( ( blendInfo._backdropWorkingRect.y + pLINE )   * bdp_bps ) + bdp_decal_x
-                                   , pLINE , &iFormatInfo, iBlendParams );
+                                   , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
+                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                   , pLINE , iInfo );
 }
 
 ULIS2_NAMESPACE_END

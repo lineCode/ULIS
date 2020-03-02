@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/Core.h"
+#include "Core/Core.h"
 #include "Blend/Blend.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.ipp"
@@ -22,7 +22,6 @@
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
 #include "Maths/Geometry.h"
-#include "Thread/ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T >

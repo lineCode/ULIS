@@ -12,8 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/CoreInternal.h"
-#include <cstdint>
+#include "Core/Platform.h"
 
 ULIS2_NAMESPACE_BEGIN
 // Typedefs
@@ -30,13 +29,14 @@ typedef  double     udouble;
 typedef  uint8_t    tByte;
 typedef  uint32_t   tFormat;
 typedef  uint32_t   tPerfIntent;
+typedef  uint32_t   tSize;
 
 // Perf codes
-#define ULISZ_PERF_MT           0x1
-#define ULISZ_PERF_TSPEC        0x2
-#define ULISZ_PERF_SSE42        0x4
-#define ULISZ_PERF_AVX2         0x8
-#define ULISZ_PERF_GPU          0x10
+#define ULIS_PERF_MT           0x1
+#define ULIS_PERF_TSPEC        0x2
+#define ULIS_PERF_SSE42        0x4
+#define ULIS_PERF_AVX2         0x8
+#define ULIS_PERF_GPU          0x10
 
 // Type codes
 #define ULIS2_TYPE_UINT8    0x0
