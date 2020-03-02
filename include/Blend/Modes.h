@@ -238,10 +238,5 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( AM_MIN           , _E0, _E1, _E2, _E3 )          \
     X( AM_MAX           , _E0, _E1, _E2, _E3 )
 
-#define ULIS2_SELECT_COMP_OP( iSubpixel, _FUNCTION )        iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
-#define ULIS2_SELECT_COMP_OPT( iSubpixel, _FUNCTION, _T )   iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
-#define ULIS2_COMP_OP_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )  case _CASE: { _ACTION( _CASE, _E1, _E2, _E3 ); break; }
-#define ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )  switch( iValue ) { _SUBSET( ULIS2_ENUM_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
-
 ULIS2_NAMESPACE_END
 

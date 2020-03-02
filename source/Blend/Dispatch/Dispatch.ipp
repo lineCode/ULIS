@@ -23,11 +23,12 @@
 #include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_AVX_RGBA8.ipp"
 
-ULIS2_NAMESPACE_BEGIN
+#define ULIS2_SELECT_COMP_OP(   iSubpixel, _FUNCTION )      iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
+#define ULIS2_SELECT_COMP_OPT(  iSubpixel, _FUNCTION, _T )  iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
 
+ULIS2_NAMESPACE_BEGIN
 typedef void (*fpDispatchedBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
-/////////////////////////////////////////////////////
-// Generic Dispatcher
+
 template< typename T >
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iInfo ) {
@@ -39,8 +40,7 @@ QueryDispatchedBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iIn
     return  nullptr;
 }
 
-/////////////////////////////////////////////////////
-// RGBA8 Dispatcher
+
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo ) {
     switch( BlendingModeQualifier( iInfo.blendingMode ) ) {
@@ -74,16 +74,14 @@ QueryDispatchedBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo
     return  nullptr;
 }
 
-/////////////////////////////////////////////////////
-// Generic Dispatcher Selector
+
 template< typename T >
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_imp( const _FBlendInfoPrivate& iInfo ) {
     return  QueryDispatchedBlendFunctionForParameters_Generic< T >( iInfo );
 }
 
-/////////////////////////////////////////////////////
-// RGBA8 Dispatcher Selector Specialization
+
 template<>
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPrivate& iInfo ) {
@@ -101,8 +99,7 @@ QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPrivate
     return  QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( iInfo );
 }
 
-/////////////////////////////////////////////////////
-// Type Dispatcher Selector
+
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
     switch( iInfo.source->Type() ) {
