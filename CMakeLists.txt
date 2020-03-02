@@ -33,6 +33,7 @@ endif()
 
 # Create global solution
 project( ULIS2 )
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Check Endianness
 #include( TestBigEndian )
@@ -66,6 +67,16 @@ add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip         ${PROJECT_BI
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs      )
+set_target_properties( clip                 PROPERTIES FOLDER 3rdparty )
+set_target_properties( lcms2                PROPERTIES FOLDER 3rdparty )
+set_target_properties( freetype             PROPERTIES FOLDER 3rdparty )
+set_target_properties( cppfs                PROPERTIES FOLDER 3rdparty )
+set_target_properties( component_install    PROPERTIES FOLDER 3rdparty )
+set_target_properties( check-all            PROPERTIES FOLDER 3rdparty )
+set_target_properties( check-cppfs          PROPERTIES FOLDER 3rdparty )
+set_target_properties( check-template       PROPERTIES FOLDER 3rdparty )
+set_target_properties( pack                 PROPERTIES FOLDER 3rdparty )
+set_target_properties( pack-cppfs           PROPERTIES FOLDER 3rdparty )
 
 ####################################
 # Add Main Project

@@ -29,6 +29,5 @@ ULIS2_API void Blend( FThreadPool*              iThreadPool
                     , eBlendingMode             iBlendingMode
                     , eAlphaMode                iAlphaMode
                     , float                     iOpacityValue );
-
 ULIS2_NAMESPACE_END
 
