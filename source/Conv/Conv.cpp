@@ -61,7 +61,7 @@ void Conv( FThreadPool*           iThreadPool
 
     // Check same format perform copy ( faster ).
     if( iSource->Format() == iDestination->Format() ) {
-        //Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, iDestination, 0, 0, ULIS2_NOCB );
+        Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, ULIS2_NOCB, iSource, iDestination, iSource->Rect(), FVec2I() );
         return;
     }
 

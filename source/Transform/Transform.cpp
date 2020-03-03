@@ -12,28 +12,69 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Transform/Transform.h"
+#include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
-// Dispatch
+#include "Maths/Geometry.h"
+#include "Maths/Maths.h"
+#include "Maths/Transform2D.h"
+#include "Transform/Dispatch/TransformInfo.h"
 #include "Transform/Dispatch/Dispatch.ipp"
 
-ULIS2_NAMESPACE_BEGIN
+#include <glm/matrix.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
-void Transform( const FTransformInfo& iTransformParams ) {
+ULIS2_NAMESPACE_BEGIN
+void Transform( FThreadPool*            iThreadPool
+              , bool                    iBlocking
+              , uint32                  iPerfIntent
+              , const FHostDeviceInfo&  iHostDeviceInfo
+              , bool                    iCallCB
+              , const FBlock*           iSource
+              , FBlock*                 iDestination
+              , const FRect&            iSourceRect
+              , const FTransform2D&     iTransform
+              , eResamplingMethod       iMethod )
+{
     // Assertions
-    ULIS2_ASSERT( iTransformParams.source,                                                      "Bad source."                                                       );
-    ULIS2_ASSERT( iTransformParams.destination,                                                 "Bad destination."                                                  );
-    ULIS2_ASSERT( !iTransformParams.perfInfo.intent.UseMT() || iTransformParams.perfInfo.pool,  "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iTransformParams.perfInfo.callCB || iTransformParams.perfInfo.blocking,      "Callback flag is specified on non-blocking operation."             );
-    ULIS2_ASSERT( iTransformParams.source->Format() == iTransformParams.destination->Format(),  "Formats do not match"                                              );
-    ULIS2_ASSERT( iTransformParams.transform,                                                   "Not transform provided"                                            );
-    ULIS2_WARNING( iTransformParams.source != iTransformParams.destination,                     "Copying a block on itself is dangerous."                           );
+    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS2_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+
+    FRect dst_fit = iSourceRect.Transformed( iTransform ) & iDestination->Rect();
+    if( !dst_fit.Area() )
+        return;
+
+    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
+    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    alias.pool              = iThreadPool;
+    alias.blocking          = iBlocking;
+    alias.hostDeviceInfo    = &iHostDeviceInfo;
+    alias.perfIntent        = iPerfIntent;
+    alias.source            = iSource;
+    alias.destination       = iDestination;
+    alias.src_roi           = iSourceRect & iSource->Rect();
+    alias.dst_roi           = dst_fit;
+    alias.method            = iMethod;
+    alias.inverseTransform  = glm::inverse( iTransform.Matrix() );
+
+    // Query dispatched method
+    fpDispatchedTransformFunc fptr = QueryDispatchedTransformFunctionForParameters( alias );
+    ULIS2_ASSERT( fptr, "No dispatch function found." );
+    fptr( forwardTransformParams );
+
+    // Invalid
+    iDestination->Invalidate( dst_fit, iCallCB );
 }
 
-FRect TransformMetrics( const FTransformMetricsInfo& iTransformMetricsParams ) {
-    ULIS2_ASSERT( iTransformMetricsParams.transform,                                            "Not transform provided"                                            );
-
-    FRect transformed = iTransformMetricsParams.sourceRect.Transformed( *iTransformMetricsParams.transform );
-    transformed.FitInPositiveRange();
+FRect TransformMetrics( const FRect&          iSourceRect
+                      , const FTransform2D&   iTransform
+                      , eResamplingMethod     iMethod )
+{
+    // Temporary simple transformed way, we may introduce some fitting rules according to the resampling method.
+    return iSourceRect.Transformed( iTransform );
 }
 
 ULIS2_NAMESPACE_END

@@ -14,31 +14,22 @@
 #pragma once
 #include "Core/Core.h"
 #include "Transform/Methods.h"
-#include "Maths/Geometry.h"
-#include <glm/mat3x3.hpp>
 
 ULIS2_NAMESPACE_BEGIN
-struct ULIS2_API FTransformInfo {
-    const FBlock*       source;
-    FBlock*             destination;
-    const FTransform2D* transform;
-    eResamplingMethod   interpolationType;
-    FPerfInfo           perfInfo;
-};
+ULIS2_API void Transform( FThreadPool*              iThreadPool
+                        , bool                      iBlocking
+                        , uint32                    iPerfIntent
+                        , const FHostDeviceInfo&    iHostDeviceInfo
+                        , bool                      iCallCB
+                        , const FBlock*             iSource
+                        , FBlock*                   iDestination
+                        , const FRect&              iSourceRect
+                        , const FTransform2D&       iTransform
+                        , eResamplingMethod         iMethod );
 
-
-struct ULIS2_API FTransformMetricsInfo {
-    FRect               sourceRect;
-    const FTransform2D* transform;
-    eResamplingMethod   interpolationType;
-};
-
-ULIS2_API void Transform( const FTransformInfo& );
-ULIS2_API FRect TransformMetrics( const FTransformMetricsInfo& );
-
-// Transform Typedefs ( implemented in dispatch.ipp but available from public API )
-typedef void (*fpDispatchedTransformFunc)( FThreadPool*, bool, const FPerf&, const FBlock*, FBlock*, const glm::mat3& );
-ULIS2_API fpDispatchedTransformFunc QueryDispatchedTransformFunctionForParameters( uint32 iFormat, eResamplingMethod iInterpolationType, const FPerf& iPerf, const FCPU& iCPU );
+ULIS2_API FRect TransformMetrics( const FRect&          iSourceRect
+                                , const FTransform2D&   iTransform
+                                , eResamplingMethod     iMethod );
 
 ULIS2_NAMESPACE_END
 

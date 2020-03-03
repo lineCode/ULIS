@@ -104,15 +104,15 @@ Copy_imp( FThreadPool*              iThreadPool
 }
 
 
-void CopyRect( FThreadPool*             iThreadPool
-             , bool                     iBlocking
-             , uint32                   iPerfIntent
-             , const FHostDeviceInfo&   iHostDeviceInfo
-             , bool                     iCallCB
-             , const FBlock*            iSource
-             , FBlock*                  iDestination
-             , const FRect&             iArea
-             , const FVec2I&            iPos )
+void Copy( FThreadPool*             iThreadPool
+         , bool                     iBlocking
+         , uint32                   iPerfIntent
+         , const FHostDeviceInfo&   iHostDeviceInfo
+         , bool                     iCallCB
+         , const FBlock*            iSource
+         , FBlock*                  iDestination
+         , const FRect&             iArea
+         , const FVec2I&            iPos )
 {
     // Assertions
     ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
