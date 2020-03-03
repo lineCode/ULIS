@@ -26,11 +26,11 @@
 ULIS2_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const _FBlendInfoPrivate > iBlendParams ) {
-    const FBlendInfo&   blendInfo       = *iBlendParams;
-    const tByte*        src             = iSrc;
-    tByte*              bdp             = iBdp;
-
+InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
+    const _FBlendInfoPrivate&   info    = *iInfo;
+    const FFormatInfo&          fmt     = info.source->FormatInfo();
+    const tByte*                src     = iSrc;
+    tByte*                      bdp     = iBdp;
     const bool notLastLine  = iLine < info.backdropCoverage.y;
     const bool notFirstLine = iLine > 0;
     const bool onLeftBorder = info.backdropWorkingRect.x == 0;
@@ -76,12 +76,12 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSr
             FLOAT2TYPE( src_sample.Ptr(), r, srcvf );
         }
 
-        conv_forward_fptr( *iFmtInfo, src_sample.Ptr(), rgbfFormatInfo, reinterpret_cast< tByte* >( &src_conv.m[0] ), 1 );
-        conv_forward_fptr( *iFmtInfo, bdp, rgbfFormatInfo, reinterpret_cast< tByte* >( &bdp_conv.m[0] ), 1 );
+        conv_forward_fptr( &fmt, src_sample.Ptr(), &rgbfFormatInfo, reinterpret_cast< tByte* >( &src_conv.m[0] ), 1 );
+        conv_forward_fptr( &fmt, bdp, &rgbfFormatInfo, reinterpret_cast< tByte* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( rgbfFormatInfo, reinterpret_cast< const tByte* >( &res_conv.m[0] ), *iFmtInfo, result, 1 );
+        conv_backward_fptr( &rgbfFormatInfo, reinterpret_cast< const tByte* >( &res_conv.m[0] ), &fmt, result, 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
@@ -141,12 +141,12 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const tByte* iSrc, tByte*
         float alpha_result;
         ULIS2_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        conv_forward_fptr( *iFmtInfo, src, rgbfFormatInfo, reinterpret_cast< tByte* >( &src_conv.m[0] ), 1 );
-        conv_forward_fptr( *iFmtInfo, bdp, rgbfFormatInfo, reinterpret_cast< tByte* >( &bdp_conv.m[0] ), 1 );
+        conv_forward_fptr( &fmt, src, &rgbfFormatInfo, reinterpret_cast< tByte* >( &src_conv.m[0] ), 1 );
+        conv_forward_fptr( &fmt, bdp, &rgbfFormatInfo, reinterpret_cast< tByte* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( rgbfFormatInfo, reinterpret_cast< const tByte* >( &res_conv.m[0] ), *iFmtInfo, result, 1 );
+        conv_backward_fptr( &rgbfFormatInfo, reinterpret_cast< const tByte* >( &res_conv.m[0] ), &fmt, result, 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];

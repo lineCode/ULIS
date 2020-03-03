@@ -32,7 +32,7 @@ typedef void (*fpDispatchedBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate
 template< typename T >
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iInfo ) {
-    switch( BlendingModeQualifier( iBlendParams.blendingMode ) ) {
+    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {
         case BMQ_MISC           : return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Misc_MEM_Generic,          T );
         case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Separable_MEM_Generic,     T );
         case BMQ_NONSEPARABLE   : return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_NonSeparable_MEM_Generic,  T );
@@ -109,6 +109,7 @@ QueryDispatchedBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
         case TYPE_UFLOAT    : return  QueryDispatchedBlendFunctionForParameters_imp< ufloat  >( iInfo );
         case TYPE_UDOUBLE   : return  QueryDispatchedBlendFunctionForParameters_imp< udouble >( iInfo );
     }
+    return  nullptr;
 }
 
 ULIS2_NAMESPACE_END

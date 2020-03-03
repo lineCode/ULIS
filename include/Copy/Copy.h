@@ -16,16 +16,25 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-struct ULIS2_API FCopyInfo {
-    const FBlock*   source;
-    FBlock*         destination;
-    FRect           area;
-    FVec2I          pos;
-    FPerfInfo       perfInfo;
-};
+ULIS2_API void Copy( FThreadPool*           iThreadPool
+                   , bool                   iBlocking
+                   , uint32                 iPerfIntent
+                   , const FHostDeviceInfo& iHostDeviceInfo
+                   , bool                   iCallCB
+                   , const FBlock*          iSource
+                   , FBlock*                iDestination
+                   , const FRect&           iArea
+                   , const FVec2I&          iPos );
 
-ULIS2_API void CopyRect( const FCopyInfo& );
-ULIS2_API void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallInvalidCB );
+ULIS2_API FBlock* XCopy( FThreadPool*           iThreadPool
+                       , bool                   iBlocking
+                       , uint32                 iPerfIntent
+                       , const FHostDeviceInfo& iHostDeviceInfo
+                       , bool                   iCallCB
+                       , const FBlock*          iSource );
+
+ULIS2_API void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB );
+ULIS2_API FBlock* XCopyRaw( const FBlock* iSrc, bool iCallCB );
 
 ULIS2_NAMESPACE_END
 
