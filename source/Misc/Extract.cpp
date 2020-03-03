@@ -21,19 +21,19 @@
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T1, typename T2 >
-void InvokeExtractInto( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst ) {
+void InvokeExtractInto( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSPP ) {
     const T1*   src = reinterpret_cast< const T1* >( iSrc );
     T2*         dst = reinterpret_cast< T2* >( iDst );
     const size_t len = iStridesSrc.size();
     for( size_t i = 0; i < iW; ++i ) {
         for( size_t j = 0; j < len; ++j )
             *( dst+ iStridesDst[j] ) = ConvType< T1, T2 >( *( src+ iStridesSrc[j] ) );
-        src++;
-        dst++;
+        src+= iSPP;
+        dst+= iSPP;
     }
 }
 
-typedef void (*fpDispatchedExtractInvoke)( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst );
+typedef void (*fpDispatchedExtractInvoke)( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSPP );
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType );
 
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType ) {
@@ -135,6 +135,7 @@ Extract( FThreadPool*           iThreadPool
     }
 
     // Bake Params
+    uint8           spp = iSource->SamplesPerPixel();
     const tByte*    srb = iSource->DataPtr();
     tByte*          dsb = iDestination->DataPtr();
     size_t          src_bps = iSource->BytesPerScanLine();
@@ -147,7 +148,7 @@ Extract( FThreadPool*           iThreadPool
     ULIS2_ASSERT( fptr, "No dispatch invocation found." );
     ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, SRC, DST, sourceStrides, destinationStrides )
+                                   , fptr, len, SRC, DST, sourceStrides, destinationStrides, spp )
 
     iDestination->Invalidate( iCallCB );
 }

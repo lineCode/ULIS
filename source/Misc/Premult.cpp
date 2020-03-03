@@ -28,7 +28,7 @@ void InvokesPremult( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
             uint8 r = iFmt->IDT[j];
             *( dst + r ) = ( *( dst + r ) * alpha ) / MaxType< T >();
         }
-        ++dst;
+        dst += iFmt->SPP;
     }
 }
 
@@ -41,7 +41,7 @@ void InvokesUnpremult( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
             uint8 r = iFmt->IDT[j];
             *( dst + r ) = ( *( dst + r ) * MaxType< T >() ) / alpha;
         }
-        ++dst;
+        dst += iFmt->SPP;
     }
 }
 

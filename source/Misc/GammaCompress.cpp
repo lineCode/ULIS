@@ -28,7 +28,7 @@ void InvokesRGB2Linear( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
             uint8 r = iFmt->IDT[j];
             *( dst + r ) = sel_srgb2linearT< T >( *( dst + r ) );
         }
-        ++dst;
+        dst += iFmt->SPP;
     }
 }
 
@@ -40,7 +40,7 @@ void InvokeLinear2sRGB( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
             uint8 r = iFmt->IDT[j];
             *( dst + r ) = sel_linear2srgbT< T >( *( dst + r ) );
         }
-        ++dst;
+        dst += iFmt->SPP;
     }
 }
 
