@@ -12,13 +12,14 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Misc/Extract.h"
+#include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
-#include "Thread/ParallelFor.h"
+#include "Thread/ThreadPool.h"
+#include <vector>
 
 ULIS2_NAMESPACE_BEGIN
-
 template< typename T1, typename T2 >
 void InvokeExtractInto( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst ) {
     const T1*   src = reinterpret_cast< const T1* >( iSrc );
@@ -73,25 +74,36 @@ fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcT
 
 
 void
-Extract( const FExtractInfo& iExtractParams ) {
+Extract( FThreadPool*           iThreadPool
+       , bool                   iBlocking
+       , uint32                 iPerfIntent
+       , const FHostDeviceInfo& iHostDeviceInfo
+       , bool                   iCallCB
+       , const FBlock*          iSource
+       , bool                   iSourceRawIndicesFlag
+       , uint8                  iSourceExtractMask
+       , FBlock*                iDestination
+       , bool                   iDestinationRawIndicesFlag
+       , uint8                  iDestinationExtractMask )
+{
     // Assertions
-    ULIS2_ASSERT( iExtractParams.source,                                                    "Bad source."                                                       );
-    ULIS2_ASSERT( iExtractParams.destination,                                               "Bad destination."                                                  );
-    ULIS2_ASSERT( iExtractParams.source != iExtractParams.destination,                      "Cannot extract a block to itself, use swap instead."               );
-    ULIS2_ASSERT( !iExtractParams.perfInfo.intent.UseMT() || iExtractParams.perfInfo.pool,  "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iExtractParams.perfInfo.callCB || iExtractParams.perfInfo.blocking,      "Callback flag is specified on non-blocking operation."             );
-    ULIS2_ASSERT( !iExtractParams.sourceExtractMask,                                        "Empty extract mask provided."                                      );
-    ULIS2_ASSERT( !iExtractParams.destinationExtractMask,                                   "Empty extract mask provided."                                      );
-    ULIS2_ASSERT( iExtractParams.source->Width() == iExtractParams.destination->Width(),    "Blocks sizes don't match"                                          );
-    ULIS2_ASSERT( iExtractParams.source->Height() == iExtractParams.destination->Height(),  "Blocks sizes don't match"                                          );
+    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS2_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
+    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS2_ASSERT( !iSourceExtractMask,                          "Empty extract mask provided."                          );
+    ULIS2_ASSERT( !iDestinationExtractMask,                     "Empty extract mask provided."                          );
+    ULIS2_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
+    ULIS2_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
 
     // Check no-op
-    if( !iExtractParams.sourceExtractMask || !iExtractParams.destinationExtractMask )
+    if( !iSourceExtractMask || !iDestinationExtractMask )
         return;
 
-    // Dst info
-    const FFormatInfo& srcFormatInfo( iExtractParams.source->FormatInfo() );
-    const FFormatInfo& dstFormatInfo( iExtractParams.destination->FormatInfo() );
+    // Format info
+    const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
+    const FFormatInfo& dstFormatInfo( iDestination->FormatInfo() );
 
     // Channels
     std::vector< uint8 > sourceChannelsToExtract;
@@ -100,15 +112,15 @@ Extract( const FExtractInfo& iExtractParams ) {
     sourceChannelsToExtract.reserve( max_channels_both );
     destinationChannelsToExtract.reserve( max_channels_both );
     for( int i = 0; i < max_channels_both; ++i ) {
-        if( iExtractParams.sourceExtractMask & 1 << i )
-            sourceChannelsToExtract.push_back( iExtractParams.sourceRawIndicesFlag ? i : srcFormatInfo.IDT[i] );
+        if( iSourceExtractMask & 1 << i )
+            sourceChannelsToExtract.push_back( iSourceRawIndicesFlag ? i : srcFormatInfo.IDT[i] );
 
-        if( iExtractParams.destinationExtractMask & 1 << i )
-            destinationChannelsToExtract.push_back( iExtractParams.destinationRawIndicesFlag ? i : dstFormatInfo.IDT[i] );
+        if( iDestinationExtractMask & 1 << i )
+            destinationChannelsToExtract.push_back( iDestinationRawIndicesFlag ? i : dstFormatInfo.IDT[i] );
     }
 
-    ULIS2_ERROR( sourceChannelsToExtract.size() == destinationChannelsToExtract.size(), "Extract masks don't map" );
-    ULIS2_ERROR( sourceChannelsToExtract.size() && destinationChannelsToExtract.size(), "Bad Extraction parameters" );
+    ULIS2_ASSERT( sourceChannelsToExtract.size() == destinationChannelsToExtract.size(), "Extract masks don't map" );
+    ULIS2_ASSERT( sourceChannelsToExtract.size() && destinationChannelsToExtract.size(), "Bad Extraction parameters" );
 
     // Strides
     std::vector< uint8 >    sourceStrides;
@@ -123,39 +135,40 @@ Extract( const FExtractInfo& iExtractParams ) {
     }
 
     // Bake Params
-    const tByte*    srb = iExtractParams.source->DataPtr();
-    tByte*          dsb = iExtractParams.destination->DataPtr();
-    size_t          src_bps = iExtractParams.source->BytesPerScanLine();
-    size_t          dst_bps = iExtractParams.destination->BytesPerScanLine();
+    const tByte*    srb = iSource->DataPtr();
+    tByte*          dsb = iDestination->DataPtr();
+    size_t          src_bps = iSource->BytesPerScanLine();
+    size_t          dst_bps = iDestination->BytesPerScanLine();
     #define SRC srb + ( pLINE * src_bps )
     #define DST dsb + ( pLINE * dst_bps )
-    const int   max = iExtractParams.source->Height();
-    const size_t len = iExtractParams.source->Width();
+    const int       max = iSource->Height();
+    const size_t    len = iSource->Width();
     fpDispatchedExtractInvoke fptr = QueryDispatchedExtractInvokeForParameters( srcFormatInfo.TP, dstFormatInfo.TP );
-
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iExtractParams.perfInfo.intent, iExtractParams.perfInfo.pool, iExtractParams.perfInfo.blocking
+    ULIS2_ASSERT( fptr, "No dispatch invocation found." );
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, SRC, DST, sourceStrides, destinationStrides )
 
-    iExtractParams.destination->Invalidate( iExtractParams.perfInfo.callCB );
+    iDestination->Invalidate( iCallCB );
 }
 
 
-FBlock* XExtract( const FXExtractInfo& iExtractParams ) {
+FBlock* XExtract( FThreadPool*              iThreadPool
+                , bool                      iBlocking
+                , uint32                    iPerfIntent
+                , const FHostDeviceInfo&    iHostDeviceInfo
+                , bool                      iCallCB
+                , const FBlock*             iSource
+                , bool                      iSourceRawIndicesFlag
+                , uint8                     iSourceExtractMask
+                , tFormat                   iDestinationFormat
+                , bool                      iDestinationRawIndicesFlag
+                , uint8                     iDestinationExtractMask )
+{
     // Assertions
-    ULIS2_ASSERT( iExtractParams.source, "Bad source." );
-    FBlock* ret = new  FBlock( iExtractParams.source->Width(), iExtractParams.source->Height(), iExtractParams.destinationFormat );
-    FExtractInfo nfo = {};
-    nfo.source                      = iExtractParams.source;
-    nfo.destination                 = ret;
-    nfo.sourceRawIndicesFlag        = iExtractParams.sourceRawIndicesFlag;
-    nfo.destinationRawIndicesFlag   = iExtractParams.destinationRawIndicesFlag;
-    nfo.sourceExtractMask           = iExtractParams.sourceExtractMask;
-    nfo.destinationExtractMask      = iExtractParams.destinationExtractMask;
-    nfo.perfInfo                    = iExtractParams.perfInfo;
-
-    Extract( nfo );
-
+    ULIS2_ASSERT( iSource, "Bad source." );
+    FBlock* ret = new  FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
+    Extract( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iSourceRawIndicesFlag, iSourceExtractMask, ret, iDestinationRawIndicesFlag, iDestinationExtractMask );
     return  ret;
 }
 

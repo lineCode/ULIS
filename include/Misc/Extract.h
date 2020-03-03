@@ -13,33 +13,32 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Base/Perf.h"
-#include <vector>
 
 ULIS2_NAMESPACE_BEGIN
 
-struct ULIS2_API FExtractInfo {
-    FBlock*     source;
-    FBlock*     destination;
-    bool        sourceRawIndicesFlag;
-    bool        destinationRawIndicesFlag;
-    uint8       sourceExtractMask;
-    uint8       destinationExtractMask;
-    FPerfInfo   perfInfo;
-};
+ULIS2_API void Extract( FThreadPool*            iThreadPool
+                      , bool                    iBlocking
+                      , uint32                  iPerfIntent
+                      , const FHostDeviceInfo&  iHostDeviceInfo
+                      , bool                    iCallCB
+                      , const FBlock*           iSource
+                      , bool                    iSourceRawIndicesFlag
+                      , uint8                   iSourceExtractMask
+                      , FBlock*                 iDestination
+                      , bool                    iDestinationRawIndicesFlag
+                      , uint8                   iDestinationExtractMask );
 
-struct ULIS2_API FXExtractInfo {
-    FBlock*     source;
-    tFormat     destinationFormat;
-    bool        sourceRawIndicesFlag;
-    bool        destinationRawIndicesFlag;
-    uint8       sourceExtractMask;
-    uint8       destinationExtractMask;
-    FPerfInfo   perfInfo;
-};
-
-ULIS2_API void Extract( const FExtractInfo& );
-ULIS2_API FBlock* XExtract( const FXExtractInfo& );
+ULIS2_API FBlock* XExtract( FThreadPool*            iThreadPool
+                          , bool                    iBlocking
+                          , uint32                  iPerfIntent
+                          , const FHostDeviceInfo&  iHostDeviceInfo
+                          , bool                    iCallCB
+                          , const FBlock*           iSource
+                          , bool                    iSourceRawIndicesFlag
+                          , uint8                   iSourceExtractMask
+                          , tFormat                 iDestinationFormat
+                          , bool                    iDestinationRawIndicesFlag
+                          , uint8                   iDestinationExtractMask );
 
 ULIS2_NAMESPACE_END
 

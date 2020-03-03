@@ -16,14 +16,14 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-struct ULIS2_API FSwapInfo {
-    FBlock*     destination;
-    uint8       channel1;
-    uint8       channel2;
-    FPerfInfo   perfInfo;
-};
-
-ULIS2_API void Swap( const FSwapInfo& );
+ULIS2_API void Swap( FThreadPool*           iThreadPool
+                   , bool                   iBlocking
+                   , uint32                 iPerfIntent
+                   , const FHostDeviceInfo& iHostDeviceInfo
+                   , bool                   iCallCB
+                   , FBlock*                iDestination
+                   , uint8                  iChannel1
+                   , uint8                  iChannel2 );
 
 ULIS2_NAMESPACE_END
 

@@ -12,10 +12,9 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Misc/Swap.h"
-#include "Base/Perf.h"
+#include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
-#include "Thread/ParallelFor.h"
 #include "Thread/ThreadPool.h"
 
 ULIS2_NAMESPACE_BEGIN
@@ -33,17 +32,26 @@ InvokeSwapMTProcessScanline_MEM( tByte* iDst, tSize iCount, uint8 iC1, uint8 iC2
 }
 
 void
-Swap( const FSwapInfo& iSwapParams ) {
+Swap( FThreadPool*              iThreadPool
+    , bool                      iBlocking
+    , uint32                    iPerfIntent
+    , const FHostDeviceInfo&    iHostDeviceInfo
+    , bool                      iCallCB
+    , FBlock*                   iDestination
+    , uint8                     iChannel1
+    , uint8                     iChannel2 )
+{
     // Assertions
-    ULIS2_ASSERT( iSwapParams.destination,                                              "Bad source."                                                       );
-    ULIS2_ASSERT( !iSwapParams.perfInfo.intent.UseMT() || iSwapParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iSwapParams.perfInfo.callCB || iSwapParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
-    ULIS2_ASSERT( iSwapParams.channel1 < iSwapParams.destination->SamplesPerPixel(),    "Bad channel"                                                       );
-    ULIS2_ASSERT( iSwapParams.channel2 < iSwapParams.destination->SamplesPerPixel(),    "Bad channel"                                                       );
-    if( iSwapParams.channel1 == iSwapParams.channel2 )
+    // Assertions
+    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS2_ASSERT( iChannel1 < iDestination->SamplesPerPixel(),  "Bad channel"                                           );
+    ULIS2_ASSERT( iChannel2 < iDestination->SamplesPerPixel(),  "Bad channel"                                           );
+    if( iChannel1 == iChannel2 )
         return;
 
-    FBlock* dst = iSwapParams.destination;
+    FBlock* dst = iDestination;
     const tSize bpc = dst->BytesPerSample();
     const tSize bpp = dst->BytesPerPixel();
     const tSize w   = dst->Width();
@@ -51,11 +59,11 @@ Swap( const FSwapInfo& iSwapParams ) {
     tByte*      dsb = dst->DataPtr();
     #define DST dsb + ( pLINE * bps )
     const int max = dst->Height();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iSwapParams.perfInfo.intent, iSwapParams.perfInfo.pool, iSwapParams.perfInfo.blocking
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , InvokeSwapMTProcessScanline_MEM, DST, w, iSwapParams.channel1, iSwapParams.channel2, bpc, bpp )
+                                   , InvokeSwapMTProcessScanline_MEM, DST, w, iChannel1, iChannel2, bpc, bpp )
 
-    dst->Invalidate( iSwapParams.perfInfo.callCB );
+    dst->Invalidate( iCallCB );
 }
 
 ULIS2_NAMESPACE_END
