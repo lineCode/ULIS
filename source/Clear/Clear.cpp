@@ -63,7 +63,7 @@ void Clear_imp( FThreadPool*            iThreadPool
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
     #ifdef __AVX2__
-    if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
+    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const tSize stride = 32;
         const tSize count = iArea.w * bpp;
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
@@ -72,7 +72,7 @@ void Clear_imp( FThreadPool*            iThreadPool
     } else
     #endif
     #ifdef __SSE4_2__
-    if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
+    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const tSize stride = 16;
         const tSize count = iArea.w * bpp;
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking

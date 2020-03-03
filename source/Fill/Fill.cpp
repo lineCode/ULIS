@@ -12,16 +12,16 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Fill/Fill.h"
-#include "Base/CPU.h"
+#include "Base/HostDeviceInfo.h"
 #include "Conv/Conv.h"
 #include "Data/Block.h"
 #include "Data/Pixel.h"
-#include "Thread/ParallelFor.h"
-#include <immintrin.h>
+#include "Maths/Geometry.h"
+#include "Thread/ThreadPool.h"
 
 ULIS2_NAMESPACE_BEGIN
 #ifdef __AVX2__
-void
+void ULIS2_VECTORCALL
 InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, const tSize iStride ) {
     tSize index = 0;
     for( index = 0; index < ( iCount - 32 ); index += iStride ) {
@@ -35,7 +35,7 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, 
 #endif // __AVX2__
 
 #ifdef __SSE4_2__
-void
+void ULIS2_VECTORCALL
 InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, const tSize iStride ) {
     tSize index;
     for( index = 0; index < ( iCount - 16 ); index += iStride ) {
@@ -57,85 +57,96 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, std::shared_ptr< const FPixelValue
 }
 
 void
-Fill_imp( const FFormatInfo& iFmtInfo, const FFillInfo& iFillParams, std::shared_ptr< const FPixelValue > iColor ) {
+Fill_imp( FThreadPool*                          iThreadPool
+        , bool                                  iBlocking
+        , uint32                                iPerfIntent
+        , const FHostDeviceInfo&                iHostDeviceInfo
+        , bool                                  iCallCB
+        , FBlock*                               iDestination
+        , std::shared_ptr< const FPixelValue >  iColor
+        , const FRect&                          iDstROI )
+{
     // Bake Params
-    const tSize bpp     = iFmtInfo.BPP;
-    const tSize bps     = iFillParams.destination->BytesPerScanLine();
-    const tSize dsh     = iFillParams.area.x * bpp;
-    tByte*      dsb     = iFillParams.destination->DataPtr() + dsh;
-    const tByte* src    = iColor->Ptr();
-    #define DST dsb + ( ( iFillParams.area.y + pLINE ) * bps )
+    const tSize bpp     = iDestination->BytesPerPixel();
+    const tSize bps     = iDestination->BytesPerScanLine();
+    const tSize dsh     = iDstROI.x * bpp;
+    tByte*      dsb     = iDestination->DataPtr() + dsh;
+    #define DST dsb + ( ( iDstROI.y + pLINE ) * bps )
 
 #ifdef __AVX2__
-    if( iFillParams.perfInfo.intent.UseAVX2() && gCpuInfo.info.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
-        tSize   count   = iFillParams.area.w * bpp;
+    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
+        tSize   count   = iDstROI.w * bpp;
         tSize   stride  = 32 - ( 32 % bpp );
         tByte*  srcb    = new tByte[32];
 
         for( tSize i = 0; i < stride; i+= bpp )
-            memcpy( (void*)( ( srcb ) + i ), src, bpp );
+            memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
         __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
 
         delete [] srcb;
 
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iFillParams.perfInfo.intent, iFillParams.perfInfo.pool, iFillParams.perfInfo.blocking
-                                       , iFillParams.area.h
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                       , iDstROI.h
                                        , InvokeFillMTProcessScanline_AX2, DST, src, count, stride )
     } else
 #endif
 #ifdef __SSE4_2__
-    if( iFillParams.perfInfo.intent.UseSSE4_2() && gCpuInfo.info.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
-        tSize   count   = iFillParams.area.w * bpp;
+    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
+        tSize   count   = iDstROI.w * bpp;
         tSize   stride  = 16 - ( 16 % bpp );
         tByte*  srcb    = new tByte[16];
 
         for( tSize i = 0; i < stride; i+= bpp )
-            memcpy( (void*)( ( srcb ) + i ), src, bpp );
+            memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
         __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
 
         delete [] srcb;
 
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iFillParams.perfInfo.intent, iFillParams.perfInfo.pool, iFillParams.perfInfo.blocking
-                                       , iFillParams.area.h
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                       , iDstROI.h
                                        , InvokeFillMTProcessScanline_SSE, DST, src, count, stride )
     } else
 #endif
     {
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iFillParams.perfInfo.intent, iFillParams.perfInfo.pool, iFillParams.perfInfo.blocking
-                                       , iFillParams.area.h
-                                       , InvokeFillMTProcessScanline_MEM, DST, iColor, iFillParams.area.w, bpp )
+        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                       , iDstROI.h
+                                       , InvokeFillMTProcessScanline_MEM, DST, iColor, iDstROI.w, bpp )
     }
 }
 
 void
-Fill( const FFillInfo& iFillParams ) {
+Fill( FThreadPool*              iThreadPool
+    , bool                      iBlocking
+    , uint32                    iPerfIntent
+    , const FHostDeviceInfo&    iHostDeviceInfo
+    , bool                      iCallCB
+    , FBlock*                   iDestination
+    , const IPixel&             iColor
+    , const FRect&              iArea )
+{
     // Assertions
-    ULIS2_ASSERT( iFillParams.destination,                                              "Bad source."                                                       );
-    ULIS2_ASSERT( !iFillParams.perfInfo.intent.UseMT() || iFillParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iFillParams.perfInfo.callCB || iFillParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
+    ULIS2_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     // Fit region of interest
-    FRect roi = iFillParams.area & iFillParams.destination->Rect();
+    FRect roi = iArea & iDestination->Rect();
 
     // Check no-op
     if( roi.Area() <= 0 )
         return;
 
     // Bake color param, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    std::shared_ptr< FPixelValue > color = std::make_shared< FPixelValue >( iFillParams.destination->Format() );
-    Conv( *iFillParams.color, *color );
-
-    // Bake forward param
-    FFillInfo forwardFillInfo = iFillParams;
-    forwardFillInfo.area = roi;
+    std::shared_ptr< FPixelValue > color = std::make_shared< FPixelValue >( iDestination->Format() );
+    Conv( iColor, *color );
 
     // Call
-    Fill_imp( iFillParams.destination->FormatInfo(), forwardFillInfo, color );
+    Fill_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iDestination, color, roi );
 
     // Invalid
-    iFillParams.destination->Invalidate( roi, iFillParams.perfInfo.callCB );
+    iDestination->Invalidate( roi, iCallCB );
 }
 
 ULIS2_NAMESPACE_END

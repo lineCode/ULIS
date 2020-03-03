@@ -32,11 +32,11 @@ typedef  uint32_t   tPerfIntent;
 typedef  uint32_t   tSize;
 
 // Perf codes
-#define ULIS_PERF_MT           0x1
-#define ULIS_PERF_TSPEC        0x2
-#define ULIS_PERF_SSE42        0x4
-#define ULIS_PERF_AVX2         0x8
-#define ULIS_PERF_GPU          0x10
+#define ULIS2_PERF_MT           0x1
+#define ULIS2_PERF_TSPEC        0x2
+#define ULIS2_PERF_SSE42        0x4
+#define ULIS2_PERF_AVX2         0x8
+#define ULIS2_PERF_GPU          0x10
 
 // Type codes
 #define ULIS2_TYPE_UINT8    0x0

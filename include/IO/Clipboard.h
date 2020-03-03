@@ -16,18 +16,20 @@
 
 ULIS2_NAMESPACE_BEGIN
 
-struct ULIS2_API FXLoadFromClipboardInfo {
-    tFormat         desiredFormat;
-    FPerfInfo       perfInfo;
-};
+ULIS2_API FBlock* XLoadFromClipboard( FThreadPool*              iThreadPool
+                                    , bool                      iBlocking
+                                    , uint32                    iPerfIntent
+                                    , const FHostDeviceInfo&    iHostDeviceInfo
+                                    , bool                      iCallCB
+                                    , tFormat                   iDesiredFormat );
 
-struct ULIS2_API FSaveToClipboardInfo {
-    const FBlock*   source;
-    FPerfInfo       perfInfo;
-};
+ULIS2_API void SaveToClipboard( FThreadPool*            iThreadPool
+                              , bool                    iBlocking
+                              , uint32                  iPerfIntent
+                              , const FHostDeviceInfo&  iHostDeviceInfo
+                              , bool                    iCallCB
+                              , const FBlock*           iSource );
 
-ULIS2_API FBlock* XLoadFromClipboard( const FXLoadFromClipboardInfo& );
-ULIS2_API void SaveToClipboard( const FSaveToClipboardInfo& );
 ULIS2_API bool ClipboardHasImageData();
 
 ULIS2_NAMESPACE_END

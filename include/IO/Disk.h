@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Base/Perf.h"
 
 ULIS2_NAMESPACE_BEGIN
 
@@ -33,22 +32,23 @@ static const char* kwImageFormat[] = {
     , "hdr"
 };
 
-struct ULIS2_API FXLoadFromFileInfo {
-    std::string     path;
-    tFormat         desiredFormat;
-    FPerfInfo       perfInfo;
-};
+ULIS2_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
+                               , bool                   iBlocking
+                               , uint32                 iPerfIntent
+                               , const FHostDeviceInfo& iHostDeviceInfo
+                               , bool                   iCallCB
+                               , const std::string&     iPath
+                               , tFormat                iDesiredFormat );
 
-struct ULIS2_API FSaveToFileInfo {
-    const FBlock*   source;
-    std::string     path;
-    eImageFormat    imageFormat;
-    int             quality;
-    FPerfInfo       perfInfo;
-};
-
-ULIS2_API FBlock* XLoadFromFile( const FXLoadFromFileInfo& );
-ULIS2_API void SaveToFile( const FSaveToFileInfo& );
+ULIS2_API void SaveToFile( FThreadPool*             iThreadPool
+                         , bool                     iBlocking
+                         , uint32                   iPerfIntent
+                         , const FHostDeviceInfo&   iHostDeviceInfo
+                         , bool                     iCallCB
+                         , const FBlock*            iSource
+                         , const std::string&       iPath
+                         , eImageFormat             iImageFormat
+                         , int                      iQuality );
 
 ULIS2_NAMESPACE_END
 

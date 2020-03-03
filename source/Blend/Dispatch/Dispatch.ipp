@@ -50,7 +50,7 @@ QueryDispatchedBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo
 
         case BMQ_SEPARABLE: {
             #ifdef __AVX2__
-                if( iInfo.perfIntent & ULIS_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
+                if( iInfo.perfIntent & ULIS2_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
                     return  ULIS2_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_AVX_RGBA8 );
                 else
             #endif
@@ -89,8 +89,8 @@ QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPrivate
     if( iInfo.source->HasAlpha()
      && iInfo.source->NumColorChannels()    == 3
      && iInfo.source->Model()               == CM_RGB
-     && iInfo.perfIntent & ULIS_PERF_TSPEC
-     && ( iInfo.perfIntent & ULIS_PERF_SSE42 || iInfo.perfIntent & ULIS_PERF_AVX2 )
+     && iInfo.perfIntent & ULIS2_PERF_TSPEC
+     && ( iInfo.perfIntent & ULIS2_PERF_SSE42 || iInfo.perfIntent & ULIS2_PERF_AVX2 )
      && ( iInfo.hostDeviceInfo->HW_SSE42 || iInfo.hostDeviceInfo->HW_AVX2 ) ) {
         return  QueryDispatchedBlendFunctionForParameters_RGBA8( iInfo );
     }

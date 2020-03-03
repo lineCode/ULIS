@@ -79,7 +79,7 @@ Copy_imp( FThreadPool*              iThreadPool
     #define SRC src + ( ( basesrcy + pLINE ) * bps )
     #define DST dst + ( ( basedsty + pLINE ) * bps )
     #ifdef __AVX2__
-    if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
+    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const tSize stride = 32;
         const tSize count = iSrcROI.w;
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
@@ -88,7 +88,7 @@ Copy_imp( FThreadPool*              iThreadPool
     } else
     #endif
     #ifdef __SSE4_2__
-    if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
+    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const tSize stride = 16;
         const tSize count = iSrcROI.w;
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking

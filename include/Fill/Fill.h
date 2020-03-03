@@ -13,18 +13,15 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Base/Perf.h"
-#include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-struct ULIS2_API FFillInfo {
-    FBlock*         destination;
-    const IPixel*   color;
-    FRect           area;
-    FPerfInfo       perfInfo;
-};
-
-ULIS2_API void Fill( const FFillInfo& );
-
+ULIS2_API void Fill( FThreadPool* iThreadPool
+                   , bool iBlocking
+                   , uint32 iPerfIntent
+                   , const FHostDeviceInfo& iHostDeviceInfo
+                   , bool iCallCB
+                   , FBlock* iDestination
+                   , const IPixel& iColor
+                   , const FRect& iArea );
 ULIS2_NAMESPACE_END
 

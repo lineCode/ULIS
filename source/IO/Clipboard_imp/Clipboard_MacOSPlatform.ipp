@@ -14,12 +14,23 @@
 #include "IO/Clipboard.h"
 
 ULIS2_NAMESPACE_BEGIN
-FBlock* XLoadFromClipboard_MacOSPlatform( const FXLoadFromClipboardInfo& iLoadParams ) {
+FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
+                          , bool                    iBlocking
+                          , uint32                  iPerfIntent
+                          , const FHostDeviceInfo&  iHostDeviceInfo
+                          , bool                    iCallCB
+                          , tFormat                 iDesiredFormat )
+{
     return  nullptr;
 }
 
-
-void SaveToClipboard_MacOSPlatform( const FSaveToClipboardInfo& iSaveParams ) {
+void SaveToClipboard( FThreadPool*              iThreadPool
+                    , bool                      iBlocking
+                    , uint32                    iPerfIntent
+                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , bool                      iCallCB
+                    , const FBlock*             iSource )
+{
     return  void();
 }
 

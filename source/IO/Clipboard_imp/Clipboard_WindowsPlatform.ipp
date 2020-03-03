@@ -13,21 +13,28 @@
 */
 #include "IO/Clipboard.h"
 #include "Data/Block.h"
-#include "Base/CPU.h"
+#include "Base/HostDeviceInfo.h"
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
-#include "Thread/ParallelFor.h"
+#include "Thread/ThreadPool.h"
 
 #include <array>
 #include <algorithm>
 
 #include <Windows.h>
 
-
 #include <clip.h>
 
 ULIS2_NAMESPACE_BEGIN
-FBlock* XLoadFromClipboard( const FXLoadFromClipboardInfo& iLoadParams ) {
+FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
+                          , bool                    iBlocking
+                          , uint32                  iPerfIntent
+                          , const FHostDeviceInfo&  iHostDeviceInfo
+                          , bool                    iCallCB
+                          , tFormat                 iDesiredFormat )
+{
+    ULIS2_ASSERT( iThreadPool, "Bad pool." );
+
     if( !ClipboardHasImageData() )
         return  nullptr;
 
@@ -51,38 +58,31 @@ FBlock* XLoadFromClipboard( const FXLoadFromClipboardInfo& iLoadParams ) {
     if( bits_per_pixel == 32 ) srcFormat = ULIS2_FORMAT_BGRA8;
 
     tByte* src = ( ((tByte*)bi) + bi->bmiHeader.biSize );
-    tFormat dstFormat = iLoadParams.desiredFormat;
+    tFormat dstFormat = iDesiredFormat;
     if( dstFormat <= 0 ) dstFormat = srcFormat;
 
     FBlock tmp( src, w, h, srcFormat, nullptr, FOnInvalid( nullptr, nullptr ), OnCleanup_DoNothing );
     FBlock* ret = new FBlock( w, h, dstFormat );
 
     // Assertions
-    ULIS2_ASSERT( !iLoadParams.perfInfo.intent.UseMT() || iLoadParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iLoadParams.perfInfo.callCB || iLoadParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
-
     fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( srcFormat, dstFormat );
-
-    // Check dispatched method
     ULIS2_ASSERT( fptr, "No Conversion invocation found" );
-    if( !fptr )
-        return  nullptr;
 
     // Bake Params
-    int dc = bits_per_pixel == 24 ? 3 & w : 0;
-    tSize   src_bps = ( bits_per_pixel / 8 ) * tmp.Width() + dc;
-    tSize   dst_bps = ret->BytesPerScanLine();
-    const int   numLines = h;
-    const tSize len = w;
-    const tByte*    srb = tmp.DataPtr() + src_bps * ( numLines - 1 );
-    tByte*          dsb = ret->DataPtr();
+    int             dc          = bits_per_pixel == 24 ? 3 & w : 0;
+    tSize           src_bps     = ( bits_per_pixel / 8 ) * tmp.Width() + dc;
+    tSize           dst_bps     = ret->BytesPerScanLine();
+    const int       numLines    = h;
+    const tSize     len         = w;
+    const tByte*    srb         = tmp.DataPtr() + src_bps * ( numLines - 1 );
+    tByte*          dsb         = ret->DataPtr();
     #define SRC srb - ( pLINE * src_bps )
     #define DST dsb + ( pLINE * dst_bps )
-    const FFormatInfo& srcnfo = tmp.FormatInfo();
-    const FFormatInfo& dstnfo = ret->FormatInfo();
+    const FFormatInfo* srcnfo = &tmp.FormatInfo();
+    const FFormatInfo* dstnfo = &ret->FormatInfo();
 
     // Call
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iLoadParams.perfInfo.intent, iLoadParams.perfInfo.pool, iLoadParams.perfInfo.blocking
+    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS2_BLOCKING
                                    , numLines
                                    , fptr, srcnfo, SRC, dstnfo, DST, len );
 
@@ -90,18 +90,18 @@ FBlock* XLoadFromClipboard( const FXLoadFromClipboardInfo& iLoadParams ) {
     return  ret;
 }
 
-
-void SaveToClipboard( const FSaveToClipboardInfo& iSaveParams ) {
+void SaveToClipboard( FThreadPool*              iThreadPool
+                    , bool                      iBlocking
+                    , uint32                    iPerfIntent
+                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , bool                      iCallCB
+                    , const FBlock*             iSource )
+{
     // Assertions
-    ULIS2_ASSERT( iSaveParams.source,                                                   "Bad source."                                                       );
-    ULIS2_ASSERT( !iSaveParams.perfInfo.intent.UseMT() || iSaveParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iSaveParams.perfInfo.callCB || iSaveParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
+    ULIS2_ASSERT( iSource,                  "Bad source."                                           );
+    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
 
-    FXConvInfo convInfo = {};
-    convInfo.source             = iSaveParams.source;
-    convInfo.destinationFormat  = ULIS2_FORMAT_BGRA8;
-    convInfo.perfInfo           = iSaveParams.perfInfo;
-    FBlock* tmpConv = XConv( convInfo );
+    FBlock* tmpConv = XConv( iThreadPool, ULIS2_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ULIS2_FORMAT_BGRA8 );
 
     clip::image_spec spec;
     spec.width = tmpConv->Width();
@@ -116,10 +116,9 @@ void SaveToClipboard( const FSaveToClipboardInfo& iSaveParams ) {
     spec.green_shift = 8;
     spec.blue_shift = 0;
     spec.alpha_shift = 24;
-      
+
   clip::image img( tmpConv->DataPtr(), spec );
   clip::set_image(img);
-
 }
 
 bool ClipboardHasImageData() {

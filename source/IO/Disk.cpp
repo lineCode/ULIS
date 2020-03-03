@@ -12,10 +12,9 @@
 * @license      Please refer to LICENSE.md
 */
 #include "IO/Disk.h"
+#include "Base/HostDeviceInfo.h"
 #include "Base/StringUtils.h"
 #include "Data/Block.h"
-#include "Base/Perf.h"
-#include "base/CPU.h"
 #include "Conv/Conv.h"
 
 // STD
@@ -37,30 +36,39 @@
 
 ULIS2_NAMESPACE_BEGIN
 FBlock*
-XLoadFromFile( const FXLoadFromFileInfo& iXLoadFromFileParams ) {
-    cppfs::FileHandle   fh = cppfs::fs::open( iXLoadFromFileParams.path );
+XLoadFromFile( FThreadPool*             iThreadPool
+             , bool                     iBlocking
+             , uint32                   iPerfIntent
+             , const FHostDeviceInfo&   iHostDeviceInfo
+             , bool                     iCallCB
+             , const std::string&       iPath
+             , tFormat                  iDesiredFormat )
+{
+    // Assertions
+    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
-    if( ( !fh.exists() ) || ( !fh.isFile() ) ) {
+    cppfs::FileHandle   fh = cppfs::fs::open( iPath );
+
+    if( ( !fh.exists() ) || ( !fh.isFile() ) )
         ULIS2_ASSERT( false, "Error bad input file" );
-    }
 
-    std::ifstream file( iXLoadFromFileParams.path.c_str(), std::ios::binary | std::ios::ate );
+    std::ifstream file( iPath.c_str(), std::ios::binary | std::ios::ate );
     std::streamsize size = file.tellg();
     file.seekg( 0, std::ios::beg );
     std::vector<char> buffer(size);
-    if( !file.read( buffer.data(), size ) ) {
+    if( !file.read( buffer.data(), size ) )
         ULIS2_ASSERT( false, "Error bad input file" );
-    }
 
     eType type = TYPE_UINT8;
     type = stbi_is_16_bit_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )  ? TYPE_UINT16 : type;
     type = stbi_is_hdr_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )     ? TYPE_UFLOAT : type;
 
     int desiredChannels = STBI_default;
-    eColorModel desiredModel = static_cast< eColorModel >( ULIS2_R_MODEL( iXLoadFromFileParams.desiredFormat ) );
+    eColorModel desiredModel = static_cast< eColorModel >( ULIS2_R_MODEL( iDesiredFormat ) );
     bool needgrey   = desiredModel == CM_GREY;
     bool needrgb    = desiredModel == CM_RGB;
-    bool needalpha  = ULIS2_R_ALPHA( iXLoadFromFileParams.desiredFormat );
+    bool needalpha  = ULIS2_R_ALPHA( iDesiredFormat );
     if( needgrey )  desiredChannels = needalpha ? 2 : 1;
     if( needrgb )   desiredChannels = needalpha ? 4 : 3;
 
@@ -69,9 +77,9 @@ XLoadFromFile( const FXLoadFromFileInfo& iXLoadFromFileParams ) {
     width = height = channels = depth = 1;
     bool floating;
     switch( type ) {
-        case TYPE_UINT8:    data = (tByte*)stbi_load(       iXLoadFromFileParams.path.c_str(), &width, &height, &channels, desiredChannels ); depth = 1;    floating = false;   break;
-        case TYPE_UINT16:   data = (tByte*)stbi_load_16(    iXLoadFromFileParams.path.c_str(), &width, &height, &channels, desiredChannels ); depth = 2;    floating = false;   break;
-        case TYPE_UFLOAT:   data = (tByte*)stbi_loadf(      iXLoadFromFileParams.path.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
+        case TYPE_UINT8:    data = (tByte*)stbi_load(       iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 1;    floating = false;   break;
+        case TYPE_UINT16:   data = (tByte*)stbi_load_16(    iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 2;    floating = false;   break;
+        case TYPE_UFLOAT:   data = (tByte*)stbi_loadf(      iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
     }
 
     if( !data )
@@ -93,12 +101,8 @@ XLoadFromFile( const FXLoadFromFileInfo& iXLoadFromFileParams ) {
     tFormat fmt = ULIS2_W_TYPE( type ) | ULIS2_W_CHANNELS( channels ) | ULIS2_W_MODEL( model ) | ULIS2_W_ALPHA( hea ) | ULIS2_W_DEPTH( depth ) | ULIS2_W_FLOATING( floating );
     FBlock* ret = new FBlock( data, width, height, fmt, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
 
-    if( iXLoadFromFileParams.desiredFormat != 0 && iXLoadFromFileParams.desiredFormat != fmt ) {
-        FXConvInfo xconvInfo = {};
-        xconvInfo.source = ret;
-        xconvInfo.destinationFormat = iXLoadFromFileParams.desiredFormat;
-        xconvInfo.perfInfo = iXLoadFromFileParams.perfInfo;
-        FBlock* conv = XConv( xconvInfo );
+    if( iDesiredFormat != 0 && iDesiredFormat != fmt ) {
+        FBlock* conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, ret, iDesiredFormat );
         delete ret;
         ret = conv;
     }
@@ -106,42 +110,50 @@ XLoadFromFile( const FXLoadFromFileInfo& iXLoadFromFileParams ) {
     return  ret;
 }
 
-void SaveToFile( const FSaveToFileInfo& iSaveToFileParams ) {
+void SaveToFile( FThreadPool*           iThreadPool
+               , bool                   iBlocking
+               , uint32                 iPerfIntent
+               , const FHostDeviceInfo& iHostDeviceInfo
+               , bool                   iCallCB
+               , const FBlock*          iSource
+               , const std::string&     iPath
+               , eImageFormat           iImageFormat
+               , int                    iQuality )
+{
+    ULIS2_ASSERT( iSource,             "Bad source."                                           );
+    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+
     //cppfs::FilePath     path( iPath );
     //std::string         ext = path.extension();
-    tFormat     format  = iSaveToFileParams.source->Format();
-    eColorModel model   = iSaveToFileParams.source->Model();
-    eType       type    = iSaveToFileParams.source->Type();
+    tFormat     format  = iSource->Format();
+    eColorModel model   = iSource->Model();
+    eType       type    = iSource->Type();
 
     bool layout_valid   = ULIS2_R_RS( format ) == 0;
     bool model_valid    = model == CM_GREY || model == CM_RGB;
-    bool type_valid     = ( iSaveToFileParams.imageFormat != IM_HDR && type == TYPE_UINT8 ) || ( iSaveToFileParams.imageFormat == IM_HDR && type == TYPE_UFLOAT && model == CM_RGB );
+    bool type_valid     = ( iImageFormat != IM_HDR && type == TYPE_UINT8 ) || ( iImageFormat == IM_HDR && type == TYPE_UFLOAT && model == CM_RGB );
 
-    int w = iSaveToFileParams.source->Width();
-    int h = iSaveToFileParams.source->Height();
-    int c = iSaveToFileParams.source->SamplesPerPixel();
-    const uint8* dat = iSaveToFileParams.source->DataPtr();
+    int w = iSource->Width();
+    int h = iSource->Height();
+    int c = iSource->SamplesPerPixel();
+    const uint8* dat = iSource->DataPtr();
     FBlock* conv = nullptr;
     if( !( layout_valid && model_valid && type_valid ) ) {
-        FXConvInfo xconvInfo = {};
-        xconvInfo.source = iSaveToFileParams.source;
-        xconvInfo.destinationFormat = 0;
-        xconvInfo.perfInfo = iSaveToFileParams.perfInfo;
-
-        if( iSaveToFileParams.imageFormat == IM_HDR )   xconvInfo.destinationFormat = ULIS2_FORMAT_RGBF;
-        else if( model == CM_GREY )                     xconvInfo.destinationFormat = ULIS2_FORMAT_G8   | ULIS2_W_ALPHA( iSaveToFileParams.source->HasAlpha() );
-        else                                            xconvInfo.destinationFormat = ULIS2_FORMAT_RGB8 | ULIS2_W_ALPHA( iSaveToFileParams.source->HasAlpha() );
-
-        conv = XConv( xconvInfo );
+        tFormat dstformat = 0;
+        if( iImageFormat == IM_HDR )    dstformat = ULIS2_FORMAT_RGBF;
+        else if( model == CM_GREY )     dstformat = ULIS2_FORMAT_G8   | ULIS2_W_ALPHA( iSource->HasAlpha() );
+        else                            dstformat = ULIS2_FORMAT_RGB8 | ULIS2_W_ALPHA( iSource->HasAlpha() );
+        conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
         dat = conv->DataPtr();
     }
 
-    switch( iSaveToFileParams.imageFormat ) {
-        case IM_PNG: stbi_write_png( iSaveToFileParams.path.c_str(), w, h, c, dat, 0                            );  break;
-        case IM_BMP: stbi_write_bmp( iSaveToFileParams.path.c_str(), w, h, c, dat                               );  break;
-        case IM_TGA: stbi_write_tga( iSaveToFileParams.path.c_str(), w, h, c, dat                               );  break;
-        case IM_JPG: stbi_write_jpg( iSaveToFileParams.path.c_str(), w, h, c, dat, iSaveToFileParams.quality    );  break; // Quality: 0 - 100;
-        case IM_HDR: stbi_write_hdr( iSaveToFileParams.path.c_str(), w, h, c, (float*)dat                       );  break;
+    switch( iImageFormat ) {
+        case IM_PNG: stbi_write_png( iPath.c_str(), w, h, c, dat, 0         );  break; // stride: 0
+        case IM_BMP: stbi_write_bmp( iPath.c_str(), w, h, c, dat            );  break;
+        case IM_TGA: stbi_write_tga( iPath.c_str(), w, h, c, dat            );  break;
+        case IM_JPG: stbi_write_jpg( iPath.c_str(), w, h, c, dat, iQuality  );  break; // Quality: 0 - 100;
+        case IM_HDR: stbi_write_hdr( iPath.c_str(), w, h, c, (float*)dat    );  break;
     }
 
     if( conv )
