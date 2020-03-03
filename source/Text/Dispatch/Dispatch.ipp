@@ -13,34 +13,38 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Text/Dispatch/TextInfo.h"
 #include "Text/Dispatch/Generic/TraceTextMono_Generic.ipp"
 
 ULIS2_NAMESPACE_BEGIN
+// Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
+typedef void (*fpDispatchedTextFunc)( std::shared_ptr< _FPrivateTextInfo > );
+
 // Generic Dispatcher
 template< typename T >
 fpDispatchedTextFunc
-QueryDispatchedTextFunctionForParameters_Generic( const FTextInfo& iTextInfo ) {
+QueryDispatchedTextFunctionForParameters_Generic() {
     return  &TraceTextMono_Generic< T >;
 }
 
 // Generic Dispatcher Selector
 template< typename T >
 fpDispatchedTextFunc
-QueryDispatchedTextFunctionForParameters_imp( const FTextInfo& iTextInfo ) {
-    return  QueryDispatchedTextFunctionForParameters_Generic< T >( iTextInfo );
+QueryDispatchedTextFunctionForParameters_imp() {
+    return  QueryDispatchedTextFunctionForParameters_Generic< T >();
 }
 
 // Type Dispatcher Selector
 fpDispatchedTextFunc
-QueryDispatchedTextFunctionForParameters( const FTextInfo& iTextInfo ) {
-    switch( iTextInfo.destination->Type() ) {
-        case TYPE_UINT8     : return  QueryDispatchedTextFunctionForParameters_imp< uint8   >( iTextInfo ); break;
-        case TYPE_UINT16    : return  QueryDispatchedTextFunctionForParameters_imp< uint16  >( iTextInfo ); break;
-        case TYPE_UINT32    : return  QueryDispatchedTextFunctionForParameters_imp< uint32  >( iTextInfo ); break;
-        case TYPE_UFLOAT    : return  QueryDispatchedTextFunctionForParameters_imp< ufloat  >( iTextInfo ); break;
-        case TYPE_UDOUBLE   : return  QueryDispatchedTextFunctionForParameters_imp< udouble >( iTextInfo ); break;
-        default             : ULIS2_FAIL_RET( "Bad input format !", nullptr );
+QueryDispatchedTextFunctionForParameters( eType iType ) {
+    switch( iType ) {
+        case TYPE_UINT8     : return  QueryDispatchedTextFunctionForParameters_imp< uint8   >();
+        case TYPE_UINT16    : return  QueryDispatchedTextFunctionForParameters_imp< uint16  >();
+        case TYPE_UINT32    : return  QueryDispatchedTextFunctionForParameters_imp< uint32  >();
+        case TYPE_UFLOAT    : return  QueryDispatchedTextFunctionForParameters_imp< ufloat  >();
+        case TYPE_UDOUBLE   : return  QueryDispatchedTextFunctionForParameters_imp< udouble >();
     }
+    return  nullptr;
 }
 
 ULIS2_NAMESPACE_END

@@ -13,51 +13,26 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Base/Perf.h"
 #include "Maths/Geometry.h"
 #include "Maths/Transform2D.h"
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 ULIS2_NAMESPACE_BEGIN
+ULIS2_API void RenderText( FThreadPool*             iThreadPool
+                         , bool                     iBlocking
+                         , uint32                   iPerfIntent
+                         , const FHostDeviceInfo&   iHostDeviceInfo
+                         , bool                     iCallCB
+                         , FBlock*                  iDestination
+                         , const std::wstring       iText
+                         , const FFont&             iFont
+                         , int                      iSize
+                         , const IPixel&            iColor
+                         , const FTransform2D&      iTransform
+                         , bool                     iAntialiasing );
 
-struct ULIS2_API FTextInfo {
-    FBlock*             destination;
-    std::wstring        text;
-    const FFont*        font;
-    int                 size;
-    const IPixel*       color;
-    const FTransform2D* transform;
-    bool                antialiasingFlag;
-    FPerfInfo           perfInfo;
-};
-
-struct ULIS2_API FTextMetricsInfo {
-    std::string         text;
-    const FFont*        font;
-    int                 size;
-    const FTransform2D* transform;
-};
-
-struct ULIS2_API _FPrivateTextInfo {
-    FBlock*             destination;
-    std::wstring        text;
-    const FFont*        font;
-    int                 size;
-    const tByte*        color;
-    FT_Matrix*          matrix;
-    FVec2I              position;
-    bool                antialiasingFlag;
-    FPerfInfo           perfInfo;
-};
-
-ULIS2_API void RenderText( const FTextInfo& );
-ULIS2_API FRect TextMetrics( const FTextMetricsInfo& );
-
-// Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
-typedef void (*fpDispatchedTextFunc)( const _FPrivateTextInfo& );
-ULIS2_API fpDispatchedTextFunc QueryDispatchedTextFunctionForParameters( const FTextInfo&  );
-
+ULIS2_API FRect TextMetrics( std::wstring           iText
+                           , const FFont&           iFont
+                           , int                    iSize
+                           , const FTransform2D&    iTransform );
 ULIS2_NAMESPACE_END
 

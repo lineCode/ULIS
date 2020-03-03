@@ -12,76 +12,82 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Text/Text.h"
-#include "Base/CPU.h"
-#include "Base/Perf.h"
+#include "Base/HostDeviceInfo.h"
 #include "Conv/Conv.h"
+#include "Conv/ConvBuffer.h"
 #include "Data/Block.h"
 #include "Data/Pixel.h"
 #include "Maths/Geometry.h"
-#include "Thread/ParallelFor.h"
-#include "Text/Font.h"
 #include "Maths/Transform2D.h"
-
-#include <immintrin.h>
-#include <glm/mat2x2.hpp>
-#include <glm/vec2.hpp>
-#include <glm/gtx/matrix_transform_2d.hpp>
+#include "Text/Font.h"
+#include "Text/Dispatch/TextInfo.h"
+#include "Text/Dispatch/Dispatch.ipp"
 
 #include FT_GLYPH_H
 
-#include "Text/Dispatch/Dispatch.ipp"
-
-
 ULIS2_NAMESPACE_BEGIN
 void
-RenderText( const FTextInfo& iTextParams ) {
+RenderText( FThreadPool*            iThreadPool
+          , bool                    iBlocking
+          , uint32                  iPerfIntent
+          , const FHostDeviceInfo&  iHostDeviceInfo
+          , bool                    iCallCB
+          , FBlock*                 iDestination
+          , const std::wstring      iText
+          , const FFont&            iFont
+          , int                     iSize
+          , const IPixel&           iColor
+          , const FTransform2D&     iTransform
+          , bool                    iAntialiasing )
+{
     // Assertions
-    ULIS2_ASSERT( iTextParams.destination,                                              "Bad source."                                                       );
-    ULIS2_ASSERT( !iTextParams.perfInfo.intent.UseMT() || iTextParams.perfInfo.pool,    "Multithreading flag is specified but no thread pool is provided."  );
-    ULIS2_ASSERT( !iTextParams.perfInfo.callCB || iTextParams.perfInfo.blocking,        "Callback flag is specified on non-blocking operation."             );
+    ULIS2_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
-    // Bake color param in destination model
-    FPixelValue nativeColor( iTextParams.destination->Format() );
-    Conv( *iTextParams.color, nativeColor );
-    const tByte* colorBytes = nativeColor.Ptr();
+    std::shared_ptr< _FPrivateTextInfo > forwardTextParams = std::make_shared< _FPrivateTextInfo >();
+    _FPrivateTextInfo& alias = *forwardTextParams;
+    alias.pool              = iThreadPool;
+    alias.blocking          = iBlocking;
+    alias.hostDeviceInfo    = &iHostDeviceInfo;
+    alias.perfIntent        = iPerfIntent;
+    alias.destination       = iDestination;
+    alias.text              = &iText;
+    alias.font              = &iFont;
+    alias.size              = iSize;
+    alias.antialiasing      = iAntialiasing;
 
-    // Translate Matrix param
-    const glm::mat3& _mat = iTextParams.transform->Matrix();
-    FT_Matrix matrix;
-    matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
-    matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
-    matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
-    matrix.yy = (FT_Fixed)( _mat[1].y * 0x10000L );
-    int dx = static_cast< int >( _mat[2].x );
-    int dy = static_cast< int >( _mat[2].y );
+    { // Conv
+        fpDispatchedConvInvoke fptrconv = QueryDispatchedConvInvokeForParameters( iColor.Format(), iDestination->Format() );
+        ULIS2_ASSERT( fptrconv, "No Conversion invocation found" );
+        fptrconv( &iColor.FormatInfo(), iColor.Ptr(), &iDestination->FormatInfo(), alias.color, 1 );
+    }
 
-    // Bake forward params
-    _FPrivateTextInfo forwardParams = {};
-    forwardParams.destination       = iTextParams.destination;
-    forwardParams.text              = iTextParams.text;
-    forwardParams.font              = iTextParams.font;
-    forwardParams.size              = iTextParams.size;
-    forwardParams.color             = colorBytes;
-    forwardParams.matrix            = &matrix;
-    forwardParams.position          = FVec2I( dx, dy );
-    forwardParams.antialiasingFlag  = iTextParams.antialiasingFlag;
-    forwardParams.perfInfo          = iTextParams.perfInfo;
+    { // Mat
+        const glm::mat3& _mat = iTransform.Matrix();
+        alias.matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
+        alias.matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
+        alias.matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
+        alias.matrix.yy = (FT_Fixed)( _mat[1].y * 0x10000L );
+        alias.position = FVec2I( static_cast< int >( _mat[2].x ), static_cast< int >( _mat[2].y )  );
+    }
 
     // Query
-    fpDispatchedTextFunc fptr = QueryDispatchedTextFunctionForParameters( iTextParams );
-
-    // Call
-    if( fptr )
-        fptr( forwardParams );
+    fpDispatchedTextFunc fptr = QueryDispatchedTextFunctionForParameters( iDestination->Type() );
+    ULIS2_ASSERT( fptr, "No invocation found" );
+    fptr( forwardTextParams );
 
     // Invalidate
-    iTextParams.destination->Invalidate( iTextParams.perfInfo.callCB );
+    iDestination->Invalidate( iCallCB );
 }
 
 
 FRect
-TextMetrics( const FTextMetricsInfo& iTextMetricsParams ) {
-    const glm::mat3& _mat = iTextMetricsParams.transform->Matrix();
+TextMetrics( std::wstring           iText
+           , const FFont&           iFont
+           , int                    iSize
+           , const FTransform2D&    iTransform ) {
+    const glm::mat3& _mat = iTransform.Matrix();
     FT_Matrix matrix;
     matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
     matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
@@ -96,27 +102,27 @@ TextMetrics( const FTextMetricsInfo& iTextMetricsParams ) {
     result.w = 1;
     result.h = 1;
 
-    const char* str = iTextMetricsParams.text.c_str();
-    int len = (int)iTextMetricsParams.text.size();
+    const wchar_t* str = iText.c_str();
+    int len = (int)iText.size();
 
     FT_GlyphSlot  slot;
     FT_Vector     pen;
 
     FT_Error error = 0;
-    FT_Face face = iTextMetricsParams.font->Handle();
-    error = FT_Set_Pixel_Sizes( face, 0, iTextMetricsParams.size );
-    ULIS2_ERROR( !error, "Error setting face size" );
+    FT_Face face = iFont.Handle();
+    error = FT_Set_Pixel_Sizes( face, 0, iSize );
+    ULIS2_ASSERT( !error, "Error setting face size" );
 
     slot = face->glyph;
     pen.x = 0;
     pen.y = 0;
-    int autobaseline = (int)( iTextMetricsParams.size * 0.7 );
+    int autobaseline = (int)( iSize * 0.7 );
 
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, &matrix, &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_BITMAP_METRICS_ONLY );
-        ULIS2_ERROR( !error, "Error loading glyph" );
+        ULIS2_ASSERT( !error, "Error loading glyph" );
 
         FRect box = FRect::FromXYWH( dx + slot->bitmap_left, dy + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
         result = result | box;

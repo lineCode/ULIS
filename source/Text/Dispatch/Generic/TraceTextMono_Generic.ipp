@@ -13,8 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Text/Dispatch/TextInfo.h"
 #include "Maths/Geometry.h"
-#include "Thread/ParallelFor.h"
 
 ULIS2_NAMESPACE_BEGIN
 float AlphaBlendAlpha( float iAs, float iAb ) {
@@ -27,16 +27,16 @@ float AlphaBlendChannel( float iCs, float iCb, float iAs, float iAb, float iAr )
 
 template< typename T >
 void
-RasterBitmap( const _FPrivateTextInfo& iTextParams, FT_Bitmap* iBitmap, FT_Int iX, FT_Int iY ) {
-    const FFormatInfo& fmtInfo = iTextParams.destination->FormatInfo();
-    int width = iTextParams.destination->Width();
-    int height = iTextParams.destination->Height();
-    int bps = iTextParams.destination->BytesPerScanLine();
+RasterBitmap( std::shared_ptr< _FPrivateTextInfo > iTextParams, FT_Bitmap* iBitmap, FT_Int iX, FT_Int iY ) {
+    const FFormatInfo& fmtInfo = iTextParams->destination->FormatInfo();
+    int width = iTextParams->destination->Width();
+    int height = iTextParams->destination->Height();
+    int bps = iTextParams->destination->BytesPerScanLine();
 
     int xmax = iX + iBitmap->width;
     int ymax = iY + iBitmap->rows;
 
-    tByte* dst = iTextParams.destination->DataPtr() + ( iY * (int64)bps ) + ( iX * (int64)fmtInfo.BPP );
+    tByte* dst = iTextParams->destination->DataPtr() + ( iY * (int64)bps ) + ( iX * (int64)fmtInfo.BPP );
     tSize jmp = ( width - iBitmap->width ) * fmtInfo.BPP; 
 
     int x, y, p, q;
@@ -48,13 +48,13 @@ RasterBitmap( const _FPrivateTextInfo& iTextParams, FT_Bitmap* iBitmap, FT_Int i
             }
 
             float srcAlpha = ConvType< uint8, float >( iBitmap->buffer[ q * iBitmap->width + p ] );
-            if( fmtInfo.HEA ) srcAlpha = srcAlpha * TYPE2FLOAT( iTextParams.color, fmtInfo.AID );
+            if( fmtInfo.HEA ) srcAlpha = srcAlpha * TYPE2FLOAT( iTextParams->color, fmtInfo.AID );
             float dstAlpha = fmtInfo.HEA ? TYPE2FLOAT( dst, fmtInfo.AID ) : 1.f;
             float resAlpha = AlphaBlendAlpha( srcAlpha, dstAlpha );
             for( uint8 j = 0; j < fmtInfo.NCC; ++j )
             {
                 uint8 r = fmtInfo.IDT[j];
-                float srcvf = TYPE2FLOAT( iTextParams.color, r );
+                float srcvf = TYPE2FLOAT( iTextParams->color, r );
                 float dstvf = TYPE2FLOAT( dst, r );
                 FLOAT2TYPE( dst, r, AlphaBlendChannel( srcvf, dstvf, srcAlpha, dstAlpha, resAlpha ) );
             }
@@ -68,31 +68,31 @@ RasterBitmap( const _FPrivateTextInfo& iTextParams, FT_Bitmap* iBitmap, FT_Int i
 
 template< typename T >
 void
-TraceTextMono_Generic( const _FPrivateTextInfo& iTextParams ) {
-    const wchar_t* str = iTextParams.text.c_str();
-    size_t len = (int)iTextParams.text.size();
+TraceTextMono_Generic( std::shared_ptr< _FPrivateTextInfo > iTextParams ) {
+    const wchar_t* str = iTextParams->text->c_str();
+    size_t len = static_cast< size_t >( iTextParams->text->size() );
 
     FT_GlyphSlot  slot;
     FT_Vector     pen;
 
     FT_Error error = 0;
-    FT_Face face = iTextParams.font->Handle();
-    error = FT_Set_Pixel_Sizes( face, 0, iTextParams.size );
-    ULIS2_ERROR( !error, "Error setting face size" );
+    FT_Face face = iTextParams->font->Handle();
+    error = FT_Set_Pixel_Sizes( face, 0, iTextParams->size );
+    ULIS2_ASSERT( !error, "Error setting face size" );
 
     slot = face->glyph;
     pen.x = 0;
     pen.y = 0;
-    int autobaseline = (int)( iTextParams.size * 0.7 );
+    int autobaseline = (int)( iTextParams->size * 0.7 );
 
     for( int n = 0; n < len; ++n ) {
-        FT_Set_Transform( face, iTextParams.matrix, &pen );
+        FT_Set_Transform( face, &(iTextParams->matrix), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-        ULIS2_ERROR( !error, "Error loading glyph" );
+        ULIS2_ASSERT( !error, "Error loading glyph" );
         error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-        ULIS2_ERROR( !error, "Error rendering glyph" );
-        RasterBitmap< T >( iTextParams, &slot->bitmap, iTextParams.position.x + slot->bitmap_left, iTextParams.position.y + ( autobaseline - slot->bitmap_top ) );
+        ULIS2_ASSERT( !error, "Error rendering glyph" );
+        RasterBitmap< T >( iTextParams, &slot->bitmap, iTextParams->position.x + slot->bitmap_left, iTextParams->position.y + ( autobaseline - slot->bitmap_top ) );
         pen.x += slot->advance.x;
         pen.y += slot->advance.y;
     }
