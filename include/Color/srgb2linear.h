@@ -21,5 +21,12 @@ ULIS2_API uint8     fast_srgb2linearU8( uint8 iValue );
 ULIS2_API uint8     fast_linear2srgbU8( uint8 iValue );
 ULIS2_API ufloat    fast_srgb2linearF( uint8 iValue );
 ULIS2_API ufloat    fast_linear2srgbF( uint8 iValue );
+
+template< typename T > ULIS2_API ULIS2_FORCEINLINE T sel_srgb2linearT( T iValue ) { return  ConvType< float, T >( srgb2linear( ConvType< T, float >( iValue ) ) ); }
+template<> ULIS2_API ULIS2_FORCEINLINE float sel_srgb2linearT< float >( float iValue ) { return  srgb2linear( iValue ); }
+template<> ULIS2_API ULIS2_FORCEINLINE uint8 sel_srgb2linearT< uint8 >( uint8 iValue ) { return  fast_srgb2linearU8( iValue ); }
+template< typename T > ULIS2_API ULIS2_FORCEINLINE T sel_linear2srgbT( T iValue ) { return  ConvType< float, T >( linear2srgb( ConvType< T, float >( iValue ) ) ); }
+template<> ULIS2_API ULIS2_FORCEINLINE float sel_linear2srgbT< float >( float iValue ) { return  linear2srgb( iValue ); }
+template<> ULIS2_API ULIS2_FORCEINLINE uint8 sel_linear2srgbT< uint8 >( uint8 iValue ) { return  fast_linear2srgbU8( iValue ); }
 ULIS2_NAMESPACE_END
 
