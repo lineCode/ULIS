@@ -17,11 +17,24 @@
 #include <vector>
 using namespace ::ul2;
 
+FVec2F TransformPerspective( const FVec2F& iPoint, const glm::mat3& iMat ) {
+    return  FVec2F( ( iPoint.x * iMat[0][0] + iPoint.y * iMat[0][1] + iMat[0][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] )
+                  , ( iPoint.x * iMat[1][0] + iPoint.y * iMat[1][1] + iMat[1][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] ) );
+}
+
 int
 main() {
     FVec2F A[4] = { { 0, 0 }, { 200, 0 }, { 200, 200 }, { 0, 200 } };
     FVec2F B[4] = { { 10, 10 }, { 100, 50 }, { 100, 150 }, { 10, 190 } };
-    GetPerspectiveTransform( A, B );
+    auto mat = GetPerspectiveMatrix( A, B );
+
+    FVec2F C[4];
+    C[0] = TransformPerspective( A[0], mat );
+    C[1] = TransformPerspective( A[1], mat );
+    C[2] = TransformPerspective( A[2], mat );
+    C[3] = TransformPerspective( A[3], mat );
+
+    auto dummy = 0;
     /*
     FBlock blockA( 256, 256, ULIS2_FORMAT_ARGB8 );
     FBlock blockB( 256, 256, ULIS2_FORMAT_ARGB8 );

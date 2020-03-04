@@ -14,12 +14,17 @@
 #include "Maths/Transform2D.h"
 #include "Data/Block.h"
 #include "Maths/Maths.h"
+
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/matrix.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/mat2x2.hpp>
+#include <glm/mat3x3.hpp>
 #include <glm/vec2.hpp>
+
+#include <Eigen/Core>
+#include <Eigen/Dense>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -181,49 +186,53 @@ DecomposeMatrix( const glm::mat3& iMat, float* iTx, float* iTy, float* iRotation
     *iSkewY     = sky;
 }
 
-/* Calculates coefficients of perspective transformation
- * which maps (xi,yi) to (ui,vi), (i=1,2,3,4):
- *
- *      c00*xi + c01*yi + c02
- * ui = ---------------------
- *      c20*xi + c21*yi + c22
- *
- *      c10*xi + c11*yi + c12
- * vi = ---------------------
- *      c20*xi + c21*yi + c22
- *
- * Coefficients are calculated by solving linear system:
- * / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \ /c00\ /u0\
- * | x1 y1  1  0  0  0 -x1*u1 -y1*u1 | |c01| |u1|
- * | x2 y2  1  0  0  0 -x2*u2 -y2*u2 | |c02| |u2|
- * | x3 y3  1  0  0  0 -x3*u3 -y3*u3 |.|c10|=|u3|,
- * |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 | |c20| |v2|
- * |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 | |c11| |v0|
- * |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 | |c12| |v1|
- * \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 / \c21/ \v3/
 
- * / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \ /c00\ /u0\
- * | x1 y1  1  0  0  0 -x1*u1 -y1*u1 | |c01| |u1|
- * | x2 y2  1  0  0  0 -x2*u2 -y2*u2 | |c02| |u2|
- * | x3 y3  1  0  0  0 -x3*u3 -y3*u3 |.|c10|=|u3|,
- * |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 | |c20| |v2|
- * |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 | |c11| |v0|
- * |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 | |c12| |v1|
- * \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 / \c21/ \v3/
- *
- * where:
- *   cij - matrix coefficients, c22 = 1
- */
-glm::mat3 GetPerspectiveMatrix( const FVec2F src[], const FVec2F dst[] ) {
-    return  glm::mat3( 0
-                     , 0
-                     , 0
-                     , 0
-                     , 0
-                     , 0
-                     , 0
-                     , 0
-                     , 0 );
+glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] ) {
+    //      c00*xi + c01*yi + c02
+    // ui = ---------------------
+    //      c20*xi + c21*yi + c22
+    //      c10*xi + c11*yi + c12
+    // vi = ---------------------
+    //      c20*xi + c21*yi + c22
+    // Coefficients are calculated by solving linear system:
+    // / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \ /c00\ /u0\
+    // | x1 y1  1  0  0  0 -x1*u1 -y1*u1 | |c01| |u1|
+    // | x2 y2  1  0  0  0 -x2*u2 -y2*u2 | |c02| |u2|
+    // | x3 y3  1  0  0  0 -x3*u3 -y3*u3 |.|c10|=|u3|
+    // |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 | |c20| |v2|
+    // |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 | |c11| |v0|
+    // |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 | |c12| |v1|
+    // \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 / \c21/ \v3/
+    // Use inverse matrix approach instead:
+    // /c00\ / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \-1  /u0\
+    // |c01| | x1 y1  1  0  0  0 -x1*u1 -y1*u1 |    |u1|
+    // |c02| | x2 y2  1  0  0  0 -x2*u2 -y2*u2 |    |u2|
+    // |c10|=| x3 y3  1  0  0  0 -x3*u3 -y3*u3 |  * |u3|
+    // |c20| |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 |    |v2|
+    // |c11| |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 |    |v0|
+    // |c12| |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 |    |v1|
+    // \c21/ \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 /    \v3/
+    Eigen::Matrix< double, 8, 8, Eigen::RowMajor > mat;
+    mat << iSrc[0].x, iSrc[0].y, 1, 0, 0, 0, -iSrc[0].x * iDst[0].x, - iSrc[0].y * iDst[0].x
+         , iSrc[1].x, iSrc[1].y, 1, 0, 0, 0, -iSrc[1].x * iDst[1].x, - iSrc[1].y * iDst[1].x
+         , iSrc[2].x, iSrc[2].y, 1, 0, 0, 0, -iSrc[2].x * iDst[2].x, - iSrc[2].y * iDst[2].x
+         , iSrc[3].x, iSrc[3].y, 1, 0, 0, 0, -iSrc[3].x * iDst[3].x, - iSrc[3].y * iDst[3].x
+         , 0, 0, 0, iSrc[2].x, iSrc[2].y, 1, -iSrc[2].x * iDst[2].y, - iSrc[2].y * iDst[2].y
+         , 0, 0, 0, iSrc[0].x, iSrc[0].y, 1, -iSrc[0].x * iDst[0].y, - iSrc[0].y * iDst[0].y
+         , 0, 0, 0, iSrc[1].x, iSrc[1].y, 1, -iSrc[1].x * iDst[1].y, - iSrc[1].y * iDst[1].y
+         , 0, 0, 0, iSrc[3].x, iSrc[3].y, 1, -iSrc[3].x * iDst[3].y, - iSrc[3].y * iDst[3].y;
+    Eigen::Vector< double, 8 > vec( iDst[0].x, iDst[1].x, iDst[2].x, iDst[3].x, iDst[2].y, iDst[0].y, iDst[1].y, iDst[3].y );
+    Eigen::Matrix< double, 8, 8 > inverse = mat.inverse();
+    Eigen::Vector< double, 8 > res = inverse * vec;
+    return  glm::mat3( res[0]
+                     , res[1]
+                     , res[2]
+                     , res[3]
+                     , res[4]
+                     , res[5]
+                     , res[6]
+                     , res[7]
+                     , 1 );
 }
 
 ULIS2_NAMESPACE_END
