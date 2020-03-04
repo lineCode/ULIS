@@ -19,6 +19,9 @@ using namespace ::ul2;
 
 int
 main() {
+    FVec2F A[4] = { { 0, 0 }, { 200, 0 }, { 200, 200 }, { 0, 200 } };
+    FVec2F B[4] = { { 10, 10 }, { 100, 50 }, { 100, 150 }, { 10, 190 } };
+    GetPerspectiveTransform( A, B );
     /*
     FBlock blockA( 256, 256, ULIS2_FORMAT_ARGB8 );
     FBlock blockB( 256, 256, ULIS2_FORMAT_ARGB8 );

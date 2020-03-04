@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Maths/Transform2D.h"
+#include "Data/Block.h"
 #include "Maths/Maths.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/matrix.hpp>
@@ -64,7 +65,7 @@ FTransform2D::InverseMatrix() const {
 
 void
 FTransform2D::DecomposeMatrix( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const {
-    float a = mMatrix[0][0];
+    float a = mMatr ix[0][0];
     float b = mMatrix[0][1];
     float c = mMatrix[1][0];
     float d = mMatrix[1][1];
@@ -104,17 +105,6 @@ FTransform2D::DecomposeMatrix( float* iTx, float* iTy, float* iRotation, float* 
     *iSkewX     = skx;
     *iSkewY     = sky;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 //----------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Private API
@@ -186,6 +176,82 @@ ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB )
     return  iB * iA;
 }
 
+
+
+/* Calculates coefficients of perspective transformation
+ * which maps (xi,yi) to (ui,vi), (i=1,2,3,4):
+ *
+ *      c00*xi + c01*yi + c02
+ * ui = ---------------------
+ *      c20*xi + c21*yi + c22
+ *
+ *      c10*xi + c11*yi + c12
+ * vi = ---------------------
+ *      c20*xi + c21*yi + c22
+ *
+ * Coefficients are calculated by solving linear system:
+ * / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \ /c00\ /u0\
+ * | x1 y1  1  0  0  0 -x1*u1 -y1*u1 | |c01| |u1|
+ * | x2 y2  1  0  0  0 -x2*u2 -y2*u2 | |c02| |u2|
+ * | x3 y3  1  0  0  0 -x3*u3 -y3*u3 |.|c10|=|u3|,
+ * |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 | |c11| |v0|
+ * |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 | |c12| |v1|
+ * |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 | |c20| |v2|
+ * \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 / \c21/ \v3/
+ *
+ * where:
+ *   cij - matrix coefficients, c22 = 1
+ */
+glm::mat3 GetPerspectiveTransform( const FVec2F src[], const FVec2F dst[] ) {
+
+    double M[3][3];
+    double* X = M[0];
+    double a[8][8], b[8];
+    double* A = a[0];
+    double* B = b;
+
+    for( int i = 0; i < 4; ++i ) {
+        a[i][0] = a[i+4][3] = src[i].x;
+        a[i][1] = a[i+4][4] = src[i].y;
+        a[i][2] = a[i+4][5] = 1;
+        a[i][3] = a[i][4] = a[i][5] =
+        a[i+4][0] = a[i+4][1] = a[i+4][2] = 0;
+        a[i][6] = -src[i].x*dst[i].x;
+        a[i][7] = -src[i].y*dst[i].x;
+        a[i+4][6] = -src[i].x*dst[i].y;
+        a[i+4][7] = -src[i].y*dst[i].y;
+        b[i] = dst[i].x;
+        b[i+4] = dst[i].y;
+    }
+
+
+    /*
+    Mat M(3, 3, CV_64F), X(8, 1, CV_64F, M.ptr());
+    double a[8][8], b[8];
+    Mat A(8, 8, CV_64F, a), B(8, 1, CV_64F, b);
+
+    for( int i = 0; i < 4; ++i )
+    {
+        a[i][0] = a[i+4][3] = src[i].x;
+        a[i][1] = a[i+4][4] = src[i].y;
+        a[i][2] = a[i+4][5] = 1;
+        a[i][3] = a[i][4] = a[i][5] =
+        a[i+4][0] = a[i+4][1] = a[i+4][2] = 0;
+        a[i][6] = -src[i].x*dst[i].x;
+        a[i][7] = -src[i].y*dst[i].x;
+        a[i+4][6] = -src[i].x*dst[i].y;
+        a[i+4][7] = -src[i].y*dst[i].y;
+        b[i] = dst[i].x;
+        b[i+4] = dst[i].y;
+    }
+
+    solve(A, B, X, solveMethod);
+    M.ptr<double>()[8] = 1.;
+
+    return M;
+    */
+    return  glm::mat3();
+}
 
 ULIS2_NAMESPACE_END
 

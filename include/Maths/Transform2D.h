@@ -52,6 +52,7 @@ ULIS2_API glm::mat3 MakeScaleMatrix( float iX, float iY );
 ULIS2_API glm::mat3 MakeShearMatrix( float iX, float iY );
 ULIS2_API glm::mat3 MakeTranslationMatrix( float iX, float iY );
 ULIS2_API glm::mat3 ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB );
+ULIS2_API glm::mat3 GetPerspectiveTransform( const FVec2F src[], const FVec2F dst[] );
 
 ULIS2_NAMESPACE_END
 
