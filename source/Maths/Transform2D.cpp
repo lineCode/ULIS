@@ -64,46 +64,8 @@ FTransform2D::InverseMatrix() const {
 }
 
 void
-FTransform2D::DecomposeMatrix( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const {
-    float a = mMatr ix[0][0];
-    float b = mMatrix[0][1];
-    float c = mMatrix[1][0];
-    float d = mMatrix[1][1];
-    float e = mMatrix[2][0];
-    float f = mMatrix[2][1];
-    float delta = a * d - b * c;
-
-    float tx = e;
-    float ty = f;
-    float rot = 0.f;
-    float scx = 0.f;
-    float scy = 0.f;
-    float skx = 0.f;
-    float sky = 0.f;
-    // Apply the QR-like decomposition.
-    if( a != 0.f || b != 0.f ) {
-        float r = sqrtf( a * a + b * b );
-        rot = FMaths::Sign( b ) * acosf( a / r );
-        scx = r;
-        scy = delta / r;
-        skx = atanf( ( a * c + b * d ) / ( r * r ) );
-        sky = 0.f;
-    } else if( c != 0.f || d != 0.f ) {
-        float s = sqrtf( c * c + d * d );
-        rot = FMaths::kPIf / 2.f - ( d > 0 ? acosf( -c / s) : - acosf( c / s ) );
-        scx = delta / s;
-        scy = s;
-        skx = 0.f;
-        sky = atanf( ( a * c + b * d ) / ( s * s ) );
-    } else {
-    }
-    *iTx        = tx;
-    *iTy        = ty;
-    *iRotation  = rot;
-    *iScaleX    = scx;
-    *iScaleY    = scy;
-    *iSkewX     = skx;
-    *iSkewY     = sky;
+FTransform2D::Decompose( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const {
+    DecomposeMatrix( mMatrix, iTx, iTy, iRotation, iScaleX, iScaleY, iSkewX, iSkewY );
 }
 
 //----------------------------------------------------------------------------------------------
@@ -176,7 +138,48 @@ ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB )
     return  iB * iA;
 }
 
+void
+DecomposeMatrix( const glm::mat3& iMat, float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) {
+    float a = iMat[0][0];
+    float b = iMat[0][1];
+    float c = iMat[1][0];
+    float d = iMat[1][1];
+    float e = iMat[2][0];
+    float f = iMat[2][1];
+    float delta = a * d - b * c;
 
+    float tx = e;
+    float ty = f;
+    float rot = 0.f;
+    float scx = 0.f;
+    float scy = 0.f;
+    float skx = 0.f;
+    float sky = 0.f;
+    // Apply the QR-like decomposition.
+    if( a != 0.f || b != 0.f ) {
+        float r = sqrtf( a * a + b * b );
+        rot = FMaths::Sign( b ) * acosf( a / r );
+        scx = r;
+        scy = delta / r;
+        skx = atanf( ( a * c + b * d ) / ( r * r ) );
+        sky = 0.f;
+    } else if( c != 0.f || d != 0.f ) {
+        float s = sqrtf( c * c + d * d );
+        rot = FMaths::kPIf / 2.f - ( d > 0 ? acosf( -c / s) : - acosf( c / s ) );
+        scx = delta / s;
+        scy = s;
+        skx = 0.f;
+        sky = atanf( ( a * c + b * d ) / ( s * s ) );
+    } else {
+    }
+    *iTx        = tx;
+    *iTy        = ty;
+    *iRotation  = rot;
+    *iScaleX    = scx;
+    *iScaleY    = scy;
+    *iSkewX     = skx;
+    *iSkewY     = sky;
+}
 
 /* Calculates coefficients of perspective transformation
  * which maps (xi,yi) to (ui,vi), (i=1,2,3,4):
@@ -194,63 +197,33 @@ ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB )
  * | x1 y1  1  0  0  0 -x1*u1 -y1*u1 | |c01| |u1|
  * | x2 y2  1  0  0  0 -x2*u2 -y2*u2 | |c02| |u2|
  * | x3 y3  1  0  0  0 -x3*u3 -y3*u3 |.|c10|=|u3|,
+ * |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 | |c20| |v2|
  * |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 | |c11| |v0|
  * |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 | |c12| |v1|
+ * \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 / \c21/ \v3/
+
+ * / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \ /c00\ /u0\
+ * | x1 y1  1  0  0  0 -x1*u1 -y1*u1 | |c01| |u1|
+ * | x2 y2  1  0  0  0 -x2*u2 -y2*u2 | |c02| |u2|
+ * | x3 y3  1  0  0  0 -x3*u3 -y3*u3 |.|c10|=|u3|,
  * |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 | |c20| |v2|
+ * |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 | |c11| |v0|
+ * |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 | |c12| |v1|
  * \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 / \c21/ \v3/
  *
  * where:
  *   cij - matrix coefficients, c22 = 1
  */
-glm::mat3 GetPerspectiveTransform( const FVec2F src[], const FVec2F dst[] ) {
-
-    double M[3][3];
-    double* X = M[0];
-    double a[8][8], b[8];
-    double* A = a[0];
-    double* B = b;
-
-    for( int i = 0; i < 4; ++i ) {
-        a[i][0] = a[i+4][3] = src[i].x;
-        a[i][1] = a[i+4][4] = src[i].y;
-        a[i][2] = a[i+4][5] = 1;
-        a[i][3] = a[i][4] = a[i][5] =
-        a[i+4][0] = a[i+4][1] = a[i+4][2] = 0;
-        a[i][6] = -src[i].x*dst[i].x;
-        a[i][7] = -src[i].y*dst[i].x;
-        a[i+4][6] = -src[i].x*dst[i].y;
-        a[i+4][7] = -src[i].y*dst[i].y;
-        b[i] = dst[i].x;
-        b[i+4] = dst[i].y;
-    }
-
-
-    /*
-    Mat M(3, 3, CV_64F), X(8, 1, CV_64F, M.ptr());
-    double a[8][8], b[8];
-    Mat A(8, 8, CV_64F, a), B(8, 1, CV_64F, b);
-
-    for( int i = 0; i < 4; ++i )
-    {
-        a[i][0] = a[i+4][3] = src[i].x;
-        a[i][1] = a[i+4][4] = src[i].y;
-        a[i][2] = a[i+4][5] = 1;
-        a[i][3] = a[i][4] = a[i][5] =
-        a[i+4][0] = a[i+4][1] = a[i+4][2] = 0;
-        a[i][6] = -src[i].x*dst[i].x;
-        a[i][7] = -src[i].y*dst[i].x;
-        a[i+4][6] = -src[i].x*dst[i].y;
-        a[i+4][7] = -src[i].y*dst[i].y;
-        b[i] = dst[i].x;
-        b[i+4] = dst[i].y;
-    }
-
-    solve(A, B, X, solveMethod);
-    M.ptr<double>()[8] = 1.;
-
-    return M;
-    */
-    return  glm::mat3();
+glm::mat3 GetPerspectiveMatrix( const FVec2F src[], const FVec2F dst[] ) {
+    return  glm::mat3( 0
+                     , 0
+                     , 0
+                     , 0
+                     , 0
+                     , 0
+                     , 0
+                     , 0
+                     , 0 );
 }
 
 ULIS2_NAMESPACE_END

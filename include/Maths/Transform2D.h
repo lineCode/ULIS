@@ -30,7 +30,7 @@ public:
     const std::string& ID() const; // Str From Blob
     const glm::mat3& Matrix() const;
     const glm::mat3& InverseMatrix() const;
-    void DecomposeMatrix( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const;
+    void Decompose( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const;
 
 private:
     // Private API
@@ -52,7 +52,8 @@ ULIS2_API glm::mat3 MakeScaleMatrix( float iX, float iY );
 ULIS2_API glm::mat3 MakeShearMatrix( float iX, float iY );
 ULIS2_API glm::mat3 MakeTranslationMatrix( float iX, float iY );
 ULIS2_API glm::mat3 ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB );
-ULIS2_API glm::mat3 GetPerspectiveTransform( const FVec2F src[], const FVec2F dst[] );
+ULIS2_API void DecomposeMatrix( const glm::mat3& iMat, float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY );
+ULIS2_API glm::mat3 GetPerspectiveMatrix( const FVec2F src[], const FVec2F dst[] );
 
 ULIS2_NAMESPACE_END
 
