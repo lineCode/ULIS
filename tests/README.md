@@ -7,7 +7,13 @@ Check LICENSE.md, ULIS2 and tests applications are not available for commercial 
 ## Description
 |Name                   |Description                                                |
 |-----------------------|-----------------------------------------------------------|
-|Test                   |Simple test program, test ULIS2 at runtime                 |
-|QtInterop              |Simple GUI test program with display and interop with Qt   |
-|PyTest                 |Python program to test PyULIS2 python binding              |
+|ASM                    |Simple test program, test ASM output for optimizations     |
 |Benchmark              |Benchmark application to measure and profile ULIS2 perfs   |
+|CPUDeviceInfo          |Simple test program, test CPU features at runtime          |
+|GPUDeviceInfo          |Simple test program, test GPU features at runtime          |
+|OpenCLInterop          |Simple test program, test OpenCL interop                   |
+|QtInterop              |Simple GUI test program with display and interop with Qt   |
+|SIMD                   |Simple test program, test SIMD features at runtime         |
+|Test                   |Simple test program, test ULIS2 at runtime                 |
+|PyTest                 |Python program to test PyULIS2 python binding              |
+

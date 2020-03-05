@@ -53,7 +53,9 @@ Additionally, the library dependencies changed and are now embedded in the repos
 ## Library Dependencies
 Dependencies are redistributed directly within the repository under the 3rdparty directory.
 
+        clip
         cppfs
+        Eigen
         FeatureDetector
         Freetype2
         glm

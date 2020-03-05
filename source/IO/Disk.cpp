@@ -51,14 +51,14 @@ XLoadFromFile( FThreadPool*             iThreadPool
     cppfs::FileHandle   fh = cppfs::fs::open( iPath );
 
     if( ( !fh.exists() ) || ( !fh.isFile() ) )
-        ULIS2_ASSERT( false, "Error bad input file" );
+        return  nullptr;
 
     std::ifstream file( iPath.c_str(), std::ios::binary | std::ios::ate );
     std::streamsize size = file.tellg();
     file.seekg( 0, std::ios::beg );
     std::vector<char> buffer(size);
     if( !file.read( buffer.data(), size ) )
-        ULIS2_ASSERT( false, "Error bad input file" );
+        return  nullptr;
 
     eType type = TYPE_UINT8;
     type = stbi_is_16_bit_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )  ? TYPE_UINT16 : type;
@@ -82,8 +82,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
         case TYPE_UFLOAT:   data = (tByte*)stbi_loadf(      iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
     }
 
-    if( !data )
-        ULIS2_ASSERT( false, "Error bad input file" );
+    ULIS2_ASSERT( data, "Error bad input file" )
 
     if( desiredChannels != STBI_default )
         channels = desiredChannels;

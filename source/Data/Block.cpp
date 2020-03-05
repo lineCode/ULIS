@@ -49,11 +49,10 @@ FBlock::FBlock( int iWidth
     mBPS = mWidth * mInfo.BPP;
     mBTT = mHeight * mBPS;
 
-    if( mProfile )
-        ULIS2_ASSERT( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
+    ULIS2_ASSERT( mProfile && mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 
     tSize num = mWidth * mHeight * mInfo.SPP;
-    ULIS2_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" );
+    ULIS2_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" )
 
     // For proper alignment
     switch( Type() ) {
@@ -87,8 +86,7 @@ FBlock::FBlock( tByte* iData
     mBPS = mWidth * mInfo.BPP;
     mBTT = mHeight * mBPS;
 
-    if( mProfile )
-        ULIS2_ASSERT( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
+    ULIS2_ASSERT( mProfile && mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 }
 
 
@@ -129,17 +127,15 @@ void
 FBlock::AssignProfile( FColorProfile* iProfile )
 {
     mProfile = iProfile;
-
-    if( mProfile )
-        ULIS2_ASSERT( mProfile->IsModelSupported( Model() ), "Bad ColorProfile" );
+    ULIS2_ASSERT( mProfile && mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 }
 
 
 const tByte*
 FBlock::PixelPtr( int iX, int iY ) const
 {
-    ULIS2_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
-    ULIS2_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" );
+    ULIS2_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" )
+    ULIS2_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" )
     return  mData + ( iX * mInfo.BPP + iY * mBPS );
 }
 
@@ -147,7 +143,7 @@ FBlock::PixelPtr( int iX, int iY ) const
 const tByte*
 FBlock::ScanlinePtr( int iRow ) const
 {
-    ULIS2_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" );
+    ULIS2_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" )
     return  mData + ( iRow * mBPS );
 }
 

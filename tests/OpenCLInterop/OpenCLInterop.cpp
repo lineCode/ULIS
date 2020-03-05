@@ -5,45 +5,19 @@
 *   ULIS2
 *__________________
 *
-* @file         test.cpp
+* @file         OpenCLInterop.cpp
 * @author       Clement Berthaud
 * @brief        Test application for ULIS2.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS2>
-
 #include <CL/cl.hpp>
 #include <vector>
 using namespace ::ul2;
 
-FVec2F TransformPerspective( const FVec2F& iPoint, const glm::mat3& iMat ) {
-    return  FVec2F( ( iPoint.x * iMat[0][0] + iPoint.y * iMat[0][1] + iMat[0][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] )
-                  , ( iPoint.x * iMat[1][0] + iPoint.y * iMat[1][1] + iMat[1][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] ) );
-}
-
 int
 main() {
-    FVec2F A[4] = { { 0, 0 }, { 200, 0 }, { 200, 200 }, { 0, 200 } };
-    FVec2F B[4] = { { 10, 10 }, { 100, 50 }, { 100, 150 }, { 10, 190 } };
-    auto mat = GetPerspectiveMatrix( A, B );
-
-    FVec2F C[4];
-    C[0] = TransformPerspective( A[0], mat );
-    C[1] = TransformPerspective( A[1], mat );
-    C[2] = TransformPerspective( A[2], mat );
-    C[3] = TransformPerspective( A[3], mat );
-
-    auto dummy = 0;
-    /*
-    FBlock blockA( 256, 256, ULIS2_FORMAT_ARGB8 );
-    FBlock blockB( 256, 256, ULIS2_FORMAT_ARGB8 );
-    FThreadPool pool;
-    FPerf       perf( Perf_Lowest );
-    Blend( &pool, ULIS2_BLOCKING, &blockA, &blockB, glm::vec2( 0 ), BM_HUE, AM_NORMAL, 1.f, perf, ULIS2_CALL_CB );
-    */
-
-    /*
     // OpenCL
     //get all platforms (drivers)
     std::vector<cl::Platform> all_platforms;
@@ -109,17 +83,6 @@ main() {
         std::cout<<C[i]<< " " << std::endl;
     }
 
-    cl_int err;
-    cl::size_t< 3 > origin;
-    cl::size_t< 3 > region;
-    region[0] = 256;
-    region[1] = 256;
-    cl::Image2D resource( context, CL_MEM_USE_HOST_PTR, { CL_RGBA, CL_FLOAT }, 256, 256, 0, block.DataPtr(), &err );
-    std::cout << err << std::endl;
-    std::cout << resource.getInfo< CL_MEM_SIZE >( &err ) << std::endl;
-    std::cout << err << std::endl;
-    auto _dummy = 0;
-    */
     return  0;
 }
 

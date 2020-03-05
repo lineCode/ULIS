@@ -137,66 +137,6 @@ foreach(source IN LISTS source_list)
 endforeach()
 
 ####################################
-# Add Test Project
-file(
-    GLOB_RECURSE
-    source_list
-    RELATIVE
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    "test.cpp"
-)
-
-add_executable( Test ${source_list} )
-target_link_libraries( Test ULIS2 )
-
-# For MSVC parse pretty filter names
-foreach(source IN LISTS source_list)
-    get_filename_component(source_path "${source}" PATH)
-    string(REPLACE "/" "\\" source_path_msvc "${source_path}")
-    source_group("${source_path_msvc}" FILES "${source}")
-endforeach()
-
-####################################
-# Add GUI Project
-# Qt Options
-if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
-    set( CMAKE_PREFIX_PATH ${ULIS2_QT_CMAKE_PATH} )
-
-    find_package(
-        Qt5
-        REQUIRED COMPONENTS
-        Core
-        Widgets
-        Gui
-    )
-
-    file(
-        GLOB_RECURSE
-        source_list
-        RELATIVE
-        "${CMAKE_CURRENT_SOURCE_DIR}"
-        "gui.cpp"
-    )
-
-    add_executable( Gui ${source_list} )
-    set_target_properties( Gui PROPERTIES CMAKE_AUTOMOC ON )
-    target_link_libraries(
-        Gui
-        ULIS2
-        Qt5::Core
-        Qt5::Widgets
-        Qt5::Gui
-    )
-
-    # For MSVC parse pretty filter names
-    foreach(source IN LISTS source_list)
-        get_filename_component(source_path "${source}" PATH)
-        string(REPLACE "/" "\\" source_path_msvc "${source_path}")
-        source_group("${source_path_msvc}" FILES "${source}")
-    endforeach()
-endif()
-
-####################################
 # Add Python Project
 if( ${ULIS2_BUILD_PYTHON_MODULE} )
     file(
@@ -235,5 +175,6 @@ if( ${ULIS2_BUILD_PYTHON_MODULE} )
 
 endif()
 
-# Set default startup project
-set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Test )
+####################################
+# Add Test Projects
+include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
