@@ -30,7 +30,7 @@ IPixel::IPixel( tFormat iFormat, FColorProfile* iProfile )
     , mInfo( iFormat )
     , mProfile( iProfile )
 {
-    ULIS2_ASSERT( mProfile && mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
+    ULIS2_ASSERT( !mProfile || mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 }
 
 
@@ -47,7 +47,7 @@ void
 IPixel::AssignProfile( FColorProfile* iProfile )
 {
     mProfile = iProfile;
-    ULIS2_ASSERT( mProfile && mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
+    ULIS2_ASSERT( !mProfile || mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 }
 
 

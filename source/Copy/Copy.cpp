@@ -27,10 +27,11 @@ void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSiz
     for( index = 0; index < ( iCount - 32 ); index += iStride )
     {
         _mm256_storeu_si256( (__m256i*)iDst, _mm256_loadu_si256( (const __m256i*)iSrc ) );
+        iSrc += iStride;
         iDst += iStride;
     }
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
-    memcpy( iDst, &iSrc, iCount - index );
+    memcpy( iDst, iSrc, iCount - index );
 }
 #endif // __AVX2__
 
@@ -41,10 +42,11 @@ void InvokeCopyMTProcessScanline_SSE( tByte* iDst, const tByte* iSrc, const tSiz
     for( index = 0; index < ( iCount - 16 ); index += iStride )
     {
         _mm_storeu_si128( (__m128i*)iDst, _mm_loadu_si128( (const __m128i*)iSrc ) );
+        iSrc += iStride;
         iDst += iStride;
     }
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
-    memcpy( iDst, &iSrc, iCount - index );
+    memcpy( iDst, iSrc, iCount - index );
 }
 #endif // __SE4_2__
 
@@ -68,38 +70,35 @@ Copy_imp( FThreadPool*              iThreadPool
     const tSize bpc = iDestination->BytesPerSample();
     const tSize spp = iDestination->SamplesPerPixel();
     const tSize bpp = iDestination->BytesPerPixel();
-    const tSize w   = iDestination->Width();
-    const tSize bps = iDestination->BytesPerScanLine();
+    const tSize src_bps = iSource->BytesPerScanLine();
+    const tSize dst_bps = iDestination->BytesPerScanLine();
     const tSize srh = iSrcROI.x * bpp;
     const tSize dsh = iDstROI.x * bpp;
     const tByte*src = iSource->DataPtr() + srh;
     tByte*      dst = iDestination->DataPtr() + dsh;
     const auto basesrcy = iSrcROI.y;
     const auto basedsty = iDstROI.y;
-    #define SRC src + ( ( basesrcy + pLINE ) * bps )
-    #define DST dst + ( ( basedsty + pLINE ) * bps )
+    #define SRC src + ( ( basesrcy + pLINE ) * src_bps )
+    #define DST dst + ( ( basedsty + pLINE ) * dst_bps )
+    const tSize count = iSrcROI.w * bpp;
     #ifdef __AVX2__
-    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
-        const tSize stride = 32;
-        const tSize count = iSrcROI.w;
+    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && ( src_bps + dst_bps ) >= 64 ) {
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iSrcROI.h
-                                       , InvokeCopyMTProcessScanline_AX2, DST, SRC, count, stride )
+                                       , InvokeCopyMTProcessScanline_AX2, DST, SRC, count, 32 )
     } else
     #endif
     #ifdef __SSE4_2__
-    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
-        const tSize stride = 16;
-        const tSize count = iSrcROI.w;
+    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && ( src_bps + dst_bps ) >= 32 ) {
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iSrcROI.h
-                                       , InvokeCopyMTProcessScanline_SSE, DST, SRC, count, stride )
+                                       , InvokeCopyMTProcessScanline_SSE, DST, SRC, count, 16 )
     } else
     #endif
     {
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iSrcROI.h
-                                       , InvokeCopyMTProcessScanline_MEM, DST, SRC, iSrcROI.w )
+                                       , InvokeCopyMTProcessScanline_MEM, DST, SRC, count )
     }
 }
 
