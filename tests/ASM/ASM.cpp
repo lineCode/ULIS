@@ -22,7 +22,7 @@ int power2( int num, int power ) {
     }
     // Return with result in EAX
     */
-    return  ;
+    return  0;
 }
 
 int main() {

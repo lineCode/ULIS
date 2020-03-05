@@ -178,3 +178,4 @@ endif()
 ####################################
 # Add Test Projects
 include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/samples/CMakeLists.txt)
