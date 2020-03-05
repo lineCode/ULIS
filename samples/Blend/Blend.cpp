@@ -19,10 +19,15 @@
 #include <QPixmap>
 #include <QLabel>
 
+#include <chrono>
+
 using namespace ::ul2;
 
 int
 main( int argc, char *argv[] ) {
+    // Gather start time to output the time it took to perform the blend composition
+    auto startTime = std::chrono::steady_clock::now();
+
     // Start by defining pool thread to host workers
     // Define the perfIntent flag to use Multithread, Type Specializations, SSE42 or AVX2 if available.
     // ( Note 1: if both SSE42 and AVX2 are available, AVX2 will be chosen. )
@@ -81,27 +86,48 @@ main( int argc, char *argv[] ) {
         int y = ( i / 8 ) * sourceRect.h;
 
         // First perform the Copy, specifying threadPool, blocking flag, performance intent, host, callback, and parameters as usual.
-        // The first 5 parameters are commone to most ULIS2 functions and are used to know how to perform a task.
+        // The first 5 parameters are common to most ULIS2 functions and are used to know how to perform a task.
         // The user provides intent and control over the CPU optimization dispatch method ( MEM, SSE, AVX ) and over the CPU multithreading dispatch too.
+        // Notice the BLOCKING here: we don't want Copy and Blend to be concurrent as they work on the same region in a given loop iteration.
+        Copy(   &threadPool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
+
         // Then we perform the blend by iterating over all blending modes ( see i cast to eBlendingMode enum value ).
         // By default we'll use a normal alphaMode for nicer results in this context, and an opacity of 0.5, which is a normalized value that corresponds to 50%, half-fade.
-        Copy(   &threadPool, ULIS2_NONBLOCKING, perfIntent, host, ULIS2_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
         Blend(  &threadPool, ULIS2_NONBLOCKING, perfIntent, host, ULIS2_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS2_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
     }
-    // Fence the pool here,
-    // You may have noticed that both calls to Copy and Blend specify ULIS2_NONBLOCKING flag.
+    // Fence the pool here to make sure the very last blend is completed.
+    // You may have noticed that we did not fence after Blend inside the loop.
     // This may strike you as odd, as one could be worried about data race and concurrency issues while reading and writing to blocks.
-    // Actually, there are actually 40 * 2 = 80 non blocking operations scheduled together, each of which will in turn schedule a task
-    // for each scanline in the specified rects. Assuming the rect is valid and not cropped, and that height = 160, that will lead to 80 * 160 = 12800
-    // scheduled scanline processes, with potential concurrency issues.
-    // This is right. This setup is unsafe in and by itself. However, since it's assumed there are 160 scanlines and since two iterations are non concurrent,
-    // and since no one has a machine with 160 cores and since blend operation is slower than copy operation, it is *most of the time* safe to do so.
-    // Here it avoids many stalls during the blend, however for safety in a professional application you would most likely not mess with that and fence immediately after Copy.
+    // This is safe here because copy and blend *might* be concurrent only within a given loop iteration.
+    // On the next loop, even if the Blend is not complete, the copy can take over and be scheduled regardless of blend completion status,
+    // because it will work on another region. That way we can avoid a few stalls and this is perfectly safe concurrency wise.
     Fence( threadPool );
 
     // Get rid of Base and Over, we don't need them anymore.
     delete  blockBase;
     delete  blockOver;
+
+    // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS2 operations.
+    // We are not interested in the time it took Qt to create the window.
+    auto endTime = std::chrono::steady_clock::now();
+    auto delta   = std::chrono::duration_cast< std::chrono::milliseconds >( endTime - startTime ).count();
+
+    // Let's recap:
+    // We performed two loads with potential conversion
+    // We performed a block allocation
+    // We performed 40 block copies
+    // We performed 40 block blends with all the most sophisticated blending modes
+    // That makes, worst case:
+    //      4 Alloc     ( 160² )
+    //      2 Conv      ( 160² )
+    //      1 Alloc     ( 1280*800 )
+    //      40 Copy     ( 160² )
+    //      40 Blend    ( 160² )
+    // Average on my desktop setup: 55ms
+    // Average on my laptop setup:  <unavailable>
+    // Remember: everything is multithreaded, SSE and AVX are used whenever possible, everything is computed on CPU
+    // Print out the result time.
+    std::cout << "ULIS2 Blend: Composition took " << delta << "ms." << std::endl;
 
     // Create a Qt application and a simple window to display the result block we computed.
     // We create a QImage from the blockCanvas data, QImage does not own the data, so it still lives in blockCanvas, so we don't delete it right now.
