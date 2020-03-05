@@ -25,7 +25,7 @@ using namespace ::ul2;
 
 int
 main( int argc, char *argv[] ) {
-    // Gather start time to output the time it took to perform the blend composition
+    // Gather start time to output the time it took to perform the conversion operation
     auto startTime = std::chrono::steady_clock::now();
 
     // Start by defining pool thread to host workers
@@ -78,6 +78,8 @@ main( int argc, char *argv[] ) {
     // For the basic conv operations, we always assume an RGB block is using the sRGB colorspace, and that Lab blocks use CIELab with illuminant D60.
     // conversion to XYZ and subsequent linear RGB are done assuming this predicate too.
     // The channel type is different for the two blocks here too, so conv can be used to convert a block depth too ( e.g: RGBA16 to RGBA8 ).
+    // Notice we passed the ULIS2_BLOCKING flag here, that means the Conv function will not return until the conversion is complete.
+    // We don't care about stalling here since there are no multihtreaded operations following, yet we need to ensure the blockRGB is valid before we go on.
     Conv( &threadPool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, blockLAB, blockRGB );
 
     // Get rid of block Lab, we don't need it anymore.
