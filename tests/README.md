@@ -1,19 +1,19 @@
-# Samples Directory
-Here are some samples applications for ULIS2
+# Tests Directory
+Here are some test applications for ULIS2
 
 ## License
-Check LICENSE.md, ULIS2 and samples applications are not available for commercial use.
+Check LICENSE.md, ULIS2 and tests applications are not available for commercial use.
 
 ## Description
 |Name                   |Description                                                |
 |-----------------------|-----------------------------------------------------------|
-|Blend                  |Blends samples.                                            |
-|ClearFillCopy          |Sample for Clear / Fill / Copy operations.                 |
-|Conversion             |Conversions tests                                          |
-|LoadSaveClipboard      |Sample Load / Save on clipboard.                           |
-|LoadSaveDisk           |Sample Load / Save on disk.                                |
-|Pixels                 |Sample pixel manipulation.                                 |
-|Raster                 |Sample for raster / draw of shapes.                        |
-|Text                   |Sample text rendering, unicode, supporting JA.             |
-|Transform              |Sample for image transforms.                               |
+|ASM                    |Simple test program, test ASM output for optimizations     |
+|Benchmark              |Benchmark application to measure and profile ULIS2 perfs   |
+|CPUDeviceInfo          |Simple test program, test CPU features at runtime          |
+|GPUDeviceInfo          |Simple test program, test GPU features at runtime          |
+|OpenCLInterop          |Simple test program, test OpenCL interop                   |
+|QtInterop              |Simple GUI test program with display and interop with Qt   |
+|SIMD                   |Simple test program, test SIMD features at runtime         |
+|Test                   |Simple test program, test ULIS2 at runtime                 |
+|PyTest                 |Python program to test PyULIS2 python binding              |
 
