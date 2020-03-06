@@ -175,6 +175,19 @@ if( ${ULIS2_BUILD_PYTHON_MODULE} )
 
 endif()
 
+if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
+    set( CMAKE_PREFIX_PATH ${ULIS2_QT_CMAKE_PATH} )
+
+    find_package(
+        Qt5
+        REQUIRED COMPONENTS
+        Core
+        Widgets
+        Gui
+    )
+    set(CMAKE_AUTOMOC ON)
+endif()
+
 ####################################
 # Add Test Projects
 include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)

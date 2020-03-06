@@ -113,7 +113,12 @@ TextMetrics( std::wstring           iText
     error = FT_Set_Pixel_Sizes( face, 0, iSize );
     ULIS2_ASSERT( !error, "Error setting face size" );
 
+    std::cout << __LINE__ << std::endl;
+    if( face == nullptr ) {
+        std::cout << "BAD3" << __LINE__ << std::endl;
+    }
     slot = face->glyph;
+    std::cout << __LINE__ << std::endl;
     pen.x = 0;
     pen.y = 0;
     int autobaseline = (int)( iSize * 0.7 );

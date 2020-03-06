@@ -16,13 +16,15 @@ if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "samples/ClearFillCopy/ClearFillCopy.cpp"
+        "samples/Particles/main.cpp"
+        "samples/Particles/Particles.cpp"
+        "samples/Particles/Particles.h"
     )
 
-    add_executable( ClearFillCopy ${source_list} )
-    set_target_properties( ClearFillCopy PROPERTIES CMAKE_AUTOMOC ON )
+    add_executable( Particles ${source_list} )
+    set_target_properties( Particles PROPERTIES CMAKE_AUTOMOC ON )
     target_link_libraries(
-        ClearFillCopy
+        Particles
         ULIS2
         Qt5::Core
         Qt5::Widgets

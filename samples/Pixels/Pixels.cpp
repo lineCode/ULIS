@@ -16,6 +16,8 @@ using namespace ::ul2;
 
 int
 main() {
+    // This sample shows
+
     return  0;
 }
 
