@@ -98,8 +98,8 @@ main( int argc, char *argv[] ) {
     //      2 Alloc     ( 800*600 )
     //      1 Gradient  ( 800*600 )
     //      1 Conv      ( 1280*800 )
-    // Average on my desktop setup: 53ms
-    // Average on my laptop setup:  <unavailable>
+    // Average on my desktop setup: 53ms            | Conversion only ( without manual unoptimized gradient ) : 13ms
+    // Average on my laptop setup:  <unavailable>   | Conversion only ( without manual unoptimized gradient ) : <unavailable>
     // Remember: everything is multithreaded, SSE and AVX are used whenever possible, everything is computed on CPU
     // Print out the result time.
     std::cout << "ULIS2 Conversion: Conversion took " << delta << "ms." << std::endl;
