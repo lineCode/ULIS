@@ -67,7 +67,7 @@ private:
     constexpr
     TRegistry< _N >
     PushBack_imp( uint32 i, std::integer_sequence< T, Nums... > )  const {
-        return { array[Nums] ..., i };
+        return {{ array[Nums] ..., i}};
     }
 
 };
@@ -77,7 +77,7 @@ private:
 // Utilities for registry manipulations
 #define ULIS_PREVIOUS( i )                      BOOST_PP_SUB( i, 1 )
 #define ULIS_CAT( iLhs, iRhs )                  BOOST_PP_CAT( iLhs, iRhs )
-#define ULIS_CREATE_REG( iName, i )             namespace generated { constexpr ::ULIS::TRegistry< 1 > ULIS_CAT( iName,  __COUNTER__ ) = { i }; }
+#define ULIS_CREATE_REG( iName, i )             namespace generated { constexpr ::ULIS::TRegistry< 1 > ULIS_CAT( iName,  __COUNTER__ ) = {{ i }}; }
 #define ULIS_APPEND_REG_IMP( iName, i, c )      namespace generated { constexpr auto ULIS_CAT( iName,  c ) = ULIS_CAT( iName, ULIS_PREVIOUS( c ) ).PushBack( i ); }
 #define ULIS_APPEND_REG( iName, i )             ULIS_APPEND_REG_IMP( iName, i, __COUNTER__ )
 #define ULIS_ASSIGN_REG( iName )                generated:: ULIS_CAT( iName, ULIS_PREVIOUS( __COUNTER__ ) )
