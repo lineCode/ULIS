@@ -3,6 +3,23 @@ Unique Library for Imaging Systems
 
 ## License
 Check LICENSE.md, ULIS2 is not available for commercial use.
+|Name               |Link                                                           |License            |
+|-------------------|---------------------------------------------------------------|-------------------|
+|ULIS2              |https://github.com/Praxinos/ULIS2                              |CC-BY-NC-ND-4.0    |
+
+|Dependency         |Link                                                           |License            |
+|-------------------|---------------------------------------------------------------|-------------------|
+|clip               |https://github.com/dacap/clip                                  |MIT                |
+|cppfs              |https://github.com/cginternals/cppfs                           |MIT                |
+|eigen              |https://gitlab.com/libeigen/eigen                              |MPL2               |
+|FeatureDetector    |https://github.com/Mysticial/FeatureDetector                   |CC0 1.0 Universal  |
+|freetype2          |https://github.com/aseprite/freetype2                          |FTL ( BSD-like )   |
+|glm                |https://github.com/g-truc/glm                                  |MIT                |
+|Little-CMS         |https://github.com/mm2/Little-CMS                              |MIT                |
+|OCL-SDK            |https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/releases   |-                  |
+|stb_image          |https://github.com/nothings/stb                                |MIT                |
+|stb_image_write    |https://github.com/nothings/stb                                |MIT                |
+|VCL                |https://github.com/vectorclass/version1                        |Apache 2.0         |
 
 ## Description
 

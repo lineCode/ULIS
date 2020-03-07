@@ -5,13 +5,13 @@
 *   ULIS2
 *__________________
 *
-* @file         Particles.cpp
+* @file         SimpleFluid.cpp
 * @author       Clement Berthaud
-* @brief        Particles application for ULIS2.
+* @brief        SimpleFluid application for ULIS2.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Particles.h"
+#include "SimpleFluid.h"
 #include <QImage>
 #include <QLabel>
 #include <QPixmap>

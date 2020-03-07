@@ -12,8 +12,10 @@ Check LICENSE.md, ULIS2 and samples applications are not available for commercia
 |Conversion             |Conversions tests                                          |
 |LoadSaveClipboard      |Sample Load / Save on clipboard.                           |
 |LoadSaveDisk           |Sample Load / Save on disk.                                |
+|Particles              |Particle Engine using ULIS2.                               |
 |Pixels                 |Sample pixel manipulation.                                 |
 |Raster                 |Sample for raster / draw of shapes.                        |
+|SimpleFluid            |Sample fluid simulation.                                   |
 |Text                   |Sample text rendering, unicode, supporting JA.             |
 |Transform              |Sample for image transforms.                               |
 
