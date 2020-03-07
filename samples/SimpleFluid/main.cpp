@@ -11,7 +11,7 @@
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Particles.h"
+#include "SimpleFluid.h"
 #include <QApplication>
 
 #include <cstdlib>

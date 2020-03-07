@@ -7,20 +7,6 @@ Check LICENSE.md, ULIS2 is not available for commercial use.
 |-------------------|---------------------------------------------------------------|-------------------|
 |ULIS2              |https://github.com/Praxinos/ULIS2                              |CC-BY-NC-ND-4.0    |
 
-|Dependency         |Link                                                           |License            |
-|-------------------|---------------------------------------------------------------|-------------------|
-|clip               |https://github.com/dacap/clip                                  |MIT                |
-|cppfs              |https://github.com/cginternals/cppfs                           |MIT                |
-|eigen              |https://gitlab.com/libeigen/eigen                              |MPL2               |
-|FeatureDetector    |https://github.com/Mysticial/FeatureDetector                   |CC0 1.0 Universal  |
-|freetype2          |https://github.com/aseprite/freetype2                          |FTL ( BSD-like )   |
-|glm                |https://github.com/g-truc/glm                                  |MIT                |
-|Little-CMS         |https://github.com/mm2/Little-CMS                              |MIT                |
-|OCL-SDK            |https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/releases   |-                  |
-|stb_image          |https://github.com/nothings/stb                                |MIT                |
-|stb_image_write    |https://github.com/nothings/stb                                |MIT                |
-|VCL                |https://github.com/vectorclass/version1                        |Apache 2.0         |
-
 ## Description
 
         Cross-Platform C++14 Library
@@ -61,7 +47,6 @@ Additionally, the library dependencies changed and are now embedded in the repos
 
 ## Software Requirements Specification ( SRS )
 
-        64bit OS Only
         Linux, Windows or MacOS
         CMake
         Git
@@ -70,21 +55,24 @@ Additionally, the library dependencies changed and are now embedded in the repos
 ## Library Dependencies
 Dependencies are redistributed directly within the repository under the 3rdparty directory.
 
-        clip
-        cppfs
-        Eigen
-        FeatureDetector
-        Freetype2
-        glm
-        OpenCL
-        Little-CMS2
-        stb
-        VCL ( Agner Fog's Vector Class Library )
+|Dependency         |Link                                                           |License            |
+|-------------------|---------------------------------------------------------------|-------------------|
+|clip               |https://github.com/dacap/clip                                  |MIT                |
+|cppfs              |https://github.com/cginternals/cppfs                           |MIT                |
+|eigen              |https://gitlab.com/libeigen/eigen                              |MPL2               |
+|FeatureDetector    |https://github.com/Mysticial/FeatureDetector                   |CC0 1.0 Universal  |
+|freetype2          |https://github.com/aseprite/freetype2                          |FTL ( BSD-like )   |
+|glm                |https://github.com/g-truc/glm                                  |MIT                |
+|Little-CMS         |https://github.com/mm2/Little-CMS                              |MIT                |
+|OCL-SDK            |https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/releases   |-                  |
+|stb_image          |https://github.com/nothings/stb                                |MIT                |
+|stb_image_write    |https://github.com/nothings/stb                                |MIT                |
+|VCL                |https://github.com/vectorclass/version1                        |Apache 2.0         |
 
-Additional Optional library can be used with ULIS2 to test or extend capabilities:
+Additional Optional library can be used with ULIS2 to test samples programs or build the python binding:
 
-        Qt
-        Python3x
+        Qt5.x
+        Python3.x
 
 ## Getting Started
 
@@ -100,11 +88,36 @@ A `ULIS2.Build.cs` script is provided within the repository.
 ULIS2 GPU capabilities and interop with Direct3D or OpenGL in the context of a generic rendering hardware interface is still a work in progress.
 
 ## Examples
-Include ULIS2 headers:
+This is a small sample illustrating image loading, copy and blend operatios. Check samples to get a gist of how to use ULIS2, more details and specific functions.
+
 ```cpp
 #include <ULIS2>
-using namespace ul2;
-// Ready to go
+using namespace ::ul2;
+
+int main() {
+    FThreadPool  threadPool;
+    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2;
+    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    std::string pathBase = "base_160.png";
+    std::string pathOver = "over_160.png";
+    FBlock* blockBase = XLoadFromFile( &threadPool, ULIS2_NONBLOCKING, perfIntent, host, ULIS2_NOCB, pathBase, ULIS2_FORMAT_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( &threadPool, ULIS2_NONBLOCKING, perfIntent, host, ULIS2_NOCB, pathOver, ULIS2_FORMAT_RGBA8 );
+    Fence( threadPool );
+    FRect sourceRect = blockBase->Rect();
+    int w = sourceRect.w * 8;
+    int h = sourceRect.h * 5;
+    FBlock* blockCanvas = new  FBlock( w, h, ULIS2_FORMAT_RGBA8 );
+    for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
+        int x = ( i % 8 ) * sourceRect.w;
+        int y = ( i / 8 ) * sourceRect.h;
+        Copy(   &threadPool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
+        Blend(  &threadPool, ULIS2_NONBLOCKING, perfIntent, host, ULIS2_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS2_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
+    }
+    Fence( threadPool );
+    delete  blockBase;
+    delete  blockOver;
+    delete  blockCanvas;
+    return  0;
+}
 ```
 
-Check samples to get a gist of how to use ULIS2, more details and specific functions.
