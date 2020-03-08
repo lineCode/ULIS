@@ -8,6 +8,11 @@ SET( ULIS2_PYTHON_DEB_LIB           "default" CACHE STRING "Indicates the path t
 SET( ULIS2_PYTHON_INCLUDE_PATH      "default" CACHE STRING "Indicates the path to python include path" )
 SET( ULIS2_PYTHON_ADD_INCLUDE_PATH  "default" CACHE STRING "Indicates the path to python include path" )
 
+set( ULIS2_USE_QT OFF )
+if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
+    set( ULIS2_USE_QT ON )
+endif()
+
 # Display host & compiler
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
 
@@ -27,7 +32,7 @@ set( CMAKE_DEBUG_POSTFIX d )
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_CXX_EXTENSIONS OFF )
-if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
+if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "CLANG" )
     set( CMAKE_CXX_FLAGS "-std=c++14" )
 endif()
 
@@ -46,7 +51,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Flags for Compiler / Platforms
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -fabi-version=0")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -mfma")
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
     if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux" )
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -fabi-version=0 -W -pthread")
@@ -175,9 +180,8 @@ if( ${ULIS2_BUILD_PYTHON_MODULE} )
 
 endif()
 
-if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
+if( ${ULIS2_USE_QT} )
     set( CMAKE_PREFIX_PATH ${ULIS2_QT_CMAKE_PATH} )
-
     find_package(
         Qt5
         REQUIRED COMPONENTS

@@ -296,7 +296,8 @@ FFontRegistry::FontEngine() const
 FFont
 FFontRegistry::LoadFont( const std::string& iFamily, const std::string& iStyle ) const
 {
-    return  FFont( *this, iFamily, iStyle );
+    FFont ret( *this, iFamily, iStyle );
+    return  ret;
 }
 
 ULIS2_NAMESPACE_END

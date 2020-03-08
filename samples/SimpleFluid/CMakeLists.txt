@@ -1,16 +1,6 @@
 cmake_minimum_required( VERSION 3.13.2 )
 
-if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
-    set( CMAKE_PREFIX_PATH ${ULIS2_QT_CMAKE_PATH} )
-
-    find_package(
-        Qt5
-        REQUIRED COMPONENTS
-        Core
-        Widgets
-        Gui
-    )
-
+if( ${ULIS2_USE_QT} )
     file(
         GLOB_RECURSE
         source_list
@@ -22,7 +12,6 @@ if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
     )
 
     add_executable( SimpleFluid ${source_list} )
-    set_target_properties( SimpleFluid PROPERTIES CMAKE_AUTOMOC ON )
     target_link_libraries(
         SimpleFluid
         ULIS2

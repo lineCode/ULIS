@@ -1,26 +1,9 @@
 cmake_minimum_required( VERSION 3.13.2 )
 
-if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
+if( ${ULIS2_USE_QT} )
     set( CMAKE_PREFIX_PATH ${ULIS2_QT_CMAKE_PATH} )
 
-    find_package(
-        Qt5
-        REQUIRED COMPONENTS
-        Core
-        Widgets
-        Gui
-    )
-
-    file(
-        GLOB_RECURSE
-        source_list
-        RELATIVE
-        "${CMAKE_CURRENT_SOURCE_DIR}"
-        "samples/Blend/Blend.cpp"
-    )
-
     add_executable( Blend ${source_list} )
-    set_target_properties( Blend PROPERTIES CMAKE_AUTOMOC ON )
     target_link_libraries(
         Blend
         ULIS2

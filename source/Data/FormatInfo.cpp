@@ -31,7 +31,6 @@ FFormatInfo::FFormatInfo( tFormat iFMT )
     SPP = NCC + HEA;
     BPP = SPP * BPC;
     IDT = new uint8[ SPP ];
-    AID;
     CM = static_cast< eColorModel >( ULIS2_R_MODEL( FMT ) );
     TP = static_cast< eType >( ULIS2_R_TYPE( FMT ) );
     SWA = ULIS2_R_SWAP( FMT );
