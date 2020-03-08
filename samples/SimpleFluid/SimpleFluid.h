@@ -38,18 +38,23 @@ public:
     ~SWindow();
     SWindow();
 
-private:
+protected:
     virtual void mousePressEvent( QMouseEvent* event ) override;
     virtual void mouseMoveEvent( QMouseEvent* event ) override;
     virtual void mouseReleaseEvent( QMouseEvent* event ) override;
+    virtual void keyPressEvent( QKeyEvent* event ) override;
+
+private:
     Q_SLOT void tickEvent();
+    void RedrawParticle();
 
 private:
     std::vector< FParticle >    mParticles;
 
     FHostDeviceInfo             mHost;
     FThreadPool                 mPool;
-    FBlock*                     mCanvas;
+    FBlock*                     mWetCanvas;
+    FBlock*                     mDryCanvas;
     FBlock*                     mParticle;
 
     QPoint                      mPos;
@@ -58,5 +63,13 @@ private:
     QLabel*                     mLabel;
     QTimer*                     mTimer;
     bool                        mLeftButtonDown;
+    int                         mParticleSize;
+    FPixelValue*                mCurrentParticleColor;
+    FPixelValue*                mBGParticleColor;
+    FPixelValue*                mDarkParticleColor;
+    FPixelValue*                mLightParticleColor;
+    eBlendingMode               mCurrentBlendingMode;
+    float                       mCurrentOpacity;
+    float                       mMul;
 };
 
