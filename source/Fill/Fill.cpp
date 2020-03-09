@@ -18,6 +18,7 @@
 #include "Data/Pixel.h"
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
+#include <vectorclass.h>
 
 ULIS2_NAMESPACE_BEGIN
 #ifdef __AVX2__
@@ -82,7 +83,7 @@ Fill_imp( FThreadPool*                          iThreadPool
         for( tSize i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
-        __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
+        Vec32uc src = _mm256_lddqu_si256( (const __m256i*)srcb );
 
         delete [] srcb;
 
@@ -100,7 +101,7 @@ Fill_imp( FThreadPool*                          iThreadPool
         for( tSize i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
-        __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
+        Vec16uc src = _mm_lddqu_si128( (const __m128i*)srcb );
 
         delete [] srcb;
 

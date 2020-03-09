@@ -15,5 +15,6 @@ Check LICENSE.md, ULIS2 and tests applications are not available for commercial 
 |QtInterop              |Simple GUI test program with display and interop with Qt   |
 |SIMD                   |Simple test program, test SIMD features at runtime         |
 |Test                   |Simple test program, test ULIS2 at runtime                 |
+|Formats                |Simple program, display all ULIS2 Formats                  |
 |PyTest                 |Python program to test PyULIS2 python binding              |
 

@@ -13,8 +13,7 @@
 */
 #include <ULIS2>
 
-int
-main() {
+int main( int argc, char *argv[] ) {
     ::ul2::FHostDeviceInfo deviceInfo = ::ul2::FHostDeviceInfo::Detect();
     const char* out[] = { "NO", "YES" };
     std::cout << "Vendor_AMD        : " << out[ deviceInfo.Vendor_AMD       ] << std::endl;
@@ -54,8 +53,6 @@ main() {
     std::cout << "HW_AVX512_DQ      : " << out[ deviceInfo.HW_AVX512_DQ     ] << std::endl;
     std::cout << "HW_AVX512_IFMA    : " << out[ deviceInfo.HW_AVX512_IFMA   ] << std::endl;
     std::cout << "HW_AVX512_VBMI    : " << out[ deviceInfo.HW_AVX512_VBMI   ] << std::endl;
-    char dummy;
-    std::cin >> dummy;
     return  0;
 }
 

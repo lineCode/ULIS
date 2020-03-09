@@ -14,7 +14,7 @@
 
 ULIS2_NAMESPACE_BEGIN
 // eTypeFromT
-template< typename T > ULIS2_FORCEINLINE eType  eTypeFromT(void)            { return  TYPE_INVALID; }
+template< typename T > ULIS2_FORCEINLINE eType  eTypeFromT(void)            { return  TYPE_UINT8; }
 template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint8 >()       { return  TYPE_UINT8;   }
 template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint16 >()      { return  TYPE_UINT16;  }
 template<> constexpr ULIS2_FORCEINLINE eType    eTypeFromT< uint32 >()      { return  TYPE_UINT32;  }

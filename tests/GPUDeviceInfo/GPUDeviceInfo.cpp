@@ -14,8 +14,7 @@
 #include <ULIS2>
 #include <CL/cl.hpp>
 
-int
-main() {
+int main( int argc, char *argv[] ) {
     // OpenCL
     //get all platforms (drivers)
     std::vector<cl::Platform> all_platforms;
@@ -97,8 +96,6 @@ main() {
             std::cout<< "   CL_DEVICE_DOUBLE_FP_CONFIG              : " << device.getInfo< CL_DEVICE_DOUBLE_FP_CONFIG               >() << std::endl;
         }
     }
-    char dummy;
-    std::cin >> dummy;
     return  0;
 }
 

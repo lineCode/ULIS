@@ -67,8 +67,6 @@ Copy_imp( FThreadPool*              iThreadPool
         , const FRect&              iSrcROI
         , const FRect&              iDstROI )
 {
-    const tSize bpc = iDestination->BytesPerSample();
-    const tSize spp = iDestination->SamplesPerPixel();
     const tSize bpp = iDestination->BytesPerPixel();
     const tSize src_bps = iSource->BytesPerScanLine();
     const tSize dst_bps = iDestination->BytesPerScanLine();
