@@ -8,6 +8,7 @@ Check LICENSE.md, ULIS2 and samples applications are not available for commercia
 |Name                   |Description                                                |
 |-----------------------|-----------------------------------------------------------|
 |Blend                  |Blends samples.                                            |
+|BlendShowcase          |Blends showcase.                                           |
 |ClearFillCopy          |Sample for Clear / Fill / Copy operations.                 |
 |Conversion             |Conversions tests                                          |
 |LoadSaveClipboard      |Sample Load / Save on clipboard.                           |
@@ -17,5 +18,6 @@ Check LICENSE.md, ULIS2 and samples applications are not available for commercia
 |Raster                 |Sample for raster / draw of shapes.                        |
 |SimpleFluid            |Sample fluid simulation.                                   |
 |Text                   |Sample text rendering, unicode, supporting JA.             |
+|TextShowcase           |Text showcase, display all fonts                           |
 |Transform              |Sample for image transforms.                               |
 

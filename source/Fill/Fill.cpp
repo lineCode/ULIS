@@ -83,7 +83,7 @@ Fill_imp( FThreadPool*                          iThreadPool
         for( tSize i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
-        Vec32uc src = _mm256_lddqu_si256( (const __m256i*)srcb );
+        __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
 
         delete [] srcb;
 
@@ -101,7 +101,7 @@ Fill_imp( FThreadPool*                          iThreadPool
         for( tSize i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
-        Vec16uc src = _mm_lddqu_si128( (const __m128i*)srcb );
+        __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
 
         delete [] srcb;
 

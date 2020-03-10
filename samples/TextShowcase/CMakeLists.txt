@@ -6,12 +6,12 @@ if( ${ULIS2_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "samples/Blend/Blend.cpp"
+        "samples/TextShowcase/TextShowcase.cpp"
     )
 
-    add_executable( Blend ${source_list} )
+    add_executable( TextShowcase ${source_list} )
     target_link_libraries(
-        Blend
+        TextShowcase
         ULIS2
         Qt5::Core
         Qt5::Widgets

@@ -55,12 +55,10 @@ main( int argc, char *argv[] ) {
     FFont fontEU = fontRegistry.LoadFont( "Arial", "Black" );
     FFont fontJA = fontRegistry.LoadFont( "Yu Gothic", "Bold" );
     FTransform2D identityTransform = FTransform2D();
+
     int fontSize = 64;
-    std::cout << __LINE__ << std::endl;
     FRect rect1 = TextMetrics( str1, fontEU, fontSize, identityTransform );
-    std::cout << __LINE__ << std::endl;
     FRect rect2 = TextMetrics( str2, fontJA, fontSize, identityTransform );
-    std::cout << __LINE__ << std::endl;
     FRect rect3 = TextMetrics( str3, fontJA, fontSize, identityTransform );
     rect1.x = ( w - rect1.w ) / 2;
     rect2.x = ( w - rect2.w ) / 2;
