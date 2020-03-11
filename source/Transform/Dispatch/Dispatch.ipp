@@ -15,9 +15,9 @@
 #include "Core/Core.h"
 #include "Transform/Methods.h"
 #include "Transform/Dispatch/TransformInfo.h"
-#include "Transform/Dispatch/Generic/TransformMT_NN_MEM_Generic.ipp"
-#include "Transform/Dispatch/Generic/TransformMT_Bilinear_MEM_Generic.ipp"
-#include "Transform/Dispatch/Generic/TransformMT_Bicubic_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformAffineMT_NN_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformAffineMT_Bilinear_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformAffineMT_Bicubic_MEM_Generic.ipp"
 
 ULIS2_NAMESPACE_BEGIN
 typedef void (*fpDispatchedTransformFunc)( std::shared_ptr< const _FTransformInfoPrivate > );
@@ -25,11 +25,11 @@ typedef void (*fpDispatchedTransformFunc)( std::shared_ptr< const _FTransformInf
 // Generic Dispatcher
 template< typename T >
 fpDispatchedTransformFunc
-QueryDispatchedTransformFunctionForParameters_Generic( const _FTransformInfoPrivate& iInfo ) {
+QueryDispatchedTransformAffineFunctionForParameters_Generic( const _FTransformInfoPrivate& iInfo ) {
     switch( iInfo.method ) {
-        case INTERP_NN          : return  TransformMT_NN_MEM_Generic< T >;
-        case INTERP_BILINEAR    : return  TransformMT_Bilinear_MEM_Generic< T >;
-        case INTERP_BICUBIC     : return  TransformMT_Bicubic_MEM_Generic< T >;
+        case INTERP_NN          : return  TransformAffineMT_NN_MEM_Generic< T >;
+        case INTERP_BILINEAR    : return  TransformAffineMT_Bilinear_MEM_Generic< T >;
+        case INTERP_BICUBIC     : return  TransformAffineMT_Bicubic_MEM_Generic< T >;
     }
     return  nullptr;
 }
@@ -37,19 +37,19 @@ QueryDispatchedTransformFunctionForParameters_Generic( const _FTransformInfoPriv
 // Generic Dispatcher Selector
 template< typename T >
 fpDispatchedTransformFunc
-QueryDispatchedTransformFunctionForParameters_imp( const _FTransformInfoPrivate& iInfo ) {
-    return  QueryDispatchedTransformFunctionForParameters_Generic< T >( iInfo );
+QueryDispatchedTransformAffineFunctionForParameters_imp( const _FTransformInfoPrivate& iInfo ) {
+    return  QueryDispatchedTransformAffineFunctionForParameters_Generic< T >( iInfo );
 }
 
 // Type Dispatcher Selector
 fpDispatchedTransformFunc
-QueryDispatchedTransformFunctionForParameters( const _FTransformInfoPrivate& iInfo ) {
+QueryDispatchedTransformAffineFunctionForParameters( const _FTransformInfoPrivate& iInfo ) {
     switch( iInfo.source->Type() ) {
-        case TYPE_UINT8     : return  QueryDispatchedTransformFunctionForParameters_imp< uint8   >( iInfo ); break;
-        case TYPE_UINT16    : return  QueryDispatchedTransformFunctionForParameters_imp< uint16  >( iInfo ); break;
-        case TYPE_UINT32    : return  QueryDispatchedTransformFunctionForParameters_imp< uint32  >( iInfo ); break;
-        case TYPE_UFLOAT    : return  QueryDispatchedTransformFunctionForParameters_imp< ufloat  >( iInfo ); break;
-        case TYPE_UDOUBLE   : return  QueryDispatchedTransformFunctionForParameters_imp< udouble >( iInfo ); break;
+        case TYPE_UINT8     : return  QueryDispatchedTransformAffineFunctionForParameters_imp< uint8   >( iInfo ); break;
+        case TYPE_UINT16    : return  QueryDispatchedTransformAffineFunctionForParameters_imp< uint16  >( iInfo ); break;
+        case TYPE_UINT32    : return  QueryDispatchedTransformAffineFunctionForParameters_imp< uint32  >( iInfo ); break;
+        case TYPE_UFLOAT    : return  QueryDispatchedTransformAffineFunctionForParameters_imp< ufloat  >( iInfo ); break;
+        case TYPE_UDOUBLE   : return  QueryDispatchedTransformAffineFunctionForParameters_imp< udouble >( iInfo ); break;
     }
     return  nullptr;
 }

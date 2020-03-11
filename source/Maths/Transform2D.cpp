@@ -236,5 +236,10 @@ glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] ) {
                      , 1 );
 }
 
+FVec2F HomographyTransform( const FVec2F& iPoint, const glm::mat3& iMat ) {
+    return  FVec2F( ( iPoint.x * iMat[0][0] + iPoint.y * iMat[0][1] + iMat[0][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] )
+                  , ( iPoint.x * iMat[1][0] + iPoint.y * iMat[1][1] + iMat[1][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] ) );
+}
+
 ULIS2_NAMESPACE_END
 

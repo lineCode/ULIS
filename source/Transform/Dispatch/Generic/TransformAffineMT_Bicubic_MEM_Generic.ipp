@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         TransformMT_Bicubic_MEM_Generic.ipp
+* @file         TransformAffineMT_Bicubic_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic transform entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -15,63 +15,11 @@
 #include "Core/Core.h"
 #include "Maths/Geometry.h"
 #include "Transform/Dispatch/TransformInfo.h"
+#include "Transform/Dispatch/Samplers.ipp"
 
 ULIS2_NAMESPACE_BEGIN
-float InterpCubic( float iA, float iB, float iC, float iD, float iT ) {
-    float a = -iA / 2.0f + (3.0f*iB) / 2.0f - (3.0f*iC) / 2.0f + iD / 2.0f;
-    float b = iA - (5.0f*iB) / 2.0f + 2.0f*iC - iD / 2.0f;
-    float c = -iA / 2.0f + iC / 2.0f;
-    float d = iB;
- 
-    return a * iT * iT * iT + b * iT * iT + c * iT + d;
-}
-
-template< typename T > ULIS2_FORCEINLINE void
-SampleBicubicH( float* iDst, const tByte* iA, const tByte* iB, const tByte* iC, const tByte* iD, const FFormatInfo& iFMT, const float iT ) {
-    float alphaA, alphaB, alphaC, alphaD, alphaR;
-    alphaA = alphaB = alphaC = alphaD = alphaR = 1.f;
-    if( iFMT.HEA ) {
-        alphaA = TYPE2FLOAT( iA, iFMT.AID );
-        alphaB = TYPE2FLOAT( iB, iFMT.AID );
-        alphaC = TYPE2FLOAT( iC, iFMT.AID );
-        alphaD = TYPE2FLOAT( iD, iFMT.AID );
-        alphaR = InterpCubic( alphaA, alphaB, alphaC, alphaD, iT );
-        iDst[iFMT.AID] = alphaR;
-        alphaR = alphaR == 0.f ? 0.f : 1.f / alphaR;
-    }
-    for( int i = 0; i < iFMT.NCC; ++i ) {
-        uint8 r = iFMT.IDT[i];
-        iDst[r] = InterpCubic( ConvType< T, float >( iA[r] ) * alphaA
-                             , ConvType< T, float >( iB[r] ) * alphaB
-                             , ConvType< T, float >( iC[r] ) * alphaC
-                             , ConvType< T, float >( iD[r] ) * alphaD
-                             , iT ) * alphaR;
-    }
-}
-
-template< typename T > ULIS2_FORCEINLINE void
-SampleBicubicV( tByte* iDst, const float* iA, const float* iB, const float* iC, const float* iD, const FFormatInfo& iFMT, const float iT ) {
-    float alphaA, alphaB, alphaC, alphaD, alphaR;
-    alphaA = alphaB = alphaC = alphaD = alphaR = 1.f;
-    if( iFMT.HEA ) {
-        alphaA = iA[iFMT.AID];
-        alphaB = iB[iFMT.AID];
-        alphaC = iC[iFMT.AID];
-        alphaD = iD[iFMT.AID];
-        alphaR = InterpCubic( alphaA, alphaB, alphaC, alphaD, iT );
-        FLOAT2TYPE( iDst, iFMT.AID, FMaths::Clamp( alphaR, 0.f, 1.f ) );
-        alphaR = alphaR == 0.f ? 0.f : 1.f / alphaR;
-    }
-    for( int i = 0; i < iFMT.NCC; ++i ) {
-        uint8 r = iFMT.IDT[i];
-        //*( reinterpret_cast< T* >( iDst ) + r ) = FMaths::Clamp( static_cast< T >( InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR ), MinType< T >(), MaxType< T >() );
-        FLOAT2TYPE( iDst, r, FMaths::Clamp( InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR, 0.f, 1.f ) );
-
-    }
-}
-
 template< typename T > void
-InvokeTransformMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
+InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     tByte*                          dst     = iDst;
@@ -130,7 +78,7 @@ InvokeTransformMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 iLine, 
 }
 
 template< typename T > void
-TransformMT_Bicubic_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
+TransformAffineMT_Bicubic_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
@@ -138,7 +86,7 @@ TransformMT_Bicubic_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate >
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformMTProcessScanline_Bicubic_MEM_Generic< T >
+                                   , InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 

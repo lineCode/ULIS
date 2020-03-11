@@ -25,16 +25,16 @@
 #include <glm/ext/matrix_transform.hpp>
 
 ULIS2_NAMESPACE_BEGIN
-void Transform( FThreadPool*            iThreadPool
-              , bool                    iBlocking
-              , uint32                  iPerfIntent
-              , const FHostDeviceInfo&  iHostDeviceInfo
-              , bool                    iCallCB
-              , const FBlock*           iSource
-              , FBlock*                 iDestination
-              , const FRect&            iSourceRect
-              , const FTransform2D&     iTransform
-              , eResamplingMethod       iMethod )
+void TransformAffine( FThreadPool*            iThreadPool
+                    , bool                    iBlocking
+                    , uint32                  iPerfIntent
+                    , const FHostDeviceInfo&  iHostDeviceInfo
+                    , bool                    iCallCB
+                    , const FBlock*           iSource
+                    , FBlock*                 iDestination
+                    , const FRect&            iSourceRect
+                    , const FTransform2D&     iTransform
+                    , eResamplingMethod       iMethod )
 {
     // Assertions
     ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
@@ -44,7 +44,7 @@ void Transform( FThreadPool*            iThreadPool
     ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     FRect src_fit = iSourceRect & iSource->Rect();
-    FRect trans = TransformMetrics( src_fit, iTransform, iMethod );
+    FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
     FRect dst_fit = trans & iDestination->Rect();
 
     if( !dst_fit.Area() )
@@ -64,7 +64,7 @@ void Transform( FThreadPool*            iThreadPool
     alias.inverseTransform  = glm::inverse( iTransform.Matrix() );
 
     // Query dispatched method
-    fpDispatchedTransformFunc fptr = QueryDispatchedTransformFunctionForParameters( alias );
+    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
     ULIS2_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams );
 
@@ -72,9 +72,9 @@ void Transform( FThreadPool*            iThreadPool
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
-FRect TransformMetrics( const FRect&          iSourceRect
-                      , const FTransform2D&   iTransform
-                      , eResamplingMethod     iMethod )
+FRect TransformAffineMetrics( const FRect&          iSourceRect
+                            , const FTransform2D&   iTransform
+                            , eResamplingMethod     iMethod )
 {
     FRect trans = iSourceRect.Transformed( iTransform );
     if( iMethod > INTERP_NN ) {

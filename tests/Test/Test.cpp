@@ -14,23 +14,24 @@
 #include <ULIS2>
 using namespace ::ul2;
 
-FVec2F TransformPerspective( const FVec2F& iPoint, const glm::mat3& iMat ) {
-    return  FVec2F( ( iPoint.x * iMat[0][0] + iPoint.y * iMat[0][1] + iMat[0][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] )
-                  , ( iPoint.x * iMat[1][0] + iPoint.y * iMat[1][1] + iMat[1][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] ) );
-}
-
 int
 main() {
     FVec2F A[4] = { { 0, 0 }, { 200, 0 }, { 200, 200 }, { 0, 200 } };
     FVec2F B[4] = { { 10, 10 }, { 100, 50 }, { 100, 150 }, { 10, 190 } };
     auto mat = GetPerspectiveMatrix( A, B );
+    auto inverse = glm::inverse( mat );
 
     FVec2F C[4];
-    C[0] = TransformPerspective( A[0], mat );
-    C[1] = TransformPerspective( A[1], mat );
-    C[2] = TransformPerspective( A[2], mat );
-    C[3] = TransformPerspective( A[3], mat );
+    C[0] = HomographyTransform( A[0], mat );
+    C[1] = HomographyTransform( A[1], mat );
+    C[2] = HomographyTransform( A[2], mat );
+    C[3] = HomographyTransform( A[3], mat );
 
+    FVec2F D[4];
+    D[0] = HomographyTransform( B[0], inverse );
+    D[1] = HomographyTransform( B[1], inverse );
+    D[2] = HomographyTransform( B[2], inverse );
+    D[3] = HomographyTransform( B[3], inverse );
     auto dummy = 0;
     return  0;
 }

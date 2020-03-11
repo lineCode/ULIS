@@ -54,6 +54,7 @@ ULIS2_API glm::mat3 MakeTranslationMatrix( float iX, float iY );
 ULIS2_API glm::mat3 ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB );
 ULIS2_API void DecomposeMatrix( const glm::mat3& iMat, float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY );
 ULIS2_API glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] );
+ULIS2_API FVec2F HomographyTransform( const FVec2F& iPoint, const glm::mat3& iMat );
 
 ULIS2_NAMESPACE_END
 

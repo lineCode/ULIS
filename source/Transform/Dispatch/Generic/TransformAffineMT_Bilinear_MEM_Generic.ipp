@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         TransformMT_Bilinear_MEM_Generic.ipp
+* @file         TransformAffineMT_Bilinear_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic transform entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -15,27 +15,11 @@
 #include "Core/Core.h"
 #include "Maths/Geometry.h"
 #include "Transform/Dispatch/TransformInfo.h"
+#include "Transform/Dispatch/Samplers.ipp"
 
 ULIS2_NAMESPACE_BEGIN
-
-template< typename T > ULIS2_FORCEINLINE void
-SampleBilinear( tByte* iDst, const tByte* iCA, const tByte* iCB, const FFormatInfo& iFMT, const float iT, const float iU ) {
-    float alphaA, alphaB, alphaC;
-    alphaA = alphaB = alphaC = 1.f;
-    if( iFMT.HEA ) {
-        alphaA = TYPE2FLOAT( iCA, iFMT.AID );
-        alphaB = TYPE2FLOAT( iCB, iFMT.AID );
-        alphaC = ( alphaA * iU + alphaB * iT );
-        FLOAT2TYPE( iDst, iFMT.AID, alphaC );
-    }
-    for( int i = 0; i < iFMT.NCC; ++i ) {
-        uint8 r = iFMT.IDT[i];
-        *( reinterpret_cast< T* >( iDst ) + r ) = static_cast< T >( ( iCA[r] * alphaA * iU + iCB[r] * alphaB * iT ) / alphaC );
-    }
-}
-
 template< typename T > void
-InvokeTransformMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
+InvokeTransformAffineMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     tByte*                          dst     = iDst;
@@ -83,7 +67,7 @@ InvokeTransformMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 iLine,
 }
 
 template< typename T > void
-TransformMT_Bilinear_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
+TransformAffineMT_Bilinear_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
@@ -91,7 +75,7 @@ TransformMT_Bilinear_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate 
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformMTProcessScanline_Bilinear_MEM_Generic< T >
+                                   , InvokeTransformAffineMTProcessScanline_Bilinear_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 

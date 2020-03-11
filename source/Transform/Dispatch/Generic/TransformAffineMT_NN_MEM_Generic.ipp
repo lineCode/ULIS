@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         TransformMT_NearestNeighbour_MEM_Generic.ipp
+* @file         TransformAffineMT_NN_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic transform entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -20,7 +20,7 @@
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
+InvokeTransformAffineMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     tByte*                          dst     = iDst;
@@ -45,7 +45,7 @@ InvokeTransformMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::
 }
 
 template< typename T > void
-TransformMT_NN_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
+TransformAffineMT_NN_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
@@ -53,7 +53,7 @@ TransformMT_NN_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInf
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformMTProcessScanline_NN_MEM_Generic< T >
+                                   , InvokeTransformAffineMTProcessScanline_NN_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 
