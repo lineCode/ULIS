@@ -92,6 +92,8 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSr
         src += fmt.BPP;
         bdp += fmt.BPP;
     }
+
+    delete [] result;
 }
 
 template< typename T >
@@ -157,6 +159,8 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const tByte* iSrc, tByte*
         src += fmt.BPP;
         bdp += fmt.BPP;
     }
+
+    delete [] result;
 }
 
 template< typename T >

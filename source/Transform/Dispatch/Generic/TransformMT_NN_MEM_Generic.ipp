@@ -29,12 +29,14 @@ InvokeTransformMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::
     glm::vec2 point_in_src( info.inverseTransform * point_in_dst );
     glm::vec2 src_dx( info.inverseTransform * glm::vec3( 1.f, 0.f, 0.f ) );
 
-    const int maxx = info.source->Width();
-    const int maxy = info.source->Height();
+    const int minx = info.src_roi.x;
+    const int miny = info.src_roi.y;
+    const int maxx = minx + info.src_roi.w;
+    const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
         int src_x = static_cast< int >( point_in_src.x );
         int src_y = static_cast< int >( point_in_src.y );
-        if( src_x >= 0 && src_y >= 0 && src_x < maxx && src_y < maxy )
+        if( src_x >= minx && src_y >= miny && src_x < maxx && src_y < maxy )
             memcpy( dst, info.source->PixelPtr( src_x, src_y ), fmt.BPP );
 
         dst += fmt.BPP;

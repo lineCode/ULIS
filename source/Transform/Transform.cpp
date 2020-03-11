@@ -43,7 +43,8 @@ void Transform( FThreadPool*            iThreadPool
     ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
-    FRect dst_fit = iSourceRect.Transformed( iTransform ) & iDestination->Rect();
+    FRect src_fit = iSourceRect & iSource->Rect();
+    FRect dst_fit = src_fit.Transformed( iTransform ) & iDestination->Rect();
     if( !dst_fit.Area() )
         return;
 
@@ -55,7 +56,7 @@ void Transform( FThreadPool*            iThreadPool
     alias.perfIntent        = iPerfIntent;
     alias.source            = iSource;
     alias.destination       = iDestination;
-    alias.src_roi           = iSourceRect & iSource->Rect();
+    alias.src_roi           = src_fit;
     alias.dst_roi           = dst_fit;
     alias.method            = iMethod;
     alias.inverseTransform  = glm::inverse( iTransform.Matrix() );

@@ -95,10 +95,10 @@ FRect::Transform( const FTransform2D& iTransform ) {
     glm::vec3 m10 = mat * glm::vec3( src_x2, y, 1 );
     glm::vec3 m11 = mat * glm::vec3( src_x2, src_y2, 1 );
     glm::vec3 m01 = mat * glm::vec3( x, src_y2, 1 );
-    x = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Min4( m00.x, m10.x, m11.x, m01.x ) ) );
-    y = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Min4( m00.y, m10.y, m11.y, m01.y ) ) );
-    w = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Max4( m00.x, m10.x, m11.x, m01.x ) ) ) - x;
-    h = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Max4( m00.y, m10.y, m11.y, m01.y ) ) ) - y;
+    x = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( m00.x, m10.x, m11.x, m01.x ) ) );
+    y = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( m00.y, m10.y, m11.y, m01.y ) ) );
+    w = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( m00.x, m10.x, m11.x, m01.x ) ) ) - x;
+    h = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( m00.y, m10.y, m11.y, m01.y ) ) ) - y;
 }
 
 
