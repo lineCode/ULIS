@@ -44,7 +44,9 @@ void Transform( FThreadPool*            iThreadPool
     ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     FRect src_fit = iSourceRect & iSource->Rect();
-    FRect dst_fit = src_fit.Transformed( iTransform ) & iDestination->Rect();
+    FRect trans = TransformMetrics( src_fit, iTransform, iMethod );
+    FRect dst_fit = trans & iDestination->Rect();
+
     if( !dst_fit.Area() )
         return;
 
@@ -74,8 +76,16 @@ FRect TransformMetrics( const FRect&          iSourceRect
                       , const FTransform2D&   iTransform
                       , eResamplingMethod     iMethod )
 {
-    // Temporary simple transformed way, we may introduce some fitting rules according to the resampling method.
-    return iSourceRect.Transformed( iTransform );
+    FRect trans = iSourceRect.Transformed( iTransform );
+    if( iMethod > INTERP_NN ) {
+        float tx, ty, r, sx, sy, skx, sky;
+        DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
+        trans.x -= static_cast< int >( ceil( sx ) );
+        trans.y -= static_cast< int >( ceil( sy ) );
+        trans.w += static_cast< int >( ceil( sx ) );
+        trans.h += static_cast< int >( ceil( sy ) );
+    }
+    return  trans;
 }
 
 ULIS2_NAMESPACE_END

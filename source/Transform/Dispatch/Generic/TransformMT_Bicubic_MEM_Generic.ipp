@@ -23,7 +23,7 @@ float InterpCubic( float iA, float iB, float iC, float iD, float iT ) {
     float c = -iA / 2.0f + iC / 2.0f;
     float d = iB;
  
-    return a*iT*iT*iT + b*iT*iT + c*iT + d;
+    return a * iT * iT * iT + b * iT * iT + c * iT + d;
 }
 
 template< typename T > ULIS2_FORCEINLINE void
@@ -41,7 +41,11 @@ SampleBicubicH( float* iDst, const tByte* iA, const tByte* iB, const tByte* iC, 
     }
     for( int i = 0; i < iFMT.NCC; ++i ) {
         uint8 r = iFMT.IDT[i];
-        iDst[r] = InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR;
+        iDst[r] = InterpCubic( ConvType< T, float >( iA[r] ) * alphaA
+                             , ConvType< T, float >( iB[r] ) * alphaB
+                             , ConvType< T, float >( iC[r] ) * alphaC
+                             , ConvType< T, float >( iD[r] ) * alphaD
+                             , iT ) * alphaR;
     }
 }
 
@@ -60,7 +64,9 @@ SampleBicubicV( tByte* iDst, const float* iA, const float* iB, const float* iC, 
     }
     for( int i = 0; i < iFMT.NCC; ++i ) {
         uint8 r = iFMT.IDT[i];
-        *( reinterpret_cast< T* >( iDst ) + r ) = FMaths::Clamp( static_cast< T >( InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR ), MinType< T >(), MaxType< T >() );
+        //*( reinterpret_cast< T* >( iDst ) + r ) = FMaths::Clamp( static_cast< T >( InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR ), MinType< T >(), MaxType< T >() );
+        FLOAT2TYPE( iDst, r, FMaths::Clamp( InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR, 0.f, 1.f ) );
+
     }
 }
 
