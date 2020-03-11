@@ -21,7 +21,7 @@ ULIS2_NAMESPACE_BEGIN
 template< typename T > ULIS2_FORCEINLINE void
 SampleBilinear( tByte* iDst, const tByte* iCA, const tByte* iCB, const FFormatInfo& iFMT, const float iT, const float iU ) {
     float alphaA, alphaB, alphaC;
-    alphaA = alphaB = alphaC = 0.f;
+    alphaA = alphaB = alphaC = 1.f;
     if( iFMT.HEA ) {
         alphaA = TYPE2FLOAT( iCA, iFMT.AID );
         alphaB = TYPE2FLOAT( iCB, iFMT.AID );
