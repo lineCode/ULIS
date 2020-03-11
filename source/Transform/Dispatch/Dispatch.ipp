@@ -26,6 +26,11 @@ typedef void (*fpDispatchedTransformFunc)( std::shared_ptr< const _FTransformInf
 template< typename T >
 fpDispatchedTransformFunc
 QueryDispatchedTransformFunctionForParameters_Generic( const _FTransformInfoPrivate& iInfo ) {
+    switch( iInfo.method ) {
+        case INTERP_NN          : return  TransformMT_NN_MEM_Generic< T >;
+        case INTERP_BILINEAR    : return  TransformMT_Bilinear_MEM_Generic< T >;
+        case INTERP_BICUBIC     : return  TransformMT_Bicubic_MEM_Generic< T >;
+    }
     return  nullptr;
 }
 

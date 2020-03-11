@@ -16,9 +16,6 @@
 #include "Data/Block.h"
 #include "Data/Pixel.h"
 #include "Data/Kernel.h"
-// Color
-#include "Color/ColorProfile.h"
-#include "Color/ProfileRegistry.h"
 // Base
 #include "Base/HostDeviceInfo.h"
 #include "Base/FilePathRegistry.h"
@@ -44,3 +41,4 @@
 #include "IO/Clipboard.h"
 #include "Raster/Draw.h"
 #include "Mix/Mix.h"
+#include "Transform/Transform.h"

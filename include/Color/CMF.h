@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "lcms2.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

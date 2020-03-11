@@ -14,7 +14,12 @@
 #pragma once
 #include "Core/Core.h"
 #include "Maths/Geometry.h"
+#include "Transform/Dispatch/TransformInfo.h"
 
 ULIS2_NAMESPACE_BEGIN
+template< typename T > void
+TransformMT_Bicubic_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
+}
+
 ULIS2_NAMESPACE_END
 

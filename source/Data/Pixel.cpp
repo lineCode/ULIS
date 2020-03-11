@@ -12,7 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Data/Pixel.h"
-#include "Color/ColorProfile.h"
 #include "Maths/Maths.h"
 
 ULIS2_NAMESPACE_BEGIN
@@ -30,7 +29,6 @@ IPixel::IPixel( tFormat iFormat, FColorProfile* iProfile )
     , mInfo( iFormat )
     , mProfile( iProfile )
 {
-    ULIS2_ASSERT( !mProfile || mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 }
 
 
@@ -47,7 +45,6 @@ void
 IPixel::AssignProfile( FColorProfile* iProfile )
 {
     mProfile = iProfile;
-    ULIS2_ASSERT( !mProfile || mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 }
 
 

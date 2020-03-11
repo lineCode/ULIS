@@ -98,7 +98,7 @@ FRect::Transform( const FTransform2D& iTransform ) {
     x = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Min4( m00.x, m10.x, m11.x, m01.x ) ) );
     y = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Min4( m00.y, m10.y, m11.y, m01.y ) ) );
     w = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Max4( m00.x, m10.x, m11.x, m01.x ) ) ) - x;
-    h = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Max4( m00.y, m10.y, m11.y, m01.y ) ) ) - h;
+    h = static_cast< int >( FMaths::RoundAwayFromZero( FMaths::Max4( m00.y, m10.y, m11.y, m01.y ) ) ) - y;
 }
 
 

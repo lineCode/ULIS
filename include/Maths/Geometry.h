@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include <glm/vec2.hpp>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

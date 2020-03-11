@@ -12,7 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Data/Block.h"
-#include "Color/ColorProfile.h"
 #include "Base/UUID.h"
 #include "Maths/Geometry.h"
 #include "Base/CRC32.h"
@@ -49,8 +48,6 @@ FBlock::FBlock( int iWidth
     mBPS = mWidth * mInfo.BPP;
     mBTT = mHeight * mBPS;
 
-    ULIS2_ASSERT( !mProfile || mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
-
     tSize num = mWidth * mHeight * mInfo.SPP;
     ULIS2_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" )
 
@@ -86,7 +83,6 @@ FBlock::FBlock( tByte* iData
     mBPS = mWidth * mInfo.BPP;
     mBTT = mHeight * mBPS;
 
-    ULIS2_ASSERT( !mProfile || mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 }
 
 
@@ -127,7 +123,6 @@ void
 FBlock::AssignProfile( FColorProfile* iProfile )
 {
     mProfile = iProfile;
-    ULIS2_ASSERT( !mProfile || mProfile->IsModelSupported( Model() ), "Bad ColorProfile" )
 }
 
 
