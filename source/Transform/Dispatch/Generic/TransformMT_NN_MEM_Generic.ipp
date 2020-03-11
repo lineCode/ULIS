@@ -25,16 +25,20 @@ InvokeTransformMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     tByte*                          dst     = iDst;
 
+    glm::vec3 point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
+    glm::vec2 point_in_src( info.inverseTransform * point_in_dst );
+    glm::vec2 src_dx( info.inverseTransform * glm::vec3( 1.f, 0.f, 0.f ) );
+
     const int maxx = info.source->Width();
     const int maxy = info.source->Height();
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        glm::vec3 point_in_dst( x, iLine, 1.f );
-        glm::vec2 point_in_src( info.inverseTransform * point_in_dst );
-        int src_x = static_cast< int >( floor( point_in_src.x ) );
-        int src_y = static_cast< int >( floor( point_in_src.y ) );
+        int src_x = static_cast< int >( point_in_src.x );
+        int src_y = static_cast< int >( point_in_src.y );
         if( src_x >= 0 && src_y >= 0 && src_x < maxx && src_y < maxy )
             memcpy( dst, info.source->PixelPtr( src_x, src_y ), fmt.BPP );
+
         dst += fmt.BPP;
+        point_in_src += src_dx;
     }
 }
 
@@ -48,7 +52,7 @@ TransformMT_NN_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInf
     ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformMTProcessScanline_NN_MEM_Generic< T >
-                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_y, pLINE, iInfo );
+                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 
 ULIS2_NAMESPACE_END
