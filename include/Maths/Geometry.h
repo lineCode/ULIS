@@ -24,7 +24,33 @@ struct ULIS2_API TVec2
     T y;
 
     TVec2() : x( 0 ), y( 0 ) {}
-    TVec2( T iX, T iY ) : x( iX ), y( iY ) {};
+    TVec2( T ix, T iy ) : x( ix ), y( iy ) {};
+
+    ULIS2_FORCEINLINE T Distance() const {                              return  sqrt( x * x + y *y ); }
+    ULIS2_FORCEINLINE T DistanceSquared() const {                       return  x * x + y * y; }
+    ULIS2_FORCEINLINE T ManhattanDistance() const {                     return  x + y; }
+    ULIS2_FORCEINLINE float operator|( const FVec2F& iOther ) const {   return  x * iOther.x + y * iOther.y; }
+    ULIS2_FORCEINLINE float DotProduct( const FVec2F& iOther ) {        return  ( *this | B ); }
+    ULIS2_FORCEINLINE FVec2F operator+( const FVec2F& iOther ) const {  return  FVec2F( x + iOther.x, y + iOther.y ); }
+    ULIS2_FORCEINLINE FVec2F operator-(const FVec2F& iOther ) const {   return  FVec2F( x - iOther.x, y - iOther.y ); }
+    ULIS2_FORCEINLINE FVec2F operator-( float iValue ) const {          return  FVec2F( x - iValue, y - iValue ); }
+    ULIS2_FORCEINLINE FVec2F operator+( float iValue ) const {          return  FVec2F( x + iValue, y + iValue ); }
+    ULIS2_FORCEINLINE FVec2F operator*( float iValue ) const {          return  FVec2F( x * iValue, y * iValue ); }
+    ULIS2_FORCEINLINE FVec2F operator/( float iValue ) const {          return  FVec2F( x / iValue, y / iValue ); }
+    ULIS2_FORCEINLINE FVec2F operator*(const FVec2F& iOther ) const {   return  FVec2F( x * iOther.x, y * iOther.y ); }
+    ULIS2_FORCEINLINE FVec2F operator/(const FVec2F& iOther ) const {   return  FVec2F( x / iOther.x, y / iOther.y ); }
+    ULIS2_FORCEINLINE bool operator==(const FVec2F& iOther ) const {    return  x == iOther.x && y == iOther.y; }
+    ULIS2_FORCEINLINE bool operator!=(const FVec2F& iOther ) const {    return x != iOther.x || y != iOther.y; }
+    ULIS2_FORCEINLINE FVec2F operator-() const {                        return  FVec2F(-x, -y, -Z); }
+    ULIS2_FORCEINLINE FVec2F operator+=(const FVec2F& iOther ) {        x += iOther.x; y += iOther.y; return  *this; }
+    ULIS2_FORCEINLINE FVec2F operator-=(const FVec2F& iOther ) {        x -= iOther.x; y -= iOther.y; return  *this; }
+    ULIS2_FORCEINLINE FVec2F operator*=(float iValue) {                 x *= iValue; y *= iValue; return  *this; }
+    ULIS2_FORCEINLINE FVec2F operator/=(float iValue ) {                x /= iValue; y /= iValue; return  *this; }
+    ULIS2_FORCEINLINE FVec2F operator*=(const FVec2F& iOther ) {        x *= iOther.x; y *= iOther.y; return  *this; }
+    ULIS2_FORCEINLINE FVec2F operator/=(const FVec2F& iOther ) {        x /= iOther.x; y /= iOther.y; return  *this; }
+    ULIS2_FORCEINLINE float& operator[](int32 iIndex ) { ULIS2_ASSERT( iIndex >= 0 && iIndex < 3, "Bad Index" ); return  ( &x )[ iIndex ]; }
+    ULIS2_FORCEINLINE float operator[]( int32 iIndex)const { ULIS2_ASSERT( iIndex >= 0 && iIndex < 3, "Bad Index" ); return  ( &x )[ iIndex ]; }
+    ULIS2_FORCEINLINE void Normalize() { float dist = Distance(); x /= dist; y /= dist; }
 };
 
 /////////////////////////////////////////////////////
@@ -37,9 +63,9 @@ struct ULIS2_API FRect
     int h;
 
     FRect();
-    FRect( int iX, int iY, int iW, int iH );
-    static FRect FromXYWH( int iX, int iY, int iW, int iH );
-    static FRect FromMinMax( int iXMin, int iYMin, int iXMax, int iYMax );
+    FRect( int ix, int iy, int iW, int iH );
+    static FRect FromXYWH( int ix, int iy, int iW, int iH );
+    static FRect FromMinMax( int ixMin, int iyMin, int ixMax, int iyMax );
     FRect operator&( const FRect& iOther ) const;
     FRect operator|( const FRect& iOther ) const;
     bool operator==( const FRect& iOther ) const;

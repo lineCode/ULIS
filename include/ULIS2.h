@@ -24,6 +24,7 @@
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
 #include "Maths/Transform2D.h"
+#include "Maths/Bezier.h"
 // Thread
 #include "Thread/ThreadPool.h"
 // Interface

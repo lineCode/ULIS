@@ -87,6 +87,31 @@ struct ULIS2_API FMaths
     }
 
     template< typename T >
+    static inline T&&  VMin( T&&  val )
+    {
+        return  std::forward< T >( val );
+    }
+
+    template< typename T0, typename T1, typename... Ts >
+    static inline auto  VMin( T0&&  val1, T1&&  val2, Ts&&...  vs )
+    {
+        return  ( val1 < val2 ) ? VMin( val1, std::forward< Ts >( vs )... ) : VMin( val2, std::forward< Ts >( vs )... );
+    }
+
+    template< typename T >
+    static inline T&&  VMax( T&&  val )
+    {
+        return  std::forward< T >( val );
+    }
+
+    template< typename T0, typename T1, typename... Ts >
+    static inline auto  VMax( T0&&  val1, T1&&  val2, Ts&&...  vs )
+    {
+        return  ( val1 > val2 ) ? VMax( val1, std::forward< Ts >( vs )... ) : VMax( val2, std::forward< Ts >( vs )... );
+    }
+
+
+    template< typename T >
     static ULIS2_FORCEINLINE T Clamp( T iValue, T iMin, T iMax ) {
         return  Max( iMin, Min( iValue, iMax ) );
     }
