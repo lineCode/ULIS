@@ -72,11 +72,75 @@ void TransformAffine( FThreadPool*            iThreadPool
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
+void TransformPerspective( FThreadPool*            iThreadPool
+                    , bool                    iBlocking
+                    , uint32                  iPerfIntent
+                    , const FHostDeviceInfo&  iHostDeviceInfo
+                    , bool                    iCallCB
+                    , const FBlock*           iSource
+                    , FBlock*                 iDestination
+                    , const FRect&            iSourceRect
+                    , const FTransform2D&     iTransform
+                    , eResamplingMethod       iMethod )
+{
+    // Assertions
+    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS2_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+
+    FRect src_fit = iSourceRect & iSource->Rect();
+    FRect trans = TransformPerspectiveMetrics( src_fit, iTransform, iMethod );
+    FRect dst_fit = trans & iDestination->Rect();
+
+    if( !dst_fit.Area() )
+        return;
+
+    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
+    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    alias.pool              = iThreadPool;
+    alias.blocking          = iBlocking;
+    alias.hostDeviceInfo    = &iHostDeviceInfo;
+    alias.perfIntent        = iPerfIntent;
+    alias.source            = iSource;
+    alias.destination       = iDestination;
+    alias.src_roi           = src_fit;
+    alias.dst_roi           = dst_fit;
+    alias.method            = iMethod;
+    alias.inverseTransform  = glm::inverse( iTransform.Matrix() );
+
+    // Query dispatched method
+    fpDispatchedTransformFunc fptr = QueryDispatchedTransformPerspectiveFunctionForParameters( alias );
+    ULIS2_ASSERT( fptr, "No dispatch function found." );
+    fptr( forwardTransformParams );
+
+    // Invalid
+    iDestination->Invalidate( dst_fit, iCallCB );
+}
+
 FRect TransformAffineMetrics( const FRect&          iSourceRect
                             , const FTransform2D&   iTransform
                             , eResamplingMethod     iMethod )
 {
-    FRect trans = iSourceRect.Transformed( iTransform );
+    FRect trans = iSourceRect.TransformedAffine( iTransform );
+    if( iMethod > INTERP_NN ) {
+        float tx, ty, r, sx, sy, skx, sky;
+        DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
+        trans.x -= static_cast< int >( ceil( sx ) );
+        trans.y -= static_cast< int >( ceil( sy ) );
+        trans.w += static_cast< int >( ceil( sx ) );
+        trans.h += static_cast< int >( ceil( sy ) );
+    }
+    return  trans;
+}
+
+
+FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
+                                 , const FTransform2D&   iTransform
+                                 , eResamplingMethod     iMethod )
+{
+    FRect trans = iSourceRect.TransformedPerspective( iTransform );
     if( iMethod > INTERP_NN ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );

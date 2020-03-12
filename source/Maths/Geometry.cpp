@@ -87,7 +87,7 @@ FRect::Area() const
 
 
 void
-FRect::Transform( const FTransform2D& iTransform ) {
+FRect::TransformAffine( const FTransform2D& iTransform ) {
     float src_x2 = static_cast< float >( x + w );
     float src_y2 = static_cast< float >( y + h );
     const glm::mat3& mat = iTransform.Matrix();
@@ -101,11 +101,36 @@ FRect::Transform( const FTransform2D& iTransform ) {
     h = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( m00.y, m10.y, m11.y, m01.y ) ) ) - y;
 }
 
+void
+FRect::TransformPerspective( const FTransform2D& iTransform ) {
+    float x1 = static_cast< float >( x );
+    float y1 = static_cast< float >( y );
+    float x2 = static_cast< float >( x + w );
+    float y2 = static_cast< float >( y + h );
+    const glm::mat3& mat = iTransform.Matrix();
+    FVec2F A = HomographyTransform( FVec2F( x1, y1 ),   mat );
+    FVec2F B = HomographyTransform( FVec2F( x2, y1 ),   mat );
+    FVec2F C = HomographyTransform( FVec2F( x2, y2 ),   mat );
+    FVec2F D = HomographyTransform( FVec2F( x1, y2 ),   mat );
+    x = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( A.x, B.x, C.x, D.x ) ) );
+    y = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( A.y, B.y, C.y, D.y ) ) );
+    w = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( A.x, B.x, C.x, D.x ) ) ) - x;
+    h = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( A.y, B.y, C.y, D.y ) ) ) - y;
+}
+
 
 FRect
-FRect::Transformed( const FTransform2D& iTransform ) const {
+FRect::TransformedAffine( const FTransform2D& iTransform ) const {
     FRect ret = *this;
-    ret.Transform( iTransform );
+    ret.TransformAffine( iTransform );
+    return  ret;
+}
+
+
+FRect
+FRect::TransformedPerspective( const FTransform2D& iTransform ) const {
+    FRect ret = *this;
+    ret.TransformPerspective( iTransform );
     return  ret;
 }
 

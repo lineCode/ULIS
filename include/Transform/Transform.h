@@ -27,9 +27,24 @@ ULIS2_API void TransformAffine( FThreadPool*              iThreadPool
                               , const FTransform2D&       iTransform
                               , eResamplingMethod         iMethod );
 
+ULIS2_API void TransformPerspective( FThreadPool*              iThreadPool
+                                   , bool                      iBlocking
+                                   , uint32                    iPerfIntent
+                                   , const FHostDeviceInfo&    iHostDeviceInfo
+                                   , bool                      iCallCB
+                                   , const FBlock*             iSource
+                                   , FBlock*                   iDestination
+                                   , const FRect&              iSourceRect
+                                   , const FTransform2D&       iTransform
+                                   , eResamplingMethod         iMethod );
+
 ULIS2_API FRect TransformAffineMetrics( const FRect&          iSourceRect
                                       , const FTransform2D&   iTransform
                                       , eResamplingMethod     iMethod );
+
+ULIS2_API FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
+                                           , const FTransform2D&   iTransform
+                                           , eResamplingMethod     iMethod );
 
 ULIS2_NAMESPACE_END
 
