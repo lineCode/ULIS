@@ -14,8 +14,11 @@
 #pragma once
 #include "Core/Core.h"
 #include "Transform/Methods.h"
+#include "Maths/Bezier.h"
+#include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
+
 ULIS2_API void TransformAffine( FThreadPool*              iThreadPool
                               , bool                      iBlocking
                               , uint32                    iPerfIntent
@@ -38,6 +41,19 @@ ULIS2_API void TransformPerspective( FThreadPool*              iThreadPool
                                    , const FTransform2D&       iTransform
                                    , eResamplingMethod         iMethod );
 
+ULIS2_API void TransformBezier( FThreadPool*                                    iThreadPool
+                              , bool                                            iBlocking
+                              , uint32                                          iPerfIntent
+                              , const FHostDeviceInfo&                          iHostDeviceInfo
+                              , bool                                            iCallCB
+                              , const FBlock*                                   iSource
+                              , FBlock*                                         iDestination
+                              , const FRect&                                    iSourceRect
+                              , const std::vector< FBezierCubicControlPoint >&  iControlPoints
+                              , float                                           iThreshold
+                              , int                                             iPlotSize
+                              , eResamplingMethod                               iMethod );
+
 ULIS2_API FRect TransformAffineMetrics( const FRect&          iSourceRect
                                       , const FTransform2D&   iTransform
                                       , eResamplingMethod     iMethod );
@@ -45,6 +61,10 @@ ULIS2_API FRect TransformAffineMetrics( const FRect&          iSourceRect
 ULIS2_API FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
                                            , const FTransform2D&   iTransform
                                            , eResamplingMethod     iMethod );
+
+ULIS2_API FRect TransformBezierMetrics( const FRect&                                    iSourceRect
+                                      , const std::vector< FBezierCubicControlPoint >&  iControlPoints
+                                      , eResamplingMethod                               iMethod );
 
 ULIS2_NAMESPACE_END
 

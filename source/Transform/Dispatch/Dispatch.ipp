@@ -21,9 +21,13 @@
 #include "Transform/Dispatch/Generic/TransformPerspectiveMT_NN_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformPerspectiveMT_Bilinear_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformPerspectiveMT_Bicubic_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformBezier_NN_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformBezier_Bilinear_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformBezier_Bicubic_MEM_Generic.ipp"
 
 ULIS2_NAMESPACE_BEGIN
 typedef void (*fpDispatchedTransformFunc)( std::shared_ptr< const _FTransformInfoPrivate > );
+typedef void (*fpDispatchedBezierTransformFunc)( std::shared_ptr< const _FTransformInfoPrivate >, std::shared_ptr< const FBlock >, std::shared_ptr< const FBlock > );
 /////////////////////////////////////////////////////
 // AFFINE
 // Generic Dispatcher
@@ -90,6 +94,41 @@ QueryDispatchedTransformPerspectiveFunctionForParameters( const _FTransformInfoP
         case TYPE_UINT32    : return  QueryDispatchedTransformPerspectiveFunctionForParameters_imp< uint32  >( iInfo ); break;
         case TYPE_UFLOAT    : return  QueryDispatchedTransformPerspectiveFunctionForParameters_imp< ufloat  >( iInfo ); break;
         case TYPE_UDOUBLE   : return  QueryDispatchedTransformPerspectiveFunctionForParameters_imp< udouble >( iInfo ); break;
+    }
+    return  nullptr;
+}
+
+
+/////////////////////////////////////////////////////
+// BEZIER
+// Generic Dispatcher
+template< typename T >
+fpDispatchedBezierTransformFunc
+QueryDispatchedTransformBezierFunctionForParameters_Generic( const _FTransformInfoPrivate& iInfo ) {
+    switch( iInfo.method ) {
+        case INTERP_NN          : return  TransformBezierMT_NN_MEM_Generic< T >;
+        case INTERP_BILINEAR    : return  TransformBezierMT_Bilinear_MEM_Generic< T >;
+        case INTERP_BICUBIC     : return  TransformBezierMT_Bicubic_MEM_Generic< T >;
+    }
+    return  nullptr;
+}
+
+// Generic Dispatcher Selector
+template< typename T >
+fpDispatchedBezierTransformFunc
+QueryDispatchedTransformBezierFunctionForParameters_imp( const _FTransformInfoPrivate& iInfo ) {
+    return  QueryDispatchedTransformBezierFunctionForParameters_Generic< T >( iInfo );
+}
+
+// Type Dispatcher Selector
+fpDispatchedBezierTransformFunc
+QueryDispatchedTransformBezierFunctionForParameters( const _FTransformInfoPrivate& iInfo ) {
+    switch( iInfo.source->Type() ) {
+        case TYPE_UINT8     : return  QueryDispatchedTransformBezierFunctionForParameters_imp< uint8   >( iInfo ); break;
+        case TYPE_UINT16    : return  QueryDispatchedTransformBezierFunctionForParameters_imp< uint16  >( iInfo ); break;
+        case TYPE_UINT32    : return  QueryDispatchedTransformBezierFunctionForParameters_imp< uint32  >( iInfo ); break;
+        case TYPE_UFLOAT    : return  QueryDispatchedTransformBezierFunctionForParameters_imp< ufloat  >( iInfo ); break;
+        case TYPE_UDOUBLE   : return  QueryDispatchedTransformBezierFunctionForParameters_imp< udouble >( iInfo ); break;
     }
     return  nullptr;
 }
