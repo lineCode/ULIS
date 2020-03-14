@@ -29,25 +29,25 @@ struct ULIS2_API TVec2
     ULIS2_FORCEINLINE T Distance() const {                              return  sqrt( x * x + y *y ); }
     ULIS2_FORCEINLINE T DistanceSquared() const {                       return  x * x + y * y; }
     ULIS2_FORCEINLINE T ManhattanDistance() const {                     return  x + y; }
-    ULIS2_FORCEINLINE float operator|( const FVec2F& iOther ) const {   return  x * iOther.x + y * iOther.y; }
-    ULIS2_FORCEINLINE float DotProduct( const FVec2F& iOther ) {        return  ( *this | B ); }
-    ULIS2_FORCEINLINE FVec2F operator+( const FVec2F& iOther ) const {  return  FVec2F( x + iOther.x, y + iOther.y ); }
-    ULIS2_FORCEINLINE FVec2F operator-(const FVec2F& iOther ) const {   return  FVec2F( x - iOther.x, y - iOther.y ); }
-    ULIS2_FORCEINLINE FVec2F operator-( float iValue ) const {          return  FVec2F( x - iValue, y - iValue ); }
-    ULIS2_FORCEINLINE FVec2F operator+( float iValue ) const {          return  FVec2F( x + iValue, y + iValue ); }
-    ULIS2_FORCEINLINE FVec2F operator*( float iValue ) const {          return  FVec2F( x * iValue, y * iValue ); }
-    ULIS2_FORCEINLINE FVec2F operator/( float iValue ) const {          return  FVec2F( x / iValue, y / iValue ); }
-    ULIS2_FORCEINLINE FVec2F operator*(const FVec2F& iOther ) const {   return  FVec2F( x * iOther.x, y * iOther.y ); }
-    ULIS2_FORCEINLINE FVec2F operator/(const FVec2F& iOther ) const {   return  FVec2F( x / iOther.x, y / iOther.y ); }
-    ULIS2_FORCEINLINE bool operator==(const FVec2F& iOther ) const {    return  x == iOther.x && y == iOther.y; }
-    ULIS2_FORCEINLINE bool operator!=(const FVec2F& iOther ) const {    return x != iOther.x || y != iOther.y; }
-    ULIS2_FORCEINLINE FVec2F operator-() const {                        return  FVec2F(-x, -y, -Z); }
-    ULIS2_FORCEINLINE FVec2F operator+=(const FVec2F& iOther ) {        x += iOther.x; y += iOther.y; return  *this; }
-    ULIS2_FORCEINLINE FVec2F operator-=(const FVec2F& iOther ) {        x -= iOther.x; y -= iOther.y; return  *this; }
-    ULIS2_FORCEINLINE FVec2F operator*=(float iValue) {                 x *= iValue; y *= iValue; return  *this; }
-    ULIS2_FORCEINLINE FVec2F operator/=(float iValue ) {                x /= iValue; y /= iValue; return  *this; }
-    ULIS2_FORCEINLINE FVec2F operator*=(const FVec2F& iOther ) {        x *= iOther.x; y *= iOther.y; return  *this; }
-    ULIS2_FORCEINLINE FVec2F operator/=(const FVec2F& iOther ) {        x /= iOther.x; y /= iOther.y; return  *this; }
+    ULIS2_FORCEINLINE float operator|( const TVec2& iOther ) const {   return  x * iOther.x + y * iOther.y; }
+    ULIS2_FORCEINLINE float DotProduct( const TVec2& iOther ) {        return  ( *this | B ); }
+    ULIS2_FORCEINLINE TVec2 operator+( const TVec2& iOther ) const {  return  TVec2( x + iOther.x, y + iOther.y ); }
+    ULIS2_FORCEINLINE TVec2 operator-(const TVec2& iOther ) const {   return  TVec2( x - iOther.x, y - iOther.y ); }
+    ULIS2_FORCEINLINE TVec2 operator-( float iValue ) const {          return  TVec2( x - iValue, y - iValue ); }
+    ULIS2_FORCEINLINE TVec2 operator+( float iValue ) const {          return  TVec2( x + iValue, y + iValue ); }
+    ULIS2_FORCEINLINE TVec2 operator*( float iValue ) const {          return  TVec2( x * iValue, y * iValue ); }
+    ULIS2_FORCEINLINE TVec2 operator/( float iValue ) const {          return  TVec2( x / iValue, y / iValue ); }
+    ULIS2_FORCEINLINE TVec2 operator*(const TVec2& iOther ) const {   return  TVec2( x * iOther.x, y * iOther.y ); }
+    ULIS2_FORCEINLINE TVec2 operator/(const TVec2& iOther ) const {   return  TVec2( x / iOther.x, y / iOther.y ); }
+    ULIS2_FORCEINLINE bool operator==(const TVec2& iOther ) const {    return  x == iOther.x && y == iOther.y; }
+    ULIS2_FORCEINLINE bool operator!=(const TVec2& iOther ) const {    return x != iOther.x || y != iOther.y; }
+    ULIS2_FORCEINLINE TVec2 operator-() const {                        return  TVec2(-x, -y, -Z); }
+    ULIS2_FORCEINLINE TVec2 operator+=(const TVec2& iOther ) {        x += iOther.x; y += iOther.y; return  *this; }
+    ULIS2_FORCEINLINE TVec2 operator-=(const TVec2& iOther ) {        x -= iOther.x; y -= iOther.y; return  *this; }
+    ULIS2_FORCEINLINE TVec2 operator*=(float iValue) {                 x *= iValue; y *= iValue; return  *this; }
+    ULIS2_FORCEINLINE TVec2 operator/=(float iValue ) {                x /= iValue; y /= iValue; return  *this; }
+    ULIS2_FORCEINLINE TVec2 operator*=(const TVec2& iOther ) {        x *= iOther.x; y *= iOther.y; return  *this; }
+    ULIS2_FORCEINLINE TVec2 operator/=(const TVec2& iOther ) {        x /= iOther.x; y /= iOther.y; return  *this; }
     ULIS2_FORCEINLINE float& operator[](int32 iIndex ) { ULIS2_ASSERT( iIndex >= 0 && iIndex < 3, "Bad Index" ); return  ( &x )[ iIndex ]; }
     ULIS2_FORCEINLINE float operator[]( int32 iIndex)const { ULIS2_ASSERT( iIndex >= 0 && iIndex < 3, "Bad Index" ); return  ( &x )[ iIndex ]; }
     ULIS2_FORCEINLINE void Normalize() { float dist = Distance(); x /= dist; y /= dist; }

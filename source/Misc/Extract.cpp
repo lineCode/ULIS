@@ -21,19 +21,19 @@
 
 ULIS2_NAMESPACE_BEGIN
 template< typename T1, typename T2 >
-void InvokeExtractInto( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSPP ) {
+void InvokeExtractInto( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP ) {
     const T1*   src = reinterpret_cast< const T1* >( iSrc );
     T2*         dst = reinterpret_cast< T2* >( iDst );
     const size_t len = iStridesSrc.size();
     for( size_t i = 0; i < iW; ++i ) {
         for( size_t j = 0; j < len; ++j )
             *( dst+ iStridesDst[j] ) = ConvType< T1, T2 >( *( src+ iStridesSrc[j] ) );
-        src+= iSPP;
-        dst+= iSPP;
+        src+= iSRCSPP;
+        dst+= iDSTSPP;
     }
 }
 
-typedef void (*fpDispatchedExtractInvoke)( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSPP );
+typedef void (*fpDispatchedExtractInvoke)( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP );
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType );
 
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType ) {
@@ -92,8 +92,8 @@ Extract( FThreadPool*           iThreadPool
     ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS2_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
     ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS2_ASSERT( !iSourceExtractMask,                          "Empty extract mask provided."                          );
-    ULIS2_ASSERT( !iDestinationExtractMask,                     "Empty extract mask provided."                          );
+    ULIS2_ASSERT( iSourceExtractMask,                          "Empty extract mask provided."                          );
+    ULIS2_ASSERT( iDestinationExtractMask,                     "Empty extract mask provided."                          );
     ULIS2_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
     ULIS2_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
 
@@ -112,10 +112,10 @@ Extract( FThreadPool*           iThreadPool
     sourceChannelsToExtract.reserve( max_channels_both );
     destinationChannelsToExtract.reserve( max_channels_both );
     for( int i = 0; i < max_channels_both; ++i ) {
-        if( iSourceExtractMask & 1 << i )
+        if( iSourceExtractMask & ( 1 << i ) )
             sourceChannelsToExtract.push_back( iSourceRawIndicesFlag ? i : srcFormatInfo.IDT[i] );
 
-        if( iDestinationExtractMask & 1 << i )
+        if( iDestinationExtractMask & ( 1 << i ) )
             destinationChannelsToExtract.push_back( iDestinationRawIndicesFlag ? i : dstFormatInfo.IDT[i] );
     }
 
@@ -135,7 +135,8 @@ Extract( FThreadPool*           iThreadPool
     }
 
     // Bake Params
-    uint8           spp = iSource->SamplesPerPixel();
+    uint8           src_spp = iSource->SamplesPerPixel();
+    uint8           dst_spp = iDestination->SamplesPerPixel();
     const tByte*    srb = iSource->DataPtr();
     tByte*          dsb = iDestination->DataPtr();
     size_t          src_bps = iSource->BytesPerScanLine();
@@ -148,7 +149,7 @@ Extract( FThreadPool*           iThreadPool
     ULIS2_ASSERT( fptr, "No dispatch invocation found." );
     ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, SRC, DST, sourceStrides, destinationStrides, spp )
+                                   , fptr, len, SRC, DST, sourceStrides, destinationStrides, src_spp, dst_spp )
 
     iDestination->Invalidate( iCallCB );
 }

@@ -29,7 +29,10 @@
 #include "Thread/ThreadPool.h"
 // Interface
 #include "Conv/Conv.h"
-#include "Misc/Swap.h"
+#include "Misc/Extract.h"
+#include "Misc/GammaCompress.h"
+#include "Misc/Premult.h"
+#include "Misc/Trim.h"
 #include "Blend/Blend.h"
 #include "Fill/Fill.h"
 #include "Clear/Clear.h"
