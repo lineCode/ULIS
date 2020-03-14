@@ -37,7 +37,7 @@ typedef void (*fpDispatchedExtractInvoke)( size_t iW, const tByte* iSrc, tByte* 
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType );
 
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType ) {
-        switch( iSrcType ) {
+    switch( iSrcType ) {
         case TYPE_UINT8: switch( iDstType ) {
                 case TYPE_UINT8:    return  InvokeExtractInto< uint8, uint8        >;
                 case TYPE_UINT16:   return  InvokeExtractInto< uint8, uint16       >;
@@ -92,8 +92,8 @@ Extract( FThreadPool*           iThreadPool
     ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS2_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
     ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS2_ASSERT( iSourceExtractMask,                          "Empty extract mask provided."                          );
-    ULIS2_ASSERT( iDestinationExtractMask,                     "Empty extract mask provided."                          );
+    ULIS2_ASSERT( iSourceExtractMask,                          "Empty extract mask provided."                           );
+    ULIS2_ASSERT( iDestinationExtractMask,                     "Empty extract mask provided."                           );
     ULIS2_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
     ULIS2_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
 
