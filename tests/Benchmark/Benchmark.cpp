@@ -240,11 +240,11 @@ int transform( int argc, char *argv[] ) {
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
     FBlock* src = new FBlock( size, size, format );
-    FRect dstmetrics = TransformMetrics( src->Rect(), mat, method );
+    FRect dstmetrics = TransformAffineMetrics( src->Rect(), mat, method );
     FBlock* dst = new FBlock( dstmetrics.w, dstmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();
     for( int l = 0; l < repeat; ++l )
-        Transform( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, src, dst, src->Rect(), mat, method );
+        TransformAffine( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, src, dst, src->Rect(), mat, method );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete src;

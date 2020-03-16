@@ -90,23 +90,23 @@ void
 SWindow::tickEvent() {
 
     float len = 150;
-    mEvolutiveAngle += 0.01f;
+    mEvolutiveAngle += 0.08f;
     float evoAngle0 = mEvolutiveAngle;
     float evoAngle1 = evoAngle0 + FMaths::kPIf / 2;
     float evoAngle2 = evoAngle1 + FMaths::kPIf / 2;
     float evoAngle3 = evoAngle2 + FMaths::kPIf / 2;
-    mCtrlPts[0].ctrlCW  = mCtrlPts[0].point + FVec2F( cos( evoAngle0 ) * 0, sin( evoAngle0 ) ) * len;
-    mCtrlPts[0].ctrlCCW = mCtrlPts[0].point + FVec2F( cos( evoAngle1 ) * 0, sin( evoAngle1 ) ) * len;
-    mCtrlPts[1].ctrlCW  = mCtrlPts[1].point + FVec2F( cos( evoAngle1 ) * 0, sin( evoAngle1 ) ) * len;
-    mCtrlPts[1].ctrlCCW = mCtrlPts[1].point + FVec2F( cos( evoAngle2 ) * 0, sin( evoAngle2 ) ) * len;
-    mCtrlPts[2].ctrlCW  = mCtrlPts[2].point + FVec2F( cos( evoAngle2 ) * 0, sin( evoAngle2 ) ) * len;
-    mCtrlPts[2].ctrlCCW = mCtrlPts[2].point + FVec2F( cos( evoAngle3 ) * 0, sin( evoAngle3 ) ) * len;
-    mCtrlPts[3].ctrlCW  = mCtrlPts[3].point + FVec2F( cos( evoAngle3 ) * 0, sin( evoAngle3 ) ) * len;
-    mCtrlPts[3].ctrlCCW = mCtrlPts[3].point + FVec2F( cos( evoAngle0 ) * 0, sin( evoAngle0 ) ) * len;
+    mCtrlPts[0].ctrlCW  = mCtrlPts[0].point + FVec2F( cos( evoAngle0 ), sin( evoAngle0 ) ) * len;
+    mCtrlPts[0].ctrlCCW = mCtrlPts[0].point + FVec2F( cos( evoAngle1 ), sin( evoAngle1 ) ) * len;
+    mCtrlPts[1].ctrlCW  = mCtrlPts[1].point + FVec2F( cos( evoAngle1 ), sin( evoAngle1 ) ) * len;
+    mCtrlPts[1].ctrlCCW = mCtrlPts[1].point + FVec2F( cos( evoAngle2 ), sin( evoAngle2 ) ) * len;
+    mCtrlPts[2].ctrlCW  = mCtrlPts[2].point + FVec2F( cos( evoAngle2 ), sin( evoAngle2 ) ) * len;
+    mCtrlPts[2].ctrlCCW = mCtrlPts[2].point + FVec2F( cos( evoAngle3 ), sin( evoAngle3 ) ) * len;
+    mCtrlPts[3].ctrlCW  = mCtrlPts[3].point + FVec2F( cos( evoAngle3 ), sin( evoAngle3 ) ) * len;
+    mCtrlPts[3].ctrlCCW = mCtrlPts[3].point + FVec2F( cos( evoAngle0 ), sin( evoAngle0 ) ) * len;
 
     Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mDST, mDST->Rect() );
 
-    TransformBezier( &mPool, ULIS2_BLOCKING, ULIS2_PERF_MT | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BILINEAR );
+    TransformBezier( &mPool, ULIS2_BLOCKING, ULIS2_PERF_MT | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BICUBIC );
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }
