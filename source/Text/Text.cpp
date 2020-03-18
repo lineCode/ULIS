@@ -109,7 +109,7 @@ TextMetrics( std::wstring           iText
     FT_Vector     pen;
 
     FT_Error error = 0;
-    FT_Face face = iFont.Handle();
+    FT_Face face = reinterpret_cast< FT_Face >( iFont.Handle() );
     error = FT_Set_Pixel_Sizes( face, 0, iSize );
     ULIS2_ASSERT( !error, "Error setting face size" );
     slot = face->glyph;

@@ -13,6 +13,9 @@
 */
 #include "Text/FontEngine.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFontEngine
@@ -20,21 +23,21 @@ ULIS2_NAMESPACE_BEGIN
 //----------------------------------------------------------- Construction / Destruction
 FFontEngine::~FFontEngine()
 {
-    FT_Done_FreeType( mHandle );
+    FT_Done_FreeType( reinterpret_cast< FT_Library >( mHandle ) );
 }
 
 
 FFontEngine::FFontEngine()
     : mHandle( nullptr )
 {
-    FT_Error error = FT_Init_FreeType( &mHandle );
+    FT_Error error = FT_Init_FreeType( reinterpret_cast< FT_Library* >( &mHandle ) );
     ULIS2_ASSERT( !error, "Error initializing freetype2" );
 }
 
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-FT_Library
+void*
 FFontEngine::Handle() const
 {
     return  mHandle;

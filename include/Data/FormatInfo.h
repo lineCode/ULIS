@@ -22,18 +22,18 @@ struct ULIS2_API FFormatInfo
     ~FFormatInfo();
     FFormatInfo( tFormat iFMT );
     tFormat FMT;    // Format
+    eType   TP;     // Type
+    eColorModel CM; // Color Model
+    uint8*  IDT;    // Index Table
     uint8   BPC;    // Bytes Per Channel
     uint8   NCC;    // Num Color Channels
     uint8   HEA;    // Has Extra Alpha
     uint8   COD;    // ReverseSwapped Code
     uint8   SPP;    // Samples Per Pixel
     uint8   BPP;    // Bytes Per Pixel
-    uint8*  IDT;    // Index Table
     uint8   AID;    // Alpha Index
     uint8   REV;    // Reversed
     uint8   SWA;    // Swapped
-    eType   TP;     // Type
-    eColorModel CM; // Color Model
 };
 
 ULIS2_NAMESPACE_END

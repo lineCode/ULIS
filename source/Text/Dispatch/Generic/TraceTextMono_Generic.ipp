@@ -76,7 +76,7 @@ TraceTextMono_Generic( std::shared_ptr< _FPrivateTextInfo > iTextParams ) {
     FT_Vector     pen;
 
     FT_Error error = 0;
-    FT_Face face = iTextParams->font->Handle();
+    FT_Face face = reinterpret_cast< FT_Face >( iTextParams->font->Handle() );
     error = FT_Set_Pixel_Sizes( face, 0, iTextParams->size );
     ULIS2_ASSERT( !error, "Error setting face size" );
 

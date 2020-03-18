@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Thread/ThreadPool.h"
+#include "Maths/Maths.h"
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -23,7 +24,8 @@ FThreadPool::FThreadPool(unsigned int n)
     , stop( false )
     , processed( 0 )
 {
-    for( unsigned int i = 0; i < n; ++i )
+    unsigned int max = FMaths::Min( n, std::thread::hardware_concurrency() );
+    for( unsigned int i = 0; i < max; ++i )
         workers.emplace_back( std::bind( &FThreadPool::ThreadProcess, this ) );
 }
 

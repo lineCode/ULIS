@@ -12,7 +12,7 @@ TiledBlock
                 ├ filled_chunk:         ptr* to block covering the quadtree surface segment in TilePool 
                 ├ empty_chunk:         ptr* to empty block in TilePool
                 └ data_leaf_chunk:    ptr* to block covering the specified tile in TilePool
-                
+
 Single Image Creation and Manipulation Scenario:
     An Empty TiledBlock is created
     Its map is empty
@@ -66,3 +66,46 @@ TiledBlock OP & Geometry:
     A finer grained geometry can also be obtained by running trim transparency alpha on the edges tiles.
 
 
+
+===============================================================================================================================================
+===============================================================================================================================================
+===============================================================================================================================================
+// RLE ENCODE:
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Perform Run Length Encoding (RLE) data compression algorithm
+// on string str
+string encode(string str)
+{
+    // stores output string
+    string encoding = "";
+    int count;
+
+    for (int i = 0; str[i]; i++)
+    {
+        // count occurrences of character at index i
+        count = 1;
+        while (str[i] == str[i + 1])
+            count++, i++;
+
+        // append current character and its count to the result
+        encoding += to_string(count) + str[i];
+    }
+
+    return encoding;
+}
+
+// main function
+int main()
+{
+    string str = "ABBCCCD";
+
+    cout << encode(str);
+
+    return 0;
+}
+===============================================================================================================================================
+===============================================================================================================================================
+===============================================================================================================================================

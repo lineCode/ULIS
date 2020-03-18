@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Data/Block.h"
-#include "Base/UUID.h"
+//#include "Base/UUID.h"
 #include "Maths/Geometry.h"
 #include "Base/CRC32.h"
 #include "Base/MD5.h"
@@ -40,7 +40,7 @@ FBlock::FBlock( int iWidth
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
-    , mUUID( GenerateWeakUUID( 16 ) )
+    //, mUUID( GenerateWeakUUID( 16 ) )
     , mInfo( iFormat )
 {
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
@@ -75,7 +75,7 @@ FBlock::FBlock( tByte* iData
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
     , mProfile( iProfile )
-    , mUUID( GenerateWeakUUID( 16 ) )
+    //, mUUID( GenerateWeakUUID( 16 ) )
     , mInfo( iFormat )
 {
     ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
@@ -326,11 +326,13 @@ FBlock::MD5() const
 }
 
 
+/*
 std::string
 FBlock::UUID() const
 {
     return  mUUID;
 }
+*/
 
 uint8*
 FBlock::IndexTable() const

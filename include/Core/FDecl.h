@@ -32,6 +32,9 @@ class   FFontEngine;
 struct  FFormatInfo;
 class   FFont;
 class   FTransform2D;
+class   FTilePool;
+class   FTiledBlock;
+class   FTileElement;
 
 template< typename T >
 struct TVec2;

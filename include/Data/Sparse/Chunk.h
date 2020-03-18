@@ -5,7 +5,7 @@
 *   ULIS2
 *__________________
 *
-* @file         TiledBlock.h
+* @file         Chunk.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the FTiledBlock class.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -18,8 +18,8 @@
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// FTiledBlock
-class ULIS2_API FTiledBlock
+/// IChunk
+class ULIS2_API IChunk
 {
 };
 

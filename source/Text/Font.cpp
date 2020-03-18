@@ -15,6 +15,9 @@
 #include "Text/FontEngine.h"
 #include "Text/FontRegistry.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFont
@@ -23,7 +26,7 @@ ULIS2_NAMESPACE_BEGIN
 FFont::~FFont()
 {
     if( mHandle )
-        FT_Done_Face( mHandle );
+        FT_Done_Face( reinterpret_cast< FT_Face >( mHandle ) );
 }
 
 
@@ -33,7 +36,7 @@ FFont::FFont( const FFontRegistry& iFontRegistry, const std::string& iFamily, co
     , mFontRegistry( iFontRegistry )
 {
     std::string fpath = mFontRegistry.FuzzyFindFontPath( iFamily, iStyle );
-    FT_Error error = FT_New_Face( mFontEngine.Handle(), fpath.c_str(), 0, &mHandle );
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.Handle() ), fpath.c_str(), 0, reinterpret_cast< FT_Face* >( &mHandle ) );
     ULIS2_ASSERT( !error, "Error initializing font handle" );
 }
 
@@ -48,7 +51,7 @@ FFont::FFont( FFont& iOther )
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-FT_Face
+void*
 FFont::Handle() const
 {
     return  mHandle;

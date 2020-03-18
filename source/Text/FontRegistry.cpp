@@ -27,6 +27,9 @@
 #include <Windows.h>
 #endif
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFontStyleKey
@@ -199,7 +202,7 @@ FFontRegistry::Load() {
 
     for( auto it : reg.GetMap() ) {
         FT_Face face;
-        FT_Error load_error = FT_New_Face( mFontEngine.Handle(), it.second.c_str(), 0, &face );
+        FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.Handle() ), it.second.c_str(), 0, &face );
         ULIS2_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );

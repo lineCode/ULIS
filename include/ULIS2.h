@@ -46,3 +46,8 @@
 #include "Raster/Draw.h"
 #include "Mix/Mix.h"
 #include "Transform/Transform.h"
+// Sparse
+#include "Data/Sparse/Chunk.h"
+#include "Data/Sparse/TiledBlock.h"
+#include "Data/Sparse/TilePool.h"
+

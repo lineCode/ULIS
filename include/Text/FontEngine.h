@@ -14,9 +14,6 @@
 #pragma once
 #include "Core/Core.h"
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFontEngine
@@ -31,11 +28,11 @@ public:
 
 public:
     // Public API
-    FT_Library Handle() const;
+    void* Handle() const;
 
 private:
     // Private Data Members
-    FT_Library mHandle;
+    void* mHandle;
 };
 ULIS2_NAMESPACE_END
 

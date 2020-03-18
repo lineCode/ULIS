@@ -31,6 +31,7 @@ public:
     // Construction / Destruction
     FThreadPool( unsigned int iCount = std::thread::hardware_concurrency() );
     ~FThreadPool();
+    static uint32 MaxWorkers() { return  std::thread::hardware_concurrency(); }
 
 public:
     // Public API

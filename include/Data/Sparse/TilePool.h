@@ -5,79 +5,101 @@
 *   ULIS2
 *__________________
 *
-* @file         TiledBlock.h
+* @file         TilePool.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FTiledBlock class.
+* @brief        This file provides the declaration for the TilePool class.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
-#include "Data/Block.h"
 #include "Maths/Geometry.h"
+#include <list>
+#include <forward_list>
+#include <unordered_map>
+#include <chrono>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// FTile
-class ULIS2_API FTile {
-public:
-    // Construction / Destruction
-    virtual ~FTile();
-
-    FTile( int iSize
-         , tFormat iFormat
-         , FColorProfile* iProfile = nullptr );
-};
-
-/////////////////////////////////////////////////////
 /// FTiledBlock
-class ULIS2_API FTiledBlock
+class ULIS2_API FTilePool
 {
 public:
     // Construction / Destruction
-    virtual ~FTiledBlock();
-    FTiledBlock( int iWidth
-               , int iHeight
-               , tFormat iFormat
-               , FColorProfile* iProfile = nullptr );
+    virtual ~FTilePool();
+    FTilePool( int iWidth
+             , int iHeight
+             , tFormat iFormat
+             , FColorProfile* iProfile
+             , uint64 iRAMUsageCapTarget
+             , uint64 iSWAPUsageCapTarget
+             , uint32 iDesiredPoolWorkers
+             , uint32 iTimeOutMS );
 
 public:
     // Public API
-    tByte*                  PixelPtr( int iX, int iY );
-    void                    AssignProfile( FColorProfile* iProfile );
-    const tByte*            PixelPtr( int iX, int iY )                          const;
-    tSize                   Width()                                             const;
-    tSize                   Height()                                            const;
-    tSize                   BytesPerSample()                                    const;
-    tSize                   BytesPerPixel()                                     const;
-    tFormat                 Format()                                            const;
-    eColorModel             Model()                                             const;
-    eType                   Type()                                              const;
-    bool                    HasAlpha()                                          const;
-    bool                    Swapped()                                           const;
-    bool                    Reversed()                                          const;
-    uint8                   SamplesPerPixel()                                   const;
-    uint8                   NumColorChannels()                                  const;
-    FColorProfile*          Profile()                                           const;
-    uint8                   RedirectedIndex( uint8 iIndex )                     const;
-    uint8                   AlphaIndex()                                        const;
-    void                    Invalidate( bool iCall = true )                     const;
-    void                    Invalidate( const FRect& iRect, bool iCall = true ) const;
-    FRect                   Rect()                                              const;
-    FPixelValue             PixelValue( int iX, int iY )                        const;
-    FPixelProxy             PixelProxy( int iX, int iY );
-    const FPixelProxy       PixelProxy( int iX, int iY )                        const;
-    std::string             UUID()                                              const;
-    uint8*                  IndexTable()                                        const;
-    const FFormatInfo&      FormatInfo()                                        const;
+    const FVec2I&           TileSize() const;
+    uint32                  EmptyHash() const;
+    const FBlock*           EmptyTile() const;
+    tFormat                 TileFormat() const;
+    const FFormatInfo&      TileFormatInfo() const;
+    const FColorProfile*    TileColorProfile() const;
+    uint64                  CurrentRAMUsage() const;
+    uint64                  CurrentSwapUsage() const;
+    uint64                  RAMUsageCapTarget() const;
+    uint64                  SWAPUsageCapTarget() const;
+    uint64                  CurrentTotalMemoryUsage() const;
+    void                    SetRAMUsageCapTarget( uint64 iValue );
+    void                    SetSWAPUsageCapTarget( uint64 iValue );
+    long long               TimeOutMS() const;
+    void                    SetTimeOutMS( uint32 iValue );
+
+    size_t  NumTilesScheduledForClear() const;
+    size_t  NumFreshTilesAvailableForQuery() const;
+    size_t  NumDirtyHashedTilesCurrentlyInUse() const;
+    size_t  NumCorrectlyHashedTilesCurrentlyInUse() const;
+
+public:
+    // Core API
+    void Tick();
+    void PurgeAllNow();
+    void AllocateNow( uint32 iNum );
+    void ClearNow( uint32 iNum );
+    FTileElement* QueryFreshTile();
 
 private:
-    // Private Data Members
-    FVec2F          mPos;
-    FVec2I          mSize;
-    FColorProfile*  mProfile;
-    std::string     mUUID;
-    FFormatInfo     mInfo;
+    // Tiles Info
+    FVec2I                      mTileSize;
+    tFormat                     mTileFormat;
+    FColorProfile*              mTileColorProfile;
+
+    // Empty Tile Stored Only Once
+    FBlock*                     mEmptyTile;
+    uint32                      mEmptyHash;
+
+    // Memory Info
+    uint64                      mSWAPUsageCapTarget;
+    uint64                      mRAMUsageCapTarget;
+    uint64                      mCurrentRAMUSage;
+    uint32                      mBytesPerTile;
+
+    // Time Info
+    std::chrono::milliseconds   mTimeOutMS;
+    bool                        mTickForbidden;
+
+    // Size Info
+    uint32 mNumTilesScheduledForClear;
+    uint32 mNumFreshTilesAvailableForQuery;
+
+    // Storage Containers
+    std::forward_list< FBlock* >                mTilesScheduledForClear_slist;
+    std::forward_list< FBlock* >                mFreshTilesAvailableForQuery_slist;
+    std::list< FTileElement* >                  mDirtyHashedTilesCurrentlyInUse_dlist;
+    std::unordered_map< uint32, FTileElement* > mCorrectlyHashedTilesCurrentlyInUse_umap;
+
+    // Thread Work Items
+    FThreadPool*        mThreadPool;
+    FHostDeviceInfo*    mHost;
 };
 
 ULIS2_NAMESPACE_END
