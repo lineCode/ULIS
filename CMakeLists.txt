@@ -128,6 +128,7 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/eigen/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
     ${OpenCL_INCLUDE_DIR}
     PRIVATE

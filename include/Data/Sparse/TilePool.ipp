@@ -5,27 +5,28 @@
 *   ULIS2
 *__________________
 *
-* @file         TilePool.cpp
+* @file         TilePool.ippp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the TilePool class.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#pragma once
 #include "Data/Sparse/TilePool.h"
 #include "Data/Sparse/Tile.h"
-#include "Base/CRC32.h"
 #include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
 #include "Thread/ThreadPool.h"
 #include "Clear/Clear.h"
 #include <thread>
+#include <algorithm>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FTilePool
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FTilePool::~FTilePool() {
+template< uint8 _MICRO, uint8 _MACRO > FTilePool< _MICRO, _MACRO >::~FTilePool() {
     PurgeAllNow();
     mThreadPool->WaitForCompletion();
     delete  mThreadPool;
@@ -33,15 +34,14 @@ FTilePool::~FTilePool() {
     delete  mEmptyTile;
 }
 
-FTilePool::FTilePool( int iWidth
-                    , int iHeight
-                    , tFormat iFormat
-                    , FColorProfile* iProfile
-                    , uint64 iRAMUsageCapTarget
-                    , uint64 iSWAPUsageCapTarget
-                    , uint32 iDesiredPoolWorkers
-                    , uint32 iTimeOutMS )
-    : mTileSize                                 ( iWidth, iHeight       )
+template< uint8 _MICRO, uint8 _MACRO > FTilePool< _MICRO, _MACRO >::FTilePool( tFormat iFormat
+                                                                             , FColorProfile* iProfile
+                                                                             , uint64 iRAMUsageCapTarget
+                                                                             , uint64 iSWAPUsageCapTarget
+                                                                             , uint32 iDesiredPoolWorkers
+                                                                             , uint32 iTimeOutMS )
+    : mPixelDim                                 ( pow( 2, _MICRO )      )
+    , mTileSize                                 ( mPixelDim, mPixelDim  )
     , mTileFormat                               ( iFormat               )
     , mEmptyTile                                ( nullptr               )
     , mEmptyHash                                ( 0                     )
@@ -64,7 +64,7 @@ FTilePool::FTilePool( int iWidth
     mThreadPool = new FThreadPool( iDesiredPoolWorkers );
     mHost = new FHostDeviceInfo( FHostDeviceInfo::Detect() );
 
-    mEmptyTile = new FBlock( iWidth, iHeight, iFormat, iProfile );
+    mEmptyTile = new FBlock( mPixelDim, mPixelDim, iFormat, iProfile );
     ClearRaw( mEmptyTile, ULIS2_NOCB );
     mEmptyHash = mEmptyTile->CRC32();
     mBytesPerTile = mEmptyTile->BytesTotal();
@@ -72,29 +72,30 @@ FTilePool::FTilePool( int iWidth
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-const FVec2I&           FTilePool::TileSize()                               const   { return  mTileSize;                                        }
-uint32                  FTilePool::EmptyHash()                              const   { return  mEmptyHash;                                       }
-const FBlock*           FTilePool::EmptyTile()                              const   { return  mEmptyTile;                                       }
-tFormat                 FTilePool::TileFormat()                             const   { return  mTileFormat;                                      }
-const FFormatInfo&      FTilePool::TileFormatInfo()                         const   { return  mEmptyTile->FormatInfo();                         }
-const FColorProfile*    FTilePool::TileColorProfile()                       const   { return  mTileColorProfile;                                }
-uint64                  FTilePool::CurrentRAMUsage()                        const   { return  mCurrentRAMUSage;                                 }
-uint64                  FTilePool::CurrentSwapUsage()                       const   { return  0;                                                }
-uint64                  FTilePool::RAMUsageCapTarget()                      const   { return  mRAMUsageCapTarget;                               }
-uint64                  FTilePool::SWAPUsageCapTarget()                     const   { return  mSWAPUsageCapTarget;                              }
-uint64                  FTilePool::CurrentTotalMemoryUsage()                const   { return  mCurrentRAMUSage;                                 }
-long long               FTilePool::TimeOutMS()                              const   { return  mTimeOutMS.count();                               }
-void                    FTilePool::SetRAMUsageCapTarget( uint64 iValue )            { mRAMUsageCapTarget  = iValue;                             }
-void                    FTilePool::SetSWAPUsageCapTarget( uint64 iValue )           { mSWAPUsageCapTarget = iValue;                             }
-void                    FTilePool::SetTimeOutMS( uint32 iValue )                    { mTimeOutMS = std::chrono::milliseconds( iValue );         }
-size_t                  FTilePool::NumTilesScheduledForClear()              const   { return  mNumTilesScheduledForClear;                       }
-size_t                  FTilePool::NumFreshTilesAvailableForQuery()         const   { return  mNumFreshTilesAvailableForQuery;                  }
-size_t                  FTilePool::NumDirtyHashedTilesCurrentlyInUse()      const   { return  mDirtyHashedTilesCurrentlyInUse_dlist.size();     }
-size_t                  FTilePool::NumCorrectlyHashedTilesCurrentlyInUse()  const   { return  mCorrectlyHashedTilesCurrentlyInUse_umap.size();  }
-//--------------------------------------------------------------------------------------
+template< uint8 _MICRO, uint8 _MACRO > const FVec2I&        FTilePool< _MICRO, _MACRO >::TileSize()                                 const   { return  mTileSize;                                        }
+template< uint8 _MICRO, uint8 _MACRO > uint32               FTilePool< _MICRO, _MACRO >::EmptyHash()                                const   { return  mEmptyHash;                                       }
+template< uint8 _MICRO, uint8 _MACRO > const FBlock*        FTilePool< _MICRO, _MACRO >::EmptyTile()                                const   { return  mEmptyTile;                                       }
+template< uint8 _MICRO, uint8 _MACRO > tFormat              FTilePool< _MICRO, _MACRO >::TileFormat()                               const   { return  mTileFormat;                                      }
+template< uint8 _MICRO, uint8 _MACRO > const FFormatInfo&   FTilePool< _MICRO, _MACRO >::TileFormatInfo()                           const   { return  mEmptyTile->FormatInfo();                         }
+template< uint8 _MICRO, uint8 _MACRO > const FColorProfile* FTilePool< _MICRO, _MACRO >::TileColorProfile()                         const   { return  mTileColorProfile;                                }
+template< uint8 _MICRO, uint8 _MACRO > uint64               FTilePool< _MICRO, _MACRO >::CurrentRAMUsage()                          const   { return  mCurrentRAMUSage;                                 }
+template< uint8 _MICRO, uint8 _MACRO > uint64               FTilePool< _MICRO, _MACRO >::CurrentSwapUsage()                         const   { return  0;                                                }
+template< uint8 _MICRO, uint8 _MACRO > uint64               FTilePool< _MICRO, _MACRO >::RAMUsageCapTarget()                        const   { return  mRAMUsageCapTarget;                               }
+template< uint8 _MICRO, uint8 _MACRO > uint64               FTilePool< _MICRO, _MACRO >::SWAPUsageCapTarget()                       const   { return  mSWAPUsageCapTarget;                              }
+template< uint8 _MICRO, uint8 _MACRO > uint64               FTilePool< _MICRO, _MACRO >::CurrentTotalMemoryUsage()                  const   { return  mCurrentRAMUSage;                                 }
+template< uint8 _MICRO, uint8 _MACRO > long long            FTilePool< _MICRO, _MACRO >::TimeOutMS()                                const   { return  mTimeOutMS.count();                               }
+template< uint8 _MICRO, uint8 _MACRO > void                 FTilePool< _MICRO, _MACRO >::SetRAMUsageCapTarget( uint64 iValue )              { mRAMUsageCapTarget  = iValue;                             }
+template< uint8 _MICRO, uint8 _MACRO > void                 FTilePool< _MICRO, _MACRO >::SetSWAPUsageCapTarget( uint64 iValue )             { mSWAPUsageCapTarget = iValue;                             }
+template< uint8 _MICRO, uint8 _MACRO > void                 FTilePool< _MICRO, _MACRO >::SetTimeOutMS( uint32 iValue )                      { mTimeOutMS = std::chrono::milliseconds( iValue );         }
+template< uint8 _MICRO, uint8 _MACRO > size_t               FTilePool< _MICRO, _MACRO >::NumTilesScheduledForClear()                const   { return  mNumTilesScheduledForClear;                       }
+template< uint8 _MICRO, uint8 _MACRO > size_t               FTilePool< _MICRO, _MACRO >::NumFreshTilesAvailableForQuery()           const   { return  mNumFreshTilesAvailableForQuery;                  }
+template< uint8 _MICRO, uint8 _MACRO > size_t               FTilePool< _MICRO, _MACRO >::NumDirtyHashedTilesCurrentlyInUse()        const   { return  mDirtyHashedTilesCurrentlyInUse_dlist.size();     }
+template< uint8 _MICRO, uint8 _MACRO > size_t               FTilePool< _MICRO, _MACRO >::NumCorrectlyHashedTilesCurrentlyInUse()    const   { return  mCorrectlyHashedTilesCurrentlyInUse_umap.size();  }
+template< uint8 _MICRO, uint8 _MACRO > size_t               FTilePool< _MICRO, _MACRO >::NumRegisteredTiledBlocks()                 const   { return  mRegisteredTiledBlocks.size();                    }
 //----------------------------------------------------------------------------- Core API
+template< uint8 _MICRO, uint8 _MACRO >
 void
-FTilePool::Tick() {
+FTilePool< _MICRO, _MACRO >::Tick() {
     if( mTickForbidden )
         return;
 
@@ -105,9 +106,6 @@ FTilePool::Tick() {
     auto    span_new    = micro_delta * 3;
     auto    span_clear  = micro_delta * 4;
     std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
-
-    std::cout << "Current RAM: " << mCurrentRAMUSage    << std::endl;
-    std::cout << "Target  RAM: " << mRAMUsageCapTarget  << std::endl;
 
     { // Del
         while( !( mTilesScheduledForClear_slist.empty() ) ) {
@@ -159,6 +157,7 @@ FTilePool::Tick() {
             mTilesScheduledForClear_slist.pop_front();
             --mNumTilesScheduledForClear;
             Clear( mThreadPool, ULIS2_BLOCKING, 0, *mHost, ULIS2_NOCB, ptr, ptr->Rect() );
+
             mFreshTilesAvailableForQuery_slist.emplace_front( ptr );
             ++mNumFreshTilesAvailableForQuery;
             auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::steady_clock::now() - start_time );
@@ -169,8 +168,9 @@ FTilePool::Tick() {
 }
 
 
+template< uint8 _MICRO, uint8 _MACRO >
 void
-FTilePool::PurgeAllNow() {
+FTilePool< _MICRO, _MACRO >::PurgeAllNow() {
     mTickForbidden = true;
     // Purge Scheduled For Clear
     for( auto it : mTilesScheduledForClear_slist            ) delete it;
@@ -186,10 +186,15 @@ FTilePool::PurgeAllNow() {
         delete it.second;
     }
 
+    for( auto it : mRegisteredTiledBlocks ) {
+        delete it;
+    }
+
     mTilesScheduledForClear_slist.clear();
     mFreshTilesAvailableForQuery_slist.clear();
     mDirtyHashedTilesCurrentlyInUse_dlist.clear();
     mCorrectlyHashedTilesCurrentlyInUse_umap.clear();
+    mRegisteredTiledBlocks.clear();
     mCurrentRAMUSage = 0;
     SetRAMUsageCapTarget( 0 );
     SetSWAPUsageCapTarget( 0 );
@@ -198,8 +203,9 @@ FTilePool::PurgeAllNow() {
     mTickForbidden = false;
 }
 
+template< uint8 _MICRO, uint8 _MACRO >
 void
-FTilePool::AllocateNow( uint32 iNum ) {
+FTilePool< _MICRO, _MACRO >::AllocateNow( uint32 iNum ) {
     mTickForbidden = true;
     for( uint32 i = 0; i < iNum; ++i ) {
         mTilesScheduledForClear_slist.emplace_front( new FBlock( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile ) );
@@ -209,8 +215,9 @@ FTilePool::AllocateNow( uint32 iNum ) {
     mTickForbidden = false;
 }
 
+template< uint8 _MICRO, uint8 _MACRO >
 void
-FTilePool::ClearNow( uint32 iNum ) {
+FTilePool< _MICRO, _MACRO >::ClearNow( uint32 iNum ) {
     mTickForbidden = true;
 
     if( iNum > mNumTilesScheduledForClear )
@@ -228,8 +235,9 @@ FTilePool::ClearNow( uint32 iNum ) {
     mTickForbidden = false;
 }
 
+template< uint8 _MICRO, uint8 _MACRO >
 FTileElement*
-FTilePool::QueryFreshTile() {
+FTilePool< _MICRO, _MACRO >::QueryFreshTile() {
     mTickForbidden = true;
     if( !mNumFreshTilesAvailableForQuery )
         ClearNow( 1 );
@@ -240,6 +248,21 @@ FTilePool::QueryFreshTile() {
     mDirtyHashedTilesCurrentlyInUse_dlist.push_back( te );
     mTickForbidden = false;
     return  te;
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+FTiledBlock< _MICRO, _MACRO >*
+FTilePool< _MICRO, _MACRO >::CreateNewTiledBlock() {
+    mRegisteredTiledBlocks.emplace_back( new FTiledBlock< _MICRO, _MACRO >( this ) );
+    return  mRegisteredTiledBlocks.back();
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+void
+FTilePool< _MICRO, _MACRO >::RequestTiledBlockDeletion( FTiledBlock< _MICRO, _MACRO >* iBlock ) {
+    auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), iBlock );
+    if( it != mRegisteredTiledBlocks.end() )
+        mRegisteredTiledBlocks.erase( it );
 }
 
 ULIS2_NAMESPACE_END

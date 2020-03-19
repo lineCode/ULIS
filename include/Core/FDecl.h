@@ -32,14 +32,16 @@ class   FFontEngine;
 struct  FFormatInfo;
 class   FFont;
 class   FTransform2D;
-class   FTilePool;
-class   FTiledBlock;
-class   FTileElement;
+struct  FTileElement;
+template< uint8 _MICRO, uint8 _MACRO > class FTilePool;
+template< uint8 _MICRO, uint8 _MACRO > class FTiledBlock;
 
 template< typename T >
 struct TVec2;
 typedef TVec2< int >            FVec2I;
 typedef TVec2< float >          FVec2F;
+typedef TVec2< int64 >          FVec2I64;
+typedef TVec2< int32 >          FVec2I32;
 
 ULIS2_NAMESPACE_END
 

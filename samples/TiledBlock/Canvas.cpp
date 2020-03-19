@@ -20,6 +20,14 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 
+int Mo2O( int iO ) {
+    return  iO * 1000 * 1000;
+}
+
+int O2Mo( int iMo ) {
+    return  iMo / 1000 / 1000;
+}
+
 SCanvas::~SCanvas() {
     delete  mTimer;
     delete  mTilePool;
@@ -34,6 +42,9 @@ SCanvas::SCanvas()
     : mHost( FHostDeviceInfo::Detect() )
     , mPool()
     , mCanvas(      nullptr )
+    , mFontEngine()
+    , mFontReg( mFontEngine )
+    , mFont( mFontReg.LoadFont( "Courrier NEw", "Regular" ) )
     , mTilePool(    nullptr )
     , mImage(       nullptr )
     , mPixmap(      nullptr )
@@ -53,15 +64,21 @@ SCanvas::SCanvas()
     this->QWidget::setFixedSize( mPixmap->size() );
 
     mTimer = new QTimer();
-    mTimer->setInterval( 1000.0 / 24.0 );
+    mTimer->setInterval( 1000.0 / 60.0 );
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 
-    int tileSize    =   64;         // px
-    uint64 maxRAM   =   100000;     // 1 billion Bytes, 1 Gb
-    int timeoutms   =   20;
-    mTilePool = new FTilePool( tileSize, tileSize, ULIS2_FORMAT_RGBA8, nullptr, maxRAM, 0, FThreadPool::MaxWorkers(), timeoutms );
-    mTilePool->ClearNow( 1000 );
+    uint64 maxRAM   = Mo2O( 0 );
+    int timeoutms   = 8;
+    mTilePool = new FTilePool< MICRO_64, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr, maxRAM, 0, FThreadPool::MaxWorkers(), timeoutms );
+    //mTilePool->ClearNow( 1000 );
+    mTileBlock = mTilePool->CreateNewTiledBlock();
+
+    mRAMUSAGEBLOCK1 = new FBlock( 300, 100, ULIS2_FORMAT_RGBA8 );
+    mRAMUSAGEBLOCK2 = new FBlock( 300, 100, ULIS2_FORMAT_RGBA8 );
+    mRAMUSAGESWAPBUFFER = mRAMUSAGEBLOCK1;
+    Clear( &mPool, ULIS2_BLOCKING, perfIntent, mHost, ULIS2_NOCB, mRAMUSAGEBLOCK1, mRAMUSAGEBLOCK1->Rect() );
+    Clear( &mPool, ULIS2_BLOCKING, perfIntent, mHost, ULIS2_NOCB, mRAMUSAGEBLOCK2, mRAMUSAGEBLOCK2->Rect() );
 }
 
 
@@ -83,19 +100,19 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
         mTilePool->SetRAMUsageCapTarget( 0 );
 
     if( event->key() == Qt::Key::Key_1 )
-        mTilePool->SetRAMUsageCapTarget( 100000000 );
+        mTilePool->SetRAMUsageCapTarget( Mo2O( 100 ) );
 
     if( event->key() == Qt::Key::Key_2 )
-        mTilePool->SetRAMUsageCapTarget( 200000000 );
+        mTilePool->SetRAMUsageCapTarget( Mo2O( 200 ) );
 
     if( event->key() == Qt::Key::Key_3 )
-        mTilePool->SetRAMUsageCapTarget( 400000000 );
+        mTilePool->SetRAMUsageCapTarget( Mo2O( 400 ) );
 
     if( event->key() == Qt::Key::Key_4 )
-        mTilePool->SetRAMUsageCapTarget( 1000000000 );
+        mTilePool->SetRAMUsageCapTarget( Mo2O( 1000 ) );
 
     if( event->key() == Qt::Key::Key_5 )
-        mTilePool->SetRAMUsageCapTarget( 2000000000 );
+        mTilePool->SetRAMUsageCapTarget( Mo2O( 2000 ) );
 
     if( event->key() == Qt::Key::Key_Plus ) {
         mTilePool->PurgeAllNow();
@@ -106,7 +123,36 @@ void
 SCanvas::tickEvent() {
     mTilePool->Tick();
 
+    int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
+    int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
+    auto cramu = mTilePool->CurrentRAMUsage();
+    float maxramu = Mo2O( 2000 );
+    float tramu = cramu / maxramu;
+    int iramu = int( tramu * HH );
+    for( int i = 0; i < iramu; ++i ) {
+        FPixelProxy prox = mRAMUSAGESWAPBUFFER->PixelProxy( WW, HH - i );
+        prox.SetR8( 20 );
+        prox.SetG8( 80 );
+        prox.SetB8( 200 );
+        prox.SetA8( 255 );
+    }
+
     Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mCanvas, mCanvas->Rect() );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Target  RAM            : " + std::to_wstring( mTilePool->RAMUsageCapTarget() ),                        mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 10 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Current RAM            : " + std::to_wstring( mTilePool->CurrentRAMUsage() ),                          mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 20 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Scheduled For Clear: " + std::to_wstring( mTilePool->NumTilesScheduledForClear() ),                mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 30 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Available For Query: " + std::to_wstring( mTilePool->NumFreshTilesAvailableForQuery() ),           mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 40 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Dirty In Use       : " + std::to_wstring( mTilePool->NumDirtyHashedTilesCurrentlyInUse() ),        mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 50 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Correct In Use     : " + std::to_wstring( mTilePool->NumCorrectlyHashedTilesCurrentlyInUse() ),    mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 60 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Registered Blocks  : " + std::to_wstring( mTilePool->NumRegisteredTiledBlocks() ),                 mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 70 ) ), ULIS2_NOAA );
+    Copy( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mRAMUSAGESWAPBUFFER, mCanvas, mRAMUSAGESWAPBUFFER->Rect(), FVec2I( 10, 80 ) );
+
+    FBlock* oldram = mRAMUSAGESWAPBUFFER;
+    FBlock* newram = mRAMUSAGESWAPBUFFER == mRAMUSAGEBLOCK1 ? mRAMUSAGEBLOCK2 : mRAMUSAGEBLOCK1;
+    Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, newram, newram->Rect() );
+    Copy( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, oldram, newram, oldram->Rect(), FVec2I( -1, 0 ) );
+    mRAMUSAGESWAPBUFFER = newram;
+
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }

@@ -13,11 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry.h"
 
 ULIS2_NAMESPACE_BEGIN
-ULIS2_API void DotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos );
-/*
 ULIS2_API void DrawDot();
 ULIS2_API void DrawDotNoAA();
 ULIS2_API void DrawDotAA();
@@ -78,6 +75,5 @@ ULIS2_API void DrawTriangleBarycentricAA();
 ULIS2_API void DrawTrianglePoly();
 ULIS2_API void DrawTrianglePolyNoAA();
 ULIS2_API void DrawTrianglePolyAA();
-*/
 ULIS2_NAMESPACE_END
 

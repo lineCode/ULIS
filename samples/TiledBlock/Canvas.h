@@ -39,10 +39,18 @@ private:
     Q_SLOT void tickEvent();
 
 private:
-    FHostDeviceInfo             mHost;
-    FThreadPool                 mPool;
-    FBlock*                     mCanvas;
-    FTilePool*                  mTilePool;
+    FHostDeviceInfo                     mHost;
+    FThreadPool                         mPool;
+    FBlock*                             mCanvas;
+    FBlock*                             mRAMUSAGEBLOCK1;
+    FBlock*                             mRAMUSAGEBLOCK2;
+    FBlock*                             mRAMUSAGESWAPBUFFER;
+    FFontEngine                         mFontEngine;
+    FFontRegistry                       mFontReg;
+    FFont                               mFont;
+
+    FTilePool< MICRO_64, MACRO_16 >*    mTilePool;
+    FTiledBlock< MICRO_64, MACRO_16 >*  mTileBlock;
 
     QImage*                     mImage;
     QPixmap*                    mPixmap;

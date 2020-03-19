@@ -65,6 +65,7 @@ Dependencies are redistributed directly within the repository under the 3rdparty
 |glm                |https://github.com/g-truc/glm                                  |MIT                |
 |Little-CMS         |https://github.com/mm2/Little-CMS                              |MIT                |
 |OCL-SDK            |https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/releases   |-                  |
+|static_math        |https://github.com/Morwenn/static_math                         |MIT                |
 |stb_image          |https://github.com/nothings/stb                                |MIT                |
 |stb_image_write    |https://github.com/nothings/stb                                |MIT                |
 |VCL                |https://github.com/vectorclass/version1                        |Apache 2.0         |

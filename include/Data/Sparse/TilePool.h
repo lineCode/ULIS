@@ -18,18 +18,19 @@
 #include <forward_list>
 #include <unordered_map>
 #include <chrono>
+#include <vector>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FTiledBlock
+template< uint8 _MICRO
+        , uint8 _MACRO >
 class ULIS2_API FTilePool
 {
 public:
     // Construction / Destruction
     virtual ~FTilePool();
-    FTilePool( int iWidth
-             , int iHeight
-             , tFormat iFormat
+    FTilePool( tFormat iFormat
              , FColorProfile* iProfile
              , uint64 iRAMUsageCapTarget
              , uint64 iSWAPUsageCapTarget
@@ -58,6 +59,7 @@ public:
     size_t  NumFreshTilesAvailableForQuery() const;
     size_t  NumDirtyHashedTilesCurrentlyInUse() const;
     size_t  NumCorrectlyHashedTilesCurrentlyInUse() const;
+    size_t  NumRegisteredTiledBlocks() const;
 
 public:
     // Core API
@@ -67,8 +69,12 @@ public:
     void ClearNow( uint32 iNum );
     FTileElement* QueryFreshTile();
 
+    FTiledBlock< _MICRO, _MACRO >* CreateNewTiledBlock();
+    void RequestTiledBlockDeletion( FTiledBlock< _MICRO, _MACRO >* iBlock );
+
 private:
     // Tiles Info
+    int                         mPixelDim;
     FVec2I                      mTileSize;
     tFormat                     mTileFormat;
     FColorProfile*              mTileColorProfile;
@@ -97,10 +103,14 @@ private:
     std::list< FTileElement* >                  mDirtyHashedTilesCurrentlyInUse_dlist;
     std::unordered_map< uint32, FTileElement* > mCorrectlyHashedTilesCurrentlyInUse_umap;
 
+    std::vector< FTiledBlock< _MICRO, _MACRO >* > mRegisteredTiledBlocks;
+
     // Thread Work Items
     FThreadPool*        mThreadPool;
     FHostDeviceInfo*    mHost;
 };
 
 ULIS2_NAMESPACE_END
+
+#include "TilePool.ipp"
 

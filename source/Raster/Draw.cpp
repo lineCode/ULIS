@@ -12,7 +12,15 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Raster/Draw.h"
+#include "Data/Block.h"
+#include "Conv/ConvBuffer.h"
 
 ULIS2_NAMESPACE_BEGIN
+void DotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos ) {
+    tByte* ptr = iDst->PixelPtr( iPos.x, iPos.y );
+    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iColor.Format(), iDst->Format() );
+    fptr( &iColor.FormatInfo(), iColor.Ptr(), &iDst->FormatInfo(), ptr, 1 );
+}
+
 ULIS2_NAMESPACE_END
 

@@ -65,37 +65,38 @@ Copy_imp( FThreadPool*              iThreadPool
         , const FBlock*             iSource
         , FBlock*                   iDestination
         , const FRect&              iSrcROI
-        , const FRect&              iDstROI )
+        , const FRect&              iDstROI
+        , const FVec2I&             iShift )
 {
     const tSize bpp = iDestination->BytesPerPixel();
     const tSize src_bps = iSource->BytesPerScanLine();
     const tSize dst_bps = iDestination->BytesPerScanLine();
-    const tSize srh = iSrcROI.x * bpp;
+    const tSize srh = ( iShift.x + iSrcROI.x ) * bpp;
     const tSize dsh = iDstROI.x * bpp;
     const tByte*src = iSource->DataPtr() + srh;
     tByte*      dst = iDestination->DataPtr() + dsh;
-    const auto basesrcy = iSrcROI.y;
+    const auto basesrcy = iShift.y + iSrcROI.y;
     const auto basedsty = iDstROI.y;
     #define SRC src + ( ( basesrcy + pLINE ) * src_bps )
     #define DST dst + ( ( basedsty + pLINE ) * dst_bps )
-    const tSize count = iSrcROI.w * bpp;
+    const tSize count = iDstROI.w * bpp;
     #ifdef __AVX2__
     if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && ( src_bps + dst_bps ) >= 64 ) {
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
-                                       , iSrcROI.h
+                                       , iDstROI.h
                                        , InvokeCopyMTProcessScanline_AX2, DST, SRC, count, 32 )
     } else
     #endif
     #ifdef __SSE4_2__
     if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && ( src_bps + dst_bps ) >= 32 ) {
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
-                                       , iSrcROI.h
+                                       , iDstROI.h
                                        , InvokeCopyMTProcessScanline_SSE, DST, SRC, count, 16 )
     } else
     #endif
     {
         ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
-                                       , iSrcROI.h
+                                       , iDstROI.h
                                        , InvokeCopyMTProcessScanline_MEM, DST, SRC, count )
     }
 }
@@ -117,10 +118,9 @@ void Copy( FThreadPool*             iThreadPool
     ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS2_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match"                                  );
 
-    // Ensure the selected source rect actually fits in source dimensions.
-    FRect src_roi = iArea & iSource->Rect();
-
     // Compute coordinates of target rect in destination, with source rect dimension
+    // Ensure the selected target actually fits in destination
+    FRect src_roi = iArea & iSource->Rect();
     int target_xmin = iPos.x;
     int target_ymin = iPos.y;
     int target_xmax = target_xmin + src_roi.w;
@@ -131,8 +131,13 @@ void Copy( FThreadPool*             iThreadPool
     FRect dst_fit = dst_target & iDestination->Rect();
     if( dst_fit.Area() <= 0 ) return;
 
+    // Forward arguments baking
+    const int   translationX        = dst_fit.x - dst_target.x;
+    const int   translationY        = dst_fit.y - dst_target.y;
+    const FVec2I shift( translationX, translationY );
+
     // Call
-    Copy_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iDestination, src_roi, dst_fit );
+    Copy_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iDestination, src_roi, dst_fit, shift );
 
     // Invalidate
     iDestination->Invalidate( dst_fit, iCallCB );
