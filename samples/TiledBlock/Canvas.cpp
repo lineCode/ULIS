@@ -44,7 +44,7 @@ SCanvas::SCanvas()
     , mCanvas(      nullptr )
     , mFontEngine()
     , mFontReg( mFontEngine )
-    , mFont( mFontReg.LoadFont( "Courrier NEw", "Regular" ) )
+    , mFont( mFontReg.LoadFont( "Courrier New", "Bold" ) )
     , mTilePool(    nullptr )
     , mImage(       nullptr )
     , mPixmap(      nullptr )
@@ -53,7 +53,7 @@ SCanvas::SCanvas()
 {
     uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2;
 
-    mCanvas = new  FBlock( 900, 600, ULIS2_FORMAT_RGBA8 );
+    mCanvas = new  FBlock( 320, 600, ULIS2_FORMAT_RGBA8 );
 
     Clear( &mPool, ULIS2_BLOCKING, perfIntent, mHost, ULIS2_NOCB, mCanvas, mCanvas->Rect() );
 
@@ -64,21 +64,20 @@ SCanvas::SCanvas()
     this->QWidget::setFixedSize( mPixmap->size() );
 
     mTimer = new QTimer();
-    mTimer->setInterval( 1000.0 / 60.0 );
+    mTimer->setInterval( 1000.0 / 24.0 );
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 
-    uint64 maxRAM   = Mo2O( 0 );
-    int timeoutms   = 8;
-    mTilePool = new FTilePool< MICRO_64, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr, maxRAM, 0, FThreadPool::MaxWorkers(), timeoutms );
-    //mTilePool->ClearNow( 1000 );
-    mTileBlock = mTilePool->CreateNewTiledBlock();
+    uint64 maxRAM   = Mo2O( 1000 );
+    int timeoutms   = 20;
+    mTilePool = new TTilePool< MICRO_64, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr, maxRAM, 0, FThreadPool::MaxWorkers(), timeoutms );
+    mTilePool->ClearNow( 10000 );
+    mTiledBlock = mTilePool->CreateNewTiledBlock();
 
     mRAMUSAGEBLOCK1 = new FBlock( 300, 100, ULIS2_FORMAT_RGBA8 );
     mRAMUSAGEBLOCK2 = new FBlock( 300, 100, ULIS2_FORMAT_RGBA8 );
     mRAMUSAGESWAPBUFFER = mRAMUSAGEBLOCK1;
-    Clear( &mPool, ULIS2_BLOCKING, perfIntent, mHost, ULIS2_NOCB, mRAMUSAGEBLOCK1, mRAMUSAGEBLOCK1->Rect() );
-    Clear( &mPool, ULIS2_BLOCKING, perfIntent, mHost, ULIS2_NOCB, mRAMUSAGEBLOCK2, mRAMUSAGEBLOCK2->Rect() );
+    Fill( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mRAMUSAGEBLOCK1, FPixelValue( ULIS2_FORMAT_G8, { 15 } ), mRAMUSAGEBLOCK1->Rect() );
 }
 
 
@@ -137,19 +136,19 @@ SCanvas::tickEvent() {
         prox.SetA8( 255 );
     }
 
-    Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mCanvas, mCanvas->Rect() );
-    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Target  RAM            : " + std::to_wstring( mTilePool->RAMUsageCapTarget() ),                        mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 10 ) ), ULIS2_NOAA );
-    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Current RAM            : " + std::to_wstring( mTilePool->CurrentRAMUsage() ),                          mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 20 ) ), ULIS2_NOAA );
-    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Scheduled For Clear: " + std::to_wstring( mTilePool->NumTilesScheduledForClear() ),                mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 30 ) ), ULIS2_NOAA );
-    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Available For Query: " + std::to_wstring( mTilePool->NumFreshTilesAvailableForQuery() ),           mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 40 ) ), ULIS2_NOAA );
-    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Dirty In Use       : " + std::to_wstring( mTilePool->NumDirtyHashedTilesCurrentlyInUse() ),        mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 50 ) ), ULIS2_NOAA );
-    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Correct In Use     : " + std::to_wstring( mTilePool->NumCorrectlyHashedTilesCurrentlyInUse() ),    mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 60 ) ), ULIS2_NOAA );
-    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Registered Blocks  : " + std::to_wstring( mTilePool->NumRegisteredTiledBlocks() ),                 mFont, 12, FPixelValue( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } ), FTransform2D( MakeTranslationMatrix( 10, 70 ) ), ULIS2_NOAA );
+    Fill( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mCanvas, FPixelValue( ULIS2_FORMAT_G8, { 40 } ), mCanvas->Rect() );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Target  RAM                : " + std::to_wstring( mTilePool->RAMUsageCapTarget() ),                        mFont, 12, FPixelValue( ULIS2_FORMAT_G8, { 220 } ), FTransform2D( MakeTranslationMatrix( 10, 10 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Current RAM                : " + std::to_wstring( mTilePool->CurrentRAMUsage() ),                          mFont, 12, FPixelValue( ULIS2_FORMAT_G8, { 220 } ), FTransform2D( MakeTranslationMatrix( 10, 20 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Scheduled For Clear    : " + std::to_wstring( mTilePool->NumTilesScheduledForClear() ),                mFont, 12, FPixelValue( ULIS2_FORMAT_G8, { 220 } ), FTransform2D( MakeTranslationMatrix( 10, 30 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Available For Query    : " + std::to_wstring( mTilePool->NumFreshTilesAvailableForQuery() ),           mFont, 12, FPixelValue( ULIS2_FORMAT_G8, { 220 } ), FTransform2D( MakeTranslationMatrix( 10, 40 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Dirty In Use           : " + std::to_wstring( mTilePool->NumDirtyHashedTilesCurrentlyInUse() ),        mFont, 12, FPixelValue( ULIS2_FORMAT_G8, { 220 } ), FTransform2D( MakeTranslationMatrix( 10, 50 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Correct In Use         : " + std::to_wstring( mTilePool->NumCorrectlyHashedTilesCurrentlyInUse() ),    mFont, 12, FPixelValue( ULIS2_FORMAT_G8, { 220 } ), FTransform2D( MakeTranslationMatrix( 10, 60 ) ), ULIS2_NOAA );
+    RenderText( &mPool, ULIS2_BLOCKING, 0, mHost, ULIS2_NOCB, mCanvas, L"Num Registered Blocks      : " + std::to_wstring( mTilePool->NumRegisteredTiledBlocks() ),                 mFont, 12, FPixelValue( ULIS2_FORMAT_G8, { 220 } ), FTransform2D( MakeTranslationMatrix( 10, 70 ) ), ULIS2_NOAA );
     Copy( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mRAMUSAGESWAPBUFFER, mCanvas, mRAMUSAGESWAPBUFFER->Rect(), FVec2I( 10, 80 ) );
 
     FBlock* oldram = mRAMUSAGESWAPBUFFER;
     FBlock* newram = mRAMUSAGESWAPBUFFER == mRAMUSAGEBLOCK1 ? mRAMUSAGEBLOCK2 : mRAMUSAGEBLOCK1;
-    Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, newram, newram->Rect() );
+    Fill( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, newram, FPixelValue( ULIS2_FORMAT_G8, { 15 } ), newram->Rect() );
     Copy( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, oldram, newram, oldram->Rect(), FVec2I( -1, 0 ) );
     mRAMUSAGESWAPBUFFER = newram;
 

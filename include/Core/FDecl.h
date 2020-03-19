@@ -33,8 +33,9 @@ struct  FFormatInfo;
 class   FFont;
 class   FTransform2D;
 struct  FTileElement;
-template< uint8 _MICRO, uint8 _MACRO > class FTilePool;
-template< uint8 _MICRO, uint8 _MACRO > class FTiledBlock;
+class ITiledBlock;
+template< uint8 _MICRO, uint8 _MACRO > class TTilePool;
+template< uint8 _MICRO, uint8 _MACRO > class TTiledBlock;
 
 template< typename T >
 struct TVec2;

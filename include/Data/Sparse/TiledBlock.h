@@ -7,7 +7,7 @@
 *
 * @file         TiledBlock.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FTiledBlock class.
+* @brief        This file provides the declaration for the TTiledBlock class.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -20,42 +20,73 @@
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// FTiledBlock
-template< uint8 _MICRO
-        , uint8 _MACRO >
-class ULIS2_API FTiledBlock
+/// ITiledBlock
+class ULIS2_API ITiledBlock
 {
-    typedef TRootChunk< _MICRO, _MACRO, _MACRO >        tRootChunk;
-    typedef std::unordered_map< uint64, tRootChunk* >   tMap;
-    typedef FTilePool< _MICRO, _MACRO >                 tPool;
 public:
-    // Construction / Destruction
-    ~FTiledBlock();
-    FTiledBlock( tPool* iPool );
+    virtual ~ITiledBlock() {};
+    ITiledBlock() {};
 
 public:
     // Core API
-    size_t      NumRootEntries() const;
-    void        Purge();
-    void        GatherRootEntries( std::vector< tRootChunk* >* oVector );
-    void        GatherLeafEntries( std::vector< tRootChunk* >* oVector );
-    bool        IsValidPixelCoordRange( int64 iValue )  const;
-    FVec2I32    ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const;
-    FVec2I64    PixelCoordinatesFromChunkCoordinates( const FVec2I32& iPos ) const;
-    uint64      KeyFromChunkCoordinates( const FVec2I32& iPos ) const;
-    uint64      KeyFromPixelCoordinates( const FVec2I64& iPos ) const;
-    FVec2I32    ChunkCoordinatesFromKey( uint64 iKey ) const;
-    FVec2I32    PixelCoordinatesFromKey( uint64 iKey ) const;
+    virtual size_t      NumRootEntries() const = 0;
+    virtual void        Purge() = 0;
+    virtual bool        IsValidPixelCoordRange( int64 iValue )  const = 0;
+    virtual FVec2I32    ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const = 0;
+    virtual FVec2I64    PixelCoordinatesFromChunkCoordinates( const FVec2I32& iPos ) const = 0;
+    virtual uint64      KeyFromChunkCoordinates( const FVec2I32& iPos ) const = 0;
+    virtual uint64      KeyFromPixelCoordinates( const FVec2I64& iPos ) const = 0;
+    virtual FVec2I32    ChunkCoordinatesFromKey( uint64 iKey ) const = 0;
+    virtual FVec2I64    PixelCoordinatesFromKey( uint64 iKey ) const = 0;
+
+public:
+    // Tile API
+    virtual const FBlock* QueryTileAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) = 0;
+};
+
+
+/////////////////////////////////////////////////////
+/// TTiledBlock
+template< uint8 _MICRO
+        , uint8 _MACRO >
+class ULIS2_API TTiledBlock : public ITiledBlock
+{
+    typedef ITiledBlock                                 tSuperClass;
+    typedef TRootChunk< _MICRO, _MACRO, _MACRO >        tRootChunk;
+    typedef std::unordered_map< uint64, tRootChunk* >   tMap;
+    typedef TTilePool< _MICRO, _MACRO >                 tTilePool;
+public:
+    // Construction / Destruction
+    virtual ~TTiledBlock();
+    TTiledBlock( tTilePool* iPool );
+
+public:
+    // Core API
+    virtual size_t      NumRootEntries() const override;
+    virtual void        Purge() override;
+    virtual void        GatherRootEntries( std::vector< tRootChunk* >* oVector );
+    virtual bool        IsValidPixelCoordRange( int64 iValue )  const override;
+    virtual FVec2I32    ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const override;
+    virtual FVec2I64    PixelCoordinatesFromChunkCoordinates( const FVec2I32& iPos ) const override;
+    virtual uint64      KeyFromChunkCoordinates( const FVec2I32& iPos ) const override;
+    virtual uint64      KeyFromPixelCoordinates( const FVec2I64& iPos ) const override;
+    virtual FVec2I32    ChunkCoordinatesFromKey( uint64 iKey ) const override;
+    virtual FVec2I64    PixelCoordinatesFromKey( uint64 iKey ) const override;
+
 
 private:
     // Private API
-    void CreateRootEntryAtPixelSector( const FVec2I64& iPos );
-    void CreateRootEntryAtChunkSector( const FVec2I32& iPos );
+    tRootChunk* CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( const FVec2I64& iPos );
+    tRootChunk* CreateRootEntryAtChunkSectorIfNotExistAndReturnPtr( const FVec2I32& iPos );
+
+public:
+    // Tile API
+    virtual const FBlock* QueryTileAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) override;
 
 private:
     // Private Data Members
-    tMap mMap;
-    tPool* mPool;
+    tMap mSparseMap;
+    tTilePool* mTilePool;
 
     static constexpr uint8  micro_threshold                     = _MICRO;
     static constexpr uint8  macro_threshold                     = _MACRO;

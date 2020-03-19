@@ -22,15 +22,15 @@
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// FTiledBlock
+/// TTiledBlock
 template< uint8 _MICRO
         , uint8 _MACRO >
-class ULIS2_API FTilePool
+class ULIS2_API TTilePool
 {
 public:
     // Construction / Destruction
-    virtual ~FTilePool();
-    FTilePool( tFormat iFormat
+    virtual ~TTilePool();
+    TTilePool( tFormat iFormat
              , FColorProfile* iProfile
              , uint64 iRAMUsageCapTarget
              , uint64 iSWAPUsageCapTarget
@@ -69,8 +69,8 @@ public:
     void ClearNow( uint32 iNum );
     FTileElement* QueryFreshTile();
 
-    FTiledBlock< _MICRO, _MACRO >* CreateNewTiledBlock();
-    void RequestTiledBlockDeletion( FTiledBlock< _MICRO, _MACRO >* iBlock );
+    TTiledBlock< _MICRO, _MACRO >* CreateNewTiledBlock();
+    void RequestTiledBlockDeletion( TTiledBlock< _MICRO, _MACRO >* iBlock );
 
 private:
     // Tiles Info
@@ -103,7 +103,7 @@ private:
     std::list< FTileElement* >                  mDirtyHashedTilesCurrentlyInUse_dlist;
     std::unordered_map< uint32, FTileElement* > mCorrectlyHashedTilesCurrentlyInUse_umap;
 
-    std::vector< FTiledBlock< _MICRO, _MACRO >* > mRegisteredTiledBlocks;
+    std::vector< TTiledBlock< _MICRO, _MACRO >* > mRegisteredTiledBlocks;
 
     // Thread Work Items
     FThreadPool*        mThreadPool;

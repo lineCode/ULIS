@@ -7,7 +7,7 @@
 *
 * @file         Chunk.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FTiledBlock class.
+* @brief        This file provides the declaration for the TTiledBlock class.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -60,6 +60,7 @@ template< uint8 _MICRO
 class ULIS2_API TAbstractChunk
 {
     typedef  TAbstractChunk< _MICRO, _MACRO, _LOCAL >   tSelf;
+    typedef TTilePool< _MICRO, _MACRO >                 tTilePool;
 
 public:
     // Construction / Destruction
@@ -69,6 +70,7 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const = 0;
+    virtual  const FBlock* QueryTileAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) = 0;
 
 protected:
     // Protected Data Members
@@ -93,6 +95,8 @@ class ULIS2_API TRootChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >    tSuperClass;
     typedef  TRootChunk<        _MICRO, _MACRO, _LOCAL >    tSelf;
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >    tChild;
+    typedef TTilePool< _MICRO, _MACRO >                 tTilePool;
+
 public:
     // Construction / Destruction
     virtual ~TRootChunk() {}
@@ -103,6 +107,9 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kRoot; }
+    virtual  const FBlock* QueryTileAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
+        return  mChild ? iPool->EmptyTile() : mChild->QueryTileAtPixelCoordinates( iPool, iPos );
+    }
 
 private:
     // Private Data Members
@@ -119,6 +126,7 @@ class ULIS2_API TDataChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
 {
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >    tSuperClass;
     typedef  TDataChunk<        _MICRO, _MACRO, _LOCAL >    tSelf;
+    typedef TTilePool< _MICRO, _MACRO >                 tTilePool;
 
 public:
     // Construction / Destruction
@@ -130,6 +138,9 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kData; }
+    virtual  const FBlock* QueryTileAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
+        return  mPtr->mBlock;
+    }
 
 private:
     // Private Data Members
@@ -147,6 +158,7 @@ class ULIS2_API TQuadtreeChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
     typedef  TQuadtreeChunk<    _MICRO, _MACRO, _LOCAL >                        tSelf;
     typedef  TAbstractChunk<    _MICRO, _MACRO, tSuperClass::sub_threshold >    tSubAbstractChunk;
     typedef  TQuadtreeChunk<    _MICRO, _MACRO, tSuperClass::sub_threshold >    tSubQuadtreeChunk;
+    typedef TTilePool< _MICRO, _MACRO >                 tTilePool;
 
 public:
     // Construction / Destruction
@@ -156,9 +168,26 @@ public:
     {
     }
 
+private:
+    // Coordinates API
+    FVec2I64  SubChunkCoordinatesFromLocalPixelCoordinates( const FVec2I64& iPos )  const { return  iPos / local_chunk_halfsize_as_pixels; }
+    FVec2I64  LocalPixelCoordinatesFromSubChunkCoordinates( const FVec2I64& iPos )  const { return  iPos * local_chunk_halfsize_as_pixels; }
+
+    uint8 IndexFromSubChunkCoordinates( const FVec2I64& iPos )  const {
+        return  iPos.y * 2  + iX;
+    }
+
+    FVec2I64 SubChunkCoordinatesFromIndex( uint8 iIndex )  const {
+        return  FVec2I64( iIndex & 0x1, ( iIndex & 0x2 ) >> 1 );
+    }
+
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kRoot; }
+    virtual  const FBlock* QueryTileAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
+        uint8 index = IndexFromSubChunkCoordinates( SubChunkCoordinatesFromLocalPixelCoordinates( iPos ) );
+        return  mQuad[index] == nullptr ? iPool->EmptyTile() : mQuad[index]->QueryTileAtPixelCoordinates( iPool, iPos % local_chunk_halfsize_as_pixels );
+    }
 
 private:
     // Private Data Members
