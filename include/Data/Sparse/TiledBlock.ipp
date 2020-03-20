@@ -147,17 +147,36 @@ TTiledBlock< _MICRO, _MACRO >::CreateRootEntryAtChunkSectorIfNotExistAndReturnPt
 }
 
 
+template< uint8 _MICRO, uint8 _MACRO >
+typename TTiledBlock< _MICRO, _MACRO >::tRootChunk*
+TTiledBlock< _MICRO, _MACRO >::QueryRootEntryAtPixelSector( const FVec2I64& iPos ) {
+    return  QueryRootEntryAtChunkSector( ChunkCoordinatesFromPixelCoordinates( iPos ) );
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+typename TTiledBlock< _MICRO, _MACRO >::tRootChunk*
+TTiledBlock< _MICRO, _MACRO >::QueryRootEntryAtChunkSector( const FVec2I32& iPos ) {
+    uint64 key = KeyFromChunkCoordinates( iPos );
+    auto it = mSparseMap.find( key );
+
+    if( it != mSparseMap.end() )
+        return  it->second;
+
+    return  nullptr;
+}
+
+
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Tile API
 template< uint8 _MICRO, uint8 _MACRO >
 const FBlock*
-TTiledBlock< _MICRO, _MACRO >::QueryTileAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) {
+TTiledBlock< _MICRO, _MACRO >::QueryConstBlockAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) {
     static FVec2I64 modLeaf( static_cast< int64 >( micro_chunk_size_as_pixels ) );
     static FVec2I64 modRoot( static_cast< int64 >( macro_chunk_size_as_pixels ) );
     *oLocalCoords = FMaths::PyModulo( iPos, modLeaf );
     FVec2I64 pixelCoordsInRoot = FMaths::PyModulo( iPos, modRoot );
-    tRootChunk* root = CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( iPos );
-    return  root->QueryTileAtPixelCoordinates( mTilePool, pixelCoordsInRoot );
+    tRootChunk* root = QueryRootEntryAtPixelSector( iPos );
+    return  root ? mTilePool->EmptyTile() : root->QueryConstBlockAtPixelCoordinates( mTilePool, pixelCoordsInRoot );
 }
 
 ULIS2_NAMESPACE_END

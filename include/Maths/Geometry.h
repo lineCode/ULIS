@@ -69,6 +69,14 @@ struct ULIS2_API FRect
     FRect( int ix, int iy, int iW, int iH );
     static FRect FromXYWH( int ix, int iy, int iW, int iH );
     static FRect FromMinMax( int ixMin, int iyMin, int ixMax, int iyMax );
+
+    template< class T >
+    bool HitTest( const TVec2< T >& iV ) {
+        return  iV.x >= static_cast< T >( x )
+            &&  iV.x <  static_cast< T >( x + h )
+            &&  iV.y >= static_cast< T >( y )
+            &&  iV.y <  static_cast< T >( y + h );
+    }
     FRect operator&( const FRect& iOther ) const;
     FRect operator|( const FRect& iOther ) const;
     bool operator==( const FRect& iOther ) const;

@@ -17,6 +17,9 @@
 
 ULIS2_NAMESPACE_BEGIN
 void DotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos ) {
+    if( !iDst->Rect().HitTest( iPos ) )
+        return;
+
     tByte* ptr = iDst->PixelPtr( iPos.x, iPos.y );
     fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iColor.Format(), iDst->Format() );
     fptr( &iColor.FormatInfo(), iColor.Ptr(), &iDst->FormatInfo(), ptr, 1 );

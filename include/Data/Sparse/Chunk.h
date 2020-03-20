@@ -70,7 +70,7 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const = 0;
-    virtual  const FBlock* QueryTileAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) = 0;
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) = 0;
 
 protected:
     // Protected Data Members
@@ -107,8 +107,8 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kRoot; }
-    virtual  const FBlock* QueryTileAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
-        return  mChild ? iPool->EmptyTile() : mChild->QueryTileAtPixelCoordinates( iPool, iPos );
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
+        return  mChild ? iPool->EmptyTile() : mChild->QueryConstBlockAtPixelCoordinates( iPool, iPos );
     }
 
 private:
@@ -138,7 +138,7 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kData; }
-    virtual  const FBlock* QueryTileAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
         return  mPtr->mBlock;
     }
 
@@ -184,9 +184,9 @@ private:
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kRoot; }
-    virtual  const FBlock* QueryTileAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) override {
         uint8 index = IndexFromSubChunkCoordinates( SubChunkCoordinatesFromLocalPixelCoordinates( iPos ) );
-        return  mQuad[index] == nullptr ? iPool->EmptyTile() : mQuad[index]->QueryTileAtPixelCoordinates( iPool, iPos % local_chunk_halfsize_as_pixels );
+        return  mQuad[index] == nullptr ? iPool->EmptyTile() : mQuad[index]->QueryConstBlockAtPixelCoordinates( iPool, iPos % local_chunk_halfsize_as_pixels );
     }
 
 private:

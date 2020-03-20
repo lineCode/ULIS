@@ -41,7 +41,7 @@ public:
 
 public:
     // Tile API
-    virtual const FBlock* QueryTileAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) = 0;
+    virtual const FBlock* QueryConstBlockAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) = 0;
 };
 
 
@@ -78,10 +78,12 @@ private:
     // Private API
     tRootChunk* CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( const FVec2I64& iPos );
     tRootChunk* CreateRootEntryAtChunkSectorIfNotExistAndReturnPtr( const FVec2I32& iPos );
+    tRootChunk* QueryRootEntryAtPixelSector( const FVec2I64& iPos );
+    tRootChunk* QueryRootEntryAtChunkSector( const FVec2I32& iPos );
 
 public:
     // Tile API
-    virtual const FBlock* QueryTileAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) override;
+    virtual const FBlock* QueryConstBlockAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) override;
 
 private:
     // Private Data Members
