@@ -26,12 +26,17 @@ FTileElement::FTileElement()
     , mRefCount( 0 )
 {}
 
-FTileElement::FTileElement( FBlock* iPtr, uint32 iRef )
+FTileElement::FTileElement( FBlock* iPtr )
     : mBlock( iPtr )
     , mHash( 0 )
     , mDirty( true )
     , mRefCount( 0 )
 {}
+
+void FTileElement::DecreaseRefCount() { mRefCount--; };
+void FTileElement::DecreaseRefCount( int iVal ) { mRefCount-= iVal; };
+void FTileElement::IncreaseRefCount() { mRefCount++; };
+void FTileElement::IncreaseRefCount( int iVal ) { mRefCount+= iVal; };
 
 ULIS2_NAMESPACE_END
 

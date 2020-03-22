@@ -26,6 +26,8 @@ struct ULIS2_API TVec2
     TVec2() : x( 0 ), y( 0 ) {}
     TVec2( T iV ) : x( iV ), y( iV ) {};
     TVec2( T ix, T iy ) : x( ix ), y( iy ) {};
+    template< typename U > TVec2( U ix, U iy ) : x( static_cast< T >( ix ) ), y( static_cast< T >( iy ) ) {};
+    template< typename U > TVec2( const TVec2< U >& iOther ) : x( static_cast< T >( iOther.x ) ), y( static_cast< T >( iOther.y ) ) {};
 
     ULIS2_FORCEINLINE T Distance() const {                              return  sqrt( x * x + y *y ); }
     ULIS2_FORCEINLINE T DistanceSquared() const {                       return  x * x + y * y; }

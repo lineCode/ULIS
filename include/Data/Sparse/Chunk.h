@@ -17,12 +17,14 @@
 #include "Maths/Geometry.h"
 #include "Copy/Copy.h"
 #include "Raster/Sparse/DrawSparse.h"
+#include "Base/HostDeviceInfo.h"
 #include <static_math/static_math.h>
 
 ULIS2_NAMESPACE_BEGIN
 static const FPixelValue default_wireframe_debug_color = FPixelValue( ULIS2_FORMAT_RGB8, { 40, 80, 220 } );
 static const FPixelValue dirty_wireframe_debug_color = FPixelValue( ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
 static const FPixelValue correct_wireframe_debug_color = FPixelValue( ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
+static const FHostDeviceInfo debug_host = FHostDeviceInfo::Detect();
 /////////////////////////////////////////////////////
 // Enums
 //----------------------------------------------------------------------------------------------
@@ -83,6 +85,8 @@ public:
     virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const = 0;
     virtual  FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( tTilePool* iPool, const FVec2I64& iPos ) = 0;
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
+    virtual  void SanitizeNow( tTilePool* iPool ) = 0;
 
 protected:
     // Protected Data Members
@@ -116,6 +120,8 @@ public:
     virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const = 0;
     virtual  FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( tTilePool* iPool, const FVec2I64& iPos ) = 0;
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
+    virtual  void SanitizeNow( tTilePool* iPool ) = 0;
 
 protected:
     // Protected Data Members
@@ -187,6 +193,42 @@ public:
             mChild->DrawDebugWireframe( iDst, iPos, iScale );
     }
 
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
+        if( mChild )
+            mChild->DrawDebugTileContent( iDst, iPos );
+    }
+
+    virtual  void SanitizeNow( tTilePool* iPool ) override {
+        if( mChild ) {
+            mChild->SanitizeNow( iPool );
+            if( mChild->Type() == eChunkType::kData ) {
+                tDataChild* data = dynamic_cast< tDataChild* >( mChild );
+                if( data->PointedData() == nullptr ) {
+                    delete  mChild;
+                    mChild = nullptr;
+                }
+            }
+            else if( mChild->Type() == eChunkType::kQuadree ) {
+                tQuadtreeChild* quad = dynamic_cast< tQuadtreeChild* >( mChild );
+                FTileElement* el = nullptr;
+                bool uniform = quad->CheckUniformDistributedValue( &el );
+                if( uniform ) {
+                    if( el == nullptr ) {
+                        delete  mChild;
+                        mChild = nullptr;
+                    } else {
+                        delete  mChild;
+                        mChild = new tDataChild( el );
+                    }
+                }
+            }
+        }
+    }
+
+    const tChild* Child() const {
+        return  mChild;
+    }
+
 private:
     // Private Data Members
     tChild* mChild;
@@ -207,7 +249,8 @@ class ULIS2_API TDataChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
 public:
     // Construction / Destruction
     virtual ~TDataChunk() {
-        mPtr->mRefCount--;
+        if( mPtr )
+            mPtr->DecreaseRefCount();
     }
 
     TDataChunk()
@@ -217,7 +260,7 @@ public:
     TDataChunk( FTileElement* iDistributedValue )
         : mPtr( iDistributedValue )
     {
-        mPtr->mRefCount++;
+        mPtr->IncreaseRefCount();
     }
 
 public:
@@ -228,13 +271,8 @@ public:
     }
 
     void PerformDataCopyForImminentMutableChangeIfNeeded( tTilePool* iPool ) {
-        if( mPtr->mRefCount > 1 ) {
-            FTileElement* tile = iPool->QueryFreshTile();
-            CopyRaw( mPtr->mBlock, tile->mBlock, false );
-            mPtr->mRefCount--;
-            mPtr = tile;
-            mPtr->mRefCount++;
-        }
+        mPtr = iPool->PerformDataCopyForImminentMutableChangeIfNeeded( mPtr );
+        mPtr->mDirty = true;
     }
 
     virtual  FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( tTilePool* iPool, const FVec2I64& iPos ) override {
@@ -249,6 +287,19 @@ public:
             DrawRectOutlineNoAA( iDst, dirty_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
         else
             DrawRectOutlineNoAA( iDst, correct_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
+    }
+
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
+        for( int i = 0; i < local_chunk_size_as_pixels; i+= micro_chunk_size_as_pixels ) {
+            for( int j = 0; j < local_chunk_size_as_pixels; j+= micro_chunk_size_as_pixels ) {
+                Copy( nullptr, ULIS2_NONBLOCKING, 0, debug_host, ULIS2_NOCB, mPtr->mBlock, iDst, mPtr->mBlock->Rect(), iPos + FVec2I64( i, j ) );
+            }
+        }
+    }
+
+    virtual  void SanitizeNow( tTilePool* iPool ) override {
+        if( !( mPtr->mDirty ) )
+            mPtr = iPool->PerformRedundantHashMergeReturnCorrect( mPtr );
     }
 
     FTileElement* PointedData() {
@@ -292,7 +343,6 @@ public:
     {
         for( int i = 0; i < 4; ++i )
             mQuad[i] = new  tSubDataChunk( iDistributedValue );
-        iDistributedValue->mRefCount += 4;
     }
 
 private:
@@ -310,7 +360,7 @@ private:
 
 public:
     // Public API
-    virtual  eChunkType  Type()  const override { return  eChunkType::kRoot; }
+    virtual  eChunkType  Type()  const override { return  eChunkType::kQuadree; }
     virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const override {
         uint8 index = IndexFromSubChunkCoordinates( SubChunkCoordinatesFromLocalPixelCoordinates( iPos ) );
         return  mQuad[index] == nullptr ? iPool->EmptyTile() : mQuad[index]->QueryConstBlockAtPixelCoordinates( iPool, iPos % local_chunk_halfsize_as_pixels );
@@ -343,6 +393,76 @@ public:
         for( int i = 0; i < 4; ++i )
             if( mQuad[i] )
                 mQuad[i]->DrawDebugWireframe( iDst, iPos + SubChunkCoordinatesFromIndex( i ) * hsize, iScale );
+    }
+
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
+        auto size  = round( local_chunk_size_as_pixels );
+        auto hsize = round( local_chunk_halfsize_as_pixels );
+        for( int i = 0; i < 4; ++i )
+            if( mQuad[i] )
+                mQuad[i]->DrawDebugTileContent( iDst, iPos + SubChunkCoordinatesFromIndex( i ) * hsize );
+    }
+
+    virtual  void SanitizeNow( tTilePool* iPool ) override {
+        for( int i = 0; i < 4; ++i ) {
+            if( mQuad[i] ) {
+                mQuad[i]->SanitizeNow( iPool );
+                if( mQuad[i]->Type() == eChunkType::kData ) {
+                    // IF after sanitization the child data points to null, simply delete to state it's clear
+                    tSubDataChunk* datachunk = dynamic_cast< tSubDataChunk* >( mQuad[i] );
+                    if( datachunk->PointedData() == nullptr ) {
+                        delete  mQuad[i];
+                        mQuad[i] = nullptr;
+                    }
+                } else {
+                    // Else, it's likely a quad.
+                    // Check if the quad has the same distributed value and perform merge
+                    // if the distributed value is null, just clear delete
+                    // else, we can make it a data chunk if it's not bed.
+                    tSubQuadtreeChunk* quadchunk = dynamic_cast< tSubQuadtreeChunk* >( mQuad[i] );
+                    FTileElement* el;
+                    bool uniform = quadchunk->CheckUniformDistributedValue( &el );
+                    if( uniform ) {
+                        if( el == nullptr ) {
+                            delete  mQuad[i];
+                            mQuad[i] = nullptr;
+                        } else {
+                            delete  mQuad[i];
+                            mQuad[i] = new tSubDataChunk( el );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    bool CheckUniformDistributedValue( FTileElement** oElem ) {
+        // IF all null, return true null
+        // IF all data and all same, return true and elem.
+        bool all_data = true;
+        bool all_null = true;
+        bool all_same = true;
+        FTileElement* val = nullptr;
+        for( int i = 0; i < 4; ++i ) {
+            if( mQuad[i] != nullptr ) {
+                all_null = false;
+                tSubDataChunk* data = dynamic_cast< tSubDataChunk* >( mQuad[i] );
+                if( data != nullptr ) {
+                    if( i == 0 )
+                        val = data->PointedData();
+                    else if( val != data->PointedData() )
+                        all_same = false;
+                }
+                else
+                {
+                    all_data = false;
+                }
+            } else {
+                all_data = false;
+            }
+        }
+        *oElem = val;
+        return  all_null || ( all_data && all_same );
     }
 
 private:

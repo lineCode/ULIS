@@ -69,8 +69,8 @@ SCanvas::SCanvas()
     mTimer->start();
 
     uint64 maxRAM   = Mo2O( 100 );
-    int timeoutms   = 2;
-    mTilePool = new TTilePool< MICRO_64, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr, maxRAM, 0, FThreadPool::MaxWorkers(), timeoutms );
+    int timeoutms   = 10;
+    mTilePool = new TTilePool< MICRO_16, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr, maxRAM, 0, FThreadPool::MaxWorkers(), timeoutms );
     mTilePool->ClearNow( 10000 );
     mTiledBlock = mTilePool->CreateNewTiledBlock();
 
@@ -90,11 +90,37 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
     if ( event->buttons() & Qt::LeftButton ) {
         int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
         int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
-        float scale = WW / 1024.f;
+        float scale = 1.f;
         FVec2I64 ref( 10, 80+HH+10 );
         FVec2I64 pos( event->x(), event->y() );
-        FVec2I64 res( ( pos.x - ref.x ) / scale, ( pos.y - ref.y ) / scale );
-        FTileElement** ptr1 = mTiledBlock->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( res, &res );
+        int size = 8;
+        for( int i = -size; i < size; ++i ) {
+            for( int j = -size; j < size; ++j ) {
+                FVec2I64 res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
+                if( res.x >= 0 && res.x < 256 && res.y >= 0 && res.y < 256 ) {
+                    FTileElement** tileptr = mTiledBlock->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( res, &res );
+                    DrawDotNoAA( (*tileptr)->mBlock, FPixelValue( ULIS2_FORMAT_G8, {0} ), FVec2I( res.x, res.y ) );
+                }
+            }
+        }
+    }
+
+    if( event->buttons() & Qt::RightButton ) {
+        int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
+        int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
+        float scale = 1.f;
+        FVec2I64 ref( 10, 80+HH+10 );
+        FVec2I64 pos( event->x(), event->y() );
+        int size = 16;
+        for( int i = -size; i < size; ++i ) {
+            for( int j = -size; j < size; ++j ) {
+                FVec2I64 res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
+                if( res.x >= 0 && res.x < 256 && res.y >= 0 && res.y < 256 ) {
+                    FTileElement** tileptr = mTiledBlock->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( res, &res );
+                    DrawDotNoAA( (*tileptr)->mBlock, FPixelValue( ULIS2_FORMAT_GA8, {0,0} ), FVec2I( res.x, res.y ) );
+                }
+            }
+        }
     }
 }
 
@@ -128,6 +154,10 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
 
     if( event->key() == Qt::Key::Key_A ) {
         mTiledBlock->Clear();
+    }
+
+    if( event->key() == Qt::Key::Key_B ) {
+        mTiledBlock->SanitizeNow();
     }
 
 }
@@ -166,7 +196,9 @@ SCanvas::tickEvent() {
     Copy( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, oldram, newram, oldram->Rect(), FVec2I( -1, 0 ) );
     mRAMUSAGESWAPBUFFER = newram;
 
-    mTiledBlock->DrawDebugWireframe( mCanvas, FVec2I64( 10, 80+HH+10 ), WW / 1024.f );
+    Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mCanvas, FRect( 10, 80+HH+10, 256, 256 ) );
+    mTiledBlock->DrawDebugTileContent( mCanvas, FVec2I64( 10, 80+HH+10 ) );
+    mTiledBlock->DrawDebugWireframe( mCanvas, FVec2I64( 10, 80+HH+10 ), 1.f );
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }

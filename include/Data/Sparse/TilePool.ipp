@@ -61,6 +61,10 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( t
     , mTickForbidden                            ( false                 )
     , mNumTilesScheduledForClear                ( 0                     )
     , mNumFreshTilesAvailableForQuery           ( 0                     )
+    , mAllocatorCleanerWorker_thread            ( nullptr               )
+    , mSanitizerCompressorWorker_thread         ( nullptr               )
+    , mNumTilesScheduledForClear_atomic         ( 0                     )
+    , mNumFreshTilesAvailableForQuery_atomic    ( 0                     )
 {
     mThreadPool = new FThreadPool( iDesiredPoolWorkers );
     mHost = new FHostDeviceInfo( FHostDeviceInfo::Detect() );
@@ -160,7 +164,8 @@ TTilePool< _MICRO, _MACRO >::Tick() {
             auto ptr = mTilesScheduledForClear_slist.front();
             mTilesScheduledForClear_slist.pop_front();
             --mNumTilesScheduledForClear;
-            Clear( mThreadPool, ULIS2_BLOCKING, 0, *mHost, ULIS2_NOCB, ptr, ptr->Rect() );
+            ClearRaw( ptr, false );
+
 
             mFreshTilesAvailableForQuery_slist.emplace_front( ptr );
             ++mNumFreshTilesAvailableForQuery;
@@ -187,6 +192,9 @@ TTilePool< _MICRO, _MACRO >::Tick() {
             {
                 if( ptr->mDirty ) {
                     ptr->mHash = ptr->mBlock->CRC32();
+                    if( ptr->mHash == 1799349750 ) {
+                        auto dummy = 0;
+                    }
                     ptr->mDirty = false;
                 }
                 mDirtyTaskIterator = std::next( mDirtyTaskIterator );
@@ -263,7 +271,7 @@ TTilePool< _MICRO, _MACRO >::ClearNow( uint32 iNum ) {
         auto ptr = mTilesScheduledForClear_slist.front();
         mTilesScheduledForClear_slist.pop_front();
         --mNumTilesScheduledForClear;
-        Clear( mThreadPool, ULIS2_BLOCKING, 0, *mHost, ULIS2_NOCB, ptr, ptr->Rect() );
+        ClearRaw( ptr, false );
         mFreshTilesAvailableForQuery_slist.emplace_front( ptr );
         ++mNumFreshTilesAvailableForQuery;
     }
@@ -280,10 +288,115 @@ TTilePool< _MICRO, _MACRO >::QueryFreshTile() {
     auto ptr = mFreshTilesAvailableForQuery_slist.front();
     mFreshTilesAvailableForQuery_slist.pop_front();
     --mNumFreshTilesAvailableForQuery;
-    FTileElement* tile = new FTileElement( ptr, 1 );
+    FTileElement* tile = new FTileElement( ptr );
     mDirtyHashedTilesCurrentlyInUse_dlist.push_back( tile );
     mTickForbidden = false;
     return  tile;
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+FTileElement*
+TTilePool< _MICRO, _MACRO >::PerformRedundantHashMergeReturnCorrect( FTileElement* iElem ) {
+    ULIS2_ASSERT( iElem,                    "Bad Elem Query during Hash Merge Check" );
+    ULIS2_ASSERT( iElem->mDirty == false,   "Bad Elem Query during Hash Merge Check" );
+
+    // If the hashed tile is empty we return null ptr and decrease refcount
+    if( iElem->mHash == mEmptyHash ) {
+        iElem->DecreaseRefCount();
+        return  nullptr;
+    }
+
+    // Find the hashed tile in the map if not empty
+    auto it = mCorrectlyHashedTilesCurrentlyInUse_umap.find( iElem->mHash );
+
+    // If the hashed tile isn't in correct map yet
+    // we copy it and insert in correct
+    if( it == mCorrectlyHashedTilesCurrentlyInUse_umap.end() ) {
+        if( !mNumFreshTilesAvailableForQuery )
+            ClearNow( 1 );
+        auto ptr = mFreshTilesAvailableForQuery_slist.front();
+        mFreshTilesAvailableForQuery_slist.pop_front();
+        --mNumFreshTilesAvailableForQuery;
+        FTileElement* tile = new FTileElement( ptr );
+        tile->mDirty = false;
+        tile->mHash = iElem->mHash;
+        CopyRaw( iElem->mBlock, tile->mBlock, false );
+        mCorrectlyHashedTilesCurrentlyInUse_umap[ tile->mHash ] = tile;
+        iElem->DecreaseRefCount();
+        tile->IncreaseRefCount();
+        return  tile;
+    }
+
+    // If it's already the same correct hash, do nothing
+    if( it->second == iElem )
+        return  iElem;
+
+    // Otherwise, perform merge and decrease ref in dirty.
+    it->second->IncreaseRefCount();
+    iElem->DecreaseRefCount();
+    return  it->second;
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+FTileElement*
+TTilePool< _MICRO, _MACRO >::PerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem ) {
+    ULIS2_ASSERT( iElem,                    "Bad Elem Query during Hash Merge Check" );
+
+    if( !( iElem->mDirty ) ) {
+        auto it = mCorrectlyHashedTilesCurrentlyInUse_umap.find( iElem->mHash );
+        if( it == mCorrectlyHashedTilesCurrentlyInUse_umap.end() ) {
+            if( iElem->mRefCount > 1 ) {
+                FTileElement* tile = QueryFreshTile();
+                CopyRaw( iElem->mBlock, tile->mBlock, false );
+                iElem->DecreaseRefCount();
+                tile->IncreaseRefCount();
+                return  tile;
+            } else {
+                iElem->mDirty = true;
+                return  iElem;
+            }
+        } else {
+            if( it->second == iElem ) {
+                if( iElem->mRefCount > 1 ) {
+                    FTileElement* tile = QueryFreshTile();
+                    CopyRaw( iElem->mBlock, tile->mBlock, false );
+                    iElem->DecreaseRefCount();
+                    tile->IncreaseRefCount();
+                    return  tile;
+                } else {
+                    mDirtyHashedTilesCurrentlyInUse_dlist.push_back( iElem );
+                    mCorrectlyHashedTilesCurrentlyInUse_umap.erase( it );
+                    iElem->mDirty = true;
+                    return  iElem;
+                }
+            } else {
+                if( iElem->mRefCount > 1 ) {
+                    FTileElement* tile = QueryFreshTile();
+                    CopyRaw( iElem->mBlock, tile->mBlock, false );
+                    iElem->DecreaseRefCount();
+                    tile->IncreaseRefCount();
+                    return  tile;
+                } else {
+                    iElem->mDirty = true;
+                    return  iElem;
+                }
+            }
+        }
+    }
+    else
+    {
+        if( iElem->mRefCount > 1 ) {
+            FTileElement* tile = QueryFreshTile();
+            CopyRaw( iElem->mBlock, tile->mBlock, false );
+            iElem->DecreaseRefCount();
+            tile->IncreaseRefCount();
+            return  tile;
+        }
+        else
+        {
+            return  iElem;
+        }
+    }
 }
 
 template< uint8 _MICRO, uint8 _MACRO >

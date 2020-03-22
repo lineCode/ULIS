@@ -44,7 +44,9 @@ public:
     virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const = 0;
     virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords  ) = 0;
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
     virtual  void Clear() = 0;
+    virtual  void SanitizeNow() = 0;
 };
 
 
@@ -89,7 +91,9 @@ public:
     virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const override;
     virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) override;
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override;
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override;
     virtual  void Clear() override;
+    virtual  void SanitizeNow() override;
     const tMap& GetSparseMap() const;
 
 private:

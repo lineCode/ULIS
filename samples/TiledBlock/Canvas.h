@@ -49,7 +49,7 @@ private:
     FFontRegistry                       mFontReg;
     FFont                               mFont;
 
-    TTilePool< MICRO_64, MACRO_16 >*    mTilePool;
+    TTilePool< MICRO_16, MACRO_16 >*    mTilePool;
     ITiledBlock*                        mTiledBlock;
 
     QImage*                     mImage;

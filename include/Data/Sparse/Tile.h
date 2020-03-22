@@ -20,8 +20,11 @@ ULIS2_NAMESPACE_BEGIN
 struct ULIS2_API FTileElement {
     ~FTileElement();
     FTileElement();
-    FTileElement( FBlock* iPtr, uint32 iRef );
-
+    FTileElement( FBlock* iPtr );
+    void DecreaseRefCount( int iVal );
+    void DecreaseRefCount();
+    void IncreaseRefCount( int iVal );
+    void IncreaseRefCount();
     FBlock* mBlock;
     uint32  mHash;
     uint32  mRefCount;

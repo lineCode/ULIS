@@ -51,7 +51,7 @@ TTiledBlock< _MICRO, _MACRO >::NumRootEntries() const {
 template< uint8 _MICRO, uint8 _MACRO >
 void
 TTiledBlock< _MICRO, _MACRO >::Purge() {
-    for( auto i : mSparseMap )
+    for( auto& i : mSparseMap )
         delete  i.second;
     mSparseMap.clear();
 }
@@ -62,7 +62,7 @@ void
 TTiledBlock< _MICRO, _MACRO >::GatherRootEntries( std::vector< tRootChunk* >* oVector ) {
     oVector->clear();
     oVector->reserve( mSparseMap.size() );
-    for( auto i : mSparseMap )
+    for( auto& i : mSparseMap )
         oVector->push_back( i.second );
 }
 
@@ -96,7 +96,7 @@ TTiledBlock< _MICRO, _MACRO >::PixelCoordinatesFromChunkCoordinates( const FVec2
 template< uint8 _MICRO, uint8 _MACRO >
 uint64
 TTiledBlock< _MICRO, _MACRO >::KeyFromChunkCoordinates( const FVec2I32& iPos ) const {
-    return  static_cast< uint64 >( iPos.x ) | ( static_cast< uint64 >( iPos.y ) << 32 );
+    return  uint64( uint32( iPos.x ) ) | ( uint64( uint32( iPos.y ) ) << 32 );
 }
 
 
@@ -111,8 +111,8 @@ TTiledBlock< _MICRO, _MACRO >::KeyFromPixelCoordinates( const FVec2I64& iPos ) c
 template< uint8 _MICRO, uint8 _MACRO >
 FVec2I32
 TTiledBlock< _MICRO, _MACRO >::ChunkCoordinatesFromKey( uint64 iKey ) const {
-    int32 X = static_cast< int32 >( iKey & ULIS2_SPARSE_MASK_X );
-    int32 Y = static_cast< int32 >( ( iKey & ULIS2_SPARSE_MASK_Y ) >> 32 );
+    int32 X = int32( iKey & ULIS2_SPARSE_MASK_X );
+    int32 Y = int32( ( iKey & ULIS2_SPARSE_MASK_Y ) >> 32 );
     return  FVec2I32( X, Y );
 }
 
@@ -190,7 +190,7 @@ TTiledBlock< _MICRO, _MACRO >::QueryOneMutableTileElementForImminentDirtyOperati
 template< uint8 _MICRO, uint8 _MACRO >
 void
 TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) {
-    for( auto it : mSparseMap ) {
+    for( auto& it : mSparseMap ) {
         auto pos = PixelCoordinatesFromKey( it.first );
         pos.x *= iScale;
         pos.y *= iScale;
@@ -200,10 +200,35 @@ TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FBlock* iDst, const FVec2I64&
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
+TTiledBlock< _MICRO, _MACRO >::DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) {
+    for( auto& it : mSparseMap ) {
+        auto pos = PixelCoordinatesFromKey( it.first );
+        it.second->DrawDebugTileContent( iDst, iPos + pos );
+    }
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+void
 TTiledBlock< _MICRO, _MACRO >::Clear() {
-    for( auto i : mSparseMap )
+    for( auto& i : mSparseMap )
         delete  i.second;
     mSparseMap.clear();
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+void
+TTiledBlock< _MICRO, _MACRO >::SanitizeNow() {
+    std::vector< tMap::iterator > to_delete;
+    tMap::iterator it = mSparseMap.begin();
+    while( it != mSparseMap.end() ) {
+        it->second->SanitizeNow( mTilePool );
+        if( it->second->Child() == nullptr )
+            to_delete.push_back( it );
+        ++it;
+    }
+
+    for( auto it : to_delete )
+        mSparseMap.erase( it );
 }
 
 template< uint8 _MICRO, uint8 _MACRO >

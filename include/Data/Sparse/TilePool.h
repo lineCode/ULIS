@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <chrono>
 #include <vector>
+#include <thread>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -68,6 +69,8 @@ public:
     void AllocateNow( uint32 iNum );
     void ClearNow( uint32 iNum );
     FTileElement* QueryFreshTile();
+    FTileElement* PerformRedundantHashMergeReturnCorrect( FTileElement* iElem );
+    FTileElement* PerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem );
 
     TTiledBlock< _MICRO, _MACRO >* CreateNewTiledBlock();
     void RequestTiledBlockDeletion( TTiledBlock< _MICRO, _MACRO >* iBlock );
@@ -110,6 +113,11 @@ private:
     // Thread Work Items
     FThreadPool*        mThreadPool;
     FHostDeviceInfo*    mHost;
+
+    std::thread* mAllocatorCleanerWorker_thread;
+    std::thread* mSanitizerCompressorWorker_thread;
+    std::atomic< uint32 > mNumTilesScheduledForClear_atomic;
+    std::atomic< uint32 > mNumFreshTilesAvailableForQuery_atomic;
 };
 
 ULIS2_NAMESPACE_END
