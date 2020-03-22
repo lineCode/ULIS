@@ -41,7 +41,10 @@ public:
 
 public:
     // Tile API
-    virtual const FBlock* QueryConstBlockAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) = 0;
+    virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const = 0;
+    virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords  ) = 0;
+    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
+    virtual  void Clear() = 0;
 };
 
 
@@ -78,12 +81,16 @@ private:
     // Private API
     tRootChunk* CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( const FVec2I64& iPos );
     tRootChunk* CreateRootEntryAtChunkSectorIfNotExistAndReturnPtr( const FVec2I32& iPos );
-    tRootChunk* QueryRootEntryAtPixelSector( const FVec2I64& iPos );
-    tRootChunk* QueryRootEntryAtChunkSector( const FVec2I32& iPos );
+    tRootChunk* QueryRootEntryAtPixelSector( const FVec2I64& iPos ) const;
+    tRootChunk* QueryRootEntryAtChunkSector( const FVec2I32& iPos ) const;
 
 public:
     // Tile API
-    virtual const FBlock* QueryConstBlockAtPixelCoordinates( const FVec2I64& iPos, FVec2I64* oLocalCoords ) override;
+    virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const override;
+    virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) override;
+    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override;
+    virtual  void Clear() override;
+    const tMap& GetSparseMap() const;
 
 private:
     // Private Data Members
@@ -99,6 +106,8 @@ private:
     static constexpr int32 macro_chunk_max_coord                = std::numeric_limits< int32 >::max();
     static constexpr int64 pixel_min_coord                      = static_cast< int64 >( macro_chunk_min_coord ) * static_cast< int64 >( macro_chunk_size_as_micro_chunks );
     static constexpr int64 pixel_max_coord                      = static_cast< int64 >( macro_chunk_max_coord ) * static_cast< int64 >( macro_chunk_size_as_micro_chunks );
+    static const FVec2I64 modLeaf;
+    static const FVec2I64 modRoot;
 };
 
 ULIS2_NAMESPACE_END

@@ -52,10 +52,11 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( t
     , mFreshTilesAvailableForQuery_slist        ()
     , mDirtyHashedTilesCurrentlyInUse_dlist     ()
     , mCorrectlyHashedTilesCurrentlyInUse_umap  ()
+    , mDirtyTaskIterator                        ( mDirtyHashedTilesCurrentlyInUse_dlist.end() )
     , mThreadPool                               ( nullptr               )
     , mHost                                     ( nullptr               )
     , mTimeOutMS                                ( iTimeOutMS            )
-    , mBytesPerTile                                      ( 0                     )
+    , mBytesPerTile                             ( 0                     )
     , mCurrentRAMUSage                          ( 0                     )
     , mTickForbidden                            ( false                 )
     , mNumTilesScheduledForClear                ( 0                     )
@@ -101,12 +102,13 @@ TTilePool< _MICRO, _MACRO >::Tick() {
 
     mTickForbidden = true;
 
-    int     num_task = 4;
+    int     num_task = 5;
     auto    micro_delta = mTimeOutMS / num_task;
     auto    span_del1   = micro_delta * 1;
     auto    span_del2   = micro_delta * 2;
     auto    span_new    = micro_delta * 3;
     auto    span_clear  = micro_delta * 4;
+    auto    span_wipe   = micro_delta * 5;
     std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
 
     { // Del
@@ -168,6 +170,35 @@ TTilePool< _MICRO, _MACRO >::Tick() {
         }
     }
 
+    { // Whipe
+        while( !( mDirtyHashedTilesCurrentlyInUse_dlist.empty() ) ) {
+            mDirtyTaskIterator = mDirtyTaskIterator == mDirtyHashedTilesCurrentlyInUse_dlist.end() ? mDirtyHashedTilesCurrentlyInUse_dlist.begin() : mDirtyTaskIterator;
+            auto ptr = *mDirtyTaskIterator;
+            if( ptr->mRefCount == 0 ) {
+                auto element_to_erase = mDirtyTaskIterator;
+                mTilesScheduledForClear_slist.push_front( ptr->mBlock );
+                ++mNumTilesScheduledForClear;
+                delete ptr;
+                ptr = nullptr;
+                mDirtyTaskIterator = mDirtyTaskIterator == mDirtyHashedTilesCurrentlyInUse_dlist.end() ? mDirtyHashedTilesCurrentlyInUse_dlist.begin() : std::next( mDirtyTaskIterator );
+                mDirtyHashedTilesCurrentlyInUse_dlist.erase( element_to_erase );
+            }
+            else
+            {
+                if( ptr->mDirty ) {
+                    ptr->mHash = ptr->mBlock->CRC32();
+                    ptr->mDirty = false;
+                }
+                mDirtyTaskIterator = std::next( mDirtyTaskIterator );
+                mDirtyTaskIterator = mDirtyTaskIterator == mDirtyHashedTilesCurrentlyInUse_dlist.end() ? mDirtyHashedTilesCurrentlyInUse_dlist.begin() : mDirtyTaskIterator;
+            }
+
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::steady_clock::now() - start_time );
+            if( elapsed > span_wipe )
+                break;
+        }
+    }
+
     mTickForbidden = false;
 }
 
@@ -205,6 +236,7 @@ TTilePool< _MICRO, _MACRO >::PurgeAllNow() {
     mNumTilesScheduledForClear = 0;
     mNumFreshTilesAvailableForQuery = 0;
     mTickForbidden = false;
+    mDirtyTaskIterator = mDirtyHashedTilesCurrentlyInUse_dlist.end();
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
@@ -245,13 +277,13 @@ TTilePool< _MICRO, _MACRO >::QueryFreshTile() {
     mTickForbidden = true;
     if( !mNumFreshTilesAvailableForQuery )
         ClearNow( 1 );
-    auto ptr = mTilesScheduledForClear_slist.front();
-    mTilesScheduledForClear_slist.pop_front();
-    --mNumTilesScheduledForClear;
-    FTileElement* te = new FTileElement( ptr, 1 );
-    mDirtyHashedTilesCurrentlyInUse_dlist.push_back( te );
+    auto ptr = mFreshTilesAvailableForQuery_slist.front();
+    mFreshTilesAvailableForQuery_slist.pop_front();
+    --mNumFreshTilesAvailableForQuery;
+    FTileElement* tile = new FTileElement( ptr, 1 );
+    mDirtyHashedTilesCurrentlyInUse_dlist.push_back( tile );
     mTickForbidden = false;
-    return  te;
+    return  tile;
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
@@ -265,8 +297,10 @@ template< uint8 _MICRO, uint8 _MACRO >
 void
 TTilePool< _MICRO, _MACRO >::RequestTiledBlockDeletion( TTiledBlock< _MICRO, _MACRO >* iBlock ) {
     auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), iBlock );
-    if( it != mRegisteredTiledBlocks.end() )
+    if( it != mRegisteredTiledBlocks.end() ) {
+        delete it;
         mRegisteredTiledBlocks.erase( it );
+    }
 }
 
 ULIS2_NAMESPACE_END

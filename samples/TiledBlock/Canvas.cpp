@@ -68,8 +68,8 @@ SCanvas::SCanvas()
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 
-    uint64 maxRAM   = Mo2O( 1000 );
-    int timeoutms   = 20;
+    uint64 maxRAM   = Mo2O( 100 );
+    int timeoutms   = 2;
     mTilePool = new TTilePool< MICRO_64, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr, maxRAM, 0, FThreadPool::MaxWorkers(), timeoutms );
     mTilePool->ClearNow( 10000 );
     mTiledBlock = mTilePool->CreateNewTiledBlock();
@@ -87,6 +87,15 @@ SCanvas::mousePressEvent( QMouseEvent* event ) {
 
 void
 SCanvas::mouseMoveEvent( QMouseEvent* event ) {
+    if ( event->buttons() & Qt::LeftButton ) {
+        int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
+        int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
+        float scale = WW / 1024.f;
+        FVec2I64 ref( 10, 80+HH+10 );
+        FVec2I64 pos( event->x(), event->y() );
+        FVec2I64 res( ( pos.x - ref.x ) / scale, ( pos.y - ref.y ) / scale );
+        FTileElement** ptr1 = mTiledBlock->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( res, &res );
+    }
 }
 
 void
@@ -116,6 +125,11 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
     if( event->key() == Qt::Key::Key_Plus ) {
         mTilePool->PurgeAllNow();
     }
+
+    if( event->key() == Qt::Key::Key_A ) {
+        mTiledBlock->Clear();
+    }
+
 }
 
 void
@@ -125,9 +139,9 @@ SCanvas::tickEvent() {
     int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
     int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
     auto cramu = mTilePool->CurrentRAMUsage();
-    float maxramu = Mo2O( 2000 );
+    float maxramu = Mo2O( 100 );
     float tramu = cramu / maxramu;
-    int iramu = int( tramu * HH );
+    int iramu = FMaths::Min( HH, int( tramu * HH ) );
     for( int i = 0; i < iramu; ++i ) {
         FPixelProxy prox = mRAMUSAGESWAPBUFFER->PixelProxy( WW, HH - i );
         prox.SetR8( 20 );
@@ -152,6 +166,7 @@ SCanvas::tickEvent() {
     Copy( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, oldram, newram, oldram->Rect(), FVec2I( -1, 0 ) );
     mRAMUSAGESWAPBUFFER = newram;
 
+    mTiledBlock->DrawDebugWireframe( mCanvas, FVec2I64( 10, 80+HH+10 ), WW / 1024.f );
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }

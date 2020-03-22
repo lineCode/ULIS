@@ -77,6 +77,19 @@ struct ULIS2_API FRect
             &&  iV.y >= static_cast< T >( y )
             &&  iV.y <  static_cast< T >( y + h );
     }
+
+    template< class T >
+    bool InVerticalRange( T iV ) {
+        return  iV >= static_cast< T >( y )
+            &&  iV <  static_cast< T >( y + h );
+    }
+
+    template< class T >
+    bool InHorizontalRange( T iV ) {
+        return  iV >= static_cast< T >( x )
+            &&  iV <  static_cast< T >( x + w );
+    }
+
     FRect operator&( const FRect& iOther ) const;
     FRect operator|( const FRect& iOther ) const;
     bool operator==( const FRect& iOther ) const;

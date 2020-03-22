@@ -105,6 +105,8 @@ private:
 
     std::vector< TTiledBlock< _MICRO, _MACRO >* > mRegisteredTiledBlocks;
 
+    std::list< FTileElement* >::iterator        mDirtyTaskIterator;
+
     // Thread Work Items
     FThreadPool*        mThreadPool;
     FHostDeviceInfo*    mHost;
