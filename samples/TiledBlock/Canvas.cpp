@@ -169,7 +169,7 @@ SCanvas::tickEvent() {
     int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
     int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
     auto cramu = mTilePool->CurrentRAMUsage();
-    float maxramu = Mo2O( 100 );
+    float maxramu = Mo2O( 2 );
     float tramu = cramu / maxramu;
     int iramu = FMaths::Min( HH, int( tramu * HH ) );
     for( int i = 0; i < iramu; ++i ) {

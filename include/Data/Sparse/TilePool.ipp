@@ -192,9 +192,6 @@ TTilePool< _MICRO, _MACRO >::Tick() {
             {
                 if( ptr->mDirty ) {
                     ptr->mHash = ptr->mBlock->CRC32();
-                    if( ptr->mHash == 1799349750 ) {
-                        auto dummy = 0;
-                    }
                     ptr->mDirty = false;
                 }
                 mDirtyTaskIterator = std::next( mDirtyTaskIterator );
@@ -205,6 +202,10 @@ TTilePool< _MICRO, _MACRO >::Tick() {
             if( elapsed > span_wipe )
                 break;
         }
+    }
+
+    for( auto i : mRegisteredTiledBlocks ) {
+        i->SanitizeNow();
     }
 
     mTickForbidden = false;
