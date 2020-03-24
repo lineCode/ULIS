@@ -44,7 +44,7 @@ struct ULIS2_API TVec2
     ULIS2_FORCEINLINE TVec2 operator/(const TVec2& iOther ) const {     return  TVec2( x / iOther.x, y / iOther.y ); }
     ULIS2_FORCEINLINE TVec2 operator%(const TVec2& iOther ) const {     return  TVec2( x % iOther.x, y % iOther.y ); }
     ULIS2_FORCEINLINE bool operator==(const TVec2& iOther ) const {     return  x == iOther.x && y == iOther.y; }
-    ULIS2_FORCEINLINE bool operator!=(const TVec2& iOther ) const {     return x != iOther.x || y != iOther.y; }
+    ULIS2_FORCEINLINE bool operator!=(const TVec2& iOther ) const {     return  x != iOther.x || y != iOther.y; }
     ULIS2_FORCEINLINE TVec2 operator-() const {                         return  TVec2(-x, -y, -Z); }
     ULIS2_FORCEINLINE TVec2 operator+=(const TVec2& iOther ) {          x += iOther.x; y += iOther.y; return  *this; }
     ULIS2_FORCEINLINE TVec2 operator-=(const TVec2& iOther ) {          x -= iOther.x; y -= iOther.y; return  *this; }

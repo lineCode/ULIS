@@ -70,7 +70,7 @@ SCanvas::SCanvas()
 
     uint64 maxRAM   = Mo2O( 100 );
     int timeoutms   = 10;
-    mTilePool = new TTilePool< MICRO_16, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr, maxRAM, 0, FThreadPool::MaxWorkers(), timeoutms );
+    mTilePool = new TTilePool< MICRO_16, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr );
     mTilePool->ClearNow( 10000 );
     mTiledBlock = mTilePool->CreateNewTiledBlock();
 
@@ -134,7 +134,7 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
         mTilePool->SetRAMUsageCapTarget( 0 );
 
     if( event->key() == Qt::Key::Key_1 )
-        mTilePool->SetRAMUsageCapTarget( Mo2O( 100 ) );
+        mTilePool->SetRAMUsageCapTarget( Mo2O( 2 ) );
 
     if( event->key() == Qt::Key::Key_2 )
         mTilePool->SetRAMUsageCapTarget( Mo2O( 200 ) );
@@ -164,8 +164,6 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
 
 void
 SCanvas::tickEvent() {
-    mTilePool->Tick();
-
     int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
     int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
     auto cramu = mTilePool->CurrentRAMUsage();

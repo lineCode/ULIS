@@ -17,6 +17,9 @@
 #include "Data/Sparse/Chunk.h"
 #include "Maths/Geometry.h"
 #include <unordered_map>
+#include <mutex>
+#include <atomic>
+#include <thread>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -99,6 +102,7 @@ public:
 private:
     // Private Data Members
     tMap mSparseMap;
+    std::mutex mSparseMapLock;
     tTilePool* mTilePool;
 
     static constexpr uint8  micro_threshold                     = _MICRO;

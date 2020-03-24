@@ -23,7 +23,7 @@ ULIS2_API void Clear( FThreadPool*              iThreadPool
                     , FBlock*                   iDestination
                     , const FRect&              iArea );
 
-ULIS2_API void ClearRaw( FBlock* iSrc, bool iCallCB );
+ULIS2_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
 
 ULIS2_NAMESPACE_END
 

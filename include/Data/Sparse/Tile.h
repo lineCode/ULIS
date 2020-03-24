@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include <atomic>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -27,8 +28,8 @@ struct ULIS2_API FTileElement {
     void IncreaseRefCount();
     FBlock* mBlock;
     uint32  mHash;
-    uint32  mRefCount;
-    bool    mDirty;
+    std::atomic< uint32 >   mRefCount;
+    std::atomic< bool >     mDirty;
 };
 ULIS2_NAMESPACE_END
 
