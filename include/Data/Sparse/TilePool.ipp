@@ -77,7 +77,7 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( t
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 template< uint8 _MICRO, uint8 _MACRO > const FVec2I&        TTilePool< _MICRO, _MACRO >::TileSize()                                 const   { return  mTileSize;                                          }
-template< uint8 _MICRO, uint8 _MACRO > uint32               TTilePool< _MICRO, _MACRO >::EmptyCRC32Hash()                           const   { return  mEmptyHash;                                         }
+template< uint8 _MICRO, uint8 _MACRO > uint32               TTilePool< _MICRO, _MACRO >::EmptyCRC32Hash()                           const   { return  mEmptyCRC32Hash;                                         }
 template< uint8 _MICRO, uint8 _MACRO > const FBlock*        TTilePool< _MICRO, _MACRO >::EmptyTile()                                const   { return  mEmptyTile;                                         }
 template< uint8 _MICRO, uint8 _MACRO > tFormat              TTilePool< _MICRO, _MACRO >::TileFormat()                               const   { return  mTileFormat;                                        }
 template< uint8 _MICRO, uint8 _MACRO > const FFormatInfo&   TTilePool< _MICRO, _MACRO >::TileFormatInfo()                           const   { return  mEmptyTile->FormatInfo();                           }
@@ -217,28 +217,148 @@ TTilePool< _MICRO, _MACRO >::ClearNow( uint32 iNum ) {
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement*
 TTilePool< _MICRO, _MACRO >::QueryFreshTile() {
-    if( mNumFreshTilesAvailableForQueryAtomic.load() == 0 )
+    mMutexFreshTilesAvailableForQueryLock.lock();
+    bool freshEmpty = mFreshTilesAvailableForQuery.empty();
+    mMutexFreshTilesAvailableForQueryLock.unlock();
+
+    if( freshEmpty )
         ClearNow( 1 );
 
     mMutexFreshTilesAvailableForQueryLock.lock();
     FBlock* block = mFreshTilesAvailableForQuery.front();
     mFreshTilesAvailableForQuery.pop_front();
+    mMutexFreshTilesAvailableForQueryLock.unlock();
     --mNumFreshTilesAvailableForQueryAtomic;
+
     FTileElement* tile = new FTileElement( block );
+
+    mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
     mDirtyHashedTilesCurrentlyInUse.push_back( tile );
+    mMutexDirtyHashedTilesCurrentlyInUseLock.unlock();
+
     return  tile;
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement*
 TTilePool< _MICRO, _MACRO >::PerformRedundantHashMergeReturnCorrect( FTileElement* iElem ) {
-    return  nullptr;
+    ULIS2_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
+
+    if( iElem->mDirty.load() == true )
+        return  iElem;
+
+    // If the hashed tile is empty we return null ptr and decrease refcount
+    if( iElem->mHash == mEmptyCRC32Hash ) {
+        iElem->DecreaseRefCount();
+        return  nullptr;
+    }
+
+    // Find the hashed tile in the map if not empty
+    mMutexCorrectlyHashedTilesCurrentlyInUseLock.lock();
+    std::unordered_map< uint32, FTileElement* >::iterator& it = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
+    std::unordered_map< uint32, FTileElement* >::iterator& end = mCorrectlyHashedTilesCurrentlyInUse.end();
+    mMutexCorrectlyHashedTilesCurrentlyInUseLock.unlock();
+
+    if( it == end ) {
+        if( mNumFreshTilesAvailableForQueryAtomic.load() == 0 )
+            ClearNow( 1 );
+
+        mMutexFreshTilesAvailableForQueryLock.lock();
+        FBlock* block = mFreshTilesAvailableForQuery.front();
+        mFreshTilesAvailableForQuery.pop_front();
+        mMutexFreshTilesAvailableForQueryLock.unlock();
+        --mNumFreshTilesAvailableForQueryAtomic;
+        FTileElement* tile = new FTileElement( block );
+        tile->mDirty = false;
+        tile->mHash = iElem->mHash;
+        CopyRaw( iElem->mBlock, tile->mBlock, false );
+
+        mMutexCorrectlyHashedTilesCurrentlyInUseLock.lock();
+        mCorrectlyHashedTilesCurrentlyInUse[ tile->mHash ] = tile;
+        mMutexCorrectlyHashedTilesCurrentlyInUseLock.unlock();
+
+        iElem->DecreaseRefCount();
+        tile->IncreaseRefCount();
+        return  tile;
+    }
+
+    if( it->second == iElem )
+        return  iElem;
+
+    it->second->IncreaseRefCount();
+    iElem->DecreaseRefCount();
+    return  it->second;
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement*
 TTilePool< _MICRO, _MACRO >::PerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem ) {
-    return  nullptr;
+    ULIS2_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
+
+    if( !( iElem->mDirty.load() ) ) {
+        mMutexCorrectlyHashedTilesCurrentlyInUseLock.lock();
+        std::unordered_map< uint32, FTileElement* >::iterator& it = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
+        std::unordered_map< uint32, FTileElement* >::iterator& end = mCorrectlyHashedTilesCurrentlyInUse.end();
+        mMutexCorrectlyHashedTilesCurrentlyInUseLock.unlock();
+
+        if( it == end ) {
+            if( iElem->mRefCount > 1 ) {
+                FTileElement* tile = QueryFreshTile();
+                CopyRaw( iElem->mBlock, tile->mBlock, false );
+                iElem->DecreaseRefCount();
+                tile->IncreaseRefCount();
+                return  tile;
+            } else {
+                iElem->mDirty = true;
+                return  iElem;
+            }
+        } else {
+            if( it->second == iElem ) {
+                if( iElem->mRefCount > 1 ) {
+                    FTileElement* tile = QueryFreshTile();
+                    CopyRaw( iElem->mBlock, tile->mBlock, false );
+                    iElem->DecreaseRefCount();
+                    tile->IncreaseRefCount();
+                    return  tile;
+                } else {
+                    mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
+                    mDirtyHashedTilesCurrentlyInUse.push_back( iElem );
+                    mMutexDirtyHashedTilesCurrentlyInUseLock.unlock();
+                    mMutexCorrectlyHashedTilesCurrentlyInUseLock.lock();
+                    mCorrectlyHashedTilesCurrentlyInUse.erase( it );
+                    mMutexCorrectlyHashedTilesCurrentlyInUseLock.unlock();
+                    iElem->mDirty = true;
+                    return  iElem;
+                }
+            } else {
+                if( iElem->mRefCount > 1 ) {
+                    FTileElement* tile = QueryFreshTile();
+                    CopyRaw( iElem->mBlock, tile->mBlock, false );
+                    iElem->DecreaseRefCount();
+                    tile->IncreaseRefCount();
+                    return  tile;
+                } else {
+                    iElem->mDirty = true;
+                    return  iElem;
+                }
+            }
+        }
+    }
+    else
+    {
+        if( iElem->mRefCount > 1 ) {
+            FTileElement* tile = QueryFreshTile();
+            CopyRaw( iElem->mBlock, tile->mBlock, false );
+            iElem->DecreaseRefCount();
+            tile->IncreaseRefCount();
+            return  tile;
+        }
+        else
+        {
+            return  iElem;
+        }
+    }
+
 }
 
 //--------------------------------------------------------------------------------------
@@ -249,7 +369,12 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
 
         // Dealloc in blocks scheduled for clear if we overflow the RAM usage cap target.
         if( mCurrentRAMUsageAtomic.load() > mRAMUsageCapTargetAtomic.load() ) {
-            if( mNumTilesScheduledForClearAtomic.load() ) {
+
+            mMutexTilesScheduledForClearLock.lock();
+            bool clearEmpty = mTilesScheduledForClear.empty();
+            mMutexTilesScheduledForClearLock.unlock();
+
+            if( !clearEmpty ) {
                 mMutexTilesScheduledForClearLock.lock();
                 auto block = mTilesScheduledForClear.front();
                 mTilesScheduledForClear.pop_front();
@@ -261,15 +386,26 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
         }
 
         // Dealloc in blocks scheduled available for query if we overflow the RAM usage cap target, and if scheduled for clear is already empty
-        if( mCurrentRAMUsageAtomic.load() > mRAMUsageCapTargetAtomic.load() ) {
-            if( mNumFreshTilesAvailableForQueryAtomic.load() && mNumTilesScheduledForClearAtomic.load() == 0 ) {
+        {
+            if( mCurrentRAMUsageAtomic.load() > mRAMUsageCapTargetAtomic.load() ) {
+
                 mMutexFreshTilesAvailableForQueryLock.lock();
-                auto block = mFreshTilesAvailableForQuery.front();
-                mFreshTilesAvailableForQuery.pop_front();
+                bool freshEmpty = mFreshTilesAvailableForQuery.empty();
                 mMutexFreshTilesAvailableForQueryLock.unlock();
-                --mNumFreshTilesAvailableForQueryAtomic;
-                delete  block;
-                mCurrentRAMUsageAtomic.fetch_sub( mBytesPerTile );
+
+                mMutexTilesScheduledForClearLock.lock();
+                bool clearEmpty = mTilesScheduledForClear.empty();
+                mMutexTilesScheduledForClearLock.unlock();
+
+                if( clearEmpty && !freshEmpty ) {
+                    mMutexFreshTilesAvailableForQueryLock.lock();
+                    auto block = mFreshTilesAvailableForQuery.front();
+                    mFreshTilesAvailableForQuery.pop_front();
+                    mMutexFreshTilesAvailableForQueryLock.unlock();
+                    --mNumFreshTilesAvailableForQueryAtomic;
+                    delete  block;
+                    mCurrentRAMUsageAtomic.fetch_sub( mBytesPerTile );
+                }
             }
         }
 
@@ -278,18 +414,27 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
             AllocateNow( 1 );
 
         // Clear blocks in schdeduled for clear if there are some, then transfer them to available for query
-        if( mNumTilesScheduledForClearAtomic.load() ) {
+        {
             mMutexTilesScheduledForClearLock.lock();
-            auto block = mTilesScheduledForClear.front();
-            mTilesScheduledForClear.pop_front();
+            bool empty = mTilesScheduledForClear.empty();
             mMutexTilesScheduledForClearLock.unlock();
-            --mNumTilesScheduledForClearAtomic;
-            ClearRaw( block );
-            mMutexFreshTilesAvailableForQueryLock.lock();
-            mFreshTilesAvailableForQuery.emplace_front( block );
-            mMutexFreshTilesAvailableForQueryLock.unlock();
-            ++mNumFreshTilesAvailableForQueryAtomic;
+
+            if( !empty ) {
+                mMutexTilesScheduledForClearLock.lock();
+                auto block = mTilesScheduledForClear.front();
+                mTilesScheduledForClear.pop_front();
+                mMutexTilesScheduledForClearLock.unlock();
+                --mNumTilesScheduledForClearAtomic;
+                ClearRaw( block );
+                mMutexFreshTilesAvailableForQueryLock.lock();
+                mFreshTilesAvailableForQuery.emplace_front( block );
+                mMutexFreshTilesAvailableForQueryLock.unlock();
+                ++mNumFreshTilesAvailableForQueryAtomic;
+            }
         }
+
+        // Relax
+        std::this_thread::sleep_for( std::chrono::duration< double, std::nano >( 0 ) );
     }
 }
 
@@ -298,21 +443,27 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
         if( bRequestWorkersTerminationAtomic.load() ) return;
 
         { // Garbage-Collect dirty tiles we refcount 0 or compute hash for others tiles that are actually dirty.
-            mMutexFreshTilesAvailableForQueryLock.lock();
+            mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
             std::list< FTileElement* >::iterator& it = mDirtyHashedTilesCurrentlyInUse.begin();
-            mMutexFreshTilesAvailableForQueryLock.unlock();
+            mMutexDirtyHashedTilesCurrentlyInUseLock.unlock();
             while( true ) {
-                mMutexFreshTilesAvailableForQueryLock.lock();
+                mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
                 std::list< FTileElement* >::iterator& end = mDirtyHashedTilesCurrentlyInUse.end();
-                mMutexFreshTilesAvailableForQueryLock.unlock();
+                mMutexDirtyHashedTilesCurrentlyInUseLock.unlock();
                 if( it == end )
                     break;
 
                 FTileElement* tile = *it;
                 if( tile->mRefCount.load() == 0 ) {
-                    mMutexFreshTilesAvailableForQueryLock.lock();
-                    it = std::prev( mDirtyHashedTilesCurrentlyInUse.erase( it ) );
-                    mMutexFreshTilesAvailableForQueryLock.unlock();
+                    mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
+                    it = mDirtyHashedTilesCurrentlyInUse.erase( it );
+                    mMutexDirtyHashedTilesCurrentlyInUseLock.unlock();
+
+                    if( it == end )
+                        break;
+
+                    if( it != mDirtyHashedTilesCurrentlyInUse.begin() )
+                        it = std::prev( it );
 
                     mMutexTilesScheduledForClearLock.lock();
                     mTilesScheduledForClear.push_front( tile->mBlock );
@@ -327,11 +478,14 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
                     }
                 }
 
-                mMutexFreshTilesAvailableForQueryLock.lock();
+                mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
                 it = std::next( it );
-                mMutexFreshTilesAvailableForQueryLock.unlock();
+                mMutexDirtyHashedTilesCurrentlyInUseLock.unlock();
             }
         }
+
+        // Relax
+        std::this_thread::sleep_for( std::chrono::duration< double, std::nano >( 0 ) );
     }
 }
 

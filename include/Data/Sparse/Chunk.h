@@ -298,8 +298,7 @@ public:
     }
 
     virtual  void SanitizeNow( tTilePool* iPool ) override {
-        if( !( mPtr->mDirty ) )
-            mPtr = iPool->PerformRedundantHashMergeReturnCorrect( mPtr );
+        mPtr = iPool->PerformRedundantHashMergeReturnCorrect( mPtr );
     }
 
     FTileElement* PointedData() {
