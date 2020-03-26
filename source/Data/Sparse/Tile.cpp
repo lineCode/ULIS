@@ -17,7 +17,9 @@ ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FTileElement
 FTileElement::~FTileElement()
-{}
+{
+    ULIS2_ASSERT( mRefCount.load() == 0, "Bad RefCount on Delete Tile" );
+}
 
 FTileElement::FTileElement()
     : mBlock( nullptr )

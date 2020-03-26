@@ -65,12 +65,20 @@ public:
 public:
     // Core API
     void                                        PurgeAllNow();
-    void                                        AllocateNow( uint32 iNum );
-    void                                        ClearNow( uint32 iNum );
-    FTileElement*                               QueryFreshTile();
+    FTileElement*                               XQueryFreshTile();
     FTileElement*                               PerformRedundantHashMergeReturnCorrect( FTileElement* iElem );
-    FTileElement*                               PerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem );
+    FTileElement*                               XPerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem );
 
+private:
+    // Internal API
+    void    AllocateNow_Unsafe( int32 iNum );
+    void    ClearNowDirect_Unsafe( int32 iNum );
+
+    void    DeallocOneInTilesScheduledForClearIfRAMOverflowsTarget();
+    void    DeallocOneInFreshTilesAvailableForQueryIfRAMOverflowsTargetAndTilesScheduledForClearIsEmptyImprecise();
+    void    AllocOneInTilesScheduledForClearIfRAMUnderflowsTarget();
+    void    ClearOneInTilesScheduledForClearAndMoveToFreshTilesAvailableForQueryIfNeeded();
+    void    SanitizeAllDirtyTilesCurrentlyInUse();
 private:
     // Private Workers API
     void  ThreadedDeallocatorAllocatorCleanerBackgroundWorker();
@@ -78,30 +86,47 @@ private:
 
 private:
     // Private Data Members
+    // Static sizing
     static constexpr int                                            scPixelDim = ::smath::pow( 2, _MICRO );
+
+    // Runtime Tile Info
     const FVec2I                                                    mTileSize;
     const tFormat                                                   mTileFormat;
     FColorProfile         * const                                   mTileColorProfile;
+
+    // Empty Tile Ref
     FBlock                * const                                   mEmptyTile;
-    FThreadPool           * const                                   mThreadPool;
-    FHostDeviceInfo const * const                                   mHost;
     uint32                                                          mEmptyCRC32Hash;
     const uint64                                                    mBytesPerTile;
+
+    // Atomic memory Intent
     std::atomic< uint64 >                                           mSWAPUsageCapTargetAtomic;
     std::atomic< uint64 >                                           mRAMUsageCapTargetAtomic;
     std::atomic< uint64 >                                           mCurrentRAMUsageAtomic;
+
+    // Memory Pools
     std::forward_list< FBlock* >                                    mTilesScheduledForClear;
     std::forward_list< FBlock* >                                    mFreshTilesAvailableForQuery;
+
+    // Usage Pools
     std::list< FTileElement* >                                      mDirtyHashedTilesCurrentlyInUse;
     std::unordered_map< uint32, FTileElement* >                     mCorrectlyHashedTilesCurrentlyInUse;
+
+    // Registered Blocks
     std::list< tTiledBlock* >                                       mRegisteredTiledBlocks;
+
+    // Parallel Concurrency Tools Mutex
     std::mutex                                                      mMutexTilesScheduledForClearLock;
     std::mutex                                                      mMutexFreshTilesAvailableForQueryLock;
     std::mutex                                                      mMutexDirtyHashedTilesCurrentlyInUseLock;
     std::mutex                                                      mMutexCorrectlyHashedTilesCurrentlyInUseLock;
     std::mutex                                                      mMutexRegisteredTiledBlocksLock;
+
+    // Atomic Hack for Memory Pools Sizing
     std::atomic< uint32 >                                           mNumTilesScheduledForClearAtomic;
     std::atomic< uint32 >                                           mNumFreshTilesAvailableForQueryAtomic;
+
+    // Threading Workers Tools
     std::atomic< bool >                                             bRequestWorkersTerminationAtomic;
     std::thread * const                                             mThreadDeallocatorAllocatorCleanerBackgroundWorker;
     std::thread * const                                             mThreadHasherGarbageCollectorBackgroundWorker;

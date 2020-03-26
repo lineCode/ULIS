@@ -71,7 +71,6 @@ SCanvas::SCanvas()
     uint64 maxRAM   = Mo2O( 100 );
     int timeoutms   = 10;
     mTilePool = new TTilePool< MICRO_16, MACRO_16 >( ULIS2_FORMAT_RGBA8, nullptr );
-    mTilePool->ClearNow( 10000 );
     mTiledBlock = mTilePool->CreateNewTiledBlock();
 
     mRAMUSAGEBLOCK1 = new FBlock( 300, 100, ULIS2_FORMAT_RGBA8 );
@@ -147,10 +146,6 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
 
     if( event->key() == Qt::Key::Key_5 )
         mTilePool->SetRAMUsageCapTarget( Mo2O( 2000 ) );
-
-    if( event->key() == Qt::Key::Key_Plus ) {
-        mTilePool->PurgeAllNow();
-    }
 
     if( event->key() == Qt::Key::Key_A ) {
         mTiledBlock->Clear();

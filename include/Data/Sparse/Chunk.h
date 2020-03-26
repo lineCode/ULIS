@@ -158,6 +158,7 @@ public:
     }
     TRootChunk()
         : mChild( nullptr )
+        , mDirty( true )
     {}
 
 public:
@@ -167,21 +168,30 @@ public:
         return  mChild ? iPool->EmptyTile() : mChild->QueryConstBlockAtPixelCoordinates( iPool, iPos );
     }
 
-    void ReplaceChild( tChild* iNewChild ) {
-        if( mChild )
-            delete  mChild;
-        mChild = iNewChild;
-    }
 
     void PerformRootSubdivisionForImminentMutableChangeIfNeeded( tTilePool* iPool ) {
         if( mChild == nullptr )
-            mChild = bed ? dynamic_cast< tChild* >( new tDataChild( iPool->QueryFreshTile() ) ) : dynamic_cast< tChild* >( new tQuadtreeChild() );
+            if( bed ) {
+                // X Query Tile, X stands for Refcount decrease needed by caller.
+                FTileElement* tile = iPool->XQueryFreshTile();
+                mChild = dynamic_cast< tChild* >( new tDataChild(  ) );
+                tile->DecreaseRefCount();
+            } else {
+                mChild = dynamic_cast< tChild* >( new tQuadtreeChild() );
+            }
         else
-            if( mChild->Type() == eChunkType::kData && !bed )
-                ReplaceChild( new tQuadtreeChild( dynamic_cast< tDataChild* >( mChild )->PointedData() ) );
+            if( mChild->Type() == eChunkType::kData && !bed ) {
+                FTileElement* tile = dynamic_cast< tDataChild* >( mChild )->PointedData();
+                tile->IncreaseRefCount();
+                if( mChild )
+                    delete  mChild;
+                mChild = new tQuadtreeChild( tile );
+                tile->DecreaseRefCount();
+            }
     }
 
     virtual  FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( tTilePool* iPool, const FVec2I64& iPos ) override {
+        mDirty.store( true );
         PerformRootSubdivisionForImminentMutableChangeIfNeeded( iPool );
         return  mChild->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( iPool, iPos );
     }
@@ -199,6 +209,9 @@ public:
     }
 
     virtual  void SanitizeNow( tTilePool* iPool ) override {
+        if( mDirty.load() == false )
+            return;
+
         if( mChild ) {
             mChild->SanitizeNow( iPool );
             if( mChild->Type() == eChunkType::kData ) {
@@ -232,6 +245,7 @@ public:
 private:
     // Private Data Members
     tChild* mChild;
+    std::atomic< bool > mDirty;
 };
 
 
@@ -271,7 +285,7 @@ public:
     }
 
     void PerformDataCopyForImminentMutableChangeIfNeeded( tTilePool* iPool ) {
-        mPtr = iPool->PerformDataCopyForImminentMutableChangeIfNeeded( mPtr );
+        mPtr = iPool->XPerformDataCopyForImminentMutableChangeIfNeeded( mPtr );
         mPtr->mDirty = true;
     }
 
@@ -298,7 +312,8 @@ public:
     }
 
     virtual  void SanitizeNow( tTilePool* iPool ) override {
-        mPtr = iPool->PerformRedundantHashMergeReturnCorrect( mPtr );
+        if( mPtr->mDirty == false )
+            mPtr = iPool->PerformRedundantHashMergeReturnCorrect( mPtr );
     }
 
     FTileElement* PointedData() {
@@ -373,7 +388,14 @@ public:
 
     void PerformElementSubdivisionForImminentMutableChangeIfNeeded( uint8 iIndex, tTilePool* iPool ) {
         if( mQuad[iIndex] == nullptr )
-            mQuad[iIndex] = bed ? dynamic_cast< tSubAbstractChunk* >( new tSubDataChunk( iPool->QueryFreshTile() ) ) : dynamic_cast< tSubAbstractChunk* >( new tSubQuadtreeChunk() );
+            if( bed ) {
+                // X Query Tile, X stands for Refcount decrease needed by caller.
+                FTileElement* tile = iPool->XQueryFreshTile();
+                mQuad[iIndex] = dynamic_cast< tSubAbstractChunk* >( new tSubDataChunk( tile ) );
+                tile->DecreaseRefCount();
+            } else {
+                mQuad[iIndex] = dynamic_cast< tSubAbstractChunk* >( new tSubQuadtreeChunk() );
+            }
         else
             if( mQuad[iIndex]->Type() == eChunkType::kData && !bed )
                 ReplaceElement( iIndex, new tSubQuadtreeChunk( dynamic_cast< tSubDataChunk* >( mQuad[iIndex] )->PointedData() ) );
