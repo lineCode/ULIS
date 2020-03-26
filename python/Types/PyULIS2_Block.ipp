@@ -96,7 +96,7 @@ _PyULIS2Object_Block_GetterMethod_Begin( NumColorChannels   )   return  PyLong_F
 _PyULIS2Object_Block_GetterMethod_Begin( AlphaIndex         )   return  PyLong_FromLong( self->_mBlock->AlphaIndex() );         _PyULIS2Object_Block_GetterMethod_End
 _PyULIS2Object_Block_GetterMethod_Begin( CRC32              )   return  PyFloat_FromDouble( self->_mBlock->CRC32() );           _PyULIS2Object_Block_GetterMethod_End
 _PyULIS2Object_Block_GetterMethod_Begin( MD5                )   return  PyUnicode_FromString( self->_mBlock->MD5().c_str() );   _PyULIS2Object_Block_GetterMethod_End
-_PyULIS2Object_Block_GetterMethod_Begin( UUID               )   return  PyUnicode_FromString( self->_mBlock->UUID().c_str() );  _PyULIS2Object_Block_GetterMethod_End
+//_PyULIS2Object_Block_GetterMethod_Begin( UUID               )   return  PyUnicode_FromString( self->_mBlock->UUID().c_str() );  _PyULIS2Object_Block_GetterMethod_End
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Getters
@@ -150,7 +150,7 @@ static PyMethodDef _PyULIS2Object_Block_methods[] = {
     { "AlphaIndex"          , (PyCFunction)_PyULIS2Object_Block_AlphaIndex          , METH_NOARGS, "AlphaIndex"         },
     { "CRC32"               , (PyCFunction)_PyULIS2Object_Block_CRC32               , METH_NOARGS, "CRC32"              },
     { "MD5"                 , (PyCFunction)_PyULIS2Object_Block_MD5                 , METH_NOARGS, "MD5"                },
-    { "UUID"                , (PyCFunction)_PyULIS2Object_Block_UUID                , METH_NOARGS, "UUID"               },
+    //{ "UUID"                , (PyCFunction)_PyULIS2Object_Block_UUID                , METH_NOARGS, "UUID"               },
     { "PixelProxy"          , (PyCFunction)_PyULIS2Object_Block_PixelProxy          , METH_VARARGS, "PixelProxy"        },
     { "PixelValue"          , (PyCFunction)_PyULIS2Object_Block_PixelValue          , METH_VARARGS, "PixelValue"        },
     { NULL } // Sentinel
