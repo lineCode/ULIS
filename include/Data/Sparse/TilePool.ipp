@@ -407,8 +407,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Sanitiz
             first = false;
         }
 
-        std::list< FTileElement* >::iterator& end = mDirtyHashedTilesCurrentlyInUse.end();
-        if( it == end )
+        if( it == mDirtyHashedTilesCurrentlyInUse.end() )
             break;
 
         FTileElement* tile = *it;
@@ -426,6 +425,37 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Sanitiz
                 tile->mHash = tile->mBlock->CRC32();
                 tile->mDirty.store( false );
             }
+            ++it;
+        }
+    }
+}
+
+template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::SanitizeAllCorrectlyHashedTilesCurrentlyInUse() {
+    std::unordered_map< uint32, FTileElement* >::iterator& it = mCorrectlyHashedTilesCurrentlyInUse.end();
+    bool first = true;
+    while( true ) {
+
+        const std::lock_guard<std::mutex> lock( mMutexCorrectlyHashedTilesCurrentlyInUseLock );
+
+        if( first ) {
+            it = mCorrectlyHashedTilesCurrentlyInUse.begin();
+            first = false;
+        }
+
+        if( it == mCorrectlyHashedTilesCurrentlyInUse.end() )
+            break;
+
+        FTileElement* tile = it->second;
+        if( tile->mRefCount.load() == 0 ) {
+            mMutexTilesScheduledForClearLock.lock();
+            mTilesScheduledForClear.push_front( tile->mBlock );
+            mMutexTilesScheduledForClearLock.unlock();
+            ++mNumTilesScheduledForClearAtomic;
+            delete  tile;
+            it = mCorrectlyHashedTilesCurrentlyInUse.erase( it );
+        }
+        else
+        {
             ++it;
         }
     }
@@ -452,6 +482,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
         if( bRequestWorkersTerminationAtomic.load() ) return;
 
         SanitizeAllDirtyTilesCurrentlyInUse();
+        SanitizeAllCorrectlyHashedTilesCurrentlyInUse();
 
         // Relax
         std::this_thread::sleep_for( std::chrono::duration< double, std::nano >( 0 ) );

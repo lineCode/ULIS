@@ -79,6 +79,7 @@ private:
     void    AllocOneInTilesScheduledForClearIfRAMUnderflowsTarget();
     void    ClearOneInTilesScheduledForClearAndMoveToFreshTilesAvailableForQueryIfNeeded();
     void    SanitizeAllDirtyTilesCurrentlyInUse();
+    void    SanitizeAllCorrectlyHashedTilesCurrentlyInUse();
 private:
     // Private Workers API
     void  ThreadedDeallocatorAllocatorCleanerBackgroundWorker();
