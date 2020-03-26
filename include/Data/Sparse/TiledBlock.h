@@ -22,6 +22,7 @@
 #include <thread>
 
 ULIS2_NAMESPACE_BEGIN
+
 /////////////////////////////////////////////////////
 /// ITiledBlock
 class ULIS2_API ITiledBlock
@@ -43,6 +44,13 @@ public:
     virtual FVec2I64    PixelCoordinatesFromKey( uint64 iKey ) const = 0;
 
 public:
+    // Block API
+    virtual const FVec2I&   GetShift() const = 0;
+    virtual void            SetShift( const FVec2I& iShift ) = 0;
+    virtual const FRect&    GetGeometry() const = 0;
+    virtual void            ExtendRegionAfterMutableChange( const FRect& iRect ) = 0;
+
+public:
     // Tile API
     virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const = 0;
     virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords  ) = 0;
@@ -51,7 +59,6 @@ public:
     virtual  void Clear() = 0;
     virtual  void SanitizeNow() = 0;
 };
-
 
 /////////////////////////////////////////////////////
 /// TTiledBlock
@@ -81,6 +88,12 @@ public:
     virtual FVec2I32    ChunkCoordinatesFromKey( uint64 iKey ) const override;
     virtual FVec2I64    PixelCoordinatesFromKey( uint64 iKey ) const override;
 
+public:
+    // Block API
+    virtual const FVec2I&   GetShift() const override;
+    virtual void            SetShift( const FVec2I& iShift ) override;
+    virtual const FRect&    GetGeometry() const override;
+    virtual void            ExtendRegionAfterMutableChange( const FRect& iRect ) override;
 
 private:
     // Private API
@@ -101,9 +114,10 @@ public:
 
 private:
     // Private Data Members
-    tMap mSparseMap;
-    std::mutex mSparseMapLock;
-    tTilePool* mTilePool;
+    tMap        mSparseMap;
+    tTilePool*  mTilePool; // Non-Owning
+    FVec2I      mShift;
+    FRect       mGeometry;
 
     static constexpr uint8  micro_threshold                     = _MICRO;
     static constexpr uint8  macro_threshold                     = _MACRO;
@@ -121,3 +135,4 @@ private:
 ULIS2_NAMESPACE_END
 
 #include "TiledBlock.ipp"
+

@@ -52,8 +52,8 @@ main( int argc, char *argv[] ) {
     std::wstring str3 = L"ゆりっす";
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );
-    FFont fontEU = fontRegistry.LoadFont( "Arial", "Black" );
-    FFont fontJA = fontRegistry.LoadFont( "Yu Gothic", "Bold" );
+    FFont fontEU( fontRegistry, "Arial", "Black" );
+    FFont fontJA( fontRegistry, "Yu Gothic", "Bold" );
     FTransform2D identityTransform = FTransform2D();
 
     int fontSize = 64;

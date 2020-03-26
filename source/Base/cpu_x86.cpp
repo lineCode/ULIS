@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 //  Dependencies
+#include "Core/Platform.h"
 #include <cstring>
 #include <iostream>
 #include "cpu_x86.h"
@@ -28,6 +29,10 @@
 #   endif
 #else
 #   error "No cpuid intrinsic defined for processor architecture."
+#endif
+
+#ifndef _XCR_XFEATURE_ENABLED_MASK
+#define _XCR_XFEATURE_ENABLED_MASK  0
 #endif
 
 namespace FeatureDetector{

@@ -12,8 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS2>
-#include <immintrin.h>
-#include <vectorclass.h>
 using namespace ::ul2;
 
 int

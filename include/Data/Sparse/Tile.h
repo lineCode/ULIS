@@ -22,9 +22,7 @@ struct ULIS2_API FTileElement {
     ~FTileElement();
     FTileElement();
     FTileElement( FBlock* iPtr );
-    void DecreaseRefCount( int iVal );
     void DecreaseRefCount();
-    void IncreaseRefCount( int iVal );
     void IncreaseRefCount();
     FBlock* mBlock;
     uint32  mHash;

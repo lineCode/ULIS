@@ -279,7 +279,7 @@ int text( int argc, char *argv[] ) {
     uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );
-    FFont font = fontRegistry.LoadFont( fam, style );
+    FFont font( fontRegistry, fam, style );
     FRect textmetrics = TextMetrics( wtxt, font, fontSize, FTransform2D() );
     FPixelValue color( format );
     FBlock* dst = new FBlock( textmetrics.w, textmetrics.h, format );

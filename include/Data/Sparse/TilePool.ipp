@@ -28,21 +28,16 @@ ULIS2_NAMESPACE_BEGIN
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
 template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::~TTilePool() {
-    // Request Background Workers Termination With Atomic Boolean Check.
     bRequestWorkersTerminationAtomic.store( true );
 
-    // Actually Join the Background Workers Threads Before Deleting Them.
     mThreadDeallocatorAllocatorCleanerBackgroundWorker->join();
     mThreadHasherGarbageCollectorBackgroundWorker->join();
 
-    // Delete the Background Workers Threads.
     delete  mThreadDeallocatorAllocatorCleanerBackgroundWorker;
     delete  mThreadHasherGarbageCollectorBackgroundWorker;
 
-    // Purge Unsafe the stored Tiles
     PurgeAllNow();
 
-    // Delete Empty Tile.
     delete  mEmptyTile;
 }
 
@@ -473,7 +468,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
         ClearOneInTilesScheduledForClearAndMoveToFreshTilesAvailableForQueryIfNeeded();
 
         // Relax
-        std::this_thread::sleep_for( std::chrono::duration< double, std::nano >( 0 ) );
+        std::this_thread::sleep_for( std::chrono::duration< double, std::pico >( 0 ) );
     }
 }
 
@@ -485,7 +480,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
         SanitizeAllCorrectlyHashedTilesCurrentlyInUse();
 
         // Relax
-        std::this_thread::sleep_for( std::chrono::duration< double, std::nano >( 0 ) );
+        std::this_thread::sleep_for( std::chrono::duration< double, std::milli >( 50.0 ) );
     }
 }
 

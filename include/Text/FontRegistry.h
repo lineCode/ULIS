@@ -91,7 +91,6 @@ public:
     const FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iFamily, const std::string& iStyle ) const;
     std::string FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle ) const;
     const FFontEngine& FontEngine() const;
-    FFont LoadFont( const std::string& iFamily, const std::string& iStyle ) const;
 
 private:
     // Private Data Members

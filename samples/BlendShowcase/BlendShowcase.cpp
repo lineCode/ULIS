@@ -55,7 +55,7 @@ main( int argc, char *argv[] ) {
 
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );
-    FFont font= fontRegistry.LoadFont( "Segoe UI", "Light" );
+    FFont font( fontRegistry, "Segoe UI", "Light" );
 
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int x = ( i % 8 ) * sourceRect.w;

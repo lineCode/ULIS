@@ -26,7 +26,7 @@
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// TTiledBlock
+/// TTilePool
 template< uint8 _MICRO
         , uint8 _MACRO >
 class ULIS2_API TTilePool

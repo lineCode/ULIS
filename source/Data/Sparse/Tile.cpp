@@ -36,9 +36,7 @@ FTileElement::FTileElement( FBlock* iPtr )
 {}
 
 void FTileElement::DecreaseRefCount() { mRefCount--; };
-void FTileElement::DecreaseRefCount( int iVal ) { mRefCount-= iVal; };
 void FTileElement::IncreaseRefCount() { mRefCount++; };
-void FTileElement::IncreaseRefCount( int iVal ) { mRefCount+= iVal; };
 
 ULIS2_NAMESPACE_END
 

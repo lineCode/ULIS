@@ -33,7 +33,7 @@ struct ULIS2_API TVec2
     ULIS2_FORCEINLINE T DistanceSquared() const {                       return  x * x + y * y; }
     ULIS2_FORCEINLINE T ManhattanDistance() const {                     return  x + y; }
     ULIS2_FORCEINLINE T operator|( const TVec2& iOther ) const {        return  x * iOther.x + y * iOther.y; }
-    ULIS2_FORCEINLINE T DotProduct( const TVec2& iOther ) {             return  ( *this | B ); }
+    ULIS2_FORCEINLINE T DotProduct( const TVec2& iOther ) {             return  ( *this | iOther ); }
     ULIS2_FORCEINLINE TVec2 operator+( const TVec2& iOther ) const {    return  TVec2( x + iOther.x, y + iOther.y ); }
     ULIS2_FORCEINLINE TVec2 operator-(const TVec2& iOther ) const {     return  TVec2( x - iOther.x, y - iOther.y ); }
     ULIS2_FORCEINLINE TVec2 operator-( T iValue ) const {               return  TVec2( x - iValue, y - iValue ); }
@@ -45,7 +45,7 @@ struct ULIS2_API TVec2
     ULIS2_FORCEINLINE TVec2 operator%(const TVec2& iOther ) const {     return  TVec2( x % iOther.x, y % iOther.y ); }
     ULIS2_FORCEINLINE bool operator==(const TVec2& iOther ) const {     return  x == iOther.x && y == iOther.y; }
     ULIS2_FORCEINLINE bool operator!=(const TVec2& iOther ) const {     return  x != iOther.x || y != iOther.y; }
-    ULIS2_FORCEINLINE TVec2 operator-() const {                         return  TVec2(-x, -y, -Z); }
+    ULIS2_FORCEINLINE TVec2 operator-() const {                         return  TVec2( -x, -y ); }
     ULIS2_FORCEINLINE TVec2 operator+=(const TVec2& iOther ) {          x += iOther.x; y += iOther.y; return  *this; }
     ULIS2_FORCEINLINE TVec2 operator-=(const TVec2& iOther ) {          x -= iOther.x; y -= iOther.y; return  *this; }
     ULIS2_FORCEINLINE TVec2 operator*=(T iValue) {                      x *= iValue; y *= iValue; return  *this; }

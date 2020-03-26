@@ -15,7 +15,6 @@
 #include "Core/Core.h"
 #include "Maths/Geometry.h"
 #include <cmath>
-#include <immintrin.h>
 
 ULIS2_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -204,10 +203,6 @@ struct ULIS2_API FMaths
     static ULIS2_FORCEINLINE bool EpsilonComp( float iA, float iB )
     {
         return  Abs( iA - iB ) <= kEpsilonf;
-    }
-
-    static ULIS2_FORCEINLINE ufloat FixInf( ufloat iValue ) {
-        return  isinf( iValue ) || isnan( iValue ) ? 0.f : iValue;
     }
 
 }; // struct FMaths

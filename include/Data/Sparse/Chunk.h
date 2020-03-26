@@ -21,9 +21,9 @@
 #include <static_math/static_math.h>
 
 ULIS2_NAMESPACE_BEGIN
-static const FPixelValue default_wireframe_debug_color = FPixelValue( ULIS2_FORMAT_RGB8, { 40, 80, 220 } );
-static const FPixelValue dirty_wireframe_debug_color = FPixelValue( ULIS2_FORMAT_RGB8, { 255, 0, 0 } );
-static const FPixelValue correct_wireframe_debug_color = FPixelValue( ULIS2_FORMAT_RGB8, { 0, 255, 0 } );
+static const FPixelValue default_wireframe_debug_color = FPixelValue(   ULIS2_FORMAT_RGB8, { 40,    80,     220 } );
+static const FPixelValue dirty_wireframe_debug_color = FPixelValue(     ULIS2_FORMAT_RGB8, { 255,   0,      0   } );
+static const FPixelValue correct_wireframe_debug_color = FPixelValue(   ULIS2_FORMAT_RGB8, { 0,     255,    0   } );
 static const FHostDeviceInfo debug_host = FHostDeviceInfo::Detect();
 /////////////////////////////////////////////////////
 // Enums
@@ -171,7 +171,7 @@ public:
 
     void PerformRootSubdivisionForImminentMutableChangeIfNeeded( tTilePool* iPool ) {
         if( mChild == nullptr )
-            if( bed ) {
+            if( tSuperClass::bed ) {
                 // X Query Tile, X stands for Refcount decrease needed by caller.
                 FTileElement* tile = iPool->XQueryFreshTile();
                 mChild = dynamic_cast< tChild* >( new tDataChild(  ) );
@@ -180,7 +180,7 @@ public:
                 mChild = dynamic_cast< tChild* >( new tQuadtreeChild() );
             }
         else
-            if( mChild->Type() == eChunkType::kData && !bed ) {
+            if( mChild->Type() == eChunkType::kData && !tSuperClass::bed ) {
                 FTileElement* tile = dynamic_cast< tDataChild* >( mChild )->PointedData();
                 tile->IncreaseRefCount();
                 if( mChild )
@@ -197,7 +197,7 @@ public:
     }
 
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
-        auto size = round( local_chunk_size_as_pixels * iScale );
+        auto size = round( tSuperClass::local_chunk_size_as_pixels * iScale );
         DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
         if( mChild )
             mChild->DrawDebugWireframe( iDst, iPos, iScale );
@@ -296,7 +296,7 @@ public:
     }
 
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
-        auto size = round( local_chunk_size_as_pixels * iScale );
+        auto size = round( tSuperClass::local_chunk_size_as_pixels * iScale );
         if( mPtr->mDirty )
             DrawRectOutlineNoAA( iDst, dirty_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
         else
@@ -304,8 +304,8 @@ public:
     }
 
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
-        for( int i = 0; i < local_chunk_size_as_pixels; i+= micro_chunk_size_as_pixels ) {
-            for( int j = 0; j < local_chunk_size_as_pixels; j+= micro_chunk_size_as_pixels ) {
+        for( int i = 0; i < tSuperClass::local_chunk_size_as_pixels; i+= tSuperClass::micro_chunk_size_as_pixels ) {
+            for( int j = 0; j < tSuperClass::local_chunk_size_as_pixels; j+= tSuperClass::micro_chunk_size_as_pixels ) {
                 Copy( nullptr, ULIS2_NONBLOCKING, 0, debug_host, ULIS2_NOCB, mPtr->mBlock, iDst, mPtr->mBlock->Rect(), iPos + FVec2I64( i, j ) );
             }
         }
@@ -361,8 +361,8 @@ public:
 
 private:
     // Coordinates API
-    FVec2I64  SubChunkCoordinatesFromLocalPixelCoordinates( const FVec2I64& iPos )  const { return  iPos / local_chunk_halfsize_as_pixels; }
-    FVec2I64  LocalPixelCoordinatesFromSubChunkCoordinates( const FVec2I64& iPos )  const { return  iPos * local_chunk_halfsize_as_pixels; }
+    FVec2I64  SubChunkCoordinatesFromLocalPixelCoordinates( const FVec2I64& iPos )  const { return  iPos / tSuperClass::local_chunk_halfsize_as_pixels; }
+    FVec2I64  LocalPixelCoordinatesFromSubChunkCoordinates( const FVec2I64& iPos )  const { return  iPos * tSuperClass::local_chunk_halfsize_as_pixels; }
 
     uint8 IndexFromSubChunkCoordinates( const FVec2I64& iPos )  const {
         return  iPos.y * 2  + iPos.x;
@@ -377,7 +377,7 @@ public:
     virtual  eChunkType  Type()  const override { return  eChunkType::kQuadree; }
     virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const override {
         uint8 index = IndexFromSubChunkCoordinates( SubChunkCoordinatesFromLocalPixelCoordinates( iPos ) );
-        return  mQuad[index] == nullptr ? iPool->EmptyTile() : mQuad[index]->QueryConstBlockAtPixelCoordinates( iPool, iPos % local_chunk_halfsize_as_pixels );
+        return  mQuad[index] == nullptr ? iPool->EmptyTile() : mQuad[index]->QueryConstBlockAtPixelCoordinates( iPool, iPos % tSuperClass::local_chunk_halfsize_as_pixels );
     }
 
     void ReplaceElement( uint8 iIndex, tSubAbstractChunk* iValue ) {
@@ -388,7 +388,7 @@ public:
 
     void PerformElementSubdivisionForImminentMutableChangeIfNeeded( uint8 iIndex, tTilePool* iPool ) {
         if( mQuad[iIndex] == nullptr )
-            if( bed ) {
+            if( tSuperClass::bed ) {
                 // X Query Tile, X stands for Refcount decrease needed by caller.
                 FTileElement* tile = iPool->XQueryFreshTile();
                 mQuad[iIndex] = dynamic_cast< tSubAbstractChunk* >( new tSubDataChunk( tile ) );
@@ -397,19 +397,19 @@ public:
                 mQuad[iIndex] = dynamic_cast< tSubAbstractChunk* >( new tSubQuadtreeChunk() );
             }
         else
-            if( mQuad[iIndex]->Type() == eChunkType::kData && !bed )
+            if( mQuad[iIndex]->Type() == eChunkType::kData && !tSuperClass::bed )
                 ReplaceElement( iIndex, new tSubQuadtreeChunk( dynamic_cast< tSubDataChunk* >( mQuad[iIndex] )->PointedData() ) );
     }
 
     virtual  FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( tTilePool* iPool, const FVec2I64& iPos ) override {
         uint8 index = IndexFromSubChunkCoordinates( SubChunkCoordinatesFromLocalPixelCoordinates( iPos ) );
         PerformElementSubdivisionForImminentMutableChangeIfNeeded( index, iPool );
-        return  mQuad[index]->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( iPool, iPos % local_chunk_halfsize_as_pixels );
+        return  mQuad[index]->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( iPool, iPos % tSuperClass::local_chunk_halfsize_as_pixels );
     }
 
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
-        auto size  = round( local_chunk_size_as_pixels * iScale );
-        auto hsize = round( local_chunk_halfsize_as_pixels * iScale );
+        auto size  = round( tSuperClass::local_chunk_size_as_pixels * iScale );
+        auto hsize = round( tSuperClass::local_chunk_halfsize_as_pixels * iScale );
         DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
         for( int i = 0; i < 4; ++i )
             if( mQuad[i] )
@@ -417,8 +417,8 @@ public:
     }
 
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
-        auto size  = round( local_chunk_size_as_pixels );
-        auto hsize = round( local_chunk_halfsize_as_pixels );
+        auto size  = round( tSuperClass::local_chunk_size_as_pixels );
+        auto hsize = round( tSuperClass::local_chunk_halfsize_as_pixels );
         for( int i = 0; i < 4; ++i )
             if( mQuad[i] )
                 mQuad[i]->DrawDebugTileContent( iDst, iPos + SubChunkCoordinatesFromIndex( i ) * hsize );

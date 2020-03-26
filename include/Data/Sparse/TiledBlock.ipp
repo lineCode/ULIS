@@ -34,6 +34,8 @@ template< uint8 _MICRO, uint8 _MACRO > TTiledBlock< _MICRO, _MACRO >::~TTiledBlo
 template< uint8 _MICRO, uint8 _MACRO > TTiledBlock< _MICRO, _MACRO >::TTiledBlock( tTilePool* iPool )
     : tSuperClass()
     , mTilePool( iPool )
+    , mShift()
+    , mGeometry()
 {
     static_assert( _MICRO > 0, "_MICRO template argument cannot be 0" );
     static_assert( _MACRO > 0, "_MACRO template argument cannot be 0" );
@@ -122,6 +124,33 @@ FVec2I64
 TTiledBlock< _MICRO, _MACRO >::PixelCoordinatesFromKey( uint64 iKey ) const {
     FVec2I32 pos = ChunkCoordinatesFromKey( iKey );
     return  PixelCoordinatesFromChunkCoordinates( pos );
+}
+
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------- Block API
+template< uint8 _MICRO, uint8 _MACRO >
+const FVec2I&
+TTiledBlock< _MICRO, _MACRO >::GetShift() const {
+    return  mShift;
+}
+
+
+template< uint8 _MICRO, uint8 _MACRO >
+void
+TTiledBlock< _MICRO, _MACRO >::SetShift( const FVec2I& iShift ) {
+    mShift = iShift;
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+const FRect&
+TTiledBlock< _MICRO, _MACRO >::GetGeometry() const {
+    return  mGeometry;
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+void
+TTiledBlock< _MICRO, _MACRO >::ExtendRegionAfterMutableChange( const FRect& iRect ) {
+    mGeometry = mGeometry | iRect;
 }
 
 //--------------------------------------------------------------------------------------
@@ -218,8 +247,8 @@ TTiledBlock< _MICRO, _MACRO >::Clear() {
 template< uint8 _MICRO, uint8 _MACRO >
 void
 TTiledBlock< _MICRO, _MACRO >::SanitizeNow() {
-    std::vector< tMap::iterator > to_delete;
-    tMap::iterator it = mSparseMap.begin();
+    std::vector< typename tMap::iterator > to_delete;
+    typename tMap::iterator it = mSparseMap.begin();
     while( it != mSparseMap.end() ) {
         it->second->SanitizeNow( mTilePool );
         if( it->second->Child() == nullptr )
