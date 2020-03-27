@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FormatInfo.cpp
@@ -15,7 +15,7 @@
 
 /////////////////////////////////////////////////////
 // FFormatInfo
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 FFormatInfo::~FFormatInfo() {
     delete [] IDT;
 }
@@ -24,17 +24,17 @@ FFormatInfo::FFormatInfo( tFormat iFMT )
     : FMT( iFMT )
     , IDT( nullptr )
 {
-    BPC = ULIS2_R_DEPTH(    FMT );
-    NCC = ULIS2_R_CHANNELS( FMT );
-    HEA = ULIS2_R_ALPHA(    FMT );
-    COD = ULIS2_R_RS(       FMT );
+    BPC = ULIS3_R_DEPTH(    FMT );
+    NCC = ULIS3_R_CHANNELS( FMT );
+    HEA = ULIS3_R_ALPHA(    FMT );
+    COD = ULIS3_R_RS(       FMT );
     SPP = NCC + HEA;
     BPP = SPP * BPC;
     IDT = new uint8[ SPP ];
-    CM = static_cast< eColorModel >( ULIS2_R_MODEL( FMT ) );
-    TP = static_cast< eType >( ULIS2_R_TYPE( FMT ) );
-    SWA = ULIS2_R_SWAP( FMT );
-    REV = ULIS2_R_REVERSE( FMT );
+    CM = static_cast< eColorModel >( ULIS3_R_MODEL( FMT ) );
+    TP = static_cast< eType >( ULIS3_R_TYPE( FMT ) );
+    SWA = ULIS3_R_SWAP( FMT );
+    REV = ULIS3_R_REVERSE( FMT );
 
     uint8 msp = SPP - 1;
     switch( COD ) {
@@ -45,5 +45,5 @@ FFormatInfo::FFormatInfo( tFormat iFMT )
     }
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

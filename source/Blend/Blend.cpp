@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Blend.cpp
@@ -18,7 +18,7 @@
 #include "Blend/Dispatch/BlendInfo.h"
 #include "Blend/Dispatch/Dispatch.ipp"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
 void Blend( FThreadPool*            iThreadPool
           , bool                    iBlocking
@@ -35,11 +35,11 @@ void Blend( FThreadPool*            iThreadPool
           , float                   iOpacityValue )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                                  "Bad source."                                               );
-    ULIS2_ASSERT( iBackdrop,                                "Bad destination."                                          );
-    ULIS2_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
-    ULIS2_ASSERT( iThreadPool,                              "Bad pool."                                                 );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
+    ULIS3_ASSERT( iSource,                                  "Bad source."                                               );
+    ULIS3_ASSERT( iBackdrop,                                "Bad destination."                                          );
+    ULIS3_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
+    ULIS3_ASSERT( iThreadPool,                              "Bad pool."                                                 );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
@@ -84,12 +84,12 @@ void Blend( FThreadPool*            iThreadPool
 
     // Query dispatched method
     fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( forwardBlendInfoAlias );
-    ULIS2_ASSERT( fptr, "No dispatch function found." );
+    ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardBlendInfo );
 
     // Invalid
     forwardBlendInfo->backdrop->Invalidate( dst_fit, iCallCB );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

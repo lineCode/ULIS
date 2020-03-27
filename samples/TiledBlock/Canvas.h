@@ -2,16 +2,16 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Canvas.h
 * @author       Clement Berthaud
-* @brief        TiledBlock application for ULIS2.
+* @brief        TiledBlock application for ULIS3.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS2>
+#include <ULIS3>
 #include <QWidget>
 
 class QImage;
@@ -19,7 +19,7 @@ class QLabel;
 class QPixmap;
 class QTimer;
 
-using namespace ::ul2;
+using namespace ::ul3;
 
 class SCanvas : public QWidget
 {

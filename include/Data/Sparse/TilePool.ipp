@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         TilePool.ippp
@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <thread>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTilePool
 //--------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( t
     , mThreadDeallocatorAllocatorCleanerBackgroundWorker    ( new std::thread( &TTilePool< _MICRO, _MACRO >::ThreadedDeallocatorAllocatorCleanerBackgroundWorker, this )    )
     , mThreadHasherGarbageCollectorBackgroundWorker         ( new std::thread( &TTilePool< _MICRO, _MACRO >::ThreadedHasherGarbageCollectorBackgroundWorker, this )         )
 {
-    ClearRaw( mEmptyTile, ULIS2_NOCB );
+    ClearRaw( mEmptyTile, ULIS3_NOCB );
     mEmptyCRC32Hash = mEmptyTile->CRC32();
 }
 
@@ -113,7 +113,7 @@ template< uint8 _MICRO, uint8 _MACRO > typename TTilePool< _MICRO, _MACRO >::tTi
 template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::RequestTiledBlockDeletion( tTiledBlock* iBlock ) {
     const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
     auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), iBlock );
-    ULIS2_ASSERT( it != mRegisteredTiledBlocks.end(), "Bad TiledBlock Deletion Request, this tiledblock is not in this pool or has already been deleted !" );
+    ULIS3_ASSERT( it != mRegisteredTiledBlocks.end(), "Bad TiledBlock Deletion Request, this tiledblock is not in this pool or has already been deleted !" );
     if( it != mRegisteredTiledBlocks.end() ) {
         mRegisteredTiledBlocks.erase( it );
         delete it;
@@ -200,7 +200,7 @@ TTilePool< _MICRO, _MACRO >::XQueryFreshTile() {
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement*
 TTilePool< _MICRO, _MACRO >::PerformRedundantHashMergeReturnCorrect( FTileElement* iElem ) {
-    ULIS2_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
+    ULIS3_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
 
     // If the hashed tile is empty we return null ptr and decrease refcount
     if( iElem->mHash == mEmptyCRC32Hash ) {
@@ -253,61 +253,39 @@ TTilePool< _MICRO, _MACRO >::PerformRedundantHashMergeReturnCorrect( FTileElemen
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement*
 TTilePool< _MICRO, _MACRO >::XPerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem ) {
-    ULIS2_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
+    ULIS3_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
+    const std::lock_guard<std::mutex> lock_correct( mMutexCorrectlyHashedTilesCurrentlyInUseLock );
+    std::unordered_map< uint32, FTileElement* >::iterator& it   = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
+    std::unordered_map< uint32, FTileElement* >::iterator& end  = mCorrectlyHashedTilesCurrentlyInUse.end();
+    bool dirty  = iElem->mDirty.load();
+    bool shared = iElem->mRefCount > 1;
+    bool found  = it != end;
+    bool same   = found ? it->second == iElem : false;
 
-    if( !( iElem->mDirty.load() ) ) {
-        const std::lock_guard<std::mutex> lock_correct( mMutexCorrectlyHashedTilesCurrentlyInUseLock );
-        std::unordered_map< uint32, FTileElement* >::iterator& it   = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
-        std::unordered_map< uint32, FTileElement* >::iterator& end  = mCorrectlyHashedTilesCurrentlyInUse.end();
-
-        if( it == end ) {
-            if( iElem->mRefCount > 1 ) {
-                FTileElement* tile = XQueryFreshTile();
-                CopyRaw( iElem->mBlock, tile->mBlock, false );
-                iElem->DecreaseRefCount();
-                return  tile;
-            } else {
-                return  iElem;
-            }
+    if( shared ) {
+        goto cpy;
+    } else {
+        if( same ) {
+            goto mov;
         } else {
-            if( it->second == iElem ) {
-                if( iElem->mRefCount > 1 ) {
-                    FTileElement* tile = XQueryFreshTile();
-                    CopyRaw( iElem->mBlock, tile->mBlock, false );
-                    iElem->DecreaseRefCount();
-                    return  tile;
-                } else {
-                    const std::lock_guard<std::mutex> lock_dirty( mMutexDirtyHashedTilesCurrentlyInUseLock );
-                    mDirtyHashedTilesCurrentlyInUse.push_back( iElem );
-                    mCorrectlyHashedTilesCurrentlyInUse.erase( it );
-                    return  iElem;
-                }
-            } else {
-                if( iElem->mRefCount > 1 ) {
-                    FTileElement* tile = XQueryFreshTile();
-                    CopyRaw( iElem->mBlock, tile->mBlock, false );
-                    iElem->DecreaseRefCount();
-                    return  tile;
-                } else {
-                    return  iElem;
-                }
-            }
-        }
-    }
-    else
-    {
-        if( iElem->mRefCount > 1 ) {
-            FTileElement* tile = XQueryFreshTile();
-            CopyRaw( iElem->mBlock, tile->mBlock, false );
-            iElem->DecreaseRefCount();
-            return  tile;
-        }
-        else
-        {
-            return  iElem;
+            goto nop;
         }
     }
 
+cpy:
+    FTileElement* tile = XQueryFreshTile();
+    CopyRaw( iElem->mBlock, tile->mBlock, false );
+    iElem->DecreaseRefCount();
+    return  tile;
+
+nop:
+    return  iElem;
+
+mov:
+    const std::lock_guard<std::mutex> lock_dirty( mMutexDirtyHashedTilesCurrentlyInUseLock );
+    mDirtyHashedTilesCurrentlyInUse.push_back( iElem );
+    mCorrectlyHashedTilesCurrentlyInUse.erase( it );
+    return  iElem;
 }
 
 template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::AllocateNow_Unsafe( int32 iNum ) {
@@ -484,5 +462,5 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
     }
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

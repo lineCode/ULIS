@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         PRNG.cpp
@@ -13,7 +13,7 @@
 */
 #include "Base/PRNG.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 static uint32 sWeakPRNGSeed = 5323; // Arbitrary
 
 void ResetWeakPRNGSeed() {
@@ -33,5 +33,5 @@ uint32 GenerateWeakPRNG() {
     return sWeakPRNGSeed % 65537;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

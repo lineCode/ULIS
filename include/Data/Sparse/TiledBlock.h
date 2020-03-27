@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         TiledBlock.h
@@ -21,11 +21,11 @@
 #include <atomic>
 #include <thread>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
 /////////////////////////////////////////////////////
 /// ITiledBlock
-class ULIS2_API ITiledBlock
+class ULIS3_API ITiledBlock
 {
 public:
     virtual ~ITiledBlock() {};
@@ -64,7 +64,7 @@ public:
 /// TTiledBlock
 template< uint8 _MICRO
         , uint8 _MACRO >
-class ULIS2_API TTiledBlock : public ITiledBlock
+class ULIS3_API TTiledBlock : public ITiledBlock
 {
     typedef ITiledBlock                                 tSuperClass;
     typedef TRootChunk< _MICRO, _MACRO, _MACRO >        tRootChunk;
@@ -132,7 +132,7 @@ private:
     static const FVec2I64 modRoot;
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 
 #include "TiledBlock.ipp"
 

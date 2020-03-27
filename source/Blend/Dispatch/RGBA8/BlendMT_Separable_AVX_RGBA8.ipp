@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         BlendMT_Separable_AVX_RGBA8.ipp
@@ -20,7 +20,7 @@
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 void
 InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
     const _FBlendInfoPrivate&   info    = *iInfo;
@@ -108,7 +108,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const tByte* iSrc, tB
         Vec8f alpha_comp    = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
         Vec8f alpha_result;
-        ULIS2_ASSIGN_ALPHAAVXF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS3_ASSIGN_ALPHAAVXF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
         alpha_result *= 255.f;
 
         // Comp Channels
@@ -117,7 +117,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const tByte* iSrc, tB
         Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( bdp128 ) ) ) / 255.f;
         Vec8f   res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpAVXF< _BM >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
@@ -145,7 +145,7 @@ BlendMT_Separable_AVX_RGBA8_Subpixel( std::shared_ptr< const _FBlendInfoPrivate 
     const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
     const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -167,14 +167,14 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte* iSrc, tByte* iBdp
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_bdp ) );
         Vec8f   alpha_result;
-        ULIS2_ASSIGN_ALPHAAVXF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS3_ASSIGN_ALPHAAVXF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
         alpha_result *= 255.f;
 
         Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( iSrc ) ) ) ) / 255.f;
         Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( iBdp ) ) ) ) / 255.f;
         Vec8f   res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpAVXF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
@@ -195,14 +195,14 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte* iSrc, tByte* iBdp
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_bdp ) );
         Vec8f   alpha_result;
-        ULIS2_ASSIGN_ALPHAAVXF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS3_ASSIGN_ALPHAAVXF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
         alpha_result *= 255.f;
 
         Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( iSrc ) ) ) ) / 255.f;
         Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( iBdp ) ) ) ) / 255.f;
         Vec8f   res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpAVXF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS2_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
@@ -223,7 +223,7 @@ BlendMT_Separable_AVX_RGBA8( std::shared_ptr< const _FBlendInfoPrivate > iInfo )
     const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
     const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeBlendMTProcessScanline_Separable_AVX_RGBA8
                                 , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -231,5 +231,5 @@ BlendMT_Separable_AVX_RGBA8( std::shared_ptr< const _FBlendInfoPrivate > iInfo )
                                 , pLINE , iInfo );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Dispatch.ipp
@@ -16,8 +16,8 @@
 #include "Blend/Modes.h"
 #include "Maths/Geometry.h"
 
-ULIS2_NAMESPACE_BEGIN
-struct ULIS2_API _FBlendInfoPrivate {
+ULIS3_NAMESPACE_BEGIN
+struct ULIS3_API _FBlendInfoPrivate {
     FThreadPool*            pool;
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;
@@ -36,5 +36,5 @@ struct ULIS2_API _FBlendInfoPrivate {
     FRect                   backdropWorkingRect;
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

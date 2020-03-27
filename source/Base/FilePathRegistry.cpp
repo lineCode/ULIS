@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FilePathRegistry.cpp
@@ -25,7 +25,7 @@
 
 using namespace cppfs;
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ConstDefault
 static const std::string sDefaultRet = "";
@@ -181,5 +181,5 @@ FFilePathRegistry::CreateName( const std::string& iFile )
     return  path.baseName();
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

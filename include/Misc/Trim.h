@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Trim.h
@@ -14,14 +14,14 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
-ULIS2_API FRect GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
+ULIS3_API FRect GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                           , bool                    iBlocking
                                           , uint32                  iPerfIntent
                                           , const FHostDeviceInfo&  iHostDeviceInfo
                                           , bool                    iCallCB
                                           , const FBlock*           iSource );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

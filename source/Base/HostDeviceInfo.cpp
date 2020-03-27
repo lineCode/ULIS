@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         HostDeviceInfo.cpp
@@ -14,7 +14,7 @@
 #include "Base/HostDeviceInfo.h"
 #include "cpu_x86.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FHostDeviceInfo
 FHostDeviceInfo::FHostDeviceInfo( bool iVendor_AMD
@@ -136,5 +136,5 @@ FHostDeviceInfo::Detect() {
                            , tmp.HW_AVX512_VBMI );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

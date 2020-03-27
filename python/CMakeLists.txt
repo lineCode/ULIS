@@ -23,7 +23,7 @@ if( ${ULIS3_BUILD_PYTHON_MODULE} )
     target_include_directories(
         PyULIS3
         PUBLIC
-        "python/"
+        "python/binding/cmodule/"
         ${ULIS3_PYTHON_INCLUDE_PATH1}
         ${ULIS3_PYTHON_INCLUDE_PATH2}
     )

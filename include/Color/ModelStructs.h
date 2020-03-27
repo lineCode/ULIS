@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         ModelStructs.h
@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Maths/Maths.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 struct FGreyF
 {
     float Grey;
@@ -97,7 +97,7 @@ struct FLChF
     float h;
 };
 
-static ULIS2_FORCEINLINE FCMYKF RGBToCMYK( const FRGBF& iValue )
+static ULIS3_FORCEINLINE FCMYKF RGBToCMYK( const FRGBF& iValue )
 {
     float ik = FMaths::Max3( iValue.R, iValue.G, iValue.B );
     float k = 1.f - ik;
@@ -108,7 +108,7 @@ static ULIS2_FORCEINLINE FCMYKF RGBToCMYK( const FRGBF& iValue )
             , k };
 }
 
-static ULIS2_FORCEINLINE FRGBF CMYKToRGB( const FCMYKF& iValue )
+static ULIS3_FORCEINLINE FRGBF CMYKToRGB( const FCMYKF& iValue )
 {
     return  { 1.f - ( iValue.C * ( 1.f - iValue.K ) + iValue.K )
             , 1.f - ( iValue.M * ( 1.f - iValue.K ) + iValue.K )
@@ -116,17 +116,17 @@ static ULIS2_FORCEINLINE FRGBF CMYKToRGB( const FCMYKF& iValue )
 }
 
 
-static ULIS2_FORCEINLINE FLChF LabToLCh( const FLabF& iValue )
+static ULIS3_FORCEINLINE FLChF LabToLCh( const FLabF& iValue )
 {
     return  { iValue.L, powf( sqrtf( iValue.a ) + sqrtf( iValue.b ), 0.5f ), atan2f( iValue.b, iValue.a ) };
 }
 
-static ULIS2_FORCEINLINE FLabF LChToLab( const FLChF& iValue )
+static ULIS3_FORCEINLINE FLabF LChToLab( const FLChF& iValue )
 {
     return  { iValue.L, iValue.C * cosf( iValue.h ), iValue.C * sinf( iValue.h ) };
 }
 
 
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

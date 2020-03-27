@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Kernel.h
@@ -15,13 +15,13 @@
 #include "Core/Core.h"
 #include "Data/Block.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FConvolutionKernel
 /// @brief      The FKernel class provides a mean of storing and manipulating convolution kernels
 /// @details    The kernel is actually a block in Gray floating point format.
 /// @details    kernel data lives on CPU, kernel can also be used as matrix.
-class ULIS2_API FKernel : public FBlock
+class ULIS3_API FKernel : public FBlock
 {
 public:
     typedef FKernel tSelf;
@@ -33,5 +33,5 @@ public:
     FKernel( int iWidth, int iHeight );
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

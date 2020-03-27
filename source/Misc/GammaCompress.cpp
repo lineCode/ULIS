@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Extract.cpp
@@ -19,7 +19,7 @@
 #include "Maths/Maths.h"
 #include "Thread/ThreadPool.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 template< typename T >
 void InvokesRGB2Linear( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
@@ -77,20 +77,20 @@ ApplysRGB2Linear( FThreadPool*           iThreadPool
                 , FBlock*                iDestination )
 {
     // Assertions
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     fpDispatchedGammaCompressInvoke fptr = QueryDispatchedsRGB2LinearInvokeForParameters( iDestination->Type() );
-    ULIS2_ASSERT( fptr, "No invocation found." );
+    ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
     tByte*          dst = iDestination->DataPtr();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
-    ULIS2_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS3_ASSERT( fptr, "No dispatch invocation found." );
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
     iDestination->Invalidate( iCallCB );
@@ -106,25 +106,25 @@ ApplyLinear2sRGB( FThreadPool*           iThreadPool
                 , FBlock*                iDestination )
 {
     // Assertions
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     fpDispatchedGammaCompressInvoke fptr = QueryDispatchedLinear2sRGBInvokeForParameters( iDestination->Type() );
-    ULIS2_ASSERT( fptr, "No invocation found." );
+    ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
     tByte*          dst = iDestination->DataPtr();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
-    ULIS2_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS3_ASSERT( fptr, "No dispatch invocation found." );
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
     iDestination->Invalidate( iCallCB );
 }
 
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

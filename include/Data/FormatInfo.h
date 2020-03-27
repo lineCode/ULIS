@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FormatInfo.h
@@ -14,10 +14,10 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFormatInfo
-struct ULIS2_API FFormatInfo
+struct ULIS3_API FFormatInfo
 {
     ~FFormatInfo();
     FFormatInfo( tFormat iFMT );
@@ -36,5 +36,5 @@ struct ULIS2_API FFormatInfo
     uint8   SWA;    // Swapped
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

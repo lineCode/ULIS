@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Tile.h
@@ -15,10 +15,10 @@
 #include "Core/Core.h"
 #include <atomic>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FTileElement
-struct ULIS2_API FTileElement {
+struct ULIS3_API FTileElement {
     ~FTileElement();
     FTileElement();
     FTileElement( FBlock* iPtr );
@@ -29,5 +29,5 @@ struct ULIS2_API FTileElement {
     std::atomic< uint32 >   mRefCount;
     std::atomic< bool >     mDirty;
 };
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

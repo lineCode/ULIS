@@ -2,12 +2,12 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Core.h
 * @author       Clement Berthaud
-* @brief        This file gathers core definitions for the ULIS2 library.
+* @brief        This file gathers core definitions for the ULIS3 library.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

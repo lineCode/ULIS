@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Fill.cpp
@@ -20,9 +20,9 @@
 #include "Thread/ThreadPool.h"
 #include <vectorclass.h>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 #ifdef __AVX2__
-void ULIS2_VECTORCALL
+void ULIS3_VECTORCALL
 InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, const tSize iStride ) {
     tSize index = 0;
     for( index = 0; index < ( iCount - 32 ); index += iStride ) {
@@ -36,7 +36,7 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, 
 #endif // __AVX2__
 
 #ifdef __SSE4_2__
-void ULIS2_VECTORCALL
+void ULIS3_VECTORCALL
 InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, const tSize iStride ) {
     tSize index;
     for( index = 0; index < ( iCount - 16 ); index += iStride ) {
@@ -75,7 +75,7 @@ Fill_imp( FThreadPool*                          iThreadPool
     #define DST dsb + ( ( iDstROI.y + pLINE ) * bps )
 
 #ifdef __AVX2__
-    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
+    if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
         tSize   count   = iDstROI.w * bpp;
         tSize   stride  = 32 - ( 32 % bpp );
         tByte*  srcb    = new tByte[32];
@@ -87,13 +87,13 @@ Fill_imp( FThreadPool*                          iThreadPool
 
         delete [] srcb;
 
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeFillMTProcessScanline_AX2, DST, src, count, stride )
     } else
 #endif
 #ifdef __SSE4_2__
-    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
+    if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
         tSize   count   = iDstROI.w * bpp;
         tSize   stride  = 16 - ( 16 % bpp );
         tByte*  srcb    = new tByte[16];
@@ -105,13 +105,13 @@ Fill_imp( FThreadPool*                          iThreadPool
 
         delete [] srcb;
 
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeFillMTProcessScanline_SSE, DST, src, count, stride )
     } else
 #endif
     {
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeFillMTProcessScanline_MEM, DST, iColor, iDstROI.w, bpp )
     }
@@ -128,9 +128,9 @@ Fill( FThreadPool*              iThreadPool
     , const FRect&              iArea )
 {
     // Assertions
-    ULIS2_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     // Fit region of interest
     FRect roi = iArea & iDestination->Rect();
@@ -150,5 +150,5 @@ Fill( FThreadPool*              iThreadPool
     iDestination->Invalidate( roi, iCallCB );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

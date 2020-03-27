@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         ThreadPool.h
@@ -22,10 +22,10 @@
 #include <random>
 #include <atomic>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FThreadPool
-class ULIS2_API FThreadPool
+class ULIS3_API FThreadPool
 {
 public:
     // Construction / Destruction
@@ -74,12 +74,12 @@ private:
     std::condition_variable             cv_finished;
 };
 
-ULIS2_API ULIS2_FORCEINLINE void Fence( FThreadPool& iPool ) {
+ULIS3_API ULIS3_FORCEINLINE void Fence( FThreadPool& iPool ) {
     iPool.WaitForCompletion();
 }
 
-#define ULIS2_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
-    if( ( _PERF & ULIS2_PERF_MT ) && _POOL->GetNumWorkers() > 1 )                        \
+#define ULIS3_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
+    if( ( _PERF & ULIS3_PERF_MT ) && _POOL->GetNumWorkers() > 1 )                        \
     {                                                                                   \
         for( int pLINE = 0; pLINE < _MAX; ++pLINE )                                     \
             _POOL->ScheduleJob( _FUNC, __VA_ARGS__ );                                   \
@@ -93,5 +93,5 @@ ULIS2_API ULIS2_FORCEINLINE void Fence( FThreadPool& iPool ) {
     }
 
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

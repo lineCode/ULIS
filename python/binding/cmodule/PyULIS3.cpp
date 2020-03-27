@@ -2,23 +2,23 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   PyULIS2
+*   PyULIS3
 *__________________
 *
-* @file         _PyULIS2.cpp
+* @file         _PyULIS3.cpp
 * @author       Clement Berthaud
-* @brief        Python3 module for ULIS2.
+* @brief        Python3 module for ULIS3.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS2>
+#include <ULIS3>
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include "macros.h"
-#include "Types/PyULIS2_Block.ipp"
-#include "Types/PyULIS2_AbstractPixel.ipp"
-#include "Types/PyULIS2_PixelProxy.ipp"
-#include "Types/PyULIS2_PixelValue.ipp"
+#include "Types/Block.ipp"
+#include "Types/AbstractPixel.ipp"
+#include "Types/PixelProxy.ipp"
+#include "Types/PixelValue.ipp"
 
 PyObject*
 spam_system( PyObject *self, PyObject *args ) {
@@ -30,30 +30,30 @@ spam_system( PyObject *self, PyObject *args ) {
 }
 
 
-static PyMethodDef PyULIS2Methods[] = {
+static PyMethodDef PyULIS3Methods[] = {
     { "system",  spam_system, METH_VARARGS, "Execute a shell command." },
     { NULL, NULL, 0, NULL } // Sentinel
 };
 
-static struct PyModuleDef PyULIS2Module  = {
+static struct PyModuleDef PyULIS3Module  = {
       PyModuleDef_HEAD_INIT
-    , "PyULIS2"                 // name of module
+    , "PyULIS3"                 // name of module
     , NULL                      // module documentation, may be NULL
     , -1                        // size of per-interpreter state of the module, or -1 if the module keeps state in global variables.
-    , PyULIS2Methods
+    , PyULIS3Methods
 };
 
 PyMODINIT_FUNC
-PyInit_PyULIS2(void) {
+PyInit_PyULIS3(void) {
     PyObject *m;
 
-    PYULIS2_CHECK_FOR_ALL_TYPES_READY
+    PYULIS3_CHECK_FOR_ALL_TYPES_READY
 
-    m = PyModule_Create( &PyULIS2Module );
+    m = PyModule_Create( &PyULIS3Module );
     if( m == NULL )
         return  NULL;
 
-    PYULIS2_FOR_ALL_TYPES_IMPORT
+    PYULIS3_FOR_ALL_TYPES_IMPORT
 
     return  m;
 }

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clipboard.h
@@ -14,23 +14,23 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
-ULIS2_API FBlock* XLoadFromClipboard( FThreadPool*              iThreadPool
+ULIS3_API FBlock* XLoadFromClipboard( FThreadPool*              iThreadPool
                                     , bool                      iBlocking
                                     , uint32                    iPerfIntent
                                     , const FHostDeviceInfo&    iHostDeviceInfo
                                     , bool                      iCallCB
                                     , tFormat                   iDesiredFormat );
 
-ULIS2_API void SaveToClipboard( FThreadPool*            iThreadPool
+ULIS3_API void SaveToClipboard( FThreadPool*            iThreadPool
                               , bool                    iBlocking
                               , uint32                  iPerfIntent
                               , const FHostDeviceInfo&  iHostDeviceInfo
                               , bool                    iCallCB
                               , const FBlock*           iSource );
 
-ULIS2_API bool ClipboardHasImageData();
+ULIS3_API bool ClipboardHasImageData();
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -2,12 +2,12 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FDecl.h
 * @author       Clement Berthaud
-* @brief        This file provides core forward declarations for the ULIS2 library.
+* @brief        This file provides core forward declarations for the ULIS3 library.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -16,7 +16,7 @@
 
 /////////////////////////////////////////////////////
 // FDecl Typedefs and enums
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 class   FBlock;
 class   IPixel;
 class   FPixelValue;
@@ -44,5 +44,5 @@ typedef TVec2< float >          FVec2F;
 typedef TVec2< int64 >          FVec2I64;
 typedef TVec2< int32 >          FVec2I32;
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

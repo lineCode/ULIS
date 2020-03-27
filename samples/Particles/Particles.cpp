@@ -2,12 +2,12 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Particles.cpp
 * @author       Clement Berthaud
-* @brief        Particles application for ULIS2.
+* @brief        Particles application for ULIS3.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -44,9 +44,9 @@ SWindow::SWindow()
     , mTimer( nullptr )
     , mLeftButtonDown( false )
 {
-    mCanvas = new FBlock( 800, 600, ULIS2_FORMAT_RGBA8 );
-    mParticle = new FBlock( 3, 3, ULIS2_FORMAT_RGBA8 );
-    ClearRaw( mParticle, ULIS2_NOCB );
+    mCanvas = new FBlock( 800, 600, ULIS3_FORMAT_RGBA8 );
+    mParticle = new FBlock( 3, 3, ULIS3_FORMAT_RGBA8 );
+    ClearRaw( mParticle, ULIS3_NOCB );
     mParticles.reserve( 1000 );
     mImage = new QImage( mCanvas->DataPtr(), mCanvas->Width(), mCanvas->Height(), mCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
@@ -59,7 +59,7 @@ SWindow::SWindow()
     mTimer->start();
 
     FPixelValue particleColor = FPixelValue::FromRGBA8( 170, 40, 0, 255 );
-    Fill( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mParticle, particleColor, mParticle->Rect() );
+    Fill( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mParticle, particleColor, mParticle->Rect() );
     float midx = mParticle->Width() / 2.f;
     float midy = mParticle->Height() / 2.f;
     float ray2 = midx * midx;
@@ -107,13 +107,13 @@ SWindow::tickEvent() {
         }
     }
 
-    Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mCanvas, mCanvas->Rect() );
+    Clear( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mCanvas, mCanvas->Rect() );
 
     FRect sourceRect = mParticle->Rect();
     for( size_t i = 0; i < mParticles.size(); ++i ) {
         mParticles[i].p.x += mParticles[i].v.x = mParticles[i].v.x * 0.9f;
         mParticles[i].p.y += mParticles[i].v.y = mParticles[i].v.y * 0.9f;
-        Blend( &mPool, ULIS2_BLOCKING, ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42, mHost, ULIS2_NOCB, mParticle, mCanvas, sourceRect, mParticles[i].p, ULIS2_AA, BM_MULTIPY, AM_NORMAL, 0.3f );
+        Blend( &mPool, ULIS3_BLOCKING, ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mCanvas, sourceRect, mParticles[i].p, ULIS3_AA, BM_MULTIPY, AM_NORMAL, 0.3f );
     }
 
     mPixmap->convertFromImage( *mImage );

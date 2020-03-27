@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Font.h
@@ -14,11 +14,11 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFont
 /// @brief      The FFont class provides a thin wrapper around the freetype face type.
-class ULIS2_API FFont
+class ULIS3_API FFont
 {
 public:
     // Construction / Destruction
@@ -37,5 +37,5 @@ private:
     const FFontEngine& mFontEngine;
     const FFontRegistry& mFontRegistry;
 };
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

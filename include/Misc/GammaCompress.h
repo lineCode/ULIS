@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         GammaCompress.h
@@ -14,21 +14,21 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
-ULIS2_API void ApplysRGB2Linear( FThreadPool*           iThreadPool
+ULIS3_API void ApplysRGB2Linear( FThreadPool*           iThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
                                , bool                   iCallCB
                                , FBlock*                iDestination );
 
-ULIS2_API void ApplyLinear2sRGB( FThreadPool*           iThreadPool
+ULIS3_API void ApplyLinear2sRGB( FThreadPool*           iThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
                                , bool                   iCallCB
                                , FBlock*                iDestination );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

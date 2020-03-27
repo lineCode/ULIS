@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         BlendMT_NonSeparable_MEM_Generic.ipp
@@ -23,7 +23,7 @@
 #include "Conv/ConvBuffer.h"
 #include "Maths/Geometry.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 template< typename T >
 void
 InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
@@ -44,11 +44,11 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSr
     tByte* result = new tByte[ fmt.SPP ];
 
     // Query dispatched method
-    FFormatInfo rgbfFormatInfo( ULIS2_FORMAT_RGBF );
-    fpDispatchedConvInvoke conv_forward_fptr = QueryDispatchedConvInvokeForParameters( fmt.FMT, ULIS2_FORMAT_RGBF );
-    fpDispatchedConvInvoke conv_backward_fptr = QueryDispatchedConvInvokeForParameters( ULIS2_FORMAT_RGBF, fmt.FMT );
-    ULIS2_ASSERT( conv_forward_fptr, "No Conversion invocation found" );
-    ULIS2_ASSERT( conv_backward_fptr, "No Conversion invocation found" );
+    FFormatInfo rgbfFormatInfo( ULIS3_FORMAT_RGBF );
+    fpDispatchedConvInvoke conv_forward_fptr = QueryDispatchedConvInvokeForParameters( fmt.FMT, ULIS3_FORMAT_RGBF );
+    fpDispatchedConvInvoke conv_backward_fptr = QueryDispatchedConvInvokeForParameters( ULIS3_FORMAT_RGBF, fmt.FMT );
+    ULIS3_ASSERT( conv_forward_fptr, "No Conversion invocation found" );
+    ULIS3_ASSERT( conv_backward_fptr, "No Conversion invocation found" );
 
 
     float m11, m01, m10, m00, vv0, vv1, res;
@@ -67,7 +67,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSr
         const float alpha_comp  = AlphaNormalF( alpha_src, alpha_bdp );
         const float var         = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         float alpha_result;
-        ULIS2_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
@@ -79,7 +79,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSr
         conv_forward_fptr( &fmt, src_sample.Ptr(), &rgbfFormatInfo, reinterpret_cast< tByte* >( &src_conv.m[0] ), 1 );
         conv_forward_fptr( &fmt, bdp, &rgbfFormatInfo, reinterpret_cast< tByte* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
-        ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
         conv_backward_fptr( &rgbfFormatInfo, reinterpret_cast< const tByte* >( &res_conv.m[0] ), &fmt, result, 1 );
 
@@ -107,7 +107,7 @@ BlendMT_NonSeparable_MEM_Generic_Subpixel( std::shared_ptr< const _FBlendInfoPri
     const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
     const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel< T >
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -129,11 +129,11 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const tByte* iSrc, tByte*
     tByte* result = new tByte[ fmt.SPP ];
 
     // Query dispatched method
-    FFormatInfo rgbfFormatInfo( ULIS2_FORMAT_RGBF );
-    fpDispatchedConvInvoke conv_forward_fptr = QueryDispatchedConvInvokeForParameters( fmt.FMT, ULIS2_FORMAT_RGBF );
-    fpDispatchedConvInvoke conv_backward_fptr = QueryDispatchedConvInvokeForParameters( ULIS2_FORMAT_RGBF, fmt.FMT );
-    ULIS2_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
-    ULIS2_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
+    FFormatInfo rgbfFormatInfo( ULIS3_FORMAT_RGBF );
+    fpDispatchedConvInvoke conv_forward_fptr = QueryDispatchedConvInvokeForParameters( fmt.FMT, ULIS3_FORMAT_RGBF );
+    fpDispatchedConvInvoke conv_backward_fptr = QueryDispatchedConvInvokeForParameters( ULIS3_FORMAT_RGBF, fmt.FMT );
+    ULIS3_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
+    ULIS3_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
         const float alpha_src   = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;
@@ -141,12 +141,12 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const tByte* iSrc, tByte*
         const float alpha_comp  = AlphaNormalF( alpha_src, alpha_bdp );
         const float var         = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         float alpha_result;
-        ULIS2_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
         conv_forward_fptr( &fmt, src, &rgbfFormatInfo, reinterpret_cast< tByte* >( &src_conv.m[0] ), 1 );
         conv_forward_fptr( &fmt, bdp, &rgbfFormatInfo, reinterpret_cast< tByte* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
-        ULIS2_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS2_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
         conv_backward_fptr( &rgbfFormatInfo, reinterpret_cast< const tByte* >( &res_conv.m[0] ), &fmt, result, 1 );
 
@@ -174,7 +174,7 @@ BlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const _FBlendInfoPrivate > iI
     const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
     const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic< T >
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -182,5 +182,5 @@ BlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const _FBlendInfoPrivate > iI
                                    , pLINE , iInfo );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

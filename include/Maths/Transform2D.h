@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Transform2D.h
@@ -15,10 +15,10 @@
 #include "Core/Core.h"
 #include <glm/mat3x3.hpp>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransform2D
-class ULIS2_API FTransform2D
+class ULIS3_API FTransform2D
 {
 public:
     // Construction / Destruction
@@ -46,15 +46,15 @@ private:
     mutable bool mDirtyInverseMatrix;
 };
 
-ULIS2_API glm::mat3 MakeIdentityMatrix();
-ULIS2_API glm::mat3 MakeRotationMatrix( float iAngleRag );
-ULIS2_API glm::mat3 MakeScaleMatrix( float iX, float iY );
-ULIS2_API glm::mat3 MakeShearMatrix( float iX, float iY );
-ULIS2_API glm::mat3 MakeTranslationMatrix( float iX, float iY );
-ULIS2_API glm::mat3 ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB );
-ULIS2_API void DecomposeMatrix( const glm::mat3& iMat, float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY );
-ULIS2_API glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] );
-ULIS2_API FVec2F HomographyTransform( const FVec2F& iPoint, const glm::mat3& iMat );
+ULIS3_API glm::mat3 MakeIdentityMatrix();
+ULIS3_API glm::mat3 MakeRotationMatrix( float iAngleRag );
+ULIS3_API glm::mat3 MakeScaleMatrix( float iX, float iY );
+ULIS3_API glm::mat3 MakeShearMatrix( float iX, float iY );
+ULIS3_API glm::mat3 MakeTranslationMatrix( float iX, float iY );
+ULIS3_API glm::mat3 ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB );
+ULIS3_API void DecomposeMatrix( const glm::mat3& iMat, float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY );
+ULIS3_API glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] );
+ULIS3_API FVec2F HomographyTransform( const FVec2F& iPoint, const glm::mat3& iMat );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

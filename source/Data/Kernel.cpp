@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Kernel.cpp
@@ -13,7 +13,7 @@
 */
 #include "Data/Kernel.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FKernel
 //--------------------------------------------------------------------------------------
@@ -24,9 +24,9 @@ FKernel::~FKernel()
 
 
 FKernel::FKernel( int iWidth, int iHeight )
-    : tSuperClass( iWidth, iHeight, ULIS2_FORMAT_GF )
+    : tSuperClass( iWidth, iHeight, ULIS3_FORMAT_GF )
 {
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

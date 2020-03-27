@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         TransformBezier_NN_MEM_Generic.ipp
@@ -18,7 +18,7 @@
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 template< typename T > void
 InvokeTransformBezierMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const _FTransformInfoPrivate&   info    = *iInfo;
@@ -48,11 +48,11 @@ TransformBezierMT_NN_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate 
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
     const tSize                     dst_decal_y = info.dst_roi.y;
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformBezierMTProcessScanline_NN_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, iField, iMask );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

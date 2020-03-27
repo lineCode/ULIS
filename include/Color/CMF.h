@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         CMF.h
@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // CIE 2° (1931) Table, XYZ CMFs ( 360nm to 830nm ) 1nm step
 static const cmsCIEXYZ CMF_XYZ_CIE_2_1931_1nm[ 471 ] = {
@@ -491,5 +491,5 @@ static const cmsCIEXYZ CMF_XYZ_CIE_2_1931_1nm[ 471 ] = {
 /*830*/ { 0.000001251141,0.000000451810,0.000000000000 }
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

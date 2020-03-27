@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         StringUtils.cpp
@@ -20,7 +20,7 @@
 namespace std {   };
 using namespace std;
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 bool replace_imp( std::string& str, const std::string& from, const std::string& to ) {
     size_t start_pos = str.find(from);
     if(start_pos == std::string::npos)
@@ -55,5 +55,5 @@ LevenshteinDistance( const char* s, size_t n, const char* t, size_t m )
     return  r;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

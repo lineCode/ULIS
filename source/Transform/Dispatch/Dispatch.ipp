@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Dispatch.ipp
@@ -25,7 +25,7 @@
 #include "Transform/Dispatch/Generic/TransformBezier_Bilinear_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformBezier_Bicubic_MEM_Generic.ipp"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 typedef void (*fpDispatchedTransformFunc)( std::shared_ptr< const _FTransformInfoPrivate > );
 typedef void (*fpDispatchedBezierTransformFunc)( std::shared_ptr< const _FTransformInfoPrivate >, std::shared_ptr< const FBlock >, std::shared_ptr< const FBlock > );
 /////////////////////////////////////////////////////
@@ -132,5 +132,5 @@ QueryDispatchedTransformBezierFunctionForParameters( const _FTransformInfoPrivat
     }
     return  nullptr;
 }
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

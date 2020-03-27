@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clear.cpp
@@ -17,7 +17,7 @@
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 #ifdef __AVX2__
 void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iStride ) {
     int64 index;
@@ -63,25 +63,25 @@ void Clear_imp( FThreadPool*            iThreadPool
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
     #ifdef __AVX2__
-    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
+    if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const tSize stride = 32;
         const tSize count = iArea.w * bpp;
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_AX2, DST, count, stride )
     } else
     #endif
     #ifdef __SSE4_2__
-    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
+    if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const tSize stride = 16;
         const tSize count = iArea.w * bpp;
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
     } else
     #endif
     {
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_MEM, DST, iArea.w, bpp )
     }
@@ -96,9 +96,9 @@ void Clear_imp( FThreadPool*            iThreadPool
            , const FRect&              iArea )
 {
     // Assertions
-    ULIS2_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
     // Fit region of interest
     FRect roi = iArea & iDestination->Rect();
 
@@ -114,10 +114,10 @@ void Clear_imp( FThreadPool*            iThreadPool
 }
 
 void ClearRaw( FBlock* iDst, bool iCallCB ) {
-    ULIS2_ASSERT( iDst, "Bad destination" );
+    ULIS3_ASSERT( iDst, "Bad destination" );
     memset( iDst->DataPtr(), 0, iDst->BytesTotal() );
     iDst->Invalidate( iCallCB );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

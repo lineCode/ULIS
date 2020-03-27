@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Copy.cpp
@@ -18,7 +18,7 @@
 #include "Thread/ThreadPool.h"
 
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
 #ifdef __AVX2__
 void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSize iCount, const tSize iStride )
@@ -81,21 +81,21 @@ Copy_imp( FThreadPool*              iThreadPool
     #define DST dst + ( ( basedsty + pLINE ) * dst_bps )
     const tSize count = iDstROI.w * bpp;
     #ifdef __AVX2__
-    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && ( src_bps + dst_bps ) >= 64 ) {
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && ( src_bps + dst_bps ) >= 64 ) {
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeCopyMTProcessScanline_AX2, DST, SRC, count, 32 )
     } else
     #endif
     #ifdef __SSE4_2__
-    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && ( src_bps + dst_bps ) >= 32 ) {
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && ( src_bps + dst_bps ) >= 32 ) {
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeCopyMTProcessScanline_SSE, DST, SRC, count, 16 )
     } else
     #endif
     {
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeCopyMTProcessScanline_MEM, DST, SRC, count )
     }
@@ -113,10 +113,10 @@ void Copy( FThreadPool*             iThreadPool
          , const FVec2I&            iPos )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS2_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match"                                  );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match"                                  );
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
@@ -150,7 +150,7 @@ FBlock* XCopy( FThreadPool*           iThreadPool
              , bool                   iCallCB
              , const FBlock*          iSource )
 {
-    ULIS2_ASSERT( iSource, "Bad source." );
+    ULIS3_ASSERT( iSource, "Bad source." );
     FBlock* ret = new FBlock( iSource->Width(), iSource->Height(), iSource->Format() );
     Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret, iSource->Rect(), FVec2I( 0, 0 ) );
     return  ret;
@@ -159,10 +159,10 @@ FBlock* XCopy( FThreadPool*           iThreadPool
 void
 CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB ) {
     // Assertions
-    ULIS2_ASSERT( iSrc,                             "Bad source"                                );
-    ULIS2_ASSERT( iDst,                             "Bad destination"                           );
-    ULIS2_ASSERT( iSrc != iDst,                     "Destination and source cannot be the same" );
-    ULIS2_ASSERT( iSrc->Format() == iDst->Format(), "Formats do not matchs"                     );
+    ULIS3_ASSERT( iSrc,                             "Bad source"                                );
+    ULIS3_ASSERT( iDst,                             "Bad destination"                           );
+    ULIS3_ASSERT( iSrc != iDst,                     "Destination and source cannot be the same" );
+    ULIS3_ASSERT( iSrc->Format() == iDst->Format(), "Formats do not matchs"                     );
 
     // One call, supposedly more efficient for small block.
     memcpy( iDst->DataPtr(), iSrc->DataPtr(), iSrc->BytesTotal() );
@@ -174,12 +174,12 @@ CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB ) {
 FBlock*
 XCopyRaw( const FBlock* iSrc, bool iCallCB ) {
     // Assertions
-    ULIS2_ASSERT( iSrc, "Bad source" );
+    ULIS3_ASSERT( iSrc, "Bad source" );
     FBlock* ret = new FBlock( iSrc->Width(), iSrc->Height(), iSrc->Format() );
     memcpy( ret->DataPtr(), iSrc->DataPtr(), iSrc->BytesTotal() );
     return  ret;
 }
 
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         UUID.cpp
@@ -16,7 +16,7 @@
 #include <sstream>
 #include <random>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Weak UUID
 //--------------------------------------------------------------------------------------
@@ -47,5 +47,5 @@ std::string GenerateWeakUUID( uint8 len )
 }
 
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

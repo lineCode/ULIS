@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Tile.cpp
@@ -13,12 +13,12 @@
 */
 #include "Data/Sparse/Tile.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FTileElement
 FTileElement::~FTileElement()
 {
-    ULIS2_ASSERT( mRefCount.load() == 0, "Bad RefCount on Delete Tile" );
+    ULIS3_ASSERT( mRefCount.load() == 0, "Bad RefCount on Delete Tile" );
 }
 
 FTileElement::FTileElement()
@@ -38,5 +38,5 @@ FTileElement::FTileElement( FBlock* iPtr )
 void FTileElement::DecreaseRefCount() { mRefCount--; };
 void FTileElement::IncreaseRefCount() { mRefCount++; };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

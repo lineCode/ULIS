@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Draw.cpp
@@ -17,7 +17,7 @@
 #include "Conv/Conv.h"
 #include "Maths/Maths.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 void DrawDotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos ) {
     if( !iDst->Rect().HitTest( iPos ) )
         return;
@@ -89,5 +89,5 @@ void DrawRectOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& 
     DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, iRect.x + iRect.w );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

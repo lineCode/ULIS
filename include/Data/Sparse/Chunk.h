@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Chunk.h
@@ -20,10 +20,10 @@
 #include "Base/HostDeviceInfo.h"
 #include <static_math/static_math.h>
 
-ULIS2_NAMESPACE_BEGIN
-static const FPixelValue default_wireframe_debug_color = FPixelValue(   ULIS2_FORMAT_RGB8, { 40,    80,     220 } );
-static const FPixelValue dirty_wireframe_debug_color = FPixelValue(     ULIS2_FORMAT_RGB8, { 255,   0,      0   } );
-static const FPixelValue correct_wireframe_debug_color = FPixelValue(   ULIS2_FORMAT_RGB8, { 0,     255,    0   } );
+ULIS3_NAMESPACE_BEGIN
+static const FPixelValue default_wireframe_debug_color = FPixelValue(   ULIS3_FORMAT_RGB8, { 40,    80,     220 } );
+static const FPixelValue dirty_wireframe_debug_color = FPixelValue(     ULIS3_FORMAT_RGB8, { 255,   0,      0   } );
+static const FPixelValue correct_wireframe_debug_color = FPixelValue(   ULIS3_FORMAT_RGB8, { 0,     255,    0   } );
 static const FHostDeviceInfo debug_host = FHostDeviceInfo::Detect();
 /////////////////////////////////////////////////////
 // Enums
@@ -69,7 +69,7 @@ template< uint8 _MICRO, uint8 _MACRO, uint8 _LOCAL > class TQuadtreeChunk;
 template< uint8 _MICRO
         , uint8 _MACRO
         , uint8 _LOCAL >
-class ULIS2_API TAbstractChunk
+class ULIS3_API TAbstractChunk
 {
     typedef  TAbstractChunk< _MICRO, _MACRO, _LOCAL >   tSelf;
     typedef TTilePool< _MICRO, _MACRO >                 tTilePool;
@@ -104,7 +104,7 @@ protected:
 /////////////////////////////////////////////////////
 /// TAbstractChunk
 template< uint8 _MICRO, uint8 _MACRO >
-class ULIS2_API TAbstractChunk< _MICRO, _MACRO, 0 >
+class ULIS3_API TAbstractChunk< _MICRO, _MACRO, 0 >
 {
     typedef  TAbstractChunk< _MICRO, _MACRO, 0 >    tSelf;
     typedef TTilePool< _MICRO, _MACRO >             tTilePool;
@@ -141,7 +141,7 @@ protected:
 template< uint8 _MICRO
         , uint8 _MACRO
         , uint8 _LOCAL >
-class ULIS2_API TRootChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
+class ULIS3_API TRootChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
 {
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >    tSuperClass;
     typedef  TRootChunk<        _MICRO, _MACRO, _LOCAL >    tSelf;
@@ -254,7 +254,7 @@ private:
 template< uint8 _MICRO
         , uint8 _MACRO
         , uint8 _LOCAL >
-class ULIS2_API TDataChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
+class ULIS3_API TDataChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
 {
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >    tSuperClass;
     typedef  TDataChunk<        _MICRO, _MACRO, _LOCAL >    tSelf;
@@ -306,7 +306,7 @@ public:
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
         for( int i = 0; i < tSuperClass::local_chunk_size_as_pixels; i+= tSuperClass::micro_chunk_size_as_pixels ) {
             for( int j = 0; j < tSuperClass::local_chunk_size_as_pixels; j+= tSuperClass::micro_chunk_size_as_pixels ) {
-                Copy( nullptr, ULIS2_NONBLOCKING, 0, debug_host, ULIS2_NOCB, mPtr->mBlock, iDst, mPtr->mBlock->Rect(), iPos + FVec2I64( i, j ) );
+                Copy( nullptr, ULIS3_NONBLOCKING, 0, debug_host, ULIS3_NOCB, mPtr->mBlock, iDst, mPtr->mBlock->Rect(), iPos + FVec2I64( i, j ) );
             }
         }
     }
@@ -330,7 +330,7 @@ private:
 template< uint8 _MICRO
         , uint8 _MACRO
         , uint8 _LOCAL >
-class ULIS2_API TQuadtreeChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
+class ULIS3_API TQuadtreeChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
 {
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >                        tSuperClass;
     typedef  TQuadtreeChunk<    _MICRO, _MACRO, _LOCAL >                        tSelf;
@@ -491,5 +491,5 @@ private:
     tSubAbstractChunk* mQuad[4];
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clipboard.cpp
@@ -13,11 +13,11 @@
 */
 #include "IO/Clipboard.h"
 
-#if defined(ULIS2_WIN)
+#if defined(ULIS3_WIN)
 #include "IO/Clipboard_imp/Clipboard_WindowsPlatform.ipp"
-#elif defined(ULIS2_MACOS)
+#elif defined(ULIS3_MACOS)
 #include "IO/Clipboard_imp/Clipboard_MacOSPlatform.ipp"
-#elif defined(ULIS2_LINUX)
+#elif defined(ULIS3_LINUX)
 #include "IO/Clipboard_imp/Clipboard_LinuxPlatform.ipp"
 #else
 #include "IO/Clipboard_imp/Clipboard_GenericPlatform.ipp"

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Samplers.ipp
@@ -16,8 +16,8 @@
 #include "Transform/Methods.h"
 #include "Maths/Geometry.h"
 
-ULIS2_NAMESPACE_BEGIN
-template< typename T > ULIS2_FORCEINLINE void
+ULIS3_NAMESPACE_BEGIN
+template< typename T > ULIS3_FORCEINLINE void
 SampleBilinear( tByte* iDst, const tByte* iCA, const tByte* iCB, const FFormatInfo& iFMT, const float iT, const float iU ) {
     float alphaA, alphaB, alphaC;
     alphaA = alphaB = alphaC = 1.f;
@@ -42,7 +42,7 @@ float InterpCubic( float iA, float iB, float iC, float iD, float iT ) {
     return a * iT * iT * iT + b * iT * iT + c * iT + d;
 }
 
-template< typename T > ULIS2_FORCEINLINE void
+template< typename T > ULIS3_FORCEINLINE void
 SampleBicubicH( float* iDst, const tByte* iA, const tByte* iB, const tByte* iC, const tByte* iD, const FFormatInfo& iFMT, const float iT ) {
     float alphaA, alphaB, alphaC, alphaD, alphaR;
     alphaA = alphaB = alphaC = alphaD = alphaR = 1.f;
@@ -65,7 +65,7 @@ SampleBicubicH( float* iDst, const tByte* iA, const tByte* iB, const tByte* iC, 
     }
 }
 
-template< typename T > ULIS2_FORCEINLINE void
+template< typename T > ULIS3_FORCEINLINE void
 SampleBicubicV( tByte* iDst, const float* iA, const float* iB, const float* iC, const float* iD, const FFormatInfo& iFMT, const float iT ) {
     float alphaA, alphaB, alphaC, alphaD, alphaR;
     alphaA = alphaB = alphaC = alphaD = alphaR = 1.f;
@@ -85,5 +85,5 @@ SampleBicubicV( tByte* iDst, const float* iA, const float* iB, const float* iC, 
     }
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

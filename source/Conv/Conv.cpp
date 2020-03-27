@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Conv.cpp
@@ -22,7 +22,7 @@
 #include "Thread/ThreadPool.h"
 #include "lcms2.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 void Conv( const IPixel& iSrc, IPixel& iDst ) {
     fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst.Format() );
     fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &iDst.FormatInfo(), iDst.Ptr(), 1 );
@@ -44,12 +44,12 @@ void Conv( FThreadPool*           iThreadPool
          , FBlock*                iDestination )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                          );
-    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                     );
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool"                                              );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS2_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
-    ULIS2_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                          );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                     );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool"                                              );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
+    ULIS3_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
 
     // Check no-op
     if( iSource == iDestination )
@@ -57,13 +57,13 @@ void Conv( FThreadPool*           iThreadPool
 
     // Check same format perform copy ( faster ).
     if( iSource->Format() == iDestination->Format() ) {
-        Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, ULIS2_NOCB, iSource, iDestination, iSource->Rect(), FVec2I() );
+        Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, ULIS3_NOCB, iSource, iDestination, iSource->Rect(), FVec2I() );
         return;
     }
 
     // Query dispatched method
     fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSource->Format(), iDestination->Format() );
-    ULIS2_ASSERT( fptr, "No Conversion invocation found" );
+    ULIS3_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params and call
     const tByte*    src = iSource->DataPtr();
@@ -74,7 +74,7 @@ void Conv( FThreadPool*           iThreadPool
     const tSize len = iSource->Width();
     const FFormatInfo* srcnfo = &iSource->FormatInfo();
     const FFormatInfo* dstnfo = &iDestination->FormatInfo();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr
                                    , srcnfo
@@ -96,9 +96,9 @@ FBlock* XConv( FThreadPool*           iThreadPool
              , tFormat                iDestinationFormat )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                                       "Bad source."                                          );
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool"                                              );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iSource,                                       "Bad source."                                          );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool"                                              );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Alloc return buffer in desired format use the same size, then perform conversion
     FBlock* ret = new FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
@@ -106,5 +106,5 @@ FBlock* XConv( FThreadPool*           iThreadPool
     return  ret;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         UUID.h
@@ -14,13 +14,13 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Weak UUID
 /// @fn         GenerateWeakUUID()
 /// @brief      Generate a weak UUID.
 /// @details    Weak UUID is an UUID that is pseudo random but with no guarantee to be unique at all. This it can be suitable for light uses.
-ULIS2_API std::string GenerateWeakUUID( uint8 iLen );
+ULIS3_API std::string GenerateWeakUUID( uint8 iLen );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

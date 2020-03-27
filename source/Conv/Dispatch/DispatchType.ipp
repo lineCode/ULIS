@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         DispatchType.ipp
@@ -17,35 +17,35 @@
 //Dispatch
 #include "Conv/Dispatch/DispatchModel.ipp"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 fpDispatchedConvInvoke QueryDispatchedConvInvokeForParameters( uint32 iSrcFormat, uint32 iDstFormat )
 {
-        switch( static_cast< eType >( ULIS2_R_TYPE( iSrcFormat ) ) ) {
-        case TYPE_UINT8: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
+        switch( static_cast< eType >( ULIS3_R_TYPE( iSrcFormat ) ) ) {
+        case TYPE_UINT8: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
                 case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, uint8       >( iSrcFormat, iDstFormat );
                 case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, uint16      >( iSrcFormat, iDstFormat );
                 case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, uint32      >( iSrcFormat, iDstFormat );
                 case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, ufloat      >( iSrcFormat, iDstFormat );
                 case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< uint8, udouble     >( iSrcFormat, iDstFormat ); }
-        case TYPE_UINT16: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
+        case TYPE_UINT16: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
                 case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, uint8      >( iSrcFormat, iDstFormat );
                 case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, uint16     >( iSrcFormat, iDstFormat );
                 case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, uint32     >( iSrcFormat, iDstFormat );
                 case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, ufloat     >( iSrcFormat, iDstFormat );
                 case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< uint16, udouble    >( iSrcFormat, iDstFormat ); }
-        case TYPE_UINT32: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
+        case TYPE_UINT32: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
                 case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, uint8      >( iSrcFormat, iDstFormat );
                 case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, uint16     >( iSrcFormat, iDstFormat );
                 case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, uint32     >( iSrcFormat, iDstFormat );
                 case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, ufloat     >( iSrcFormat, iDstFormat );
                 case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< uint32, udouble    >( iSrcFormat, iDstFormat ); }
-        case TYPE_UFLOAT: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
+        case TYPE_UFLOAT: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
                 case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, uint8      >( iSrcFormat, iDstFormat );
                 case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, uint16     >( iSrcFormat, iDstFormat );
                 case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, uint32     >( iSrcFormat, iDstFormat );
                 case TYPE_UFLOAT:   return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, ufloat     >( iSrcFormat, iDstFormat );
                 case TYPE_UDOUBLE:  return  QueryDispatchedConvInvokeForParameters_SelectModel< ufloat, udouble    >( iSrcFormat, iDstFormat ); }
-        case TYPE_UDOUBLE: switch( static_cast< eType >( ULIS2_R_TYPE( iDstFormat ) ) ) {
+        case TYPE_UDOUBLE: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
                 case TYPE_UINT8:    return  QueryDispatchedConvInvokeForParameters_SelectModel< udouble, uint8     >( iSrcFormat, iDstFormat );
                 case TYPE_UINT16:   return  QueryDispatchedConvInvokeForParameters_SelectModel< udouble, uint16    >( iSrcFormat, iDstFormat );
                 case TYPE_UINT32:   return  QueryDispatchedConvInvokeForParameters_SelectModel< udouble, uint32    >( iSrcFormat, iDstFormat );
@@ -55,5 +55,5 @@ fpDispatchedConvInvoke QueryDispatchedConvInvokeForParameters( uint32 iSrcFormat
 
     return  nullptr;
 }
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

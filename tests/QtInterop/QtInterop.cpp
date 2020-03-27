@@ -2,16 +2,16 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         QtInterop.cpp
 * @author       Clement Berthaud
-* @brief        Gui application for ULIS2.
+* @brief        Gui application for ULIS3.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS2>
+#include <ULIS3>
 
 #include <QApplication>
 #include <QWidget>
@@ -19,15 +19,15 @@
 #include <QPixmap>
 #include <QLabel>
 
-using namespace ::ul2;
+using namespace ::ul3;
 
 int
 main( int argc, char *argv[] ) {
     FThreadPool  threadPool;
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2;
+    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
-    FBlock* blockA = new FBlock( 256, 256, ULIS2_FORMAT_RGBA8 );
+    FBlock* blockA = new FBlock( 256, 256, ULIS3_FORMAT_RGBA8 );
 
     // Qt Window
     QApplication    app( argc, argv );

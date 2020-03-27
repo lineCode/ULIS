@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Dispatch.ipp
@@ -23,19 +23,19 @@
 #include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_AVX_RGBA8.ipp"
 
-#define ULIS2_SELECT_COMP_OP(   iSubpixel, _FUNCTION )      iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
-#define ULIS2_SELECT_COMP_OPT(  iSubpixel, _FUNCTION, _T )  iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
+#define ULIS3_SELECT_COMP_OP(   iSubpixel, _FUNCTION )      iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
+#define ULIS3_SELECT_COMP_OPT(  iSubpixel, _FUNCTION, _T )  iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 typedef void (*fpDispatchedBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
 
 template< typename T >
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iInfo ) {
     switch( BlendingModeQualifier( iInfo.blendingMode ) ) {
-        case BMQ_MISC           : return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Misc_MEM_Generic,          T );
-        case BMQ_SEPARABLE      : return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Separable_MEM_Generic,     T );
-        case BMQ_NONSEPARABLE   : return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_NonSeparable_MEM_Generic,  T );
+        case BMQ_MISC           : return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Misc_MEM_Generic,          T );
+        case BMQ_SEPARABLE      : return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Separable_MEM_Generic,     T );
+        case BMQ_NONSEPARABLE   : return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_NonSeparable_MEM_Generic,  T );
     }
     return  nullptr;
 }
@@ -45,30 +45,30 @@ fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo ) {
     switch( BlendingModeQualifier( iInfo.blendingMode ) ) {
         case BMQ_MISC: {
-            return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Misc_MEM_Generic, uint8  );
+            return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Misc_MEM_Generic, uint8  );
         }
 
         case BMQ_SEPARABLE: {
             #ifdef __AVX2__
-                if( iInfo.perfIntent & ULIS2_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
-                    return  ULIS2_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_AVX_RGBA8 );
+                if( iInfo.perfIntent & ULIS3_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
+                    return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_AVX_RGBA8 );
                 else
             #endif
             #ifdef __SSE4_2__
                 if( iInfo.hostDeviceInfo->HW_SSE42 )
-                    return  ULIS2_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_SSE_RGBA8 );
+                    return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_SSE_RGBA8 );
                 else
             #endif
-                    return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Separable_MEM_Generic,  uint8 );
+                    return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Separable_MEM_Generic,  uint8 );
         }
 
         case BMQ_NONSEPARABLE: {
             #ifdef __SSE4_2__
                 if( iInfo.hostDeviceInfo->HW_SSE42 )
-                    return  ULIS2_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_NonSeparable_SSE_RGBA8 );
+                    return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_NonSeparable_SSE_RGBA8 );
                 else
             #endif
-                    return  ULIS2_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_NonSeparable_MEM_Generic, uint8 );
+                    return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_NonSeparable_MEM_Generic, uint8 );
         }
     }
     return  nullptr;
@@ -89,8 +89,8 @@ QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPrivate
     if( iInfo.source->HasAlpha()
      && iInfo.source->NumColorChannels()    == 3
      && iInfo.source->Model()               == CM_RGB
-     && iInfo.perfIntent & ULIS2_PERF_TSPEC
-     && ( iInfo.perfIntent & ULIS2_PERF_SSE42 || iInfo.perfIntent & ULIS2_PERF_AVX2 )
+     && iInfo.perfIntent & ULIS3_PERF_TSPEC
+     && ( iInfo.perfIntent & ULIS3_PERF_SSE42 || iInfo.perfIntent & ULIS3_PERF_AVX2 )
      && ( iInfo.hostDeviceInfo->HW_SSE42 || iInfo.hostDeviceInfo->HW_AVX2 ) ) {
         return  QueryDispatchedBlendFunctionForParameters_RGBA8( iInfo );
     }
@@ -112,5 +112,5 @@ QueryDispatchedBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
     return  nullptr;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

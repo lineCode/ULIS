@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Callbacks.cpp
@@ -13,7 +13,7 @@
 */
 #include "Base/Callbacks.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 void OnCleanup_FreeMemory( tByte* iData, void* iInfo )
 {
     delete [] iData;
@@ -70,5 +70,5 @@ FOnCleanup::ExecuteIfBound( tByte* iData ) const
         execute( iData, info );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

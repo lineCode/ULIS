@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FontEngine.h
@@ -14,11 +14,11 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFontEngine
 /// @brief      The FFontEngine class provides a thin wrapper around the freetype library.
-class ULIS2_API FFontEngine
+class ULIS3_API FFontEngine
 {
 public:
     // Construction / Destruction
@@ -34,5 +34,5 @@ private:
     // Private Data Members
     void* mHandle;
 };
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

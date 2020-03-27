@@ -2,12 +2,12 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Platform.h
 * @author       Clement Berthaud
-* @brief        This file provides platform definitions for the ULIS2 library.
+* @brief        This file provides platform definitions for the ULIS3 library.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -36,109 +36,109 @@
 /////////////////////////////////////////////////////
 // Detect Build Configuration
 #ifdef NDEBUG
-    #define ULIS2_RELEASE
+    #define ULIS3_RELEASE
 #else // !NDEBUG
-    #define ULIS2_DEBUG
+    #define ULIS3_DEBUG
 #endif // !NDEBUG
 
 /////////////////////////////////////////////////////
 // Detect Compiler
 #if defined(__clang__)
-    #define ULIS2_CLANG
+    #define ULIS3_CLANG
 #elif defined(__GNUC__) || defined(__GNUG__)
-    #define ULIS2_GCC
+    #define ULIS3_GCC
 #elif defined(_MSC_VER)
-    #define ULIS2_MSVC
+    #define ULIS3_MSVC
 #else
-    #define ULIS2_UNKNOWN_COMPILER
+    #define ULIS3_UNKNOWN_COMPILER
 #endif
 
-#ifdef ULIS2_MSVC
+#ifdef ULIS3_MSVC
     #define _CRT_SECURE_NO_WARNINGS 1
-#endif // ULIS2_MSVC
+#endif // ULIS3_MSVC
 
 /////////////////////////////////////////////////////
 // Detect Platform
 #ifdef _WIN32
-    #define ULIS2_WIN
+    #define ULIS3_WIN
    #ifdef _WIN64
-      #define ULIS2_WIN64
+      #define ULIS3_WIN64
    #else
-      #define ULIS2_WIN32
+      #define ULIS3_WIN32
    #endif
 #elif __APPLE__
     #include "TargetConditionals.h"
     #if TARGET_IPHONE_SIMULATOR
-         #define ULIS2_IOS_SIMULATOR
+         #define ULIS3_IOS_SIMULATOR
     #elif TARGET_OS_IPHONE
-        #define ULIS2_IOS_DEVICE
+        #define ULIS3_IOS_DEVICE
     #elif TARGET_OS_MAC
-        #define ULIS2_MACOS
+        #define ULIS3_MACOS
     #else
         #error "Unknown Apple platform"
     #endif
 #elif __linux__
-    #define ULIS2_LINUX
+    #define ULIS3_LINUX
 #elif __unix__
-    #define ULIS2_UNIX
+    #define ULIS3_UNIX
 #elif defined(_POSIX_VERSION)
-    #define ULIS2_POSIX
+    #define ULIS3_POSIX
 #else
     #error "Unknown Platform"
 #endif
 
 /////////////////////////////////////////////////////
 // Force Inline Utility
-#define ULIS2_ENABLE_FORCEINLINE
-#define ULIS2_ENABLE_VECTORCALL
+#define ULIS3_ENABLE_FORCEINLINE
+#define ULIS3_ENABLE_VECTORCALL
 
-#ifdef ULIS2_ENABLE_FORCEINLINE
+#ifdef ULIS3_ENABLE_FORCEINLINE
     #if defined(__clang__)
-    #define ULIS2_FORCEINLINE inline __attribute__ ((always_inline))
+    #define ULIS3_FORCEINLINE inline __attribute__ ((always_inline))
     #elif defined(__GNUC__) || defined(__GNUG__)
-    #define ULIS2_FORCEINLINE inline __attribute__ ((always_inline))
+    #define ULIS3_FORCEINLINE inline __attribute__ ((always_inline))
     #elif defined(_MSC_VER)
-    #define ULIS2_FORCEINLINE __forceinline
+    #define ULIS3_FORCEINLINE __forceinline
     #else
-    #define ULIS2_FORCEINLINE inline
+    #define ULIS3_FORCEINLINE inline
     #endif
 #else
-    #define ULIS2_FORCEINLINE inline
-#endif // ULIS2_ENABLE_FORCEINLINE
+    #define ULIS3_FORCEINLINE inline
+#endif // ULIS3_ENABLE_FORCEINLINE
 
-#ifdef ULIS2_ENABLE_VECTORCALL
+#ifdef ULIS3_ENABLE_VECTORCALL
     #if defined(__clang__)
-    #define ULIS2_VECTORCALL __vectorcall
+    #define ULIS3_VECTORCALL __vectorcall
     #elif defined(__GNUC__) || defined(__GNUG__)
-    #define ULIS2_VECTORCALL
+    #define ULIS3_VECTORCALL
     #elif defined(_MSC_VER)
-    #define ULIS2_VECTORCALL __vectorcall
+    #define ULIS3_VECTORCALL __vectorcall
     #else
-    #define ULIS2_VECTORCALL __vectorcall
+    #define ULIS3_VECTORCALL __vectorcall
     #endif
 #else
-    #define ULIS2_VECTORCALL
-#endif // ULIS2_ENABLE_FORCEINLINE
+    #define ULIS3_VECTORCALL
+#endif // ULIS3_ENABLE_FORCEINLINE
 
 /////////////////////////////////////////////////////
 // Export utility macros
-#ifdef ULIS2_WIN
-    #ifdef ULIS2_BUILD_SHARED
-        #define ULIS2_SHARED
-        #define ULIS2_API __declspec( dllexport )
-        #define ULIS2_API_TEMPLATE template ULIS2_API
-    #elif defined ULIS2_DYNAMIC_LIBRARY
-        #define ULIS2_SHARED
-        #define ULIS2_API __declspec( dllimport )
-        #define ULIS2_API extern template ULIS2_API
+#ifdef ULIS3_WIN
+    #ifdef ULIS3_BUILD_SHARED
+        #define ULIS3_SHARED
+        #define ULIS3_API __declspec( dllexport )
+        #define ULIS3_API_TEMPLATE template ULIS3_API
+    #elif defined ULIS3_DYNAMIC_LIBRARY
+        #define ULIS3_SHARED
+        #define ULIS3_API __declspec( dllimport )
+        #define ULIS3_API extern template ULIS3_API
     #else
-        #define ULIS2_STATIC
-        #define ULIS2_API
-        #define ULIS2_API_TEMPLATE template
+        #define ULIS3_STATIC
+        #define ULIS3_API
+        #define ULIS3_API_TEMPLATE template
     #endif
 #else
-    #define ULIS2_API
-    #define ULIS2_API_TEMPLATE template
+    #define ULIS3_API
+    #define ULIS3_API_TEMPLATE template
 #endif
 
 /////////////////////////////////////////////////////
@@ -148,30 +148,30 @@
 
 /////////////////////////////////////////////////////
 // Define Namespaces
-#define ULIS2_NAMESPACE_NAME        ULIS2
-#define ULIS2_SHORT_NAMESPACE_NAME  ul2
-#define ULIS2_NAMESPACE_BEGIN       namespace ULIS2_NAMESPACE_NAME {
-#define ULIS2_NAMESPACE_END         }
-#define ULIS2_FDECL_CLASS( i )      ULIS2_NAMESPACE_BEGIN class i ; ULIS2_NAMESPACE_END
-#define ULIS2_FDECL_STRUCT( i )     ULIS2_NAMESPACE_BEGIN struct i ; ULIS2_NAMESPACE_END
-namespace ULIS2_NAMESPACE_NAME {}
-namespace ULIS2_SHORT_NAMESPACE_NAME = ULIS2_NAMESPACE_NAME;
+#define ULIS3_NAMESPACE_NAME        ULIS3
+#define ULIS3_SHORT_NAMESPACE_NAME  ul3
+#define ULIS3_NAMESPACE_BEGIN       namespace ULIS3_NAMESPACE_NAME {
+#define ULIS3_NAMESPACE_END         }
+#define ULIS3_FDECL_CLASS( i )      ULIS3_NAMESPACE_BEGIN class i ; ULIS3_NAMESPACE_END
+#define ULIS3_FDECL_STRUCT( i )     ULIS3_NAMESPACE_BEGIN struct i ; ULIS3_NAMESPACE_END
+namespace ULIS3_NAMESPACE_NAME {}
+namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Version Specification
-#define ULIS2_VERSION_MAJOR      2
-#define ULIS2_VERSION_MINOR      0
-#define ULIS2_VERSION_MAJOR_STR  "2"
-#define ULIS2_VERSION_MINOR_STR  "0"
+#define ULIS3_VERSION_MAJOR      2
+#define ULIS3_VERSION_MINOR      0
+#define ULIS3_VERSION_MAJOR_STR  "2"
+#define ULIS3_VERSION_MINOR_STR  "0"
 
 /////////////////////////////////////////////////////
 // Crash Behaviours
-#define ULIS2_CRASH             *((volatile int*)0) = 0
+#define ULIS3_CRASH             *((volatile int*)0) = 0
 
 /////////////////////////////////////////////////////
 // Assert Behaviours
-#ifdef ULIS2_DEBUG
-    #define ULIS2_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS2_CRASH; }
+#ifdef ULIS3_DEBUG
+    #define ULIS3_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS3_CRASH; }
 #else
-    #define ULIS2_ASSERT( cond, log )
+    #define ULIS3_ASSERT( cond, log )
 #endif

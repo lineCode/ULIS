@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Dispatch.ipp
@@ -18,8 +18,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-ULIS2_NAMESPACE_BEGIN
-struct ULIS2_API _FPrivateTextInfo {
+ULIS3_NAMESPACE_BEGIN
+struct ULIS3_API _FPrivateTextInfo {
     FThreadPool*            pool;
     bool                    blocking;
     uint32                  perfIntent;
@@ -33,5 +33,5 @@ struct ULIS2_API _FPrivateTextInfo {
     FVec2I                  position;
     bool                    antialiasing;
 };
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

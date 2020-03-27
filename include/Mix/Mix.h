@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Mix.h
@@ -14,10 +14,10 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
-ULIS2_API FPixelValue MixNative( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS2_API FPixelValue MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS2_API FPixelValue MixRGB( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS2_API FPixelValue MixLab( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_BEGIN
+ULIS3_API FPixelValue MixNative( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_API FPixelValue MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_API FPixelValue MixRGB( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_API FPixelValue MixLab( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_NAMESPACE_END
 

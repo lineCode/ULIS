@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Text.cpp
@@ -25,7 +25,7 @@
 
 #include FT_GLYPH_H
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 void
 RenderText( FThreadPool*            iThreadPool
           , bool                    iBlocking
@@ -41,9 +41,9 @@ RenderText( FThreadPool*            iThreadPool
           , bool                    iAntialiasing )
 {
     // Assertions
-    ULIS2_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     std::shared_ptr< _FPrivateTextInfo > forwardTextParams = std::make_shared< _FPrivateTextInfo >();
     _FPrivateTextInfo& alias = *forwardTextParams;
@@ -59,7 +59,7 @@ RenderText( FThreadPool*            iThreadPool
 
     { // Conv
         fpDispatchedConvInvoke fptrconv = QueryDispatchedConvInvokeForParameters( iColor.Format(), iDestination->Format() );
-        ULIS2_ASSERT( fptrconv, "No Conversion invocation found" );
+        ULIS3_ASSERT( fptrconv, "No Conversion invocation found" );
         fptrconv( &iColor.FormatInfo(), iColor.Ptr(), &iDestination->FormatInfo(), alias.color, 1 );
     }
 
@@ -74,7 +74,7 @@ RenderText( FThreadPool*            iThreadPool
 
     // Query
     fpDispatchedTextFunc fptr = QueryDispatchedTextFunctionForParameters( iDestination->Type() );
-    ULIS2_ASSERT( fptr, "No invocation found" );
+    ULIS3_ASSERT( fptr, "No invocation found" );
     fptr( forwardTextParams );
 
     // Invalidate
@@ -111,7 +111,7 @@ TextMetrics( std::wstring           iText
     FT_Error error = 0;
     FT_Face face = reinterpret_cast< FT_Face >( iFont.Handle() );
     error = FT_Set_Pixel_Sizes( face, 0, iSize );
-    ULIS2_ASSERT( !error, "Error setting face size" );
+    ULIS3_ASSERT( !error, "Error setting face size" );
     slot = face->glyph;
     pen.x = 0;
     pen.y = 0;
@@ -121,7 +121,7 @@ TextMetrics( std::wstring           iText
         FT_Set_Transform( face, &matrix, &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_BITMAP_METRICS_ONLY );
-        ULIS2_ASSERT( !error, "Error loading glyph" );
+        ULIS3_ASSERT( !error, "Error loading glyph" );
 
         FRect box = FRect::FromXYWH( dx + slot->bitmap_left, dy + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
         result = result | box;
@@ -133,5 +133,5 @@ TextMetrics( std::wstring           iText
     return  result;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

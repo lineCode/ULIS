@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Dispatch.ipp
@@ -16,7 +16,7 @@
 #include "Text/Dispatch/TextInfo.h"
 #include "Text/Dispatch/Generic/TraceTextMono_Generic.ipp"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedTextFunc)( std::shared_ptr< _FPrivateTextInfo > );
 
@@ -47,5 +47,5 @@ QueryDispatchedTextFunctionForParameters( eType iType ) {
     return  nullptr;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

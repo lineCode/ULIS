@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clipboard_GenericPlatform.ipp
@@ -13,7 +13,7 @@
 */
 #include "IO/Clipboard.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
@@ -38,5 +38,5 @@ bool ClipboardHasImageData_GenericPlatform() {
     return  false;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

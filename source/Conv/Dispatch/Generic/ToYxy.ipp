@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         ToYxy.ipp
@@ -17,9 +17,9 @@
 #include "Data/FormatInfo.h"
 #include "Data/Pixel.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 template< typename T1, typename T2 > void ConvBufferGreyToYxy(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
-    FPixelValue temp( ULIS2_FORMAT_RGBAF );
+    FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferGreyToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
         ConvBufferRGBToYxy< ufloat, T2 >( &temp.FormatInfo(), temp.Ptr(), iDstFormat, iDst, 1 );
@@ -51,7 +51,7 @@ template< typename T1, typename T2 > void ConvBufferRGBToYxy(   const FFormatInf
 
 
 template< typename T1, typename T2 > void ConvBufferHSVToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
-    FPixelValue temp( ULIS2_FORMAT_RGBAF );
+    FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferHSVToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
         ConvBufferRGBToYxy< ufloat, T2 >( &temp.FormatInfo(), temp.Ptr(), iDstFormat, iDst, 1 );
@@ -62,7 +62,7 @@ template< typename T1, typename T2 > void ConvBufferHSVToYxy(   const FFormatInf
 
 
 template< typename T1, typename T2 > void ConvBufferHSLToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
-    FPixelValue temp( ULIS2_FORMAT_RGBAF );
+    FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferHSLToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
         ConvBufferRGBToYxy< ufloat, T2 >( &temp.FormatInfo(), temp.Ptr(), iDstFormat, iDst, 1 );
@@ -73,7 +73,7 @@ template< typename T1, typename T2 > void ConvBufferHSLToYxy(   const FFormatInf
 
 
 template< typename T1, typename T2 > void ConvBufferCMYToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
-    FPixelValue temp( ULIS2_FORMAT_RGBAF );
+    FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferCMYToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
         ConvBufferRGBToYxy< ufloat, T2 >( &temp.FormatInfo(), temp.Ptr(), iDstFormat, iDst, 1 );
@@ -84,7 +84,7 @@ template< typename T1, typename T2 > void ConvBufferCMYToYxy(   const FFormatInf
 
 
 template< typename T1, typename T2 > void ConvBufferCMYKToYxy(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
-    FPixelValue temp( ULIS2_FORMAT_RGBAF );
+    FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferCMYKToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
         ConvBufferRGBToYxy< ufloat, T2 >( &temp.FormatInfo(), temp.Ptr(), iDstFormat, iDst, 1 );
@@ -95,7 +95,7 @@ template< typename T1, typename T2 > void ConvBufferCMYKToYxy(  const FFormatInf
 
 
 template< typename T1, typename T2 > void ConvBufferYUVToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
-    FPixelValue temp( ULIS2_FORMAT_RGBAF );
+    FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferYUVToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
         ConvBufferRGBToYxy< ufloat, T2 >( &temp.FormatInfo(), temp.Ptr(), iDstFormat, iDst, 1 );
@@ -155,4 +155,4 @@ template< typename T1, typename T2 > void ConvBufferYxyToYxy(   const FFormatInf
     }
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END

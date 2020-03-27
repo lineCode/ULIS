@@ -2,12 +2,12 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         AnimatedBezier.cpp
 * @author       Clement Berthaud
-* @brief        AnimatedBezier application for ULIS2.
+* @brief        AnimatedBezier application for ULIS3.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -44,11 +44,11 @@ SWindow::SWindow()
     , mLeftButtonDown( false )
     , mEvolutiveAngle( 0.f )
 {
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2;
+    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     std::string path = "C:/Users/PRAXINOS/Documents/work/TEST.png";
-    mSRC = XLoadFromFile( &mPool, ULIS2_BLOCKING, perfIntent, mHost, ULIS2_NOCB, path, ULIS2_FORMAT_RGBA8 );
-    mDST = new  FBlock( 1024, 512, ULIS2_FORMAT_RGBA8 );
-    Clear( &mPool, ULIS2_BLOCKING, perfIntent, mHost, ULIS2_NOCB, mDST, mDST->Rect() );
+    mSRC = XLoadFromFile( &mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, path, ULIS3_FORMAT_RGBA8 );
+    mDST = new  FBlock( 1024, 512, ULIS3_FORMAT_RGBA8 );
+    Clear( &mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
     mImage = new QImage( mDST->DataPtr(), mDST->Width(), mDST->Height(), mDST->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel = new QLabel( this );
@@ -104,9 +104,9 @@ SWindow::tickEvent() {
     mCtrlPts[3].ctrlCW  = mCtrlPts[3].point + FVec2F( cos( evoAngle3 ), sin( evoAngle3 ) ) * len;
     mCtrlPts[3].ctrlCCW = mCtrlPts[3].point + FVec2F( cos( evoAngle0 ), sin( evoAngle0 ) ) * len;
 
-    Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mDST, mDST->Rect() );
+    Clear( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
 
-    TransformBezier( &mPool, ULIS2_BLOCKING, ULIS2_PERF_MT | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BICUBIC );
+    TransformBezier( &mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BICUBIC );
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }

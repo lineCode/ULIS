@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         MD5.h
@@ -14,12 +14,12 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FMD5
 /// @brief      The FMD5 class provides a mean for computation of MD5 hash.
 /// @details    Based on reference implementation of RFC 1321.
-class ULIS2_API FMD5
+class ULIS3_API FMD5
 {
 public:
 //--------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ private:
 /// @brief      Shorthand function, computes MD5 for std::string directly
 /// @param      iStr    The text to hash.
 /// @return     A std::string representing the MD5 hash.
-ULIS2_API std::string  MD5( const std::string iStr );
+ULIS3_API std::string  MD5( const std::string iStr );
 
 
 /// @fn         MD5( const uint8* iData, int iLen )
@@ -121,7 +121,7 @@ ULIS2_API std::string  MD5( const std::string iStr );
 /// @param      iData   The data to hash.
 /// @param      iLen    The size in bytes of the data to hash.
 /// @return     A std::string representing the MD5 hash.
-ULIS2_API std::string  MD5( const uint8* iData, int iLen );
+ULIS3_API std::string  MD5( const uint8* iData, int iLen );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

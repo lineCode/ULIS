@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FontRegistry.h
@@ -16,7 +16,7 @@
 #include <map>
 #include <vector>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 class FFontRegistry;
 class FFontFamilyKey;
 class FFontStyleKey;
@@ -24,7 +24,7 @@ class FFontStyleKey;
 /////////////////////////////////////////////////////
 /// @class      FFontStyleKey
 /// @brief      The FFontStyleKey class provides a mean of storing and manipulating font families file paths.
-class ULIS2_API FFontStyleKey
+class ULIS3_API FFontStyleKey
 {
 public:
     // Construction / Destruction
@@ -47,7 +47,7 @@ private:
 /////////////////////////////////////////////////////
 /// @class      FFontFamilyKey
 /// @brief      The FFontFamilyKey class provides a mean of storing and manipulating font families file paths.
-class ULIS2_API FFontFamilyKey
+class ULIS3_API FFontFamilyKey
 {
 public:
     // Construction / Destruction
@@ -71,7 +71,7 @@ private:
 /////////////////////////////////////////////////////
 /// @class      FFontRegistry
 /// @brief      The FFontRegistry class provides a mean of storing and manipulating font families file paths.
-class ULIS2_API FFontRegistry
+class ULIS3_API FFontRegistry
 {
 public:
     // Construction / Destruction
@@ -99,5 +99,5 @@ private:
     const FFontEngine& mFontEngine;
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

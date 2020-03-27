@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Geometry.cpp
@@ -17,7 +17,7 @@
 #include <glm/vec3.hpp>
 #include <glm/mat3x3.hpp>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FRect
 FRect::FRect()
@@ -154,5 +154,5 @@ FRect::GetShift() const {
     return  FVec2I( -x, -y );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         ConvBuffer.h
@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
 template< typename T1, typename T2 > void ConvBufferGreyToGrey( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToGrey(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -127,7 +127,7 @@ template< typename T1, typename T2 > void ConvBufferXYZToYxy(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferYxyToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
 typedef void (*fpDispatchedConvInvoke)( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
-ULIS2_API fpDispatchedConvInvoke QueryDispatchedConvInvokeForParameters( uint32 iSrcFormat, uint32 iDstFormat );
+ULIS3_API fpDispatchedConvInvoke QueryDispatchedConvInvokeForParameters( uint32 iSrcFormat, uint32 iDstFormat );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

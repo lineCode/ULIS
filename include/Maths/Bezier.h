@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Bezier.h
@@ -17,16 +17,16 @@
 #include "Maths/Maths.h"
 #include <vector>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Bezier Functions
-struct ULIS2_API FBezierLUTElement {
+struct ULIS3_API FBezierLUTElement {
     FVec2F point;
     float length;
     float param;
 };
 
-struct ULIS2_API FBezierCubicControlPoint {
+struct ULIS3_API FBezierCubicControlPoint {
     FVec2F point;
     FVec2F ctrlCW;
     FVec2F ctrlCCW;
@@ -161,5 +161,5 @@ void inline CubicBezierRelinearizeLUT( const std::vector< FBezierLUTElement >& i
 }
 */
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

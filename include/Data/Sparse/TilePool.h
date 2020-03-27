@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         TilePool.h
@@ -24,12 +24,12 @@
 #include <thread>
 #include <unordered_map>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTilePool
 template< uint8 _MICRO
         , uint8 _MACRO >
-class ULIS2_API TTilePool
+class ULIS3_API TTilePool
 {
     typedef  TTiledBlock< _MICRO, _MACRO > tTiledBlock;
 
@@ -133,7 +133,7 @@ private:
     std::thread * const                                             mThreadHasherGarbageCollectorBackgroundWorker;
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 
 #include "TilePool.ipp"
 

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Disk.h
@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
 enum eImageFormat {
       IM_PNG
@@ -32,7 +32,7 @@ static const char* kwImageFormat[] = {
     , "hdr"
 };
 
-ULIS2_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
+ULIS3_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
@@ -40,7 +40,7 @@ ULIS2_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
                                , const std::string&     iPath
                                , tFormat                iDesiredFormat );
 
-ULIS2_API void SaveToFile( FThreadPool*             iThreadPool
+ULIS3_API void SaveToFile( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
@@ -50,5 +50,5 @@ ULIS2_API void SaveToFile( FThreadPool*             iThreadPool
                          , eImageFormat             iImageFormat
                          , int                      iQuality );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

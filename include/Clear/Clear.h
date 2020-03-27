@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clear.h
@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
-ULIS2_API void Clear( FThreadPool*              iThreadPool
+ULIS3_NAMESPACE_BEGIN
+ULIS3_API void Clear( FThreadPool*              iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -23,7 +23,7 @@ ULIS2_API void Clear( FThreadPool*              iThreadPool
                     , FBlock*                   iDestination
                     , const FRect&              iArea );
 
-ULIS2_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
+ULIS3_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

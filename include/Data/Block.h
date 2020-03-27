@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Block.h
@@ -17,13 +17,13 @@
 #include "Data/Pixel.h"
 #include "Base/Callbacks.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FBlock
 /// @brief      The FBlock class provides a mean of storing and manipulating digital images in various formats.
 /// @details    The block format, type, layout, and other informations can be retrieved with dedicated functions.
 /// @details    FBlock differs from FTexture because FBlock only lives on host CPU memory.
-class ULIS2_API FBlock
+class ULIS3_API FBlock
 {
 public:
     // Construction / Destruction
@@ -101,5 +101,5 @@ private:
     tSize           mBTT;
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

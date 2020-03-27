@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Dispatch.ipp
@@ -17,8 +17,8 @@
 #include "Maths/Geometry.h"
 #include <glm/matrix.hpp>
 
-ULIS2_NAMESPACE_BEGIN
-struct ULIS2_API _FTransformInfoPrivate {
+ULIS3_NAMESPACE_BEGIN
+struct ULIS3_API _FTransformInfoPrivate {
     FThreadPool*            pool;
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;
@@ -31,5 +31,5 @@ struct ULIS2_API _FTransformInfoPrivate {
     glm::mat3               inverseTransform;
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

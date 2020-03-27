@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Transform.h
@@ -17,9 +17,9 @@
 #include "Maths/Bezier.h"
 #include "Maths/Geometry.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
-ULIS2_API void TransformAffine( FThreadPool*              iThreadPool
+ULIS3_API void TransformAffine( FThreadPool*              iThreadPool
                               , bool                      iBlocking
                               , uint32                    iPerfIntent
                               , const FHostDeviceInfo&    iHostDeviceInfo
@@ -30,7 +30,7 @@ ULIS2_API void TransformAffine( FThreadPool*              iThreadPool
                               , const FTransform2D&       iTransform
                               , eResamplingMethod         iMethod );
 
-ULIS2_API void TransformPerspective( FThreadPool*              iThreadPool
+ULIS3_API void TransformPerspective( FThreadPool*              iThreadPool
                                    , bool                      iBlocking
                                    , uint32                    iPerfIntent
                                    , const FHostDeviceInfo&    iHostDeviceInfo
@@ -41,7 +41,7 @@ ULIS2_API void TransformPerspective( FThreadPool*              iThreadPool
                                    , const FTransform2D&       iTransform
                                    , eResamplingMethod         iMethod );
 
-ULIS2_API void TransformBezier( FThreadPool*                                    iThreadPool
+ULIS3_API void TransformBezier( FThreadPool*                                    iThreadPool
                               , bool                                            iBlocking
                               , uint32                                          iPerfIntent
                               , const FHostDeviceInfo&                          iHostDeviceInfo
@@ -54,17 +54,17 @@ ULIS2_API void TransformBezier( FThreadPool*                                    
                               , int                                             iPlotSize
                               , eResamplingMethod                               iMethod );
 
-ULIS2_API FRect TransformAffineMetrics( const FRect&          iSourceRect
+ULIS3_API FRect TransformAffineMetrics( const FRect&          iSourceRect
                                       , const FTransform2D&   iTransform
                                       , eResamplingMethod     iMethod );
 
-ULIS2_API FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
+ULIS3_API FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
                                            , const FTransform2D&   iTransform
                                            , eResamplingMethod     iMethod );
 
-ULIS2_API FRect TransformBezierMetrics( const FRect&                                    iSourceRect
+ULIS3_API FRect TransformBezierMetrics( const FRect&                                    iSourceRect
                                       , const std::vector< FBezierCubicControlPoint >&  iControlPoints
                                       , eResamplingMethod                               iMethod );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

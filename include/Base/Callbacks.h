@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Callbacks.h
@@ -14,12 +14,12 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRect& /* rect */ );
 typedef void (*fpCleanupFunction)( tByte* /* data */, void* /* info */ );
-ULIS2_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
-ULIS2_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
-struct ULIS2_API FOnInvalid
+ULIS3_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
+ULIS3_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
+struct ULIS3_API FOnInvalid
 {
     FOnInvalid();
     FOnInvalid( fpInvalidateFunction iInvalidateFunction, void* iInvalidateInfo = nullptr );
@@ -30,7 +30,7 @@ private:
     void*                   info;
 };
 
-struct ULIS2_API FOnCleanup
+struct ULIS3_API FOnCleanup
 {
     FOnCleanup();
     FOnCleanup( fpCleanupFunction iCleanupFunction, void* iCleanupInfo = nullptr );
@@ -41,5 +41,5 @@ private:
     void*                   info;
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Transform.cpp
@@ -25,7 +25,7 @@
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 void TransformAffine( FThreadPool*            iThreadPool
                     , bool                    iBlocking
                     , uint32                  iPerfIntent
@@ -38,11 +38,11 @@ void TransformAffine( FThreadPool*            iThreadPool
                     , eResamplingMethod       iMethod )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS2_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
@@ -66,7 +66,7 @@ void TransformAffine( FThreadPool*            iThreadPool
 
     // Query dispatched method
     fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
-    ULIS2_ASSERT( fptr, "No dispatch function found." );
+    ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams );
 
     // Invalid
@@ -85,11 +85,11 @@ void TransformPerspective( FThreadPool*            iThreadPool
                     , eResamplingMethod       iMethod )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS2_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformPerspectiveMetrics( src_fit, iTransform, iMethod );
@@ -113,7 +113,7 @@ void TransformPerspective( FThreadPool*            iThreadPool
 
     // Query dispatched method
     fpDispatchedTransformFunc fptr = QueryDispatchedTransformPerspectiveFunctionForParameters( alias );
-    ULIS2_ASSERT( fptr, "No dispatch function found." );
+    ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams );
 
     // Invalid
@@ -134,12 +134,12 @@ void TransformBezier( FThreadPool*                                      iThreadP
                     , eResamplingMethod                                 iMethod )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS2_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS2_ASSERT( iControlPoints.size() == 4,                   "Bad control points size" );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iControlPoints.size() == 4,                   "Bad control points size" );
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformBezierMetrics( src_fit, iControlPoints, iMethod );
     int plotsize = FMaths::Clamp( iPlotSize, 1, 8 );
@@ -151,9 +151,9 @@ void TransformBezier( FThreadPool*                                      iThreadP
         return;
 
     FVec2F shift( static_cast< float >( trans.x ), static_cast< float >( trans.y ) );
-    std::shared_ptr< FBlock > field   = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, ULIS2_FORMAT_GAF );
-    std::shared_ptr< FBlock > mask    = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, ULIS2_FORMAT_G8 );
-    ClearRaw( mask.get(), ULIS2_NOCB );
+    std::shared_ptr< FBlock > field   = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, ULIS3_FORMAT_GAF );
+    std::shared_ptr< FBlock > mask    = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, ULIS3_FORMAT_G8 );
+    ClearRaw( mask.get(), ULIS3_NOCB );
     std::vector< FBezierCubicControlPoint > tempPoints;
     tempPoints.reserve( 4 );
     for( auto i : iControlPoints )
@@ -208,7 +208,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
 
     // Query dispatched method
     fpDispatchedBezierTransformFunc fptr = QueryDispatchedTransformBezierFunctionForParameters( alias );
-    ULIS2_ASSERT( fptr, "No dispatch function found." );
+    ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams, field, mask );
 
     // Invalid
@@ -252,7 +252,7 @@ FRect TransformBezierMetrics( const FRect&                                    iS
                             , const std::vector< FBezierCubicControlPoint >&  iControlPoints
                             , eResamplingMethod                               iMethod )
 {
-    ULIS2_ASSERT( iControlPoints.size() == 4, "Bad control points size" );
+    ULIS3_ASSERT( iControlPoints.size() == 4, "Bad control points size" );
     return  FRect::FromMinMax( static_cast< int >( FMaths::VMin( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
                                                                , iControlPoints[1].point.x, iControlPoints[1].ctrlCW.x, iControlPoints[1].ctrlCCW.x
                                                                , iControlPoints[2].point.x, iControlPoints[2].ctrlCW.x, iControlPoints[2].ctrlCCW.x
@@ -271,5 +271,5 @@ FRect TransformBezierMetrics( const FRect&                                    iS
                                                                , iControlPoints[3].point.y, iControlPoints[3].ctrlCW.y, iControlPoints[3].ctrlCCW.y ) ) );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 
