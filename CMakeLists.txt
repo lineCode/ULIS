@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.11.0)
 
-option( ULIS2_BUILD_SHARED          "Build the library shared or statically" OFF )
-option( ULIS2_BUILD_PYTHON_MODULE   "Build the library python module"        OFF )
-SET( ULIS2_QT_CMAKE_PATH            "default" CACHE STRING "Indicates the path to Qt cmake package" )
-SET( ULIS2_PYTHON_REL_LIB           "default" CACHE STRING "Indicates the path to python release static library" )
-SET( ULIS2_PYTHON_DEB_LIB           "default" CACHE STRING "Indicates the path to python debug static library" )
-SET( ULIS2_PYTHON_INCLUDE_PATH      "default" CACHE STRING "Indicates the path to python include path" )
-SET( ULIS2_PYTHON_ADD_INCLUDE_PATH  "default" CACHE STRING "Indicates the path to python include path" )
+option( ULIS3_BUILD_SHARED          "Build the library shared or statically" OFF )
+option( ULIS3_BUILD_PYTHON_MODULE   "Build the library python module"        OFF )
+SET( ULIS3_QT_CMAKE_PATH            "default" CACHE STRING "Indicates the path to Qt cmake package" )
+SET( ULIS3_PYTHON_REL_LIB           "default" CACHE STRING "Indicates the path to python release static library" )
+SET( ULIS3_PYTHON_DEB_LIB           "default" CACHE STRING "Indicates the path to python debug static library" )
+SET( ULIS3_PYTHON_INCLUDE_PATH1     "default" CACHE STRING "Indicates the path to python include path" )
+SET( ULIS3_PYTHON_INCLUDE_PATH2     "default" CACHE STRING "Indicates the path to python include path" )
 
-set( ULIS2_USE_QT OFF )
-if( NOT "${ULIS2_QT_CMAKE_PATH}" STREQUAL "default")
-    set( ULIS2_USE_QT ON )
+set( ULIS3_USE_QT OFF )
+if( NOT "${ULIS3_QT_CMAKE_PATH}" STREQUAL "default")
+    set( ULIS3_USE_QT ON )
 endif()
 
 # Display host & compiler
@@ -37,17 +37,8 @@ if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STRE
 endif()
 
 # Create global solution
-project( ULIS2 )
+project( ULIS3 )
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-# Check Endianness
-#include( TestBigEndian )
-#TEST_BIG_ENDIAN( IS_BIG_ENDIAN )
-#if( IS_BIG_ENDIAN )
-#    message( STATUS "BIG_ENDIAN" )
-#else()
-#    message( STATUS "LITTLE_ENDIAN" )
-#endif()
 
 # Flags for Compiler / Platforms
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
@@ -94,30 +85,31 @@ file(
     "source/*"
 )
 
-if( ${ULIS2_BUILD_SHARED} )
-   add_library( ULIS2 SHARED ${source_list} )
-   target_compile_definitions( ULIS2 PUBLIC ULIS2_BUILD_SHARED )
+if( ${ULIS3_BUILD_SHARED} )
+   add_library( ULIS3 SHARED ${source_list} )
+   target_compile_definitions( ULIS3 PUBLIC ULIS3_BUILD_SHARED )
 else()
-   add_library( ULIS2 STATIC ${source_list} )
-   target_compile_definitions( ULIS2 PUBLIC ULIS2_BUILD_STATIC )
+   add_library( ULIS3 STATIC ${source_list} )
+   target_compile_definitions( ULIS3 PUBLIC ULIS3_BUILD_STATIC )
 endif()
 
-target_compile_definitions( ULIS2 PUBLIC UNICODE )
+target_compile_definitions( ULIS3 PUBLIC UNICODE )
 
 if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
     set( OpenCL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/include/"                 )
     set( OpenCL_LIBRARY     "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/lib/x86_64/OpenCL.lib"    )
 endif()
 find_package(OpenCL)
-set_target_properties( ULIS2 PROPERTIES OUTPUT_NAME "ULIS2.0" )
-target_link_libraries( ULIS2 PUBLIC clip )
-target_link_libraries( ULIS2 PUBLIC lcms2 )
-target_link_libraries( ULIS2 PUBLIC freetype )
-target_link_libraries( ULIS2 PUBLIC cppfs )
-target_link_libraries( ULIS2 PUBLIC ${OpenCL_LIBRARY} )
+set_target_properties( ULIS3 PROPERTIES OUTPUT_NAME "ULIS3" )
+set_target_properties( ULIS3 PROPERTIES PREFIX "" )
+target_link_libraries( ULIS3 PUBLIC clip )
+target_link_libraries( ULIS3 PUBLIC lcms2 )
+target_link_libraries( ULIS3 PUBLIC freetype )
+target_link_libraries( ULIS3 PUBLIC cppfs )
+target_link_libraries( ULIS3 PUBLIC ${OpenCL_LIBRARY} )
 
 target_include_directories(
-    ULIS2
+    ULIS3
     PUBLIC
     "include/"
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
@@ -143,46 +135,9 @@ foreach(source IN LISTS source_list)
 endforeach()
 
 ####################################
-# Add Python Project
-if( ${ULIS2_BUILD_PYTHON_MODULE} )
-    file(
-        GLOB_RECURSE
-        source_list
-        RELATIVE
-        "${CMAKE_CURRENT_SOURCE_DIR}"
-        "python/*"
-    )
-
-    add_library( PyULIS2 SHARED ${source_list} )
-    set_target_properties( PyULIS2 PROPERTIES SUFFIX ".pyd" )
-    target_compile_definitions( PyULIS2 PRIVATE PyULIS2_BUILD_SHARED )
-
-    target_link_libraries(
-        PyULIS2
-        ULIS2
-        optimized   ${ULIS2_PYTHON_REL_LIB}
-        debug       ${ULIS2_PYTHON_DEB_LIB}
-    )
-
-    target_include_directories(
-        PyULIS2
-        PUBLIC
-        "python/"
-        ${ULIS2_PYTHON_INCLUDE_PATH}
-        ${ULIS2_PYTHON_ADD_INCLUDE_PATH}
-    )
-
-    # For MSVC parse pretty filter names
-    foreach(source IN LISTS source_list)
-        get_filename_component(source_path "${source}" PATH)
-        string(REPLACE "/" "\\" source_path_msvc "${source_path}")
-        source_group("${source_path_msvc}" FILES "${source}")
-    endforeach()
-
-endif()
-
-if( ${ULIS2_USE_QT} )
-    set( CMAKE_PREFIX_PATH ${ULIS2_QT_CMAKE_PATH} )
+# Load Qt
+if( ${ULIS3_USE_QT} )
+    set( CMAKE_PREFIX_PATH ${ULIS3_QT_CMAKE_PATH} )
     find_package(
         Qt5
         REQUIRED COMPONENTS
@@ -192,7 +147,9 @@ if( ${ULIS2_USE_QT} )
     )
     set(CMAKE_AUTOMOC ON)
 endif()
-
+####################################
+# Add Python Project
+include(${CMAKE_CURRENT_SOURCE_DIR}/python/CMakeLists.txt)
 ####################################
 # Add Test Projects
 include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11.0)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/samples/Pixels/CMakeLists.txt)
-if( ${ULIS2_USE_QT} )
+if( ${ULIS3_USE_QT} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/samples/Blend/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/samples/BlendShowcase/CMakeLists.txt)
     include(${CMAKE_CURRENT_SOURCE_DIR}/samples/ClearFillCopy/CMakeLists.txt)
@@ -21,7 +21,7 @@ if( ${ULIS2_USE_QT} )
 endif()
 
 set_target_properties( Pixels               PROPERTIES FOLDER samples )
-if( ${ULIS2_USE_QT} )
+if( ${ULIS3_USE_QT} )
     set_target_properties( Blend                PROPERTIES FOLDER samples )
     set_target_properties( BlendShowcase        PROPERTIES FOLDER samples )
     set_target_properties( ClearFillCopy        PROPERTIES FOLDER samples )

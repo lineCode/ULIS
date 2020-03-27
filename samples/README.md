@@ -1,8 +1,8 @@
 # Samples Directory
-Here are some samples applications for ULIS2
+Here are some samples applications for ULIS3
 
 ## License
-Check LICENSE.md, ULIS2 and samples applications are not available for commercial use.
+Check LICENSE.md, ULIS3 and samples applications are not available for commercial use.
 
 ## Description
 |Name                   |Description                                                |
@@ -13,7 +13,7 @@ Check LICENSE.md, ULIS2 and samples applications are not available for commercia
 |Conversion             |Conversions tests                                          |
 |LoadSaveClipboard      |Sample Load / Save on clipboard.                           |
 |LoadSaveDisk           |Sample Load / Save on disk.                                |
-|Particles              |Particle Engine using ULIS2.                               |
+|Particles              |Particle Engine using ULIS3.                               |
 |Pixels                 |Sample pixel manipulation.                                 |
 |Raster                 |Sample for raster / draw of shapes.                        |
 |SimpleFluid            |Sample fluid simulation.                                   |

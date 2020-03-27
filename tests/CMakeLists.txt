@@ -8,7 +8,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/tests/OpenCLInterop/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/tests/SIMD/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/tests/Test/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/tests/Formats/CMakeLists.txt)
-if( ${ULIS2_USE_QT} )
+if( ${ULIS3_USE_QT} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/tests/QtInterop/CMakeLists.txt)
 endif()
 
@@ -24,7 +24,7 @@ set_target_properties( SIMD             PROPERTIES FOLDER tests )
 set_target_properties( Test             PROPERTIES FOLDER tests )
 set_target_properties( Formats          PROPERTIES FOLDER tests )
 
-if( ${ULIS2_USE_QT} )
+if( ${ULIS3_USE_QT} )
     set_target_properties( QtInterop        PROPERTIES FOLDER tests )
 endif()
 

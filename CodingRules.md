@@ -10,8 +10,6 @@ The following documents provides the **Coding Rules** for this project.
 |Abstract class         |**I**Class             |
 |Template class         |**T**Class             |
 |Template Abstract class|**TAbstract**Class     |
-- Class declaration `class FClass`
-- Class end: `}; // class FClass`
 
 #### Namespaces
 |Type           |Prefix                                 |
@@ -23,25 +21,17 @@ The following documents provides the **Coding Rules** for this project.
 - Explicit access from Global namespace: `::nApplication::nWindow:: ... `
 - Never use the `using` directive, unless in a local function or function-like scope, especially for `std::`
 
-#### Files
-- Organisation:
-    - One directory per namespace.
-    - One class per file.
-- Naming:
-    - Library + Path + Class Name + Extension ( `ULIS.Base.AlignedMemory.h` )
-
 ### Include Directives
 - Use `#pragma once`
 - Include directives should be sorted first by type, then by name in alphanumeric order:
-    - C++ Standard Library Headers
-    - C Headers
+    - Application
     - Library1
     - Library2
-    - Application
+    - C++ Standard Library Headers
+    - C Headers
     - Platform-Specific
-- Includes within Application files should use the full path:`#include "ULIS/Base/ULIS.Base.AlignedMemory.h"`
-- Includes within Application files use double quotes:`""`
-- Includes withing Library files use brackets:`<>`
+- Includes of Application files use double quotes:`""`
+- Includes of Library files use brackets:`<>`
 
 ### Member Variables
 - **Member variables** of class should generally be private and start with lowercase prefix "**m**":
@@ -54,14 +44,7 @@ The following documents provides the **Coding Rules** for this project.
     ```
 
 ### Typedefs
-- **`typedef`** on basic primitive type can be named however you like without prefix, but avoid clustering the namespace with too much semantic typedefs.
-    ```
-    typedef uint32_t    uint32;     // OK
-    typedef uint8_t     byte;       // Clumsy...
-    typedef uint8_t     small_size; // Not OK.
-    ```
-
-- **`typedef`** on template class can be named with uppercase prefix "**F**":
+- **`typedef`** on template class instanciations can be named with uppercase prefix "**F**":
     ```
     typedef TNode< int > FNodeInt; // OK.
     ```
@@ -122,7 +105,6 @@ The following documents provides the **Coding Rules** for this project.
 
 ### Templates
 - As powerfull as it can be, use templates sparingly as it can lead to unmanageable code quickly.
-    - This is the reason ULIS2 was made in the first place: to get rid of too many template paths generating so much symbols in the resulting binary it could weight well over 1Gb on disk.
 
 ### License Header
 - Doxygen style comments:
