@@ -15,9 +15,6 @@ Check LICENSE.md, ULIS2 is not available for commercial use.
         Very lightweight, good performance
         Generic Digital Image Processing
         Python3x binding
-
-Details:
-
         Read Write from files for many popular formats
         Image conversions
         Render Text to any image in memory
@@ -34,16 +31,31 @@ Details:
         Image Pools and Caches for Optimisation
 
 ## History
-ULIS was first developped by Clément BERTHAUD ( a.k.a Layl or Robot-Fromage ) on his spare-time in December 2018.  
-It was then developped as part of Praxinos, aiming for robust tools for digital image processing.  
-ULIS "1.0" was first released internaly for Praxinos at the end of summer 2019, and used in Iliad, a digital painting plugin for UnrealEngine developped by Praxinos.  
-ULIS "1.0" had a lot of issues. It was hard to maintain and overused template, resulting in terrible binary sizes for the compiled library ( over 200mo for a release build ).  
-Performance was ok but there was a lot of room for improvments.  
-The library needed to mature a bit, and the changes to make were so drastic that a separate successor library, ULIS2, was starting development in beginning of January 2020.  
-ULIS2 was scheduled for release in February 2020, and comes with a much simpler API, drastically reduced compile times and output binary sizes, better performances, and a lot of additional features such as support for more models, actual support for AVX2 optimisations, color mix, smudge, new blending modes and alpha modes, new interpolation types, etc.  
-The build framework was also simplified and extended to conform to the typical cmake build process.  
-Support for GPU image processing with OpenCL was introduced.  
-Additionally, the library dependencies changed and are now embedded in the repository. The library doesn't rely on preprocessor trickery so much anymore so boost_preprocessor and coal were removed, Qt and OpenCL are now fully optional, and VCL was added for handling SSE / AVX optimisations in a simpler way.  
+ULIS is created and maintained by Clément BERTHAUD ( a.k.a Layl, a.k.a Robot-Fromage ).  
+ULIS began development in December 2018, as a side project during spare time from an  
+unexperienced developper. It was first hosted as a repository listed under user  
+Robot-Fromage. It was then developped as a part of Praxinos, aiming for robust tools for  
+digital image processing. ULIS was first released internaly for Praxinos at the end of  
+summer 2019. It made its debut in Iliad, a digital painting plugin for UnrealEngine  
+developped by Praxinos. The first version of ULIS had a lot of issues: it was hard to  
+maintain and overused template. It resulted in terrible output binary sizes and compile  
+times.  
+ULIS2, was starting development in beginning of January 2020. ULIS2 was scheduled for  
+release in February 2020, and came with a much simpler API. Compile times were drastically  
+reduced as well as output binary sizes. ULIS2 brought many things, such as better overall  
+performances, support for more models, actual support for AVX2 optimisations, color mix,  
+smudge, new blending modes and alpha modes, new interpolation types, etc. The build  
+framework was also simplified and extended to conform to the typical cmake build process.  
+Optional for GPU image processing with OpenCL was introduced. The library dependencies  
+changed and are now embedded in the repository.  
+ULIS3 was introduced in March 2020 during a period of high productivity. ULIS3 merged the  
+commit history of both ULIS and ULIS2 for future reference and to keep track of what has  
+been done since the repository had such a turbulent history, facing many complete rewrites.  
+This version corresponds to the age of high-level features, the focus on development has  
+shifted from very low level memory operation on pixel buffers towards more complexe  
+structures built from these parts, such as Tile Pools and Tiled Blocks, or advanced  
+deformation algorithms. ULIS3 also introduces WASM a new available compilation target,  
+allowing to run transpiled C++ code on client side in web browsers.  
 
 ## Software Requirements Specification ( SRS )
 
