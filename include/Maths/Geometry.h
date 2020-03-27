@@ -94,8 +94,11 @@ struct ULIS3_API FRect
 
     FRect operator&( const FRect& iOther ) const;
     FRect operator|( const FRect& iOther ) const;
+    FRect operator-( const FRect& iOther ) const;
     bool operator==( const FRect& iOther ) const;
     int Area() const;
+    void Sanitize();
+    FRect Sanitized();
     void TransformAffine( const FTransform2D& iTransform );
     void TransformPerspective( const FTransform2D& iTransform );
     FRect TransformedAffine( const FTransform2D& iTransform ) const;

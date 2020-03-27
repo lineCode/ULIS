@@ -16,6 +16,7 @@
 #include "Maths/Transform2D.h"
 #include <glm/vec3.hpp>
 #include <glm/mat3x3.hpp>
+#include <vector>
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -39,7 +40,7 @@ FRect::FRect( int iX, int iY, int iW, int iH )
 FRect
 FRect::FromXYWH( int iX, int iY, int iW, int iH )
 {
-    return  FRect( iX, iY, iW, iH );
+    return  FRect( iX, iY, iW, iH ).Sanitized();
 }
 
 
@@ -47,7 +48,7 @@ FRect::FromXYWH( int iX, int iY, int iW, int iH )
 FRect
 FRect::FromMinMax( int iXMin, int iYMin, int iXMax, int iYMax )
 {
-    return  FRect( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
+    return  FRect( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin ).Sanitized();
 }
 
 
@@ -71,7 +72,43 @@ FRect::operator|( const FRect& iOther ) const
     int y2 = FMaths::Max( y + h, iOther.y + iOther.h );
     return  FromMinMax( x1, y1, x2, y2 );
 }
-    
+
+FRect
+FRect::operator-( const FRect& iOther ) const
+{
+    FRect u = *this & iOther;
+    if( u.Area() == 0 )
+        return  *this;
+
+    if( u == *this )
+        return  FRect();
+
+    int x1  = x;
+    int y1  = y;
+    int x2  = x + w;
+    int y2  = y + h;
+    int ux1 = u.x;
+    int uy1 = u.y;
+    int ux2 = u.x + u.w;
+    int uy2 = u.y + u.h;
+
+    FRect sides[4] = { FRect::FromMinMax( ux1, y1, ux2, uy1 )       // top
+                     , FRect::FromMinMax( x1, uy1, ux1, uy2 )       // left
+                     , FRect::FromMinMax( ux2, uy1, x2, uy2 )       // right
+                     , FRect::FromMinMax( ux1, uy2, ux2, y2 ) };    // bot
+
+    std::vector< FRect* > vec;
+    for( int i = 0; i < 4; ++i )
+        if( sides[i].Area() )
+            vec.push_back( &sides[i] );
+
+    FRect res = *vec[0];
+    for( int i = 1; i < vec.size(); ++i )
+        res = res | *vec[i];
+
+    return  res;
+}
+
 bool
 FRect::operator==( const FRect& iOther ) const
 {
@@ -83,6 +120,21 @@ int
 FRect::Area() const
 {
     return  w * h;
+}
+
+void
+FRect::Sanitize() {
+    if( h < 0 || w < 0 ) {
+        h = 0;
+        w = 0;
+    }
+}
+
+FRect
+FRect::Sanitized() {
+    FRect ret = *this;
+    ret.Sanitize();
+    return  ret;
 }
 
 

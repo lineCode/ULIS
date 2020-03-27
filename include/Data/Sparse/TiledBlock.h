@@ -34,7 +34,6 @@ public:
 public:
     // Core API
     virtual size_t      NumRootEntries() const = 0;
-    virtual void        Purge() = 0;
     virtual bool        IsValidPixelCoordRange( int64 iValue )  const = 0;
     virtual FVec2I32    ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const = 0;
     virtual FVec2I64    PixelCoordinatesFromChunkCoordinates( const FVec2I32& iPos ) const = 0;
@@ -49,6 +48,7 @@ public:
     virtual void            SetShift( const FVec2I& iShift ) = 0;
     virtual const FRect&    GetGeometry() const = 0;
     virtual void            ExtendRegionAfterMutableChange( const FRect& iRect ) = 0;
+    virtual void            SubstractRegionAfterMutableChange( const FRect& iRect ) = 0;
 
 public:
     // Tile API
@@ -78,7 +78,6 @@ public:
 public:
     // Core API
     virtual size_t      NumRootEntries() const override;
-    virtual void        Purge() override;
     virtual void        GatherRootEntries( std::vector< tRootChunk* >* oVector );
     virtual bool        IsValidPixelCoordRange( int64 iValue )  const override;
     virtual FVec2I32    ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const override;
@@ -94,6 +93,7 @@ public:
     virtual void            SetShift( const FVec2I& iShift ) override;
     virtual const FRect&    GetGeometry() const override;
     virtual void            ExtendRegionAfterMutableChange( const FRect& iRect ) override;
+    virtual void            SubstractRegionAfterMutableChange( const FRect& iRect ) override;
 
 private:
     // Private API

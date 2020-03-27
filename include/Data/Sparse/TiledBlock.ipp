@@ -49,16 +49,6 @@ TTiledBlock< _MICRO, _MACRO >::NumRootEntries() const {
     return  mSparseMap.size();
 }
 
-
-template< uint8 _MICRO, uint8 _MACRO >
-void
-TTiledBlock< _MICRO, _MACRO >::Purge() {
-    for( auto& i : mSparseMap )
-        delete  i.second;
-    mSparseMap.clear();
-}
-
-
 template< uint8 _MICRO, uint8 _MACRO >
 void
 TTiledBlock< _MICRO, _MACRO >::GatherRootEntries( std::vector< tRootChunk* >* oVector ) {
@@ -150,7 +140,19 @@ TTiledBlock< _MICRO, _MACRO >::GetGeometry() const {
 template< uint8 _MICRO, uint8 _MACRO >
 void
 TTiledBlock< _MICRO, _MACRO >::ExtendRegionAfterMutableChange( const FRect& iRect ) {
-    mGeometry = mGeometry | iRect;
+    if( iRect.Area() == 0 )
+        return;
+
+    if( mGeometry.Area() == 0 )
+        mGeometry = iRect;
+    else
+        mGeometry = mGeometry | iRect;
+}
+
+template< uint8 _MICRO, uint8 _MACRO >
+void
+TTiledBlock< _MICRO, _MACRO >::SubstractRegionAfterMutableChange( const FRect& iRect ) {
+    mGeometry = mGeometry - iRect;
 }
 
 //--------------------------------------------------------------------------------------
@@ -242,6 +244,8 @@ TTiledBlock< _MICRO, _MACRO >::Clear() {
     for( auto& i : mSparseMap )
         delete  i.second;
     mSparseMap.clear();
+    mGeometry = FRect();
+    mShift = FVec2I();
 }
 
 template< uint8 _MICRO, uint8 _MACRO >

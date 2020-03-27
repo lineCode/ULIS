@@ -41,8 +41,7 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::~TTilePool()
     delete  mEmptyTile;
 }
 
-template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( tFormat        iFormat
-                               , FColorProfile* iProfile )
+template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( tFormat iFormat, FColorProfile* iProfile )
     : mTileSize                                             ( scPixelDim, scPixelDim                                                                                        )
     , mTileFormat                                           ( iFormat                                                                                                       )
     , mTileColorProfile                                     ( iProfile                                                                                                      )
@@ -56,38 +55,38 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( t
     , mDirtyHashedTilesCurrentlyInUse                       ( std::list< FTileElement* >()                                                                                  )
     , mCorrectlyHashedTilesCurrentlyInUse                   ( std::unordered_map< uint32, FTileElement* >()                                                                 )
     , mRegisteredTiledBlocks                                ( std::list< tTiledBlock* >()                                                                                   )
-    , mMutexTilesScheduledForClearLock                      ()
-    , mMutexFreshTilesAvailableForQueryLock                 ()
-    , mMutexDirtyHashedTilesCurrentlyInUseLock              ()
-    , mMutexCorrectlyHashedTilesCurrentlyInUseLock          ()
-    , mMutexRegisteredTiledBlocksLock                       ()
+    , mMutexTilesScheduledForClearLock                      (                                                                                                               )
+    , mMutexFreshTilesAvailableForQueryLock                 (                                                                                                               )
+    , mMutexDirtyHashedTilesCurrentlyInUseLock              (                                                                                                               )
+    , mMutexCorrectlyHashedTilesCurrentlyInUseLock          (                                                                                                               )
+    , mMutexRegisteredTiledBlocksLock                       (                                                                                                               )
     , mNumTilesScheduledForClearAtomic                      ( 0                                                                                                             )
     , mNumFreshTilesAvailableForQueryAtomic                 ( 0                                                                                                             )
     , bRequestWorkersTerminationAtomic                      ( false                                                                                                         )
     , mThreadDeallocatorAllocatorCleanerBackgroundWorker    ( new std::thread( &TTilePool< _MICRO, _MACRO >::ThreadedDeallocatorAllocatorCleanerBackgroundWorker, this )    )
     , mThreadHasherGarbageCollectorBackgroundWorker         ( new std::thread( &TTilePool< _MICRO, _MACRO >::ThreadedHasherGarbageCollectorBackgroundWorker, this )         )
 {
-    ClearRaw( mEmptyTile, ULIS3_NOCB );
+    ClearRaw( mEmptyTile );
     mEmptyCRC32Hash = mEmptyTile->CRC32();
 }
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-template< uint8 _MICRO, uint8 _MACRO > const FVec2I&        TTilePool< _MICRO, _MACRO >::TileSize()                                 const   { return  mTileSize;                                          }
-template< uint8 _MICRO, uint8 _MACRO > uint32               TTilePool< _MICRO, _MACRO >::EmptyCRC32Hash()                           const   { return  mEmptyCRC32Hash;                                         }
-template< uint8 _MICRO, uint8 _MACRO > const FBlock*        TTilePool< _MICRO, _MACRO >::EmptyTile()                                const   { return  mEmptyTile;                                         }
-template< uint8 _MICRO, uint8 _MACRO > tFormat              TTilePool< _MICRO, _MACRO >::TileFormat()                               const   { return  mTileFormat;                                        }
-template< uint8 _MICRO, uint8 _MACRO > const FFormatInfo&   TTilePool< _MICRO, _MACRO >::TileFormatInfo()                           const   { return  mEmptyTile->FormatInfo();                           }
-template< uint8 _MICRO, uint8 _MACRO > const FColorProfile* TTilePool< _MICRO, _MACRO >::TileColorProfile()                         const   { return  mTileColorProfile;                                  }
-template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentRAMUsage()                          const   { return  mCurrentRAMUsageAtomic.load();                      }
-template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentSwapUsage()                         const   { return  0;                                                  }
-template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::RAMUsageCapTarget()                        const   { return  mRAMUsageCapTargetAtomic.load();                    }
-template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::SWAPUsageCapTarget()                       const   { return  mSWAPUsageCapTargetAtomic.load();                   }
-template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentTotalMemoryUsage()                  const   { return  CurrentRAMUsage();                                  }
-template< uint8 _MICRO, uint8 _MACRO > size_t               TTilePool< _MICRO, _MACRO >::NumTilesScheduledForClear()                const   { return  mNumTilesScheduledForClearAtomic.load();            }
-template< uint8 _MICRO, uint8 _MACRO > size_t               TTilePool< _MICRO, _MACRO >::NumFreshTilesAvailableForQuery()           const   { return  mNumFreshTilesAvailableForQueryAtomic.load();       }
-template< uint8 _MICRO, uint8 _MACRO > void                 TTilePool< _MICRO, _MACRO >::SetRAMUsageCapTarget( uint64 iValue )              { mRAMUsageCapTargetAtomic.store( iValue );                   }
-template< uint8 _MICRO, uint8 _MACRO > void                 TTilePool< _MICRO, _MACRO >::SetSWAPUsageCapTarget( uint64 iValue )             { mSWAPUsageCapTargetAtomic.store( iValue );                  }
+template< uint8 _MICRO, uint8 _MACRO > const FVec2I&        TTilePool< _MICRO, _MACRO >::TileSize()                                 const   { return  mTileSize;                                    }
+template< uint8 _MICRO, uint8 _MACRO > uint32               TTilePool< _MICRO, _MACRO >::EmptyCRC32Hash()                           const   { return  mEmptyCRC32Hash;                              }
+template< uint8 _MICRO, uint8 _MACRO > const FBlock*        TTilePool< _MICRO, _MACRO >::EmptyTile()                                const   { return  mEmptyTile;                                   }
+template< uint8 _MICRO, uint8 _MACRO > tFormat              TTilePool< _MICRO, _MACRO >::TileFormat()                               const   { return  mTileFormat;                                  }
+template< uint8 _MICRO, uint8 _MACRO > const FFormatInfo&   TTilePool< _MICRO, _MACRO >::TileFormatInfo()                           const   { return  mEmptyTile->FormatInfo();                     }
+template< uint8 _MICRO, uint8 _MACRO > const FColorProfile* TTilePool< _MICRO, _MACRO >::TileColorProfile()                         const   { return  mTileColorProfile;                            }
+template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentRAMUsage()                          const   { return  mCurrentRAMUsageAtomic.load();                }
+template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentSwapUsage()                         const   { return  0;                                            }
+template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::RAMUsageCapTarget()                        const   { return  mRAMUsageCapTargetAtomic.load();              }
+template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::SWAPUsageCapTarget()                       const   { return  mSWAPUsageCapTargetAtomic.load();             }
+template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentTotalMemoryUsage()                  const   { return  CurrentRAMUsage();                            }
+template< uint8 _MICRO, uint8 _MACRO > size_t               TTilePool< _MICRO, _MACRO >::NumTilesScheduledForClear()                const   { return  mNumTilesScheduledForClearAtomic.load();      }
+template< uint8 _MICRO, uint8 _MACRO > size_t               TTilePool< _MICRO, _MACRO >::NumFreshTilesAvailableForQuery()           const   { return  mNumFreshTilesAvailableForQueryAtomic.load(); }
+template< uint8 _MICRO, uint8 _MACRO > void                 TTilePool< _MICRO, _MACRO >::SetRAMUsageCapTarget( uint64 iValue )              { mRAMUsageCapTargetAtomic.store( iValue );             }
+template< uint8 _MICRO, uint8 _MACRO > void                 TTilePool< _MICRO, _MACRO >::SetSWAPUsageCapTarget( uint64 iValue )             { mSWAPUsageCapTargetAtomic.store( iValue );            }
 
 template< uint8 _MICRO, uint8 _MACRO > size_t TTilePool< _MICRO, _MACRO >::NumDirtyHashedTilesCurrentlyInUse() {
     const std::lock_guard<std::mutex> lock( mMutexDirtyHashedTilesCurrentlyInUseLock );

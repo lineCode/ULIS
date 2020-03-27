@@ -73,13 +73,13 @@ private:
     // Internal API
     void    AllocateNow_Unsafe( int32 iNum );
     void    ClearNowDirect_Unsafe( int32 iNum );
-
     void    DeallocOneInTilesScheduledForClearIfRAMOverflowsTarget();
     void    DeallocOneInFreshTilesAvailableForQueryIfRAMOverflowsTargetAndTilesScheduledForClearIsEmptyImprecise();
     void    AllocOneInTilesScheduledForClearIfRAMUnderflowsTarget();
     void    ClearOneInTilesScheduledForClearAndMoveToFreshTilesAvailableForQueryIfNeeded();
     void    SanitizeAllDirtyTilesCurrentlyInUse();
     void    SanitizeAllCorrectlyHashedTilesCurrentlyInUse();
+
 private:
     // Private Workers API
     void  ThreadedDeallocatorAllocatorCleanerBackgroundWorker();

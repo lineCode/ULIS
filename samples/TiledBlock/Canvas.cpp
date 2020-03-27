@@ -39,17 +39,17 @@ SCanvas::~SCanvas() {
 
 
 SCanvas::SCanvas()
-    : mHost( FHostDeviceInfo::Detect() )
-    , mPool()
-    , mCanvas(      nullptr )
-    , mFontEngine()
-    , mFontReg( mFontEngine )
-    , mFont( mFontReg, "Courrier New", "Bold" )
-    , mTilePool(    nullptr )
-    , mImage(       nullptr )
-    , mPixmap(      nullptr )
-    , mLabel(       nullptr )
-    , mTimer(       nullptr )
+    : mHost(        FHostDeviceInfo::Detect()           )
+    , mPool(                                            )
+    , mCanvas(      nullptr                             )
+    , mFontEngine(                                      )
+    , mFontReg(     mFontEngine                         )
+    , mFont(        mFontReg, "Courrier New", "Bold"    )
+    , mTilePool(    nullptr                             )
+    , mImage(       nullptr                             )
+    , mPixmap(      nullptr                             )
+    , mLabel(       nullptr                             )
+    , mTimer(       nullptr                             )
 {
     uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
 
@@ -69,19 +69,13 @@ SCanvas::SCanvas()
     mTimer->start();
 
     uint64 maxRAM   = Mo2O( 100 );
-    int timeoutms   = 10;
-    mTilePool = new TTilePool< MICRO_16, MACRO_16 >( ULIS3_FORMAT_RGBA8, nullptr );
+    mTilePool   = new TTilePool< MICRO_16, MACRO_16 >( ULIS3_FORMAT_RGBA8, nullptr );
     mTiledBlock = mTilePool->CreateNewTiledBlock();
 
     mRAMUSAGEBLOCK1 = new FBlock( 300, 100, ULIS3_FORMAT_RGBA8 );
     mRAMUSAGEBLOCK2 = new FBlock( 300, 100, ULIS3_FORMAT_RGBA8 );
     mRAMUSAGESWAPBUFFER = mRAMUSAGEBLOCK1;
     Fill( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mRAMUSAGEBLOCK1, FPixelValue( ULIS3_FORMAT_G8, { 15 } ), mRAMUSAGEBLOCK1->Rect() );
-}
-
-
-void
-SCanvas::mousePressEvent( QMouseEvent* event ) {
 }
 
 void
@@ -92,7 +86,7 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
         float scale = 1.f;
         FVec2I64 ref( 10, 80+HH+10 );
         FVec2I64 pos( event->x(), event->y() );
-        int size = 8;
+        int size = 2;
         for( int i = -size; i < size; ++i ) {
             for( int j = -size; j < size; ++j ) {
                 FVec2I64 res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
@@ -102,6 +96,12 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
                 }
             }
         }
+        int x = FMaths::Clamp( int( pos.x -ref.x - size ), 0, 256 );
+        int y = FMaths::Clamp( int( pos.y -ref.y - size ), 0, 256 );
+        int x2 = FMaths::Clamp( x + size * 2, 0, 256 );
+        int y2 = FMaths::Clamp( y + size * 2, 0, 256 );
+        FRect rect = FRect::FromMinMax( x, y, x2, y2 );
+        mTiledBlock->ExtendRegionAfterMutableChange( FRect::FromMinMax( x, y, x2, y2 ) );
     }
 
     if( event->buttons() & Qt::RightButton ) {
@@ -120,11 +120,8 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
                 }
             }
         }
+        mTiledBlock->SubstractRegionAfterMutableChange( FRect( pos.x -ref.x - size, pos.y -ref.y - size, size * 2, size * 2 ) );
     }
-}
-
-void
-SCanvas::mouseReleaseEvent( QMouseEvent* event ) {
 }
 
 void
@@ -147,20 +144,17 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
     if( event->key() == Qt::Key::Key_5 )
         mTilePool->SetRAMUsageCapTarget( Mo2O( 2000 ) );
 
-    if( event->key() == Qt::Key::Key_A ) {
+    if( event->key() == Qt::Key::Key_A )
         mTiledBlock->Clear();
-    }
 
-    if( event->key() == Qt::Key::Key_B ) {
+    if( event->key() == Qt::Key::Key_B )
         mTiledBlock->SanitizeNow();
-    }
-
 }
 
 void
 SCanvas::tickEvent() {
-    int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
-    int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
+    int HH = ( mRAMUSAGESWAPBUFFER->Height()    - 1 );
+    int WW = ( mRAMUSAGESWAPBUFFER->Width()     - 1 );
     auto cramu = mTilePool->CurrentRAMUsage();
     float maxramu = Mo2O( 2000 );
     float tramu = cramu / maxramu;
@@ -190,8 +184,14 @@ SCanvas::tickEvent() {
     mRAMUSAGESWAPBUFFER = newram;
 
     Clear( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mCanvas, FRect( 10, 80+HH+10, 256, 256 ) );
-    mTiledBlock->DrawDebugTileContent( mCanvas, FVec2I64( 10, 80+HH+10 ) );
-    mTiledBlock->DrawDebugWireframe( mCanvas, FVec2I64( 10, 80+HH+10 ), 1.f );
+
+    mTiledBlock->DrawDebugTileContent(  mCanvas, FVec2I64( 10, 80+HH+10 ) );
+    mTiledBlock->DrawDebugWireframe(    mCanvas, FVec2I64( 10, 80+HH+10 ), 1.f );
+    FRect outline = mTiledBlock->GetGeometry();
+    outline.x += 10;
+    outline.y += 80+HH+10;
+    DrawRectOutlineNoAA( mCanvas, FPixelValue( ULIS3_FORMAT_RGB8, { 255, 0, 255 } ), outline );
+
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }
