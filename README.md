@@ -2,8 +2,10 @@
     <img width="288" height="64" src="samples/Splash.png">
 </p>
 
-# ULIS3
-Unlimited Library for Imaging Systems
+# Showcase
+![Showcase](samples/BlendNormals.png) | ![Showcase](samples/RasterText.png) | ![Showcase](samples/Transforms.png)
+---- | ---- | ----
+![Showcase](samples/BezierDeform.png) | ![Showcase](samples/TiledBlock.png) | ![Showcase](samples/Benchmark.png)
 
 ## License
 Check LICENSE.md, ULIS3 is not available for commercial use.
