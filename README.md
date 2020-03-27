@@ -1,11 +1,11 @@
-# ULIS2
-U Library for Imaging Systems
+# ULIS3
+Unlimited Library for Imaging Systems
 
 ## License
-Check LICENSE.md, ULIS2 is not available for commercial use.
+Check LICENSE.md, ULIS3 is not available for commercial use.
 |Name               |Link                                                           |License            |
 |-------------------|---------------------------------------------------------------|-------------------|
-|ULIS2              |https://github.com/Praxinos/ULIS2                              |CC-BY-NC-ND-4.0    |
+|ULIS3              |https://github.com/Praxinos/ULIS3                              |CC-BY-NC-ND-4.0    |
 
 ## Description
 
@@ -82,49 +82,49 @@ Dependencies are redistributed directly within the repository under the 3rdparty
 |stb_image_write    |https://github.com/nothings/stb                                |MIT                |
 |VCL                |https://github.com/vectorclass/version1                        |Apache 2.0         |
 
-Additional Optional library can be used with ULIS2 to test samples programs or build the python binding:
+Additional Optional library can be used with ULIS3 to test samples programs or build the python binding:
 
         Qt5.x
         Python3.x
 
 ## Getting Started
 
-        git clone https://github.com/Praxinos/ULIS2
-        mkdir ULIS2_Build
-        cd ULIS2_Build
-        cmake -G ../ULIS2
+        git clone https://github.com/Praxinos/ULIS3
+        mkdir ULIS3_Build
+        cd ULIS3_Build
+        cmake -G ../ULIS3
 
 Sample scripts are also available in the repository to help with the build process.
 
-## ULIS2 for UnrealEngine ThirdParty Module
-A `ULIS2.Build.cs` script is provided within the repository.
-ULIS2 GPU capabilities and interop with Direct3D or OpenGL in the context of a generic rendering hardware interface is still a work in progress.
+## ULIS3 for UnrealEngine ThirdParty Module
+A `ULIS3.Build.cs` script is provided within the repository.  
+ULIS3 GPU capabilities and interop with Direct3D or OpenGL in the context of a generic rendering hardware interface is still a work in progress.
 
 ## Examples
-This is a small sample illustrating image loading, copy and blend operatios. Check samples to get a gist of how to use ULIS2, more details and specific functions.
+This is a small sample illustrating image loading, copy and blend operatios. Check samples to get a gist of how to use ULIS3, more details and specific functions.
 
 ```cpp
-#include <ULIS2>
-using namespace ::ul2;
+#include <ULIS3>
+using namespace ::ul3;
 
 int main() {
     FThreadPool  threadPool;
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2;
+    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     std::string pathBase = "base_160.png";
     std::string pathOver = "over_160.png";
-    FBlock* blockBase = XLoadFromFile( &threadPool, ULIS2_NONBLOCKING, perfIntent, host, ULIS2_NOCB, pathBase, ULIS2_FORMAT_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( &threadPool, ULIS2_NONBLOCKING, perfIntent, host, ULIS2_NOCB, pathOver, ULIS2_FORMAT_RGBA8 );
+    FBlock* blockBase = XLoadFromFile( &threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( &threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
     Fence( threadPool );
     FRect sourceRect = blockBase->Rect();
     int w = sourceRect.w * 8;
     int h = sourceRect.h * 5;
-    FBlock* blockCanvas = new  FBlock( w, h, ULIS2_FORMAT_RGBA8 );
+    FBlock* blockCanvas = new  FBlock( w, h, ULIS3_FORMAT_RGBA8 );
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int x = ( i % 8 ) * sourceRect.w;
         int y = ( i / 8 ) * sourceRect.h;
-        Copy(   &threadPool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
-        Blend(  &threadPool, ULIS2_NONBLOCKING, perfIntent, host, ULIS2_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS2_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
+        Copy(   &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
+        Blend(  &threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS3_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
     }
     Fence( threadPool );
     delete  blockBase;
