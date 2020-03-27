@@ -46,13 +46,13 @@ reduced as well as output binary sizes. ULIS2 brought many things, such as bette
 performances, support for more models, actual support for AVX2 optimisations, color mix,  
 smudge, new blending modes and alpha modes, new interpolation types, etc. The build  
 framework was also simplified and extended to conform to the typical cmake build process.  
-Optional for GPU image processing with OpenCL was introduced. The library dependencies  
-changed and are now embedded in the repository.  
-ULIS3 was introduced in March 2020 during a period of high productivity. ULIS3 merged the  
+Support for GPU image processing with OpenCL was introduced. The library dependencies  
+changed and were embedded in the repository.  
+ULIS3 was introduced in March 2020 during a period of confinment. ULIS3 merged the  
 commit history of both ULIS and ULIS2 for future reference and to keep track of what has  
 been done since the repository had such a turbulent history, facing many complete rewrites.  
-This version corresponds to the age of high-level features, the focus on development has  
-shifted from very low level memory operation on pixel buffers towards more complexe  
+This version brings more higher-level features, the focus on development has  
+shifted from very low level memory operation on pixel buffers towards more complex  
 structures built from these parts, such as Tile Pools and Tiled Blocks, or advanced  
 deformation algorithms. ULIS3 also introduces WASM a new available compilation target,  
 allowing to run transpiled C++ code on client side in web browsers.  
