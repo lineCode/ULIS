@@ -30,8 +30,11 @@
 // Interface
 #include "Conv/Conv.h"
 #include "Misc/Extract.h"
+#include "Misc/Filter.h"
 #include "Misc/GammaCompress.h"
 #include "Misc/Premult.h"
+#include "Misc/SummedAreaTable.h"
+#include "Misc/Swap.h"
 #include "Misc/Trim.h"
 #include "Blend/Blend.h"
 #include "Fill/Fill.h"

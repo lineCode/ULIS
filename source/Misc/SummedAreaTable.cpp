@@ -19,49 +19,105 @@
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
-/*
+
 template< typename T >
-void InvokeComputeSummedAreaTable( FThreadPool*             iThreadPool
-                                 , bool                     iBlocking
-                                 , uint32                   iPerfIntent
-                                 , const FHostDeviceInfo&   iHostDeviceInfo
-                                 , bool                     iCallCB
-                                 , const FBlock*            iSource
-                                 , FBlock*                  iSAT )
-{
-    ULIS3_ASSERT( iThreadPool,                          "Bad pool."                                             );
-    ULIS3_ASSERT( iSource,                              "Bad source."                                           );
-    ULIS3_ASSERT( iSAT,                                 "Bad destination."                                      );
-    ULIS3_ASSERT( iSource != iSAT,                      "Cannot extract a block to itself, use swap instead."   );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                "Callback flag is specified on non-blocking operation." );
-    ULIS3_ASSERT( iSource->Width()  == iSAT->Width(),   "Blocks sizes don't match"                              );
-    ULIS3_ASSERT( iSource->Height() == iSAT->Height(),  "Blocks sizes don't match"                              );
+void 
+InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
+    const FFormatInfo& fmt = iSource->FormatInfo();
+    const T*    src = reinterpret_cast< const T* >( iSrc )  + fmt.SPP;
+    float*      dst = reinterpret_cast< float* >( iDst )    + fmt.SPP;
 
-    // Format info
-    const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
-    const FFormatInfo& dstFormatInfo( iSAT->FormatInfo() );
+    for( uint32 x = 1; x < iLen; ++x ) {
 
-    // Bake Params and call
-    const tByte*    src     = iSource->DataPtr();
-    tSize           src_bps = iSource->BytesPerScanLine();
-    tByte*          dst     = iDestination->DataPtr();
-    tSize           dst_bps = iDestination->BytesPerScanLine();
-    const int       max     = iSource->Height();
-    const tSize     len     = iSource->Width();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
-                                   , max
-                                   , InvokeFilterInto
-                                   , len
-                                   , iSource
-                                   , src + ( pLINE * src_bps )
-                                   , srcFormatInfo.BPP
-                                   , iDestination
-                                   , dst + ( pLINE * dst_bps )
-                                   , dstFormatInfo.BPP
-                                   , iFunc );
-    iDestination->Invalidate( iCallCB );
+        for( uint8 j = 0; j < fmt.SPP; ++j )
+            dst[j] = static_cast< float >( src[j] + src[j - fmt.SPP ] );
+
+        src += fmt.SPP;
+        dst += fmt.SPP;
+    }
 }
-*/
+
+template< typename T >
+void 
+InvokeComputeSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
+    const FFormatInfo& fmt = iSource->FormatInfo();
+    const tSize src_stride = iSource->Width();
+    const tSize dst_stride = iSAT->Width();
+    const T* src = reinterpret_cast< const T* >( iSrc ) + src_stride;
+    float*   dst = reinterpret_cast< float* >( iDst )   + dst_stride;
+
+    for( uint32 y = 1; y < iLen; ++y ) {
+
+        for( uint8 j = 0; j < fmt.SPP; ++j )
+            dst[j] = static_cast< float >( src[j] + src[j - fmt.SPP ] );
+
+        src += src_stride;
+        dst += dst_stride;
+    }
+}
+
+template< typename T >
+void ComputeSummedAreaTable_Generic( FThreadPool*             iThreadPool
+                                   , bool                     iBlocking
+                                   , uint32                   iPerfIntent
+                                   , const FHostDeviceInfo&   iHostDeviceInfo
+                                   , const FBlock*            iSource
+                                   , FBlock*                  iSAT )
+{
+    const tByte*    src     = iSource->DataPtr();
+    tByte*          bdp     = iSAT->DataPtr();
+    const tSize     src_bps = iSource->BytesPerScanLine();
+    const tSize     bdp_bps = iSAT->BytesPerScanLine();
+    const tSize     src_bpp = iSource->BytesPerPixel();
+    const tSize     bdp_bpp = iSAT->BytesPerPixel();
+    const int       w       = iSource->Width();
+    const int       h       = iSource->Height();
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                   , h
+                                   , InvokeComputeSummedAreaTable_XPass_MEM_Generic< T >
+                                   , w, iSource, iSAT
+                                   , src + pLINE * src_bps
+                                   , bdp + pLINE * bdp_bps );
+    iThreadPool->WaitForCompletion();
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                   , w
+                                   , InvokeComputeSummedAreaTable_YPass_MEM_Generic< T >
+                                   , h, iSource, iSAT
+                                   , src + pLINE * src_bpp
+                                   , bdp + pLINE * bdp_bpp );
+}
+
+typedef void (*fpDispatchedSATFunc)( FThreadPool*             iThreadPool
+                                   , bool                     iBlocking
+                                   , uint32                   iPerfIntent
+                                   , const FHostDeviceInfo&   iHostDeviceInfo
+                                   , const FBlock*            iSource
+                                   , FBlock*                  iSAT );
+
+template< typename T >
+fpDispatchedSATFunc
+QueryDispatchedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+    return  ComputeSummedAreaTable_Generic< T >;
+}
+
+template< typename T >
+fpDispatchedSATFunc
+QueryDispatchedSATFunctionForParameters_imp( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+    return  QueryDispatchedSATFunctionForParameters_Generic< T >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+}
+
+fpDispatchedSATFunc
+QueryDispatchedSATFunctionForParameters( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+    switch( iFormatInfo.TP ) {
+        case TYPE_UINT8     : return  QueryDispatchedSATFunctionForParameters_imp< uint8   >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+        case TYPE_UINT16    : return  QueryDispatchedSATFunctionForParameters_imp< uint16  >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+        case TYPE_UINT32    : return  QueryDispatchedSATFunctionForParameters_imp< uint32  >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+        case TYPE_UFLOAT    : return  QueryDispatchedSATFunctionForParameters_imp< ufloat  >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+        case TYPE_UDOUBLE   : return  QueryDispatchedSATFunctionForParameters_imp< udouble >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+    }
+    return  nullptr;
+}
+
 
 FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
                            , bool                     iBlocking
@@ -75,17 +131,15 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
     ULIS3_ASSERT( iSource,                  "Bad source."                                           );
     ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
-    tFormat satFormat = iSource->Format() & ULIS3_E_TYPE | ULIS3_W_TYPE( ULIS3_TYPE_UFLOAT );
+    tFormat satFormat = ( ( iSource->Format() & ULIS3_E_TYPE ) | ULIS3_W_TYPE( ULIS3_TYPE_UFLOAT ) );
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
-    /*
-    switch( iSource->Type() ) {
-        case TYPE_UINT8     : InvokeComputeSummedAreaTable< uint8 >(    iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, sat );
-        case TYPE_UINT16    : InvokeComputeSummedAreaTable< uint16 >(   iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, sat );
-        case TYPE_UINT32    : InvokeComputeSummedAreaTable< uint32 >(   iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, sat );
-        case TYPE_UFLOAT    : InvokeComputeSummedAreaTable< ufloat >(   iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, sat );
-        case TYPE_UDOUBLE   : InvokeComputeSummedAreaTable< udouble >(  iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, sat );
-    }
-    */
+
+    // Query dispatched method
+    fpDispatchedSATFunc fptr = QueryDispatchedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->Format() );
+    ULIS3_ASSERT( fptr, "No dispatch function found." );
+    fptr( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
+
+    sat->Invalidate( iCallCB );
 
     return  sat;
 }
