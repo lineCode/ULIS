@@ -204,6 +204,7 @@ SCanvas::tickEvent() {
     FRect outline = mTiledBlock->GetOperativeGeometry();
     Clear( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, outline );
     Blend( &mPool, ULIS3_BLOCKING,  ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, mCanvas, shade->Rect(), FVec2F( 10, 80+HH+10 ), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+    delete shade;
     outline.x += 10;
     outline.y += 80+HH+10;
     DrawRectOutlineNoAA( mCanvas, FPixelValue( ULIS3_FORMAT_RGB8, { 255, 0, 255 } ), outline );
