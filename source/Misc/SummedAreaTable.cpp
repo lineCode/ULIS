@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Misc/SummedAreaTable.h"
+#include "Base/HostDeviceInfo.h"
 #include "Misc/Filter.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
@@ -41,8 +42,8 @@ template< typename T >
 void 
 InvokeComputeSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
     const FFormatInfo& fmt = iSource->FormatInfo();
-    const tSize src_stride = iSource->Width();
-    const tSize dst_stride = iSAT->Width();
+    const tSize src_stride = iSource->Width() * fmt.SPP;
+    const tSize dst_stride = iSAT->Width() * fmt.SPP;
     const T* src = reinterpret_cast< const T* >( iSrc ) + src_stride;
     float*   dst = reinterpret_cast< float* >( iDst )   + dst_stride;
 
@@ -57,7 +58,7 @@ InvokeComputeSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, const FBlock*
 }
 
 template< typename T >
-void ComputeSummedAreaTable_Generic( FThreadPool*             iThreadPool
+void ComputeSummedAreaTable_MEM_Generic( FThreadPool*             iThreadPool
                                    , bool                     iBlocking
                                    , uint32                   iPerfIntent
                                    , const FHostDeviceInfo&   iHostDeviceInfo
@@ -87,6 +88,69 @@ void ComputeSummedAreaTable_Generic( FThreadPool*             iThreadPool
                                    , bdp + pLINE * bdp_bpp );
 }
 
+#ifdef __SSE4_2__
+void 
+InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const tByte* iSrc, tByte* iDst ) {
+    const uint8* src = reinterpret_cast< const uint8* >( iSrc ) + 4;
+    float*       dst = reinterpret_cast< float* >( iDst )       + 4;
+    for( uint32 x = 1; x < iLen; ++x ) {
+        __m128 n = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) ) );
+        __m128 m = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src - 4 ) ) ) );
+        __m128 r = _mm_add_ps( n, m );
+        _mm_storeu_ps( dst, r );
+        src += 4;
+        dst += 4;
+    }
+}
+
+void 
+InvokeComputeSummedAreaTable_YPass_SSE42_RGBA8( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
+    const tSize src_stride = iSource->Width()   * 4;
+    const tSize dst_stride = iSAT->Width()      * 4;
+    const uint8* src = reinterpret_cast< const uint8* >( iSrc ) + src_stride;
+    float*       dst = reinterpret_cast< float* >( iDst )       + dst_stride;
+    for( uint32 y = 1; y < iLen; ++y ) {
+        __m128 n = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) ) );
+        __m128 m = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src - 4 ) ) ) );
+        __m128 r = _mm_add_ps( n, m );
+        _mm_storeu_ps( dst, r );
+        src += src_stride;
+        dst += dst_stride;
+    }
+}
+
+void ComputeSummedAreaTable_SSE42_RGBA8( FThreadPool*             iThreadPool
+                                       , bool                     iBlocking
+                                       , uint32                   iPerfIntent
+                                       , const FHostDeviceInfo&   iHostDeviceInfo
+                                       , const FBlock*            iSource
+                                       , FBlock*                  iSAT )
+{
+    const tByte*    src     = iSource->DataPtr();
+    tByte*          bdp     = iSAT->DataPtr();
+    const tSize     src_bps = iSource->BytesPerScanLine();
+    const tSize     bdp_bps = iSAT->BytesPerScanLine();
+    const tSize     src_bpp = iSource->BytesPerPixel();
+    const tSize     bdp_bpp = iSAT->BytesPerPixel();
+    const int       w       = iSource->Width();
+    const int       h       = iSource->Height();
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                   , h
+                                   , InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8
+                                   , w
+                                   , src + pLINE * src_bps
+                                   , bdp + pLINE * bdp_bps );
+    iThreadPool->WaitForCompletion();
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+                                   , w
+                                   , InvokeComputeSummedAreaTable_YPass_SSE42_RGBA8
+                                   , h, iSource, iSAT
+                                   , src + pLINE * src_bpp
+                                   , bdp + pLINE * bdp_bpp );
+}
+#endif // __SSE4_2__
+
+
 typedef void (*fpDispatchedSATFunc)( FThreadPool*             iThreadPool
                                    , bool                     iBlocking
                                    , uint32                   iPerfIntent
@@ -97,13 +161,40 @@ typedef void (*fpDispatchedSATFunc)( FThreadPool*             iThreadPool
 template< typename T >
 fpDispatchedSATFunc
 QueryDispatchedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
-    return  ComputeSummedAreaTable_Generic< T >;
+    return  ComputeSummedAreaTable_MEM_Generic< T >;
 }
+
+fpDispatchedSATFunc
+QueryDispatchedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+    #ifdef __SSE4_2__
+        if( iHostDeviceInfo.HW_SSE42 )
+            return  ComputeSummedAreaTable_SSE42_RGBA8;
+        else
+    #endif
+            return  ComputeSummedAreaTable_MEM_Generic< uint8 >;
+}
+
 
 template< typename T >
 fpDispatchedSATFunc
 QueryDispatchedSATFunctionForParameters_imp( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
     return  QueryDispatchedSATFunctionForParameters_Generic< T >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+}
+
+template<>
+fpDispatchedSATFunc
+QueryDispatchedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+    // RGBA8 Signature, any layout
+    if( iFormatInfo.HEA
+     && iFormatInfo.NCC == 3
+     && iFormatInfo.CM  == CM_RGB
+     && iPerfIntent & ULIS3_PERF_TSPEC
+     && ( iPerfIntent & ULIS3_PERF_SSE42 || iPerfIntent & ULIS3_PERF_AVX2 )
+     && ( iHostDeviceInfo.HW_SSE42 || iHostDeviceInfo.HW_AVX2 ) ) {
+        return  QueryDispatchedSATFunctionForParameters_RGBA8( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+    }
+
+    return  QueryDispatchedSATFunctionForParameters_Generic< uint8 >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
 }
 
 fpDispatchedSATFunc
