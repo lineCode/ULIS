@@ -28,7 +28,6 @@ typedef  float      ufloat;
 typedef  double     udouble;
 typedef  uint8_t    tByte;
 typedef  uint32_t   tFormat;
-typedef  uint32_t   tPerfIntent;
 typedef  uint32_t   tSize;
 
 // Perf codes

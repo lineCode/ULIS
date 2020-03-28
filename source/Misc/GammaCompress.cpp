@@ -46,7 +46,7 @@ void InvokeLinear2sRGB( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
 
 typedef void (*fpDispatchedGammaCompressInvoke)( size_t iW, tByte* iDst, const FFormatInfo* iFmt );
 fpDispatchedGammaCompressInvoke QueryDispatchedsRGB2LinearInvokeForParameters( eType iType ) {
-        switch( iType ) {
+    switch( iType ) {
         case TYPE_UINT8     : return  InvokesRGB2Linear< uint8 >;
         case TYPE_UINT16    : return  InvokesRGB2Linear< uint16 >;
         case TYPE_UINT32    : return  InvokesRGB2Linear< uint32 >;
@@ -57,7 +57,7 @@ fpDispatchedGammaCompressInvoke QueryDispatchedsRGB2LinearInvokeForParameters( e
 }
 
 fpDispatchedGammaCompressInvoke QueryDispatchedLinear2sRGBInvokeForParameters( eType iType ) {
-        switch( iType ) {
+    switch( iType ) {
         case TYPE_UINT8     : return  InvokeLinear2sRGB< uint8 >;
         case TYPE_UINT16    : return  InvokeLinear2sRGB< uint16 >;
         case TYPE_UINT32    : return  InvokeLinear2sRGB< uint32 >;

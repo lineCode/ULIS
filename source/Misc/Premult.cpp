@@ -46,7 +46,7 @@ void InvokesUnpremult( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
 }
 
 typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, tByte* iDst, const FFormatInfo* iFmt );
-fpDispatchedAlphamulInvoke QueryDispatchedsPremultInvokeForParameters( eType iType ) {
+fpDispatchedAlphamulInvoke QueryDispatchedPremultInvokeForParameters( eType iType ) {
         switch( iType ) {
         case TYPE_UINT8     : return  InvokesPremult< uint8 >;
         case TYPE_UINT16    : return  InvokesPremult< uint16 >;
@@ -82,7 +82,7 @@ Premultiply( FThreadPool*           iThreadPool
     ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
-    fpDispatchedAlphamulInvoke fptr = QueryDispatchedsPremultInvokeForParameters( iDestination->Type() );
+    fpDispatchedAlphamulInvoke fptr = QueryDispatchedPremultInvokeForParameters( iDestination->Type() );
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
