@@ -34,8 +34,8 @@ template< uint8 _MICRO, uint8 _MACRO > TTiledBlock< _MICRO, _MACRO >::~TTiledBlo
 template< uint8 _MICRO, uint8 _MACRO > TTiledBlock< _MICRO, _MACRO >::TTiledBlock( tTilePool* iPool )
     : tSuperClass()
     , mTilePool( iPool )
-    , mShift()
-    , mGeometry()
+    , mOperativeGeometry()
+    , mRoughRootGeometry()
 {
     static_assert( _MICRO > 0, "_MICRO template argument cannot be 0" );
     static_assert( _MACRO > 0, "_MACRO template argument cannot be 0" );
@@ -119,40 +119,27 @@ TTiledBlock< _MICRO, _MACRO >::PixelCoordinatesFromKey( uint64 iKey ) const {
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- Block API
 template< uint8 _MICRO, uint8 _MACRO >
-const FVec2I&
-TTiledBlock< _MICRO, _MACRO >::GetShift() const {
-    return  mShift;
-}
-
-
-template< uint8 _MICRO, uint8 _MACRO >
-void
-TTiledBlock< _MICRO, _MACRO >::SetShift( const FVec2I& iShift ) {
-    mShift = iShift;
-}
-
-template< uint8 _MICRO, uint8 _MACRO >
 const FRect&
-TTiledBlock< _MICRO, _MACRO >::GetGeometry() const {
-    return  mGeometry;
+TTiledBlock< _MICRO, _MACRO >::GetOperativeGeometry() const {
+    return  mOperativeGeometry;
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
-TTiledBlock< _MICRO, _MACRO >::ExtendRegionAfterMutableChange( const FRect& iRect ) {
+TTiledBlock< _MICRO, _MACRO >::ExtendOperativeGeometryAfterMutableChange( const FRect& iRect ) {
     if( iRect.Area() == 0 )
         return;
 
-    if( mGeometry.Area() == 0 )
-        mGeometry = iRect;
+    if( mOperativeGeometry.Area() == 0 )
+        mOperativeGeometry = iRect;
     else
-        mGeometry = mGeometry | iRect;
+        mOperativeGeometry = mOperativeGeometry | iRect;
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
-TTiledBlock< _MICRO, _MACRO >::SubstractRegionAfterMutableChange( const FRect& iRect ) {
-    mGeometry = mGeometry - iRect;
+TTiledBlock< _MICRO, _MACRO >::SubstractOperativeGeometryAfterMutableChange( const FRect& iRect ) {
+    mOperativeGeometry = mOperativeGeometry - iRect;
 }
 
 //--------------------------------------------------------------------------------------
@@ -244,24 +231,42 @@ TTiledBlock< _MICRO, _MACRO >::Clear() {
     for( auto& i : mSparseMap )
         delete  i.second;
     mSparseMap.clear();
-    mGeometry = FRect();
-    mShift = FVec2I();
+    mOperativeGeometry = FRect();
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
 TTiledBlock< _MICRO, _MACRO >::SanitizeNow() {
     std::vector< typename tMap::iterator > to_delete;
+
     typename tMap::iterator it = mSparseMap.begin();
+    bool first = true;
+
     while( it != mSparseMap.end() ) {
         it->second->SanitizeNow( mTilePool );
-        if( it->second->Child() == nullptr )
+        if( it->second->Child() == nullptr ) {
             to_delete.push_back( it );
+        } else {
+            auto pos = PixelCoordinatesFromKey( it->first );
+            if( first ) {
+                mRoughRootGeometry = FRect( pos.x, pos.y, macro_chunk_size_as_pixels, macro_chunk_size_as_pixels );
+                first = false;
+            } else {
+                mRoughRootGeometry = mRoughRootGeometry | FRect( pos.x, pos.y, macro_chunk_size_as_pixels, macro_chunk_size_as_pixels );
+            }
+        }
         ++it;
     }
 
     for( auto it : to_delete )
         mSparseMap.erase( it );
+
+    if( mSparseMap.size() == 0 ) {
+        mOperativeGeometry = FRect();
+        mRoughRootGeometry = FRect();
+    } else {
+        mOperativeGeometry = mRoughRootGeometry & mOperativeGeometry;
+    }
 }
 
 template< uint8 _MICRO, uint8 _MACRO >

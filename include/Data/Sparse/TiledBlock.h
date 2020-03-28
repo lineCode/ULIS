@@ -44,11 +44,9 @@ public:
 
 public:
     // Block API
-    virtual const FVec2I&   GetShift() const = 0;
-    virtual void            SetShift( const FVec2I& iShift ) = 0;
-    virtual const FRect&    GetGeometry() const = 0;
-    virtual void            ExtendRegionAfterMutableChange( const FRect& iRect ) = 0;
-    virtual void            SubstractRegionAfterMutableChange( const FRect& iRect ) = 0;
+    virtual const FRect&    GetOperativeGeometry() const = 0;
+    virtual void            ExtendOperativeGeometryAfterMutableChange( const FRect& iRect ) = 0;
+    virtual void            SubstractOperativeGeometryAfterMutableChange( const FRect& iRect ) = 0;
 
 public:
     // Tile API
@@ -89,11 +87,9 @@ public:
 
 public:
     // Block API
-    virtual const FVec2I&   GetShift() const override;
-    virtual void            SetShift( const FVec2I& iShift ) override;
-    virtual const FRect&    GetGeometry() const override;
-    virtual void            ExtendRegionAfterMutableChange( const FRect& iRect ) override;
-    virtual void            SubstractRegionAfterMutableChange( const FRect& iRect ) override;
+    virtual const FRect&    GetOperativeGeometry() const override;
+    virtual void            ExtendOperativeGeometryAfterMutableChange( const FRect& iRect ) override;
+    virtual void            SubstractOperativeGeometryAfterMutableChange( const FRect& iRect ) override;
 
 private:
     // Private API
@@ -116,8 +112,8 @@ private:
     // Private Data Members
     tMap        mSparseMap;
     tTilePool*  mTilePool; // Non-Owning
-    FVec2I      mShift;
-    FRect       mGeometry;
+    FRect       mOperativeGeometry;
+    FRect       mRoughRootGeometry;
 
     static constexpr uint8  micro_threshold                     = _MICRO;
     static constexpr uint8  macro_threshold                     = _MACRO;
