@@ -23,16 +23,14 @@ ULIS3_NAMESPACE_BEGIN
 
 template< typename T >
 void 
-InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
-    const FFormatInfo& fmt = iSource->FormatInfo();
-    const T*    src = reinterpret_cast< const T* >( iSrc )  + fmt.SPP;
-    float*      dst = reinterpret_cast< float* >( iDst )    + fmt.SPP;
+InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
+    const FFormatInfo& fmt = iSAT->FormatInfo();
+    const T* src = reinterpret_cast< const T* >( iSrc )  + fmt.SPP;
+    float*   dst = reinterpret_cast< float* >( iDst )    + fmt.SPP;
 
     for( uint32 x = 1; x < iLen; ++x ) {
-
         for( uint8 j = 0; j < fmt.SPP; ++j )
-            dst[j] = static_cast< float >( src[j] + src[j - fmt.SPP ] );
-
+            dst[j] = static_cast< float >( src[j] + *( dst - fmt.SPP + j ) );
         src += fmt.SPP;
         dst += fmt.SPP;
     }
@@ -40,30 +38,25 @@ InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, const FBlock*
 
 template< typename T >
 void 
-InvokeComputeSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
-    const FFormatInfo& fmt = iSource->FormatInfo();
-    const tSize src_stride = iSource->Width() * fmt.SPP;
-    const tSize dst_stride = iSAT->Width() * fmt.SPP;
-    const T* src = reinterpret_cast< const T* >( iSrc ) + src_stride;
-    float*   dst = reinterpret_cast< float* >( iDst )   + dst_stride;
+InvokeComputeSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, tByte* iDst ) {
+    const FFormatInfo& fmt = iSAT->FormatInfo();
+    const tSize stride = iSAT->Width() * fmt.SPP;
+    float* dst = reinterpret_cast< float* >( iDst ) + stride;
 
     for( uint32 y = 1; y < iLen; ++y ) {
-
         for( uint8 j = 0; j < fmt.SPP; ++j )
-            dst[j] = static_cast< float >( src[j] + src[j - fmt.SPP ] );
-
-        src += src_stride;
-        dst += dst_stride;
+            dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
+        dst += stride;
     }
 }
 
 template< typename T >
-void ComputeSummedAreaTable_MEM_Generic( FThreadPool*             iThreadPool
-                                   , bool                     iBlocking
-                                   , uint32                   iPerfIntent
-                                   , const FHostDeviceInfo&   iHostDeviceInfo
-                                   , const FBlock*            iSource
-                                   , FBlock*                  iSAT )
+void ComputeSummedAreaTable_MEM_Generic( FThreadPool*           iThreadPool
+                                   , bool                       iBlocking
+                                   , uint32                     iPerfIntent
+                                   , const FHostDeviceInfo&     iHostDeviceInfo
+                                   , const FBlock*              iSource
+                                   , FBlock*                    iSAT )
 {
     const tByte*    src     = iSource->DataPtr();
     tByte*          bdp     = iSAT->DataPtr();
@@ -73,18 +66,31 @@ void ComputeSummedAreaTable_MEM_Generic( FThreadPool*             iThreadPool
     const tSize     bdp_bpp = iSAT->BytesPerPixel();
     const int       w       = iSource->Width();
     const int       h       = iSource->Height();
+
+    {
+        const FFormatInfo& fmt = iSAT->FormatInfo();
+        const T* wsrc = reinterpret_cast< const T* >( src );
+        float*   wdst = reinterpret_cast< float* >( bdp );
+        const tSize stride = iSAT->Width()   * fmt.SPP;
+        for( int y = 0; y < h; ++y ) {
+            for( uint8 j = 0; j < iSource->SamplesPerPixel(); ++j )
+                wdst[j] = static_cast< float >( wsrc[j] );
+            wsrc += stride;
+            wdst += stride;
+        }
+    }
+
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , h
                                    , InvokeComputeSummedAreaTable_XPass_MEM_Generic< T >
-                                   , w, iSource, iSAT
+                                   , w, iSAT
                                    , src + pLINE * src_bps
                                    , bdp + pLINE * bdp_bps );
     iThreadPool->WaitForCompletion();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , w
                                    , InvokeComputeSummedAreaTable_YPass_MEM_Generic< T >
-                                   , h, iSource, iSAT
-                                   , src + pLINE * src_bpp
+                                   , h, iSAT
                                    , bdp + pLINE * bdp_bpp );
 }
 
@@ -95,7 +101,7 @@ InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const tByte* 
     float*       dst = reinterpret_cast< float* >( iDst )       + 4;
     for( uint32 x = 1; x < iLen; ++x ) {
         __m128 n = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) ) );
-        __m128 m = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src - 4 ) ) ) );
+        __m128 m = _mm_loadu_ps( dst - 4 );
         __m128 r = _mm_add_ps( n, m );
         _mm_storeu_ps( dst, r );
         src += 4;
@@ -105,17 +111,14 @@ InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const tByte* 
 
 void 
 InvokeComputeSummedAreaTable_YPass_SSE42_RGBA8( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
-    const tSize src_stride = iSource->Width()   * 4;
-    const tSize dst_stride = iSAT->Width()      * 4;
-    const uint8* src = reinterpret_cast< const uint8* >( iSrc ) + src_stride;
-    float*       dst = reinterpret_cast< float* >( iDst )       + dst_stride;
+    const tSize stride = iSAT->Width() * 4;
+    float* dst = reinterpret_cast< float* >( iDst ) + stride;
     for( uint32 y = 1; y < iLen; ++y ) {
-        __m128 n = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) ) );
-        __m128 m = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src - 4 ) ) ) );
+        __m128 n = _mm_loadu_ps( dst );
+        __m128 m = _mm_loadu_ps( dst - stride );
         __m128 r = _mm_add_ps( n, m );
         _mm_storeu_ps( dst, r );
-        src += src_stride;
-        dst += dst_stride;
+        dst += stride;
     }
 }
 
@@ -134,6 +137,19 @@ void ComputeSummedAreaTable_SSE42_RGBA8( FThreadPool*             iThreadPool
     const tSize     bdp_bpp = iSAT->BytesPerPixel();
     const int       w       = iSource->Width();
     const int       h       = iSource->Height();
+
+    {
+        const uint8* wsrc = reinterpret_cast< const uint8* >( src );
+        float*   wdst = reinterpret_cast< float* >( bdp );
+        const tSize src_stride = iSource->Width()   * 4;
+        const tSize dst_stride = iSAT->Width()      * 4;
+        for( int y = 0; y < h; ++y ) {
+            _mm_storeu_ps( wdst, _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( wsrc ) ) ) ) );
+            wsrc += src_stride;
+            wdst += dst_stride;
+        }
+    }
+
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , h
                                    , InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8
@@ -222,11 +238,12 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
     ULIS3_ASSERT( iSource,                  "Bad source."                                           );
     ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
-    tFormat satFormat = ( ( iSource->Format() & ULIS3_E_TYPE ) | ULIS3_W_TYPE( ULIS3_TYPE_UFLOAT ) );
+    tFormat satFormat = ( ( ( iSource->Format() & ULIS3_E_TYPE ) & ULIS3_E_DEPTH ) ) | ULIS3_W_TYPE( ULIS3_TYPE_UFLOAT ) | ULIS3_W_FLOATING( 1 ) | ULIS3_W_DEPTH( 4 ) );
+    tFormat test = ULIS3_FORMAT_RGBAF;
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method
-    fpDispatchedSATFunc fptr = QueryDispatchedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->Format() );
+    fpDispatchedSATFunc fptr = QueryDispatchedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 

@@ -24,4 +24,5 @@ Check LICENSE.md, ULIS3 and samples applications are not available for commercia
 |AnimatedBezier         |Sample for animated Bezier transforms.                     |
 |Extract                |Sample for extract functions.                              |
 |TiledBlock             |Sample for TiledBlock.                                     |
+|SummedAreaTable        |Sample for SummedAreaTable.                                |
 
