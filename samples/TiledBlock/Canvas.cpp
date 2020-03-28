@@ -147,8 +147,19 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
     if( event->key() == Qt::Key::Key_A )
         mTiledBlock->Clear();
 
-    if( event->key() == Qt::Key::Key_B )
+    if( event->key() == Qt::Key::Key_B ) {
         mTiledBlock->SanitizeNow();
+    }
+
+    if( event->key() == Qt::Key::Key_C ) {
+        mTiledBlock->SanitizeNow();
+        mTiledBlock->RecomputeRoughRootGeometry();
+    }
+
+    if( event->key() == Qt::Key::Key_D ) {
+        mTiledBlock->SanitizeNow();
+        mTiledBlock->RecomputeRoughLeafGeometry();
+    }
 }
 
 void

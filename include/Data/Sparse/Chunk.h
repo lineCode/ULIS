@@ -89,7 +89,7 @@ public:
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
     virtual  void SanitizeNow( tTilePool* iPool ) = 0;
-
+    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const = 0;
 protected:
     // Protected Data Members
     static constexpr uint8  micro_threshold                     = _MICRO;
@@ -124,6 +124,7 @@ public:
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
     virtual  void SanitizeNow( tTilePool* iPool ) = 0;
+    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const = 0;
 
 protected:
     // Protected Data Members
@@ -240,6 +241,13 @@ public:
         }
     }
 
+    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
+        if( mChild )
+            return  mChild->GetRoughLeafGeometry( iPos );
+        else
+            return  FRect();
+    }
+
     const tChild* Child() const {
         return  mChild;
     }
@@ -316,6 +324,13 @@ public:
     virtual  void SanitizeNow( tTilePool* iPool ) override {
         if( mPtr->mDirty == false )
             mPtr = iPool->PerformRedundantHashMergeReturnCorrect( mPtr );
+    }
+
+    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
+        if( mPtr )
+            return  FRect( iPos.x, iPos.y, tSuperClass::local_chunk_size_as_pixels, tSuperClass::local_chunk_size_as_pixels );
+        else
+            return  FRect();
     }
 
     FTileElement* PointedData() {
@@ -457,6 +472,14 @@ public:
                 }
             }
         }
+    }
+
+    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
+        FRect ret;
+        for( int i = 0; i < 4; ++i )
+            if( mQuad[i] )
+                ret = ret.UnionLeaveEmpty( mQuad[i]->GetRoughLeafGeometry( iPos + SubChunkCoordinatesFromIndex( i ) * tSuperClass::local_chunk_halfsize_as_pixels ) );
+        return  ret;
     }
 
     bool CheckUniformDistributedValue( FTileElement** oElem ) {

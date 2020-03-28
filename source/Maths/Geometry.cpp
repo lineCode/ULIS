@@ -109,6 +109,17 @@ FRect::operator-( const FRect& iOther ) const
     return  res;
 }
 
+FRect
+FRect::UnionLeaveEmpty( const FRect& iOther ) const {
+    if( Area() == 0 )
+        return iOther;
+
+    if( iOther.Area() == 0 )
+        return  *this;
+
+    return  *this | iOther;
+}
+
 bool
 FRect::operator==( const FRect& iOther ) const
 {

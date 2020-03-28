@@ -95,6 +95,7 @@ struct ULIS3_API FRect
     FRect operator&( const FRect& iOther ) const;
     FRect operator|( const FRect& iOther ) const;
     FRect operator-( const FRect& iOther ) const;
+    FRect UnionLeaveEmpty( const FRect& iOther ) const;
     bool operator==( const FRect& iOther ) const;
     int Area() const;
     void Sanitize();

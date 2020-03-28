@@ -36,6 +36,7 @@ template< uint8 _MICRO, uint8 _MACRO > TTiledBlock< _MICRO, _MACRO >::TTiledBloc
     , mTilePool( iPool )
     , mOperativeGeometry()
     , mRoughRootGeometry()
+    , mRoughLeafGeometry()
 {
     static_assert( _MICRO > 0, "_MICRO template argument cannot be 0" );
     static_assert( _MACRO > 0, "_MACRO template argument cannot be 0" );
@@ -142,6 +143,47 @@ TTiledBlock< _MICRO, _MACRO >::SubstractOperativeGeometryAfterMutableChange( con
     mOperativeGeometry = mOperativeGeometry - iRect;
 }
 
+template< uint8 _MICRO, uint8 _MACRO >
+void
+TTiledBlock< _MICRO, _MACRO >::RecomputeRoughRootGeometry() {
+    if( mSparseMap.size() == 0 ) {
+        mOperativeGeometry = FRect();
+        mRoughRootGeometry = FRect();
+        mRoughLeafGeometry = FRect();
+        return;
+    }
+
+    mRoughRootGeometry = FRect();
+    for( typename tMap::iterator it = mSparseMap.begin(); it != mSparseMap.end(); ++it ) {
+        auto pos = PixelCoordinatesFromKey( it->first );
+        mRoughRootGeometry = mRoughRootGeometry.UnionLeaveEmpty( FRect( pos.x, pos.y, macro_chunk_size_as_pixels, macro_chunk_size_as_pixels ) );
+    }
+
+    mOperativeGeometry = mRoughRootGeometry & mOperativeGeometry;
+    mRoughLeafGeometry = mRoughRootGeometry & mRoughLeafGeometry;
+}
+
+
+template< uint8 _MICRO, uint8 _MACRO >
+void
+TTiledBlock< _MICRO, _MACRO >::RecomputeRoughLeafGeometry() {
+    if( mSparseMap.size() == 0 ) {
+        mOperativeGeometry = FRect();
+        mRoughRootGeometry = FRect();
+        mRoughLeafGeometry = FRect();
+        return;
+    }
+
+    mRoughLeafGeometry = FRect();
+    for( typename tMap::iterator it = mSparseMap.begin(); it != mSparseMap.end(); ++it )
+        mRoughLeafGeometry = mRoughLeafGeometry.UnionLeaveEmpty( it->second->GetRoughLeafGeometry( PixelCoordinatesFromKey( it->first ) ) );
+
+    mOperativeGeometry = mOperativeGeometry & mRoughLeafGeometry;
+    mRoughRootGeometry = mRoughRootGeometry & mRoughLeafGeometry;
+}
+
+
+
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- Private API
 template< uint8 _MICRO, uint8 _MACRO >
@@ -232,41 +274,24 @@ TTiledBlock< _MICRO, _MACRO >::Clear() {
         delete  i.second;
     mSparseMap.clear();
     mOperativeGeometry = FRect();
+    mRoughRootGeometry = FRect();
+    mRoughLeafGeometry = FRect();
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
 TTiledBlock< _MICRO, _MACRO >::SanitizeNow() {
     std::vector< typename tMap::iterator > to_delete;
-
     typename tMap::iterator it = mSparseMap.begin();
-    bool first = true;
-
     while( it != mSparseMap.end() ) {
         it->second->SanitizeNow( mTilePool );
-        if( it->second->Child() == nullptr ) {
+        if( it->second->Child() == nullptr )
             to_delete.push_back( it );
-        } else {
-            auto pos = PixelCoordinatesFromKey( it->first );
-            if( first ) {
-                mRoughRootGeometry = FRect( pos.x, pos.y, macro_chunk_size_as_pixels, macro_chunk_size_as_pixels );
-                first = false;
-            } else {
-                mRoughRootGeometry = mRoughRootGeometry | FRect( pos.x, pos.y, macro_chunk_size_as_pixels, macro_chunk_size_as_pixels );
-            }
-        }
         ++it;
     }
 
     for( auto it : to_delete )
         mSparseMap.erase( it );
-
-    if( mSparseMap.size() == 0 ) {
-        mOperativeGeometry = FRect();
-        mRoughRootGeometry = FRect();
-    } else {
-        mOperativeGeometry = mRoughRootGeometry & mOperativeGeometry;
-    }
 }
 
 template< uint8 _MICRO, uint8 _MACRO >

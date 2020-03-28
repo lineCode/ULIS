@@ -47,6 +47,8 @@ public:
     virtual const FRect&    GetOperativeGeometry() const = 0;
     virtual void            ExtendOperativeGeometryAfterMutableChange( const FRect& iRect ) = 0;
     virtual void            SubstractOperativeGeometryAfterMutableChange( const FRect& iRect ) = 0;
+    virtual void            RecomputeRoughRootGeometry() = 0;
+    virtual void            RecomputeRoughLeafGeometry() = 0;
 
 public:
     // Tile API
@@ -90,6 +92,8 @@ public:
     virtual const FRect&    GetOperativeGeometry() const override;
     virtual void            ExtendOperativeGeometryAfterMutableChange( const FRect& iRect ) override;
     virtual void            SubstractOperativeGeometryAfterMutableChange( const FRect& iRect ) override;
+    virtual void            RecomputeRoughRootGeometry() override;
+    virtual void            RecomputeRoughLeafGeometry() override;
 
 private:
     // Private API
@@ -114,6 +118,7 @@ private:
     tTilePool*  mTilePool; // Non-Owning
     FRect       mOperativeGeometry;
     FRect       mRoughRootGeometry;
+    FRect       mRoughLeafGeometry;
 
     static constexpr uint8  micro_threshold                     = _MICRO;
     static constexpr uint8  macro_threshold                     = _MACRO;
