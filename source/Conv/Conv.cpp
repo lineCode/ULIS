@@ -24,14 +24,22 @@
 
 ULIS3_NAMESPACE_BEGIN
 void Conv( const IPixel& iSrc, IPixel& iDst ) {
-    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst.Format() );
-    fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &iDst.FormatInfo(), iDst.Ptr(), 1 );
+    if( iSrc.Format() == iDst.Format() ) {
+        iDst.AssignMemoryUnsafe( iSrc );
+    } else {
+        fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst.Format() );
+        fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &iDst.FormatInfo(), iDst.Ptr(), 1 );
+    }
 }
 
 FPixelValue Conv( const IPixel& iSrc, tFormat iDst ) {
     FPixelValue dst( iDst );
-    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst );
-    fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &dst.FormatInfo(), dst.Ptr(), 1 );
+    if( iSrc.Format() == iDst ) {
+        dst.AssignMemoryUnsafe( iSrc );
+    } else {
+        fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst );
+        fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &dst.FormatInfo(), dst.Ptr(), 1 );
+    }
     return  dst;
 }
 

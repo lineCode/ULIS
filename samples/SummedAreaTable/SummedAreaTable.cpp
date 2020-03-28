@@ -29,10 +29,10 @@ main() {
         for( int x = 0; x < size; ++x ) {
             FPixelProxy prox = block->PixelProxy( x, y );
             prox.SetR8( 1 );
-            prox.SetG8( 2 );
-            prox.SetB8( 3 );
-            prox.SetA8( 4 );
-            std::cout << "[ 1, 2, 3, 4 ], ";
+            prox.SetG8( 1 );
+            prox.SetB8( 1 );
+            prox.SetA8( 1 );
+            std::cout << "[ 1, 1, 1, 1 ], ";
         }
         std::cout << std::endl;
     }
