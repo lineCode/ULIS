@@ -22,6 +22,7 @@ enum eResamplingMethod
       INTERP_NN
     , INTERP_BILINEAR
     , INTERP_BICUBIC
+    , INTERP_AREA
 };
 
 static const char* kwResamplingMethod[] =
