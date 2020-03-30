@@ -45,25 +45,8 @@ void TransformAffine( FThreadPool*            iThreadPool
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     FRect src_fit = iSourceRect & iSource->Rect();
-    //FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
-    FRect trans = src_fit.TransformedAffine( iTransform );
+    FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
     FRect dst_fit = trans & iDestination->Rect();
-
-    FTransform2D fixed_transform = iTransform;
-    {
-        float tx, ty, r, sx, sy, skx, sky;
-        DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
-        float fixed_w = FMaths::Abs( sx ) > 1.f ? trans.w + FMaths::RoundAwayFromZero( sx ) : trans.w;
-        float fixed_h = FMaths::Abs( sy ) > 1.f ? trans.h + FMaths::RoundAwayFromZero( sy ) : trans.h;
-        float fixed_factorx = trans.w / fixed_w;
-        float fixed_factory = trans.h / fixed_h;
-        float fixed_sx = sx * fixed_factorx;
-        float fixed_sy = sy * fixed_factory;
-        glm::mat3 rotation      = MakeRotationMatrix( r );
-        glm::mat3 scale         = MakeScaleMatrix( fixed_sx, fixed_sy );
-        glm::mat3 translation   = MakeTranslationMatrix( tx + ( cos( r ) - sin( r ) ) * fixed_sx, ty + ( sin( r ) + cos( r ) ) * fixed_sy );
-        fixed_transform = FTransform2D( ComposeMatrix( scale, ComposeMatrix( rotation, translation ) ) );
-    }
 
     if( !dst_fit.Area() )
         return;
@@ -79,7 +62,7 @@ void TransformAffine( FThreadPool*            iThreadPool
     alias.src_roi           = src_fit;
     alias.dst_roi           = dst_fit;
     alias.method            = iMethod;
-    alias.inverseTransform  = glm::inverse( fixed_transform.Matrix() );
+    alias.inverseTransform  = glm::inverse( iTransform.Matrix() );
 
     // Query dispatched method
     fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
@@ -232,6 +215,84 @@ void TransformBezier( FThreadPool*                                      iThreadP
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
+
+FBlock* XTransformAffine( FThreadPool*              iThreadPool
+                        , bool                      iBlocking
+                        , uint32                    iPerfIntent
+                        , const FHostDeviceInfo&    iHostDeviceInfo
+                        , bool                      iCallCB
+                        , const FBlock*             iSource
+                        , const FRect&              iSourceRect
+                        , const FTransform2D&       iTransform
+                        , eResamplingMethod         iMethod ) {
+    // Assertions
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+
+    FRect src_fit = iSourceRect & iSource->Rect();
+    FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
+
+    if( !trans.Area() ) {
+        FBlock* fallback = new FBlock( 1, 1, iSource->Format() );
+        ClearRaw( fallback );
+        return  fallback;
+    }
+
+    FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
+    FRect dst_fit = dst->Rect();
+
+    FTransform2D fixedTransform( ComposeMatrix( iTransform.Matrix(), MakeTranslationMatrix( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ) ) );
+    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
+    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    alias.pool              = iThreadPool;
+    alias.blocking          = iBlocking;
+    alias.hostDeviceInfo    = &iHostDeviceInfo;
+    alias.perfIntent        = iPerfIntent;
+    alias.source            = iSource;
+    alias.destination       = dst;
+    alias.src_roi           = src_fit;
+    alias.dst_roi           = dst_fit;
+    alias.method            = iMethod;
+    alias.inverseTransform  = glm::inverse( fixedTransform.Matrix() );
+
+    // Query dispatched method
+    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
+    ULIS3_ASSERT( fptr, "No dispatch function found." );
+    fptr( forwardTransformParams );
+
+    // Invalid
+    dst->Invalidate( dst_fit, iCallCB );
+    return  dst;
+}
+
+FBlock* XTransformPerspective( FThreadPool*             iThreadPool
+                             , bool                     iBlocking
+                             , uint32                   iPerfIntent
+                             , const FHostDeviceInfo&   iHostDeviceInfo
+                             , bool                     iCallCB
+                             , const FBlock*            iSource
+                             , const FRect&             iSourceRect
+                             , const FTransform2D&      iTransform
+                             , eResamplingMethod        iMethod ) {
+    return  nullptr;
+}
+
+FBlock* XTransformBezier( FThreadPool*                                      iThreadPool
+                        , bool                                              iBlocking
+                        , uint32                                            iPerfIntent
+                        , const FHostDeviceInfo&                            iHostDeviceInfo
+                        , bool                                              iCallCB
+                        , const FBlock*                                     iSource
+                        , FBlock*                                           iDestination
+                        , const FRect&                                      iSourceRect
+                        , const std::vector< FBezierCubicControlPoint >&    iControlPoints
+                        , float                                             iThreshold
+                        , int                                               iPlotSize
+                        , eResamplingMethod                                 iMethod ) {
+    return  nullptr;
+}
+
 FRect TransformAffineMetrics( const FRect&          iSourceRect
                             , const FTransform2D&   iTransform
                             , eResamplingMethod     iMethod )
@@ -240,10 +301,13 @@ FRect TransformAffineMetrics( const FRect&          iSourceRect
     if( iMethod > INTERP_NN ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
-        trans.x -= static_cast< int >( ceil( sx ) );
-        trans.y -= static_cast< int >( ceil( sy ) );
-        trans.w += static_cast< int >( ceil( sx ) );
-        trans.h += static_cast< int >( ceil( sy ) );
+        float angle = FMaths::Max( abs( cos( r ) ), abs( sin( r ) ) );
+        float scale = FMaths::Max( sx, sy );
+        int overflow = static_cast< int >( ceil( angle * scale ) );
+        trans.x -= overflow;
+        trans.y -= overflow;
+        trans.w += overflow * 2;
+        trans.h += overflow * 2;
     }
     return  trans;
 }

@@ -140,7 +140,7 @@ glm::mat3
 ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB )
 {
     // Non commutative operation order matters.
-    return  iB * iA;
+    return  iA * iB;
 }
 
 void
