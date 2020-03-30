@@ -165,7 +165,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte* iSrc, tByte* iBdp
         Vec8f   alpha_bdp   = Vec8f( iBdp[fmt.AID], iBdp[fmt.AID + 4] ) / 255.f;
         Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], iSrc[fmt.AID + 4] ) / 255.f * info.opacityValue;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
-        Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_bdp ) );
+        Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result;
         ULIS3_ASSIGN_ALPHAAVXF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
         alpha_result *= 255.f;
@@ -193,7 +193,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte* iSrc, tByte* iBdp
         Vec8f   alpha_bdp   = Vec8f( iBdp[fmt.AID], 0 ) / 255.f;
         Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], 0 ) / 255.f * info.opacityValue;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
-        Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_bdp ) );
+        Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result;
         ULIS3_ASSIGN_ALPHAAVXF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
         alpha_result *= 255.f;

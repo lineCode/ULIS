@@ -60,12 +60,12 @@ void Clear_imp( FThreadPool*            iThreadPool
     const tSize bps = iDestination->BytesPerScanLine();
     const tSize dsh = iArea.x * bpp;
     tByte*      dsb = iDestination->DataPtr() + dsh;
+    const tSize count = iArea.w * bpp;
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
     #ifdef __AVX2__
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const tSize stride = 32;
-        const tSize count = iArea.w * bpp;
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_AX2, DST, count, stride )
@@ -74,7 +74,6 @@ void Clear_imp( FThreadPool*            iThreadPool
     #ifdef __SSE4_2__
     if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const tSize stride = 16;
-        const tSize count = iArea.w * bpp;
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
@@ -83,7 +82,7 @@ void Clear_imp( FThreadPool*            iThreadPool
     {
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
-                                       , InvokeFillMTProcessScanline_MEM, DST, iArea.w, bpp )
+                                       , InvokeFillMTProcessScanline_MEM, DST, count, bpp )
     }
 }
 
