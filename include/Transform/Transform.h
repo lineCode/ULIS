@@ -54,6 +54,28 @@ ULIS3_API void TransformBezier( FThreadPool*                                    
                               , int                                             iPlotSize
                               , eResamplingMethod                               iMethod );
 
+ULIS3_API void Resize( FThreadPool*             iThreadPool
+                     , bool                     iBlocking
+                     , uint32                   iPerfIntent
+                     , const FHostDeviceInfo&   iHostDeviceInfo
+                     , bool                     iCallCB
+                     , const FBlock*            iSource
+                     , FBlock*                  iDestination
+                     , const FRect&             iSourceRect
+                     , const FVec2F&            iSize
+                     , const FVec2F&            iPos
+                     , eResamplingMethod        iMethod );
+
+ULIS3_API FBlock* XResize( FThreadPool*             iThreadPool
+                         , bool                     iBlocking
+                         , uint32                   iPerfIntent
+                         , const FHostDeviceInfo&   iHostDeviceInfo
+                         , bool                     iCallCB
+                         , const FBlock*            iSource
+                         , const FRect&             iSourceRect
+                         , const FVec2F&            iSize
+                         , eResamplingMethod        iMethod );
+
 ULIS3_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
                                   , bool                    iBlocking
                                   , uint32                  iPerfIntent

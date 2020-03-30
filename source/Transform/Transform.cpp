@@ -215,6 +215,100 @@ void TransformBezier( FThreadPool*                                      iThreadP
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
+void Resize( FThreadPool*             iThreadPool
+           , bool                     iBlocking
+           , uint32                   iPerfIntent
+           , const FHostDeviceInfo&   iHostDeviceInfo
+           , bool                     iCallCB
+           , const FBlock*            iSource
+           , FBlock*                  iDestination
+           , const FRect&             iSourceRect
+           , const FVec2F&            iSize
+           , const FVec2F&            iPos
+           , eResamplingMethod        iMethod ) {
+    // Assertions
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
+
+    FRect src_fit = iSourceRect & iSource->Rect();
+    bool bNeedFix = ( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC );
+    float src_w = static_cast< float >( src_fit.w );
+    float src_h = static_cast< float >( src_fit.h );
+    float dst_w = FMaths::Max( FMaths::kEpsilonf, iSize.x );
+    float dst_h = FMaths::Max( FMaths::kEpsilonf, iSize.y );
+    float scale_x = dst_w / src_w;
+    float scale_y = dst_h / src_h;
+    float fixed_w = bNeedFix ? dst_w - scale_x : dst_w;
+    float fixed_h = bNeedFix ? dst_h - scale_y : dst_h;
+    float fixed_scalex = fixed_w / src_w;
+    float fixed_scaley = fixed_h / src_h;
+    glm::mat3 translation   = MakeTranslationMatrix( iPos.x + fixed_scalex, iPos.y + fixed_scaley );
+    glm::mat3 scale         = MakeScaleMatrix( fixed_scalex, fixed_scaley );
+    FTransform2D transform( ComposeMatrix( translation, scale ) );
+
+    FRect trans = src_fit.TransformedAffine( transform );
+    FRect dst_fit = FRect( static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.x ) )
+                         , static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.y ) )
+                         , static_cast< int >( FMaths::RoundToPositiveInfinity( dst_w ) )
+                         , static_cast< int >( FMaths::RoundToPositiveInfinity( dst_h ) ) )
+                    & iDestination->Rect();
+
+    if( !dst_fit.Area() )
+        return;
+
+    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
+    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    alias.pool              = iThreadPool;
+    alias.blocking          = iBlocking;
+    alias.hostDeviceInfo    = &iHostDeviceInfo;
+    alias.perfIntent        = iPerfIntent;
+    alias.source            = iSource;
+    alias.destination       = iDestination;
+    alias.src_roi           = src_fit;
+    alias.dst_roi           = dst_fit;
+    alias.method            = iMethod;
+    alias.inverseTransform  = glm::inverse( transform.Matrix() );
+
+    // Query dispatched method
+    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
+    ULIS3_ASSERT( fptr, "No dispatch function found." );
+    fptr( forwardTransformParams );
+
+    // Invalid
+    iDestination->Invalidate( dst_fit, iCallCB );
+}
+
+FBlock* XResize( FThreadPool*           iThreadPool
+               , bool                   iBlocking
+               , uint32                 iPerfIntent
+               , const FHostDeviceInfo& iHostDeviceInfo
+               , bool                   iCallCB
+               , const FBlock*          iSource
+               , const FRect&           iSourceRect
+               , const FVec2F&          iSize
+               , eResamplingMethod      iMethod ) {
+    // Assertions
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
+
+    if( iSize.x <= 0.f || iSize.y <= 0.f ) {
+        FBlock* fallback = new FBlock( 1, 1, iSource->Format() );
+        ClearRaw( fallback );
+        return  fallback;
+    }
+
+    FBlock* dst = new FBlock( static_cast< int >( FMaths::RoundToPositiveInfinity( iSize.x ) )
+                            , static_cast< int >( FMaths::RoundToPositiveInfinity( iSize.y ) ), iSource->Format() );
+    Resize( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, iSourceRect, iSize, FVec2F(), iMethod );
+    return  dst;
+}
+
 
 FBlock* XTransformAffine( FThreadPool*              iThreadPool
                         , bool                      iBlocking
@@ -279,21 +373,6 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
     TransformPerspective( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, persp, iMethod );
     return  dst;
-}
-
-FBlock* XTransformBezier( FThreadPool*                                      iThreadPool
-                        , bool                                              iBlocking
-                        , uint32                                            iPerfIntent
-                        , const FHostDeviceInfo&                            iHostDeviceInfo
-                        , bool                                              iCallCB
-                        , const FBlock*                                     iSource
-                        , FBlock*                                           iDestination
-                        , const FRect&                                      iSourceRect
-                        , const std::vector< FBezierCubicControlPoint >&    iControlPoints
-                        , float                                             iThreshold
-                        , int                                               iPlotSize
-                        , eResamplingMethod                                 iMethod ) {
-    return  nullptr;
 }
 
 FRect TransformAffineMetrics( const FRect&          iSourceRect
