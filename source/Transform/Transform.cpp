@@ -229,53 +229,56 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
     ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
-
     if( !trans.Area() ) {
         FBlock* fallback = new FBlock( 1, 1, iSource->Format() );
         ClearRaw( fallback );
         return  fallback;
     }
-
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
-    FRect dst_fit = dst->Rect();
-
-    FTransform2D fixedTransform( ComposeMatrix( iTransform.Matrix(), MakeTranslationMatrix( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ) ) );
-    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
-    _FTransformInfoPrivate& alias = *forwardTransformParams;
-    alias.pool              = iThreadPool;
-    alias.blocking          = iBlocking;
-    alias.hostDeviceInfo    = &iHostDeviceInfo;
-    alias.perfIntent        = iPerfIntent;
-    alias.source            = iSource;
-    alias.destination       = dst;
-    alias.src_roi           = src_fit;
-    alias.dst_roi           = dst_fit;
-    alias.method            = iMethod;
-    alias.inverseTransform  = glm::inverse( fixedTransform.Matrix() );
-
-    // Query dispatched method
-    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
-    fptr( forwardTransformParams );
-
-    // Invalid
-    dst->Invalidate( dst_fit, iCallCB );
+    FTransform2D fixedTransform( ComposeMatrix( MakeTranslationMatrix( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ), iTransform.Matrix() ) );
+    TransformAffine( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, fixedTransform, iMethod );
     return  dst;
 }
 
-FBlock* XTransformPerspective( FThreadPool*             iThreadPool
-                             , bool                     iBlocking
-                             , uint32                   iPerfIntent
-                             , const FHostDeviceInfo&   iHostDeviceInfo
-                             , bool                     iCallCB
-                             , const FBlock*            iSource
-                             , const FRect&             iSourceRect
-                             , const FTransform2D&      iTransform
-                             , eResamplingMethod        iMethod ) {
-    return  nullptr;
+FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
+                             , bool                         iBlocking
+                             , uint32                       iPerfIntent
+                             , const FHostDeviceInfo&       iHostDeviceInfo
+                             , bool                         iCallCB
+                             , const FBlock*                iSource
+                             , const FRect&                 iSourceRect
+                             , const std::vector< FVec2F >& iDestinationPoints
+                             , eResamplingMethod            iMethod ) {
+    // Assertions
+    ULIS3_ASSERT( iSource,                          "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,                      "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,            "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iDestinationPoints.size() == 4,   "Bad destination points"                                );
+
+    FRect src_fit = iSourceRect & iSource->Rect();
+    std::vector< FVec2F > sourcePoints = { FVec2F( 0, 0 ), FVec2F( src_fit.w, 0 ), FVec2F( src_fit.w, src_fit.h ), FVec2F( 0, src_fit.h ) };
+    int minx = INT_MAX;
+    int miny = INT_MAX;
+    for( auto& it : iDestinationPoints ) {
+        if( it.x < minx ) minx = static_cast< int >( it.x );
+        if( it.y < miny ) miny = static_cast< int >( it.y );
+    }
+    std::vector< FVec2F > fixedDestinationPoints;
+    for( auto& it : iDestinationPoints )
+        fixedDestinationPoints.push_back( FVec2F( it.x - minx, it.y - miny ) );
+
+    FTransform2D persp( GetPerspectiveMatrix( sourcePoints.data(), fixedDestinationPoints.data() ) );
+    FRect trans = TransformPerspectiveMetrics( src_fit, persp, iMethod );
+    if( !trans.Area() ) {
+        FBlock* fallback = new FBlock( 1, 1, iSource->Format() );
+        ClearRaw( fallback );
+        return  fallback;
+    }
+    FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
+    TransformPerspective( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, persp, iMethod );
+    return  dst;
 }
 
 FBlock* XTransformBezier( FThreadPool*                                      iThreadPool

@@ -64,28 +64,15 @@ ULIS3_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
                                   , const FTransform2D&     iTransform
                                   , eResamplingMethod       iMethod );
 
-ULIS3_API FBlock* XTransformPerspective( FThreadPool*           iThreadPool
-                                       , bool                   iBlocking
-                                       , uint32                 iPerfIntent
-                                       , const FHostDeviceInfo& iHostDeviceInfo
-                                       , bool                   iCallCB
-                                       , const FBlock*          iSource
-                                       , const FRect&           iSourceRect
-                                       , const FTransform2D&    iTransform
-                                       , eResamplingMethod      iMethod );
-
-ULIS3_API FBlock* XTransformBezier( FThreadPool*                                    iThreadPool
-                                  , bool                                            iBlocking
-                                  , uint32                                          iPerfIntent
-                                  , const FHostDeviceInfo&                          iHostDeviceInfo
-                                  , bool                                            iCallCB
-                                  , const FBlock*                                   iSource
-                                  , FBlock*                                         iDestination
-                                  , const FRect&                                    iSourceRect
-                                  , const std::vector< FBezierCubicControlPoint >&  iControlPoints
-                                  , float                                           iThreshold
-                                  , int                                             iPlotSize
-                                  , eResamplingMethod                               iMethod );
+ULIS3_API FBlock* XTransformPerspective( FThreadPool*                   iThreadPool
+                                       , bool                           iBlocking
+                                       , uint32                         iPerfIntent
+                                       , const FHostDeviceInfo&         iHostDeviceInfo
+                                       , bool                           iCallCB
+                                       , const FBlock*                  iSource
+                                       , const FRect&                   iSourceRect
+                                       , const std::vector< FVec2F >&   iDestinationPoints
+                                       , eResamplingMethod              iMethod );
 
 ULIS3_API FRect TransformAffineMetrics( const FRect&          iSourceRect
                                       , const FTransform2D&   iTransform
