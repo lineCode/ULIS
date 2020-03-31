@@ -262,29 +262,20 @@ TTilePool< _MICRO, _MACRO >::XPerformDataCopyForImminentMutableChangeIfNeeded( F
     bool same   = found ? it->second == iElem : false;
 
     if( shared ) {
-        goto cpy;
+        FTileElement* tile = XQueryFreshTile();
+        CopyRaw( iElem->mBlock, tile->mBlock, false );
+        iElem->DecreaseRefCount();
+        return  tile;
     } else {
         if( same ) {
-            goto mov;
+            const std::lock_guard<std::mutex> lock_dirty( mMutexDirtyHashedTilesCurrentlyInUseLock );
+            mDirtyHashedTilesCurrentlyInUse.push_back( iElem );
+            mCorrectlyHashedTilesCurrentlyInUse.erase( it );
+            return  iElem;
         } else {
-            goto nop;
+            return  iElem;
         }
     }
-
-cpy:
-    FTileElement* tile = XQueryFreshTile();
-    CopyRaw( iElem->mBlock, tile->mBlock, false );
-    iElem->DecreaseRefCount();
-    return  tile;
-
-nop:
-    return  iElem;
-
-mov:
-    const std::lock_guard<std::mutex> lock_dirty( mMutexDirtyHashedTilesCurrentlyInUseLock );
-    mDirtyHashedTilesCurrentlyInUse.push_back( iElem );
-    mCorrectlyHashedTilesCurrentlyInUse.erase( it );
-    return  iElem;
 }
 
 template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::AllocateNow_Unsafe( int32 iNum ) {
