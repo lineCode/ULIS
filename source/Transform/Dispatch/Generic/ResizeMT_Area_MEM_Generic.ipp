@@ -82,13 +82,11 @@ InvokeResizeMTProcessScanline_Area_MEM_Generic( tByte* iDst, int32 iLine, std::s
         #undef SUBSAMPLE_CORNER_IMP
         #undef SUBSAMPLE_CORNER
 
-        for( int i = 0; i < fmt.SPP; ++i ) {
-            float sum = ((float*)m11)[i] + ((float*)m00)[i] - ((float*)m10)[i] - ((float*)m01)[i];
-            float div = sum / coverage_area;
-            float min = static_cast< float >( MinType< T >() );
-            float max = static_cast< float >( MaxType< T >() );
-
-            *( reinterpret_cast< T* >( dst ) + i ) = static_cast< T >( FMaths::Clamp( ( ((float*)m11)[i] + ((float*)m00)[i] - ((float*)m10)[i] - ((float*)m01)[i] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) ) );
+        float alpha = FMaths::Clamp( ( ((float*)m11)[sat_fmt.AID] + ((float*)m00)[sat_fmt.AID] - ((float*)m10)[sat_fmt.AID] - ((float*)m01)[sat_fmt.AID] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) );
+        *( reinterpret_cast< T* >( dst ) + sat_fmt.AID ) = static_cast< T >( alpha );
+        for( int i = 0; i < sat_fmt.NCC; ++i ) {
+            uint8 r = sat_fmt.IDT[i];
+            *( reinterpret_cast< T* >( dst ) + r ) = static_cast< T >( FMaths::Clamp( ( ((float*)m11)[r] + ((float*)m00)[r] - ((float*)m10)[r] - ((float*)m01)[r] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) ) / alpha * static_cast< float >( MaxType< T >() ) );
         }
 
         dst += fmt.BPP;

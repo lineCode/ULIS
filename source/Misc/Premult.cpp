@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         Extract.cpp
+* @file         Premult.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definitions for the Premult entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.

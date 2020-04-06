@@ -36,6 +36,7 @@
 #include "Misc/SummedAreaTable.h"
 #include "Misc/Swap.h"
 #include "Misc/Trim.h"
+#include "Misc/Sanitize.h"
 #include "Blend/Blend.h"
 #include "Fill/Fill.h"
 #include "Clear/Clear.h"

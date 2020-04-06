@@ -21,6 +21,8 @@
 #include "Transform/Dispatch/Dispatch.ipp"
 #include "Clear/Clear.h"
 #include "Misc/SummedAreaTable.h"
+#include "Misc/Premult.h"
+#include "Copy/Copy.h"
 
 #include <glm/matrix.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
