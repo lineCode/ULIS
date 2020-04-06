@@ -30,6 +30,7 @@ static const char* kwResamplingMethod[] =
       "NearestNeighbour"
     , "Bilinear"
     , "Bicubic"
+    , "Area"
 };
 
 /////////////////////////////////////////////////////

@@ -15,6 +15,10 @@
 #include "Core/Core.h"
 #include "Transform/Methods.h"
 #include "Transform/Dispatch/TransformInfo.h"
+#include "Transform/Dispatch/Generic/ResizeMT_NN_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/ResizeMT_Bilinear_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/ResizeMT_Bicubic_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/ResizeMT_Area_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformAffineMT_NN_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformAffineMT_Bilinear_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformAffineMT_Bicubic_MEM_Generic.ipp"
@@ -27,6 +31,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 typedef void (*fpDispatchedTransformFunc)( std::shared_ptr< const _FTransformInfoPrivate > );
+typedef void (*fpDispatchedResizeFunc)( std::shared_ptr< const _FResizeInfoPrivate > );
 typedef void (*fpDispatchedBezierTransformFunc)( std::shared_ptr< const _FTransformInfoPrivate >, std::shared_ptr< const FBlock >, std::shared_ptr< const FBlock > );
 /////////////////////////////////////////////////////
 // AFFINE
@@ -129,6 +134,41 @@ QueryDispatchedTransformBezierFunctionForParameters( const _FTransformInfoPrivat
         case TYPE_UINT32    : return  QueryDispatchedTransformBezierFunctionForParameters_imp< uint32  >( iInfo ); break;
         case TYPE_UFLOAT    : return  QueryDispatchedTransformBezierFunctionForParameters_imp< ufloat  >( iInfo ); break;
         case TYPE_UDOUBLE   : return  QueryDispatchedTransformBezierFunctionForParameters_imp< udouble >( iInfo ); break;
+    }
+    return  nullptr;
+}
+
+/////////////////////////////////////////////////////
+// RESIZE
+// Generic Dispatcher
+template< typename T >
+fpDispatchedResizeFunc
+QueryDispatchedResizeFunctionForParameters_Generic( const _FResizeInfoPrivate& iInfo ) {
+    switch( iInfo.method ) {
+        case INTERP_NN          : return  ResizeMT_NN_MEM_Generic< T >;
+        case INTERP_BILINEAR    : return  ResizeMT_Bilinear_MEM_Generic< T >;
+        case INTERP_BICUBIC     : return  ResizeMT_Bicubic_MEM_Generic< T >;
+        case INTERP_AREA        : return  ResizeMT_Area_MEM_Generic< T >;
+    }
+    return  nullptr;
+}
+
+// Generic Dispatcher Selector
+template< typename T >
+fpDispatchedResizeFunc
+QueryDispatchedResizeFunctionForParameters_imp( const _FResizeInfoPrivate& iInfo ) {
+    return  QueryDispatchedResizeFunctionForParameters_Generic< T >( iInfo );
+}
+
+// Type Dispatcher Selector
+fpDispatchedResizeFunc
+QueryDispatchedResizeFunctionForParameters( const _FResizeInfoPrivate& iInfo ) {
+    switch( iInfo.source->Type() ) {
+        case TYPE_UINT8     : return  QueryDispatchedResizeFunctionForParameters_imp< uint8   >( iInfo ); break;
+        case TYPE_UINT16    : return  QueryDispatchedResizeFunctionForParameters_imp< uint16  >( iInfo ); break;
+        case TYPE_UINT32    : return  QueryDispatchedResizeFunctionForParameters_imp< uint32  >( iInfo ); break;
+        case TYPE_UFLOAT    : return  QueryDispatchedResizeFunctionForParameters_imp< ufloat  >( iInfo ); break;
+        case TYPE_UDOUBLE   : return  QueryDispatchedResizeFunctionForParameters_imp< udouble >( iInfo ); break;
     }
     return  nullptr;
 }

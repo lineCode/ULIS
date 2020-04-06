@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         TransformPerspectiveMT_Bilinear_MEM_Generic.ipp
+* @file         ResizeMT_Bilinear_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic transform entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -19,12 +19,14 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
-    const _FTransformInfoPrivate&   info    = *iInfo;
+InvokeResizeMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
+    const _FResizeInfoPrivate&      info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     tByte*                          dst     = iDst;
 
-    FVec2F pointInDst( static_cast< float >( info.dst_roi.x ), static_cast< float >( info.dst_roi.y + iLine ) );
+    FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
+    FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
+    FVec2F src_dx( info.inverseScale * FVec2F( 1.f, 0.f ) );
     tByte* c00 = new tByte[ fmt.BPP * 4 ];
     tByte* c10 = c00 + fmt.BPP;
     tByte* c11 = c10 + fmt.BPP;
@@ -37,14 +39,13 @@ InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, i
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        FVec2F pointInSrc = HomographyTransform( pointInDst, info.inverseTransform );
-        const int   left    = static_cast< int >( floor( pointInSrc.x ) );
-        const int   top     = static_cast< int >( floor( pointInSrc.y ) );
+        const int   left    = static_cast< int >( floor( point_in_src.x ) );
+        const int   top     = static_cast< int >( floor( point_in_src.y ) );
         const int   right   = left + 1;
         const int   bot     = top + 1;
-        const float tx      = pointInSrc.x - left;
+        const float tx      = point_in_src.x - left;
         const float ux      = 1.f - tx;
-        const float ty      = pointInSrc.y - top;
+        const float ty      = point_in_src.y - top;
         const float uy      = 1.f - ty;
 
         #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
@@ -58,7 +59,7 @@ InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, i
         SampleBilinear< T >( dst, hh0, hh1, fmt, ty, uy );
 
         dst += fmt.BPP;
-        pointInDst.x += 1;
+        point_in_src += src_dx;
     }
 
     delete [] c00;
@@ -66,15 +67,15 @@ InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, i
 }
 
 template< typename T > void
-TransformPerspectiveMT_Bilinear_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
-    const _FTransformInfoPrivate&   info        = *iInfo;
+ResizeMT_Bilinear_MEM_Generic( std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
+    const _FResizeInfoPrivate&      info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
     const tSize                     dst_decal_y = info.dst_roi.y;
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic< T >
+                                   , InvokeResizeMTProcessScanline_Bilinear_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 

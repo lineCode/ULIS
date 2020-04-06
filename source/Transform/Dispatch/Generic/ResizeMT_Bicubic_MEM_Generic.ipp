@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         TransformAffineMT_Bicubic_MEM_Generic.ipp
+* @file         ResizeMT_Bicubic_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic transform entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -19,14 +19,14 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
-    const _FTransformInfoPrivate&   info    = *iInfo;
+InvokeResizeMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
+    const _FResizeInfoPrivate&      info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     tByte*                          dst     = iDst;
 
-    glm::vec3 point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
-    glm::vec2 point_in_src( info.inverseTransform * point_in_dst );
-    glm::vec2 src_dx( info.inverseTransform * glm::vec3( 1.f, 0.f, 0.f ) );
+    FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
+    FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
+    FVec2F src_dx( info.inverseScale * FVec2F( 1.f, 0.f ) );
 
     tByte* p00 = new tByte[ fmt.BPP * 4 ];      tByte* p01 = new tByte[ fmt.BPP * 4 ];
     tByte* p10 = p00 + fmt.BPP;                 tByte* p11 = p01 + fmt.BPP;
@@ -78,15 +78,15 @@ InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 i
 }
 
 template< typename T > void
-TransformAffineMT_Bicubic_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
-    const _FTransformInfoPrivate&   info        = *iInfo;
+ResizeMT_Bicubic_MEM_Generic( std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
+    const _FResizeInfoPrivate&      info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
     const tSize                     dst_decal_y = info.dst_roi.y;
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic< T >
+                                   , InvokeResizeMTProcessScanline_Bicubic_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 

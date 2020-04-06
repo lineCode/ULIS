@@ -29,9 +29,18 @@ SampleBilinear( tByte* iDst, const tByte* iCA, const tByte* iCB, const FFormatIn
     }
     for( int i = 0; i < iFMT.NCC; ++i ) {
         uint8 r = iFMT.IDT[i];
-        *( reinterpret_cast< T* >( iDst ) + r ) = static_cast< T >( ( iCA[r] * alphaA * iU + iCB[r] * alphaB * iT ) / alphaC );
+        *( reinterpret_cast< T* >( iDst ) + r ) = alphaC == 0.f ? static_cast< T >( 0.f ) : static_cast< T >( ( reinterpret_cast< const T* >( iCA )[r] * alphaA * iU + reinterpret_cast< const T* >( iCB )[r] * alphaB * iT ) / alphaC );
     }
 }
+
+template< typename T > ULIS3_FORCEINLINE void
+SampleBilinearSAT( tByte* iDst, const tByte* iCA, const tByte* iCB, const FFormatInfo& iFMT, const float iT, const float iU ) {
+    for( int i = 0; i < iFMT.SPP; ++i ) {
+        uint8 r = iFMT.IDT[i];
+        *( reinterpret_cast< T* >( iDst ) + r ) = static_cast< T >( ( reinterpret_cast< const T* >( iCA )[r] * iU + reinterpret_cast< const T* >( iCB )[r] * iT ) );
+    }
+}
+
 
 float InterpCubic( float iA, float iB, float iC, float iD, float iT ) {
     float a = -iA / 2.0f + (3.0f*iB) / 2.0f - (3.0f*iC) / 2.0f + iD / 2.0f;

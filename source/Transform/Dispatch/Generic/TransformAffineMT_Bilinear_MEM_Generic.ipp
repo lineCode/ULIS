@@ -27,12 +27,12 @@ InvokeTransformAffineMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 
     glm::vec3 point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
     glm::vec2 point_in_src( info.inverseTransform * point_in_dst );
     glm::vec2 src_dx( info.inverseTransform * glm::vec3( 1.f, 0.f, 0.f ) );
-    tByte* c00 = new tByte[ fmt.SPP * 4 ];
-    tByte* c10 = c00 + fmt.SPP;
-    tByte* c11 = c10 + fmt.SPP;
-    tByte* c01 = c11 + fmt.SPP;
-    tByte* hh0 = new tByte[ fmt.SPP * 2 ];
-    tByte* hh1 = hh0 + fmt.SPP;
+    tByte* c00 = new tByte[ fmt.BPP * 4 ];
+    tByte* c10 = c00 + fmt.BPP;
+    tByte* c11 = c10 + fmt.BPP;
+    tByte* c01 = c11 + fmt.BPP;
+    tByte* hh0 = new tByte[ fmt.BPP * 2 ];
+    tByte* hh1 = hh0 + fmt.BPP;
 
     const int minx = info.src_roi.x;
     const int miny = info.src_roi.y;

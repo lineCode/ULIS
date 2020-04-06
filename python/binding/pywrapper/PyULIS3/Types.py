@@ -22,5 +22,4 @@ CM_Lab  = 8
 CM_XYZ  = 9
 CM_Yxy  = 10
 kwColorModel = [ "ANY", "Grey", "RGB", "HSV", "HSL", "CMY", "CMYK", "YUV", "Lab", "XYZ", "Yxy" ]
-kwColorModelA = [ "_", "GA", "RGBA", "HSVA", "HSLA", "CMYA", "CMYKA", "YUVA", "LabA", "XYZA", "YxyA" ]
 

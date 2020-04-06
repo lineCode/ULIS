@@ -20,22 +20,23 @@
 #include "Transform/Dispatch/TransformInfo.h"
 #include "Transform/Dispatch/Dispatch.ipp"
 #include "Clear/Clear.h"
+#include "Misc/SummedAreaTable.h"
 
 #include <glm/matrix.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
 ULIS3_NAMESPACE_BEGIN
-void TransformAffine( FThreadPool*            iThreadPool
-                    , bool                    iBlocking
-                    , uint32                  iPerfIntent
-                    , const FHostDeviceInfo&  iHostDeviceInfo
-                    , bool                    iCallCB
-                    , const FBlock*           iSource
-                    , FBlock*                 iDestination
-                    , const FRect&            iSourceRect
-                    , const FTransform2D&     iTransform
-                    , eResamplingMethod       iMethod )
+void TransformAffine( FThreadPool*              iThreadPool
+                    , bool                      iBlocking
+                    , uint32                    iPerfIntent
+                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , bool                      iCallCB
+                    , const FBlock*             iSource
+                    , FBlock*                   iDestination
+                    , const FRect&              iSourceRect
+                    , const FTransform2D&       iTransform
+                    , eResamplingMethod         iMethod )
 {
     // Assertions
     ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
@@ -73,16 +74,16 @@ void TransformAffine( FThreadPool*            iThreadPool
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
-void TransformPerspective( FThreadPool*            iThreadPool
-                    , bool                    iBlocking
-                    , uint32                  iPerfIntent
-                    , const FHostDeviceInfo&  iHostDeviceInfo
-                    , bool                    iCallCB
-                    , const FBlock*           iSource
-                    , FBlock*                 iDestination
-                    , const FRect&            iSourceRect
-                    , const FTransform2D&     iTransform
-                    , eResamplingMethod       iMethod )
+void TransformPerspective( FThreadPool*         iThreadPool
+                    , bool                      iBlocking
+                    , uint32                    iPerfIntent
+                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , bool                      iCallCB
+                    , const FBlock*             iSource
+                    , FBlock*                   iDestination
+                    , const FRect&              iSourceRect
+                    , const FTransform2D&       iTransform
+                    , eResamplingMethod         iMethod )
 {
     // Assertions
     ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
@@ -90,6 +91,11 @@ void TransformPerspective( FThreadPool*            iThreadPool
     ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+
+    // Default to bilinear for invalid method
+    // We can't compute area efficiently for perspective transforms.
+    if( iMethod == INTERP_AREA )
+        iMethod = INTERP_BILINEAR;
 
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformPerspectiveMetrics( src_fit, iTransform, iMethod );
@@ -140,6 +146,12 @@ void TransformBezier( FThreadPool*                                      iThreadP
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS3_ASSERT( iControlPoints.size() == 4,                   "Bad control points size" );
+
+    // Default to bilinear for invalid method
+    // We can't compute area efficiently for bezier transforms.
+    if( iMethod == INTERP_AREA )
+        iMethod = INTERP_BILINEAR;
+
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformBezierMetrics( src_fit, iControlPoints, iMethod );
     int plotsize = FMaths::Clamp( iPlotSize, 1, 8 );
@@ -242,15 +254,13 @@ void Resize( FThreadPool*             iThreadPool
     float dst_h = FMaths::Max( FMaths::kEpsilonf, iSize.y );
     float scale_x = dst_w / src_w;
     float scale_y = dst_h / src_h;
-    float fixed_w = bNeedFix ? dst_w - scale_x : dst_w;
-    float fixed_h = bNeedFix ? dst_h - scale_y : dst_h;
+    float fixed_w = bNeedFix && scale_x > 1.f ? dst_w - scale_x : dst_w;
+    float fixed_h = bNeedFix && scale_y > 1.f ? dst_h - scale_y : dst_h;
     float fixed_scalex = fixed_w / src_w;
     float fixed_scaley = fixed_h / src_h;
-    glm::mat3 translation   = MakeTranslationMatrix( iPos.x + fixed_scalex, iPos.y + fixed_scaley );
-    glm::mat3 scale         = MakeScaleMatrix( fixed_scalex, fixed_scaley );
-    FTransform2D transform( ComposeMatrix( translation, scale ) );
+    FVec2F inverseScale = FVec2F( 1.f / fixed_scalex, 1.f / fixed_scaley );
+    FVec2F shift = FVec2F( bNeedFix && scale_x > 1.f ? iPos.x + fixed_scalex : iPos.x, bNeedFix && scale_y > 1.f ? iPos.y + fixed_scaley : iPos.y );
 
-    FRect trans = src_fit.TransformedAffine( transform );
     FRect dst_fit = FRect( static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.x ) )
                          , static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.y ) )
                          , static_cast< int >( FMaths::RoundToPositiveInfinity( dst_w ) )
@@ -260,8 +270,8 @@ void Resize( FThreadPool*             iThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
-    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    std::shared_ptr< _FResizeInfoPrivate > forwardResizeParams = std::make_shared< _FResizeInfoPrivate >();
+    _FResizeInfoPrivate& alias = *forwardResizeParams;
     alias.pool              = iThreadPool;
     alias.blocking          = iBlocking;
     alias.hostDeviceInfo    = &iHostDeviceInfo;
@@ -271,12 +281,20 @@ void Resize( FThreadPool*             iThreadPool
     alias.src_roi           = src_fit;
     alias.dst_roi           = dst_fit;
     alias.method            = iMethod;
-    alias.inverseTransform  = glm::inverse( transform.Matrix() );
+    alias.inverseScale      = inverseScale;
+    alias.shift             = shift;
+
+    if( iMethod == INTERP_AREA ) {
+        std::shared_ptr< FBlock > sh( XGetSummedAreaTable( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS3_NOCB, iSource ) );
+        alias.optionalSAT = sh;
+    } else {
+        alias.optionalSAT = nullptr;
+    }
 
     // Query dispatched method
-    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
+    fpDispatchedResizeFunc fptr = QueryDispatchedResizeFunctionForParameters( alias );
     ULIS3_ASSERT( fptr, "No dispatch function found." );
-    fptr( forwardTransformParams );
+    fptr( forwardResizeParams );
 
     // Invalid
     iDestination->Invalidate( dst_fit, iCallCB );
@@ -380,7 +398,7 @@ FRect TransformAffineMetrics( const FRect&          iSourceRect
                             , eResamplingMethod     iMethod )
 {
     FRect trans = iSourceRect.TransformedAffine( iTransform );
-    if( iMethod > INTERP_NN ) {
+    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
         float angle = FMaths::Max( abs( cos( r ) ), abs( sin( r ) ) );
@@ -400,7 +418,7 @@ FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
                                  , eResamplingMethod     iMethod )
 {
     FRect trans = iSourceRect.TransformedPerspective( iTransform );
-    if( iMethod > INTERP_NN ) {
+    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
         trans.x -= static_cast< int >( ceil( sx ) );

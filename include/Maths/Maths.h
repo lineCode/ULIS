@@ -160,7 +160,7 @@ struct ULIS3_API FMaths
         if ( iNumber > 0 )
             return iNumber - IntegerPartOfNumber( iNumber );
         else
-            return 1.f - ( iNumber - IntegerPartOfNumber( iNumber ) );
+            return - ( iNumber - IntegerPartOfNumber( iNumber ) );
     }
 
     static ULIS3_FORCEINLINE FVec2F FloatingPart( const FVec2F& iVec ) {

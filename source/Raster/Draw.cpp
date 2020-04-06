@@ -89,5 +89,19 @@ void DrawRectOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& 
     DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, iRect.x + iRect.w );
 }
 
+void DrawUniformGridOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& iRect, int iNumSubdiv ) {
+    FPixelValue color( iDst->Format() );
+    Conv( iColor, color );
+    tByte* src = color.Ptr();
+    int stepX = iRect.w / iNumSubdiv;
+    int stepY = iRect.h / iNumSubdiv;
+    for( int x = iRect.x; x <= iRect.x + iRect.w; x += stepX )
+        DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, x );
+
+    for( int y = iRect.y; y <= iRect.y + iRect.h; y += stepY )
+        DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iRect.x, iRect.x + iRect.w, y );
+
+}
+
 ULIS3_NAMESPACE_END
 

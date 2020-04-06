@@ -27,12 +27,12 @@ InvokeTransformBezierMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 
     const int rangex = info.src_roi.w - 1;
     const int rangey = info.src_roi.h - 1;
 
-    tByte* c00 = new tByte[ fmt.SPP * 4 ];
-    tByte* c10 = c00 + fmt.SPP;
-    tByte* c11 = c10 + fmt.SPP;
-    tByte* c01 = c11 + fmt.SPP;
-    tByte* hh0 = new tByte[ fmt.SPP * 2 ];
-    tByte* hh1 = hh0 + fmt.SPP;
+    tByte* c00 = new tByte[ fmt.BPP * 4 ];
+    tByte* c10 = c00 + fmt.BPP;
+    tByte* c11 = c10 + fmt.BPP;
+    tByte* c01 = c11 + fmt.BPP;
+    tByte* hh0 = new tByte[ fmt.BPP * 2 ];
+    tByte* hh1 = hh0 + fmt.BPP;
     const int minx = info.src_roi.x;
     const int miny = info.src_roi.y;
     const int maxx = minx + info.src_roi.w;

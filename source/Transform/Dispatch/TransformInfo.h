@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         Dispatch.ipp
+* @file         TransformInfo.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic Blend entry point functions.
 * @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -29,6 +29,21 @@ struct ULIS3_API _FTransformInfoPrivate {
     FRect                   dst_roi;
     eResamplingMethod       method;
     glm::mat3               inverseTransform;
+};
+
+struct ULIS3_API _FResizeInfoPrivate {
+    FThreadPool*                        pool;
+    bool                                blocking;
+    const FHostDeviceInfo*              hostDeviceInfo;
+    uint32                              perfIntent;
+    const FBlock*                       source;
+    FBlock*                             destination;
+    FRect                               src_roi;
+    FRect                               dst_roi;
+    eResamplingMethod                   method;
+    FVec2F                              inverseScale;
+    FVec2F                              shift;
+    std::shared_ptr< const FBlock >     optionalSAT;
 };
 
 ULIS3_NAMESPACE_END

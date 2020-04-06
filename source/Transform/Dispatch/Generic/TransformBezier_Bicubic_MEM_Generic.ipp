@@ -28,14 +28,14 @@ InvokeTransformBezierMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 i
     const int rangex = info.src_roi.w - 1;
     const int rangey = info.src_roi.h - 1;
 
-    tByte* p00 = new tByte[ fmt.SPP * 4 ];      tByte* p01 = new tByte[ fmt.SPP * 4 ];
-    tByte* p10 = p00 + fmt.SPP;                 tByte* p11 = p01 + fmt.SPP;
-    tByte* p20 = p10 + fmt.SPP;                 tByte* p21 = p11 + fmt.SPP;
-    tByte* p30 = p20 + fmt.SPP;                 tByte* p31 = p21 + fmt.SPP;
-    tByte* p02 = new tByte[ fmt.SPP * 4 ];      tByte* p03 = new tByte[ fmt.SPP * 4 ];
-    tByte* p12 = p02 + fmt.SPP;                 tByte* p13 = p03 + fmt.SPP;
-    tByte* p22 = p12 + fmt.SPP;                 tByte* p23 = p13 + fmt.SPP;
-    tByte* p32 = p22 + fmt.SPP;                 tByte* p33 = p23 + fmt.SPP;
+    tByte* p00 = new tByte[ fmt.BPP * 4 ];      tByte* p01 = new tByte[ fmt.BPP * 4 ];
+    tByte* p10 = p00 + fmt.BPP;                 tByte* p11 = p01 + fmt.BPP;
+    tByte* p20 = p10 + fmt.BPP;                 tByte* p21 = p11 + fmt.BPP;
+    tByte* p30 = p20 + fmt.BPP;                 tByte* p31 = p21 + fmt.BPP;
+    tByte* p02 = new tByte[ fmt.BPP * 4 ];      tByte* p03 = new tByte[ fmt.BPP * 4 ];
+    tByte* p12 = p02 + fmt.BPP;                 tByte* p13 = p03 + fmt.BPP;
+    tByte* p22 = p12 + fmt.BPP;                 tByte* p23 = p13 + fmt.BPP;
+    tByte* p32 = p22 + fmt.BPP;                 tByte* p33 = p23 + fmt.BPP;
     float* hh0 = new float[ fmt.SPP * 4 ];
     float* hh1 = new float[ fmt.SPP * 4 ];
     float* hh2 = new float[ fmt.SPP * 4 ];
