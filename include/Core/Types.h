@@ -57,6 +57,7 @@ typedef  uint32_t   tSize;
 #define ULIS3_CM_XYZ    9
 #define ULIS3_CM_Yxy    10
 
+
 /////////////////////////////////////////////////////
 // Named booleans literals
 #define ULIS3_BLOCKING      true
@@ -97,6 +98,10 @@ enum eColorModel {
     , CM_XYZ    = ULIS3_CM_XYZ
     , CM_Yxy    = ULIS3_CM_Yxy
 };
+
+// Macro for switch enumerators
+#define ULIS3_COMP_OP_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )                          case _CASE: { _ACTION( _CASE, _E1, _E2, _E3 ); break; }
+#define ULIS3_SWITCH_FOR_ALL_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )      switch( iValue ) { _SUBSET( ULIS3_COMP_OP_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
 
 // Macro for all types for template instanciation
 #define ULIS3_FOR_ALL_TYPES_DO( X, _E0, _E1, _E2, _E3 )     \

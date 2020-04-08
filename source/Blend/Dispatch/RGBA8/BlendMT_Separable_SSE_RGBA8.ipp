@@ -75,7 +75,7 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const tByte* iSrc, tB
         Vec4f bdp_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f;
         Vec4f res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpSSEF< _BM >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         auto _pack = _mm_cvtps_epi32( res_chan );
@@ -125,7 +125,7 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte* iSrc, tByte* iBdp
         Vec4f res_chan;
 
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpSSEF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         auto _pack = _mm_cvtps_epi32( res_chan );

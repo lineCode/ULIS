@@ -47,7 +47,7 @@ void InvokesUnpremult( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
 
 typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, tByte* iDst, const FFormatInfo* iFmt );
 fpDispatchedAlphamulInvoke QueryDispatchedPremultInvokeForParameters( eType iType ) {
-        switch( iType ) {
+    switch( iType ) {
         case TYPE_UINT8     : return  InvokesPremult< uint8 >;
         case TYPE_UINT16    : return  InvokesPremult< uint16 >;
         case TYPE_UINT32    : return  InvokesPremult< uint32 >;
@@ -58,7 +58,7 @@ fpDispatchedAlphamulInvoke QueryDispatchedPremultInvokeForParameters( eType iTyp
 }
 
 fpDispatchedAlphamulInvoke QueryDispatchedUnpremultInvokeForParameters( eType iType ) {
-        switch( iType ) {
+    switch( iType ) {
         case TYPE_UINT8     : return  InvokesUnpremult< uint8 >;
         case TYPE_UINT16    : return  InvokesUnpremult< uint16 >;
         case TYPE_UINT32    : return  InvokesUnpremult< uint32 >;

@@ -59,7 +59,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, 
             SampleSubpixelChannel( srcvf, r );
             float bdpvf = TYPE2FLOAT( bdp, r );
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
-            ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+            ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
             #undef TMP_ASSIGN
         }
 
@@ -108,7 +108,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iB
             float srcvf = TYPE2FLOAT( src, r );
             float bdpvf = TYPE2FLOAT( bdp, r );
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
-            ULIS3_SWITCH_FOR_ALL_COMP_OP_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+            ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
             #undef TMP_ASSIGN
         }
         if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
