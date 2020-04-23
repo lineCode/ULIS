@@ -107,11 +107,11 @@ public class ULIS : ModuleRules
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                    Path.Combine( LibBaseFull, ULIS_LibName ) + ".a",
-                    Path.Combine( LibBaseFull, LittleCMS_LibName ) + ".a"
-                    Path.Combine( LibBaseFull, freetype2_LibName ) + ".a"
-                    Path.Combine( LibBaseFull, cppfs_LibName ) + ".a"
-                    Path.Combine( LibBaseFull, clip_LibName ) + ".a"
+                      Path.Combine( LibBaseFull, ULIS_LibName ) + ".a"
+                    , Path.Combine( LibBaseFull, LittleCMS_LibName ) + ".a"
+                    , Path.Combine( LibBaseFull, freetype2_LibName ) + ".a"
+                    , Path.Combine( LibBaseFull, cppfs_LibName ) + ".a"
+                    , Path.Combine( LibBaseFull, clip_LibName ) + ".a"
                 }
             );
 
