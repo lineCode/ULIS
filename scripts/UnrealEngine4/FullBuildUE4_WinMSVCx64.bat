@@ -61,18 +61,19 @@ mkdir Debug
 
 cd ../../../../../../
 echo %CD%
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\clip"           "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\clip"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\cppfs"          "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\cppfs"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\eigen"          "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\eigen"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\freetype2"      "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\freetype2"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\glm"            "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\glm"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\Little-CMS"     "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\Little-CMS"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\OCL-SDK"        "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\OCL-SDK"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\static_math"    "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\static_math"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\stb"            "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\stb"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\VCL"            "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\VCL"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\clip"               "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\clip"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\cppfs"              "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\cppfs"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\eigen"              "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\eigen"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\FeatureDetector"    "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\FeatureDetector"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\freetype2"          "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\freetype2"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\glm"                "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\glm"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\Little-CMS"         "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\Little-CMS"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\OCL-SDK"            "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\OCL-SDK"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\static_math"        "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\static_math"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\stb"                "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\stb"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\VCL"                "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\VCL"
 
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\include"                 "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\ULIS3"
+XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\include"                     "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Include\ULIS3"
 
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\3rdparty\build_clip\Debug\clipd.lib" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Lib\Win\MSVC\x64\Debug\clipd.lib"
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\3rdparty\build_clip\Release\clip.lib" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Lib\Win\MSVC\x64\Release\clip.lib"
