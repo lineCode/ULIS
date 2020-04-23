@@ -23,5 +23,12 @@ ULIS3_API FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
                                      , bool                     iCallCB
                                      , const FBlock*            iSource );
 
+ULIS3_API FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
+                                                  , bool                     iBlocking
+                                                  , uint32                   iPerfIntent
+                                                  , const FHostDeviceInfo&   iHostDeviceInfo
+                                                  , bool                     iCallCB
+                                                  , const FBlock*            iSource );
+
 ULIS3_NAMESPACE_END
 
