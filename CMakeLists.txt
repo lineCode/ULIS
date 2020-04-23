@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.11.0)
 
-option( ULIS3_BUILD_SHARED          "Build the library shared or statically" OFF )
-option( ULIS3_BUILD_PYTHON_MODULE   "Build the library python module"        OFF )
+option( ULIS3_BUILD_SHARED          "Build the library shared or statically"    OFF )
+option( ULIS3_BUILD_PYTHON_MODULE   "Build the library python module"           OFF )
+option( ULIS3_BUILD_TESTS           "Build the library test modules"            OFF )
+option( ULIS3_BUILD_SAMPLES         "Build the library sample modules"          OFF )
 SET( ULIS3_QT_CMAKE_PATH            "default" CACHE STRING "Indicates the path to Qt cmake package" )
 SET( ULIS3_PYTHON_REL_LIB           "default" CACHE STRING "Indicates the path to python release static library" )
 SET( ULIS3_PYTHON_DEB_LIB           "default" CACHE STRING "Indicates the path to python debug static library" )
@@ -152,5 +154,10 @@ endif()
 include(${CMAKE_CURRENT_SOURCE_DIR}/python/CMakeLists.txt)
 ####################################
 # Add Test Projects
+if( ${ULIS3_BUILD_TESTS} )
 include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
+endif()
+if( ${ULIS3_BUILD_SAMPLES} )
 include(${CMAKE_CURRENT_SOURCE_DIR}/samples/CMakeLists.txt)
+endif()
+
