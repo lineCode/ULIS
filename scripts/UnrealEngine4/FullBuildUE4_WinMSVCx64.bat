@@ -89,3 +89,5 @@ COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MS
 
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Debug\ULIS3d.lib" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Lib\Win\MSVC\x64\Debug\ULIS3d.lib"
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Release\ULIS3.lib" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Redist\Lib\Win\MSVC\x64\Release\ULIS3.lib"
+
+COPY /Y "ULIS3\scripts\UnrealEngine4\ULIS3.Build.cs" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\ULIS3.Build.cs"
