@@ -33,8 +33,7 @@ public class ULIS : ModuleRules
             string LibBase          = Path.Combine( ModuleDirectory, "Redist", "Lib", "Win", "MSVC", "x64" );
             string LibBaseRelease   = Path.Combine( LibBase, "Release" );
             string LibBaseDebug     = Path.Combine( LibBase, "Debug" );
-            PublicSystemLibraryPaths.Add( LibBaseRelease );
-            PublicSystemLibraryPaths.Add( LibBaseDebug );
+            string LibBaseFull = LibBaseRelease;
 
             string ULIS_LibName         = "ULIS3";
             string freetype2_LibName    = "freetype";
@@ -48,15 +47,16 @@ public class ULIS : ModuleRules
                     cppfs_LibName       += "d";
                     clip_LibName        += "d";
                     LittleCMS_LibName   += "d";
+                    LibBaseFull = LibBaseDebug;
             }
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                      ULIS_LibName + ".lib"
-                    , LittleCMS_LibName + ".lib"
-                    , freetype2_LibName + ".lib"
-                    , cppfs_LibName + ".lib"
-                    , clip_LibName + ".lib"
+                      Path.Combine( LibBaseFull, ULIS_LibName ) + ".lib"
+                    , Path.Combine( LibBaseFull, LittleCMS_LibName ) + ".lib"
+                    , Path.Combine( LibBaseFull, freetype2_LibName ) + ".lib"
+                    , Path.Combine( LibBaseFull, cppfs_LibName ) + ".lib"
+                    , Path.Combine( LibBaseFull, clip_LibName ) + ".lib"
                 }
             );
 
@@ -85,9 +85,6 @@ public class ULIS : ModuleRules
             string LibBase          = Path.Combine( ModuleDirectory, "Redist", "Lib", "Mac", "Xcode", "x64" );
             string LibBaseRelease   = Path.Combine( LibBase, "Release" );
             string LibBaseDebug     = Path.Combine( LibBase, "Debug" );
-            PublicSystemLibraryPaths.Add( LibBaseRelease );
-            PublicSystemLibraryPaths.Add( LibBaseDebug );
-
             string LibBaseFull = LibBaseRelease;
             
             string ULIS_LibName         = "libULIS3";
