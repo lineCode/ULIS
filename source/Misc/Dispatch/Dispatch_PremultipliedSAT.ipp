@@ -52,12 +52,12 @@ InvokeComputePremultipliedSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, 
 }
 
 template< typename T >
-void ComputePremultipliedSummedAreaTable_MEM_Generic( FThreadPool*           iThreadPool
-                                                    , bool                       iBlocking
-                                                    , uint32                     iPerfIntent
-                                                    , const FHostDeviceInfo&     iHostDeviceInfo
-                                                    , const FBlock*              iSource
-                                                    , FBlock*                    iSAT )
+void ComputePremultipliedSummedAreaTable_MEM_Generic( FThreadPool*              iThreadPool
+                                                    , bool                      iBlocking
+                                                    , uint32                    iPerfIntent
+                                                    , const FHostDeviceInfo&    iHostDeviceInfo
+                                                    , const FBlock*             iSource
+                                                    , FBlock*                   iSAT )
 {
     const tByte*    src     = iSource->DataPtr();
     tByte*          bdp     = iSAT->DataPtr();
@@ -123,12 +123,12 @@ InvokeComputePremultipliedSummedAreaTable_YPass_SSE42_RGBA8( const uint32 iLen, 
     }
 }
 
-void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FThreadPool*             iThreadPool
-                                                    , bool                     iBlocking
-                                                    , uint32                   iPerfIntent
-                                                    , const FHostDeviceInfo&   iHostDeviceInfo
-                                                    , const FBlock*            iSource
-                                                    , FBlock*                  iSAT )
+void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FThreadPool*              iThreadPool
+                                                    , bool                      iBlocking
+                                                    , uint32                    iPerfIntent
+                                                    , const FHostDeviceInfo&    iHostDeviceInfo
+                                                    , const FBlock*             iSource
+                                                    , FBlock*                   iSAT )
 {
     const tByte*    src     = iSource->DataPtr();
     tByte*          bdp     = iSAT->DataPtr();
