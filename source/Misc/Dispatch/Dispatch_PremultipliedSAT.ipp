@@ -28,9 +28,19 @@ InvokeComputePremultipliedSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, 
     const T* src = reinterpret_cast< const T* >( iSrc )  + fmt.SPP;
     float*   dst = reinterpret_cast< float* >( iDst )    + fmt.SPP;
 
+    float max = static_cast< float >( MaxType< T >() );
     for( uint32 x = 1; x < iLen; ++x ) {
-        for( uint8 j = 0; j < fmt.SPP; ++j )
-            dst[j] = static_cast< float >( src[j] + *( dst - fmt.SPP + j ) );
+
+        float alpha = max;
+        if( fmt.HEA ) {
+            alpha = static_cast< float >( src[fmt.AID] );
+            dst[fmt.AID] = alpha + *( dst - fmt.SPP + fmt.AID );
+        }
+
+        for( uint8 j = 0; j < fmt.NCC; ++j ) {
+            uint8 r = fmt.IDT[j];
+            dst[r] = static_cast< float >( src[r] * alpha / max + *( dst - fmt.SPP + r ) );
+        }
         src += fmt.SPP;
         dst += fmt.SPP;
     }
@@ -73,9 +83,18 @@ void ComputePremultipliedSummedAreaTable_MEM_Generic( FThreadPool*              
         const T* wsrc = reinterpret_cast< const T* >( src );
         float*   wdst = reinterpret_cast< float* >( bdp );
         const tSize stride = iSAT->Width()   * fmt.SPP;
+        float max = static_cast< float >( MaxType< T >() );
         for( int y = 0; y < h; ++y ) {
-            for( uint8 j = 0; j < iSource->SamplesPerPixel(); ++j )
-                wdst[j] = static_cast< float >( wsrc[j] );
+            float alpha = max;
+            if( fmt.HEA ) {
+                alpha = static_cast< float >( wsrc[fmt.AID] );
+                wdst[fmt.AID] = alpha;
+            }
+
+            for( uint8 j = 0; j < fmt.NCC; ++j ) {
+                uint8 r = fmt.IDT[j];
+                wdst[r] = static_cast< float >( wsrc[r] * alpha / max );
+            }
             wsrc += stride;
             wdst += stride;
         }
@@ -97,14 +116,19 @@ void ComputePremultipliedSummedAreaTable_MEM_Generic( FThreadPool*              
 
 #ifdef __SSE4_2__
 void 
-InvokeComputePremultipliedSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const tByte* iSrc, tByte* iDst ) {
+InvokeComputePremultipliedSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const tByte* iSrc, tByte* iDst, uint8 iAID ) {
     const uint8* src = reinterpret_cast< const uint8* >( iSrc ) + 4;
     float*       dst = reinterpret_cast< float* >( iDst )       + 4;
+    __m128 max = _mm_set_ps1( 255.f );
     for( uint32 x = 1; x < iLen; ++x ) {
+        float alpha = static_cast< float >( src[iAID] );
+        __m128 alphav = _mm_set_ps1( alpha );
+
         __m128 n = _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) ) );
         __m128 m = _mm_loadu_ps( dst - 4 );
-        __m128 r = _mm_add_ps( n, m );
+        __m128 r = _mm_add_ps( _mm_div_ps( _mm_mul_ps( n, alphav ), max ), m );
         _mm_storeu_ps( dst, r );
+        dst[iAID] = alpha + *( dst - 4 + iAID );
         src += 4;
         dst += 4;
     }
@@ -138,14 +162,16 @@ void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FThreadPool*              
     const tSize     bdp_bpp = iSAT->BytesPerPixel();
     const int       w       = iSource->Width();
     const int       h       = iSource->Height();
-
+    const FFormatInfo& fmt = iSAT->FormatInfo();
     {
         const uint8* wsrc = reinterpret_cast< const uint8* >( src );
         float*   wdst = reinterpret_cast< float* >( bdp );
         const tSize src_stride = iSource->Width()   * 4;
         const tSize dst_stride = iSAT->Width()      * 4;
+        __m128 max = _mm_set_ps1( 255.f );
         for( int y = 0; y < h; ++y ) {
-            _mm_storeu_ps( wdst, _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( wsrc ) ) ) ) );
+            __m128 alpha = _mm_set_ps1( static_cast< float >( wsrc[fmt.AID] ) );
+            _mm_storeu_ps( wdst, _mm_div_ps( _mm_mul_ps( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( wsrc ) ) ) ), alpha ), max ) );
             wsrc += src_stride;
             wdst += dst_stride;
         }
@@ -156,7 +182,7 @@ void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FThreadPool*              
                                    , InvokeComputePremultipliedSummedAreaTable_XPass_SSE42_RGBA8
                                    , w
                                    , src + pLINE * src_bps
-                                   , bdp + pLINE * bdp_bps );
+                                   , bdp + pLINE * bdp_bps, fmt.AID );
     iThreadPool->WaitForCompletion();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , w

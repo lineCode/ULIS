@@ -285,7 +285,7 @@ void Resize( FThreadPool*             iThreadPool
     alias.shift             = shift;
 
     if( iMethod == INTERP_AREA ) {
-        std::shared_ptr< FBlock > sh( XGetSummedAreaTable( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS3_NOCB, iSource ) );
+        std::shared_ptr< FBlock > sh( XGetPremultipliedSummedAreaTable( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS3_NOCB, iSource ) );
         alias.optionalSAT = sh;
     } else {
         alias.optionalSAT = nullptr;
