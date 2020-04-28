@@ -31,7 +31,8 @@ ULIS3_API FBlock* XCopy( FThreadPool*           iThreadPool
                        , uint32                 iPerfIntent
                        , const FHostDeviceInfo& iHostDeviceInfo
                        , bool                   iCallCB
-                       , const FBlock*          iSource );
+                       , const FBlock*          iSource
+                       , const FRect&           iArea );
 
 ULIS3_API void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB );
 ULIS3_API FBlock* XCopyRaw( const FBlock* iSrc, bool iCallCB );

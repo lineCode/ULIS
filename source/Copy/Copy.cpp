@@ -148,11 +148,18 @@ FBlock* XCopy( FThreadPool*           iThreadPool
              , uint32                 iPerfIntent
              , const FHostDeviceInfo& iHostDeviceInfo
              , bool                   iCallCB
-             , const FBlock*          iSource )
+             , const FBlock*          iSource
+             , const FRect&           iArea )
 {
     ULIS3_ASSERT( iSource, "Bad source." );
-    FBlock* ret = new FBlock( iSource->Width(), iSource->Height(), iSource->Format() );
-    Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret, iSource->Rect(), FVec2I( 0, 0 ) );
+
+    FRect src_roi = iArea & iSource->Rect();
+
+    if( src_roi.Area() <= 0 )
+        return  nullptr;
+
+    FBlock* ret = new FBlock( src_roi.w, src_roi.h, iSource->Format() );
+    Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret, src_roi, FVec2I( 0, 0 ) );
     return  ret;
 }
 
