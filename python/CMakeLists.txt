@@ -11,6 +11,7 @@ if( ${ULIS3_BUILD_PYTHON_MODULE} )
 
     add_library( PyULIS3 SHARED ${source_list} )
     set_target_properties( PyULIS3 PROPERTIES SUFFIX ".pyd" )
+    set_target_properties( PyULIS3 PROPERTIES FOLDER ULIS3 )
     target_compile_definitions( PyULIS3 PRIVATE PyULIS3_BUILD_SHARED )
 
     target_link_libraries(

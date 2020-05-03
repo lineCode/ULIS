@@ -31,6 +31,27 @@ IPixel::IPixel( tFormat iFormat, FColorProfile* iProfile )
 {
 }
 
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------------- Comparison Operators
+bool
+IPixel::operator==( const  IPixel& iOther )  const {
+    bool sameFormat = mInfo.FMT == iOther.mInfo.FMT;
+    bool bytePerfectMatch = true;
+    for( int i = 0; i < mInfo.BPP; ++i ) {
+        if( mData[i] != iOther.mData[i] ) {
+            bytePerfectMatch = false;
+            break;
+        }
+    }
+
+    return  sameFormat && bytePerfectMatch;
+}
+
+
+bool
+IPixel::operator!=( const  IPixel& iOther )  const {
+    return  !( *this == iOther );
+}
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API

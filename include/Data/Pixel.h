@@ -28,6 +28,11 @@ public:
     IPixel( uint32 iFormat, FColorProfile* iProfile = nullptr );
 
 public:
+    // Comparison Operators
+    bool  operator==( const  IPixel& iOther )  const;
+    bool  operator!=( const  IPixel& iOther )  const;
+
+public:
     // Public API
     tByte*              Ptr();
     void                AssignProfile( FColorProfile* iProfile );
@@ -244,7 +249,7 @@ public:
     ULIS3_FORCEINLINE double yD() const                                         { return  y< double >();                        }
 
     template< typename T > ULIS3_FORCEINLINE void SetAlpha(      T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue ); }
-    template< typename T > ULIS3_FORCEINLINE void SetA(          T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue );     }
+    template< typename T > ULIS3_FORCEINLINE void SetA(          T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue ); }
     template< typename T > ULIS3_FORCEINLINE void SetGrey(       T iValue )      { SetValue< T >( 0, iValue );                   }
     template< typename T > ULIS3_FORCEINLINE void SetRed(        T iValue )      { SetValue< T >( 0, iValue );                   }
     template< typename T > ULIS3_FORCEINLINE void SetGreen(      T iValue )      { SetValue< T >( 1, iValue );                   }
