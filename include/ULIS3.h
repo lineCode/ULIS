@@ -39,6 +39,7 @@
 #include "Misc/Sanitize.h"
 #include "Blend/Blend.h"
 #include "Fill/Fill.h"
+#include "Fill/FillPreserveAlpha.h"
 #include "Clear/Clear.h"
 #include "Copy/Copy.h"
 #include "Text/FontRegistry.h"

@@ -15,11 +15,12 @@
 #include "Core/Types.h"
 
 /////////////////////////////////////////////////////
-// Pixel format
+// Color format
 //
 //        32|           20|  16|            8|   4|   0
 //          1098 7654 3210 9876     5432 1098 7654 3210
-//          XXXX XXXX XXXX DDDD     ASRF MMMM CCCC TTTT
+//          XXXX XXXX XXXX BBBB     ASRF MMMM CCCC TTTT
+//
 //    Example: RGBA8
 //                            1     1000 0010 0011 0000
 //
@@ -28,7 +29,7 @@
 //          M: Model                A: Alpha
 //          F: Floating             B: Bytes per sample
 //
-//          X: Free space for dynamic extra info
+//          X: Free space for dynamic extra info such as premultiplied or color profile
 //
 #define ULIS3_W_TYPE( i )       ( i & 0xF )
 #define ULIS3_W_CHANNELS( i )   ( ( i & 0xF ) << 4 )

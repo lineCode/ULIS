@@ -17,8 +17,7 @@ using namespace ::ul3;
 int
 main() {
     FPixelValue colorA = FPixelValue::FromRGBA8( 0, 0, 0, 255 );
-    FPixelValue colorB = Conv( Conv( FPixelValue::FromRGBA8( 0, 0, 0, 255 ), ULIS3_FORMAT_HSVA8 ), ULIS3_FORMAT_RGBA8 );
-    bool same = colorA == colorB;
+    FPixelValue colorB = Conv( FPixelValue::FromRGBA8( 0, 0, 0, 255 ), ULIS3_FORMAT_HSVA8 );
 
     return  0;
 }
