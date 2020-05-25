@@ -82,8 +82,8 @@ XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\glm"                "ULIS3_FullB
 
 ::COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Debug\ULIS3d.pdb" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\x64\debug\ULIS3d.pdb"
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Debug\ULIS3d.lib" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\x64\debug\ULIS3d.lib"
-COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Debug\ULIS3d.dll" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\x64\debug\ULIS3d.dll"
+::COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Debug\ULIS3d.dll" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\x64\debug\ULIS3d.dll"
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Release\ULIS3.lib" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\x64\release\ULIS3.lib"
-COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Release\ULIS3.dll" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\x64\release\ULIS3.dll"
+::COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Release\ULIS3.dll" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\x64\release\ULIS3.dll"
 
 COPY /Y "ULIS3\scripts\UnrealEngine4\ULIS.Build.cs" "ULIS3_FullBuildUE4_WinMSVCx64_Redist\ULIS.Build.cs"

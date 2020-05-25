@@ -79,13 +79,13 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
     Conv( iColor, *color );
     tByte*          dst = iDestination->DataPtr();
     size_t          bps = iDestination->BytesPerScanLine();
-    const int       max = iDestination->Height();
-    const size_t    len = iDestination->Width();
+    const int       max = roi.h;
+    const size_t    len = roi.w;
 
     // Call
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo(), color )
+                                   , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, &iDestination->FormatInfo(), color )
 
     // Invalid
     iDestination->Invalidate( roi, iCallCB );
