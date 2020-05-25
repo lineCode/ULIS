@@ -36,7 +36,6 @@ public class ULIS : ModuleRules
             PublicAdditionalLibraries.AddRange(
                 new string[] {
                       Path.Combine( LibBaseFull, ULIS_LibName ) + ".lib"
-                    , Path.Combine( LibBaseFull, ULIS_LibName ) + ".dll"
                 }
             );
 
@@ -68,7 +67,6 @@ public class ULIS : ModuleRules
             PublicAdditionalLibraries.AddRange(
                 new string[] {
                       Path.Combine( LibBaseFull, ULIS_LibName ) + ".a"
-                    , Path.Combine( LibBaseFull, ULIS_LibName ) + ".dylib"
                 }
             );
 
