@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.11.0)
 
-option( ULIS3_BUILD_SHARED          "Build the library shared or statically"    OFF )
-option( ULIS3_BUILD_PYTHON_MODULE   "Build the library python module"           OFF )
-option( ULIS3_BUILD_TESTS           "Build the library test modules"            OFF )
-option( ULIS3_BUILD_SAMPLES         "Build the library sample modules"          OFF )
+option( ULIS3_BUILD_SHARED                  "Build the library shared or statically"    OFF )
+option( ULIS3_BUILD_PYTHON_MODULE           "Build the library python module"           OFF )
+option( ULIS3_BUILD_TESTS                   "Build the library test modules"            OFF )
+option( ULIS3_BUILD_SAMPLES                 "Build the library sample modules"          OFF )
 SET( ULIS3_QT_CMAKE_PATH            "default" CACHE STRING "Indicates the path to Qt cmake package" )
 SET( ULIS3_PYTHON_REL_LIB           "default" CACHE STRING "Indicates the path to python release static library" )
 SET( ULIS3_PYTHON_DEB_LIB           "default" CACHE STRING "Indicates the path to python debug static library" )
@@ -22,7 +22,7 @@ message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
 set( CMAKE_OSX_DEPLOYMENT_TARGET "10.13" )
 
 # Generate only Debug and Release configurations
-set( CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE )
+set( CMAKE_CONFIGURATION_TYPES RelWithDebInfo Debug Release CACHE STRING INTERNAL FORCE )
 
 # Get rid of cmake's ZERO_CHECK project
 set( CMAKE_SUPPRESS_REGENERATION true )
