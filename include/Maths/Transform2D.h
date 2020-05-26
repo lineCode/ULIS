@@ -42,8 +42,8 @@ private:
     glm::mat3           mMatrix;
     mutable glm::mat3   mInverseMatrix;
     mutable std::string mID;
-    mutable bool mDirtyID;
-    mutable bool mDirtyInverseMatrix;
+    mutable bool        mDirtyID;
+    mutable bool        mDirtyInverseMatrix;
 };
 
 ULIS3_API glm::mat3 MakeIdentityMatrix();
