@@ -22,20 +22,15 @@ public class ULIS : ModuleRules
             );
 
             string LibBase          = Path.Combine( ModuleDirectory, "redist", "lib" );
-            string LibBaseRelease   = Path.Combine( LibBase, "release" );
-            string LibBaseDebug     = Path.Combine( LibBase, "debug" );
-            string LibBaseFull = LibBaseRelease;
-
             string ULIS_LibName         = "ULIS3";
 
             if (Target.Configuration == UnrealTargetConfiguration.Debug && Target.bDebugBuildsActuallyUseDebugCRT) {
                     ULIS_LibName        += "d";
-                    LibBaseFull = LibBaseDebug;
             }
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                      Path.Combine( LibBaseFull, ULIS_LibName ) + ".lib"
+                      Path.Combine( LibBase, ULIS_LibName ) + ".lib"
                 }
             );
 
@@ -53,20 +48,15 @@ public class ULIS : ModuleRules
             );
 
             string LibBase          = Path.Combine( ModuleDirectory, "redist", "lib" );
-            string LibBaseRelease   = Path.Combine( LibBase, "release" );
-            string LibBaseDebug     = Path.Combine( LibBase, "debug" );
-            string LibBaseFull = LibBaseRelease;
-
             string ULIS_LibName         = "ULIS3";
 
             if (Target.Configuration == UnrealTargetConfiguration.Debug && Target.bDebugBuildsActuallyUseDebugCRT) {
                     ULIS_LibName        += "d";
-                    LibBaseFull = LibBaseDebug;
             }
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                      Path.Combine( LibBaseFull, ULIS_LibName ) + ".a"
+                      Path.Combine( LibBase, ULIS_LibName ) + ".a"
                 }
             );
 
