@@ -21,7 +21,7 @@ public class ULIS : ModuleRules
                 }
             );
 
-            string LibBase          = Path.Combine( ModuleDirectory, "redist", "bin", "x64" );
+            string LibBase          = Path.Combine( ModuleDirectory, "redist", "lib" );
             string LibBaseRelease   = Path.Combine( LibBase, "release" );
             string LibBaseDebug     = Path.Combine( LibBase, "debug" );
             string LibBaseFull = LibBaseRelease;
@@ -52,7 +52,7 @@ public class ULIS : ModuleRules
                 }
             );
 
-            string LibBase          = Path.Combine( ModuleDirectory, "redist", "bin", "x64" );
+            string LibBase          = Path.Combine( ModuleDirectory, "redist", "lib" );
             string LibBaseRelease   = Path.Combine( LibBase, "release" );
             string LibBaseDebug     = Path.Combine( LibBase, "debug" );
             string LibBaseFull = LibBaseRelease;
