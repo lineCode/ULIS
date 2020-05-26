@@ -447,6 +447,8 @@ public:
     FPixelValue( const FPixelValue& iValue );
     FPixelValue( FPixelValue&& iValue );
 
+    FPixelValue& operator=( const FPixelValue& iOther );
+
     template< typename T >
     FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile = nullptr )
         : tParent( iFormat, iProfile )

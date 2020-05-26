@@ -358,6 +358,19 @@ FPixelValue::FPixelValue( FPixelValue&& iValue )
     iValue.mData = nullptr;
 }
 
+FPixelValue&
+FPixelValue::operator=( const FPixelValue& iOther ) {
+    if( mData )
+        delete  mData;
+
+    mInfo = iOther.mInfo;
+    mProfile = iOther.mProfile;
+    mData = new tByte[ Depth() ];
+    memcpy( mData, iOther.Ptr(), Depth() );
+
+    return  *this;
+}
+
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------ Named static constructors
 //static
