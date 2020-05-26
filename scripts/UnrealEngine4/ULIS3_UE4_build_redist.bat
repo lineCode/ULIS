@@ -36,7 +36,10 @@ cmake   -G %GENERATOR%          ^
         -DULIS3_BUILD_SHARED=ON ^
         ../../ULIS3
 
+
 cmake --build . --config Release
+:: Decide if embed debug
+IF "%2"=="-d" ( cmake --build . --config Debug )
 
 :: go up to build dir
 cd ..
@@ -61,3 +64,6 @@ COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MS
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Release\ULIS3.dll"   "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\ULIS3.dll"
 COPY /Y "ULIS3\scripts\UnrealEngine4\ULIS.Build.cs"                                                     "ULIS3_FullBuildUE4_WinMSVCx64_Redist\ULIS.Build.cs"
 
+IF "%2"=="-d" ( COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Debug\ULIS3d.lib"    "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\lib\ULIS3d.lib" )
+IF "%2"=="-d" ( COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Debug\ULIS3d.dll"    "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\ULIS3d.dll" )
+IF "%2"=="-d" ( COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\Debug\ULIS3d.pdb"    "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\ULIS3d.pdb" )
