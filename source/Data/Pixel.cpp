@@ -802,6 +802,25 @@ FPixelProxy::FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iP
     mData = const_cast< tByte* >( iData );
 }
 
+FPixelProxy::FPixelProxy( const FPixelProxy& iValue )
+    : tParent( iValue.Format(), iValue.mProfile )
+{
+    mData = iValue.mData;
+}
+
+FPixelProxy::FPixelProxy( FPixelProxy&& iValue )
+    : tParent( iValue.Format(), iValue.mProfile )
+{
+    mData = iValue.mData;
+}
+
+FPixelProxy&
+FPixelProxy::operator=( const FPixelProxy& iValue ) {
+    mInfo = iValue.mInfo;
+    mProfile = iValue.mProfile;
+    mData = iValue.mData;
+    return  *this;
+}
 
 void
 FPixelProxy::SetPtr( tByte* iPtr )

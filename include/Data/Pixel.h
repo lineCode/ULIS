@@ -541,6 +541,9 @@ public:
     FPixelProxy( tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
+    FPixelProxy( const FPixelProxy& iValue );
+    FPixelProxy( FPixelProxy&& iValue );
+    FPixelProxy& operator=( const FPixelProxy& iValue );
     void SetPtr( tByte* iPtr );
     void SetPtr( const tByte* iPtr );
 };

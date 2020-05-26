@@ -17,7 +17,7 @@
 // FFormatInfo
 ULIS3_NAMESPACE_BEGIN
 FFormatInfo::~FFormatInfo() {
-    delete [] IDT;
+    if( IDT ) delete [] IDT;
 }
 
 FFormatInfo::FFormatInfo( tFormat iFMT )
@@ -43,6 +43,65 @@ FFormatInfo::FFormatInfo( tFormat iFMT )
         case 3:  for( int i = 0; i < SPP; ++i ) IDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1; AID = msp; break;
         default: for( int i = 0; i < SPP; ++i ) IDT[i] = i;                                           AID = msp; break;
     }
+}
+
+FFormatInfo::FFormatInfo( const FFormatInfo& iOther ) {
+    if( IDT ) delete [] IDT;
+    FMT = iOther.FMT;
+    TP  = iOther.TP;
+    CM  = iOther.CM;
+    BPC = iOther.BPC;
+    NCC = iOther.NCC;
+    HEA = iOther.HEA;
+    COD = iOther.COD;
+    SPP = iOther.SPP;
+    BPP = iOther.BPP;
+    AID = iOther.AID;
+    REV = iOther.REV;
+    SWA = iOther.SWA;
+
+    IDT = new uint8[ SPP ];
+    memcpy( IDT, iOther.IDT, SPP );
+}
+
+FFormatInfo&
+FFormatInfo::operator=( const FFormatInfo& iOther ) {
+    if( IDT ) delete [] IDT;
+    FMT = iOther.FMT;
+    TP  = iOther.TP;
+    CM  = iOther.CM;
+    BPC = iOther.BPC;
+    NCC = iOther.NCC;
+    HEA = iOther.HEA;
+    COD = iOther.COD;
+    SPP = iOther.SPP;
+    BPP = iOther.BPP;
+    AID = iOther.AID;
+    REV = iOther.REV;
+    SWA = iOther.SWA;
+
+    IDT = new uint8[ SPP ];
+    memcpy( IDT, iOther.IDT, SPP );
+    return  *this;
+}
+
+FFormatInfo::FFormatInfo( FFormatInfo&& iOther ) {
+    if( IDT ) delete [] IDT;
+    FMT = iOther.FMT;
+    TP  = iOther.TP;
+    CM  = iOther.CM;
+    BPC = iOther.BPC;
+    NCC = iOther.NCC;
+    HEA = iOther.HEA;
+    COD = iOther.COD;
+    SPP = iOther.SPP;
+    BPP = iOther.BPP;
+    AID = iOther.AID;
+    REV = iOther.REV;
+    SWA = iOther.SWA;
+
+    IDT = iOther.IDT;
+    iOther.IDT = nullptr;
 }
 
 ULIS3_NAMESPACE_END

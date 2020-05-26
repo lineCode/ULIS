@@ -21,6 +21,9 @@ struct ULIS3_API FFormatInfo
 {
     ~FFormatInfo();
     FFormatInfo( tFormat iFMT );
+    FFormatInfo( const FFormatInfo& iOther );
+    FFormatInfo( FFormatInfo&& iOther );
+    FFormatInfo& operator=( const FFormatInfo& iOther );
     tFormat FMT;    // Format
     eType   TP;     // Type
     eColorModel CM; // Color Model
