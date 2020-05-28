@@ -71,7 +71,7 @@ template< uint8 _MICRO, uint8 _MACRO, uint8 _LOCAL > class TQuadtreeChunk;
 template< uint8 _MICRO
         , uint8 _MACRO
         , uint8 _LOCAL >
-class ULIS3_API TAbstractChunk
+class  TAbstractChunk
 {
     typedef  TAbstractChunk< _MICRO, _MACRO, _LOCAL >   tSelf;
     typedef TTilePool< _MICRO, _MACRO >                 tTilePool;
@@ -106,7 +106,7 @@ protected:
 /////////////////////////////////////////////////////
 /// TAbstractChunk
 template< uint8 _MICRO, uint8 _MACRO >
-class ULIS3_API TAbstractChunk< _MICRO, _MACRO, 0 >
+class  TAbstractChunk< _MICRO, _MACRO, 0 >
 {
     typedef  TAbstractChunk< _MICRO, _MACRO, 0 >    tSelf;
     typedef TTilePool< _MICRO, _MACRO >             tTilePool;
@@ -144,7 +144,7 @@ protected:
 template< uint8 _MICRO
         , uint8 _MACRO
         , uint8 _LOCAL >
-class ULIS3_API TRootChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
+class  TRootChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
 {
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >    tSuperClass;
     typedef  TRootChunk<        _MICRO, _MACRO, _LOCAL >    tSelf;
@@ -264,7 +264,7 @@ private:
 template< uint8 _MICRO
         , uint8 _MACRO
         , uint8 _LOCAL >
-class ULIS3_API TDataChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
+class  TDataChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
 {
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >    tSuperClass;
     typedef  TDataChunk<        _MICRO, _MACRO, _LOCAL >    tSelf;
@@ -347,7 +347,7 @@ private:
 template< uint8 _MICRO
         , uint8 _MACRO
         , uint8 _LOCAL >
-class ULIS3_API TQuadtreeChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
+class  TQuadtreeChunk : public TAbstractChunk< _MICRO, _MACRO, _LOCAL >
 {
     typedef  TAbstractChunk<    _MICRO, _MACRO, _LOCAL >                        tSuperClass;
     typedef  TQuadtreeChunk<    _MICRO, _MACRO, _LOCAL >                        tSelf;

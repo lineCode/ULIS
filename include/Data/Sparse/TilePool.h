@@ -29,7 +29,7 @@ ULIS3_NAMESPACE_BEGIN
 /// TTilePool
 template< uint8 _MICRO
         , uint8 _MACRO >
-class ULIS3_API TTilePool
+class TTilePool
 {
     typedef  TTiledBlock< _MICRO, _MACRO > tTiledBlock;
 

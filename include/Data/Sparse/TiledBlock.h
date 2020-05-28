@@ -25,7 +25,7 @@ ULIS3_NAMESPACE_BEGIN
 
 /////////////////////////////////////////////////////
 /// ITiledBlock
-class ULIS3_API ITiledBlock
+class ITiledBlock
 {
 public:
     virtual ~ITiledBlock() {};
@@ -64,7 +64,7 @@ public:
 /// TTiledBlock
 template< uint8 _MICRO
         , uint8 _MACRO >
-class ULIS3_API TTiledBlock : public ITiledBlock
+class TTiledBlock : public ITiledBlock
 {
     typedef ITiledBlock                                 tSuperClass;
     typedef TRootChunk< _MICRO, _MACRO, _MACRO >        tRootChunk;
