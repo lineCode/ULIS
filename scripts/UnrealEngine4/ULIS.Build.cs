@@ -34,6 +34,7 @@ public class ULIS : ModuleRules
             );
 
             PublicDefinitions.Add("WITH_ULIS=1");
+            PublicDefinitions.Add("ULIS3_DYNAMIC_LIBRARY");
         }
         else if ( Target.Platform == UnrealTargetPlatform.Mac )
         {
@@ -59,6 +60,7 @@ public class ULIS : ModuleRules
             );
 
             PublicDefinitions.Add("WITH_ULIS=1");
+            PublicDefinitions.Add("ULIS3_DYNAMIC_LIBRARY");
         }
         else // unsupported platform
         {
