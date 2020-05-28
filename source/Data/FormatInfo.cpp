@@ -45,8 +45,9 @@ FFormatInfo::FFormatInfo( tFormat iFMT )
     }
 }
 
-FFormatInfo::FFormatInfo( const FFormatInfo& iOther ) {
-    if( IDT ) delete [] IDT;
+FFormatInfo::FFormatInfo( const FFormatInfo& iOther )
+    : IDT( nullptr )
+{
     FMT = iOther.FMT;
     TP  = iOther.TP;
     CM  = iOther.CM;
@@ -86,7 +87,6 @@ FFormatInfo::operator=( const FFormatInfo& iOther ) {
 }
 
 FFormatInfo::FFormatInfo( FFormatInfo&& iOther ) {
-    if( IDT ) delete [] IDT;
     FMT = iOther.FMT;
     TP  = iOther.TP;
     CM  = iOther.CM;
