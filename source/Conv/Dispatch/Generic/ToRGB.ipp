@@ -63,7 +63,7 @@ template< typename T1, typename T2 > void ConvBufferHSVToRGB(  const FFormatInfo
         } else {
             var_h = h * 6;
             if ( var_h == 6 ) var_h = 0 ;
-            var_i = var_h;
+            var_i = floor( var_h );
             var_1 = v * ( 1 - s );
             var_2 = v * ( 1 - s * ( var_h - var_i ) );
             var_3 = v * ( 1 - s * ( 1 - ( var_h - var_i ) ) );
@@ -97,7 +97,7 @@ template< typename T1, typename T2 > void ConvBufferHSLToRGB(  const FFormatInfo
         r = g = b = 0.f;
         float var_h = h / 60;
         if ( var_h == 6 ) var_h = 0;
-        int var_i = int( var_h );
+        int var_i = floor( var_h );
         float C = ( 1.f - fabs( 2.f * l - 1.f ) ) * s;
         float X = float( C * ( 1 - fabs( fmod( var_h, 2 ) - 1 ) ) );
         float m = l - C / 2;
