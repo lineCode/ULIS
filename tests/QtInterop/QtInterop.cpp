@@ -31,7 +31,7 @@ main( int argc, char *argv[] ) {
 
     for( int i = 0; i < 256; ++i ) {
         for( int j = 0; j < 256; ++j ) {
-            Conv( FPixelValue::FromHSLAF( j / 256.f, 1.f, 0.5f ), blockA->PixelProxy( i, j ) );
+            Conv( Conv( FPixelValue::FromLabA8( j, 0, 0 ), ULIS3_FORMAT_CMYKAF ), blockA->PixelProxy( i, j ) );
         }
     }
 

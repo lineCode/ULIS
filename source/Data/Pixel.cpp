@@ -679,7 +679,7 @@ FPixelValue::FromYUVAD( double iY, double iU, double iV, double iA )
 FPixelValue
 FPixelValue::FromLabA8( uint8 iL, uint8 ia, uint8 ib, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_Lab8, { iL, ia, ib, iA } );
+    return  FPixelValue( ULIS3_FORMAT_LabA8, { iL, ia, ib, iA } );
 }
 
 
@@ -687,7 +687,7 @@ FPixelValue::FromLabA8( uint8 iL, uint8 ia, uint8 ib, uint8 iA )
 FPixelValue
 FPixelValue::FromLabA16( uint16 iL, uint16 ia, uint16 ib, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_Lab16, { iL, ia, ib, iA } );
+    return  FPixelValue( ULIS3_FORMAT_LabA16, { iL, ia, ib, iA } );
 }
 
 
@@ -695,7 +695,7 @@ FPixelValue::FromLabA16( uint16 iL, uint16 ia, uint16 ib, uint16 iA )
 FPixelValue
 FPixelValue::FromLabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_Lab32, { iL, ia, ib, iA } );
+    return  FPixelValue( ULIS3_FORMAT_LabA32, { iL, ia, ib, iA } );
 }
 
 
@@ -703,7 +703,7 @@ FPixelValue::FromLabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA )
 FPixelValue
 FPixelValue::FromLabAF( float iL, float ia, float ib, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_LabF, { iL, ia, ib, iA } );
+    return  FPixelValue( ULIS3_FORMAT_LabAF, { iL, ia, ib, iA } );
 }
 
 
@@ -711,7 +711,7 @@ FPixelValue::FromLabAF( float iL, float ia, float ib, float iA )
 FPixelValue
 FPixelValue::FromLabAD( double iL, double ia, double ib, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_LabD, { iL, ia, ib, iA } );
+    return  FPixelValue( ULIS3_FORMAT_LabAD, { iL, ia, ib, iA } );
 }
 
 
