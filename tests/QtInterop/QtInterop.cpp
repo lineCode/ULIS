@@ -29,6 +29,12 @@ main( int argc, char *argv[] ) {
 
     FBlock* blockA = new FBlock( 256, 256, ULIS3_FORMAT_RGBA8 );
 
+    for( int i = 0; i < 256; ++i ) {
+        for( int j = 0; j < 256; ++j ) {
+            Conv( FPixelValue::FromHSLAF( j / 256.f, 1.f, 0.5f ), blockA->PixelProxy( i, j ) );
+        }
+    }
+
     // Qt Window
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
