@@ -361,7 +361,7 @@ FPixelValue::FPixelValue( FPixelValue&& iValue )
 FPixelValue&
 FPixelValue::operator=( const FPixelValue& iOther ) {
     if( mData )
-        delete  mData;
+        delete [] mData;
 
     mInfo = iOther.mInfo;
     mProfile = iOther.mProfile;
