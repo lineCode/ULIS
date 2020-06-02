@@ -441,6 +441,7 @@ class ULIS3_API FPixelValue : public IPixel
 public:
     // Construction / Destruction
     virtual ~FPixelValue();
+    FPixelValue();
     FPixelValue( uint32 iFormat, FColorProfile* iProfile = nullptr );
     FPixelValue( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
     FPixelValue( const FPixelProxy& iProxy );
@@ -448,21 +449,7 @@ public:
     FPixelValue( FPixelValue&& iValue );
 
     FPixelValue& operator=( const FPixelValue& iOther );
-
-    template< typename T >
-    FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile = nullptr )
-        : tParent( iFormat, iProfile )
-    {
-        mData = new tByte[ Depth() ];
-        switch( Type() )
-        {
-            case TYPE_UINT8:        Set_imp< T, uint8   >( iValues ); return;
-            case TYPE_UINT16:       Set_imp< T, uint16  >( iValues ); return;
-            case TYPE_UINT32:       Set_imp< T, uint32  >( iValues ); return;
-            case TYPE_UFLOAT:       Set_imp< T, ufloat  >( iValues ); return;
-            case TYPE_UDOUBLE:      Set_imp< T, udouble >( iValues ); return;
-        }
-    }
+    template< typename T > FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile = nullptr );
 
 private:
     template< typename T1, typename T2 >
@@ -547,6 +534,14 @@ public:
     void SetPtr( tByte* iPtr );
     void SetPtr( const tByte* iPtr );
 };
+
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< int >, FColorProfile* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< float >, FColorProfile* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< double >, FColorProfile* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint8 >, FColorProfile* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint16 >, FColorProfile* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint32 >, FColorProfile* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint64 >, FColorProfile* );
 
 ULIS3_NAMESPACE_END
 

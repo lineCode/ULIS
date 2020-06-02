@@ -21,9 +21,9 @@
 #include <static_math/static_math.h>
 
 ULIS3_NAMESPACE_BEGIN
-static const FPixelValue default_wireframe_debug_color = FPixelValue(   ULIS3_FORMAT_RGB8, { 40,    80,     220 } );
-static const FPixelValue dirty_wireframe_debug_color = FPixelValue(     ULIS3_FORMAT_RGB8, { 255,   0,      0   } );
-static const FPixelValue correct_wireframe_debug_color = FPixelValue(   ULIS3_FORMAT_RGB8, { 0,     255,    0   } );
+static const FPixelValue default_wireframe_debug_color  = FPixelValue::FromRGBA8( 40, 80, 220 );
+static const FPixelValue dirty_wireframe_debug_color    = FPixelValue::FromRGBA8( 255, 0, 0 );
+static const FPixelValue correct_wireframe_debug_color  = FPixelValue::FromRGBA8( 0, 255, 0 );
 static const FHostDeviceInfo debug_host = FHostDeviceInfo::Detect();
 /////////////////////////////////////////////////////
 // Enums

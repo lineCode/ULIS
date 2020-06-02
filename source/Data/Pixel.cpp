@@ -319,6 +319,12 @@ FPixelValue::~FPixelValue()
         delete [] mData;
 }
 
+FPixelValue::FPixelValue()
+    : tParent( ULIS3_FORMAT_RGBA8, nullptr )
+{
+    mData = new tByte[ Depth() ];
+    memset( mData, 0, Depth() );
+}
 
 FPixelValue::FPixelValue( uint32 iFormat, FColorProfile* iProfile )
     : tParent( iFormat, iProfile )
@@ -369,6 +375,22 @@ FPixelValue::operator=( const FPixelValue& iOther ) {
     memcpy( mData, iOther.Ptr(), Depth() );
 
     return  *this;
+}
+
+
+template< typename T >
+FPixelValue::FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile )
+    : tParent( iFormat, iProfile )
+{
+    mData = new tByte[ Depth() ];
+    switch( Type() )
+    {
+        case TYPE_UINT8:        Set_imp< T, uint8   >( iValues ); return;
+        case TYPE_UINT16:       Set_imp< T, uint16  >( iValues ); return;
+        case TYPE_UINT32:       Set_imp< T, uint32  >( iValues ); return;
+        case TYPE_UFLOAT:       Set_imp< T, ufloat  >( iValues ); return;
+        case TYPE_UDOUBLE:      Set_imp< T, udouble >( iValues ); return;
+    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -869,6 +891,14 @@ ULIS3_FOR_ALL_TYPES_DO( X_DO_J, 0, 0, 0, 0 )
 #undef X_DO_H
 #undef X_DO_I
 #undef X_DO_J
+
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< int >, FColorProfile* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< float >, FColorProfile* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< double >, FColorProfile* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint8 >, FColorProfile* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint16 >, FColorProfile* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint32 >, FColorProfile* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint64 >, FColorProfile* );
 
 ULIS3_NAMESPACE_END
 

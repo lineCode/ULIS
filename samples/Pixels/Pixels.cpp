@@ -23,7 +23,7 @@ int
 main() {
 
     {
-        FPixelValue colorA( ULIS3_FORMAT_RGBA8 );
+        FPixelValue colorA( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 0 } );
         FPixelValue colorB = Conv( FPixelValue::FromRGBA8( 0, 0, 0, 255 ), ULIS3_FORMAT_HSVA8 );
         colorA = colorB;
         FPixelValue colorC = GetOneColor();
