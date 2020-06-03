@@ -30,6 +30,7 @@ cmake   -G "Visual Studio 16 2019"                          ^
         -DULIS3_BUILD_SHARED=ON                             ^
         ../../ULIS3
 
+:: Replace RelWithDebInfo with Release if needed
 cmake --build . --config RelWithDebInfo
 
 :: go up to build dir
