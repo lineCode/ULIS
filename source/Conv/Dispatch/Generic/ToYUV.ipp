@@ -35,8 +35,8 @@ template< typename T1, typename T2 > void ConvBufferRGBToYUV(  const FFormatInfo
         ufloat g = srgb2linear( ConvType< T1, ufloat >( U2_DREF_SRC( 1 ) ) );
         ufloat b = srgb2linear( ConvType< T1, ufloat >( U2_DREF_SRC( 2 ) ) );
         float y = 0.299f * r + 0.587f * g + 0.114f * b;
-        float u = 0.492f * ( b - y );
-        float v = 0.877f * ( r - y );
+        float u = 0.492f * ( b - y ); // + 0.435912 * ( 1 / ( 0.886 + 0.435912 ) )
+        float v = 0.877f * ( r - y ); // + 0.621787 * ( 1 / ( 0.701 + 0.621787 ) )
         U2_DREF_DST( 0 ) = ConvType< ufloat, T2 >( y );
         U2_DREF_DST( 1 ) = ConvType< ufloat, T2 >( u );
         U2_DREF_DST( 2 ) = ConvType< ufloat, T2 >( v );
