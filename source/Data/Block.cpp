@@ -379,5 +379,13 @@ FBlock::ReleaseOwnership() {
     mOnCleanup = FOnCleanup( &OnCleanup_DoNothing );
 }
 
+/////////////////////////////////////////////////////
+// XDeleteBlock
+// for safety with different CRT and heaps when using dynamic link on windows.
+void
+XDeleteBlock( FBlock* iBlock ) {
+    delete  iBlock;
+}
+
 ULIS3_NAMESPACE_END
 

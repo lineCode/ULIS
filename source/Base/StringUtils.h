@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 
 ULIS3_NAMESPACE_BEGIN
-ULIS3_API void ReplaceAllOccurences( std::string& str, const std::string& from, const std::string& to );
-ULIS3_API size_t LevenshteinDistance( const char* s, size_t n, const char* t, size_t m );
+void ReplaceAllOccurences( std::string& str, const std::string& from, const std::string& to );
+size_t LevenshteinDistance( const char* s, size_t n, const char* t, size_t m );
 ULIS3_NAMESPACE_END
 

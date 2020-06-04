@@ -19,7 +19,6 @@
 // Base
 #include "Base/HostDeviceInfo.h"
 #include "Base/FilePathRegistry.h"
-#include "Base/StringUtils.h"
 // Maths
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"

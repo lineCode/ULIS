@@ -101,5 +101,9 @@ private:
     tSize           mBTT;
 };
 
+/////////////////////////////////////////////////////
+// XDeleteBlock
+ULIS3_API void XDeleteBlock( FBlock* iBlock );
+
 ULIS3_NAMESPACE_END
 

@@ -19,7 +19,7 @@
 #include FT_FREETYPE_H
 
 ULIS3_NAMESPACE_BEGIN
-struct ULIS3_API _FPrivateTextInfo {
+struct _FPrivateTextInfo {
     FThreadPool*            pool;
     bool                    blocking;
     uint32                  perfIntent;

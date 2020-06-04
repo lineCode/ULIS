@@ -53,6 +53,8 @@
     #define ULIS3_UNKNOWN_COMPILER
 #endif
 
+/////////////////////////////////////////////////////
+// Disable CRT Secure non standard msvc versions of functions such as strcpy_s
 #ifdef ULIS3_MSVC
     #define _CRT_SECURE_NO_WARNINGS 1
 #endif // ULIS3_MSVC
@@ -143,7 +145,7 @@
 
 /////////////////////////////////////////////////////
 // Erors
-#pragma warning(disable : 4251)     // Shut down dll interface warnings.
+//#pragma warning(disable : 4251)     // Shut down dll interface warnings.
 #pragma warning(disable : 26812)    // Shut non-class enum warnings.
 
 /////////////////////////////////////////////////////
@@ -152,16 +154,16 @@
 #define ULIS3_SHORT_NAMESPACE_NAME  ul3
 #define ULIS3_NAMESPACE_BEGIN       namespace ULIS3_NAMESPACE_NAME {
 #define ULIS3_NAMESPACE_END         }
-#define ULIS3_FDECL_CLASS( i )      ULIS3_NAMESPACE_BEGIN class i ; ULIS3_NAMESPACE_END
-#define ULIS3_FDECL_STRUCT( i )     ULIS3_NAMESPACE_BEGIN struct i ; ULIS3_NAMESPACE_END
+#define ULIS3_FDECL_CLASS( i )      ULIS3_NAMESPACE_BEGIN class i ;     ULIS3_NAMESPACE_END
+#define ULIS3_FDECL_STRUCT( i )     ULIS3_NAMESPACE_BEGIN struct i ;    ULIS3_NAMESPACE_END
 namespace ULIS3_NAMESPACE_NAME {}
 namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Version Specification
-#define ULIS3_VERSION_MAJOR      2
+#define ULIS3_VERSION_MAJOR      3
 #define ULIS3_VERSION_MINOR      0
-#define ULIS3_VERSION_MAJOR_STR  "2"
+#define ULIS3_VERSION_MAJOR_STR  "3"
 #define ULIS3_VERSION_MINOR_STR  "0"
 
 /////////////////////////////////////////////////////

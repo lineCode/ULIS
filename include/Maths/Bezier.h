@@ -20,13 +20,13 @@
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Bezier Functions
-struct ULIS3_API FBezierLUTElement {
+struct FBezierLUTElement {
     FVec2F point;
     float length;
     float param;
 };
 
-struct ULIS3_API FBezierCubicControlPoint {
+struct FBezierCubicControlPoint {
     FVec2F point;
     FVec2F ctrlCW;
     FVec2F ctrlCCW;

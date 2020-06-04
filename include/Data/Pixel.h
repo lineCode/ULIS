@@ -73,180 +73,180 @@ public:
 
 public:
     // Model Access API
-    template< typename T > ULIS3_FORCEINLINE T Alpha() const                     { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
-    template< typename T > ULIS3_FORCEINLINE T A() const                         { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
-    template< typename T > ULIS3_FORCEINLINE T Grey() const                      { return  GetValue< T >( 0 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Red() const                       { return  GetValue< T >( 0 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Green() const                     { return  GetValue< T >( 1 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Blue() const                      { return  GetValue< T >( 2 );                   }
-    template< typename T > ULIS3_FORCEINLINE T R() const                         { return  GetValue< T >( 0 );                   }
-    template< typename T > ULIS3_FORCEINLINE T G() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T > ULIS3_FORCEINLINE T B() const                         { return  GetValue< T >( 2 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Hue() const                       { return  GetValue< T >( 0 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Saturation() const                { return  GetValue< T >( 1 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Lightness() const                 { return  GetValue< T >( 2 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Value() const                     { return  GetValue< T >( 2 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Cyan() const                      { return  GetValue< T >( 0 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Magenta() const                   { return  GetValue< T >( 1 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Yellow() const                    { return  GetValue< T >( 2 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Key() const                       { return  GetValue< T >( 3 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Luma() const                      { return  GetValue< T >( 0 );                   }
-    template< typename T > ULIS3_FORCEINLINE T U() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T > ULIS3_FORCEINLINE T V() const                         { return  GetValue< T >( 2 );                   }
-    template< typename T > ULIS3_FORCEINLINE T K() const                         { return  GetValue< T >( 3 );                   }
-    template< typename T > ULIS3_FORCEINLINE T X() const                         { return  GetValue< T >( 0 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Y() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T > ULIS3_FORCEINLINE T Z() const                         { return  GetValue< T >( 2 );                   }
-    template< typename T > ULIS3_FORCEINLINE T L() const                         { return  GetValue< T >( 0 );                   }
-    template< typename T > ULIS3_FORCEINLINE T a() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T > ULIS3_FORCEINLINE T b() const                         { return  GetValue< T >( 2 );                   }
-    template< typename T > ULIS3_FORCEINLINE T x() const                         { return  GetValue< T >( 1 );                   }
-    template< typename T > ULIS3_FORCEINLINE T y() const                         { return  GetValue< T >( 2 );                   }
-    ULIS3_FORCEINLINE uint8 Alpha8() const                                      { return  Alpha< uint8 >();                     }
-    ULIS3_FORCEINLINE uint8 A8() const                                          { return  A< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 Grey8() const                                       { return  Grey< uint8 >();                      }
-    ULIS3_FORCEINLINE uint8 Red8() const                                        { return  Red< uint8 >();                       }
-    ULIS3_FORCEINLINE uint8 Green8() const                                      { return  Green< uint8 >();                     }
-    ULIS3_FORCEINLINE uint8 Blue8() const                                       { return  Blue< uint8 >();                      }
-    ULIS3_FORCEINLINE uint8 R8() const                                          { return  R< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 G8() const                                          { return  G< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 B8() const                                          { return  B< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 Hue8() const                                        { return  Hue< uint8 >();                       }
-    ULIS3_FORCEINLINE uint8 Saturation8() const                                 { return  Saturation< uint8 >();                }
-    ULIS3_FORCEINLINE uint8 Lightness8() const                                  { return  Lightness< uint8 >();                 }
-    ULIS3_FORCEINLINE uint8 Value8() const                                      { return  Value< uint8 >();                     }
-    ULIS3_FORCEINLINE uint8 Cyan8() const                                       { return  Cyan< uint8 >();                      }
-    ULIS3_FORCEINLINE uint8 Magenta8() const                                    { return  Magenta< uint8 >();                   }
-    ULIS3_FORCEINLINE uint8 Yellow8() const                                     { return  Yellow< uint8 >();                    }
-    ULIS3_FORCEINLINE uint8 Key8() const                                        { return  Key< uint8 >();                       }
-    ULIS3_FORCEINLINE uint8 Luma8() const                                       { return  Luma< uint8 >();                      }
-    ULIS3_FORCEINLINE uint8 U8() const                                          { return  U< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 V8() const                                          { return  V< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 K8() const                                          { return  K< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 X8() const                                          { return  X< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 Y8() const                                          { return  Y< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 Z8() const                                          { return  Z< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 L8() const                                          { return  L< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 a8() const                                          { return  a< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 b8() const                                          { return  b< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 x8() const                                          { return  x< uint8 >();                         }
-    ULIS3_FORCEINLINE uint8 y8() const                                          { return  y< uint8 >();                         }
-    ULIS3_FORCEINLINE uint16 Alpha16() const                                    { return  Alpha< uint16 >();                    }
-    ULIS3_FORCEINLINE uint16 A16() const                                        { return  A< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 Grey16() const                                     { return  Grey< uint16 >();                     }
-    ULIS3_FORCEINLINE uint16 Red16() const                                      { return  Red< uint16 >();                      }
-    ULIS3_FORCEINLINE uint16 Green16() const                                    { return  Green< uint16 >();                    }
-    ULIS3_FORCEINLINE uint16 Blue16() const                                     { return  Blue< uint16 >();                     }
-    ULIS3_FORCEINLINE uint16 R16() const                                        { return  R< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 G16() const                                        { return  G< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 B16() const                                        { return  B< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 Hue16() const                                      { return  Hue< uint16 >();                      }
-    ULIS3_FORCEINLINE uint16 Saturation16() const                               { return  Saturation< uint16 >();               }
-    ULIS3_FORCEINLINE uint16 Lightness16() const                                { return  Lightness< uint16 >();                }
-    ULIS3_FORCEINLINE uint16 Value16() const                                    { return  Value< uint16 >();                    }
-    ULIS3_FORCEINLINE uint16 Cyan16() const                                     { return  Cyan< uint16 >();                     }
-    ULIS3_FORCEINLINE uint16 Magenta16() const                                  { return  Magenta< uint16 >();                  }
-    ULIS3_FORCEINLINE uint16 Yellow16() const                                   { return  Yellow< uint16 >();                   }
-    ULIS3_FORCEINLINE uint16 Key16() const                                      { return  Key< uint16 >();                      }
-    ULIS3_FORCEINLINE uint16 Luma16() const                                     { return  Luma< uint16 >();                     }
-    ULIS3_FORCEINLINE uint16 U16() const                                        { return  U< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 V16() const                                        { return  V< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 K16() const                                        { return  K< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 X16() const                                        { return  X< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 Y16() const                                        { return  Y< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 Z16() const                                        { return  Z< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 L16() const                                        { return  L< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 a16() const                                        { return  a< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 b16() const                                        { return  b< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 x16() const                                        { return  x< uint16 >();                        }
-    ULIS3_FORCEINLINE uint16 y16() const                                        { return  y< uint16 >();                        }
-    ULIS3_FORCEINLINE uint32 Alpha32() const                                    { return  Alpha< uint32 >();                    }
-    ULIS3_FORCEINLINE uint32 A32() const                                        { return  A< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 Grey32() const                                     { return  Grey< uint32 >();                     }
-    ULIS3_FORCEINLINE uint32 Red32() const                                      { return  Red< uint32 >();                      }
-    ULIS3_FORCEINLINE uint32 Green32() const                                    { return  Green< uint32 >();                    }
-    ULIS3_FORCEINLINE uint32 Blue32() const                                     { return  Blue< uint32 >();                     }
-    ULIS3_FORCEINLINE uint32 R32() const                                        { return  R< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 G32() const                                        { return  G< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 B32() const                                        { return  B< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 Hue32() const                                      { return  Hue< uint32 >();                      }
-    ULIS3_FORCEINLINE uint32 Saturation32() const                               { return  Saturation< uint32 >();               }
-    ULIS3_FORCEINLINE uint32 Lightness32() const                                { return  Lightness< uint32 >();                }
-    ULIS3_FORCEINLINE uint32 Value32() const                                    { return  Value< uint32 >();                    }
-    ULIS3_FORCEINLINE uint32 Cyan32() const                                     { return  Cyan< uint32 >();                     }
-    ULIS3_FORCEINLINE uint32 Magenta32() const                                  { return  Magenta< uint32 >();                  }
-    ULIS3_FORCEINLINE uint32 Yellow32() const                                   { return  Yellow< uint32 >();                   }
-    ULIS3_FORCEINLINE uint32 Key32() const                                      { return  Key< uint32 >();                      }
-    ULIS3_FORCEINLINE uint32 Luma32() const                                     { return  Luma< uint32 >();                     }
-    ULIS3_FORCEINLINE uint32 U32() const                                        { return  U< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 V32() const                                        { return  V< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 K32() const                                        { return  K< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 X32() const                                        { return  X< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 Y32() const                                        { return  Y< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 Z32() const                                        { return  Z< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 L32() const                                        { return  L< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 a32() const                                        { return  a< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 b32() const                                        { return  b< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 x32() const                                        { return  x< uint32 >();                        }
-    ULIS3_FORCEINLINE uint32 y32() const                                        { return  y< uint32 >();                        }
-    ULIS3_FORCEINLINE float AlphaF() const                                      { return  Alpha< float >();                     }
-    ULIS3_FORCEINLINE float AF() const                                          { return  A< float >();                         }
-    ULIS3_FORCEINLINE float GreyF() const                                       { return  Grey< float >();                      }
-    ULIS3_FORCEINLINE float RedF() const                                        { return  Red< float >();                       }
-    ULIS3_FORCEINLINE float GreenF() const                                      { return  Green< float >();                     }
-    ULIS3_FORCEINLINE float BlueF() const                                       { return  Blue< float >();                      }
-    ULIS3_FORCEINLINE float RF() const                                          { return  R< float >();                         }
-    ULIS3_FORCEINLINE float GF() const                                          { return  G< float >();                         }
-    ULIS3_FORCEINLINE float BF() const                                          { return  B< float >();                         }
-    ULIS3_FORCEINLINE float HueF() const                                        { return  Hue< float >();                       }
-    ULIS3_FORCEINLINE float SaturationF() const                                 { return  Saturation< float >();                }
-    ULIS3_FORCEINLINE float LightnessF() const                                  { return  Lightness< float >();                 }
-    ULIS3_FORCEINLINE float ValueF() const                                      { return  Value< float >();                     }
-    ULIS3_FORCEINLINE float CyanF() const                                       { return  Cyan< float >();                      }
-    ULIS3_FORCEINLINE float MagentaF() const                                    { return  Magenta< float >();                   }
-    ULIS3_FORCEINLINE float YellowF() const                                     { return  Yellow< float >();                    }
-    ULIS3_FORCEINLINE float KeyF() const                                        { return  Key< float >();                       }
-    ULIS3_FORCEINLINE float LumaF() const                                       { return  Luma< float >();                      }
-    ULIS3_FORCEINLINE float UF() const                                          { return  U< float >();                         }
-    ULIS3_FORCEINLINE float VF() const                                          { return  V< float >();                         }
-    ULIS3_FORCEINLINE float KF() const                                          { return  K< float >();                         }
-    ULIS3_FORCEINLINE float XF() const                                          { return  X< float >();                         }
-    ULIS3_FORCEINLINE float YF() const                                          { return  Y< float >();                         }
-    ULIS3_FORCEINLINE float ZF() const                                          { return  Z< float >();                         }
-    ULIS3_FORCEINLINE float LF() const                                          { return  L< float >();                         }
-    ULIS3_FORCEINLINE float aF() const                                          { return  a< float >();                         }
-    ULIS3_FORCEINLINE float bF() const                                          { return  b< float >();                         }
-    ULIS3_FORCEINLINE float xF() const                                          { return  x< float >();                         }
-    ULIS3_FORCEINLINE float yF() const                                          { return  y< float >();                         }
-    ULIS3_FORCEINLINE double AlphaD() const                                     { return  Alpha< double >();                    }
-    ULIS3_FORCEINLINE double AD() const                                         { return  A< double >();                        }
-    ULIS3_FORCEINLINE double GreyD() const                                      { return  Grey< double >();                     }
-    ULIS3_FORCEINLINE double RedD() const                                       { return  Red< double >();                      }
-    ULIS3_FORCEINLINE double GreenD() const                                     { return  Green< double >();                    }
-    ULIS3_FORCEINLINE double BlueD() const                                      { return  Blue< double >();                     }
-    ULIS3_FORCEINLINE double RD() const                                         { return  R< double >();                        }
-    ULIS3_FORCEINLINE double GD() const                                         { return  G< double >();                        }
-    ULIS3_FORCEINLINE double BD() const                                         { return  B< double >();                        }
-    ULIS3_FORCEINLINE double HueD() const                                       { return  Hue< double >();                      }
-    ULIS3_FORCEINLINE double SaturationD() const                                { return  Saturation< double >();               }
-    ULIS3_FORCEINLINE double LightnessD() const                                 { return  Lightness< double >();                }
-    ULIS3_FORCEINLINE double ValueD() const                                     { return  Value< double >();                    }
-    ULIS3_FORCEINLINE double CyanD() const                                      { return  Cyan< double >();                     }
-    ULIS3_FORCEINLINE double MagentaD() const                                   { return  Magenta< double >();                  }
-    ULIS3_FORCEINLINE double YellowD() const                                    { return  Yellow< double >();                   }
-    ULIS3_FORCEINLINE double KeyD() const                                       { return  Key< double >();                      }
-    ULIS3_FORCEINLINE double LumaD() const                                      { return  Luma< double >();                     }
-    ULIS3_FORCEINLINE double UD() const                                         { return  U< double >();                        }
-    ULIS3_FORCEINLINE double VD() const                                         { return  V< double >();                        }
-    ULIS3_FORCEINLINE double KD() const                                         { return  K< double >();                        }
-    ULIS3_FORCEINLINE double XD() const                                         { return  X< double >();                        }
-    ULIS3_FORCEINLINE double YD() const                                         { return  Y< double >();                        }
-    ULIS3_FORCEINLINE double ZD() const                                         { return  Z< double >();                        }
-    ULIS3_FORCEINLINE double LD() const                                         { return  L< double >();                        }
-    ULIS3_FORCEINLINE double aD() const                                         { return  a< double >();                        }
-    ULIS3_FORCEINLINE double bD() const                                         { return  b< double >();                        }
-    ULIS3_FORCEINLINE double xD() const                                         { return  x< double >();                        }
-    ULIS3_FORCEINLINE double yD() const                                         { return  y< double >();                        }
+    template< typename T >  ULIS3_FORCEINLINE T Alpha()         const   { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
+    template< typename T >  ULIS3_FORCEINLINE T A()             const   { return  HasAlpha() ? GetValueRaw< T >( AlphaIndex() ) : MaxType< T >(); }
+    template< typename T >  ULIS3_FORCEINLINE T Grey()          const   { return  GetValue< T >( 0 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Red()           const   { return  GetValue< T >( 0 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Green()         const   { return  GetValue< T >( 1 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Blue()          const   { return  GetValue< T >( 2 ); }
+    template< typename T >  ULIS3_FORCEINLINE T R()             const   { return  GetValue< T >( 0 ); }
+    template< typename T >  ULIS3_FORCEINLINE T G()             const   { return  GetValue< T >( 1 ); }
+    template< typename T >  ULIS3_FORCEINLINE T B()             const   { return  GetValue< T >( 2 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Hue()           const   { return  GetValue< T >( 0 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Saturation()    const   { return  GetValue< T >( 1 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Lightness()     const   { return  GetValue< T >( 2 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Value()         const   { return  GetValue< T >( 2 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Cyan()          const   { return  GetValue< T >( 0 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Magenta()       const   { return  GetValue< T >( 1 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Yellow()        const   { return  GetValue< T >( 2 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Key()           const   { return  GetValue< T >( 3 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Luma()          const   { return  GetValue< T >( 0 ); }
+    template< typename T >  ULIS3_FORCEINLINE T U()             const   { return  GetValue< T >( 1 ); }
+    template< typename T >  ULIS3_FORCEINLINE T V()             const   { return  GetValue< T >( 2 ); }
+    template< typename T >  ULIS3_FORCEINLINE T K()             const   { return  GetValue< T >( 3 ); }
+    template< typename T >  ULIS3_FORCEINLINE T X()             const   { return  GetValue< T >( 0 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Y()             const   { return  GetValue< T >( 1 ); }
+    template< typename T >  ULIS3_FORCEINLINE T Z()             const   { return  GetValue< T >( 2 ); }
+    template< typename T >  ULIS3_FORCEINLINE T L()             const   { return  GetValue< T >( 0 ); }
+    template< typename T >  ULIS3_FORCEINLINE T a()             const   { return  GetValue< T >( 1 ); }
+    template< typename T >  ULIS3_FORCEINLINE T b()             const   { return  GetValue< T >( 2 ); }
+    template< typename T >  ULIS3_FORCEINLINE T x()             const   { return  GetValue< T >( 1 ); }
+    template< typename T >  ULIS3_FORCEINLINE T y()             const   { return  GetValue< T >( 2 ); }
+    ULIS3_FORCEINLINE uint8 Alpha8()        const   { return  Alpha< uint8 >();         }
+    ULIS3_FORCEINLINE uint8 A8()            const   { return  A< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 Grey8()         const   { return  Grey< uint8 >();          }
+    ULIS3_FORCEINLINE uint8 Red8()          const   { return  Red< uint8 >();           }
+    ULIS3_FORCEINLINE uint8 Green8()        const   { return  Green< uint8 >();         }
+    ULIS3_FORCEINLINE uint8 Blue8()         const   { return  Blue< uint8 >();          }
+    ULIS3_FORCEINLINE uint8 R8()            const   { return  R< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 G8()            const   { return  G< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 B8()            const   { return  B< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 Hue8()          const   { return  Hue< uint8 >();           }
+    ULIS3_FORCEINLINE uint8 Saturation8()   const   { return  Saturation< uint8 >();    }
+    ULIS3_FORCEINLINE uint8 Lightness8()    const   { return  Lightness< uint8 >();     }
+    ULIS3_FORCEINLINE uint8 Value8()        const   { return  Value< uint8 >();         }
+    ULIS3_FORCEINLINE uint8 Cyan8()         const   { return  Cyan< uint8 >();          }
+    ULIS3_FORCEINLINE uint8 Magenta8()      const   { return  Magenta< uint8 >();       }
+    ULIS3_FORCEINLINE uint8 Yellow8()       const   { return  Yellow< uint8 >();        }
+    ULIS3_FORCEINLINE uint8 Key8()          const   { return  Key< uint8 >();           }
+    ULIS3_FORCEINLINE uint8 Luma8()         const   { return  Luma< uint8 >();          }
+    ULIS3_FORCEINLINE uint8 U8()            const   { return  U< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 V8()            const   { return  V< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 K8()            const   { return  K< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 X8()            const   { return  X< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 Y8()            const   { return  Y< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 Z8()            const   { return  Z< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 L8()            const   { return  L< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 a8()            const   { return  a< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 b8()            const   { return  b< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 x8()            const   { return  x< uint8 >();             }
+    ULIS3_FORCEINLINE uint8 y8()            const   { return  y< uint8 >();             }
+    ULIS3_FORCEINLINE uint16 Alpha16()      const   { return  Alpha< uint16 >();        }
+    ULIS3_FORCEINLINE uint16 A16()          const   { return  A< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 Grey16()       const   { return  Grey< uint16 >();         }
+    ULIS3_FORCEINLINE uint16 Red16()        const   { return  Red< uint16 >();          }
+    ULIS3_FORCEINLINE uint16 Green16()      const   { return  Green< uint16 >();        }
+    ULIS3_FORCEINLINE uint16 Blue16()       const   { return  Blue< uint16 >();         }
+    ULIS3_FORCEINLINE uint16 R16()          const   { return  R< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 G16()          const   { return  G< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 B16()          const   { return  B< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 Hue16()        const   { return  Hue< uint16 >();          }
+    ULIS3_FORCEINLINE uint16 Saturation16() const   { return  Saturation< uint16 >();   }
+    ULIS3_FORCEINLINE uint16 Lightness16()  const   { return  Lightness< uint16 >();    }
+    ULIS3_FORCEINLINE uint16 Value16()      const   { return  Value< uint16 >();        }
+    ULIS3_FORCEINLINE uint16 Cyan16()       const   { return  Cyan< uint16 >();         }
+    ULIS3_FORCEINLINE uint16 Magenta16()    const   { return  Magenta< uint16 >();      }
+    ULIS3_FORCEINLINE uint16 Yellow16()     const   { return  Yellow< uint16 >();       }
+    ULIS3_FORCEINLINE uint16 Key16()        const   { return  Key< uint16 >();          }
+    ULIS3_FORCEINLINE uint16 Luma16()       const   { return  Luma< uint16 >();         }
+    ULIS3_FORCEINLINE uint16 U16()          const   { return  U< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 V16()          const   { return  V< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 K16()          const   { return  K< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 X16()          const   { return  X< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 Y16()          const   { return  Y< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 Z16()          const   { return  Z< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 L16()          const   { return  L< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 a16()          const   { return  a< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 b16()          const   { return  b< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 x16()          const   { return  x< uint16 >();            }
+    ULIS3_FORCEINLINE uint16 y16()          const   { return  y< uint16 >();            }
+    ULIS3_FORCEINLINE uint32 Alpha32()      const   { return  Alpha< uint32 >();        }
+    ULIS3_FORCEINLINE uint32 A32()          const   { return  A< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 Grey32()       const   { return  Grey< uint32 >();         }
+    ULIS3_FORCEINLINE uint32 Red32()        const   { return  Red< uint32 >();          }
+    ULIS3_FORCEINLINE uint32 Green32()      const   { return  Green< uint32 >();        }
+    ULIS3_FORCEINLINE uint32 Blue32()       const   { return  Blue< uint32 >();         }
+    ULIS3_FORCEINLINE uint32 R32()          const   { return  R< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 G32()          const   { return  G< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 B32()          const   { return  B< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 Hue32()        const   { return  Hue< uint32 >();          }
+    ULIS3_FORCEINLINE uint32 Saturation32() const   { return  Saturation< uint32 >();   }
+    ULIS3_FORCEINLINE uint32 Lightness32()  const   { return  Lightness< uint32 >();    }
+    ULIS3_FORCEINLINE uint32 Value32()      const   { return  Value< uint32 >();        }
+    ULIS3_FORCEINLINE uint32 Cyan32()       const   { return  Cyan< uint32 >();         }
+    ULIS3_FORCEINLINE uint32 Magenta32()    const   { return  Magenta< uint32 >();      }
+    ULIS3_FORCEINLINE uint32 Yellow32()     const   { return  Yellow< uint32 >();       }
+    ULIS3_FORCEINLINE uint32 Key32()        const   { return  Key< uint32 >();          }
+    ULIS3_FORCEINLINE uint32 Luma32()       const   { return  Luma< uint32 >();         }
+    ULIS3_FORCEINLINE uint32 U32()          const   { return  U< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 V32()          const   { return  V< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 K32()          const   { return  K< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 X32()          const   { return  X< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 Y32()          const   { return  Y< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 Z32()          const   { return  Z< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 L32()          const   { return  L< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 a32()          const   { return  a< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 b32()          const   { return  b< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 x32()          const   { return  x< uint32 >();            }
+    ULIS3_FORCEINLINE uint32 y32()          const   { return  y< uint32 >();            }
+    ULIS3_FORCEINLINE float AlphaF()        const   { return  Alpha< float >();         }
+    ULIS3_FORCEINLINE float AF()            const   { return  A< float >();             }
+    ULIS3_FORCEINLINE float GreyF()         const   { return  Grey< float >();          }
+    ULIS3_FORCEINLINE float RedF()          const   { return  Red< float >();           }
+    ULIS3_FORCEINLINE float GreenF()        const   { return  Green< float >();         }
+    ULIS3_FORCEINLINE float BlueF()         const   { return  Blue< float >();          }
+    ULIS3_FORCEINLINE float RF()            const   { return  R< float >();             }
+    ULIS3_FORCEINLINE float GF()            const   { return  G< float >();             }
+    ULIS3_FORCEINLINE float BF()            const   { return  B< float >();             }
+    ULIS3_FORCEINLINE float HueF()          const   { return  Hue< float >();           }
+    ULIS3_FORCEINLINE float SaturationF()   const   { return  Saturation< float >();    }
+    ULIS3_FORCEINLINE float LightnessF()    const   { return  Lightness< float >();     }
+    ULIS3_FORCEINLINE float ValueF()        const   { return  Value< float >();         }
+    ULIS3_FORCEINLINE float CyanF()         const   { return  Cyan< float >();          }
+    ULIS3_FORCEINLINE float MagentaF()      const   { return  Magenta< float >();       }
+    ULIS3_FORCEINLINE float YellowF()       const   { return  Yellow< float >();        }
+    ULIS3_FORCEINLINE float KeyF()          const   { return  Key< float >();           }
+    ULIS3_FORCEINLINE float LumaF()         const   { return  Luma< float >();          }
+    ULIS3_FORCEINLINE float UF()            const   { return  U< float >();             }
+    ULIS3_FORCEINLINE float VF()            const   { return  V< float >();             }
+    ULIS3_FORCEINLINE float KF()            const   { return  K< float >();             }
+    ULIS3_FORCEINLINE float XF()            const   { return  X< float >();             }
+    ULIS3_FORCEINLINE float YF()            const   { return  Y< float >();             }
+    ULIS3_FORCEINLINE float ZF()            const   { return  Z< float >();             }
+    ULIS3_FORCEINLINE float LF()            const   { return  L< float >();             }
+    ULIS3_FORCEINLINE float aF()            const   { return  a< float >();             }
+    ULIS3_FORCEINLINE float bF()            const   { return  b< float >();             }
+    ULIS3_FORCEINLINE float xF()            const   { return  x< float >();             }
+    ULIS3_FORCEINLINE float yF()            const   { return  y< float >();             }
+    ULIS3_FORCEINLINE double AlphaD()       const   { return  Alpha< double >();        }
+    ULIS3_FORCEINLINE double AD()           const   { return  A< double >();            }
+    ULIS3_FORCEINLINE double GreyD()        const   { return  Grey< double >();         }
+    ULIS3_FORCEINLINE double RedD()         const   { return  Red< double >();          }
+    ULIS3_FORCEINLINE double GreenD()       const   { return  Green< double >();        }
+    ULIS3_FORCEINLINE double BlueD()        const   { return  Blue< double >();         }
+    ULIS3_FORCEINLINE double RD()           const   { return  R< double >();            }
+    ULIS3_FORCEINLINE double GD()           const   { return  G< double >();            }
+    ULIS3_FORCEINLINE double BD()           const   { return  B< double >();            }
+    ULIS3_FORCEINLINE double HueD()         const   { return  Hue< double >();          }
+    ULIS3_FORCEINLINE double SaturationD()  const   { return  Saturation< double >();   }
+    ULIS3_FORCEINLINE double LightnessD()   const   { return  Lightness< double >();    }
+    ULIS3_FORCEINLINE double ValueD()       const   { return  Value< double >();        }
+    ULIS3_FORCEINLINE double CyanD()        const   { return  Cyan< double >();         }
+    ULIS3_FORCEINLINE double MagentaD()     const   { return  Magenta< double >();      }
+    ULIS3_FORCEINLINE double YellowD()      const   { return  Yellow< double >();       }
+    ULIS3_FORCEINLINE double KeyD()         const   { return  Key< double >();          }
+    ULIS3_FORCEINLINE double LumaD()        const   { return  Luma< double >();         }
+    ULIS3_FORCEINLINE double UD()           const   { return  U< double >();            }
+    ULIS3_FORCEINLINE double VD()           const   { return  V< double >();            }
+    ULIS3_FORCEINLINE double KD()           const   { return  K< double >();            }
+    ULIS3_FORCEINLINE double XD()           const   { return  X< double >();            }
+    ULIS3_FORCEINLINE double YD()           const   { return  Y< double >();            }
+    ULIS3_FORCEINLINE double ZD()           const   { return  Z< double >();            }
+    ULIS3_FORCEINLINE double LD()           const   { return  L< double >();            }
+    ULIS3_FORCEINLINE double aD()           const   { return  a< double >();            }
+    ULIS3_FORCEINLINE double bD()           const   { return  b< double >();            }
+    ULIS3_FORCEINLINE double xD()           const   { return  x< double >();            }
+    ULIS3_FORCEINLINE double yD()           const   { return  y< double >();            }
 
     template< typename T > ULIS3_FORCEINLINE void SetAlpha(      T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue ); }
     template< typename T > ULIS3_FORCEINLINE void SetA(          T iValue )      { if( HasAlpha() ) SetValueRaw< T >( AlphaIndex(), iValue ); }

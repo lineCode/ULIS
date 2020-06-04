@@ -69,11 +69,11 @@ typedef  uint32_t   tSize;
 
 // Perf enum
 enum ePerf {
-      PERF_MT
-    , PERF_TSPEC
-    , PERF_SSE42
-    , PERF_AVX2
-    , PERF_GPU
+      PERF_MT       = ULIS3_PERF_MT
+    , PERF_TSPEC    = ULIS3_PERF_TSPEC
+    , PERF_SSE42    = ULIS3_PERF_SSE42
+    , PERF_AVX2     = ULIS3_PERF_AVX2
+    , PERF_GPU      = ULIS3_PERF_GPU
 };
 
 // Type enum
@@ -98,46 +98,6 @@ enum eColorModel {
     , CM_XYZ    = ULIS3_CM_XYZ
     , CM_Yxy    = ULIS3_CM_Yxy
 };
-
-// Macro for switch enumerators
-#define ULIS3_COMP_OP_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )                          case _CASE: { _ACTION( _CASE, _E1, _E2, _E3 ); break; }
-#define ULIS3_SWITCH_FOR_ALL_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )      switch( iValue ) { _SUBSET( ULIS3_COMP_OP_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
-
-// Macro for all types for template instanciation
-#define ULIS3_FOR_ALL_TYPES_DO( X, _E0, _E1, _E2, _E3 )     \
-    X( uint8,   _E0, _E1, _E2, _E3 )                        \
-    X( uint16,  _E0, _E1, _E2, _E3 )                        \
-    X( uint32,  _E0, _E1, _E2, _E3 )                        \
-    X( ufloat,  _E0, _E1, _E2, _E3 )                        \
-    X( udouble, _E0, _E1, _E2, _E3 )
-
-// Macro for all types for combination template instanciation
-#define ULIS3_FOR_ALL_TYPES_COMBINATIONS_DO( X )    \
-    X( uint8,   uint8    )                          \
-    X( uint8,   uint16   )                          \
-    X( uint8,   uint32   )                          \
-    X( uint8,   ufloat   )                          \
-    X( uint8,   udouble  )                          \
-    X( uint16,  uint8   )                           \
-    X( uint16,  uint16  )                           \
-    X( uint16,  uint32  )                           \
-    X( uint16,  ufloat  )                           \
-    X( uint16,  udouble )                           \
-    X( uint32,  uint8   )                           \
-    X( uint32,  uint16  )                           \
-    X( uint32,  uint32  )                           \
-    X( uint32,  ufloat  )                           \
-    X( uint32,  udouble )                           \
-    X( ufloat,  uint8   )                           \
-    X( ufloat,  uint16  )                           \
-    X( ufloat,  uint32  )                           \
-    X( ufloat,  ufloat  )                           \
-    X( ufloat,  udouble )                           \
-    X( udouble, uint8   )                           \
-    X( udouble, uint16  )                           \
-    X( udouble, uint32  )                           \
-    X( udouble, ufloat  )                           \
-    X( udouble, udouble )
 
 ULIS3_NAMESPACE_END
 

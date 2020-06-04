@@ -24,21 +24,21 @@ class   FPixelProxy;
 class   FProfileRegistry;
 class   FColorProfile;
 class   FThreadPool;
+class   FFontRegistry;
+class   FFontEngine;
+class   FFont;
+class   FTransform2D;
+class   ITiledBlock;
 struct  FRect;
 struct  FPerfInfo;
 struct  FHostDeviceInfo;
-class   FFontRegistry;
-class   FFontEngine;
 struct  FFormatInfo;
-class   FFont;
-class   FTransform2D;
 struct  FTileElement;
-class ITiledBlock;
+
 template< uint8 _MICRO, uint8 _MACRO > class TTilePool;
 template< uint8 _MICRO, uint8 _MACRO > class TTiledBlock;
 
-template< typename T >
-struct TVec2;
+template< typename T > struct   TVec2;
 typedef TVec2< int >            FVec2I;
 typedef TVec2< float >          FVec2F;
 typedef TVec2< int64 >          FVec2I64;

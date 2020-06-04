@@ -34,8 +34,5 @@ ULIS3_API FBlock* XConv( FThreadPool*           iThreadPool
                        , const FBlock*          iSource
                        , tFormat                iDestinationFormat );
 
-
-
-
 ULIS3_NAMESPACE_END
 

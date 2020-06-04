@@ -15,6 +15,7 @@
 #include "Core/Core.h"
 #include "Base/HostDeviceInfo.h"
 #include "Blend/Modes.h"
+#include "Blend/Func/ModesUtils.ipp"
 #include "Blend/Dispatch/BlendInfo.h"
 #include "Blend/Dispatch/Generic/BlendMT_Separable_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_NonSeparable_MEM_Generic.ipp"

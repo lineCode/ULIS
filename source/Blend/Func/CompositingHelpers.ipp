@@ -17,15 +17,15 @@
 #include <vectorclass.h>
 
 #define SampleSubpixelAlpha( _DST )                                                                                 \
-if( fmt.HEA ) {                                                                                               \
-    m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,              fmt.AID ) : 0.f;  \
-    m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - iSrcBps,    fmt.AID ) : 0.f;  \
-} else {                                                                                                            \
-    m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;                                                            \
-    m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;                                                            \
-}                                                                                                                   \
-vv1 = m10 * info.subpixelComponent.y + m11 * info.buspixelComponent.y;                                    \
-_DST = vv0 * info.subpixelComponent.x + vv1 * info.buspixelComponent.x;
+    if( fmt.HEA ) {                                                                                                 \
+        m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,              fmt.AID ) : 0.f;    \
+        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - iSrcBps,    fmt.AID ) : 0.f;    \
+    } else {                                                                                                        \
+        m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;                                                        \
+        m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;                                                        \
+    }                                                                                                               \
+    vv1 = m10 * info.subpixelComponent.y + m11 * info.buspixelComponent.y;                                          \
+    _DST = vv0 * info.subpixelComponent.x + vv1 * info.buspixelComponent.x;
 
 #define SampleSubpixelChannel( _DST, _CHAN )                                                                                            \
 s11 = ( notLastCol  && notLastLine )                                    ?   TYPE2FLOAT( src,                            _CHAN ) : 0.f;  \

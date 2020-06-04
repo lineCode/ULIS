@@ -18,16 +18,35 @@
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FTileElement
-struct ULIS3_API FTileElement {
-    ~FTileElement();
-    FTileElement();
-    FTileElement( FBlock* iPtr );
-    void DecreaseRefCount();
-    void IncreaseRefCount();
+struct FTileElement {
+
+    ~FTileElement()
+    {
+        ULIS3_ASSERT( mRefCount.load() == 0, "Bad RefCount on Delete Tile" );
+    }
+
+    FTileElement()
+        : mBlock( nullptr )
+        , mHash( 0 )
+        , mDirty( false )
+        , mRefCount( 0 )
+    {}
+
+    FTileElement( FBlock* iPtr )
+        : mBlock( iPtr )
+        , mHash( 0 )
+        , mDirty( true )
+        , mRefCount( 0 )
+    {}
+
+    void DecreaseRefCount() { mRefCount--; };
+    void IncreaseRefCount() { mRefCount++; };
+
     FBlock* mBlock;
     uint32  mHash;
     std::atomic< uint32 >   mRefCount;
     std::atomic< bool >     mDirty;
 };
+
 ULIS3_NAMESPACE_END
 

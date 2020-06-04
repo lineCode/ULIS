@@ -20,7 +20,7 @@ ULIS3_NAMESPACE_BEGIN
 /// @fn         GenerateWeakUUID()
 /// @brief      Generate a weak UUID.
 /// @details    Weak UUID is an UUID that is pseudo random but with no guarantee to be unique at all. This it can be suitable for light uses.
-ULIS3_API std::string GenerateWeakUUID( uint8 iLen );
+std::string GenerateWeakUUID( uint8 iLen );
 
 ULIS3_NAMESPACE_END
 

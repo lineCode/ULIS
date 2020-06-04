@@ -18,7 +18,7 @@ ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // TVec2
 template< typename T >
-struct ULIS3_API TVec2
+struct TVec2
 {
     T x;
     T y;

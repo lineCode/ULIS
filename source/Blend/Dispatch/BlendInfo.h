@@ -17,7 +17,7 @@
 #include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
-struct ULIS3_API _FBlendInfoPrivate {
+struct _FBlendInfoPrivate {
     FThreadPool*            pool;
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;

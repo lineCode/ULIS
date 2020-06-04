@@ -31,7 +31,7 @@ struct ULIS3_API _FTransformInfoPrivate {
     glm::mat3               inverseTransform;
 };
 
-struct ULIS3_API _FResizeInfoPrivate {
+struct _FResizeInfoPrivate {
     FThreadPool*                        pool;
     bool                                blocking;
     const FHostDeviceInfo*              hostDeviceInfo;

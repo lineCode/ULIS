@@ -203,7 +203,8 @@ glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] ) {
     // |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 | |c11| |v0|
     // |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 | |c12| |v1|
     // \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 / \c21/ \v3/
-    // CB:| It would be faster if we solve the system by hand, eliminating any redundant calculations, but i don't have time for this right now.
+
+    // CB: It would be faster if we solve the system by hand, eliminating any redundant calculations, but i don't have time for this right now.
     // Use inverse matrix approach instead:
     // /c00\ / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \-1  /u0\
     // |c01| | x1 y1  1  0  0  0 -x1*u1 -y1*u1 |    |u1|

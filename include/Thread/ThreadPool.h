@@ -22,45 +22,118 @@
 #include <random>
 #include <atomic>
 
+#include "Maths/Maths.h"
+
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FThreadPool
-class ULIS3_API FThreadPool
+class FThreadPool
 {
 public:
     // Construction / Destruction
-    FThreadPool( unsigned int iCount = std::thread::hardware_concurrency() );
-    ~FThreadPool();
-    static uint32 MaxWorkers() { return  std::thread::hardware_concurrency(); }
+
+    FThreadPool( unsigned int iCount = std::thread::hardware_concurrency() )
+        : busy( 0 )
+        , stop( false )
+        , processed( 0 )
+    {
+        unsigned int max = FMaths::Min( iCount, std::thread::hardware_concurrency() );
+        for( unsigned int i = 0; i < max; ++i )
+            workers.emplace_back( std::bind( &FThreadPool::ThreadProcess, this ) );
+    }
+
+    ~FThreadPool()
+    {
+        // set stop-condition
+        std::unique_lock< std::mutex > latch( queue_mutex );
+        stop = true;
+        cv_task.notify_all();
+        latch.unlock();
+
+        // all threads terminate, then we're done.
+        for( auto& t : workers )
+            t.join();
+    }
 
 public:
     // Public API
     template<class F>
-    void ScheduleJob( F&& f )
-    {
+    void ScheduleJob( F&& f ) {
         std::unique_lock< std::mutex > lock( queue_mutex );
         tasks.push_back( std::forward< F >( f ) );
         cv_task.notify_one();
     }
 
     template<class F, typename ... Args >
-    void ScheduleJob( F&& f, Args&& ... args )
-    {
+    void ScheduleJob( F&& f, Args&& ... args ) {
         std::unique_lock< std::mutex > lock( queue_mutex );
         tasks.push_back( std::bind( std::forward< F >( f ), args ... ) );
         cv_task.notify_one();
     }
 
+    void WaitForCompletion() {
+        std::unique_lock< std::mutex > lock( queue_mutex );
+        cv_finished.wait( lock, [ this ](){ return tasks.empty() && ( busy == 0 ); } );
+    }
 
-    void            WaitForCompletion();
-    unsigned int    GetProcessed() const { return  processed; }
-    unsigned int    GetNumWorkers() const { return  (unsigned int)( workers.size() ); }
-    void            SetNumWorkers( unsigned int );
-    unsigned int    GetMaxWorkers() const { return  std::thread::hardware_concurrency(); }
+    void SetNumWorkers( unsigned int iValue ) {
+        WaitForCompletion();
+
+        // set stop-condition
+        std::unique_lock< std::mutex > latch( queue_mutex );
+        stop = true;
+        cv_task.notify_all();
+        latch.unlock();
+
+        // all threads terminate, then we're done.
+        for( auto& t : workers )
+            t.join();
+
+        stop = false;
+
+        workers.clear();
+        for( unsigned int i = 0; i < iValue; ++i )
+            workers.emplace_back( std::bind( &FThreadPool::ThreadProcess, this ) );
+    }
+
+    unsigned int    GetProcessed() const    { return  processed; }
+    unsigned int    GetNumWorkers() const   { return  (unsigned int)( workers.size() ); }
+    static uint32   MaxWorkers()            { return  std::thread::hardware_concurrency(); }
 
 private:
     // Private API
-    void ThreadProcess();
+    void ThreadProcess()
+    {
+        while( true )
+        {
+            std::unique_lock< std::mutex > latch( queue_mutex );
+            cv_task.wait( latch, [ this ](){ return stop || !tasks.empty(); } );
+            if( !tasks.empty() )
+            {
+                // got work. set busy.
+                ++busy;
+
+                // pull from queue
+                auto fn = tasks.front();
+                tasks.pop_front();
+
+                // release lock. run async
+                latch.unlock();
+
+                // run function outside context
+                fn();
+                ++processed;
+
+                latch.lock();
+                --busy;
+                cv_finished.notify_one();
+            }
+            else if( stop )
+            {
+                break;
+            }
+        }
+    }
 
 private:
     // Private Data
