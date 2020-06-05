@@ -27,7 +27,7 @@ void InvokeFillPreserveAlpha( size_t iW, tByte* iDst, const FFormatInfo* iFmt, s
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         const T alpha = dst[ iFmt->AID ];
-        memcpy( iDst, src, iFmt->BPP );
+        memcpy( dst, src, iFmt->BPP );
         dst[ iFmt->AID ] = alpha;
         dst += iFmt->SPP;
     }

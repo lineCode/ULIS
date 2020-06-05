@@ -24,16 +24,18 @@ using namespace ::ul3;
 int
 main( int argc, char *argv[] ) {
     FThreadPool  threadPool;
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     FBlock* blockA = new FBlock( 256, 256, ULIS3_FORMAT_RGBA8 );
 
     for( int i = 0; i < 256; ++i ) {
         for( int j = 0; j < 256; ++j ) {
-            Conv( Conv( FPixelValue::FromLabA8( j, 0, 0 ), ULIS3_FORMAT_CMYKAF ), blockA->PixelProxy( i, j ) );
+            Conv( FPixelValue::FromRGBA8( 0, 0, 0, j ), blockA->PixelProxy( i, j ) );
         }
     }
+
+    ::ul3::FillPreserveAlpha( &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, FPixelValue::FromRGBA8( 255, 0, 0, 255 ), blockA->Rect() );
 
     // Qt Window
     QApplication    app( argc, argv );
