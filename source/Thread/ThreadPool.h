@@ -25,6 +25,7 @@
 #include "Maths/Maths.h"
 
 ULIS3_NAMESPACE_BEGIN
+
 /////////////////////////////////////////////////////
 // FThreadPool
 class FThreadPool
@@ -146,10 +147,6 @@ private:
     std::condition_variable             cv_task;
     std::condition_variable             cv_finished;
 };
-
-ULIS3_API ULIS3_FORCEINLINE void Fence( FThreadPool& iPool ) {
-    iPool.WaitForCompletion();
-}
 
 #define ULIS3_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
     if( ( _PERF & ULIS3_PERF_MT ) && _POOL->GetNumWorkers() > 1 )                        \

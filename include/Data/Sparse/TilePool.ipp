@@ -17,7 +17,6 @@
 #include "Clear/Clear.h"
 #include "Data/Block.h"
 #include "Data/Sparse/Tile.h"
-#include "Thread/ThreadPool.h"
 
 #include <algorithm>
 #include <thread>
