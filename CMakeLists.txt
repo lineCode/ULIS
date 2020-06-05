@@ -89,10 +89,11 @@ file(
 
 if( ${ULIS3_BUILD_SHARED} )
    add_library( ULIS3 SHARED ${source_list} )
-   target_compile_definitions( ULIS3 PUBLIC ULIS3_BUILD_SHARED )
+   target_compile_definitions( ULIS3 PRIVATE ULIS3_BUILD_SHARED )
+   target_compile_definitions( ULIS3 PUBLIC ULIS3_DYNAMIC_LIBRARY )
 else()
    add_library( ULIS3 STATIC ${source_list} )
-   target_compile_definitions( ULIS3 PUBLIC ULIS3_BUILD_STATIC )
+   target_compile_definitions( ULIS3 PRIVATE ULIS3_BUILD_STATIC )
 endif()
 
 target_compile_definitions( ULIS3 PUBLIC UNICODE )
@@ -105,28 +106,28 @@ find_package(OpenCL)
 set_target_properties( ULIS3 PROPERTIES OUTPUT_NAME "ULIS3" )
 set_target_properties( ULIS3 PROPERTIES PREFIX "" )
 set_target_properties( ULIS3 PROPERTIES FOLDER ULIS3 )
-target_link_libraries( ULIS3 PUBLIC clip )
-target_link_libraries( ULIS3 PUBLIC lcms2 )
-target_link_libraries( ULIS3 PUBLIC freetype )
-target_link_libraries( ULIS3 PUBLIC cppfs )
-target_link_libraries( ULIS3 PUBLIC ${OpenCL_LIBRARY} )
+target_link_libraries( ULIS3 PRIVATE clip )
+target_link_libraries( ULIS3 PRIVATE lcms2 )
+target_link_libraries( ULIS3 PRIVATE freetype )
+target_link_libraries( ULIS3 PRIVATE cppfs )
+target_link_libraries( ULIS3 PRIVATE ${OpenCL_LIBRARY} )
 
 target_include_directories(
     ULIS3
     PUBLIC
     "include/"
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
+    PRIVATE
+    #${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs/source/cppfs/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/eigen/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
-    #${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
     ${OpenCL_INCLUDE_DIR}
-    PRIVATE
     "source/"
 )
 
