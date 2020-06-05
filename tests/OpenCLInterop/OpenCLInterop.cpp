@@ -12,12 +12,13 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS3>
-#include <CL/cl.hpp>
+//#include <CL/cl.hpp>
 #include <vector>
 using namespace ::ul3;
 
 int
 main() {
+    /*
     // OpenCL
     //get all platforms (drivers)
     std::vector<cl::Platform> all_platforms;
@@ -82,7 +83,7 @@ main() {
     for(int i=0;i<10;i++){
         std::cout<<C[i]<< " " << std::endl;
     }
-
+    */
     return  0;
 }
 
