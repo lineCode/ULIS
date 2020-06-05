@@ -28,15 +28,15 @@ struct FTileElement {
     FTileElement()
         : mBlock( nullptr )
         , mHash( 0 )
-        , mDirty( false )
         , mRefCount( 0 )
+        , mDirty( false )
     {}
 
     FTileElement( FBlock* iPtr )
         : mBlock( iPtr )
         , mHash( 0 )
-        , mDirty( true )
         , mRefCount( 0 )
+        , mDirty( true )
     {}
 
     void DecreaseRefCount() { mRefCount--; };
