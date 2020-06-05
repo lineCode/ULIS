@@ -379,6 +379,13 @@ FBlock::ReleaseOwnership() {
     mOnCleanup = FOnCleanup( &OnCleanup_DoNothing );
 }
 
+void
+FBlock::ResyncNonOwnedData( tByte* iData ) {
+    mOnCleanup.ExecuteIfBound( mData );
+    ReleaseOwnership();
+    mData = iData;
+}
+
 /////////////////////////////////////////////////////
 // XDeleteBlock
 // for safety with different CRT and heaps when using dynamic link on windows.

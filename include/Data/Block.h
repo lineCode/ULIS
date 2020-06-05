@@ -86,6 +86,7 @@ public:
     void                    SetOnCleanup( const FOnCleanup& iOnCleanup );
     void                    TakeOwnership();
     void                    ReleaseOwnership();
+    void                    ResyncNonOwnedData( tByte* iData );
 
 private:
     // Private Data Members
