@@ -37,7 +37,7 @@ Check LICENSE.md, ULIS3 is not available for commercial use.
         Image Pools and Caches for Optimisation
 
 ## History
-    ULIS is created and maintained by Clément BERTHAUD ( a.k.a Layl, a.k.a Robot-Fromage ).  
+ULIS is created and maintained by Clément BERTHAUD ( a.k.a Layl, a.k.a Robot-Fromage ).  
 
     ULIS1 began development in December 2018.  
 It was first hosted as a repository listed under user Robot-Fromage.  
