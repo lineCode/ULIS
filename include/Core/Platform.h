@@ -144,6 +144,16 @@
 #endif
 
 /////////////////////////////////////////////////////
+// Macros for Thread and SIMD activation, for embeded targets or WASM
+#ifndef ULIS3_NO_THREAD_SUPPORT
+#define ULIS3_COMPILED_WITH_THREAD_SUPPORT
+#endif // !ULIS3_NO_THREAD_SUPPORT
+
+#ifndef ULIS3_NO_SIMD_SUPPORT
+#define ULIS3_COMPILED_WITH_SIMD_SUPPORT
+#endif // !ULIS3_NO_SIMD_SUPPORT
+
+/////////////////////////////////////////////////////
 // Erors
 //#pragma warning(disable : 4251)     // Shut down dll interface warnings.
 #pragma warning(disable : 26812)    // Shut non-class enum warnings.
