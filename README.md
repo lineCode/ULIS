@@ -1,5 +1,5 @@
 <p align="center">
-    <img width="288" height="64" src="samples/Splash.png">
+    <img src="samples/Splash.png">
 </p>
 
 # Showcase
