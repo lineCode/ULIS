@@ -119,3 +119,11 @@ The following documents provides the **Coding Rules** for this project.
 * @brief    This file provides the declarations for the FExample class.
 */
 ```
+
+### CRT Objects across DLL boundary, CRT Safety
+- Keep in mind that the library or module could be linked dynamically against other modules, libraries or programs, where it is not always possible to ensure CRT compatibility.
+Don't forget to add **XXX_API** in front of classes, structs and function declarations that are meant to be part of the public API. Avoid mixing inline functions in an exported class.
+Extra care is needed when using templates, when possible use explicit template instanciations and export these instanciations.
+Make sure heaps don't get mixed up, when allocating memory in an implementation file, it should be deleted in an implementation file too.
+Don't allocate from an inline function in a header and delete in a destructor implemented in a source either.
+Avoid using threads and std members as part of the public API.

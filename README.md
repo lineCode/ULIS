@@ -56,7 +56,7 @@ The library dependencies changed and were embedded in the repository.
     ULIS3 was introduced in March 2020.  
 ULIS3 merged the commit history of both ULIS and ULIS2.  
 ULIS3 brings high-level features, such as Tile Pools and Tiled Blocks, or advanced deformation algorithms.  
-ULIS3 also aims to introduces WASM a new available compilation target, allowing to run transpiled C++ code on client side in web browsers.  
+ULIS3 also aims to introduce WASM as a new available compilation target, allowing to run transpiled C++ code on client side in web browsers.  
 
 ## Software Requirements Specification ( SRS )
 
