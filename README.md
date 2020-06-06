@@ -37,31 +37,26 @@ Check LICENSE.md, ULIS3 is not available for commercial use.
         Image Pools and Caches for Optimisation
 
 ## History
-ULIS is created and maintained by Clément BERTHAUD ( a.k.a Layl, a.k.a Robot-Fromage ).  
-ULIS began development in December 2018, as a side project during spare time from an  
-unexperienced developper. It was first hosted as a repository listed under user  
-Robot-Fromage. It was then developped as a part of Praxinos, aiming for robust tools for  
-digital image processing. ULIS was first released internaly for Praxinos at the end of  
-summer 2019. It made its debut in Iliad, a digital painting plugin for UnrealEngine  
-developped by Praxinos. The first version of ULIS had a lot of issues: it was hard to  
-maintain and overused template. It resulted in terrible output binary sizes and compile  
-times.  
-ULIS2, was starting development in beginning of January 2020. ULIS2 was scheduled for  
-release in February 2020, and came with a much simpler API. Compile times were drastically  
-reduced as well as output binary sizes. ULIS2 brought many things, such as better overall  
-performances, support for more models, actual support for AVX2 optimisations, color mix,  
-smudge, new blending modes and alpha modes, new interpolation types, etc. The build  
-framework was also simplified and extended to conform to the typical cmake build process.  
-Support for GPU image processing with OpenCL was introduced. The library dependencies  
-changed and were embedded in the repository.  
-ULIS3 was introduced in March 2020 during a period of confinment. ULIS3 merged the  
-commit history of both ULIS and ULIS2 for future reference and to keep track of what has  
-been done since the repository had such a turbulent history, facing many complete rewrites.  
-This version brings more higher-level features, the focus on development has  
-shifted from very low level memory operation on pixel buffers towards more complex  
-structures built from these parts, such as Tile Pools and Tiled Blocks, or advanced  
-deformation algorithms. ULIS3 also introduces WASM a new available compilation target,  
-allowing to run transpiled C++ code on client side in web browsers.  
+    ULIS is created and maintained by Clément BERTHAUD ( a.k.a Layl, a.k.a Robot-Fromage ).  
+
+    ULIS1 began development in December 2018.  
+It was first hosted as a repository listed under user Robot-Fromage.  
+It was then developped as a part of Praxinos, for its digital image processing tools.  
+ULIS was first released internaly for Praxinos at the end of summer 2019.  
+It made its debut in Iliad, a digital painting plugin for UnrealEngine  
+The first version of ULIS experienced template bloating, resulting in terrible output binary sizes and compile times.  
+
+    ULIS2, was starting development in beginning of January 2020.  
+Compile times were drastically improved as well as output binary sizes.  
+ULIS2 brought many things, such as better overall performances, support for more models, actual support for AVX2 optimisations, color mix, smudge, new blending modes and alpha modes, new interpolation types, etc.  
+The build framework was also simplified and extended to conform to the typical cmake build process.  
+Support for GPU image processing with OpenCL was introduced.  
+The library dependencies changed and were embedded in the repository.  
+
+    ULIS3 was introduced in March 2020.  
+ULIS3 merged the commit history of both ULIS and ULIS2.  
+ULIS3 brings high-level features, such as Tile Pools and Tiled Blocks, or advanced deformation algorithms.  
+ULIS3 also aims to introduces WASM a new available compilation target, allowing to run transpiled C++ code on client side in web browsers.  
 
 ## Software Requirements Specification ( SRS )
 
