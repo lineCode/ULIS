@@ -127,3 +127,23 @@ Extra care is needed when using templates, when possible use explicit template i
 Make sure heaps don't get mixed up, when allocating memory in an implementation file, it should be deleted in an implementation file too.
 Don't allocate from an inline function in a header and delete in a destructor implemented in a source either.
 Avoid using threads and std members as part of the public API.
+Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+
+### SIMD Optimization
+- If you wish to implement an optimized version of an algorithm, always make sure that a generic non optimized version is available first.
+When implementing such optimizations, enclose it in preprocessor directives to ensure the host that compiles the program has compile time support for the intrinsic you wish to use.
+It may be the case on one computed, but they might be missing on another compiler or version.
+Before calling an optimized version of a function, granted it was compiled on a computer that supported the instrinsics, make sure the computer that runs the code also supports the intrinsic with runtime checks.
+Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+
+### Intermediate results in non-blocking operations
+- If the API you expose perforls a non-blocking operation and uses intermediate results, the function might return and the intermediate result that lives on the stack will get deleted before the workers finished processing the task.
+In that case, you should use a shared pointer to ensure all workers keep a reference to the intermediate result, until all of them are finished.
+Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+
+### Type consistency and possible loss of data.
+- Solve all warnings of the form "about C4244: conversion from 'X' to 'Y', possible loss of data".
+
+### Casts
+- Always use C++ style cast such as static_cast, dynamic_cast, and such. Never use c-style casts.
+
