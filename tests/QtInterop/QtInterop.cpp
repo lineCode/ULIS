@@ -23,7 +23,7 @@ using namespace ::ul3;
 
 int
 main( int argc, char *argv[] ) {
-    FThreadPool  threadPool;
+    FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
@@ -35,7 +35,7 @@ main( int argc, char *argv[] ) {
         }
     }
 
-    ::ul3::FillPreserveAlpha( &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, FPixelValue::FromRGBA8( 255, 0, 0, 255 ), blockA->Rect() );
+    ::ul3::FillPreserveAlpha( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, FPixelValue::FromRGBA8( 255, 0, 0, 255 ), blockA->Rect() );
 
     // Qt Window
     QApplication    app( argc, argv );
@@ -55,6 +55,7 @@ main( int argc, char *argv[] ) {
 
     delete  blockA;
 
+    XDeleteThreadPool( threadPool );
     return  exit_code;
 }
 

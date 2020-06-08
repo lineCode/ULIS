@@ -52,7 +52,7 @@ private:
     std::vector< FParticle >    mParticles;
 
     FHostDeviceInfo             mHost;
-    FThreadPool                 mPool;
+    FThreadPool*                mPool;
     FBlock*                     mWetCanvas;
     FBlock*                     mDryCanvas;
     FBlock*                     mParticle;

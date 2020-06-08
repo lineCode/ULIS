@@ -16,7 +16,7 @@ using namespace ::ul3;
 
 int
 main() {
-    FThreadPool  threadPool;
+    FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent1  = 0;
     uint32 perfIntent2  = ULIS3_PERF_MT;
     uint32 perfIntent3  = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
@@ -38,7 +38,7 @@ main() {
     }
 
     std::cout << "\n==\n" << std::endl;
-    FBlock* sat = XGetSummedAreaTable( &threadPool, ULIS3_BLOCKING, perfIntent4, host, ULIS3_NOCB, block );
+    FBlock* sat = XGetSummedAreaTable( threadPool, ULIS3_BLOCKING, perfIntent4, host, ULIS3_NOCB, block );
     ULIS3_ASSERT( sat, "Error " );
     ULIS3_ASSERT( sat->Width() == size, "Error " );
     ULIS3_ASSERT( sat->Height() == size, "Error " );
@@ -55,6 +55,7 @@ main() {
         std::cout << std::endl;
     }
 
+    XDeleteThreadPool( threadPool );
     delete  block;
     delete  sat;
 

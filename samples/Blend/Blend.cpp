@@ -33,7 +33,7 @@ main( int argc, char *argv[] ) {
     // ( Note 1: if both SSE42 and AVX2 are available, AVX2 will be chosen. )
     // ( Note 2: often, SSE42 and AVX2 optimisations are available only if Type Specializations are enabled too. )
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
-    FThreadPool  threadPool;
+    FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
@@ -50,14 +50,14 @@ main( int argc, char *argv[] ) {
     // Passing ULIS3_NONBLOCKING avoids stalling beetween the two functions.
     // ( Note: the 'X' prefix before a function name always means the function allocates a block and returns the pointer,
     // the caller is now responsible for the FBlock* lifetime, and should delete it ).
-    FBlock* blockBase = XLoadFromFile( &threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( &threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockBase = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
 
     // Fence the pool here,
     // After the two calls to XLoadFromFile, the functions returned immediately even though the data isn't loaded yet
     // ( Note: the blocks buffers have been allocated and the pointers to blockBase and blockOver are valid though )
     // A fence allows the program to halt here until the data is actually loaded.
-    Fence( threadPool );
+    Fence( *threadPool );
 
     // Gather a few information on loaded images
     // They will be tiled onto a background block to display all the blending modes.
@@ -89,11 +89,11 @@ main( int argc, char *argv[] ) {
         // The first 5 parameters are common to most ULIS3 functions and are used to know how to perform a task.
         // The user provides intent and control over the CPU optimization dispatch method ( MEM, SSE, AVX ) and over the CPU multithreading dispatch too.
         // Notice the BLOCKING here: we don't want Copy and Blend to be concurrent as they work on the same region in a given loop iteration.
-        Copy(   &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
+        Copy(   threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
 
         // Then we perform the blend by iterating over all blending modes ( see i cast to eBlendingMode enum value ).
         // By default we'll use a normal alphaMode for nicer results in this context, and an opacity of 0.5, which is a normalized value that corresponds to 50%, half-fade.
-        Blend(  &threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS3_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS3_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
     }
     // Fence the pool here to make sure the very last blend is completed.
     // You may have noticed that we did not fence after Blend inside the loop.
@@ -101,7 +101,7 @@ main( int argc, char *argv[] ) {
     // This is safe here because copy and blend *might* be concurrent only within a given loop iteration.
     // On the next loop, even if the Blend is not complete, the copy can take over and be scheduled regardless of blend completion status,
     // because it will work on another region. That way we can avoid a few stalls and this is perfectly safe concurrency wise.
-    Fence( threadPool );
+    Fence( *threadPool );
 
     // Get rid of Base and Over, we don't need them anymore.
     delete  blockBase;
@@ -155,6 +155,9 @@ main( int argc, char *argv[] ) {
 
     // Delete our block Canvas.
     delete  blockCanvas;
+
+    // Delete the thread pool
+    XDeleteThreadPool( threadPool );
 
     // Return exit code.
     return  exit_code;

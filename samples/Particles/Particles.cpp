@@ -29,12 +29,13 @@ SWindow::~SWindow() {
     delete  mPixmap;
     delete  mLabel;
     delete  mTimer;
+    XDeleteThreadPool( mPool );
 }
 
 
 SWindow::SWindow()
     : mHost( FHostDeviceInfo::Detect() )
-    , mPool()
+    , mPool( XCreateThreadPool() )
     , mCanvas( nullptr )
     , mParticle( nullptr )
     , mPos( 0, 0 )
@@ -59,7 +60,7 @@ SWindow::SWindow()
     mTimer->start();
 
     FPixelValue particleColor = FPixelValue::FromRGBA8( 170, 40, 0, 255 );
-    Fill( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mParticle, particleColor, mParticle->Rect() );
+    Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mParticle, particleColor, mParticle->Rect() );
     float midx = mParticle->Width() / 2.f;
     float midy = mParticle->Height() / 2.f;
     float ray2 = midx * midx;
@@ -107,13 +108,13 @@ SWindow::tickEvent() {
         }
     }
 
-    Clear( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mCanvas, mCanvas->Rect() );
+    Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mCanvas, mCanvas->Rect() );
 
     FRect sourceRect = mParticle->Rect();
     for( size_t i = 0; i < mParticles.size(); ++i ) {
         mParticles[i].p.x += mParticles[i].v.x = mParticles[i].v.x * 0.9f;
         mParticles[i].p.y += mParticles[i].v.y = mParticles[i].v.y * 0.9f;
-        Blend( &mPool, ULIS3_BLOCKING, ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mCanvas, sourceRect, mParticles[i].p, ULIS3_AA, BM_MULTIPY, AM_NORMAL, 0.3f );
+        Blend( mPool, ULIS3_BLOCKING, ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mCanvas, sourceRect, mParticles[i].p, ULIS3_AA, BM_MULTIPY, AM_NORMAL, 0.3f );
     }
 
     mPixmap->convertFromImage( *mImage );

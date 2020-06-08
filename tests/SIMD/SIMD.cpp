@@ -13,7 +13,6 @@
 */
 #include <ULIS3>
 #include <immintrin.h>
-#include <vectorclass.h>
 using namespace ::ul3;
 
 int

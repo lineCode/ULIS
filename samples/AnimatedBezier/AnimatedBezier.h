@@ -44,7 +44,7 @@ private:
 
 private:
     FHostDeviceInfo             mHost;
-    FThreadPool                 mPool;
+    FThreadPool*                mPool;
     FBlock*                     mSRC;
     FBlock*                     mDST;
     std::vector< FBezierCubicControlPoint > mCtrlPts;

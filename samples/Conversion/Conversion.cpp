@@ -33,7 +33,7 @@ main( int argc, char *argv[] ) {
     // ( Note 1: if both SSE42 and AVX2 are available, AVX2 will be chosen. )
     // ( Note 2: often, SSE42 and AVX2 optimisations are available only if Type Specializations are enabled too. )
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
-    FThreadPool  threadPool;
+    FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
@@ -80,7 +80,7 @@ main( int argc, char *argv[] ) {
     // The channel type is different for the two blocks here too, so conv can be used to convert a block depth too ( e.g: RGBA16 to RGBA8 ).
     // Notice we passed the ULIS3_BLOCKING flag here, that means the Conv function will not return until the conversion is complete.
     // We don't care about stalling here since there are no multihtreaded operations following, yet we need to ensure the blockRGB is valid before we go on.
-    Conv( &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockLAB, blockRGB );
+    Conv( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockLAB, blockRGB );
 
     // Get rid of block Lab, we don't need it anymore.
     delete  blockLAB;
@@ -130,6 +130,7 @@ main( int argc, char *argv[] ) {
 
     // Delete our block Canvas.
     delete  blockRGB;
+    XDeleteThreadPool( threadPool );
 
     // Return exit code.
     return  exit_code;

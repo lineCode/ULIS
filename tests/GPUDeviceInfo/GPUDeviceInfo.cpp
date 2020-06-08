@@ -12,11 +12,13 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS3>
-#include <CL/cl.hpp>
+//#include <CL/cl.hpp>
 
 int main( int argc, char *argv[] ) {
     // OpenCL
     //get all platforms (drivers)
+
+    /*
     std::vector<cl::Platform> all_platforms;
     cl::Platform::get( &all_platforms );
     if( all_platforms.size() == 0 ){
@@ -96,6 +98,7 @@ int main( int argc, char *argv[] ) {
             std::cout<< "   CL_DEVICE_DOUBLE_FP_CONFIG              : " << device.getInfo< CL_DEVICE_DOUBLE_FP_CONFIG               >() << std::endl;
         }
     }
+    */
     return  0;
 }
 

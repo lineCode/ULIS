@@ -25,7 +25,7 @@ using namespace ::ul3;
 
 int
 main( int argc, char *argv[] ) {
-    FThreadPool  threadPool;
+    FThreadPool* threadPool = XCreateThreadPool();
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
@@ -36,9 +36,9 @@ main( int argc, char *argv[] ) {
     uint32 perfIntentCopy   = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     uint32 perfIntentBlend  = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     uint32 perfIntentText   = 0;
-    FBlock* blockBase = XLoadFromFile( &threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( &threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
-    Fence( threadPool );
+    FBlock* blockBase = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
+    Fence( *threadPool );
 
     FRect sourceRect = blockBase->Rect();
     int w = sourceRect.w * 8;
@@ -51,7 +51,7 @@ main( int argc, char *argv[] ) {
     FRect shadeRect = blockBase->Rect();
     FPixelValue black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
     FPixelValue white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
-    Fill( &threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_TSPEC | ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockShade, black, shadeRect );
+    Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_TSPEC | ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockShade, black, shadeRect );
 
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );
@@ -60,18 +60,18 @@ main( int argc, char *argv[] ) {
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int x = ( i % 8 ) * sourceRect.w;
         int y = ( i / 8 ) * sourceRect.h;
-        Copy(   &threadPool, ULIS3_BLOCKING, perfIntentCopy, host, ULIS3_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
-        Blend(  &threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS3_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
-        Blend(  &threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
-        Blend(  &threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS3_NOAA, BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
+        Copy(   threadPool, ULIS3_BLOCKING, perfIntentCopy, host, ULIS3_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
+        Blend(  threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS3_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS3_NOAA, BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
         std::string bm = kwBlendingMode[i];
         typedef std::codecvt_utf8<wchar_t> convert_type;
         std::wstring_convert<convert_type, wchar_t> converter;
         std::wstring wbm = converter.from_bytes(bm);
-        RenderText( &threadPool, ULIS3_BLOCKING, perfIntentText, host, ULIS3_NOCB, blockCanvas, wbm, font, 16, white, FTransform2D( MakeTranslationMatrix( x + 4, 4 + y + sourceRect.h - shadeH ) ), ULIS3_NOAA );
+        RenderText( threadPool, ULIS3_BLOCKING, perfIntentText, host, ULIS3_NOCB, blockCanvas, wbm, font, 16, white, FTransform2D( MakeTranslationMatrix( x + 4, 4 + y + sourceRect.h - shadeH ) ), ULIS3_NOAA );
     }
 
-    Fence( threadPool );
+    Fence( *threadPool );
     delete  blockBase;
     delete  blockOver;
 
@@ -96,6 +96,7 @@ main( int argc, char *argv[] ) {
 
     delete  blockCanvas;
     delete  blockShade;
+    XDeleteThreadPool( threadPool );
 
     return  exit_code;
 }

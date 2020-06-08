@@ -29,12 +29,13 @@ SWindow::~SWindow() {
     delete  mTimer;
     delete  mSRC;
     delete  mDST;
+    XDeleteThreadPool( mPool );
 }
 
 
 SWindow::SWindow()
     : mHost( FHostDeviceInfo::Detect() )
-    , mPool()
+    , mPool( XCreateThreadPool() )
     , mSRC( nullptr )
     , mDST( nullptr )
     , mImage( nullptr )
@@ -46,9 +47,9 @@ SWindow::SWindow()
 {
     uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     std::string path = "C:/Users/PRAXINOS/Documents/work/TEST.png";
-    mSRC = XLoadFromFile( &mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, path, ULIS3_FORMAT_RGBA8 );
+    mSRC = XLoadFromFile( mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, path, ULIS3_FORMAT_RGBA8 );
     mDST = new  FBlock( 1024, 512, ULIS3_FORMAT_RGBA8 );
-    Clear( &mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
+    Clear( mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
     mImage = new QImage( mDST->DataPtr(), mDST->Width(), mDST->Height(), mDST->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel = new QLabel( this );
@@ -104,9 +105,9 @@ SWindow::tickEvent() {
     mCtrlPts[3].ctrlCW  = mCtrlPts[3].point + FVec2F( cos( evoAngle3 ), sin( evoAngle3 ) ) * len;
     mCtrlPts[3].ctrlCCW = mCtrlPts[3].point + FVec2F( cos( evoAngle0 ), sin( evoAngle0 ) ) * len;
 
-    Clear( &mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
+    Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
 
-    TransformBezier( &mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 2.f, 3, INTERP_NN );
+    TransformBezier( mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 2.f, 3, INTERP_NN );
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }

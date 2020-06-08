@@ -33,7 +33,7 @@ main( int argc, char *argv[] ) {
     // ( Note 1: if both SSE42 and AVX2 are available, AVX2 will be chosen. )
     // ( Note 2: often, SSE42 and AVX2 optimisations are available only if Type Specializations are enabled too. )
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
-    FThreadPool  threadPool;
+    FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
@@ -77,10 +77,10 @@ main( int argc, char *argv[] ) {
     FPixelValue fontColor       = FPixelValue::FromRGBA8( 255, 255, 255, 255 );
 
     // Let's process the block:
-    Fill( &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, backgroundColor, blockCanvas->Rect() );
-    RenderText( &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str1, fontEU, fontSize, fontColor, transform1, ULIS3_AA );
-    RenderText( &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform2, ULIS3_AA );
-    RenderText( &threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform3, ULIS3_AA );
+    Fill( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, backgroundColor, blockCanvas->Rect() );
+    RenderText( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str1, fontEU, fontSize, fontColor, transform1, ULIS3_AA );
+    RenderText( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform2, ULIS3_AA );
+    RenderText( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform3, ULIS3_AA );
 
     // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS3 operations.
     // We are not interested in the time it took Qt to create the window.
@@ -118,6 +118,7 @@ main( int argc, char *argv[] ) {
 
     // Delete our block Canvas.
     delete  blockCanvas;
+    XDeleteThreadPool( threadPool );
 
     // Return exit code.
     return  exit_code;

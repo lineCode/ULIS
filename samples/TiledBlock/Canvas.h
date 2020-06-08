@@ -38,7 +38,7 @@ private:
 
 private:
     FHostDeviceInfo                     mHost;
-    FThreadPool                         mPool;
+    FThreadPool*                        mPool;
     FBlock*                             mCanvas;
     FBlock*                             mRAMUSAGEBLOCK1;
     FBlock*                             mRAMUSAGEBLOCK2;
