@@ -4,6 +4,7 @@ option( ULIS3_BUILD_SHARED                  "Build the library shared or statica
 option( ULIS3_BUILD_PYTHON_MODULE           "Build the library python module"           OFF )
 option( ULIS3_BUILD_TESTS                   "Build the library test modules"            OFF )
 option( ULIS3_BUILD_SAMPLES                 "Build the library sample modules"          OFF )
+option( ULIS3_FORCE_ASSERTS                 "Build the with forced assert in release"   OFF )
 SET( ULIS3_QT_CMAKE_PATH            "default" CACHE STRING "Indicates the path to Qt cmake package" )
 SET( ULIS3_PYTHON_REL_LIB           "default" CACHE STRING "Indicates the path to python release static library" )
 SET( ULIS3_PYTHON_DEB_LIB           "default" CACHE STRING "Indicates the path to python debug static library" )
@@ -94,6 +95,10 @@ if( ${ULIS3_BUILD_SHARED} )
 else()
    add_library( ULIS3 STATIC ${source_list} )
    target_compile_definitions( ULIS3 PRIVATE ULIS3_BUILD_STATIC )
+endif()
+
+if( ${ULIS3_FORCE_ASSERTS} )
+    target_compile_definitions( ULIS3 PUBLIC ULIS3_FORCE_ASSERT )
 endif()
 
 target_compile_definitions( ULIS3 PUBLIC UNICODE )

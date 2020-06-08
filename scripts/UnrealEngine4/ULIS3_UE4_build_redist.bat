@@ -28,6 +28,7 @@ IF EXIST CMakeCache.txt ( del CMakeCache.txt )
 cmake   -G "Visual Studio 16 2019"                          ^
         -A x64                                              ^
         -DULIS3_BUILD_SHARED=ON                             ^
+        -DULIS3_FORCE_ASSERTS=ON                            ^
         ../../ULIS3
 
 :: Replace RelWithDebInfo with Release if needed
