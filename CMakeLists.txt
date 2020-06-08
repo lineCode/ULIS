@@ -158,7 +158,7 @@ if( ${ULIS3_USE_QT} )
 endif()
 ####################################
 # Add Python Project
-include(${CMAKE_CURRENT_SOURCE_DIR}/python/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/bindings/python/CMakeLists.txt)
 ####################################
 # Add Test Projects
 if( ${ULIS3_BUILD_TESTS} )

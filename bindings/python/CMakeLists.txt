@@ -6,7 +6,7 @@ if( ${ULIS3_BUILD_PYTHON_MODULE} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "python/CPython-module/*"
+        "bindings/python/CPython-module/*"
     )
 
     add_library( PyULIS3 SHARED ${source_list} )
