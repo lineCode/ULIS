@@ -31,34 +31,34 @@ namespace constants
     ////////////////////////////////////////////////////////////
     // POSIX constants from cmath
 
-    /** e */
+    /* e */
     template<typename T=double>
     constexpr T e = static_cast<T>(2.71828182845904523540L);
 
-    /** log2(e) */
+    /* log2(e) */
     template<typename T=double>
     constexpr T log2e = static_cast<T>(1.44269504088896340740L);
 
-    /** log10(e) */
+    /* log10(e) */
     template<typename T=double>
     constexpr T log10e = static_cast<T>(0.43429448190325182765L);
 
-    /** ln(2) */
+    /* ln(2) */
     template<typename T=double>
     constexpr T ln2 = static_cast<T>(0.693147180559945309417232121L);
 
-    /** ln(10) */
+    /* ln(10) */
     template<typename T=double>
     constexpr T ln10 = static_cast<T>(2.302585092994045684017991454L);
 
-    /** pi */
+    /* pi */
     template<typename T=double>
     constexpr T pi = static_cast<T>(3.14159265358979323846L);
 
     ////////////////////////////////////////////////////////////
     // Other mathematical constants
 
-    /** Golden ratio */
+    /* Golden ratio */
     template<typename T=double>
     constexpr T phi = static_cast<T>(1.61803398874989484820L);
 }}

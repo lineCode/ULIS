@@ -33,7 +33,7 @@
 
 namespace smath
 {
-    /**
+    /*
      * @brief Imaginary numbers
      */
     template<typename T>
@@ -68,7 +68,7 @@ namespace smath
         value_type value = T{};
     };
 
-    /**
+    /*
      * @brief Complex numbers
      */
     template<typename T>

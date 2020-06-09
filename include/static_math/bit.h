@@ -24,7 +24,7 @@
 #ifndef SMATH_BIT_H_
 #define SMATH_BIT_H_
 
-/**
+/*
  * @file static_math/bit.h
  * @brief compile-time clone of functions from <bit>.
  *
@@ -43,28 +43,28 @@
 
 namespace smath
 {
-    /**
+    /*
      * @brief Returns whether \p x is a power of 2.
      */
     template<typename Unsigned>
     constexpr auto ispow2(Unsigned x) noexcept
         -> bool;
 
-    /**
+    /*
      * @brief Minimal power of 2 greater or equal to \p x.
      */
     template<typename Unsigned>
     constexpr auto ceil2(Unsigned x) noexcept
         -> Unsigned;
 
-    /**
+    /*
      * @brief Maximal power of two lesser or equal to \p x.
      */
     template<typename Unsigned>
     constexpr auto floor2(Unsigned x) noexcept
         -> Unsigned;
 
-    /**
+    /*
      * @brief 0 if \p x == 0, otherwise base-2 logarithm of \p x.
      */
     template<typename Unsigned>

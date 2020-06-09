@@ -34,7 +34,7 @@
 
 namespace smath
 {
-    /**
+    /*
      * @brief Rational numbers
      */
     template<typename T>

@@ -35,14 +35,14 @@
 #include <static_math/rational.h>
 #include <static_math/trigonometry.h>
 
-/**
+/*
  * @file static_math/static_math.h
  * @brief Main library file.
  *
  * This file includes the whole library.
  */
 
-/**
+/*
  * @namespace smath
  * Global namespace of static_math.
  *

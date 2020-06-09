@@ -41,7 +41,7 @@ namespace detail
     // These functions are meant to help the parsing
     // of integer literals.
 
-    /**
+    /*
      * @brief Unsigned integer fit.
      *
      * This functions checks whether a given integer
@@ -54,7 +54,7 @@ namespace detail
         return n <= std::numeric_limits<Integer>::max();
     }
 
-    /**
+    /*
      * @brief Suitable integer type selection.
      *
      * This class will select the smallest type at least

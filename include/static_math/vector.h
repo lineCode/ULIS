@@ -38,7 +38,7 @@
 
 namespace smath
 {
-    /**
+    /*
      * @brief Fixed-size vector.
      */
     template<typename T, std::size_t N>

@@ -24,7 +24,7 @@
 #ifndef SMATH_CMATH_H_
 #define SMATH_CMATH_H_
 
-/**
+/*
  * @file static_math/cmath.h
  * @brief compile-time clone of the standard header <cmath>.
  *
@@ -55,7 +55,7 @@ namespace smath
     ////////////////////////////////////////////////////////////
     // Basic functions
 
-    /**
+    /*
      * @brief Absolute value of a number
      */
     template<typename Number>
@@ -66,21 +66,21 @@ namespace smath
     template<typename Number, typename Enable=void>
     struct div_t;
 
-    /**
+    /*
      * @brief Computes both quotient and remainder at once
      */
     template<typename Number>
     constexpr auto div(Number x, Number y)
         -> div_t<Number>;
 
-    /**
+    /*
      * @brief Min of a number of variables
      */
     template<typename... Args>
     constexpr auto min(Args... args)
         -> decltype(auto);
 
-    /**
+    /*
      * @brief Max of a number of variables
      */
     template<typename... Args>
@@ -117,14 +117,14 @@ namespace smath
     ////////////////////////////////////////////////////////////
     // Power and logarithmic functions
 
-    /**
+    /*
      * @brief Exponential function.
      */
     template<typename Float>
     constexpr auto exp(Float x)
         -> decltype(std::exp(x));
 
-    /**
+    /*
      * @brief Power function
      *
      * @warning This functions is only available for the integer
@@ -134,28 +134,28 @@ namespace smath
     constexpr auto pow(Number x, Integer exponent)
         -> std::common_type_t<Number, Integer>;
 
-    /**
+    /*
      * @brief Natural Log function
      */
     template<typename Float>
     constexpr auto log(Float x)
         -> decltype(std::log(x));
 
-    /**
+    /*
      * @brief Log base 2 function
      */
     template<typename Float>
     constexpr auto log2(Float x)
         -> decltype(std::log2(x));
 
-    /**
+    /*
      * @brief Log base 10 function
      */
     template<typename Float>
     constexpr auto log10(Float x)
         -> decltype(std::log10(x));
 
-    /**
+    /*
      * @brief Square root function
      *
      * Square root computation with the Babylonian method until
@@ -166,7 +166,7 @@ namespace smath
     constexpr auto sqrt(Float x)
         -> decltype(std::sqrt(x));
 
-    /**
+    /*
      * @brief Hypotenuse function
      *
      * Computes the square root of the sum of the squares of \a x
@@ -180,7 +180,7 @@ namespace smath
     ////////////////////////////////////////////////////////////
     // Trigonometric functions
 
-    /**
+    /*
      * @brief Sine function.
      * @param x Angle in radians
      */
@@ -188,7 +188,7 @@ namespace smath
     constexpr auto sin(Float x)
         -> Float;
 
-    /**
+    /*
      * @brief Cosine function.
      * @param x Angle in radians
      */
@@ -196,7 +196,7 @@ namespace smath
     constexpr auto cos(Float x)
         -> Float;
 
-    /**
+    /*
      * @brief Tangent function.
      * @param x Angle in radians
      */
@@ -207,7 +207,7 @@ namespace smath
     ////////////////////////////////////////////////////////////
     // Hyperbolic functions
 
-    /**
+    /*
      * @brief Hyperbolic sine function.
      * @param x Hyperbolic angle in radians
      */
@@ -215,7 +215,7 @@ namespace smath
     constexpr auto sinh(Float x)
         -> Float;
 
-    /**
+    /*
      * @brief Hyperbolic cosine function.
      * @param x Hyperbolic angle in radians
      */
@@ -223,7 +223,7 @@ namespace smath
     constexpr auto cosh(Float x)
         -> Float;
 
-    /**
+    /*
      * @brief Hyperbolic tangent function.
      * @param x Hyperbolic angle in radians
      */

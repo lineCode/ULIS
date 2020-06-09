@@ -6,9 +6,9 @@
 ULIS is a graphics library written in C++. It is aimed at software rendering and digital image processing on CPU.
 
 ## Samples
-![Samples](samples/BlendNormals.png) | ![Samples](samples/RasterText.png) | ![Samples](samples/Transforms.png)
+![](samples/BlendNormals.png) | ![](samples/RasterText.png) | ![](samples/Transforms.png)
 ---- | ---- | ----
-![Samples](samples/BezierDeform.png) | ![Samples](samples/TiledBlock.png) | ![Samples](samples/Benchmark.png)
+![](samples/BezierDeform.png) | ![](samples/TiledBlock.png) | ![](samples/Benchmark.png)
 
 ## License
 Check LICENSE.md, ULIS3 is not available for commercial use.
