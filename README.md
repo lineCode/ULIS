@@ -2,10 +2,13 @@
     <img src="samples/Splash.png">
 </p>
 
-# Showcase
-![Showcase](samples/BlendNormals.png) | ![Showcase](samples/RasterText.png) | ![Showcase](samples/Transforms.png)
+## Overview
+ULIS is a graphics library written in C++. It is aimed at software rendering and digital image processing on CPU.
+
+## Samples
+![Samples](samples/BlendNormals.png) | ![Samples](samples/RasterText.png) | ![Samples](samples/Transforms.png)
 ---- | ---- | ----
-![Showcase](samples/BezierDeform.png) | ![Showcase](samples/TiledBlock.png) | ![Showcase](samples/Benchmark.png)
+![Samples](samples/BezierDeform.png) | ![Samples](samples/TiledBlock.png) | ![Samples](samples/Benchmark.png)
 
 ## License
 Check LICENSE.md, ULIS3 is not available for commercial use.
@@ -13,59 +16,37 @@ Check LICENSE.md, ULIS3 is not available for commercial use.
 |-------------------|---------------------------------------------------------------|-------------------|
 |ULIS3              |https://github.com/Praxinos/ULIS3                              |CC-BY-NC-ND-4.0    |
 
-## Description
+## Details
 
         Cross-Platform C++14 Library
         2D Software Rasterizer on CPU
         Build as static or dynamic library
         Very lightweight, good performance
         Generic Digital Image Processing
-        Python3x binding
+        Various bindings to other languages
         Read Write from files for many popular formats
-        Image conversions
+        Convert beetween image formats
         Render Text to any image in memory
-        Affine Image Transforms
+        Affine Image Transforms and other advanced deformation algorithms ( perspective, bezier )
         FX, Convolution, Blur, Noise, ...
-        All Standard Pixel Blending Modes
+        All Standard Pixel Blending Modes, and more
         Many Image Formats, Layouts and Types ( u8, u16, u32, float, double )
         Color Models ( RGB, HSL, HSV, CMY, CMYK, Lab, XYZ, ... )
         Color-Managed Pipelines, Color Profiles Support
         Multithreaded optimisations
         SSE4.2 and AVX2 optimisations
-        Support for GPU image processing with OpenCL
-        Large Tiled Images ( 300000 px * 300000 px)
-        Image Pools and Caches for Optimisation
+        Memory Efficient structures for large images ( 300k² ) or long sequences of images.
+        Interoperability with GPUs via OpenCL
+        Easy and fast interoperability with many libraries and 3D rendering APIs.
 
-## History
-ULIS is created and maintained by Clément BERTHAUD ( a.k.a Layl, a.k.a Robot-Fromage ).  
-
-    ULIS1 began development in December 2018.  
-It was first hosted as a repository listed under user Robot-Fromage.  
-It was then developped as a part of Praxinos, for its digital image processing tools.  
-ULIS was first released internaly for Praxinos at the end of summer 2019.  
-It made its debut in Iliad, a digital painting plugin for UnrealEngine  
-The first version of ULIS experienced template bloating, resulting in terrible output binary sizes and compile times.  
-
-    ULIS2, was starting development in beginning of January 2020.  
-Compile times were drastically improved as well as output binary sizes.  
-ULIS2 brought many things, such as better overall performances, support for more models, actual support for AVX2 optimisations, color mix, smudge, new blending modes and alpha modes, new interpolation types, etc.  
-The build framework was also simplified and extended to conform to the typical cmake build process.  
-Support for GPU image processing with OpenCL was introduced.  
-The library dependencies changed and were embedded in the repository.  
-
-    ULIS3 was introduced in March 2020.  
-ULIS3 merged the commit history of both ULIS and ULIS2.  
-ULIS3 brings high-level features, such as Tile Pools and Tiled Blocks, or advanced deformation algorithms.  
-ULIS3 also aims to introduce WASM as a new available compilation target, allowing to run transpiled C++ code on client side in web browsers.  
-
-## Software Requirements Specification ( SRS )
+## Software Requirements
 
         Linux, Windows or MacOS
         CMake
         Git
         C++ compiler with support for C++14 or greater
 
-## Library Dependencies
+## Dependencies
 Dependencies are redistributed directly within the repository under the 3rdparty directory.
 
 |Dependency         |Link                                                           |License            |
@@ -88,21 +69,27 @@ Additional Optional library can be used with ULIS3 to test samples programs or b
         Qt5.x
         Python3.x
 
+## Bindings
+ULIS3 officialy maitains a few bindings of the library. They are listed under the bindings/ directory. These bindings often have different build process than the library. Refer to the readme sections of the bindings for more details.
+|Target             |Name               |
+|-------------------|-------------------|
+|Python             |PyULIS3            |
+|Javascript ( wasm )|wULIS3             |
+
+## ULIS3 for UnrealEngine ThirdParty Module
+A `ULIS3.Build.cs` script is provided within the repository, in order to include ULIS3 as a third party library easily in an UnrealEngine project or plugin.  
+
 ## Getting Started
 
         git clone https://github.com/Praxinos/ULIS3
         mkdir ULIS3_Build
         cd ULIS3_Build
-        cmake -G ../ULIS3
+        cmake -G "Generator" ../ULIS3
 
 Sample scripts are also available in the repository to help with the build process.
 
-## ULIS3 for UnrealEngine ThirdParty Module
-A `ULIS3.Build.cs` script is provided within the repository.  
-ULIS3 GPU capabilities and interop with Direct3D or OpenGL in the context of a generic rendering hardware interface is still a work in progress.
-
 ## Examples
-This is a small sample illustrating image loading, copy and blend operatios. Check samples to get a gist of how to use ULIS3, more details and specific functions.
+This is a small sample illustrating image loading, copy and blend operations. Check samples to get a gist of how to use ULIS3, more details and specific functions.
 
 ```cpp
 #include <ULIS3>
@@ -135,3 +122,5 @@ int main() {
 }
 ```
 
+## Documentation
+You can build ULIS3 documentation if you have doxygen installed on you computer. On Windows, simply run the build_documentation.bat script in the documentation folder.
