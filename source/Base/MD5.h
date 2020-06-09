@@ -1,4 +1,4 @@
-// Copyright// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
@@ -8,7 +8,7 @@
 * @file         MD5.h
 * @author       Clement Berthaud
 * @brief        This file provides declaration for MD5 functions and FMD5 class.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
