@@ -21,7 +21,7 @@
 #include <vectorclass.h>
 
 ULIS3_NAMESPACE_BEGIN
-#ifdef __AVX2__
+#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void ULIS3_VECTORCALL
 InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, const tSize iStride ) {
     tSize index = 0;
@@ -33,9 +33,9 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, 
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memcpy instead
     memcpy( iDst, &iSrc, iCount - index );
 }
-#endif // __AVX2__
+#endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
-#ifdef __SSE4_2__
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void ULIS3_VECTORCALL
 InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, const tSize iStride ) {
     tSize index;
@@ -74,7 +74,7 @@ Fill_imp( FThreadPool*                          iThreadPool
     tByte*      dsb     = iDestination->DataPtr() + dsh;
     #define DST dsb + ( ( iDstROI.y + pLINE ) * bps )
 
-#ifdef __AVX2__
+#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
         tSize   count   = iDstROI.w * bpp;
         tSize   stride  = 32 - ( 32 % bpp );
@@ -92,7 +92,7 @@ Fill_imp( FThreadPool*                          iThreadPool
                                        , InvokeFillMTProcessScanline_AX2, DST, src, count, stride )
     } else
 #endif
-#ifdef __SSE4_2__
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
         tSize   count   = iDstROI.w * bpp;
         tSize   stride  = 16 - ( 16 % bpp );

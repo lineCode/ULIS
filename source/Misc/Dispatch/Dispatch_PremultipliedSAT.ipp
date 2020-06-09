@@ -114,7 +114,7 @@ void ComputePremultipliedSummedAreaTable_MEM_Generic( FThreadPool*              
                                    , bdp + pLINE * bdp_bpp );
 }
 
-#ifdef __SSE4_2__
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void 
 InvokeComputePremultipliedSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const tByte* iSrc, tByte* iDst, uint8 iAID ) {
     const uint8* src = reinterpret_cast< const uint8* >( iSrc ) + 4;
@@ -191,7 +191,7 @@ void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FThreadPool*              
                                    , src + pLINE * src_bpp
                                    , bdp + pLINE * bdp_bpp );
 }
-#endif // __SSE4_2__
+#endif // ULIS3_COMPILETIME_SSE42_SUPPORT
 
 
 typedef void (*fpDispatchedSATFunc)( FThreadPool*             iThreadPool
@@ -209,7 +209,7 @@ QueryDispatchedPremultipliedSATFunctionForParameters_Generic( uint32 iPerfIntent
 
 fpDispatchedSATFunc
 QueryDispatchedPremultipliedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
-    #ifdef __SSE4_2__
+    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
         if( iHostDeviceInfo.HW_SSE42 )
             return  ComputePremultipliedSummedAreaTable_SSE42_RGBA8;
         else

@@ -20,7 +20,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 
-#ifdef __AVX2__
+#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSize iCount, const tSize iStride )
 {
     tSize index;
@@ -33,9 +33,9 @@ void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSiz
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
     memcpy( iDst, iSrc, iCount - index );
 }
-#endif // __AVX2__
+#endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
-#ifdef __SSE4_2__
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void InvokeCopyMTProcessScanline_SSE( tByte* iDst, const tByte* iSrc, const tSize iCount, const tSize iStride )
 {
     tSize index;
@@ -80,14 +80,14 @@ Copy_imp( FThreadPool*              iThreadPool
     #define SRC src + ( ( basesrcy + pLINE ) * src_bps )
     #define DST dst + ( ( basedsty + pLINE ) * dst_bps )
     const tSize count = iDstROI.w * bpp;
-    #ifdef __AVX2__
+    #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && ( src_bps + dst_bps ) >= 64 ) {
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeCopyMTProcessScanline_AX2, DST, SRC, count, 32 )
     } else
     #endif
-    #ifdef __SSE4_2__
+    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && ( src_bps + dst_bps ) >= 32 ) {
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h

@@ -18,22 +18,6 @@
 #include <cstdint>
 
 /////////////////////////////////////////////////////
-// SIMD PATCH FOR GNU < 9
-#ifdef __GNUC__
-#if __GNUC__ < 9
-// unaligned load and store functions
-#define _mm_loadu_si16(p) _mm_cvtsi32_si128(*(unsigned short const*)(p))
-#define _mm_storeu_si16(p, a) (void)(*(short*)(p) = (short)_mm_cvtsi128_si32((a)))
-#define _mm_loadu_si32(p) _mm_cvtsi32_si128(*(unsigned int const*)(p))
-#define _mm_storeu_si32(p, a) (void)(*(int*)(p) = _mm_cvtsi128_si32((a)))
-#define _mm_loadu_si64(p) _mm_loadl_epi64((__m128i const*)(p))
-#define _mm_storeu_si64(p, a) (_mm_storel_epi64((__m128i*)(p), (a)))
-#endif
-#endif
-
-#include <immintrin.h>
-
-/////////////////////////////////////////////////////
 // Detect Build Configuration
 #ifdef NDEBUG
     #define ULIS3_RELEASE
@@ -85,8 +69,17 @@
     #define ULIS3_UNIX
 #elif defined(_POSIX_VERSION)
     #define ULIS3_POSIX
+#elif defined( __EMSCRIPTEN__ )
+    #define ULIS3_EMSCRIPTEN
 #else
     #error "Unknown Platform"
+#endif
+
+/////////////////////////////////////////////////////
+// Safety disable thread and SIMD for Emscripten target
+#ifdef ULIS3_EMSCRIPTEN
+#define ULIS3_NO_THREAD_SUPPORT
+#define ULIS3_NO_SIMD_SUPPORT
 #endif
 
 /////////////////////////////////////////////////////
@@ -191,4 +184,32 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
     #define ULIS3_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS3_CRASH; }
 #else
     #define ULIS3_ASSERT( cond, log )
+#endif
+
+/////////////////////////////////////////////////////
+// SIMD PATCH FOR GNU < 9
+#ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
+#ifdef __GNUC__
+#if __GNUC__ < 9
+// unaligned load and store functions
+#define _mm_loadu_si16(p) _mm_cvtsi32_si128(*(unsigned short const*)(p))
+#define _mm_storeu_si16(p, a) (void)(*(short*)(p) = (short)_mm_cvtsi128_si32((a)))
+#define _mm_loadu_si32(p) _mm_cvtsi32_si128(*(unsigned int const*)(p))
+#define _mm_storeu_si32(p, a) (void)(*(int*)(p) = _mm_cvtsi128_si32((a)))
+#define _mm_loadu_si64(p) _mm_loadl_epi64((__m128i const*)(p))
+#define _mm_storeu_si64(p, a) (_mm_storel_epi64((__m128i*)(p), (a)))
+#endif
+#endif
+#include <immintrin.h>
+#endif
+
+/////////////////////////////////////////////////////
+// Conditional compile time detection macro in order to decide if we should include SIMD versions in the various dispatch
+#ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
+    #ifdef __AVX2__
+        #define ULIS3_COMPILETIME_AVX2_SUPPORT
+    #endif
+    #ifdef __SSE4_2__
+        #define ULIS3_COMPILETIME_SSE42_SUPPORT
+    #endif
 #endif

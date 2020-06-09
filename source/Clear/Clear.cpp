@@ -18,7 +18,7 @@
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
-#ifdef __AVX2__
+#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iStride ) {
     int64 index;
     for( index = 0; index < int64( iCount ) - 32; index += iStride ) {
@@ -28,9 +28,9 @@ void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSi
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
     memset( iDst, 0, iCount - index );
 }
-#endif // __AVX2__
+#endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
-#ifdef __SSE4_2__
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const tSize iStride ) {
     int64 index;
     for( index = 0; index < int64( iCount ) - 16; index += iStride ) {
@@ -63,7 +63,7 @@ void Clear_imp( FThreadPool*            iThreadPool
     const tSize count = iArea.w * bpp;
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
-    #ifdef __AVX2__
+    #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const tSize stride = 32;
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
@@ -71,7 +71,7 @@ void Clear_imp( FThreadPool*            iThreadPool
                                        , InvokeFillMTProcessScanline_AX2, DST, count, stride )
     } else
     #endif
-    #ifdef __SSE4_2__
+    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const tSize stride = 16;
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
