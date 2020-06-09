@@ -66,7 +66,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const tByte* iSrc, tByte
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -95,7 +95,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const tByte* iSrc, tByte
                 const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -147,7 +147,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iBdp, i
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -164,7 +164,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iBdp, i
                 const float bayerEl     = gBayer8x8Matrix[ ( info.backdropWorkingRect.y + iLine ) % 8 ][ ( info.backdropWorkingRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }

@@ -26,8 +26,6 @@ void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const _FBlendInfoPrivate > iInfo, const Vec4i iIDT ) {
     const _FBlendInfoPrivate&   info    = *iInfo;
     const FFormatInfo&          fmt     = info.source->FormatInfo();
-    const tByte*                src     = iSrc;
-    tByte*                      bdp     = iBdp;
     const bool notLastLine  = iLine < info.backdropCoverage.y;
     const bool notFirstLine = iLine > 0;
     const bool onLeftBorder = info.backdropWorkingRect.x == 0;
@@ -115,12 +113,10 @@ void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const tByte* iSrc, tByte* iBdp, int32 iLine, std::shared_ptr< const _FBlendInfoPrivate > iInfo, const Vec4i iIDT ) {
     const _FBlendInfoPrivate&   info    = *iInfo;
     const FFormatInfo&          fmt     = info.source->FormatInfo();
-    const tByte*                src     = iSrc;
-    tByte*                      bdp     = iBdp;
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
-        ufloat alpha_bdp    = bdp[fmt.AID] / 255.f;
-        ufloat alpha_src    = ( src[fmt.AID] / 255.f ) * info.opacityValue;
+        ufloat alpha_bdp    = iBdp[fmt.AID] / 255.f;
+        ufloat alpha_src    = ( iSrc[fmt.AID] / 255.f ) * info.opacityValue;
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
         ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
