@@ -4,8 +4,12 @@
 
 ## Overview
 ULIS is a graphics library written in C++. It is aimed at software rendering and digital image processing on CPU.  
+
+## Links
 Official repository is hosted here https://github.com/Praxinos/ULIS3  
 Official documentation can be found here https://praxinos.coop/ULIS3  
+ULIS is developped and maintained by Clément Berthaud ( a.k.a Layl or Robot-Fromage ) http://clementberthaud.com/  
+ULIS is primarily developped for Praxinos, a software company developping tools for artists. https://praxinos.coop/  
 
 ## Samples
 ![](samples/BlendNormals.png) | ![](samples/RasterText.png) | ![](samples/Transforms.png)
