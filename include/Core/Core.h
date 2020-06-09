@@ -22,6 +22,8 @@
 
 /////////////////////////////////////////////////////
 // glm FORCE extensions, before any glm related includes
+#ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
 #define GLM_FORCE_SSE42
 #define GLM_FORCE_INTRINSICS
+#endif
 #define GLM_FORCE_SWIZZLE

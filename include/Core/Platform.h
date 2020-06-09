@@ -45,34 +45,36 @@
 
 /////////////////////////////////////////////////////
 // Detect Platform
-#ifdef _WIN32
-    #define ULIS3_WIN
-   #ifdef _WIN64
-      #define ULIS3_WIN64
-   #else
-      #define ULIS3_WIN32
-   #endif
-#elif __APPLE__
-    #include "TargetConditionals.h"
-    #if TARGET_IPHONE_SIMULATOR
-         #define ULIS3_IOS_SIMULATOR
-    #elif TARGET_OS_IPHONE
-        #define ULIS3_IOS_DEVICE
-    #elif TARGET_OS_MAC
-        #define ULIS3_MACOS
-    #else
-        #error "Unknown Apple platform"
-    #endif
-#elif __linux__
-    #define ULIS3_LINUX
-#elif __unix__
-    #define ULIS3_UNIX
-#elif defined(_POSIX_VERSION)
-    #define ULIS3_POSIX
-#elif defined( __EMSCRIPTEN__ )
+#ifdef __EMSCRIPTEN__
     #define ULIS3_EMSCRIPTEN
 #else
-    #error "Unknown Platform"
+    #ifdef _WIN32
+        #define ULIS3_WIN
+       #ifdef _WIN64
+          #define ULIS3_WIN64
+       #else
+          #define ULIS3_WIN32
+       #endif
+    #elif __APPLE__
+        #include "TargetConditionals.h"
+        #if TARGET_IPHONE_SIMULATOR
+             #define ULIS3_IOS_SIMULATOR
+        #elif TARGET_OS_IPHONE
+            #define ULIS3_IOS_DEVICE
+        #elif TARGET_OS_MAC
+            #define ULIS3_MACOS
+        #else
+            #error "Unknown Apple platform"
+        #endif
+    #elif __linux__
+        #define ULIS3_LINUX
+    #elif __unix__
+        #define ULIS3_UNIX
+    #elif defined(_POSIX_VERSION)
+        #define ULIS3_POSIX
+    #else
+        #error "Unknown Platform"
+    #endif
 #endif
 
 /////////////////////////////////////////////////////

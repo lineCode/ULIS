@@ -127,7 +127,7 @@ ULIS3_FORCEINLINE FRGBF BlendPartialDerivativeF( const FRGBF& iCs, const FRGBF& 
     glm::vec3 nb( iCb.R, iCb.G, iCb.B );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy * nb.z + nb.xy * ns.z, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    auto res = glm::normalize( glm::vec3( ns.xy() * nb.z + nb.xy() * ns.z, ns.z * nb.z ) ) * 0.5f + 0.5f;
     return  FRGBF{ res.x, res.y, res.z };
 }
 //--------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ ULIS3_FORCEINLINE FRGBF BlendWhiteoutF( const FRGBF& iCs, const FRGBF& iCb ) {
     glm::vec3 nb( iCb.R, iCb.G, iCb.B );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy + nb.xy, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    auto res = glm::normalize( glm::vec3( ns.xy() + nb.xy(), ns.z * nb.z ) ) * 0.5f + 0.5f;
     return  FRGBF{ res.x, res.y, res.z };
 }
 //--------------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ ULIS3_FORCEINLINE FRGBF BlendAngleCorrectedF( const FRGBF& iCs, const FRGBF& iCb
     glm::vec3 nb( iCb.R, iCb.G, iCb.B );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy + nb.xy, ns.z ) ) * 0.5f + 0.5f;
+    auto res = glm::normalize( glm::vec3( ns.xy() + nb.xy(), ns.z ) ) * 0.5f + 0.5f;
     return  FRGBF{ res.x, res.y, res.z };
 }
 
@@ -255,7 +255,7 @@ ULIS3_FORCEINLINE FRGBF_arr BlendPartialDerivativeF( const FRGBF_arr& iCs, const
     glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy * nb.z + nb.xy * ns.z, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    auto res = glm::normalize( glm::vec3( ns.xy() * nb.z + nb.xy() * ns.z, ns.z * nb.z ) ) * 0.5f + 0.5f;
     return  FRGBF_arr{ res.x, res.y, res.z };
 }
 //--------------------------------------------------------------------------------------
@@ -265,7 +265,7 @@ ULIS3_FORCEINLINE FRGBF_arr BlendWhiteoutF( const FRGBF_arr& iCs, const FRGBF_ar
     glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy + nb.xy, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    auto res = glm::normalize( glm::vec3( ns.xy() + nb.xy(), ns.z * nb.z ) ) * 0.5f + 0.5f;
     return  FRGBF_arr{ res.x, res.y, res.z };
 }
 //--------------------------------------------------------------------------------------
@@ -275,7 +275,7 @@ ULIS3_FORCEINLINE FRGBF_arr BlendAngleCorrectedF( const FRGBF_arr& iCs, const FR
     glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy + nb.xy, ns.z ) ) * 0.5f + 0.5f;
+    auto res = glm::normalize( glm::vec3( ns.xy() + nb.xy(), ns.z ) ) * 0.5f + 0.5f;
     return  FRGBF_arr{ res.x, res.y, res.z };
 }
 

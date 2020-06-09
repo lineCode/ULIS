@@ -20,9 +20,15 @@
 #include "Blend/Dispatch/Generic/BlendMT_Separable_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_NonSeparable_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_Misc_MEM_Generic.ipp"
+
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_SSE_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp"
+#endif
+
+#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_AVX_RGBA8.ipp"
+#endif
 
 #define ULIS3_SELECT_COMP_OP(   iSubpixel, _FUNCTION )      iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
 #define ULIS3_SELECT_COMP_OPT(  iSubpixel, _FUNCTION, _T )  iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
@@ -50,12 +56,12 @@ QueryDispatchedBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo
         }
 
         case BMQ_SEPARABLE: {
-            #ifdef __AVX2__
+            #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
                 if( iInfo.perfIntent & ULIS3_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
                     return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_AVX_RGBA8 );
                 else
             #endif
-            #ifdef __SSE4_2__
+            #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
                 if( iInfo.hostDeviceInfo->HW_SSE42 )
                     return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_SSE_RGBA8 );
                 else
@@ -64,7 +70,7 @@ QueryDispatchedBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo
         }
 
         case BMQ_NONSEPARABLE: {
-            #ifdef __SSE4_2__
+            #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
                 if( iInfo.hostDeviceInfo->HW_SSE42 )
                     return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_NonSeparable_SSE_RGBA8 );
                 else

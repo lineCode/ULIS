@@ -14,7 +14,6 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include <vectorclass.h>
 
 #define SampleSubpixelAlpha( _DST )                                                                                 \
     if( fmt.HEA ) {                                                                                                 \
@@ -44,6 +43,9 @@ _DST = res == 0.f ? 0.f : ( ( v1 ) * info.subpixelComponent.x + ( v2 ) * info.bu
 #define ULIS3_ASSIGN_ALPHAAVXF( iAlphaMode, iTarget, iSrc, iBdp )                       ULIS3_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS3_FOR_ALL_AM_DO, ULIS3_ACTION_ASSIGN_ALPHAAVXF, iTarget, iSrc, iBdp )
 
 ULIS3_NAMESPACE_BEGIN
+
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+#include <vectorclass.h>
 ULIS3_API ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
     switch( iRS ) {
         case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
@@ -52,6 +54,7 @@ ULIS3_API ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) 
         default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); break;
     }
 }
+#endif
 
 ULIS3_NAMESPACE_END
 

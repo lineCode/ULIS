@@ -27,7 +27,11 @@ struct ULIS3_API FMaths
     static constexpr float  kPIf = 3.14159265f;
 
     static ULIS3_FORCEINLINE int32 FloorToInt( ufloat iValue ) {
-        return  _mm_cvt_ss2si( _mm_set_ss( iValue + iValue - 0.5f ) ) >> 1;
+        #ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
+            return  _mm_cvt_ss2si( _mm_set_ss( iValue + iValue - 0.5f ) ) >> 1;
+        #else
+            return  static_cast< int32>( floor( iValue ) );
+        #endif
     }
 
     static ULIS3_FORCEINLINE ufloat FloorToFloat( ufloat iValue ) {
@@ -35,7 +39,11 @@ struct ULIS3_API FMaths
     }
 
     static ULIS3_FORCEINLINE int32 CeilToInt( ufloat iValue ) {
-        return -( _mm_cvt_ss2si( _mm_set_ss( -0.5f - ( iValue + iValue ) ) ) >> 1 );
+        #ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
+            return -( _mm_cvt_ss2si( _mm_set_ss( -0.5f - ( iValue + iValue ) ) ) >> 1 );
+        #else
+            return  static_cast< int32>( ceil( iValue ) );
+        #endif
     }
 
     static ULIS3_FORCEINLINE ufloat CeilToFloat( ufloat iValue ) {

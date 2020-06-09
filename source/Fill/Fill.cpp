@@ -18,7 +18,6 @@
 #include "Data/Pixel.h"
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
-#include <vectorclass.h>
 
 ULIS3_NAMESPACE_BEGIN
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
