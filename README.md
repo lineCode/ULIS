@@ -3,7 +3,9 @@
 </p>
 
 ## Overview
-ULIS is a graphics library written in C++. It is aimed at software rendering and digital image processing on CPU. Official repository is hosted here https://github.com/Praxinos/ULIS3
+ULIS is a graphics library written in C++. It is aimed at software rendering and digital image processing on CPU.  
+Official repository is hosted here https://github.com/Praxinos/ULIS3  
+Official documentation can be found here https://praxinos.coop/ULIS3  
 
 ## Samples
 ![](samples/BlendNormals.png) | ![](samples/RasterText.png) | ![](samples/Transforms.png)
