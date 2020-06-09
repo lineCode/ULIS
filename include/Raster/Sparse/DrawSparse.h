@@ -14,8 +14,6 @@
 #pragma once
 #include "Core/Core.h"
 #include "Raster/Draw.h"
-#include "Data/Sparse/TilePool.h"
-#include "Data/Sparse/TiledBlock.h"
 #include "Data/Block.h"
 #include "Data/Pixel.h"
 

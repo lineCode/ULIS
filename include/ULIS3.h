@@ -51,6 +51,8 @@
 #include "Mix/Mix.h"
 #include "Transform/Transform.h"
 // Sparse
+#ifndef ULIS3_EMSCRIPTEN
 #include "Data/Sparse/TiledBlock.h"
 #include "Data/Sparse/TilePool.h"
+#endif
 

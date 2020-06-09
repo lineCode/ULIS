@@ -49,3 +49,15 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/VCL/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../source/
 )
+
+file(
+    GLOB_RECURSE
+    source_list
+    RELATIVE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "Formats.cpp"
+)
+
+add_executable( wFormats ${source_list} )
+target_link_libraries( wFormats libwULIS3 )
+set( CMAKE_EXECUTABLE_SUFFIX ".html" )
