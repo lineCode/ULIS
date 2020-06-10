@@ -19,21 +19,46 @@
 #include <math.h>
 #include <iostream>
 #include <array>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
-uint32_t g_shaderProgram;
-int32_t g_attribLocationPosition;
-int32_t g_colorUniformLocation;
-uint32_t g_vbo, g_vao;
-std::array<float,9> g_vertices = {
-    -0.5f, -0.5f, 0.0f, // left
-    0.5f, -0.5f, 0.0f, // right
-    0.0f,  0.5f, 0.0f  // top
-};
 bool g_done = false;
 SDL_Window* g_window;
 SDL_GLContext g_glcontext;
+
+int g_width;
+int g_height;
+GLuint g_texture;
+bool InitTexture()
+{
+    // Load from file
+    int image_width = 256;
+    int image_height = 256;
+    unsigned char* image_data = new unsigned char[ image_width * image_height * 4 ];
+    for( int i = 0; i < 256 * 256 * 4; ++i ) {
+        image_data[i] = 255;
+    }
+
+    // Create a OpenGL texture identifier
+    GLuint image_texture;
+    glGenTextures(1, &image_texture);
+    glBindTexture(GL_TEXTURE_2D, image_texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    g_texture = image_texture;
+    g_width = image_width;
+    g_height = image_height;
+
+    delete [] image_data;
+
+    return true;
+}
 
 void main_loop()
 {
@@ -47,28 +72,16 @@ void main_loop()
 
     ImGui_ImplSdl_NewFrame(g_window);
 
-    ImGui::SetNextWindowPos(ImVec2(10,10));
-    ImGui::Begin("Demo", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::Text("Just a WebAssembly demo.");
-    ImGui::SameLine();
-    if(ImGui::Button("View on Github"))
-    {
-        emscripten_run_script( "window.location.href = 'https://github.com/schteppe/imgui-wasm';" );
-    }
-
-    static glm::vec3 color(0.7f, 0.3f, 0.2f);
-    static glm::vec3 bgcolor(0.2f);
-    ImGui::ColorEdit3( "Triangle", glm::value_ptr(color) );
-    ImGui::ColorEdit3( "Background", glm::value_ptr(bgcolor) );
+    ImGui::SetNextWindowPos(ImVec2(0,0));
+    ImGui::Begin("OpenGL Texture Test");
+    ImGui::Text("size = %d x %d", g_width, g_height);
+    ImGui::Image((void*)(intptr_t)g_texture, ImVec2(256, 256));
     ImGui::End();
-
-    static bool g_show_test_window = true;
-    ImGui::ShowDemoWindow(&g_show_test_window);
 
     int w, h;
     SDL_GL_GetDrawableSize(g_window, &w, &h);
     glViewport(0, 0, w, h);
-    glClearColor(bgcolor.x, bgcolor.y, bgcolor.z, 1.0f);
+    glClearColor(0.2, 0.2, 0.2, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     ImGui::Render();
     SDL_GL_SwapWindow(g_window);
@@ -124,6 +137,7 @@ int main(int, char**)
         return EXIT_FAILURE;
     }
 
+    InitTexture();
     runMainLoop();
 
     destroySDL();
