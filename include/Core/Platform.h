@@ -191,17 +191,17 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 /////////////////////////////////////////////////////
 // SIMD PATCH FOR GNU < 9
 #ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
-#ifdef __GNUC__
-#if __GNUC__ < 9
-// unaligned load and store functions
-#define _mm_loadu_si16(p) _mm_cvtsi32_si128(*(unsigned short const*)(p))
-#define _mm_storeu_si16(p, a) (void)(*(short*)(p) = (short)_mm_cvtsi128_si32((a)))
-#define _mm_loadu_si32(p) _mm_cvtsi32_si128(*(unsigned int const*)(p))
-#define _mm_storeu_si32(p, a) (void)(*(int*)(p) = _mm_cvtsi128_si32((a)))
-#define _mm_loadu_si64(p) _mm_loadl_epi64((__m128i const*)(p))
-#define _mm_storeu_si64(p, a) (_mm_storel_epi64((__m128i*)(p), (a)))
-#endif
-#endif
+//#ifdef __GNUC__
+//#if __GNUC__ < 9
+//// unaligned load and store functions
+//#define _mm_loadu_si16(p) _mm_cvtsi32_si128(*(unsigned short const*)(p))
+//#define _mm_storeu_si16(p, a) (void)(*(short*)(p) = (short)_mm_cvtsi128_si32((a)))
+//#define _mm_loadu_si32(p) _mm_cvtsi32_si128(*(unsigned int const*)(p))
+//#define _mm_storeu_si32(p, a) (void)(*(int*)(p) = _mm_cvtsi128_si32((a)))
+//#define _mm_loadu_si64(p) _mm_loadl_epi64((__m128i const*)(p))
+//#define _mm_storeu_si64(p, a) (_mm_storel_epi64((__m128i*)(p), (a)))
+//#endif
+//#endif
 #include <immintrin.h>
 #endif
 
