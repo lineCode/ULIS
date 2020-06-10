@@ -46,7 +46,7 @@ public class ULIS : ModuleRules
                 }
             );
 
-            string LibBase          = Path.Combine( ModuleDirectory, "redist", "lib" );
+            string LibBase          = Path.Combine( ModuleDirectory, "redist", "bin" );
             string ULIS_LibName         = "ULIS3";
 
             if (Target.Configuration == UnrealTargetConfiguration.Debug && Target.bDebugBuildsActuallyUseDebugCRT) {
