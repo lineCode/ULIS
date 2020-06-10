@@ -53,5 +53,6 @@ target_include_directories(
 set( CMAKE_EXECUTABLE_SUFFIX ".html" )
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/Formats/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/SDL_Display/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/imgui/CMakeLists.txt)
+#include(${CMAKE_CURRENT_SOURCE_DIR}/SDL_Display/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/imgui_interop/CMakeLists.txt)
+
