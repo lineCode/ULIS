@@ -82,22 +82,22 @@ template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _
 template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::RAMUsageCapTarget()                        const   { return  mRAMUsageCapTargetAtomic.load();              }
 template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::SWAPUsageCapTarget()                       const   { return  mSWAPUsageCapTargetAtomic.load();             }
 template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentTotalMemoryUsage()                  const   { return  CurrentRAMUsage();                            }
-template< uint8 _MICRO, uint8 _MACRO > size_t               TTilePool< _MICRO, _MACRO >::NumTilesScheduledForClear()                const   { return  mNumTilesScheduledForClearAtomic.load();      }
-template< uint8 _MICRO, uint8 _MACRO > size_t               TTilePool< _MICRO, _MACRO >::NumFreshTilesAvailableForQuery()           const   { return  mNumFreshTilesAvailableForQueryAtomic.load(); }
+template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::NumTilesScheduledForClear()                const   { return  mNumTilesScheduledForClearAtomic.load();      }
+template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::NumFreshTilesAvailableForQuery()           const   { return  mNumFreshTilesAvailableForQueryAtomic.load(); }
 template< uint8 _MICRO, uint8 _MACRO > void                 TTilePool< _MICRO, _MACRO >::SetRAMUsageCapTarget( uint64 iValue )              { mRAMUsageCapTargetAtomic.store( iValue );             }
 template< uint8 _MICRO, uint8 _MACRO > void                 TTilePool< _MICRO, _MACRO >::SetSWAPUsageCapTarget( uint64 iValue )             { mSWAPUsageCapTargetAtomic.store( iValue );            }
 
-template< uint8 _MICRO, uint8 _MACRO > size_t TTilePool< _MICRO, _MACRO >::NumDirtyHashedTilesCurrentlyInUse() {
+template< uint8 _MICRO, uint8 _MACRO > uint64 TTilePool< _MICRO, _MACRO >::NumDirtyHashedTilesCurrentlyInUse() {
     const std::lock_guard<std::mutex> lock( mMutexDirtyHashedTilesCurrentlyInUseLock );
     return  mDirtyHashedTilesCurrentlyInUse.size();
 }
 
-template< uint8 _MICRO, uint8 _MACRO > size_t TTilePool< _MICRO, _MACRO >::NumCorrectlyHashedTilesCurrentlyInUse() {
+template< uint8 _MICRO, uint8 _MACRO > uint64 TTilePool< _MICRO, _MACRO >::NumCorrectlyHashedTilesCurrentlyInUse() {
     const std::lock_guard<std::mutex> lock( mMutexCorrectlyHashedTilesCurrentlyInUseLock );
     return  mCorrectlyHashedTilesCurrentlyInUse.size();
 }
 
-template< uint8 _MICRO, uint8 _MACRO > size_t TTilePool< _MICRO, _MACRO >::NumRegisteredTiledBlocks() {
+template< uint8 _MICRO, uint8 _MACRO > uint64 TTilePool< _MICRO, _MACRO >::NumRegisteredTiledBlocks() {
     const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
     return  mRegisteredTiledBlocks.size();
 }

@@ -60,7 +60,7 @@ mkdir bin
 
 ## CD to root and copy
 cd ../../
-cp -a ./ULIS3/include/.          ULIS3_FullBuildUE4_MacOsXCodex64_Redist/redist/include/ULIS3
-cp -a ./ULIS3/3rdparty/glm/.     ULIS3_FullBuildUE4_MacOsXCodex64_Redist/redist/include/glm
+cp -a ./ULIS3/include/.                                                                         ULIS3_FullBuildUE4_MacOsXCodex64_Redist/redist/include/ULIS3
+cp -a ./ULIS3/3rdparty/glm/.                                                                    ULIS3_FullBuildUE4_MacOsXCodex64_Redist/redist/include/glm
 cp ULIS3_FullBuildUE4_MacOsXCodex64_Redist/Generated_XCode_Solution/RelWithDebInfo/ULIS3.dylib  ULIS3_FullBuildUE4_MacOsXCodex64_Redist/redist/bin/ULIS3.dylib
 cp ULIS3/scripts/UnrealEngine4/ULIS.Build.cs                                                    ULIS3_FullBuildUE4_MacOsXCodex64_Redist/ULIS.Build.cs

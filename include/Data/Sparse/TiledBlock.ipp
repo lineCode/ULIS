@@ -290,8 +290,8 @@ TTiledBlock< _MICRO, _MACRO >::SanitizeNow() {
         ++it;
     }
 
-    for( auto it : to_delete )
-        mSparseMap.erase( it );
+    for( auto ittd : to_delete )
+        mSparseMap.erase( ittd );
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
