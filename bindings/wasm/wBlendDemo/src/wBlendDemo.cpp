@@ -77,7 +77,7 @@ int main( int, char** ) {
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    g_Window = SDL_CreateWindow("ULIS3 Web Demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    g_Window = SDL_CreateWindow("ULIS3 Web Demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 342, 328, window_flags);
     g_GLContext = SDL_GL_CreateContext(g_Window);
     if (!g_GLContext) {
         fprintf(stderr, "Failed to initialize WebGL context!\n");
@@ -229,7 +229,9 @@ void InitULIS() {
 }
 
 void BuildGUI() {
-    ImGui::Begin( "ULIS3 Blend Demo", NULL, ImGuiWindowFlags_AlwaysAutoResize );
+    ImGui::SetNextWindowPos( ImVec2( 0.f, 0.f ) );
+    ImGui::SetNextWindowSize( ImVec2( 342.f, 328.f ) );
+    ImGui::Begin( "ULIS3 Blend Demo", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar );
     static ImGuiComboFlags flags = 0;
     static int over_item_current_idx = 3;
     const char* over_combo_label = g_sampleImagesNames[ over_item_current_idx ].c_str();
