@@ -6,14 +6,14 @@ add_executable( wimgui_interop
     3rdparty/imgui/imgui_demo.cpp
     3rdparty/imgui/imgui_draw.cpp
     3rdparty/imgui/imgui_widgets.cpp
-    imgui_interop/src/imgui_impl_sdl.h
-    imgui_interop/src/imgui_impl_sdl.cpp
-    imgui_interop/src/imgui_impl_opengl3.h
-    imgui_interop/src/imgui_impl_opengl3.cpp
-    imgui_interop/src/main.cpp
+    3rdparty/imgui/imgui_impl_sdl.h
+    3rdparty/imgui/imgui_impl_sdl.cpp
+    3rdparty/imgui/imgui_impl_opengl3.h
+    3rdparty/imgui/imgui_impl_opengl3.cpp
+    wimgui_interop/src/main.cpp
 )
 
-target_include_directories( wimgui_interop PUBLIC imgui_interop/src)
+target_include_directories( wimgui_interop PUBLIC wimgui_interop/src)
 include_directories( wimgui_interop SYSTEM PUBLIC 3rdparty/imgui ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 target_link_libraries(wimgui_interop libwULIS3 ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES})
 target_link_libraries(wimgui_interop "--preload-file ${CMAKE_CURRENT_SOURCE_DIR}/resources@/resources" )

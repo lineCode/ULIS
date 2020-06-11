@@ -22,6 +22,45 @@ SDL_GLContext   g_GLContext = NULL;
 // For clarity, our main loop code is declared at the end.
 void main_loop(void*);
 
+// Sample Texture Stuff
+/*
+int g_width;
+int g_height;
+GLuint g_texture;
+bool InitTexture()
+{
+    // Load from file
+    int image_width = 256;
+    int image_height = 256;
+    unsigned char* image_data = new unsigned char[ image_width * image_height * 4 ];
+    for( int i = 0; i < 256 * 256 * 4; ++i ) {
+        image_data[i] = 255;
+    }
+
+    // Create a OpenGL texture identifier
+    GLuint image_texture;
+    glGenTextures(1, &image_texture);
+    glBindTexture(GL_TEXTURE_2D, image_texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    g_texture = image_texture;
+    g_width = image_width;
+    g_height = image_height;
+
+    delete [] image_data;
+
+    return true;
+}
+*/
+
 void InitStyle() {
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
@@ -163,6 +202,9 @@ int main(int, char**)
     // Init Style
     InitStyle();
 
+    // Sample Texture
+    //InitTexture();
+
     // This function call won't return, and will engage in an infinite loop, processing events from the browser, and dispatching them.
     emscripten_set_main_loop_arg(main_loop, NULL, 0, true);
 }
@@ -230,6 +272,16 @@ void main_loop(void* arg)
             show_another_window = false;
         ImGui::End();
     }
+
+    // 4. Sample Texture Window
+    /*
+    {
+        ImGui::Begin("ULIS3 Texture Display");
+        ImGui::Text("size = %d x %d", g_width, g_height);
+        ImGui::Image((void*)(intptr_t)g_texture, ImVec2(256, 256));
+        ImGui::End();
+    }
+    */
 
     // Rendering
     ImGui::Render();
