@@ -6,6 +6,10 @@ message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
 # Create global solution
 project( wULIS3 )
 
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -s USE_SDL=2 -std=c++14" )
+
 # Add Dependencies
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/clip         ${PROJECT_BINARY_DIR}/3rdparty/build_clip       )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
@@ -53,6 +57,5 @@ target_include_directories(
 set( CMAKE_EXECUTABLE_SUFFIX ".html" )
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/Formats/CMakeLists.txt)
-#include(${CMAKE_CURRENT_SOURCE_DIR}/SDL_Display/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/imgui_interop/CMakeLists.txt)
 
