@@ -154,7 +154,7 @@
 
 /////////////////////////////////////////////////////
 // Erors
-//#pragma warning(disable : 4251)     // Shut down dll interface warnings.
+#pragma warning(disable : 4251)     // Shut down dll interface warnings.
 #pragma warning(disable : 26812)    // Shut non-class enum warnings.
 
 /////////////////////////////////////////////////////

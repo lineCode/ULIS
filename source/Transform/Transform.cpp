@@ -17,6 +17,7 @@
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
 #include "Maths/Transform2D.h"
+#include "Maths/Transform2D_Private.h"
 #include "Transform/Dispatch/TransformInfo.h"
 #include "Transform/Dispatch/Dispatch.ipp"
 #include "Clear/Clear.h"
@@ -63,7 +64,7 @@ void TransformAffine( FThreadPool*              iThreadPool
     alias.src_roi           = src_fit;
     alias.dst_roi           = dst_fit;
     alias.method            = iMethod;
-    alias.inverseTransform  = glm::inverse( iTransform.Matrix() );
+    alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
     fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
@@ -115,7 +116,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
     alias.src_roi           = src_fit;
     alias.dst_roi           = dst_fit;
     alias.method            = iMethod;
-    alias.inverseTransform  = glm::inverse( iTransform.Matrix() );
+    alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
     fpDispatchedTransformFunc fptr = QueryDispatchedTransformPerspectiveFunctionForParameters( alias );
@@ -349,7 +350,7 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
         return  fallback;
     }
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
-    FTransform2D fixedTransform( ComposeMatrix( MakeTranslationMatrix( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ), iTransform.Matrix() ) );
+    FTransform2D fixedTransform( FTransform2D::ComposeTransforms( FTransform2D::MakeTranslationTransform( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ), iTransform ) );
     TransformAffine( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, fixedTransform, iMethod );
     return  dst;
 }
@@ -381,7 +382,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
     for( auto& it : iDestinationPoints )
         fixedDestinationPoints.push_back( FVec2F( it.x - minx, it.y - miny ) );
 
-    FTransform2D persp( GetPerspectiveMatrix( sourcePoints.data(), fixedDestinationPoints.data() ) );
+    FTransform2D persp( FTransform2D::GetPerspectiveTransform( sourcePoints.data(), fixedDestinationPoints.data() ) );
     FRect trans = TransformPerspectiveMetrics( src_fit, persp, iMethod );
     if( !trans.Area() ) {
         FBlock* fallback = new FBlock( 1, 1, iSource->Format() );
@@ -400,7 +401,7 @@ FRect TransformAffineMetrics( const FRect&          iSourceRect
     FRect trans = iSourceRect.TransformedAffine( iTransform );
     if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC ) {
         float tx, ty, r, sx, sy, skx, sky;
-        DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
+        DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
         float angle = FMaths::Max( abs( cos( r ) ), abs( sin( r ) ) );
         float scale = FMaths::Max( sx, sy );
         int overflow = static_cast< int >( ceil( angle * scale ) );
@@ -420,7 +421,7 @@ FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
     FRect trans = iSourceRect.TransformedPerspective( iTransform );
     if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC ) {
         float tx, ty, r, sx, sy, skx, sky;
-        DecomposeMatrix( iTransform.Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
+        DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
         trans.x -= static_cast< int >( ceil( sx ) );
         trans.y -= static_cast< int >( ceil( sy ) );
         trans.w += static_cast< int >( ceil( sx ) );

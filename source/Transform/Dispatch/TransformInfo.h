@@ -18,7 +18,7 @@
 #include <glm/matrix.hpp>
 
 ULIS3_NAMESPACE_BEGIN
-struct ULIS3_API _FTransformInfoPrivate {
+struct _FTransformInfoPrivate {
     FThreadPool*            pool;
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;

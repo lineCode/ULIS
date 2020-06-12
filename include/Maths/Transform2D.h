@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include <glm/mat3x3.hpp>
+#include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -21,40 +21,40 @@ ULIS3_NAMESPACE_BEGIN
 class ULIS3_API FTransform2D
 {
 public:
+    class FTransform2D_imp;
+
+public:
     // Construction / Destruction
+    ~FTransform2D();
     FTransform2D();
-    FTransform2D( const glm::mat3& iMat );
+    FTransform2D( const FTransform2D& iOther );
+    FTransform2D( FTransform2D&& iOther );
+    FTransform2D& operator=( const FTransform2D& iOther );
 
 public:
     // Public API
-    const std::string& ID() const; // Str From Blob
-    const glm::mat3& Matrix() const;
-    const glm::mat3& InverseMatrix() const;
-    void Decompose( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const;
+    const FTransform2D_imp& GetImp() const;
 
 private:
     // Private API
-    void UpdateID() const;
-    void UpdateInverseMatrix() const;
+    FTransform2D( FTransform2D_imp* iVal );
+
+public:
+    // Static API
+    static FTransform2D MakeIdentityTransform();
+    static FTransform2D MakeRotationTransform( float iAngleRag );
+    static FTransform2D MakeScaleTransform( float iX, float iY );
+    static FTransform2D MakeShearTransform( float iX, float iY );
+    static FTransform2D MakeTranslationTransform( float iX, float iY );
+    static FTransform2D ComposeTransforms( const FTransform2D& iA, const FTransform2D& iB );
+    static void DecomposeTransform( const FTransform2D& iTransform, float* oTx, float* oTy, float* oRotation, float* oScaleX, float* oScaleY, float* oSkewX, float* oSkewY );
+    static FTransform2D GetPerspectiveTransform( const FVec2F iSrc[], const FVec2F iDst[] );
+    static FVec2F DoHomographyTransform( const FVec2F& iPoint, const FTransform2D& iTransform );
 
 private:
     // Private Data Members
-    glm::mat3           mMatrix;
-    mutable glm::mat3   mInverseMatrix;
-    mutable std::string mID;
-    mutable bool        mDirtyID;
-    mutable bool        mDirtyInverseMatrix;
+    FTransform2D_imp* mImp;
 };
-
-ULIS3_API glm::mat3 MakeIdentityMatrix();
-ULIS3_API glm::mat3 MakeRotationMatrix( float iAngleRag );
-ULIS3_API glm::mat3 MakeScaleMatrix( float iX, float iY );
-ULIS3_API glm::mat3 MakeShearMatrix( float iX, float iY );
-ULIS3_API glm::mat3 MakeTranslationMatrix( float iX, float iY );
-ULIS3_API glm::mat3 ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB );
-ULIS3_API void DecomposeMatrix( const glm::mat3& iMat, float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY );
-ULIS3_API glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] );
-ULIS3_API FVec2F HomographyTransform( const FVec2F& iPoint, const glm::mat3& iMat );
 
 ULIS3_NAMESPACE_END
 

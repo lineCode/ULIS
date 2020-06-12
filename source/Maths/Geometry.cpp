@@ -14,6 +14,7 @@
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
 #include "Maths/Transform2D.h"
+#include "Maths/Transform2D_Private.h"
 #include <glm/vec3.hpp>
 #include <glm/mat3x3.hpp>
 #include <vector>
@@ -153,7 +154,7 @@ void
 FRect::TransformAffine( const FTransform2D& iTransform ) {
     float src_x2 = static_cast< float >( x + w );
     float src_y2 = static_cast< float >( y + h );
-    const glm::mat3& mat = iTransform.Matrix();
+    const glm::mat3& mat = iTransform.GetImp().Matrix();
     glm::vec3 m00 = mat * glm::vec3( x, y, 1 );
     glm::vec3 m10 = mat * glm::vec3( src_x2, y, 1 );
     glm::vec3 m11 = mat * glm::vec3( src_x2, src_y2, 1 );
@@ -170,7 +171,7 @@ FRect::TransformPerspective( const FTransform2D& iTransform ) {
     float y1 = static_cast< float >( y );
     float x2 = static_cast< float >( x + w );
     float y2 = static_cast< float >( y + h );
-    const glm::mat3& mat = iTransform.Matrix();
+    const glm::mat3& mat = iTransform.GetImp().Matrix();
     FVec2F A = HomographyTransform( FVec2F( x1, y1 ),   mat );
     FVec2F B = HomographyTransform( FVec2F( x2, y1 ),   mat );
     FVec2F C = HomographyTransform( FVec2F( x2, y2 ),   mat );

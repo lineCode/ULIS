@@ -19,6 +19,7 @@
 #include "Data/Pixel.h"
 #include "Maths/Geometry.h"
 #include "Maths/Transform2D.h"
+#include "Maths/Transform2D_Private.h"
 #include "Text/Font.h"
 #include "Text/Dispatch/TextInfo.h"
 #include "Text/Dispatch/Dispatch.ipp"
@@ -64,7 +65,7 @@ RenderText( FThreadPool*            iThreadPool
     }
 
     { // Mat
-        const glm::mat3& _mat = iTransform.Matrix();
+        const glm::mat3& _mat = iTransform.GetImp().Matrix();
         alias.matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
         alias.matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
         alias.matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
@@ -87,7 +88,7 @@ TextMetrics( std::wstring           iText
            , const FFont&           iFont
            , int                    iSize
            , const FTransform2D&    iTransform ) {
-    const glm::mat3& _mat = iTransform.Matrix();
+    const glm::mat3& _mat = iTransform.GetImp().Matrix();
     FT_Matrix matrix;
     matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
     matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
