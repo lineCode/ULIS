@@ -18,7 +18,7 @@
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FTileElement
-struct FTileElement {
+struct ULIS3_API FTileElement {
 
     ~FTileElement()
     {

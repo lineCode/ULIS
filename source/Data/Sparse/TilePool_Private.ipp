@@ -12,14 +12,11 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Data/Sparse/TilePool.h"
 #include "Base/HostDeviceInfo.h"
 #include "Clear/Clear.h"
 #include "Data/Block.h"
 #include "Data/Sparse/Tile.h"
-
 #include <algorithm>
-#include <thread>
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -102,19 +99,22 @@ template< uint8 _MICRO, uint8 _MACRO > uint64 TTilePool< _MICRO, _MACRO >::NumRe
     return  mRegisteredTiledBlocks.size();
 }
 
-template< uint8 _MICRO, uint8 _MACRO > typename TTilePool< _MICRO, _MACRO >::tTiledBlock* TTilePool< _MICRO, _MACRO >::CreateNewTiledBlock() {
+template< uint8 _MICRO, uint8 _MACRO > ITiledBlock* TTilePool< _MICRO, _MACRO >::CreateNewTiledBlock() {
     const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
-    mRegisteredTiledBlocks.emplace_back( new TTiledBlock< _MICRO, _MACRO >( this ) );
-    return  mRegisteredTiledBlocks.back();
+    tTiledBlock* block = new tTiledBlock( this );
+    mRegisteredTiledBlocks.emplace_back( block );
+    return  block;
 }
 
-template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::RequestTiledBlockDeletion( tTiledBlock* iBlock ) {
+template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::RequestTiledBlockDeletion( ITiledBlock* iBlock ) {
     const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
-    auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), iBlock );
+    tTiledBlock* block = dynamic_cast< tTiledBlock* >( iBlock );
+    ULIS3_ASSERT( block, "Bad TiledBlock Deletion Request, this tiledblock is not the right type !" );
+    auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), block );
     ULIS3_ASSERT( it != mRegisteredTiledBlocks.end(), "Bad TiledBlock Deletion Request, this tiledblock is not in this pool or has already been deleted !" );
     if( it != mRegisteredTiledBlocks.end() ) {
         mRegisteredTiledBlocks.erase( it );
-        delete it;
+        delete *it;
     }
 }
 

@@ -16,11 +16,16 @@
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Copy/Copy.h"
-#include "Raster/Sparse/DrawSparse.h"
 #include "Base/HostDeviceInfo.h"
+#include "Raster/Draw.h"
+#include "Raster/Sparse/DrawSparse.h"
+#include "Data/Sparse/TiledBlock_Private.h"
+#include "Data/Sparse/TilePool_Private.h"
 #include <static_math/static_math.h>
 
 ULIS3_NAMESPACE_BEGIN
+template< uint8 _MICRO, uint8 _MACRO > class TTilePool;
+
 static const FPixelValue default_wireframe_debug_color  = FPixelValue::FromRGBA8( 40, 80, 220 );
 static const FPixelValue dirty_wireframe_debug_color    = FPixelValue::FromRGBA8( 255, 0, 0 );
 static const FPixelValue correct_wireframe_debug_color  = FPixelValue::FromRGBA8( 0, 255, 0 );
@@ -36,29 +41,6 @@ enum class eChunkType : uint8
     , kQuadree
 };
 
-//----------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------- eScale
-enum eMicro {
-    MICRO_2   = 1,
-    MICRO_4   = 2,
-    MICRO_8   = 3,
-    MICRO_16  = 4,
-    MICRO_32  = 5,
-    MICRO_64  = 6,
-    MICRO_128 = 7,
-    MICRO_256 = 8,
-};
-
-enum eMacro {
-    MACRO_2   = 1,
-    MACRO_4   = 2,
-    MACRO_8   = 3,
-    MACRO_16  = 4,
-    MACRO_32  = 5,
-    MACRO_64  = 6,
-    MACRO_128 = 7,
-    MACRO_256 = 8,
-};
 /////////////////////////////////////////////////////
 /// FDecl
 template< uint8 _MICRO, uint8 _MACRO, uint8 _LOCAL > class TAbstractChunk;

@@ -70,7 +70,7 @@ SCanvas::SCanvas()
     mTimer->start();
 
     uint64 maxRAM   = Mo2O( 100 );
-    mTilePool   = new TTilePool< MICRO_2, MACRO_32 >( ULIS3_FORMAT_RGBA8, nullptr );
+    mTilePool   = ITilePool::XCreateTilePool( ULIS3_FORMAT_RGBA8, nullptr, eMicro::MICRO_128, eMacro::MACRO_16 );
     mTiledBlock = mTilePool->CreateNewTiledBlock();
 
     mRAMUSAGEBLOCK1 = new FBlock( 300, 100, ULIS3_FORMAT_RGBA8 );

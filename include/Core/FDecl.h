@@ -34,9 +34,8 @@ struct  FPerfInfo;
 struct  FHostDeviceInfo;
 struct  FFormatInfo;
 struct  FTileElement;
-
-template< uint8 _MICRO, uint8 _MACRO > class TTilePool;
-template< uint8 _MICRO, uint8 _MACRO > class TTiledBlock;
+class   ITiledBlock;
+class   ITilePool;
 
 template< typename T > struct   TVec2;
 typedef TVec2< int >            FVec2I;

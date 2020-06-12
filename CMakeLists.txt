@@ -123,7 +123,7 @@ target_include_directories(
     "include/"
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     PRIVATE
-    #${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/

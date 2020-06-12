@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Data/Sparse/TiledBlock.h"
+#include "Maths/Maths.h"
 
 
 #define ULIS3_SPARSE_MASK_X 0x00000000FFFFFFFF
