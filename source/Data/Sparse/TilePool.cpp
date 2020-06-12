@@ -13,7 +13,10 @@
 */
 #pragma once
 #include "Data/Sparse/TilePool.h"
+
+#ifdef ULIS3_COMPILED_WITH_THREAD_SUPPORT
 #include "Data/Sparse/TilePool_Private.h"
+#endif
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -21,8 +24,11 @@ ULIS3_NAMESPACE_BEGIN
 //static
 ITilePool*
 ITilePool::XCreateTilePool( tFormat iFormat, FColorProfile* iProfile, eMicro iMicro, eMacro iMacro ) {
-    return  new  TTilePool< 1, 5 >( iFormat, iProfile );
-    return  nullptr;
+    #ifdef ULIS3_COMPILED_WITH_THREAD_SUPPORT
+        return  new  TTilePool< 1, 5 >( iFormat, iProfile );
+    #else
+        return  nullptr;
+    #endif
 }
 
 //static
