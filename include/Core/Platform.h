@@ -190,6 +190,7 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // SIMD PATCH FOR GNU < 9
+// CHECK: this conflicts with xcode sometimes identifying itself as GNUC < 9 but defining the appropriate simd instructions ??
 #ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
 //#ifdef __GNUC__
 //#if __GNUC__ < 9
