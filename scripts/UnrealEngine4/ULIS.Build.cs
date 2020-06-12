@@ -16,7 +16,6 @@ public class ULIS : ModuleRules
             PublicSystemIncludePaths.AddRange(
                 new string[] {
                       Path.Combine( IncludeBase, "ULIS3" )
-                    , Path.Combine( IncludeBase, "glm" )
                 }
             );
 
@@ -42,7 +41,6 @@ public class ULIS : ModuleRules
             PublicSystemIncludePaths.AddRange(
                 new string[] {
                       Path.Combine( IncludeBase, "ULIS3" )
-                    , Path.Combine( IncludeBase, "glm" )
                 }
             );
 

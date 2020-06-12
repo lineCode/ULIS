@@ -44,7 +44,6 @@ cd redist
 mkdir include
 cd include
 mkdir ULIS3
-mkdir glm
 cd ..
 mkdir bin
 mkdir lib
@@ -52,7 +51,6 @@ mkdir lib
 :: CD to root and copy
 cd ../../
 XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\include"                                                                 "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\include\ULIS3"
-XCOPY /E /C /I /Q /H /K /Y /B ".\ULIS3\3rdparty\glm"                                                            "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\include\glm"
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\RelWithDebInfo\ULIS3.lib"    "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\lib\ULIS3.lib"
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\RelWithDebInfo\ULIS3.dll"    "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\ULIS3.dll"
 COPY /Y "ULIS3_FullBuildUE4_WinMSVCx64_Redist\Generated_VisualStudio_Solution_MSVC\RelWithDebInfo\ULIS3.pdb"    "ULIS3_FullBuildUE4_WinMSVCx64_Redist\redist\bin\ULIS3.pdb"
