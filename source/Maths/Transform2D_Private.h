@@ -31,6 +31,7 @@ public:
     const glm::mat3& Matrix() const;
     const glm::mat3& InverseMatrix() const;
     void Decompose( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const;
+    const tByte* Ptr() const;
 
 private:
     // Private API

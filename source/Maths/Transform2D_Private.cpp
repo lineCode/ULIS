@@ -73,6 +73,12 @@ FTransform2D::FTransform2D_imp::Decompose( float* iTx, float* iTy, float* iRotat
     DecomposeMatrix( mMatrix, iTx, iTy, iRotation, iScaleX, iScaleY, iSkewX, iSkewY );
 }
 
+
+const tByte*
+FTransform2D::FTransform2D_imp::Ptr() const {
+    return  reinterpret_cast< const tByte* >( glm::value_ptr( mMatrix ) );
+}
+
 //----------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Private API
 void

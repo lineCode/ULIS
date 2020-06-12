@@ -34,6 +34,8 @@ public:
 public:
     // Public API
     const FTransform2D_imp& GetImp() const;
+    const tByte* Ptr() const;
+    FTransform2D Inverse() const;
 
 private:
     // Private API
@@ -41,6 +43,7 @@ private:
 
 public:
     // Static API
+    static FTransform2D MakeFromMatrix( float iM00, float iM10, float iM20, float iM01, float iM11, float iM21, float iM02, float iM12, float iM22 );
     static FTransform2D MakeIdentityTransform();
     static FTransform2D MakeRotationTransform( float iAngleRag );
     static FTransform2D MakeScaleTransform( float iX, float iY );

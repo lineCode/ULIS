@@ -70,9 +70,9 @@ main( int argc, char *argv[] ) {
     rect1.y = miny;
     rect2.y = miny + rect1.h;
     rect3.y = miny + rect1.h + rect1.h;
-    FTransform2D transform1( MakeTranslationMatrix( rect1.x, rect1.y ) );
-    FTransform2D transform2( MakeTranslationMatrix( rect2.x, rect2.y ) );
-    FTransform2D transform3( MakeTranslationMatrix( rect3.x, rect3.y ) );
+    FTransform2D transform1( FTransform2D::MakeTranslationTransform( rect1.x, rect1.y ) );
+    FTransform2D transform2( FTransform2D::MakeTranslationTransform( rect2.x, rect2.y ) );
+    FTransform2D transform3( FTransform2D::MakeTranslationTransform( rect3.x, rect3.y ) );
     FPixelValue backgroundColor = FPixelValue::FromHSVAF( 0.5f, 0.9f, 0.8f, 1.f );
     FPixelValue fontColor       = FPixelValue::FromRGBA8( 255, 255, 255, 255 );
 

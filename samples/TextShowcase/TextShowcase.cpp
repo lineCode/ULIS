@@ -59,7 +59,7 @@ main( int argc, char *argv[] ) {
             std::wstring_convert<convert_type, wchar_t> converter;
             std::wstring wtxt = converter.from_bytes(txt);
 
-            RenderText( threadPool, ULIS3_BLOCKING, 0, host, ULIS3_NOCB, blockCanvas, wtxt, font, fontSize, black, FTransform2D( MakeTranslationMatrix( x, y ) ), ULIS3_NOAA );
+            RenderText( threadPool, ULIS3_BLOCKING, 0, host, ULIS3_NOCB, blockCanvas, wtxt, font, fontSize, black, FTransform2D::MakeTranslationTransform( x, y ), ULIS3_NOAA );
             ++i;
         }
     }

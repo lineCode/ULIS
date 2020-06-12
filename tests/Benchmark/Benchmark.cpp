@@ -235,7 +235,7 @@ int transform( int argc, char *argv[] ) {
     float m02 = static_cast< float >( std::atof( argv[14] ) );
     float m12 = static_cast< float >( std::atof( argv[15] ) );
     float m22 = static_cast< float >( std::atof( argv[16] ) );
-    FTransform2D mat( glm::mat3( m00, m10, m20, m01, m11, m21, m02, m12, m22 ) );
+    FTransform2D mat( FTransform2D::MakeFromMatrix( m00, m10, m20, m01, m11, m21, m02, m12, m22 ) );
     uint32 optBit = 0;
     if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;

@@ -68,7 +68,7 @@ main( int argc, char *argv[] ) {
         typedef std::codecvt_utf8<wchar_t> convert_type;
         std::wstring_convert<convert_type, wchar_t> converter;
         std::wstring wbm = converter.from_bytes(bm);
-        RenderText( threadPool, ULIS3_BLOCKING, perfIntentText, host, ULIS3_NOCB, blockCanvas, wbm, font, 16, white, FTransform2D( MakeTranslationMatrix( x + 4, 4 + y + sourceRect.h - shadeH ) ), ULIS3_NOAA );
+        RenderText( threadPool, ULIS3_BLOCKING, perfIntentText, host, ULIS3_NOCB, blockCanvas, wbm, font, 16, white, FTransform2D::MakeTranslationTransform( x + 4, 4 + y + sourceRect.h - shadeH ), ULIS3_NOAA );
     }
 
     Fence( *threadPool );

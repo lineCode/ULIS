@@ -52,6 +52,16 @@ FTransform2D::GetImp() const {
     return  *mImp;
 }
 
+const tByte*
+FTransform2D::Ptr() const {
+    return  mImp->Ptr();
+}
+
+FTransform2D
+FTransform2D::Inverse() const {
+    return  FTransform2D( new FTransform2D_imp( glm::inverse( mImp->Matrix() ) ) );
+}
+
 //----------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Private API
 FTransform2D::FTransform2D( FTransform2D_imp* iVal )
@@ -61,6 +71,12 @@ FTransform2D::FTransform2D( FTransform2D_imp* iVal )
 
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------- Static API
+//static
+FTransform2D
+FTransform2D::MakeFromMatrix( float iM00, float iM10, float iM20, float iM01, float iM11, float iM21, float iM02, float iM12, float iM22 ) {
+    return  FTransform2D( new FTransform2D_imp( glm::mat3( iM00, iM10, iM20, iM01, iM11, iM21, iM02, iM12, iM22 ) ) );
+}
+
 //static
 FTransform2D
 FTransform2D::MakeIdentityTransform() {
