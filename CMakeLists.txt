@@ -42,12 +42,6 @@ endif()
 # Create global solution
 project( ULIS3 )
 
-message( "src: ${CMAKE_CURRENT_SOURCE_DIR}" )
-message( "dst: ${PROJECT_BINARY_DIR}" )
-if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
-    message(SEND_ERROR "In-source builds are not allowed.")
-endif("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
-
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Flags for Compiler / Platforms
