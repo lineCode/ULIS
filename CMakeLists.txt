@@ -122,7 +122,8 @@ target_include_directories(
     ULIS3
     PUBLIC
     "include/"
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
+    ${OpenCL_INCLUDE_DIR}
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
@@ -132,8 +133,7 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs/source/cppfs/include
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/eigen/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
-    ${OpenCL_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
     "source/"
 )
 

@@ -29,5 +29,18 @@ ULIS3_API void Blend( FThreadPool*              iThreadPool
                     , eBlendingMode             iBlendingMode
                     , eAlphaMode                iAlphaMode
                     , float                     iOpacityValue );
+
+ULIS3_API void AlphaBlend( FThreadPool*              iThreadPool
+                         , bool                      iBlocking
+                         , uint32                    iPerfIntent
+                         , const FHostDeviceInfo&    iHostDeviceInfo
+                         , bool                      iCallCB
+                         , const FBlock*             iSource
+                         , FBlock*                   iBackdrop
+                         , const FRect&              iSourceRect
+                         , const FVec2F&             iPosition
+                         , bool                      iSubpixelFlag
+                         , float                     iOpacityValue );
+
 ULIS3_NAMESPACE_END
 

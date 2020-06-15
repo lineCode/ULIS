@@ -20,14 +20,17 @@
 #include "Blend/Dispatch/Generic/BlendMT_Separable_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_NonSeparable_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_Misc_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/AlphaBlendMT_MEM_Generic.ipp"
 
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_SSE_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp"
+#include "Blend/Dispatch/RGBA8/AlphaBlendMT_SSE_RGBA8.ipp"
 #endif
 
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_AVX_RGBA8.ipp"
+#include "Blend/Dispatch/RGBA8/AlphaBlendMT_AVX_RGBA8.ipp"
 #endif
 
 #define ULIS3_SELECT_COMP_OP(   iSubpixel, _FUNCTION )      iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
@@ -35,7 +38,10 @@
 
 ULIS3_NAMESPACE_BEGIN
 typedef void (*fpDispatchedBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
+typedef void (*fpDispatchedAlphaBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
 
+/////////////////////////////////////////////////////
+// Dispatch Blend
 template< typename T >
 fpDispatchedBlendFunc
 QueryDispatchedBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iInfo ) {
@@ -115,6 +121,69 @@ QueryDispatchedBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
         case TYPE_UINT32    : return  QueryDispatchedBlendFunctionForParameters_imp< uint32  >( iInfo );
         case TYPE_UFLOAT    : return  QueryDispatchedBlendFunctionForParameters_imp< ufloat  >( iInfo );
         case TYPE_UDOUBLE   : return  QueryDispatchedBlendFunctionForParameters_imp< udouble >( iInfo );
+    }
+    return  nullptr;
+}
+/////////////////////////////////////////////////////
+// Dispatch Alpha Blend
+
+template< typename T >
+fpDispatchedBlendFunc
+QueryDispatchedAlphaBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iInfo ) {
+    return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, AlphaBlendMT_Separable_MEM_Generic, T );
+}
+
+
+fpDispatchedBlendFunc
+QueryDispatchedAlphaBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo ) {
+
+    #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
+        if( iInfo.perfIntent & ULIS3_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
+            return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, AlphaBlendMT_Separable_AVX_RGBA8 );
+        else
+    #endif
+    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+        if( iInfo.hostDeviceInfo->HW_SSE42 )
+            return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, AlphaBlendMT_Separable_SSE_RGBA8 );
+        else
+    #endif
+            return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, AlphaBlendMT_Separable_MEM_Generic, uint8 );
+}
+
+
+template< typename T >
+fpDispatchedBlendFunc
+QueryDispatchedAlphaBlendFunctionForParameters_imp( const _FBlendInfoPrivate& iInfo ) {
+    return  QueryDispatchedAlphaBlendFunctionForParameters_Generic< T >( iInfo );
+}
+
+
+template<>
+fpDispatchedBlendFunc
+QueryDispatchedAlphaBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPrivate& iInfo ) {
+    // RGBA8 Signature, any layout
+    if( iInfo.source->HasAlpha()
+     && iInfo.source->NumColorChannels()    == 3
+     && iInfo.source->Model()               == CM_RGB
+     && iInfo.perfIntent & ULIS3_PERF_TSPEC
+     && ( iInfo.perfIntent & ULIS3_PERF_SSE42 || iInfo.perfIntent & ULIS3_PERF_AVX2 )
+     && ( iInfo.hostDeviceInfo->HW_SSE42 || iInfo.hostDeviceInfo->HW_AVX2 ) ) {
+        return  QueryDispatchedAlphaBlendFunctionForParameters_RGBA8( iInfo );
+    }
+
+    // Generic Fallback
+    return  QueryDispatchedAlphaBlendFunctionForParameters_Generic< uint8 >( iInfo );
+}
+
+
+fpDispatchedBlendFunc
+QueryDispatchedAlphaBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
+    switch( iInfo.source->Type() ) {
+        case TYPE_UINT8     : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< uint8   >( iInfo );
+        case TYPE_UINT16    : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< uint16  >( iInfo );
+        case TYPE_UINT32    : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< uint32  >( iInfo );
+        case TYPE_UFLOAT    : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< ufloat  >( iInfo );
+        case TYPE_UDOUBLE   : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< udouble >( iInfo );
     }
     return  nullptr;
 }
