@@ -135,21 +135,23 @@ void AlphaBlend( FThreadPool*            iThreadPool
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
     auto forwardAlphaBlendInfo = std::make_shared< _FBlendInfoPrivate >();
-    _FBlendInfoPrivate& forwardAlphaBlendInfoAlias   = *forwardAlphaBlendInfo;
-    forwardAlphaBlendInfoAlias.pool                  = iThreadPool;
-    forwardAlphaBlendInfoAlias.blocking              = iBlocking;
-    forwardAlphaBlendInfoAlias.hostDeviceInfo        = &iHostDeviceInfo;
-    forwardAlphaBlendInfoAlias.perfIntent            = iPerfIntent;
-    forwardAlphaBlendInfoAlias.source                = iSource;
-    forwardAlphaBlendInfoAlias.backdrop              = iBackdrop;
-    forwardAlphaBlendInfoAlias.sourceRect            = src_roi;
-    forwardAlphaBlendInfoAlias.subpixelComponent     = subpixelComponent;
-    forwardAlphaBlendInfoAlias.buspixelComponent     = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
-    forwardAlphaBlendInfoAlias.subpixelFlag          = iSubpixelFlag;
-    forwardAlphaBlendInfoAlias.opacityValue          = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
-    forwardAlphaBlendInfoAlias.shift                 = FVec2I( translationX, translationY );
-    forwardAlphaBlendInfoAlias.backdropCoverage      = FVec2I( coverageX, coverageY );
-    forwardAlphaBlendInfoAlias.backdropWorkingRect   = dst_fit;
+    _FBlendInfoPrivate& forwardAlphaBlendInfoAlias  = *forwardAlphaBlendInfo;
+    forwardAlphaBlendInfoAlias.pool                 = iThreadPool;
+    forwardAlphaBlendInfoAlias.blocking             = iBlocking;
+    forwardAlphaBlendInfoAlias.hostDeviceInfo       = &iHostDeviceInfo;
+    forwardAlphaBlendInfoAlias.perfIntent           = iPerfIntent;
+    forwardAlphaBlendInfoAlias.source               = iSource;
+    forwardAlphaBlendInfoAlias.backdrop             = iBackdrop;
+    forwardAlphaBlendInfoAlias.sourceRect           = src_roi;
+    forwardAlphaBlendInfoAlias.subpixelComponent    = subpixelComponent;
+    forwardAlphaBlendInfoAlias.buspixelComponent    = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
+    forwardAlphaBlendInfoAlias.subpixelFlag         = iSubpixelFlag;
+    forwardAlphaBlendInfoAlias.blendingMode         = BM_NORMAL;
+    forwardAlphaBlendInfoAlias.alphaMode            = AM_NORMAL;
+    forwardAlphaBlendInfoAlias.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
+    forwardAlphaBlendInfoAlias.shift                = FVec2I( translationX, translationY );
+    forwardAlphaBlendInfoAlias.backdropCoverage     = FVec2I( coverageX, coverageY );
+    forwardAlphaBlendInfoAlias.backdropWorkingRect  = dst_fit;
 
     // Query dispatched method
     fpDispatchedBlendFunc fptr = QueryDispatchedAlphaBlendFunctionForParameters( forwardAlphaBlendInfoAlias );

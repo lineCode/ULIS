@@ -57,7 +57,7 @@ main() {
     __m128i termC = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( termB, _mm_set1_epi16( 1 ) ), _mm_srli_epi16( termB, 8 ) ), 8 );
 
     //return ( 1.f - iVar ) * iCb + iVar * ( ( 1.f - iAb ) * iCs + iAb * iCr );
-
+    //                            |
     int ghi = 010;
 
     /*
@@ -96,8 +96,6 @@ main() {
         return ( 1.f - iVar ) * iCb + iVar * ( ( 1.f - iAb ) * iCs + iAb * iCr );
     }
     */
-
-
     return  0;
 }
 

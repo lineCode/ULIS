@@ -22,6 +22,11 @@
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
+
+ULIS3_FORCEINLINE __m128i Downscale( __m128i iVal ) {
+    return  _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( iVal, _mm_set1_epi16( 1 ) ), _mm_srli_epi16( iVal, 8 ) ), 8 );
+}
+
 void
 InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
     const _FBlendInfoPrivate&   info    = *iInfo;
@@ -108,25 +113,32 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte* iSrc, tByte*
     const FFormatInfo&          fmt     = info.source->FormatInfo();
     const tByte*                src     = iSrc;
     tByte*                      bdp     = iBdp;
-    for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
-        ufloat alpha_bdp    = bdp[fmt.AID] / 255.f;
-        ufloat alpha_src    = ( src[fmt.AID] / 255.f ) * info.opacityValue;
-        ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
-        ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-        Vec4f src_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) ) ) ) / 255.f;
-        Vec4f bdp_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( bdp ) ) ) ) ) / 255.f;
-        Vec4f res_chan;
-
-        res_chan = SeparableCompOpSSEF< BM_NORMAL >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
-
-        auto _pack = _mm_cvtps_epi32( res_chan );
-        _pack = _mm_packus_epi32( _pack, _pack );
-        _pack = _mm_packus_epi16( _pack, _pack );
-        *( uint32* )bdp = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
-        bdp[fmt.AID] = static_cast< uint8 >( alpha_comp * 0xFF );
-
-        src += 4;
-        bdp += 4;
+    const __m128i FF = _mm_set1_epi16( 0xFF );
+    for( int x = 0; x < info.backdropWorkingRect.w; x+=2 ) {
+        const uint8 alpha_bdp0 = bdp[fmt.AID];
+        const uint8 alpha_bdp1 = bdp[fmt.AID + 4];
+        const uint8 alpha_src0 = static_cast< uint8 >( src[fmt.AID] * info.opacityValue );
+        const uint8 alpha_src1 = static_cast< uint8 >( src[fmt.AID + 4] * info.opacityValue );
+        const uint8 alpha_result0 = static_cast< uint8 >( ( alpha_src0 + alpha_bdp0 ) - ConvType< uint16, uint8 >( alpha_src0 * alpha_bdp0 ) );
+        const uint8 alpha_result1 = static_cast< uint8 >( ( alpha_src1 + alpha_bdp1 ) - ConvType< uint16, uint8 >( alpha_src1 * alpha_bdp1 ) );
+        const uint8 var0 = alpha_result0 == 0 ? 0 : ( alpha_src0 * 0xFF ) / alpha_result0;
+        const uint8 var1 = alpha_result1 == 0 ? 0 : ( alpha_src1 * 0xFF ) / alpha_result1;
+        const __m128i var = _mm_set_epi16( var0, var0, var0, var0, var1, var1, var1, var1 );
+        const __m128i alpha_bdp = _mm_set_epi16( alpha_bdp0, alpha_bdp0, alpha_bdp0, alpha_bdp0, alpha_bdp1, alpha_bdp1, alpha_bdp1, alpha_bdp1 );
+        const __m128i src_chan = _mm_cvtepu8_epi16( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) );
+        const __m128i bdp_chan = _mm_cvtepu8_epi16( _mm_loadu_si128( reinterpret_cast< const __m128i* >( bdp ) ) );
+        __m128i termA = Downscale( _mm_mullo_epi16( _mm_sub_epi16( FF, var ), bdp_chan ) );
+        __m128i termB = Downscale( _mm_mullo_epi16( alpha_bdp, src_chan ) );
+        __m128i termC = Downscale( _mm_mullo_epi16( _mm_sub_epi16( FF, alpha_bdp ), src_chan ) );
+        __m128i termD = _mm_add_epi16( termB, termC );
+        __m128i termE = Downscale( _mm_mullo_epi16( var, termD ) );
+        __m128i termF = _mm_add_epi16( termA, termE );
+        __m128i pack = _mm_packus_epi16( termF, termF );
+        *( reinterpret_cast< __int64* >( bdp ) )= _mm_cvtsi128_si64( pack );
+        bdp[fmt.AID] = static_cast< uint8 >( alpha_result0 );
+        bdp[fmt.AID + 4] = static_cast< uint8 >( alpha_result1 );
+        src += 8;
+        bdp += 8;
     }
 }
 
