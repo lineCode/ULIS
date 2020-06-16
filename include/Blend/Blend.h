@@ -51,7 +51,7 @@ ULIS3_API void BlendTiled( FThreadPool*              iThreadPool
                          , FBlock*                   iBackdrop
                          , const FRect&              iSourceRect
                          , const FRect&              iDestRect
-                         , const FVec2F&             iShift
+                         , const FVec2I&             iShift
                          , eBlendingMode             iBlendingMode
                          , eAlphaMode                iAlphaMode
                          , float                     iOpacityValue );

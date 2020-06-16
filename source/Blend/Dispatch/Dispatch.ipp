@@ -21,15 +21,21 @@
 #include "Blend/Dispatch/Generic/BlendMT_NonSeparable_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/BlendMT_Misc_MEM_Generic.ipp"
 #include "Blend/Dispatch/Generic/AlphaBlendMT_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/TiledBlendMT_Separable_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/TiledBlendMT_NonSeparable_MEM_Generic.ipp"
+#include "Blend/Dispatch/Generic/TiledBlendMT_Misc_MEM_Generic.ipp"
 
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_SSE_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp"
+#include "Blend/Dispatch/RGBA8/TiledBlendMT_Separable_SSE_RGBA8.ipp"
+#include "Blend/Dispatch/RGBA8/TiledBlendMT_NonSeparable_SSE_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/AlphaBlendMT_SSE_RGBA8.ipp"
 #endif
 
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_AVX_RGBA8.ipp"
+#include "Blend/Dispatch/RGBA8/TiledBlendMT_Separable_AVX_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/AlphaBlendMT_AVX_RGBA8.ipp"
 #endif
 
@@ -39,6 +45,7 @@
 ULIS3_NAMESPACE_BEGIN
 typedef void (*fpDispatchedBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
 typedef void (*fpDispatchedAlphaBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
+typedef void (*fpDispatchedTiledBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
 
 /////////////////////////////////////////////////////
 // Dispatch Blend
@@ -128,13 +135,13 @@ QueryDispatchedBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
 // Dispatch Alpha Blend
 
 template< typename T >
-fpDispatchedBlendFunc
+fpDispatchedAlphaBlendFunc
 QueryDispatchedAlphaBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iInfo ) {
     return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, AlphaBlendMT_Separable_MEM_Generic, T );
 }
 
 
-fpDispatchedBlendFunc
+fpDispatchedAlphaBlendFunc
 QueryDispatchedAlphaBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo ) {
 
     #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
@@ -152,14 +159,14 @@ QueryDispatchedAlphaBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& 
 
 
 template< typename T >
-fpDispatchedBlendFunc
+fpDispatchedAlphaBlendFunc
 QueryDispatchedAlphaBlendFunctionForParameters_imp( const _FBlendInfoPrivate& iInfo ) {
     return  QueryDispatchedAlphaBlendFunctionForParameters_Generic< T >( iInfo );
 }
 
 
 template<>
-fpDispatchedBlendFunc
+fpDispatchedAlphaBlendFunc
 QueryDispatchedAlphaBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPrivate& iInfo ) {
     // RGBA8 Signature, any layout
     if( iInfo.source->HasAlpha()
@@ -176,7 +183,7 @@ QueryDispatchedAlphaBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPr
 }
 
 
-fpDispatchedBlendFunc
+fpDispatchedAlphaBlendFunc
 QueryDispatchedAlphaBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
     switch( iInfo.source->Type() ) {
         case TYPE_UINT8     : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< uint8   >( iInfo );
@@ -184,6 +191,91 @@ QueryDispatchedAlphaBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo 
         case TYPE_UINT32    : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< uint32  >( iInfo );
         case TYPE_UFLOAT    : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< ufloat  >( iInfo );
         case TYPE_UDOUBLE   : return  QueryDispatchedAlphaBlendFunctionForParameters_imp< udouble >( iInfo );
+    }
+    return  nullptr;
+}
+
+/////////////////////////////////////////////////////
+// Dispatch Tiled Blend
+template< typename T >
+fpDispatchedTiledBlendFunc
+QueryDispatchedTiledBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iInfo ) {
+    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {
+        case BMQ_MISC           : return  TiledBlendMT_Misc_MEM_Generic< T >;
+        case BMQ_SEPARABLE      : return  TiledBlendMT_Separable_MEM_Generic< T >;
+        case BMQ_NONSEPARABLE   : return  TiledBlendMT_NonSeparable_MEM_Generic< T >;
+    }
+    return  nullptr;
+}
+
+
+fpDispatchedTiledBlendFunc
+QueryDispatchedTiledBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo ) {
+    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {
+        case BMQ_MISC: {
+            return  &TiledBlendMT_Misc_MEM_Generic< uint8 >;
+        }
+
+        case BMQ_SEPARABLE: {
+            #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
+                if( iInfo.perfIntent & ULIS3_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
+                    return  &TiledBlendMT_Separable_AVX_RGBA8;
+                else
+            #endif
+            #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+                if( iInfo.hostDeviceInfo->HW_SSE42 )
+                    return  &TiledBlendMT_Separable_SSE_RGBA8;
+                else
+            #endif
+                    return  &TiledBlendMT_Separable_MEM_Generic< uint8 >;
+        }
+
+        case BMQ_NONSEPARABLE: {
+            #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+                if( iInfo.hostDeviceInfo->HW_SSE42 )
+                    return  &TiledBlendMT_NonSeparable_SSE_RGBA8;
+                else
+            #endif
+                    return  &TiledBlendMT_NonSeparable_MEM_Generic< uint8 >;
+        }
+    }
+    return  nullptr;
+}
+
+
+template< typename T >
+fpDispatchedTiledBlendFunc
+QueryDispatchedTiledBlendFunctionForParameters_imp( const _FBlendInfoPrivate& iInfo ) {
+    return  QueryDispatchedTiledBlendFunctionForParameters_Generic< T >( iInfo );
+}
+
+
+template<>
+fpDispatchedTiledBlendFunc
+QueryDispatchedTiledBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPrivate& iInfo ) {
+    // RGBA8 Signature, any layout
+    if( iInfo.source->HasAlpha()
+     && iInfo.source->NumColorChannels()    == 3
+     && iInfo.source->Model()               == CM_RGB
+     && iInfo.perfIntent & ULIS3_PERF_TSPEC
+     && ( iInfo.perfIntent & ULIS3_PERF_SSE42 || iInfo.perfIntent & ULIS3_PERF_AVX2 )
+     && ( iInfo.hostDeviceInfo->HW_SSE42 || iInfo.hostDeviceInfo->HW_AVX2 ) ) {
+        return  QueryDispatchedTiledBlendFunctionForParameters_RGBA8( iInfo );
+    }
+
+    // Generic Fallback
+    return  QueryDispatchedTiledBlendFunctionForParameters_Generic< uint8 >( iInfo );
+}
+
+
+fpDispatchedTiledBlendFunc
+QueryDispatchedTiledBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
+    switch( iInfo.source->Type() ) {
+        case TYPE_UINT8     : return  QueryDispatchedTiledBlendFunctionForParameters_imp< uint8   >( iInfo );
+        case TYPE_UINT16    : return  QueryDispatchedTiledBlendFunctionForParameters_imp< uint16  >( iInfo );
+        case TYPE_UINT32    : return  QueryDispatchedTiledBlendFunctionForParameters_imp< uint32  >( iInfo );
+        case TYPE_UFLOAT    : return  QueryDispatchedTiledBlendFunctionForParameters_imp< ufloat  >( iInfo );
+        case TYPE_UDOUBLE   : return  QueryDispatchedTiledBlendFunctionForParameters_imp< udouble >( iInfo );
     }
     return  nullptr;
 }

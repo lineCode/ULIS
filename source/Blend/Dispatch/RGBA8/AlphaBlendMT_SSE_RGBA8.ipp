@@ -114,11 +114,11 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte* iSrc, tByte*
     const tByte*                src     = iSrc;
     tByte*                      bdp     = iBdp;
     const __m128i FF = _mm_set1_epi16( 0xFF );
-    for( int x = 0; x < info.backdropWorkingRect.w; x+=2 ) {
-        const uint8 alpha_bdp0 = bdp[fmt.AID];
-        const uint8 alpha_bdp1 = bdp[fmt.AID + 4];
-        const uint8 alpha_src0 = static_cast< uint8 >( src[fmt.AID] * info.opacityValue );
-        const uint8 alpha_src1 = static_cast< uint8 >( src[fmt.AID + 4] * info.opacityValue );
+    for( int x = 0; x < info.backdropWorkingRect.w; x+=2 ) <%
+        const uint8 alpha_bdp0 = bdp<:fmt.AID :>;
+        const uint8 alpha_bdp1 = bdp<:fmt.AID + 4:>;
+        const uint8 alpha_src0 = static_cast< uint8 >( src<:fmt.AID:> * info.opacityValue );
+        const uint8 alpha_src1 = static_cast< uint8 >( src<:fmt.AID + 4:> * info.opacityValue );
         const uint8 alpha_result0 = static_cast< uint8 >( ( alpha_src0 + alpha_bdp0 ) - ConvType< uint16, uint8 >( alpha_src0 * alpha_bdp0 ) );
         const uint8 alpha_result1 = static_cast< uint8 >( ( alpha_src1 + alpha_bdp1 ) - ConvType< uint16, uint8 >( alpha_src1 * alpha_bdp1 ) );
         const uint8 var0 = alpha_result0 == 0 ? 0 : ( alpha_src0 * 0xFF ) / alpha_result0;
@@ -135,11 +135,11 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte* iSrc, tByte*
         __m128i termF = _mm_add_epi16( termA, termE );
         __m128i pack = _mm_packus_epi16( termF, termF );
         *( reinterpret_cast< __int64* >( bdp ) )= _mm_cvtsi128_si64( pack );
-        bdp[fmt.AID] = static_cast< uint8 >( alpha_result0 );
-        bdp[fmt.AID + 4] = static_cast< uint8 >( alpha_result1 );
+        bdp<:fmt.AID:> = static_cast< uint8 >( alpha_result0 );
+        bdp<:fmt.AID + 4:> = static_cast< uint8 >( alpha_result1 );
         src += 8;
         bdp += 8;
-    }
+    %>
 }
 
 void

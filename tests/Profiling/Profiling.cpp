@@ -18,6 +18,10 @@
 using namespace ::ul3;
 
 int main( int argc, char *argv[] ) {
+
+    int rep1 = FMaths::PyModulo( 64, -20 );
+    int rep2 = 64 % -20;
+
     FThreadPool* pool = XCreateThreadPool();
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42;
