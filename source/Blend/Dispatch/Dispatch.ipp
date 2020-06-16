@@ -35,7 +35,6 @@
 
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 #include "Blend/Dispatch/RGBA8/BlendMT_Separable_AVX_RGBA8.ipp"
-#include "Blend/Dispatch/RGBA8/TiledBlendMT_Separable_AVX_RGBA8.ipp"
 #include "Blend/Dispatch/RGBA8/AlphaBlendMT_AVX_RGBA8.ipp"
 #endif
 
@@ -217,11 +216,6 @@ QueryDispatchedTiledBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& 
         }
 
         case BMQ_SEPARABLE: {
-            #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-                if( iInfo.perfIntent & ULIS3_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
-                    return  &TiledBlendMT_Separable_AVX_RGBA8;
-                else
-            #endif
             #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
                 if( iInfo.hostDeviceInfo->HW_SSE42 )
                     return  &TiledBlendMT_Separable_SSE_RGBA8;
