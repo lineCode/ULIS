@@ -8,6 +8,7 @@ Check LICENSE.md, ULIS3 and samples applications are not available for commercia
 |Name                   |Description                                                |
 |-----------------------|-----------------------------------------------------------|
 |Blend                  |Blends samples.                                            |
+|TiledBlend             |TiledBlend samples.                                        |
 |BlendShowcase          |Blends showcase.                                           |
 |ClearFillCopy          |Sample for Clear / Fill / Copy operations.                 |
 |Conversion             |Conversions tests                                          |
