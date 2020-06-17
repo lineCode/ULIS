@@ -27,7 +27,7 @@ void
 InvokeTiledBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iBdp, int32 iLine, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
     const _FBlendInfoPrivate&   info    = *iInfo;
     const FFormatInfo&          fmt     = info.source->FormatInfo();
-    const tByte*                src     = iSrc;
+    const tByte*                src     = iSrc + info.shift.x * fmt.BPP;
     tByte*                      bdp     = iBdp;
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
@@ -49,7 +49,7 @@ InvokeTiledBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByt
         src += fmt.BPP;
         bdp += fmt.BPP;
 
-        if( x % info.sourceRect.w == 0 )
+        if( ( x + info.shift.x ) % info.sourceRect.w == 0 )
             src = iSrc;
     }
 }
@@ -63,13 +63,13 @@ TiledBlendMT_Separable_MEM_Generic( std::shared_ptr< const _FBlendInfoPrivate > 
     const tSize                 src_bps     = info.source->BytesPerScanLine();
     const tSize                 bdp_bps     = info.backdrop->BytesPerScanLine();
     const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
-    const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const tSize                 src_decal_x = ( info.sourceRect.x )  * info.source->BytesPerPixel();
     const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeTiledBlendMTProcessScanline_Separable_MEM_Generic< T >
-                                   , src + ( ( src_decal_y + ( pLINE % info.sourceRect.h ) )    * src_bps ) + src_decal_x
-                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE )             * bdp_bps ) + bdp_decal_x
+                                   , src + ( ( info.sourceRect.y + ( ( info.shift.y + pLINE ) % info.sourceRect.h ) ) * src_bps ) + src_decal_x
+                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
                                    , pLINE , iInfo );
 }
 
