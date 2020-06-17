@@ -40,7 +40,8 @@ main( int argc, char *argv[] ) {
     FBlock* blockCanvas = new  FBlock( 800, 600, ULIS3_FORMAT_RGBA8 );
     Fill( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, FPixelValue::FromRGBAF( 0.5f, 0.5f, 1.f ), blockCanvas->Rect() );
 
-    BlendTiled(  threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockOver, blockCanvas, blockBase->Rect(), FRect( 20, 20, 200, 400 ), FVec2I(), BM_NORMAL, AM_NORMAL, 0.5f );
+    BlendTiled(  threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockBase, blockCanvas, FRect( 0, 0, 80, 80 ), FRect( 20, 20, 200, 400 ), FVec2I( -20, 0 ), BM_NORMAL, AM_NORMAL, 0.5f );
+    BlendColor(  threadPool, perfIntent, host, ULIS3_NOCB, FPixelValue( ULIS3_FORMAT_BGR8, { 255, 0, 0 } ), blockCanvas, FRect( 5, 80, 500, 150 ), BM_DISSOLVE, AM_NORMAL, 0.5f );
     //Blend(  threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockOver, blockCanvas, blockBase->Rect(), FVec2F(), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
 
     // Get rid of Base and Over, we don't need them anymore.

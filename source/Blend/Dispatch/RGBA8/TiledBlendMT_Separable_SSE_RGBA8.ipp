@@ -52,6 +52,8 @@ InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte* iSrc, tByte*
 
         src += 4;
         bdp += 4;
+        if( x % info.sourceRect.w == 0 )
+                    src = iSrc;
     }
 }
 
@@ -68,8 +70,8 @@ TiledBlendMT_Separable_SSE_RGBA8( std::shared_ptr< const _FBlendInfoPrivate > iI
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8
-                                , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                , src + ( ( src_decal_y + ( pLINE % info.sourceRect.h ) )    * src_bps ) + src_decal_x
+                                , bdp + ( ( info.backdropWorkingRect.y + pLINE )             * bdp_bps ) + bdp_decal_x
                                 , pLINE , iInfo );
 }
 

@@ -196,7 +196,7 @@ void BlendTiled( FThreadPool*               iThreadPool
     const int   coverageX = dst_roi.w;
     const int   coverageY = dst_roi.h;
     FVec2I src_size( src_roi.w, src_roi.h );
-    FVec2I mod_shift = - FMaths::PyModulo( - FMaths::PyModulo( iShift, src_size ), src_size );
+    FVec2I mod_shift = FMaths::PyModulo( - FMaths::PyModulo( iShift, src_size ), src_size );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
     auto forwardBlendInfo = std::make_shared< _FBlendInfoPrivate >();
@@ -225,6 +225,27 @@ void BlendTiled( FThreadPool*               iThreadPool
 
     // Invalid
     forwardBlendInfo->backdrop->Invalidate( dst_roi, iCallCB );
+}
+
+void BlendColor( FThreadPool*              iThreadPool
+               , uint32                    iPerfIntent
+               , const FHostDeviceInfo&    iHostDeviceInfo
+               , bool                      iCallCB
+               , const FPixelValue&        iColor
+               , FBlock*                   iBackdrop
+               , const FRect&              iDestRect
+               , eBlendingMode             iBlendingMode
+               , eAlphaMode                iAlphaMode
+               , float                     iOpacityValue )
+{
+    // Assertions
+    ULIS3_ASSERT( iBackdrop,                                "Bad destination."                                          );
+    ULIS3_ASSERT( iThreadPool,                              "Bad pool."                                                 );
+
+    FPixelValue color( iBackdrop->Format() );
+    Conv( iColor, color );
+    FBlock block( color.Ptr(), 1, 1, iBackdrop->Format() );
+    BlendTiled( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRect( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );
 }
 
 ULIS3_NAMESPACE_END

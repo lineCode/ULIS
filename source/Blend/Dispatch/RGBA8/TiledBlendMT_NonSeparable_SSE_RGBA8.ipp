@@ -26,17 +26,19 @@ void
 InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const tByte* iSrc, tByte* iBdp, int32 iLine, std::shared_ptr< const _FBlendInfoPrivate > iInfo, const Vec4i iIDT ) {
     const _FBlendInfoPrivate&   info    = *iInfo;
     const FFormatInfo&          fmt     = info.source->FormatInfo();
+    const tByte*                src     = iSrc;
+    tByte*                      bdp     = iBdp;
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
-        ufloat alpha_bdp    = iBdp[fmt.AID] / 255.f;
-        ufloat alpha_src    = ( iSrc[fmt.AID] / 255.f ) * info.opacityValue;
+        ufloat alpha_bdp    = bdp[fmt.AID] / 255.f;
+        ufloat alpha_src    = ( src[fmt.AID] / 255.f ) * info.opacityValue;
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
         ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
         ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        Vec4f src_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc ) ) ) ) ) / 255.f );
-        Vec4f bdp_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f );
+        Vec4f src_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src ) ) ) ) ) / 255.f );
+        Vec4f bdp_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
         src_chan.insert( 3, 0.f );
         bdp_chan.insert( 3, 0.f );
         Vec4f res_chan;
@@ -48,10 +50,12 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const tByte* iSrc, tBy
         auto _pack = _mm_cvtps_epi32( res_chan );
         _pack = _mm_packus_epi32( _pack, _pack );
         _pack = _mm_packus_epi16( _pack, _pack );
-        *( uint32* )iBdp = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
-        *( iBdp + fmt.AID ) = uint8( alpha_result * 0xFF );
-        iSrc += 4;
-        iBdp += 4;
+        *( uint32* )bdp = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
+        *( bdp + fmt.AID ) = uint8( alpha_result * 0xFF );
+        src += 4;
+        bdp += 4;
+        if( x % info.sourceRect.w == 0 )
+            src = iSrc;
     }
 }
 
@@ -70,8 +74,8 @@ TiledBlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const _FBlendInfoPrivate >
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8
-                                , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                , src + ( ( src_decal_y + ( pLINE % info.sourceRect.h ) )    * src_bps ) + src_decal_x
+                                , bdp + ( ( info.backdropWorkingRect.y + pLINE )             * bdp_bps ) + bdp_decal_x
                                 , pLINE , iInfo, idt );
 }
 

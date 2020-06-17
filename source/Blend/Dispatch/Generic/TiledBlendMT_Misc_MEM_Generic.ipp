@@ -47,6 +47,8 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iB
                 }
                 src += fmt.BPP;
                 bdp += fmt.BPP;
+                if( x % info.sourceRect.w == 0 )
+                    src = iSrc;
             }
             break;
         }
@@ -64,6 +66,8 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iB
                 }
                 src += fmt.BPP;
                 bdp += fmt.BPP;
+                if( x % info.sourceRect.w == 0 )
+                    src = iSrc;
             }
             break;
         }
@@ -84,8 +88,8 @@ TiledBlendMT_Misc_MEM_Generic( std::shared_ptr< const _FBlendInfoPrivate > iInfo
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic< T >
-                                   , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                   , src + ( ( src_decal_y + ( pLINE % info.sourceRect.h ) )    * src_bps ) + src_decal_x
+                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE )             * bdp_bps ) + bdp_decal_x
                                    , pLINE , iInfo );
 }
 
