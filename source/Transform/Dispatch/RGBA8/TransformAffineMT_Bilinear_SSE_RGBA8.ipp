@@ -65,13 +65,14 @@ InvokeTransformAffineMTProcessScanline_Bilinear_SSE_RGBA8( tByte* iDst, int32 iL
         hh0 = c00 * ux + c10 * tx;
         hh1 = c01 * ux + c11 * tx;
         res = hh0 * uy + hh1 * ty;
-        alp = lookup4( fmt.AID, res );
-        res = ( res * 255.f ) / alp;
+        float alpha = res.extract( fmt.AID );
+        res = alpha == 0.f ? 0.f : res * 255.f / alpha;
 
         auto _pack = _mm_cvtps_epi32( res );
         _pack = _mm_packus_epi32( _pack, _pack );
         _pack = _mm_packus_epi16( _pack, _pack );
         *( uint32* )dst = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
+        dst[fmt.AID]= static_cast< uint8 >( alpha );
 
         dst += fmt.BPP;
         point_in_src += src_dx;
