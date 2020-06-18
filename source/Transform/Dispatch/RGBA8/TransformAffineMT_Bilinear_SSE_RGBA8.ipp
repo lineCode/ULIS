@@ -61,6 +61,7 @@ InvokeTransformAffineMTProcessScanline_Bilinear_SSE_RGBA8( tByte* iDst, int32 iL
         TEMP( c11, right, bot );
         TEMP( c01, left, bot );
         #undef TEMP
+        #undef LOAD
         hh0 = c00 * ux + c10 * tx;
         hh1 = c01 * ux + c11 * tx;
         res = hh0 * uy + hh1 * ty;

@@ -90,7 +90,6 @@ SampleBicubicV( tByte* iDst, const float* iA, const float* iB, const float* iC, 
     for( int i = 0; i < iFMT.NCC; ++i ) {
         uint8 r = iFMT.IDT[i];
         FLOAT2TYPE( iDst, r, FMaths::Clamp( InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR, 0.f, 1.f ) );
-
     }
 }
 
@@ -104,7 +103,7 @@ ULIS3_NAMESPACE_END
 ULIS3_NAMESPACE_BEGIN
 
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-ULIS3_API ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
+ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
     switch( iRS ) {
         case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
         case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); break;
@@ -112,6 +111,16 @@ ULIS3_API ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) 
         default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); break;
     }
 }
+
+ULIS3_FORCEINLINE Vec4f InterpCubic( Vec4f iA, Vec4f iB, Vec4f iC, Vec4f iD, Vec4f iT ) {
+    Vec4f a = -iA / 2.0f + (3.0f*iB) / 2.0f - (3.0f*iC) / 2.0f + iD / 2.0f;
+    Vec4f b = iA - (5.0f*iB) / 2.0f + 2.0f*iC - iD / 2.0f;
+    Vec4f c = -iA / 2.0f + iC / 2.0f;
+    Vec4f d = iB;
+    return a * iT * iT * iT + b * iT * iT + c * iT + d;
+}
+
+
 #endif
 
 ULIS3_NAMESPACE_END
