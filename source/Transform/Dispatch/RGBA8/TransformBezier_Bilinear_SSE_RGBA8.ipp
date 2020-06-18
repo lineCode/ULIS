@@ -62,6 +62,7 @@ InvokeTransformBezierMTProcessScanline_Bilinear_SSE_RGBA8( tByte* iDst, int32 iL
             hh1 = c01 * ux + c11 * tx;
             res = hh0 * uy + hh1 * ty;
             alp = lookup4( fmt.AID, res );
+            alp.insert( fmt.AID, 255.f );
             res = ( res * 255.f ) / alp;
 
             auto _pack = _mm_cvtps_epi32( res );

@@ -85,6 +85,7 @@ InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::sha
 
         res = ( m11 + m00 - m10 - m01 ) / coverage_area;
         alp = lookup4( fmt.AID, res );
+        alp.insert( fmt.AID, 255.f );
         res = ( res * 255.f ) / alp;
         auto _pack = _mm_cvtps_epi32( res );
         _pack = _mm_packus_epi32( _pack, _pack );

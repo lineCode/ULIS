@@ -69,6 +69,7 @@ InvokeTransformAffineMTProcessScanline_Bicubic_SSE_RGBA8( tByte* iDst, int32 iLi
         hh3 = InterpCubic( p03, p13, p23, p33, tx );
         res = InterpCubic( hh0, hh1, hh2, hh3, ty );
         alp = lookup4( fmt.AID, res );
+        alp.insert( fmt.AID, 255.f );
         res = ( res * 255.f ) / alp;
 
         auto _pack = _mm_cvtps_epi32( res );
