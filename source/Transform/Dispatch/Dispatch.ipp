@@ -69,7 +69,7 @@ QueryDispatchedTransformAffineFunctionForParameters_RGBA8( const _FTransformInfo
     if( iInfo.hostDeviceInfo->HW_SSE42 ) {
         switch( iInfo.method ) {
             case INTERP_NN          : return  &TransformAffineMT_NN_SSE_RGBA8;
-            case INTERP_BILINEAR    : return  &TransformAffineMT_Bilinear_SSE_RGBA8
+            case INTERP_BILINEAR    : return  &TransformAffineMT_Bilinear_SSE_RGBA8;
             case INTERP_BICUBIC     : return  &TransformAffineMT_Bicubic_SSE_RGBA8;
         }
     }
