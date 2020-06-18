@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         TransformBezier_NN_MEM_Generic.ipp
+* @file         TransformBezier_NN_SSE_RGBA8.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic transform entry point functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -20,7 +20,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformBezierMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
+InvokeTransformBezierMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const _FTransformInfoPrivate&   info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     tByte*                          dst     = iDst;
@@ -42,7 +42,7 @@ InvokeTransformBezierMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine,
 }
 
 template< typename T > void
-TransformBezierMT_NN_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
+TransformBezierMT_NN_SSE_RGBA8( std::shared_ptr< const _FTransformInfoPrivate > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const _FTransformInfoPrivate&   info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
@@ -50,7 +50,7 @@ TransformBezierMT_NN_MEM_Generic( std::shared_ptr< const _FTransformInfoPrivate 
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformBezierMTProcessScanline_NN_MEM_Generic< T >
+                                   , InvokeTransformBezierMTProcessScanline_NN_SSE_RGBA8< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, iField, iMask );
 }
 

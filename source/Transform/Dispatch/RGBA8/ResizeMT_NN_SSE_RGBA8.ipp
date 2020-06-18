@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         ResizeMT_NN_MEM_Generic.ipp
+* @file         ResizeMT_NN_SSE_RGBA8.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic transform entry point functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -20,7 +20,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
-InvokeResizeMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
+InvokeResizeMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
     const _FResizeInfoPrivate&      info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     tByte*                          dst     = iDst;
@@ -45,7 +45,7 @@ InvokeResizeMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::sha
 }
 
 template< typename T > void
-ResizeMT_NN_MEM_Generic( std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
+ResizeMT_NN_SSE_RGBA8( std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
     const _FResizeInfoPrivate&      info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
@@ -53,7 +53,7 @@ ResizeMT_NN_MEM_Generic( std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeResizeMTProcessScanline_NN_MEM_Generic< T >
+                                   , InvokeResizeMTProcessScanline_NN_SSE_RGBA8< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 
