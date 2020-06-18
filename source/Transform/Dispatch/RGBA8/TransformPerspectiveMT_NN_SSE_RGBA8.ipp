@@ -19,7 +19,7 @@
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
-template< typename T > void
+void
 InvokeTransformPerspectiveMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
@@ -43,7 +43,7 @@ InvokeTransformPerspectiveMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLi
     }
 }
 
-template< typename T > void
+void
 TransformPerspectiveMT_NN_SSE_RGBA8( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
@@ -52,7 +52,7 @@ TransformPerspectiveMT_NN_SSE_RGBA8( std::shared_ptr< const _FTransformInfoPriva
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformPerspectiveMTProcessScanline_NN_SSE_RGBA8< T >
+                                   , InvokeTransformPerspectiveMTProcessScanline_NN_SSE_RGBA8
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 

@@ -18,7 +18,7 @@
 #include "Transform/Dispatch/Samplers.ipp"
 
 ULIS3_NAMESPACE_BEGIN
-template< typename T > void
+void
 InvokeTransformAffineMTProcessScanline_Bicubic_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
@@ -77,7 +77,7 @@ InvokeTransformAffineMTProcessScanline_Bicubic_SSE_RGBA8( tByte* iDst, int32 iLi
     delete [] hh3;
 }
 
-template< typename T > void
+void
 TransformAffineMT_Bicubic_SSE_RGBA8( std::shared_ptr< const _FTransformInfoPrivate > iInfo ) {
     const _FTransformInfoPrivate&   info        = *iInfo;
     tByte*                          dst         = info.destination->DataPtr();
@@ -86,7 +86,7 @@ TransformAffineMT_Bicubic_SSE_RGBA8( std::shared_ptr< const _FTransformInfoPriva
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformAffineMTProcessScanline_Bicubic_SSE_RGBA8< T >
+                                   , InvokeTransformAffineMTProcessScanline_Bicubic_SSE_RGBA8
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 
