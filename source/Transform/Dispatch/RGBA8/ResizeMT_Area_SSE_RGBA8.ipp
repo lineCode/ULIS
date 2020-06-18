@@ -57,13 +57,11 @@ InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::sha
             u[i]    = 1.f - t[i];
         }
 
-        #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
+        #define LOAD( X )   _mm_loadu_ps( reinterpret_cast< const float* >( X ) )
         #define SUBSAMPLE_CORNER_IMP( _C, _X, _Y )                                                                                                          \
             if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
-                const tByte* pptr = info.source->PixelPtr( _X, _Y );                                                                                        \
-                Vec4f _ch = LOAD( pptr );                                                                                                                   \
-                Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
-                _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \
+                const tByte* pptr = info.optionalSAT->PixelPtr( _X, _Y );                                                                                   \
+                _C = LOAD( pptr );                                                                                                                          \
             } else {                                                                                                                                        \
                 _C = _mm_setzero_ps();                                                                                                                      \
             }
