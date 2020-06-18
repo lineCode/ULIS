@@ -20,7 +20,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 void
-InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
+InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const _FResizeInfoPrivate > iInfo, const Vec4i iIDT ) {
     const _FResizeInfoPrivate&      info    = *iInfo;
     const FFormatInfo&              fmt     = info.destination->FormatInfo();
     const FFormatInfo&              sat_fmt = info.optionalSAT->FormatInfo();
@@ -30,29 +30,20 @@ InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::sha
     FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
     FVec2F src_dx( info.inverseScale * FVec2F( 1.f, 0.f ) );
     FVec2F coverage( FVec2F( 1.f, 1.f ) * info.inverseScale );
-    float  coverage_area = coverage.x * coverage.y;
+    Vec4f coverage_area = coverage.x * coverage.y;
 
     const int minx = info.src_roi.x;
     const int miny = info.src_roi.y;
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
 
-    tByte* c00 = new tByte[ sat_fmt.BPP * 4 ];
-    tByte* c10 = c00 + sat_fmt.BPP;
-    tByte* c11 = c10 + sat_fmt.BPP;
-    tByte* c01 = c11 + sat_fmt.BPP;
-    tByte* hh0 = new tByte[ sat_fmt.BPP * 2 ];
-    tByte* hh1 = hh0 + sat_fmt.BPP;
-
-    tByte* m00 = new tByte[ sat_fmt.BPP * 4 ];
-    tByte* m10 = m00 + sat_fmt.BPP;
-    tByte* m11 = m10 + sat_fmt.BPP;
-    tByte* m01 = m11 + sat_fmt.BPP;
+    Vec4f c00, c10, c11, c01, hh0, hh1, res, alp;
+    Vec4f m00, m10, m11, m01;
 
     float fpos[4];
     int   ipos[4];
-    float t[4];
-    float u[4];
+    Vec4f t[4];
+    Vec4f u[4];
 
     for( int x = 0; x < info.dst_roi.w; ++x ) {
         // order: left top right bot
@@ -62,40 +53,47 @@ InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::sha
         fpos[3] = fpos[1]  + coverage.y;
         for( int i = 0; i < 4; ++i ) {
             ipos[i] = static_cast< int >( fpos[i] );
-            t[i]    = FMaths::FloatingPartOfNumber( fpos[i] );
+            t[i]    = fpos[i] - ipos[i];
             u[i]    = 1.f - t[i];
         }
 
-        #define SUBSAMPLE_CORNER_IMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.optionalSAT->PixelPtr( _X, _Y ), sat_fmt.BPP ); } else { memset( _C, 0, sat_fmt.BPP ); }
+        #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
+        #define SUBSAMPLE_CORNER_IMP( _C, _X, _Y )                                                                                                          \
+            if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
+                const tByte* pptr = info.source->PixelPtr( _X, _Y );                                                                                        \
+                Vec4f _ch = LOAD( pptr );                                                                                                                   \
+                Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
+                _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \
+            } else {                                                                                                                                        \
+                _C = _mm_setzero_ps();                                                                                                                      \
+            }
         #define SUBSAMPLE_CORNER( _P0, _P1, _M )                                                            \
             SUBSAMPLE_CORNER_IMP( c00, ipos[ _P0 ],     ipos[ _P1 ]     );                                  \
             SUBSAMPLE_CORNER_IMP( c10, ipos[ _P0 ] + 1, ipos[ _P1 ]     );                                  \
             SUBSAMPLE_CORNER_IMP( c11, ipos[ _P0 ] + 1, ipos[ _P1 ] + 1 );                                  \
             SUBSAMPLE_CORNER_IMP( c01, ipos[ _P0 ],     ipos[ _P1 ] + 1 );                                  \
-            SampleBilinearSAT< float >( (tByte*)hh0, (tByte*)c00, (tByte*)c10, sat_fmt, t[ _P0 ], u[ _P0 ] );  \
-            SampleBilinearSAT< float >( (tByte*)hh1, (tByte*)c01, (tByte*)c11, sat_fmt, t[ _P0 ], u[ _P0 ] );  \
-            SampleBilinearSAT< float >( (tByte*)_M, (tByte*)hh0, (tByte*)hh1, sat_fmt, t[ _P1 ], u[ _P1 ] );
+            hh0 = c00 * u[ _P0 ] + c10 * t[ _P0 ];                                                          \
+            hh1 = c01 * u[ _P0 ] + c11 * t[ _P0 ];                                                          \
+            _M  = hh0 * u[ _P1 ] + hh1 * t[ _P1 ];
         SUBSAMPLE_CORNER( 0, 1, m00 )
         SUBSAMPLE_CORNER( 2, 1, m10 )
         SUBSAMPLE_CORNER( 2, 3, m11 )
         SUBSAMPLE_CORNER( 0, 3, m01 )
         #undef SUBSAMPLE_CORNER_IMP
         #undef SUBSAMPLE_CORNER
+        #undef LOAD
 
-        float alpha = FMaths::Clamp( ( ((float*)m11)[sat_fmt.AID] + ((float*)m00)[sat_fmt.AID] - ((float*)m10)[sat_fmt.AID] - ((float*)m01)[sat_fmt.AID] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) );
-        *( reinterpret_cast< T* >( dst ) + sat_fmt.AID ) = static_cast< T >( alpha );
-        for( int i = 0; i < sat_fmt.NCC; ++i ) {
-            uint8 r = sat_fmt.IDT[i];
-            *( reinterpret_cast< T* >( dst ) + r ) = static_cast< T >( FMaths::Clamp( ( ((float*)m11)[r] + ((float*)m00)[r] - ((float*)m10)[r] - ((float*)m01)[r] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) ) / alpha * static_cast< float >( MaxType< T >() ) );
-        }
+        res = ( m11 + m00 - m10 - m01 ) / coverage_area;
+        alp = lookup4( fmt.AID, res );
+        res = ( res * 255.f ) / alp;
+        auto _pack = _mm_cvtps_epi32( res );
+        _pack = _mm_packus_epi32( _pack, _pack );
+        _pack = _mm_packus_epi16( _pack, _pack );
+        *( uint32* )dst = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
 
         dst += fmt.BPP;
         point_in_src += src_dx;
     }
-
-    delete [] c00;
-    delete [] hh0;
-    delete [] m00;
 }
 
 void
@@ -105,10 +103,13 @@ ResizeMT_Area_SSE_RGBA8( std::shared_ptr< const _FResizeInfoPrivate > iInfo ) {
     const tSize                     dst_bps     = info.destination->BytesPerScanLine();
     const tSize                     dst_decal_y = info.dst_roi.y;
     const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    Vec4i idt;
+    BuildRGBA8IndexTable( info.source->FormatInfo().COD, &idt );
+    idt.insert( info.source->FormatInfo().AID, 4 );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeResizeMTProcessScanline_Area_SSE_RGBA8
-                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
+                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, idt );
 }
 
 ULIS3_NAMESPACE_END
