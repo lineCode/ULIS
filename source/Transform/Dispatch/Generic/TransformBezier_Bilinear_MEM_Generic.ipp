@@ -60,10 +60,10 @@ InvokeTransformBezierMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 
             SampleBilinear< T >( hh1, c01, c11, fmt, tx, ux );
             SampleBilinear< T >( dst, hh0, hh1, fmt, ty, uy );
 
-            dst += fmt.BPP;
-            field += 2;
-            ++mask;
         }
+        dst += fmt.BPP;
+        field += 2;
+        ++mask;
     }
 
     delete [] c00;

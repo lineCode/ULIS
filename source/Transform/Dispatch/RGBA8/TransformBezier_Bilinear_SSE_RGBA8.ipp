@@ -56,6 +56,10 @@ InvokeTransformBezierMTProcessScanline_Bilinear_SSE_RGBA8( tByte* iDst, int32 iL
                 } else {                                                                                                                                        \
                     _C = _mm_setzero_ps();                                                                                                                      \
                 }
+            TEMP( c00, left, top );
+            TEMP( c10, right, top );
+            TEMP( c11, right, bot );
+            TEMP( c01, left, bot );
             #undef TEMP
             #undef LOAD
             hh0 = c00 * ux + c10 * tx;
