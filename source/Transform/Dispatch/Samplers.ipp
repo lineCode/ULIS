@@ -96,3 +96,22 @@ SampleBicubicV( tByte* iDst, const float* iA, const float* iB, const float* iC, 
 
 ULIS3_NAMESPACE_END
 
+
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+#include <vectorclass.h>
+#endif
+
+ULIS3_NAMESPACE_BEGIN
+
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+ULIS3_API ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
+    switch( iRS ) {
+        case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
+        case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); break;
+        case 3:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); break;
+        default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); break;
+    }
+}
+#endif
+
+ULIS3_NAMESPACE_END
