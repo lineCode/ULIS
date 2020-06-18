@@ -16,6 +16,7 @@
 #include "Maths/Geometry.h"
 #include "Transform/Dispatch/TransformInfo.h"
 #include "Transform/Dispatch/Samplers.ipp"
+#include <vectorclass.h>
 
 ULIS3_NAMESPACE_BEGIN
 void

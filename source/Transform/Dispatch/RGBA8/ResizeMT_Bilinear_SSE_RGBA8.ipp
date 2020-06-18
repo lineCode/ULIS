@@ -40,10 +40,10 @@ InvokeResizeMTProcessScanline_Bilinear_SSE_RGBA8( tByte* iDst, int32 iLine, std:
         const int   top     = static_cast< int >( floor( point_in_src.y ) );
         const int   right   = left + 1;
         const int   bot     = top + 1;
-        const float tx      = point_in_src.x - left;
-        const float ux      = 1.f - tx;
-        const float ty      = point_in_src.y - top;
-        const float uy      = 1.f - ty;
+        const Vec4f tx      = point_in_src.x - left;
+        const Vec4f ux      = 1.f - tx;
+        const Vec4f ty      = point_in_src.y - top;
+        const Vec4f uy      = 1.f - ty;
 
         #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
         #define TEMP( _C, _X, _Y )                                                                                                                          \
