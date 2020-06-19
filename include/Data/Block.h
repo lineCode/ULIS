@@ -44,6 +44,10 @@ public:
           , const FOnInvalid& iOnInvalid = FOnInvalid()
           , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_DoNothing ) );
 
+    FBlock( const FBlock& ) = delete;
+    FBlock( FBlock&& ) = delete;
+    FBlock& operator=( const FBlock& ) = delete;
+
 public:
     // Public API
     tByte*                  DataPtr();
