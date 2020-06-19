@@ -13,6 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Data/Block.h"
+#include "Data/FormatInfo.h"
 #include "Transform/Methods.h"
 #include "Transform/Dispatch/TransformInfo.h"
 #include "Transform/Dispatch/Generic/ResizeMT_NN_MEM_Generic.ipp"

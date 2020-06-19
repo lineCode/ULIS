@@ -208,8 +208,8 @@ TTilePool< _MICRO, _MACRO >::PerformRedundantHashMergeReturnCorrect( FTileElemen
 
     // Find the hashed tile in the map if not empty
     mMutexCorrectlyHashedTilesCurrentlyInUseLock.lock();
-    std::unordered_map< uint32, FTileElement* >::iterator& it = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
-    std::unordered_map< uint32, FTileElement* >::iterator& end = mCorrectlyHashedTilesCurrentlyInUse.end();
+    std::unordered_map< uint32, FTileElement* >::iterator it = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
+    std::unordered_map< uint32, FTileElement* >::iterator end = mCorrectlyHashedTilesCurrentlyInUse.end();
     mMutexCorrectlyHashedTilesCurrentlyInUseLock.unlock();
 
     if( it == end ) {
@@ -253,8 +253,8 @@ FTileElement*
 TTilePool< _MICRO, _MACRO >::XPerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem ) {
     ULIS3_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
     const std::lock_guard<std::mutex> lock_correct( mMutexCorrectlyHashedTilesCurrentlyInUseLock );
-    std::unordered_map< uint32, FTileElement* >::iterator& it   = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
-    std::unordered_map< uint32, FTileElement* >::iterator& end  = mCorrectlyHashedTilesCurrentlyInUse.end();
+    std::unordered_map< uint32, FTileElement* >::iterator it   = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
+    std::unordered_map< uint32, FTileElement* >::iterator end  = mCorrectlyHashedTilesCurrentlyInUse.end();
     bool dirty  = iElem->mDirty.load();
     bool shared = iElem->mRefCount > 1;
     bool found  = it != end;
@@ -358,7 +358,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::ClearOn
 }
 
 template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::SanitizeAllDirtyTilesCurrentlyInUse() {
-    std::list< FTileElement* >::iterator& it = mDirtyHashedTilesCurrentlyInUse.end();
+    std::list< FTileElement* >::iterator it = mDirtyHashedTilesCurrentlyInUse.end();
     bool first = true;
     while( true ) {
 
@@ -393,7 +393,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Sanitiz
 }
 
 template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::SanitizeAllCorrectlyHashedTilesCurrentlyInUse() {
-    std::unordered_map< uint32, FTileElement* >::iterator& it = mCorrectlyHashedTilesCurrentlyInUse.end();
+    std::unordered_map< uint32, FTileElement* >::iterator it = mCorrectlyHashedTilesCurrentlyInUse.end();
     bool first = true;
     while( true ) {
 

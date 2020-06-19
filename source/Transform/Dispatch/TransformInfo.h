@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Transform/Methods.h"
+#include "Base/HostDeviceInfo.h"
 #include "Maths/Geometry.h"
 #include <glm/matrix.hpp>
 

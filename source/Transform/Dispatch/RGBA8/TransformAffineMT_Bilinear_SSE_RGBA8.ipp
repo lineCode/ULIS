@@ -67,7 +67,7 @@ InvokeTransformAffineMTProcessScanline_Bilinear_SSE_RGBA8( tByte* iDst, int32 iL
         res = hh0 * uy + hh1 * ty;
         alp = lookup4( fmt.AID, res );
         alp.insert( fmt.AID, 255.f );
-        res = select( alp == _mm_setzero_ps(), _mm_setzero_ps(), ( res * 255.f ) / alp );
+        res = ( res * 255.f ) / alp;
 
         auto _pack = _mm_cvtps_epi32( res );
         _pack = _mm_packus_epi32( _pack, _pack );
