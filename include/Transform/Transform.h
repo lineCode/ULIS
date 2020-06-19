@@ -30,6 +30,18 @@ ULIS3_API void TransformAffine( FThreadPool*              iThreadPool
                               , const FTransform2D&       iTransform
                               , eResamplingMethod         iMethod );
 
+ULIS3_API void TransformAffineTiled( FThreadPool*              iThreadPool
+                                   , bool                      iBlocking
+                                   , uint32                    iPerfIntent
+                                   , const FHostDeviceInfo&    iHostDeviceInfo
+                                   , bool                      iCallCB
+                                   , const FBlock*             iSource
+                                   , FBlock*                   iDestination
+                                   , const FRect&              iSourceRect
+                                   , const FRect&              iDestRect
+                                   , const FTransform2D&       iTransform
+                                   , eResamplingMethod         iMethod );
+
 ULIS3_API void TransformPerspective( FThreadPool*              iThreadPool
                                    , bool                      iBlocking
                                    , uint32                    iPerfIntent

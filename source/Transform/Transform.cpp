@@ -75,6 +75,55 @@ void TransformAffine( FThreadPool*              iThreadPool
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
+
+void TransformAffineTiled( FThreadPool*              iThreadPool
+                         , bool                      iBlocking
+                         , uint32                    iPerfIntent
+                         , const FHostDeviceInfo&    iHostDeviceInfo
+                         , bool                      iCallCB
+                         , const FBlock*             iSource
+                         , FBlock*                   iDestination
+                         , const FRect&              iSourceRect
+                         , const FRect&              iDestRect
+                         , const FTransform2D&       iTransform
+                         , eResamplingMethod         iMethod )
+{
+    // Assertions
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+
+    FRect src_fit = iSourceRect & iSource->Rect();
+    FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
+    FRect dst_fit = trans & iDestination->Rect();
+
+    if( !dst_fit.Area() )
+        return;
+
+    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
+    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    alias.pool              = iThreadPool;
+    alias.blocking          = iBlocking;
+    alias.hostDeviceInfo    = &iHostDeviceInfo;
+    alias.perfIntent        = iPerfIntent;
+    alias.source            = iSource;
+    alias.destination       = iDestination;
+    alias.src_roi           = src_fit;
+    alias.dst_roi           = dst_fit;
+    alias.method            = iMethod;
+    alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
+
+    // Query dispatched method
+    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
+    ULIS3_ASSERT( fptr, "No dispatch function found." );
+    fptr( forwardTransformParams );
+
+    // Invalid
+    iDestination->Invalidate( dst_fit, iCallCB );
+}
+
 void TransformPerspective( FThreadPool*         iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
