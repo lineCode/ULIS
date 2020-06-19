@@ -19,7 +19,7 @@ ULIS is primarily developped for Praxinos, a software company developping tools 
 ![](samples/BezierDeform.png) | ![](samples/TiledBlock.png) | ![](samples/Benchmark.png)
 
 ## License
-Check LICENSE.md, ULIS3 is not available for commercial use.
+Check LICENSE.md, ULIS3 is NOT available for free.
 |Name               |Link                                                           |License            |
 |-------------------|---------------------------------------------------------------|-------------------|
 |ULIS3              |https://github.com/Praxinos/ULIS3                              |Commercial         |
