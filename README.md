@@ -22,7 +22,7 @@ ULIS is primarily developped for Praxinos, a software company developping tools 
 Check LICENSE.md, ULIS3 is not available for commercial use.
 |Name               |Link                                                           |License            |
 |-------------------|---------------------------------------------------------------|-------------------|
-|ULIS3              |https://github.com/Praxinos/ULIS3                              |CC-BY-NC-ND-4.0    |
+|ULIS3              |https://github.com/Praxinos/ULIS3                              |Commercial         |
 
 ## Details
 
