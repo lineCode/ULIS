@@ -46,6 +46,9 @@ void TransformAffine( FThreadPool*              iThreadPool
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
+
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
     FRect dst_fit = trans & iDestination->Rect();
@@ -95,11 +98,13 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
-    FRect src_fit = iSourceRect & iSource->Rect();
-    FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
-    FRect dst_fit = trans & iDestination->Rect();
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    if( !dst_fit.Area() )
+    FRect src_fit = iSourceRect & iSource->Rect();
+    FRect dst_fit = iDestRect & iDestination->Rect();
+
+    if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return;
 
     std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
@@ -116,7 +121,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
-    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
+    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineTiledFunctionForParameters( alias );
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams );
 
@@ -142,10 +147,11 @@ void TransformPerspective( FThreadPool*         iThreadPool
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
-    // Default to bilinear for invalid method
-    // We can't compute area efficiently for perspective transforms.
-    if( iMethod == INTERP_AREA )
-        iMethod = INTERP_BILINEAR;
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
+
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformPerspectiveMetrics( src_fit, iTransform, iMethod );
@@ -197,10 +203,8 @@ void TransformBezier( FThreadPool*                                      iThreadP
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS3_ASSERT( iControlPoints.size() == 4,                   "Bad control points size" );
 
-    // Default to bilinear for invalid method
-    // We can't compute area efficiently for bezier transforms.
-    if( iMethod == INTERP_AREA )
-        iMethod = INTERP_BILINEAR;
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformBezierMetrics( src_fit, iControlPoints, iMethod );
@@ -391,6 +395,10 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
     ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
+
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
     if( !trans.Area() ) {
@@ -418,6 +426,9 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
     ULIS3_ASSERT( iThreadPool,                      "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,            "Callback flag is specified on non-blocking operation." );
     ULIS3_ASSERT( iDestinationPoints.size() == 4,   "Bad destination points"                                );
+
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
     FRect src_fit = iSourceRect & iSource->Rect();
     std::vector< FVec2F > sourcePoints = { FVec2F( 0, 0 ), FVec2F( src_fit.w, 0 ), FVec2F( src_fit.w, src_fit.h ), FVec2F( 0, src_fit.h ) };

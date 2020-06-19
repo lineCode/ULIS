@@ -24,6 +24,9 @@
 #include "Transform/Dispatch/Generic/TransformAffineMT_NN_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformAffineMT_Bilinear_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformAffineMT_Bicubic_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformAffineTiledMT_NN_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformAffineTiledMT_Bilinear_MEM_Generic.ipp"
+#include "Transform/Dispatch/Generic/TransformAffineTiledMT_Bicubic_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformPerspectiveMT_NN_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformPerspectiveMT_Bilinear_MEM_Generic.ipp"
 #include "Transform/Dispatch/Generic/TransformPerspectiveMT_Bicubic_MEM_Generic.ipp"
@@ -125,6 +128,80 @@ QueryDispatchedTransformAffineFunctionForParameters( const _FTransformInfoPrivat
     return  nullptr;
 }
 
+
+/////////////////////////////////////////////////////
+// AFFINE Tiled
+// Generic Dispatcher
+template< typename T >
+fpDispatchedTransformFunc
+QueryDispatchedTransformAffineTiledFunctionForParameters_Generic( const _FTransformInfoPrivate& iInfo ) {
+    switch( iInfo.method ) {
+        case INTERP_NN          : return  TransformAffineTiledMT_NN_MEM_Generic< T >;
+        case INTERP_BILINEAR    : return  TransformAffineTiledMT_Bilinear_MEM_Generic< T >;
+        case INTERP_BICUBIC     : return  TransformAffineTiledMT_Bicubic_MEM_Generic< T >;
+    }
+    return  nullptr;
+}
+
+fpDispatchedTransformFunc
+QueryDispatchedTransformAffineTiledFunctionForParameters_RGBA8( const _FTransformInfoPrivate& iInfo ) {
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT_XXX
+    if( iInfo.hostDeviceInfo->HW_SSE42 ) {
+        switch( iInfo.method ) {
+            case INTERP_NN          : return  &TransformAffineTiledMT_NN_SSE_RGBA8;
+            case INTERP_BILINEAR    : return  &TransformAffineTiledMT_Bilinear_SSE_RGBA8;
+            case INTERP_BICUBIC     : return  &TransformAffineTiledMT_Bicubic_SSE_RGBA8;
+        }
+    }
+    else
+#endif
+    {
+        switch( iInfo.method ) {
+            case INTERP_NN          : return  TransformAffineTiledMT_NN_MEM_Generic< uint8 >;
+            case INTERP_BILINEAR    : return  TransformAffineTiledMT_Bilinear_MEM_Generic< uint8 >;
+            case INTERP_BICUBIC     : return  TransformAffineTiledMT_Bicubic_MEM_Generic< uint8 >;
+        }
+    }
+
+    return  nullptr;
+}
+
+// Generic Dispatcher Selector
+template< typename T >
+fpDispatchedTransformFunc
+QueryDispatchedTransformAffineTiledFunctionForParameters_imp( const _FTransformInfoPrivate& iInfo ) {
+    return  QueryDispatchedTransformAffineTiledFunctionForParameters_Generic< T >( iInfo );
+}
+
+template<>
+fpDispatchedTransformFunc
+QueryDispatchedTransformAffineTiledFunctionForParameters_imp< uint8 >( const _FTransformInfoPrivate& iInfo ) {
+    // RGBA8 Signature, any layout
+    if( iInfo.source->HasAlpha()
+     && iInfo.source->NumColorChannels()    == 3
+     && iInfo.source->Model()               == CM_RGB
+     && iInfo.perfIntent & ULIS3_PERF_TSPEC
+     && ( iInfo.perfIntent & ULIS3_PERF_SSE42 || iInfo.perfIntent & ULIS3_PERF_AVX2 )
+     && ( iInfo.hostDeviceInfo->HW_SSE42 || iInfo.hostDeviceInfo->HW_AVX2 ) ) {
+        return  QueryDispatchedTransformAffineTiledFunctionForParameters_RGBA8( iInfo );
+    }
+
+    // Generic Fallback
+    return  QueryDispatchedTransformAffineTiledFunctionForParameters_Generic< uint8 >( iInfo );
+}
+
+// Type Dispatcher Selector
+fpDispatchedTransformFunc
+QueryDispatchedTransformAffineTiledFunctionForParameters( const _FTransformInfoPrivate& iInfo ) {
+    switch( iInfo.source->Type() ) {
+        case TYPE_UINT8     : return  QueryDispatchedTransformAffineTiledFunctionForParameters_imp< uint8   >( iInfo ); break;
+        case TYPE_UINT16    : return  QueryDispatchedTransformAffineTiledFunctionForParameters_imp< uint16  >( iInfo ); break;
+        case TYPE_UINT32    : return  QueryDispatchedTransformAffineTiledFunctionForParameters_imp< uint32  >( iInfo ); break;
+        case TYPE_UFLOAT    : return  QueryDispatchedTransformAffineTiledFunctionForParameters_imp< ufloat  >( iInfo ); break;
+        case TYPE_UDOUBLE   : return  QueryDispatchedTransformAffineTiledFunctionForParameters_imp< udouble >( iInfo ); break;
+    }
+    return  nullptr;
+}
 
 
 /////////////////////////////////////////////////////

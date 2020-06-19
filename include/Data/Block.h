@@ -100,7 +100,7 @@ private:
     FOnInvalid      mOnInvalid;
     FOnCleanup      mOnCleanup;
     FColorProfile*  mProfile;
-    //std::string     mUUID;
+    //std::string       mUUID;
     FFormatInfo     mInfo;
     tSize           mBPS;
     tSize           mBTT;
