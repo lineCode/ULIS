@@ -17,6 +17,7 @@
 #include "Data/Sparse/TiledBlock.h"
 #include "Data/Sparse/Chunk_Private.h"
 #include "Maths/Geometry.h"
+#include <vector>
 #include <unordered_map>
 #include <mutex>
 #include <atomic>
