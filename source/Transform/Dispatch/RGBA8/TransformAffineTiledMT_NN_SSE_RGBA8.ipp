@@ -34,10 +34,9 @@ InvokeTransformAffineTiledMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLi
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        int src_x = static_cast< int >( point_in_src.x );
-        int src_y = static_cast< int >( point_in_src.y );
-        if( src_x >= minx && src_y >= miny && src_x < maxx && src_y < maxy )
-            memcpy( dst, info.source->PixelPtr( src_x, src_y ), fmt.BPP );
+        int src_x = FMaths::PyModulo( static_cast< int >( point_in_src.x ), info.src_roi.w );
+        int src_y = FMaths::PyModulo( static_cast< int >( point_in_src.y ), info.src_roi.h );
+        memcpy( dst, info.source->PixelPtr( src_x, src_y ), fmt.BPP );
 
         dst += fmt.BPP;
         point_in_src += src_dx;

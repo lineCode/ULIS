@@ -36,24 +36,24 @@ InvokeTransformAffineTiledMTProcessScanline_Bilinear_SSE_RGBA8( tByte* iDst, int
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        const int   left    = static_cast< int >( floor( point_in_src.x ) );
-        const int   top     = static_cast< int >( floor( point_in_src.y ) );
-        const int   right   = left + 1;
-        const int   bot     = top + 1;
-        const Vec4f tx      = point_in_src.x - left;
+        const float modx = FMaths::PyFModulo( point_in_src.x, info.src_roi.w );
+        const float mody = FMaths::PyFModulo( point_in_src.y, info.src_roi.h );
+        const int   left    = static_cast< int >( modx );
+        const int   top     = static_cast< int >( mody );
+        const int   right   = ( left + 1 ) % info.src_roi.w;
+        const int   bot     = ( top  + 1 ) % info.src_roi.h;
+        const Vec4f tx      = modx - left;
         const Vec4f ux      = 1.f - tx;
-        const Vec4f ty      = point_in_src.y - top;
+        const Vec4f ty      = mody - top;
         const Vec4f uy      = 1.f - ty;
 
         #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
         #define TEMP( _C, _X, _Y )                                                                                                                          \
-            if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
+            {                                                                                                                                               \
                 const tByte* pptr = info.source->PixelPtr( _X, _Y );                                                                                        \
                 Vec4f _ch = LOAD( pptr );                                                                                                                   \
                 Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
                 _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \
-            } else {                                                                                                                                        \
-                _C = _mm_setzero_ps();                                                                                                                      \
             }
 
         TEMP( c00, left, top );
