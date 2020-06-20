@@ -413,7 +413,6 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                              , const FHostDeviceInfo&    iHostDeviceInfo
                              , bool                      iCallCB
                              , const FBlock*             iSource
-                             , FBlock*                   iDestination
                              , const FRect&              iSourceRect
                              , const FRect&              iDestRect
                              , const FTransform2D&       iTransform
@@ -427,7 +426,35 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
     FRect src_fit = iSourceRect & iSource->Rect();
-    FRect dst_fit = iDestRect & iDestination->Rect();
+    FRect dst_fit = iDestRect;
+
+    if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
+        return nullptr;
+
+    FBlock* dst = new FBlock( dst_fit.w, dst_fit.h, iSource->Format() );
+    TransformAffineTiled( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, dst_fit, iTransform, iMethod );
+    return  dst;
+}
+
+FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
+                                       , bool                      iBlocking
+                                       , uint32                    iPerfIntent
+                                       , const FHostDeviceInfo&    iHostDeviceInfo
+                                       , bool                      iCallCB
+                                       , const FBlock*             iSource
+                                       , const FRect&              iSourceRect
+                                       , const FTransform2D&       iTransform
+                                       , eResamplingMethod         iMethod ) {
+        // Assertions
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
+
+    FRect src_fit = iSourceRect & iSource->Rect();
+    FRect dst_fit = TransformAffineMetrics( src_fit, iTransform, INTERP_NN );;
 
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return nullptr;
