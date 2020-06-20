@@ -42,6 +42,9 @@
 #include "Transform/Dispatch/RGBA8/TransformAffineMT_NN_SSE_RGBA8.ipp"
 #include "Transform/Dispatch/RGBA8/TransformAffineMT_Bilinear_SSE_RGBA8.ipp"
 #include "Transform/Dispatch/RGBA8/TransformAffineMT_Bicubic_SSE_RGBA8.ipp"
+#include "Transform/Dispatch/RGBA8/TransformAffineTiledMT_NN_SSE_RGBA8.ipp"
+#include "Transform/Dispatch/RGBA8/TransformAffineTiledMT_Bilinear_SSE_RGBA8.ipp"
+#include "Transform/Dispatch/RGBA8/TransformAffineTiledMT_Bicubic_SSE_RGBA8.ipp"
 #include "Transform/Dispatch/RGBA8/TransformPerspectiveMT_NN_SSE_RGBA8.ipp"
 #include "Transform/Dispatch/RGBA8/TransformPerspectiveMT_Bilinear_SSE_RGBA8.ipp"
 #include "Transform/Dispatch/RGBA8/TransformPerspectiveMT_Bicubic_SSE_RGBA8.ipp"
@@ -145,7 +148,7 @@ QueryDispatchedTransformAffineTiledFunctionForParameters_Generic( const _FTransf
 
 fpDispatchedTransformFunc
 QueryDispatchedTransformAffineTiledFunctionForParameters_RGBA8( const _FTransformInfoPrivate& iInfo ) {
-#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT_XXX
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
     if( iInfo.hostDeviceInfo->HW_SSE42 ) {
         switch( iInfo.method ) {
             case INTERP_NN          : return  &TransformAffineTiledMT_NN_SSE_RGBA8;

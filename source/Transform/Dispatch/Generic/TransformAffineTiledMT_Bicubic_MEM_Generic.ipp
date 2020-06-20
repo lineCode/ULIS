@@ -51,11 +51,19 @@ InvokeTransformAffineTiledMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, in
         const float tx      = point_in_src.x - src_x;
         const float ty      = point_in_src.y - src_y;
 
-        #define GETPIXEL( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
-        GETPIXEL( p00, src_x - 1, src_y - 1 );  GETPIXEL( p01, src_x - 1, src_y + 0 );  GETPIXEL( p02, src_x - 1, src_y + 1 );  GETPIXEL( p03, src_x - 1, src_y + 2 );
-        GETPIXEL( p10, src_x + 0, src_y - 1 );  GETPIXEL( p11, src_x + 0, src_y + 0 );  GETPIXEL( p12, src_x + 0, src_y + 1 );  GETPIXEL( p13, src_x + 0, src_y + 2 );
-        GETPIXEL( p20, src_x + 1, src_y - 1 );  GETPIXEL( p21, src_x + 1, src_y + 0 );  GETPIXEL( p22, src_x + 1, src_y + 1 );  GETPIXEL( p23, src_x + 1, src_y + 2 );
-        GETPIXEL( p30, src_x + 2, src_y - 1 );  GETPIXEL( p31, src_x + 2, src_y + 0 );  GETPIXEL( p32, src_x + 2, src_y + 1 );  GETPIXEL( p33, src_x + 2, src_y + 2 );
+        const int xm1 = FMaths::PyModulo( src_x - 1, info.src_roi.w );
+        const int xp0 = FMaths::PyModulo( src_x    , info.src_roi.w );
+        const int xp1 = FMaths::PyModulo( src_x + 1, info.src_roi.w );
+        const int xp2 = FMaths::PyModulo( src_x + 2, info.src_roi.w );
+        const int ym1 = FMaths::PyModulo( src_y - 1, info.src_roi.h );
+        const int yp0 = FMaths::PyModulo( src_y    , info.src_roi.h );
+        const int yp1 = FMaths::PyModulo( src_y + 1, info.src_roi.h );
+        const int yp2 = FMaths::PyModulo( src_y + 2, info.src_roi.h );
+        #define GETPIXEL( _C, _X, _Y ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); }
+        GETPIXEL( p00, xm1,     ym1 );  GETPIXEL( p01, xm1,     yp0 );  GETPIXEL( p02, xm1,     yp1 );  GETPIXEL( p03, xm1,     yp2 );
+        GETPIXEL( p10, xp0,     ym1 );  GETPIXEL( p11, xp0,     yp0 );  GETPIXEL( p12, xp0,     yp1 );  GETPIXEL( p13, xp0,     yp2 );
+        GETPIXEL( p20, xp1,     ym1 );  GETPIXEL( p21, xp1,     yp0 );  GETPIXEL( p22, xp1,     yp1 );  GETPIXEL( p23, xp1,     yp2 );
+        GETPIXEL( p30, xp2,     ym1 );  GETPIXEL( p31, xp2,     yp0 );  GETPIXEL( p32, xp2,     yp1 );  GETPIXEL( p33, xp2,     yp2 );
         #undef GETPIXEL
         SampleBicubicH< T >( hh0, p00, p10, p20, p30, fmt, tx );
         SampleBicubicH< T >( hh1, p01, p11, p21, p31, fmt, tx );

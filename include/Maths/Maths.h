@@ -138,6 +138,10 @@ struct ULIS3_API FMaths
         return  ( iMod + ( iValue % iMod ) ) % iMod;
     }
 
+    static ULIS3_FORCEINLINE float PyFModulo( float iValue, float iMod ) {
+        return  fmod( iMod + fmod( iValue, iMod ), iMod );
+    }
+
     template< typename T >
     static ULIS3_FORCEINLINE TVec2< T > PyModulo( const TVec2< T >& iValue, const TVec2< T >& iMod ) {
         return  TVec2< T >( PyModulo( iValue.x, iMod.x ), PyModulo( iValue.y, iMod.y ) );

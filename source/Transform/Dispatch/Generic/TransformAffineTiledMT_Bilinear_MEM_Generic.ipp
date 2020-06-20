@@ -39,16 +39,18 @@ InvokeTransformAffineTiledMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, i
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        const int   left    = static_cast< int >( floor( point_in_src.x ) );
-        const int   top     = static_cast< int >( floor( point_in_src.y ) );
-        const int   right   = left + 1;
-        const int   bot     = top + 1;
-        const float tx      = point_in_src.x - left;
+        const float modx = FMaths::PyFModulo( point_in_src.x, info.src_roi.w );
+        const float mody = FMaths::PyFModulo( point_in_src.y, info.src_roi.h );
+        const int   left    = static_cast< int >( modx );
+        const int   top     = static_cast< int >( mody );
+        const int   right   = ( left + 1 ) % info.src_roi.w;
+        const int   bot     = ( top  + 1 ) % info.src_roi.h;
+        const float tx      = modx - left;
         const float ux      = 1.f - tx;
-        const float ty      = point_in_src.y - top;
+        const float ty      = mody - top;
         const float uy      = 1.f - ty;
 
-        #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
+        #define TEMP( _C, _X, _Y ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); }
         TEMP( c00, left, top );
         TEMP( c10, right, top );
         TEMP( c11, right, bot );
