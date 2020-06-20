@@ -369,11 +369,8 @@ FBlock* XResize( FThreadPool*           iThreadPool
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS3_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
 
-    if( iSize.x <= 0.f || iSize.y <= 0.f ) {
-        FBlock* fallback = new FBlock( 1, 1, iSource->Format() );
-        ClearRaw( fallback );
-        return  fallback;
-    }
+    if( iSize.x <= 0.f || iSize.y <= 0.f )
+        return  nullptr;
 
     FBlock* dst = new FBlock( static_cast< int >( FMaths::RoundToPositiveInfinity( iSize.x ) )
                             , static_cast< int >( FMaths::RoundToPositiveInfinity( iSize.y ) ), iSource->Format() );
@@ -401,14 +398,42 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
 
     FRect src_fit = iSourceRect & iSource->Rect();
     FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
-    if( !trans.Area() ) {
-        FBlock* fallback = new FBlock( 1, 1, iSource->Format() );
-        ClearRaw( fallback );
-        return  fallback;
-    }
+    if( !trans.Area() )
+        return  nullptr;
+
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
     FTransform2D fixedTransform( FTransform2D::ComposeTransforms( FTransform2D::MakeTranslationTransform( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ), iTransform ) );
     TransformAffine( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, fixedTransform, iMethod );
+    return  dst;
+}
+
+FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
+                             , bool                      iBlocking
+                             , uint32                    iPerfIntent
+                             , const FHostDeviceInfo&    iHostDeviceInfo
+                             , bool                      iCallCB
+                             , const FBlock*             iSource
+                             , FBlock*                   iDestination
+                             , const FRect&              iSourceRect
+                             , const FRect&              iDestRect
+                             , const FTransform2D&       iTransform
+                             , eResamplingMethod         iMethod ) {
+    // Assertions
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+
+    // Fix AREA not available here
+    iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
+
+    FRect src_fit = iSourceRect & iSource->Rect();
+    FRect dst_fit = iDestRect & iDestination->Rect();
+
+    if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
+        return nullptr;
+
+    FBlock* dst = new FBlock( dst_fit.w, dst_fit.h, iSource->Format() );
+    TransformAffineTiled( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, dst_fit, iTransform, iMethod );
     return  dst;
 }
 
@@ -444,11 +469,9 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
 
     FTransform2D persp( FTransform2D::GetPerspectiveTransform( sourcePoints.data(), fixedDestinationPoints.data() ) );
     FRect trans = TransformPerspectiveMetrics( src_fit, persp, iMethod );
-    if( !trans.Area() ) {
-        FBlock* fallback = new FBlock( 1, 1, iSource->Format() );
-        ClearRaw( fallback );
-        return  fallback;
-    }
+    if( !trans.Area() )
+        return  nullptr;
+
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
     TransformPerspective( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, persp, iMethod );
     return  dst;
