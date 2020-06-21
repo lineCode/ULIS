@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Data/Kernel.h"
+#include "Maths/Maths.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -22,10 +23,243 @@ FKernel::~FKernel()
 {
 }
 
-
-FKernel::FKernel( int iWidth, int iHeight )
-    : tSuperClass( iWidth, iHeight, ULIS3_FORMAT_GF )
+FKernel::FKernel( const FVec2I& iSize, float iValue )
+    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_GF )
 {
+    for( int i = 0; i < Length(); ++i )
+        mData[ i ] = iValue;
+
+}
+
+FKernel::FKernel( const FVec2I& iSize, std::initializer_list< float > iNums )
+    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_GF )
+{
+    ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for Kernel" );
+    for( int i = 0; i < iNums.size(); ++i )
+        mData[ i ] = *( iNums.begin() + i );
+}
+
+FKernel::FKernel( const FKernel& iOther )
+    : tSuperClass( iOther.Width(), iOther.Height(), ULIS3_FORMAT_GF )
+{
+    memcpy( mData, iOther.mData, BytesTotal() );
+}
+
+FKernel::FKernel( FKernel&& iOther )
+    : tSuperClass( iOther.mData, iOther.Width(), iOther.Height(), ULIS3_FORMAT_GF )
+{
+    iOther.ReleaseOwnership();
+    iOther.mData = nullptr;
+    TakeOwnership();
+}
+
+FKernel&
+FKernel::operator=( const FKernel& iOther ) {
+    delete [] mData;
+    mWidth = iOther.Width();
+    mHeight = iOther.Height();
+    mBPS = mWidth * FormatInfo().BPP;
+    mBTT = mHeight * mBPS;
+    tSize num = mWidth * mHeight * FormatInfo().SPP;
+    mData = reinterpret_cast< tByte* >( new ufloat  [ num ] );
+    memcpy( mData, iOther.mData, BytesTotal() );
+    return  *this;
+}
+
+FKernel&
+FKernel::operator=( FKernel&& iOther ) {
+    delete [] mData;
+    mWidth = iOther.Width();
+    mHeight = iOther.Height();
+    mBPS = mWidth * FormatInfo().BPP;
+    mBTT = mHeight * mBPS;
+    iOther.ReleaseOwnership();
+    mData = iOther.mData;
+    iOther.mData = nullptr;
+    TakeOwnership();
+    return  *this;
+}
+
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- Public API
+void
+FKernel::Set( std::initializer_list< float > iNums ) {
+    ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for Kernel" );
+    for( int i = 0; i < iNums.size(); ++i )
+        mData[ i ] = *( iNums.begin() + i );
+}
+
+float
+FKernel::At( int iX, int iY ) const {
+    return  *reinterpret_cast< const float* >( PixelPtr( iX, iY ) );
+}
+
+float
+FKernel::At( FVec2I iPoint ) const {
+    return  *reinterpret_cast< const float* >( PixelPtr( iPoint.x, iPoint.y ) );
+}
+
+void
+FKernel::SetAt( int iX, int iY, float iValue ) {
+    *reinterpret_cast< float* >( PixelPtr( iX, iY ) ) = iValue;
+}
+
+void
+FKernel::SetAt( FVec2I iPoint, float iValue ) {
+    *reinterpret_cast< float* >( PixelPtr( iPoint.x, iPoint.y ) ) = iValue;
+}
+
+void
+FKernel::Clear() {
+    Fill( 0.f );
+}
+
+void
+FKernel::Fill( float iValue ) {
+    for( int i = 0; i < Length(); ++i )
+        mData[ i ] = iValue;
+}
+
+void
+FKernel::SetZeroes() {
+    Clear();
+}
+
+void
+FKernel::SetOnes() {
+    Fill( 1.f );
+}
+
+float
+FKernel::Sum() const {
+    float res = 0.f;
+    for( int i = 0; i < Length(); ++i )
+        res += mData[ i ];
+    return  res;
+}
+
+void
+FKernel::Add( float iValue ) {
+    for( int i = 0; i < Length(); ++i )
+        mData[ i ] += iValue;
+}
+
+void
+FKernel::Mul( float iValue ) {
+    for( int i = 0; i < Length(); ++i )
+        mData[ i ] *= iValue;
+}
+
+void
+FKernel::Normalize() {
+    float sum = Sum();
+    for( int i = 0; i < Length(); ++i )
+        mData[ i ] /= sum;
+}
+
+bool
+FKernel::IsNormalized() const {
+    return  FMaths::Abs( Sum() - 1.f ) < FMaths::kEpsilonf;
+}
+
+void
+FKernel::FlipX() {
+    const tSize w = Width() - 1;
+    FKernel ret( mWidth, mHeight );
+    for( int x = 0; x < mWidth; ++x )
+        for( int y = 0; y < mHeight; ++y )
+            ret.SetAt( x, y, At( w - x, y ) );
+    *this = std::move( ret );
+}
+
+void
+FKernel::FlipY() {
+    const tSize h = Height() - 1;
+    FKernel ret( mWidth, mHeight );
+    for( int x = 0; x < mWidth; ++x )
+        for( int y = 0; y < mHeight; ++y )
+            ret.SetAt( x, y, At( x, h - y ) );
+    *this = std::move( ret );
+}
+
+void
+FKernel::Rotate90CW() {
+    FKernel ret( mHeight, mWidth );
+    const int w = Height() - 1;
+    const int h = Width() - 1;
+    for( int x = 0; x < mHeight; ++x )
+        for( int y = 0; y < mWidth; ++y )
+            ret.SetAt( x, y, At( h - y, x ) );
+    *this = std::move( ret );
+}
+
+void
+FKernel::Rotate90CCW() {
+    FKernel ret( mHeight, mWidth );
+    const int w = Height() - 1;
+    const int h = Width() - 1;
+    for( int x = 0; x < mHeight; ++x )
+        for( int y = 0; y < mWidth; ++y )
+            ret.SetAt( x, y, At( y, w - x ) );
+    *this = std::move( ret );
+}
+
+void
+FKernel::Rotate180() {
+    FKernel ret( mWidth, mHeight );
+    const int w = Width() - 1;
+    const int h = Height() - 1;
+    for( int x = 0; x < mWidth; ++x )
+        for( int y = 0; y < mHeight; ++y )
+            ret.SetAt( x, y, At( w - x, h - y ) );
+    *this = std::move( ret );
+}
+
+FKernel
+FKernel::Normalized() const {
+    FKernel ret( *this );
+    ret.Normalize();
+    return  ret;
+}
+
+FKernel
+FKernel::FlippedX() const {
+    FKernel ret( *this );
+    ret.FlipX();
+    return  ret;
+}
+
+FKernel
+FKernel::FlippedY() const {
+    FKernel ret( *this );
+    ret.FlipY();
+    return  ret;
+}
+
+FKernel
+FKernel::Rotated90CW() const {
+    FKernel ret( *this );
+    ret.Rotate90CW();
+    return  ret;
+}
+
+FKernel
+FKernel::Rotated90CCW() const {
+    FKernel ret( *this );
+    ret.Rotate90CCW();
+    return  ret;
+}
+
+FKernel
+FKernel::Rotated180() const {
+    FKernel ret( *this );
+    ret.Rotate180();
+    return  ret;
+}
+
+const FVec2I&
+FKernel::Size() const {
+    return  FVec2I( Width(), Height() );
 }
 
 ULIS3_NAMESPACE_END

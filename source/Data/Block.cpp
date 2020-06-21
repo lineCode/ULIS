@@ -156,6 +156,11 @@ FBlock::Height() const
     return  mHeight;
 }
 
+tSize
+FBlock::Length() const
+{
+    return  mWidth * mHeight;
+}
 
 tSize
 FBlock::BytesPerSample() const

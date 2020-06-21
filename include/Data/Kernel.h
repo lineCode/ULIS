@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
+#include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -27,10 +28,44 @@ public:
     typedef FKernel tSelf;
     typedef FBlock  tSuperClass;
 
+public:
     // Construction / Destruction
     virtual ~FKernel();
+    FKernel( const FVec2I& iSize, float iValue = 0.f );
+    FKernel( const FVec2I& iSize, std::initializer_list< float > iNums );
+    FKernel( const FKernel& );
+    FKernel( FKernel&& );
+    FKernel& operator=( const FKernel& );
+    FKernel& operator=( FKernel&& );
 
-    FKernel( int iWidth, int iHeight );
+public:
+    // Public API
+    void  Set( std::initializer_list< float > iNums );
+    float At( int iX, int iY ) const;
+    float At( FVec2I iPoint ) const;
+    void SetAt( int iX, int iY, float iValue );
+    void SetAt( FVec2I iPoint, float iValue );
+    void Clear();
+    void Fill( float iValue );
+    void SetZeroes();
+    void SetOnes();
+    float Sum() const;
+    void Add( float iValue );
+    void Mul( float iValue );
+    void Normalize();
+    bool IsNormalized() const;
+    void FlipX();
+    void FlipY();
+    void Rotate90CW();
+    void Rotate90CCW();
+    void Rotate180();
+    FKernel Normalized() const;
+    FKernel FlippedX() const;
+    FKernel FlippedY() const;
+    FKernel Rotated90CW() const;
+    FKernel Rotated90CCW() const;
+    FKernel Rotated180() const;
+    const FVec2I& Size() const;
 };
 
 ULIS3_NAMESPACE_END

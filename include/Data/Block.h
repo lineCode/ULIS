@@ -59,6 +59,7 @@ public:
     const tByte*            ScanlinePtr( int iRow )                             const;
     tSize                   Width()                                             const;
     tSize                   Height()                                            const;
+    tSize                   Length()                                            const;
     tSize                   BytesPerSample()                                    const;
     tSize                   BytesPerPixel()                                     const;
     tSize                   BytesPerScanLine()                                  const;
@@ -82,7 +83,7 @@ public:
     const FPixelProxy       PixelProxy( int iX, int iY )                        const;
     uint32                  CRC32()                                             const;
     std::string             MD5()                                               const;
-    //std::string             UUID()                                              const;
+    //std::string           UUID()                                              const;
     uint8*                  IndexTable()                                        const;
     const FFormatInfo&      FormatInfo()                                        const;
     void                    TweakFormat( tFormat iFormat );
@@ -92,18 +93,21 @@ public:
     void                    ReleaseOwnership();
     void                    ResyncNonOwnedData( tByte* iData );
 
-private:
+protected:
     // Private Data Members
     tByte*          mData;
     tSize           mWidth;
     tSize           mHeight;
+    tSize           mBPS;
+    tSize           mBTT;
+
+private:
+    // Private Data Members
     FOnInvalid      mOnInvalid;
     FOnCleanup      mOnCleanup;
     FColorProfile*  mProfile;
-    //std::string       mUUID;
+    //std::string   mUUID;
     FFormatInfo     mInfo;
-    tSize           mBPS;
-    tSize           mBTT;
 };
 
 /////////////////////////////////////////////////////
