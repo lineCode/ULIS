@@ -79,23 +79,24 @@ _PyULIS3Object_Block_init( _PyULIS3Object_Block* self, PyObject* args, PyObject*
 #define _PyULIS3Object_Block_CheckError_SelfNULL if( self->_mBlock == nullptr ) { PyErr_SetString( PyExc_AttributeError, "Bad Access to uninitialized _PyULIS3Object_Block object" ); return NULL; }
 
 // Width
-_PyULIS3Object_Block_GetterMethod_Begin( Width              )   return  PyLong_FromLong( self->_mBlock->Width() );              _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( Height             )   return  PyLong_FromLong( self->_mBlock->Height() );             _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( Format             )   return  PyLong_FromLong( self->_mBlock->Format() );             _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( BytesPerSample     )   return  PyLong_FromLong( self->_mBlock->BytesPerSample() );     _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( BytesPerPixel      )   return  PyLong_FromLong( self->_mBlock->BytesPerPixel() );      _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( BytesPerScanLine   )   return  PyLong_FromLong( self->_mBlock->BytesPerScanLine() );   _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( BytesTotal         )   return  PyLong_FromLong( self->_mBlock->BytesTotal() );         _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( Model              )   return  PyLong_FromLong( self->_mBlock->Model() );              _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( Type               )   return  PyLong_FromLong( self->_mBlock->Type() );               _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( HasAlpha           )   return  PyLong_FromLong( self->_mBlock->HasAlpha() );           _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( Swapped            )   return  PyLong_FromLong( self->_mBlock->Swapped() );            _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( Reversed           )   return  PyLong_FromLong( self->_mBlock->Reversed() );           _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( SamplesPerPixel    )   return  PyLong_FromLong( self->_mBlock->SamplesPerPixel() );    _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( NumColorChannels   )   return  PyLong_FromLong( self->_mBlock->NumColorChannels() );   _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( AlphaIndex         )   return  PyLong_FromLong( self->_mBlock->AlphaIndex() );         _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( CRC32              )   return  PyFloat_FromDouble( self->_mBlock->CRC32() );           _PyULIS3Object_Block_GetterMethod_End
-_PyULIS3Object_Block_GetterMethod_Begin( MD5                )   return  PyUnicode_FromString( self->_mBlock->MD5().c_str() );   _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Bytes              )   return  PyMemoryView_FromMemory( (char*)self->_mBlock->DataPtr(), self->_mBlock->BytesTotal(), PyBUF_READ | PyBUF_WRITE );  _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Width              )   return  PyLong_FromLong( self->_mBlock->Width() );                                                                          _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Height             )   return  PyLong_FromLong( self->_mBlock->Height() );                                                                         _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Format             )   return  PyLong_FromLong( self->_mBlock->Format() );                                                                         _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( BytesPerSample     )   return  PyLong_FromLong( self->_mBlock->BytesPerSample() );                                                                 _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( BytesPerPixel      )   return  PyLong_FromLong( self->_mBlock->BytesPerPixel() );                                                                  _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( BytesPerScanLine   )   return  PyLong_FromLong( self->_mBlock->BytesPerScanLine() );                                                               _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( BytesTotal         )   return  PyLong_FromLong( self->_mBlock->BytesTotal() );                                                                     _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Model              )   return  PyLong_FromLong( self->_mBlock->Model() );                                                                          _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Type               )   return  PyLong_FromLong( self->_mBlock->Type() );                                                                           _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( HasAlpha           )   return  PyLong_FromLong( self->_mBlock->HasAlpha() );                                                                       _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Swapped            )   return  PyLong_FromLong( self->_mBlock->Swapped() );                                                                        _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Reversed           )   return  PyLong_FromLong( self->_mBlock->Reversed() );                                                                       _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( SamplesPerPixel    )   return  PyLong_FromLong( self->_mBlock->SamplesPerPixel() );                                                                _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( NumColorChannels   )   return  PyLong_FromLong( self->_mBlock->NumColorChannels() );                                                               _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( AlphaIndex         )   return  PyLong_FromLong( self->_mBlock->AlphaIndex() );                                                                     _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( CRC32              )   return  PyFloat_FromDouble( self->_mBlock->CRC32() );                                                                       _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( MD5                )   return  PyUnicode_FromString( self->_mBlock->MD5().c_str() );                                                               _PyULIS3Object_Block_GetterMethod_End
 //_PyULIS3Object_Block_GetterMethod_Begin( UUID               )   return  PyUnicode_FromString( self->_mBlock->UUID().c_str() );  _PyULIS3Object_Block_GetterMethod_End
 
 //--------------------------------------------------------------------------------------
@@ -133,6 +134,7 @@ _PyULIS3Object_Block_PixelValue( _PyULIS3Object_Block* self, PyObject* args ) {
 /////////////////////////////////////////////////////
 /// Meta Methods
 static PyMethodDef _PyULIS3Object_Block_methods[] = {
+    { "Bytes"               , (PyCFunction)_PyULIS3Object_Block_Bytes               , METH_NOARGS, "Bytes"              },
     { "Width"               , (PyCFunction)_PyULIS3Object_Block_Width               , METH_NOARGS, "Width"              },
     { "Height"              , (PyCFunction)_PyULIS3Object_Block_Height              , METH_NOARGS, "Height"             },
     { "Format"              , (PyCFunction)_PyULIS3Object_Block_Format              , METH_NOARGS, "Format"             },
