@@ -190,7 +190,7 @@ FStructuringElement::Rotate180() {
 }
 
 FStructuringElement
-FStructuringElement::FlippedX() const {
+FStructuringElement::FlippedX() const { 
     FStructuringElement ret( *this );
     ret.FlipX();
     return  ret;

@@ -68,7 +68,6 @@ void Filter( FThreadPool*           iThreadPool
                                    , max
                                    , InvokeFilter
                                    , len, iSource, src + ( pLINE * src_bps ), srcFormatInfo.BPP, iFunc );
-
 }
 
 void FilterInPlace( FThreadPool*            iThreadPool
