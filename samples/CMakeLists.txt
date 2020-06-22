@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.11.0)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/samples/Pixels/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/samples/Kernel/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/samples/SummedAreaTable/CMakeLists.txt)
 if( ${ULIS3_USE_QT} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/samples/Blend/CMakeLists.txt)
@@ -24,6 +25,7 @@ if( ${ULIS3_USE_QT} )
 endif()
 
 set_target_properties( Pixels               PROPERTIES FOLDER ULIS3/samples )
+set_target_properties( Kernel               PROPERTIES FOLDER ULIS3/samples )
 set_target_properties( SummedAreaTable      PROPERTIES FOLDER ULIS3/samples )
 if( ${ULIS3_USE_QT} )
     set_target_properties( Blend                PROPERTIES FOLDER ULIS3/samples )

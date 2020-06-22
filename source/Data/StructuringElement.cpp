@@ -163,7 +163,7 @@ FStructuringElement::Rotate90CW() {
     const int h = Width() - 1;
     for( int x = 0; x < mHeight; ++x )
         for( int y = 0; y < mWidth; ++y )
-            ret.SetAt( x, y, At( h - y, x ) );
+            ret.SetAt( x, y, At( y, w - x ) );
     *this = std::move( ret );
 }
 
@@ -174,7 +174,7 @@ FStructuringElement::Rotate90CCW() {
     const int h = Width() - 1;
     for( int x = 0; x < mHeight; ++x )
         for( int y = 0; y < mWidth; ++y )
-            ret.SetAt( x, y, At( y, w - x ) );
+            ret.SetAt( x, y, At( h - y, x ) );
     *this = std::move( ret );
 }
 

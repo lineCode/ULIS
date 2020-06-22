@@ -16,6 +16,7 @@
 #include "Data/Block.h"
 #include "Data/Pixel.h"
 #include "Data/Kernel.h"
+#include "Data/StructuringElement.h"
 // Base
 #include "Base/HostDeviceInfo.h"
 #include "Base/FilePathRegistry.h"

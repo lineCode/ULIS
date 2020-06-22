@@ -16,6 +16,7 @@ Check LICENSE.md, ULIS3 and samples applications are not available for commercia
 |LoadSaveDisk           |Sample Load / Save on disk.                                |
 |Particles              |Particle Engine using ULIS3.                               |
 |Pixels                 |Sample pixel manipulation.                                 |
+|Kernel                 |Sample Kernel manipulation.                                |
 |Raster                 |Sample for raster / draw of shapes.                        |
 |SimpleFluid            |Sample fluid simulation.                                   |
 |Text                   |Sample text rendering, unicode, supporting JA.             |
