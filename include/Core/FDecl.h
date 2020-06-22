@@ -29,6 +29,8 @@ class   FFontEngine;
 class   FFont;
 class   FTransform2D;
 class   ITiledBlock;
+class   FKernel;
+class   FStructuringElement;
 struct  FRect;
 struct  FPerfInfo;
 struct  FHostDeviceInfo;
