@@ -66,6 +66,12 @@ public:
     FKernel Rotated90CCW() const;
     FKernel Rotated180() const;
     const FVec2I& Size() const;
+    const FVec2I& Pivot() const;
+    void SetPivot( const FVec2I& iPivot );
+
+private:
+    // Private Data Members
+    FVec2I mPivot;
 };
 
 ULIS3_NAMESPACE_END

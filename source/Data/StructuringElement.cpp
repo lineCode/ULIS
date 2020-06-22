@@ -5,53 +5,51 @@
 *   ULIS3
 *__________________
 *
-* @file         Kernel.cpp
+* @file         StructuringElement.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FKernel class.
+* @brief        This file provides the definition for the StructuringElement class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Data/Kernel.h"
+#include "Data/StructuringElement.h"
 #include "Maths/Maths.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FKernel
+// FStructuringElement
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FKernel::~FKernel()
+FStructuringElement::~FStructuringElement()
 {
 }
 
-FKernel::FKernel( const FVec2I& iSize, float iValue )
-    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_GF )
+FStructuringElement::FStructuringElement( const FVec2I& iSize, eStructuringElementValue iValue )
+    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_G8 )
     , mPivot( iSize / 2 )
 {
-    float* data = reinterpret_cast< float* >( mData );
     for( int i = 0; i < Length(); ++i )
-        data[ i ] = iValue;
+        mData[ i ] = static_cast< uint8 >( iValue );
 
 }
 
-FKernel::FKernel( const FVec2I& iSize, std::initializer_list< float > iNums )
-    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_GF )
+FStructuringElement::FStructuringElement( const FVec2I& iSize, std::initializer_list< eStructuringElementValue > iNums )
+    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_G8 )
     , mPivot( iSize / 2 )
 {
     ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for Kernel" );
-    float* data = reinterpret_cast< float* >( mData );
     for( int i = 0; i < iNums.size(); ++i )
-        data[ i ] = *( iNums.begin() + i );
+        mData[ i ] = static_cast< uint8 >( *( iNums.begin() + i ) );
 }
 
-FKernel::FKernel( const FKernel& iOther )
-    : tSuperClass( iOther.Width(), iOther.Height(), ULIS3_FORMAT_GF )
+FStructuringElement::FStructuringElement( const FStructuringElement& iOther )
+    : tSuperClass( iOther.Width(), iOther.Height(), ULIS3_FORMAT_G8 )
     , mPivot( iOther.Size() / 2 )
 {
     memcpy( mData, iOther.mData, BytesTotal() );
 }
 
-FKernel::FKernel( FKernel&& iOther )
-    : tSuperClass( iOther.mData, iOther.Width(), iOther.Height(), ULIS3_FORMAT_GF )
+FStructuringElement::FStructuringElement( FStructuringElement&& iOther )
+    : tSuperClass( iOther.mData, iOther.Width(), iOther.Height(), ULIS3_FORMAT_G8 )
     , mPivot( iOther.Size() / 2 )
 {
     iOther.ReleaseOwnership();
@@ -59,8 +57,8 @@ FKernel::FKernel( FKernel&& iOther )
     TakeOwnership();
 }
 
-FKernel&
-FKernel::operator=( const FKernel& iOther ) {
+FStructuringElement&
+FStructuringElement::operator=( const FStructuringElement& iOther ) {
     mPivot = iOther.Size() / 2;
     delete [] mData;
     mWidth = iOther.Width();
@@ -68,13 +66,13 @@ FKernel::operator=( const FKernel& iOther ) {
     mBPS = mWidth * FormatInfo().BPP;
     mBTT = mHeight * mBPS;
     tSize num = mWidth * mHeight * FormatInfo().SPP;
-    mData = reinterpret_cast< tByte* >( new ufloat  [ num ] );
+    mData = reinterpret_cast< tByte* >( new uint8  [ num ] );
     memcpy( mData, iOther.mData, BytesTotal() );
     return  *this;
 }
 
-FKernel&
-FKernel::operator=( FKernel&& iOther ) {
+FStructuringElement&
+FStructuringElement::operator=( FStructuringElement&& iOther ) {
     mPivot = iOther.Size() / 2;
     delete [] mData;
     mWidth = iOther.Width();
@@ -91,95 +89,57 @@ FKernel::operator=( FKernel&& iOther ) {
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 void
-FKernel::Set( std::initializer_list< float > iNums ) {
+FStructuringElement::Set( std::initializer_list< eStructuringElementValue > iNums ) {
     ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for Kernel" );
-    float* data = reinterpret_cast< float* >( mData );
     for( int i = 0; i < iNums.size(); ++i )
-        data[ i ] = *( iNums.begin() + i );
+        mData[ i ] = static_cast< uint8 >( *( iNums.begin() + i ) );
 }
 
-float
-FKernel::At( int iX, int iY ) const {
-    return  *reinterpret_cast< const float* >( PixelPtr( iX, iY ) );
+eStructuringElementValue
+FStructuringElement::At( int iX, int iY ) const {
+    return  static_cast< eStructuringElementValue >( *PixelPtr( iX, iY ) );
 }
 
-float
-FKernel::At( FVec2I iPoint ) const {
-    return  *reinterpret_cast< const float* >( PixelPtr( iPoint.x, iPoint.y ) );
-}
-
-void
-FKernel::SetAt( int iX, int iY, float iValue ) {
-    *reinterpret_cast< float* >( PixelPtr( iX, iY ) ) = iValue;
+eStructuringElementValue
+FStructuringElement::At( FVec2I iPoint ) const {
+    return  static_cast< eStructuringElementValue >( *PixelPtr( iPoint.x, iPoint.y ) );
 }
 
 void
-FKernel::SetAt( FVec2I iPoint, float iValue ) {
-    *reinterpret_cast< float* >( PixelPtr( iPoint.x, iPoint.y ) ) = iValue;
+FStructuringElement::SetAt( int iX, int iY, eStructuringElementValue iValue ) {
+    *PixelPtr( iX, iY ) = static_cast< uint8 >( iValue );
 }
 
 void
-FKernel::Clear() {
-    Fill( 0.f );
+FStructuringElement::SetAt( FVec2I iPoint, eStructuringElementValue iValue ) {
+    *PixelPtr( iPoint.x, iPoint.y ) = static_cast< uint8 >( iValue );
 }
 
 void
-FKernel::Fill( float iValue ) {
-    float* data = reinterpret_cast< float* >( mData );
+FStructuringElement::Clear() {
+    Fill( MP_ZERO );
+}
+
+void
+FStructuringElement::Fill( eStructuringElementValue iValue ) {
     for( int i = 0; i < Length(); ++i )
-        data[ i ] = iValue;
+        mData[ i ] = static_cast< uint8 >( iValue );
 }
 
 void
-FKernel::SetZeroes() {
+FStructuringElement::SetZeroes() {
     Clear();
 }
 
 void
-FKernel::SetOnes() {
-    Fill( 1.f );
-}
-
-float
-FKernel::Sum() const {
-    float res = 0.f;
-    float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
-        res += data[ i ];
-    return  res;
+FStructuringElement::SetOnes() {
+    Fill( MP_ZERO );
 }
 
 void
-FKernel::Add( float iValue ) {
-    float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
-        data[ i ] += iValue;
-}
-
-void
-FKernel::Mul( float iValue ) {
-    float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
-        data[ i ] *= iValue;
-}
-
-void
-FKernel::Normalize() {
-    float sum = Sum();
-    float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
-        data[ i ] /= sum;
-}
-
-bool
-FKernel::IsNormalized() const {
-    return  FMaths::Abs( Sum() - 1.f ) < FMaths::kEpsilonf;
-}
-
-void
-FKernel::FlipX() {
+FStructuringElement::FlipX() {
     const tSize w = Width() - 1;
-    FKernel ret( mWidth, mHeight );
+    FStructuringElement ret( FVec2I( mWidth, mHeight ) );
     for( int x = 0; x < mWidth; ++x )
         for( int y = 0; y < mHeight; ++y )
             ret.SetAt( x, y, At( w - x, y ) );
@@ -187,9 +147,9 @@ FKernel::FlipX() {
 }
 
 void
-FKernel::FlipY() {
+FStructuringElement::FlipY() {
     const tSize h = Height() - 1;
-    FKernel ret( mWidth, mHeight );
+    FStructuringElement ret( FVec2I( mWidth, mHeight ) );
     for( int x = 0; x < mWidth; ++x )
         for( int y = 0; y < mHeight; ++y )
             ret.SetAt( x, y, At( x, h - y ) );
@@ -197,8 +157,8 @@ FKernel::FlipY() {
 }
 
 void
-FKernel::Rotate90CW() {
-    FKernel ret( mHeight, mWidth );
+FStructuringElement::Rotate90CW() {
+    FStructuringElement ret( FVec2I( mHeight, mWidth ) );
     const int w = Height() - 1;
     const int h = Width() - 1;
     for( int x = 0; x < mHeight; ++x )
@@ -208,8 +168,8 @@ FKernel::Rotate90CW() {
 }
 
 void
-FKernel::Rotate90CCW() {
-    FKernel ret( mHeight, mWidth );
+FStructuringElement::Rotate90CCW() {
+    FStructuringElement ret( FVec2I( mHeight, mWidth ) );
     const int w = Height() - 1;
     const int h = Width() - 1;
     for( int x = 0; x < mHeight; ++x )
@@ -219,8 +179,8 @@ FKernel::Rotate90CCW() {
 }
 
 void
-FKernel::Rotate180() {
-    FKernel ret( mWidth, mHeight );
+FStructuringElement::Rotate180() {
+    FStructuringElement ret( FVec2I( mWidth, mHeight ) );
     const int w = Width() - 1;
     const int h = Height() - 1;
     for( int x = 0; x < mWidth; ++x )
@@ -229,60 +189,53 @@ FKernel::Rotate180() {
     *this = std::move( ret );
 }
 
-FKernel
-FKernel::Normalized() const {
-    FKernel ret( *this );
-    ret.Normalize();
-    return  ret;
-}
-
-FKernel
-FKernel::FlippedX() const {
-    FKernel ret( *this );
+FStructuringElement
+FStructuringElement::FlippedX() const {
+    FStructuringElement ret( *this );
     ret.FlipX();
     return  ret;
 }
 
-FKernel
-FKernel::FlippedY() const {
-    FKernel ret( *this );
+FStructuringElement
+FStructuringElement::FlippedY() const {
+    FStructuringElement ret( *this );
     ret.FlipY();
     return  ret;
 }
 
-FKernel
-FKernel::Rotated90CW() const {
-    FKernel ret( *this );
+FStructuringElement
+FStructuringElement::Rotated90CW() const {
+    FStructuringElement ret( *this );
     ret.Rotate90CW();
     return  ret;
 }
 
-FKernel
-FKernel::Rotated90CCW() const {
-    FKernel ret( *this );
+FStructuringElement
+FStructuringElement::Rotated90CCW() const {
+    FStructuringElement ret( *this );
     ret.Rotate90CCW();
     return  ret;
 }
 
-FKernel
-FKernel::Rotated180() const {
-    FKernel ret( *this );
+FStructuringElement
+FStructuringElement::Rotated180() const {
+    FStructuringElement ret( *this );
     ret.Rotate180();
     return  ret;
 }
 
 const FVec2I&
-FKernel::Size() const {
+FStructuringElement::Size() const {
     return  FVec2I( Width(), Height() );
 }
 
 const FVec2I&
-FKernel::Pivot() const {
+FStructuringElement::Pivot() const {
     return  mPivot;
 }
 
 void
-FKernel::SetPivot( const FVec2I& iPivot ) {
+FStructuringElement::SetPivot( const FVec2I& iPivot ) {
     mPivot = iPivot;
 }
 
