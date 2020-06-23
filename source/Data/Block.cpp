@@ -51,14 +51,7 @@ FBlock::FBlock( int iWidth
     tSize num = mWidth * mHeight * mInfo.SPP;
     ULIS3_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" )
 
-    // For proper alignment
-    switch( Type() ) {
-        case TYPE_UINT8     :   mData = reinterpret_cast< tByte* >( new uint8   [ num ] ); break;
-        case TYPE_UINT16    :   mData = reinterpret_cast< tByte* >( new uint16  [ num ] ); break;
-        case TYPE_UINT32    :   mData = reinterpret_cast< tByte* >( new uint32  [ num ] ); break;
-        case TYPE_UFLOAT    :   mData = reinterpret_cast< tByte* >( new ufloat  [ num ] ); break;
-        case TYPE_UDOUBLE   :   mData = reinterpret_cast< tByte* >( new udouble [ num ] ); break;
-    }
+    mData = new tByte[ mBTT ];
 }
 
 

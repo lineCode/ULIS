@@ -67,8 +67,7 @@ FKernel::operator=( const FKernel& iOther ) {
     mHeight = iOther.Height();
     mBPS = mWidth * FormatInfo().BPP;
     mBTT = mHeight * mBPS;
-    tSize num = mWidth * mHeight * FormatInfo().SPP;
-    mData = reinterpret_cast< tByte* >( new ufloat  [ num ] );
+    mData = new tByte[ mBTT ];
     memcpy( mData, iOther.mData, BytesTotal() );
     return  *this;
 }
