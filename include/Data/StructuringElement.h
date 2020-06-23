@@ -18,7 +18,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 
-enum eStructuringElementValue {
+enum eMorphologicalElementValue {
       MP_ZERO   = 0
     , MP_ONE    = 1
     , MP_ANY    = 2
@@ -37,8 +37,8 @@ public:
 public:
     // Construction / Destruction
     virtual ~FStructuringElement();
-    FStructuringElement( const FVec2I& iSize, eStructuringElementValue iValue = MP_ZERO );
-    FStructuringElement( const FVec2I& iSize, std::initializer_list< eStructuringElementValue > iNums );
+    FStructuringElement( const FVec2I& iSize, eMorphologicalElementValue iValue = MP_ZERO );
+    FStructuringElement( const FVec2I& iSize, std::initializer_list< eMorphologicalElementValue > iNums );
     FStructuringElement( const FStructuringElement& );
     FStructuringElement( FStructuringElement&& );
     FStructuringElement& operator=( const FStructuringElement& );
@@ -46,13 +46,13 @@ public:
 
 public:
     // Public API
-    void  Set( std::initializer_list< eStructuringElementValue > iNums );
-    eStructuringElementValue At( int iX, int iY ) const;
-    eStructuringElementValue At( FVec2I iPoint ) const;
-    void SetAt( int iX, int iY, eStructuringElementValue iValue );
-    void SetAt( FVec2I iPoint, eStructuringElementValue iValue );
+    void  Set( std::initializer_list< eMorphologicalElementValue > iNums );
+    eMorphologicalElementValue At( int iX, int iY ) const;
+    eMorphologicalElementValue At( FVec2I iPoint ) const;
+    void SetAt( int iX, int iY, eMorphologicalElementValue iValue );
+    void SetAt( FVec2I iPoint, eMorphologicalElementValue iValue );
     void Clear();
-    void Fill( eStructuringElementValue iValue );
+    void Fill( eMorphologicalElementValue iValue );
     void SetZeroes();
     void SetOnes();
     void FlipX();

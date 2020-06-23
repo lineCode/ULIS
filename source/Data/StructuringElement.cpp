@@ -23,7 +23,7 @@ FStructuringElement::~FStructuringElement()
 {
 }
 
-FStructuringElement::FStructuringElement( const FVec2I& iSize, eStructuringElementValue iValue )
+FStructuringElement::FStructuringElement( const FVec2I& iSize, eMorphologicalElementValue iValue )
     : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_G8 )
     , mPivot( iSize / 2 )
 {
@@ -32,7 +32,7 @@ FStructuringElement::FStructuringElement( const FVec2I& iSize, eStructuringEleme
 
 }
 
-FStructuringElement::FStructuringElement( const FVec2I& iSize, std::initializer_list< eStructuringElementValue > iNums )
+FStructuringElement::FStructuringElement( const FVec2I& iSize, std::initializer_list< eMorphologicalElementValue > iNums )
     : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_G8 )
     , mPivot( iSize / 2 )
 {
@@ -88,29 +88,29 @@ FStructuringElement::operator=( FStructuringElement&& iOther ) {
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 void
-FStructuringElement::Set( std::initializer_list< eStructuringElementValue > iNums ) {
+FStructuringElement::Set( std::initializer_list< eMorphologicalElementValue > iNums ) {
     ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for Kernel" );
     for( int i = 0; i < iNums.size(); ++i )
         mData[ i ] = static_cast< uint8 >( *( iNums.begin() + i ) );
 }
 
-eStructuringElementValue
+eMorphologicalElementValue
 FStructuringElement::At( int iX, int iY ) const {
-    return  static_cast< eStructuringElementValue >( *PixelPtr( iX, iY ) );
+    return  static_cast< eMorphologicalElementValue >( *PixelPtr( iX, iY ) );
 }
 
-eStructuringElementValue
+eMorphologicalElementValue
 FStructuringElement::At( FVec2I iPoint ) const {
-    return  static_cast< eStructuringElementValue >( *PixelPtr( iPoint.x, iPoint.y ) );
+    return  static_cast< eMorphologicalElementValue >( *PixelPtr( iPoint.x, iPoint.y ) );
 }
 
 void
-FStructuringElement::SetAt( int iX, int iY, eStructuringElementValue iValue ) {
+FStructuringElement::SetAt( int iX, int iY, eMorphologicalElementValue iValue ) {
     *PixelPtr( iX, iY ) = static_cast< uint8 >( iValue );
 }
 
 void
-FStructuringElement::SetAt( FVec2I iPoint, eStructuringElementValue iValue ) {
+FStructuringElement::SetAt( FVec2I iPoint, eMorphologicalElementValue iValue ) {
     *PixelPtr( iPoint.x, iPoint.y ) = static_cast< uint8 >( iValue );
 }
 
@@ -120,7 +120,7 @@ FStructuringElement::Clear() {
 }
 
 void
-FStructuringElement::Fill( eStructuringElementValue iValue ) {
+FStructuringElement::Fill( eMorphologicalElementValue iValue ) {
     for( int i = 0; i < Length(); ++i )
         mData[ i ] = static_cast< uint8 >( iValue );
 }
