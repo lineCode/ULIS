@@ -16,25 +16,26 @@
 using namespace ::ul3;
 
 /////////////////////////////////////////////////////
-// Imp
-#define INVOCATION_X_ARGS
-typedef void (*fpDispatchedXFunc)( INVOCATION_X_ARGS );
-
-template< typename T > void InvokeXGenericAVX( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericAVX called." << std::endl; }
-template< typename T > void InvokeXGenericSSE( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericSSE called." << std::endl; }
-template< typename T > void InvokeXGenericMEM( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericMEM called." << std::endl; }
-
-/////////////////////////////////////////////////////
 // Table
+bool TestUnorderedRGBA8( const FFormatInfo& iFormatInfo ) {
+    return  ( iFormatInfo.TP == TYPE_UINT8 ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB );
+}
+
+typedef bool (*fpCond)( const FFormatInfo& iFormatInfo );
+
 template< typename F, typename T >
-struct FDispatchTable {
+struct FDispatchGroup {
+    static const fpCond select_cond;
     static const F select_AVX;
     static const F select_SSE;
     static const F select_MEM;
 };
-template< typename F, typename T > const F FDispatchTable<F,T>::select_AVX = nullptr;
-template< typename F, typename T > const F FDispatchTable<F,T>::select_SSE = nullptr;
-template< typename F, typename T > const F FDispatchTable<F,T>::select_MEM = nullptr;
+
+template< typename F, typename T >
+struct FDispatchTable {
+    static const FDispatchGroup groups[];
+};
+template< typename F, typename T > const FDispatchGroup< F, T > FDispatchTable<F,T>::groups[] = {};
 
 /////////////////////////////////////////////////////
 // Helper
@@ -50,8 +51,19 @@ template< typename F, typename T > const F FDispatchTable<F,T>::select_MEM = nul
     template< typename T > const F FDispatchTable< F, T >::select_MEM = & MEM < T >;
 
 /////////////////////////////////////////////////////
-// Spec
-DECL_DISPATCH( fpDispatchedXFunc, InvokeXGenericAVX, InvokeXGenericSSE, InvokeXGenericMEM )
+// Helper
+#define DECL_DISPATCHGROUP( F, cond, AVX, SSE, MEM )                                        \
+    template< typename T >                                                                  \
+    struct FDispatchGroup< F, T > {                                                         \
+        static const fpCond select_cond;                                                    \
+        static const F select_AVX;                                                          \
+        static const F select_SSE;                                                          \
+        static const F select_MEM;                                                          \
+    };                                                                                      \
+    template< typename T > const fpCond FDispatchGroup<F,T>::select_cond = & cond;          \
+    template< typename T > const F FDispatchGroup< F, T >::select_AVX = & AVX < T >;        \
+    template< typename T > const F FDispatchGroup< F, T >::select_SSE = & SSE < T >;        \
+    template< typename T > const F FDispatchGroup< F, T >::select_MEM = & MEM < T >;
 
 /////////////////////////////////////////////////////
 // Dispatcher
@@ -72,19 +84,34 @@ public:
 private:
     template< typename T >
     static ULIS3_FORCEINLINE F Query_imp( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo, const E& iExtra ) {
-        #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-            if( iPerfIntent & ULIS3_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
-                return  FDispatchTable< F, T >::select_AVX;
-            else
-        #endif
-        #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-            if( iPerfIntent & ULIS3_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
-                return  FDispatchTable< F, T >::select_SSE;
-            else
-        #endif
-                return  FDispatchTable< F, T >::select_MEM;
+        if( FDispatchGroup< F, T >::select_cond( iFormatInfo ) ) {
+            #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
+                if( iPerfIntent & ULIS3_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
+                    return  FDispatchGroup< F, T >::select_AVX;
+                else
+            #endif
+            #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+                if( iPerfIntent & ULIS3_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
+                    return  FDispatchGroup< F, T >::select_SSE;
+                else
+            #endif
+                    return  FDispatchGroup< F, T >::select_MEM;
+        }
     }
 };
+
+/////////////////////////////////////////////////////
+// Imp
+#define INVOCATION_X_ARGS
+typedef void (*fpDispatchedXFunc)( INVOCATION_X_ARGS );
+template< typename T > void InvokeXGenericAVX( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericAVX called." << std::endl; }
+template< typename T > void InvokeXGenericSSE( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericSSE called." << std::endl; }
+template< typename T > void InvokeXGenericMEM( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericMEM called." << std::endl; }
+
+/////////////////////////////////////////////////////
+// Spec
+DECL_DISPATCH( fpDispatchedXFunc, InvokeXGenericAVX, InvokeXGenericSSE, InvokeXGenericMEM )
+DECL_DISPATCHGROUP( fpDispatchedXFunc, TestUnorderedRGBA8, InvokeXGenericAVX, InvokeXGenericSSE, InvokeXGenericMEM )
 
 /////////////////////////////////////////////////////
 // Main
@@ -92,7 +119,7 @@ int
 main() {
     uint32 intent = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    FFormatInfo format( ULIS3_FORMAT_RGBA8 );
+    FFormatInfo format( ULIS3_FORMAT_RGBA16 );
 
     eBlendingMode mode = BM_NORMAL;
 
