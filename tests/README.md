@@ -15,6 +15,7 @@ Check LICENSE.md, ULIS3 and tests applications are not available for commercial 
 |QtInterop              |Simple GUI test program with display and interop with Qt   |
 |SIMD                   |Simple test program, test SIMD features at runtime         |
 |Test                   |Simple test program, test ULIS3 at runtime                 |
+|Dispatch               |Simple Dispatch test program, test ULIS3 Dispatch          |
 |Formats                |Simple program, display all ULIS3 Formats                  |
 |PyTest                 |Python program to test PyULIS3 python binding              |
 
