@@ -112,6 +112,8 @@ private:
 
 /////////////////////////////////////////////////////
 // XDeleteBlock
+ULIS3_API FBlock* XCreateBlock( int iWidth, int iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& iOnInvalid = FOnInvalid(), const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory ) );
+ULIS3_API FBlock* XCreateBlock( tByte* iData, int iWidth, int iHeight, tFormat iFormat, FColorProfile* iProfile = nullptr, const FOnInvalid& iOnInvalid = FOnInvalid(), const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_DoNothing ) );
 ULIS3_API void XDeleteBlock( FBlock* iBlock );
 
 ULIS3_NAMESPACE_END
