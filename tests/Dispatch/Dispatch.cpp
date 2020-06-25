@@ -29,7 +29,6 @@ template< typename T > void InvokeXGenericSSE2( INVOCATION_X_ARGS ) { std::cout 
 template< typename T > void InvokeXGenericMEM0( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericMEM0 called." << std::endl; }
 template< typename T > void InvokeXGenericMEM1( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericMEM1 called." << std::endl; }
 template< typename T > void InvokeXGenericMEM2( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericMEM2 called." << std::endl; }
-
 void InvokeXRGBA8AVX0( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBA8AVX0 called." << std::endl; }
 void InvokeXRGBA8AVX1( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBA8AVX1 called." << std::endl; }
 void InvokeXRGBA8AVX2( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBA8AVX2 called." << std::endl; }
@@ -39,60 +38,6 @@ void InvokeXRGBA8SSE2( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBA8SSE2 call
 void InvokeXRGBA8MEM0( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBA8MEM0 called." << std::endl; }
 void InvokeXRGBA8MEM1( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBA8MEM1 called." << std::endl; }
 void InvokeXRGBA8MEM2( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBA8MEM2 called." << std::endl; }
-
-template< typename T > fpDispatchedXFunc SelectDispatchMEMGeneric( const int& iInfo ) {
-    switch( iInfo ) {
-        case 0  : return  &InvokeXGenericMEM0< T >;
-        case 1  : return  &InvokeXGenericMEM1< T >;
-        case 2  : return  &InvokeXGenericMEM2< T >;
-        default : return  nullptr;
-    }
-}
-
-template< typename T > fpDispatchedXFunc SelectDispatchSSEGeneric( const int& iInfo ) {
-    switch( iInfo ) {
-        case 0  : return  &InvokeXGenericSSE0< T >;
-        case 1  : return  &InvokeXGenericSSE1< T >;
-        case 2  : return  &InvokeXGenericSSE2< T >;
-        default : return  nullptr;
-    }
-}
-
-template< typename T > fpDispatchedXFunc SelectDispatchAVXGeneric( const int& iInfo ) {
-    switch( iInfo ) {
-        case 0  : return  &InvokeXGenericAVX0< T >;
-        case 1  : return  &InvokeXGenericAVX1< T >;
-        case 2  : return  &InvokeXGenericAVX2< T >;
-        default : return  nullptr;
-    }
-}
-
-fpDispatchedXFunc SelectDispatchMEMRGBA8( const int& iInfo ) {
-    switch( iInfo ) {
-        case 0  : return  &InvokeXRGBA8MEM0;
-        case 1  : return  &InvokeXRGBA8MEM1;
-        case 2  : return  &InvokeXRGBA8MEM2;
-        default : return  nullptr;
-    }
-}
-
-fpDispatchedXFunc SelectDispatchSSERGBA8( const int& iInfo ) {
-    switch( iInfo ) {
-        case 0  : return  &InvokeXRGBA8SSE0;
-        case 1  : return  &InvokeXRGBA8SSE1;
-        case 2  : return  &InvokeXRGBA8SSE2;
-        default : return  nullptr;
-    }
-}
-
-fpDispatchedXFunc SelectDispatchAVXRGBA8( const int& iInfo ) {
-    switch( iInfo ) {
-        case 0  : return  &InvokeXRGBA8AVX0;
-        case 1  : return  &InvokeXRGBA8AVX1;
-        case 2  : return  &InvokeXRGBA8AVX2;
-        default : return  nullptr;
-    }
-}
 
 /////////////////////////////////////////////////////
 // Table
@@ -170,7 +115,33 @@ private:
 
 /////////////////////////////////////////////////////
 // Spec
+#define ULIS3_BEGIN_DISPATCHER( F, E )                                              \
+template< typename T >                                                              \
+struct TMultiDispatchTable< F, T, E > {                                             \
+    static const TMultiDispatchGroup< F, E > spec_table[];                          \
+    static const typename TMultiDispatchGroup< F, E >::fpSelect select_AVX_Generic; \
+    static const typename TMultiDispatchGroup< F, E >::fpSelect select_SSE_Generic; \
+    static const typename TMultiDispatchGroup< F, E >::fpSelect select_MEM_Generic; \
+    static const int spec_size;                                                     \
+};
+#define ULIS3_DISPATCH_GENERIC( F, E, a1, a2, a3 )                                                                              \
+template< typename T > const TMultiDispatchGroup< F, E >::fpSelect TMultiDispatchTable< F, T, E >::select_AVX_Generic = a1;     \
+template< typename T > const TMultiDispatchGroup< F, E >::fpSelect TMultiDispatchTable< F, T, E >::select_SSE_Generic = a2;     \
+template< typename T > const TMultiDispatchGroup< F, E >::fpSelect TMultiDispatchTable< F, T, E >::select_MEM_Generic = a3;
 
+#define ULIS3_BEGIN_DISPATCH_SPEC( F, E )   \
+template< typename T > const TMultiDispatchGroup< F, E >  TMultiDispatchTable< F, T, E >::spec_table[] = {
+
+#define ULIS3_DECL_DISPATCH_SPEC( a, b, c, d ) { a, b, c, d }
+
+#define ULIS3_END_DISPATCH_SPEC                 \
+    , { nullptr, nullptr, nullptr, nullptr }    \
+};
+
+#define ULIS3_END_DISPATCHER( F, E )            \
+template< typename T > const int TMultiDispatchTable< F, T, E >::spec_size = sizeof( TMultiDispatchTable< F, T, E >::spec_table ) / sizeof( TMultiDispatchGroup< F, E > );
+
+/*
 template< typename T >
 struct TMultiDispatchTable< fpDispatchedXFunc, T, int > {
     static const TMultiDispatchGroup< fpDispatchedXFunc, int > spec_table[];
@@ -179,7 +150,6 @@ struct TMultiDispatchTable< fpDispatchedXFunc, T, int > {
     static const typename TMultiDispatchGroup< fpDispatchedXFunc, int >::fpSelect select_MEM_Generic;
     static const int spec_size;
 };
-
 template< typename T > const TMultiDispatchGroup< fpDispatchedXFunc, int >  TMultiDispatchTable< fpDispatchedXFunc, T, int >::spec_table[] = {
       { &TestUnorderedRGBA8, &SelectDispatchAVXRGBA8, &SelectDispatchSSERGBA8, &SelectDispatchMEMRGBA8 }
     , { nullptr, nullptr, nullptr, nullptr }
@@ -188,6 +158,30 @@ template< typename T > const TMultiDispatchGroup< fpDispatchedXFunc, int >::fpSe
 template< typename T > const TMultiDispatchGroup< fpDispatchedXFunc, int >::fpSelect TMultiDispatchTable< fpDispatchedXFunc, T, int >::select_SSE_Generic = &SelectDispatchSSEGeneric< T >;
 template< typename T > const TMultiDispatchGroup< fpDispatchedXFunc, int >::fpSelect TMultiDispatchTable< fpDispatchedXFunc, T, int >::select_MEM_Generic = &SelectDispatchMEMGeneric< T >;
 template< typename T > const int TMultiDispatchTable< fpDispatchedXFunc, T, int >::spec_size = sizeof( TMultiDispatchTable< fpDispatchedXFunc, T, int >::spec_table ) / sizeof( TMultiDispatchGroup< fpDispatchedXFunc, int > );
+*/
+
+#define IMP_DISPATCH_SELECT( N, a, b, c )   \
+fpDispatchedXFunc N ( const int& iInfo ) {  \
+    switch( iInfo ) {                       \
+        case 0  : return  a;                \
+        case 1  : return  b;                \
+        case 2  : return  c;                \
+        default : return  nullptr;          \
+    }                                       \
+}
+template< typename T > IMP_DISPATCH_SELECT( SelectDispatchMEMGeneric, &InvokeXGenericMEM0< T >, &InvokeXGenericMEM1< T >, &InvokeXGenericMEM2< T > )
+template< typename T > IMP_DISPATCH_SELECT( SelectDispatchSSEGeneric, &InvokeXGenericSSE0< T >, &InvokeXGenericSSE1< T >, &InvokeXGenericSSE2< T > )
+template< typename T > IMP_DISPATCH_SELECT( SelectDispatchAVXGeneric, &InvokeXGenericAVX0< T >, &InvokeXGenericAVX1< T >, &InvokeXGenericAVX2< T > )
+IMP_DISPATCH_SELECT( SelectDispatchMEMRGBA8, &InvokeXRGBA8MEM0, &InvokeXRGBA8MEM1, &InvokeXRGBA8MEM2 )
+IMP_DISPATCH_SELECT( SelectDispatchSSERGBA8, &InvokeXRGBA8SSE0, &InvokeXRGBA8SSE1, &InvokeXRGBA8SSE2 )
+IMP_DISPATCH_SELECT( SelectDispatchAVXRGBA8, &InvokeXRGBA8AVX0, &InvokeXRGBA8AVX1, &InvokeXRGBA8AVX2 )
+
+ULIS3_BEGIN_DISPATCHER( fpDispatchedXFunc, int )
+    ULIS3_DISPATCH_GENERIC( fpDispatchedXFunc, int, &SelectDispatchAVXGeneric< T >, &SelectDispatchSSEGeneric< T >, &SelectDispatchMEMGeneric< T > )
+    ULIS3_BEGIN_DISPATCH_SPEC( fpDispatchedXFunc, int )
+        ULIS3_DECL_DISPATCH_SPEC( &TestUnorderedRGBA8, &SelectDispatchAVXRGBA8, &SelectDispatchSSERGBA8, &SelectDispatchMEMRGBA8 )
+    ULIS3_END_DISPATCH_SPEC
+ULIS3_END_DISPATCHER( fpDispatchedXFunc, int )
 
 /////////////////////////////////////////////////////
 // Main
@@ -195,11 +189,11 @@ int
 main() {
     const size_t size = TMultiDispatchTable< fpDispatchedXFunc, uint8, int >::spec_size;
 
-    uint32 intent = ULIS3_PERF_SSE42;
+    uint32 intent = ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    FFormatInfo format( ULIS3_FORMAT_RGBA8 );
+    FFormatInfo format( ULIS3_FORMAT_RGBA16 );
 
-    int extra = 1;
+    int extra = 2;
 
     fpDispatchedXFunc fptr = TDispatcher< fpDispatchedXFunc, int >::Query( intent, host, format, extra );
     if( fptr )
