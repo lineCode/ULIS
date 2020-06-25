@@ -19,6 +19,7 @@ using namespace ::ul3;
 /////////////////////////////////////////////////////
 // Imp
 #define INVOCATION_X_ARGS
+
 typedef void (*fpDispatchedXFunc)( INVOCATION_X_ARGS );
 template< typename T > void InvokeXGenericAVX0( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericAVX0 called." << std::endl; }
 template< typename T > void InvokeXGenericAVX1( INVOCATION_X_ARGS ) { std::cout << "InvokeXGenericAVX1 called." << std::endl; }

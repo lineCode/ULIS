@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         Dispatch.ipp
+* @file         DispatchAlternative.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic Blend entry point functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Base/HostDeviceInfo.h"
+#include "Dispatch/Dispatch.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/ModesUtils.ipp"
 #include "Blend/Dispatch/BlendInfo.h"
@@ -38,6 +39,7 @@
 #include "Blend/Dispatch/RGBA8/AlphaBlendMT_AVX_RGBA8.ipp"
 #endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
+
 #define ULIS3_SELECT_COMP_OP(   iSubpixel, _FUNCTION )      iSubpixel ? & _FUNCTION ## _Subpixel : & _FUNCTION
 #define ULIS3_SELECT_COMP_OPT(  iSubpixel, _FUNCTION, _T )  iSubpixel ? & _FUNCTION ## _Subpixel < _T > : & _FUNCTION < _T >
 
@@ -47,88 +49,48 @@ typedef void (*fpDispatchedAlphaBlendFunc)( std::shared_ptr< const _FBlendInfoPr
 typedef void (*fpDispatchedTiledBlendFunc)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
 
 /////////////////////////////////////////////////////
-// Dispatch Blend
-template< typename T >
-fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_Generic( const _FBlendInfoPrivate& iInfo ) {
-    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {
-        case BMQ_MISC           : return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Misc_MEM_Generic,          T );
-        case BMQ_SEPARABLE      : return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Separable_MEM_Generic,     T );
-        case BMQ_NONSEPARABLE   : return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_NonSeparable_MEM_Generic,  T );
-    }
-    return  nullptr;
+// Typedefs
+typedef void (*fpBlendInvocation)( std::shared_ptr< const _FBlendInfoPrivate > iBlendParams );
+#define ULIS3_IMP_BLEND_INVOCATION_SELECTOR( TAG, MISC, MISCAA, SEP, SEPAA, NSEP, NSEPAA )  \
+fpBlendInvocation TAG ( const _FBlendInfoPrivate& iInfo ) {                                 \
+    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {                                 \
+        case BMQ_MISC           : return  iInfo.subpixelFlag ? MISCAA   : MISC;             \
+        case BMQ_SEPARABLE      : return  iInfo.subpixelFlag ? SEPAA    : SEP;              \
+        case BMQ_NONSEPARABLE   : return  iInfo.subpixelFlag ? NSEPAA   : NSEP;             \
+        default                 : return  nullptr;                                          \
+    }                                                                                       \
 }
+template< typename T > ULIS3_IMP_BLEND_INVOCATION_SELECTOR( SelectBlendInvocationMEMGeneric
+    , &BlendMT_Misc_MEM_Generic< T >            , &BlendMT_Misc_MEM_Generic_Subpixel< T >
+    , &BlendMT_Separable_MEM_Generic< T >       , &BlendMT_Separable_MEM_Generic_Subpixel< T >
+    , &BlendMT_NonSeparable_MEM_Generic< T >    , &BlendMT_NonSeparable_MEM_Generic_Subpixel< T > )
 
+#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
+ULIS3_IMP_BLEND_INVOCATION_SELECTOR( SelectBlendInvocationAVXRGBA8
+    , &BlendMT_Misc_MEM_Generic< uint8 >        , &BlendMT_Misc_MEM_Generic_Subpixel< uint8 >
+    , &BlendMT_Separable_AVX_RGBA8              , &BlendMT_Separable_AVX_RGBA8_Subpixel
+    , &BlendMT_NonSeparable_SSE_RGBA8           , &BlendMT_NonSeparable_SSE_RGBA8_Subpixel )
+#endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
-fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_RGBA8( const _FBlendInfoPrivate& iInfo ) {
-    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {
-        case BMQ_MISC: {
-            return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Misc_MEM_Generic, uint8  );
-        }
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+ULIS3_IMP_BLEND_INVOCATION_SELECTOR( SelectBlendInvocationSSERGBA8
+    , &BlendMT_Misc_MEM_Generic< uint8 >        , &BlendMT_Misc_MEM_Generic_Subpixel< uint8 >
+    , &BlendMT_Separable_SSE_RGBA8              , &BlendMT_Separable_SSE_RGBA8_Subpixel
+    , &BlendMT_NonSeparable_SSE_RGBA8           , &BlendMT_NonSeparable_SSE_RGBA8_Subpixel )
+#endif // ULIS3_COMPILETIME_SSE42_SUPPORT
 
-        case BMQ_SEPARABLE: {
-            #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-                if( iInfo.perfIntent & ULIS3_PERF_AVX2 && iInfo.hostDeviceInfo->HW_AVX2 )
-                    return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_AVX_RGBA8 );
-                else
-            #endif
-            #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-                if( iInfo.hostDeviceInfo->HW_SSE42 )
-                    return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_Separable_SSE_RGBA8 );
-                else
-            #endif
-                    return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_Separable_MEM_Generic,  uint8 );
-        }
+ULIS3_IMP_BLEND_INVOCATION_SELECTOR( SelectBlendInvocationMEMRGBA8
+    , &BlendMT_Misc_MEM_Generic< uint8 >        , &BlendMT_Misc_MEM_Generic_Subpixel< uint8 >
+    , &BlendMT_Separable_MEM_Generic< uint8 >   , &BlendMT_Separable_MEM_Generic_Subpixel< uint8 >
+    , &BlendMT_NonSeparable_MEM_Generic< uint8 >, &BlendMT_NonSeparable_MEM_Generic_Subpixel< uint8 > )
 
-        case BMQ_NONSEPARABLE: {
-            #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-                if( iInfo.hostDeviceInfo->HW_SSE42 )
-                    return  ULIS3_SELECT_COMP_OP( iInfo.subpixelFlag, BlendMT_NonSeparable_SSE_RGBA8 );
-                else
-            #endif
-                    return  ULIS3_SELECT_COMP_OPT( iInfo.subpixelFlag, BlendMT_NonSeparable_MEM_Generic, uint8 );
-        }
-    }
-    return  nullptr;
-}
+ULIS3_BEGIN_DISPATCHER_NO_GENERIC_OPT( FBlendInvocationSelector, fpBlendInvocation, _FBlendInfoPrivate, &SelectBlendInvocationMEMGeneric< T > )
+    ULIS3_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectBlendInvocationAVXRGBA8, &SelectBlendInvocationSSERGBA8, &SelectBlendInvocationMEMRGBA8 )
+ULIS3_END_DISPATCHER( FBlendInvocationSelector )
 
-
-template< typename T >
-fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_imp( const _FBlendInfoPrivate& iInfo ) {
-    return  QueryDispatchedBlendFunctionForParameters_Generic< T >( iInfo );
-}
-
-
-template<>
-fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters_imp< uint8 >( const _FBlendInfoPrivate& iInfo ) {
-    // RGBA8 Signature, any layout
-    if( iInfo.source->HasAlpha()
-     && iInfo.source->NumColorChannels()    == 3
-     && iInfo.source->Model()               == CM_RGB
-     && iInfo.perfIntent & ULIS3_PERF_TSPEC
-     && ( iInfo.perfIntent & ULIS3_PERF_SSE42 || iInfo.perfIntent & ULIS3_PERF_AVX2 )
-     && ( iInfo.hostDeviceInfo->HW_SSE42 || iInfo.hostDeviceInfo->HW_AVX2 ) ) {
-        return  QueryDispatchedBlendFunctionForParameters_RGBA8( iInfo );
-    }
-
-    // Generic Fallback
-    return  QueryDispatchedBlendFunctionForParameters_Generic< uint8 >( iInfo );
-}
-
-
-fpDispatchedBlendFunc
-QueryDispatchedBlendFunctionForParameters( const _FBlendInfoPrivate& iInfo ) {
-    switch( iInfo.source->Type() ) {
-        case TYPE_UINT8     : return  QueryDispatchedBlendFunctionForParameters_imp< uint8   >( iInfo );
-        case TYPE_UINT16    : return  QueryDispatchedBlendFunctionForParameters_imp< uint16  >( iInfo );
-        case TYPE_UINT32    : return  QueryDispatchedBlendFunctionForParameters_imp< uint32  >( iInfo );
-        case TYPE_UFLOAT    : return  QueryDispatchedBlendFunctionForParameters_imp< ufloat  >( iInfo );
-        case TYPE_UDOUBLE   : return  QueryDispatchedBlendFunctionForParameters_imp< udouble >( iInfo );
-    }
-    return  nullptr;
+fpBlendInvocation
+QueryDispatchedBlendFunctionForParameters( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo, const _FBlendInfoPrivate& iInfo ) {
+    return  TDispatcher< FBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iFormatInfo, iInfo );
 }
 /////////////////////////////////////////////////////
 // Dispatch Alpha Blend

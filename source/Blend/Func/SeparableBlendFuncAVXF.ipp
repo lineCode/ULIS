@@ -99,11 +99,7 @@ ULIS3_FORCEINLINE Vec8f BlendLinearDodgeAVXF( Vec8f iCs, Vec8f iCb ) {
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- SoftLight
-//ULIS3_FORCEINLINE Vec8f _softlight_D( Vec8f iX ) {
-//    return  iX <= 0.25f ? ( ( 16.f * iX - 12.f ) * iX + 4 ) * iX : sqrtf( iX );
-//}
 ULIS3_FORCEINLINE Vec8f BlendSoftLightAVXF( Vec8f iCs, Vec8f iCb ) {
-    //return  iCs <= 0.5f ? iCb - ( 1.f - 2.f * iCs ) * iCb * ( 1.f - iCb ) : iCb + ( 2.f * iCs - 1.f ) * ( _softlight_D( iCb ) - iCb );
     Vec8f  q = iCb * iCb;
     Vec8f  d = 2 * iCs;
     return  q + d * iCb - d * q;

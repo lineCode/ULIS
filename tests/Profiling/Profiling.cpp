@@ -19,15 +19,13 @@ using namespace ::ul3;
 
 int main( int argc, char *argv[] ) {
 
-    int rep1 = FMaths::PyModulo( 64, -20 );
-    int rep2 = 64 % -20;
 
     FThreadPool* pool = XCreateThreadPool();
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42;
     int size = 64;
     uint32 format = ULIS3_FORMAT_RGBA8;
-    uint32 repeat = 100000;
+    uint32 repeat = 1000000;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();

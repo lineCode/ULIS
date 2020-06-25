@@ -99,11 +99,7 @@ ULIS3_FORCEINLINE Vec4f BlendLinearDodgeSSEF( Vec4f iCs, Vec4f iCb ) {
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- SoftLight
-//ULIS3_FORCEINLINE Vec4f _softlight_D( Vec4f iX ) {
-//    return  iX <= 0.25f ? ( ( 16.f * iX - 12.f ) * iX + 4 ) * iX : sqrtf( iX );
-//}
 ULIS3_FORCEINLINE Vec4f BlendSoftLightSSEF( Vec4f iCs, Vec4f iCb ) {
-    //return  iCs <= 0.5f ? iCb - ( 1.f - 2.f * iCs ) * iCb * ( 1.f - iCb ) : iCb + ( 2.f * iCs - 1.f ) * ( _softlight_D( iCb ) - iCb );
     Vec4f  q = iCb * iCb;
     Vec4f  d = 2 * iCs;
     return  q + d * iCb - d * q;
