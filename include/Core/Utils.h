@@ -14,12 +14,12 @@
 
 ULIS3_NAMESPACE_BEGIN
 // eTypeFromT
-template< typename T > ULIS3_FORCEINLINE eType  eTypeFromT(void)            { return  TYPE_UINT8;   }
-template<> constexpr ULIS3_FORCEINLINE eType    eTypeFromT< uint8 >()       { return  TYPE_UINT8;   }
-template<> constexpr ULIS3_FORCEINLINE eType    eTypeFromT< uint16 >()      { return  TYPE_UINT16;  }
-template<> constexpr ULIS3_FORCEINLINE eType    eTypeFromT< uint32 >()      { return  TYPE_UINT32;  }
-template<> constexpr ULIS3_FORCEINLINE eType    eTypeFromT< ufloat >()      { return  TYPE_UFLOAT;  }
-template<> constexpr ULIS3_FORCEINLINE eType    eTypeFromT< udouble >()     { return  TYPE_UDOUBLE; }
+template< typename T >  ULIS3_FORCEINLINE   eType   eTypeFromT(void)        { return  TYPE_UINT8;   }
+template<> constexpr    ULIS3_FORCEINLINE   eType   eTypeFromT< uint8 >()   { return  TYPE_UINT8;   }
+template<> constexpr    ULIS3_FORCEINLINE   eType   eTypeFromT< uint16 >()  { return  TYPE_UINT16;  }
+template<> constexpr    ULIS3_FORCEINLINE   eType   eTypeFromT< uint32 >()  { return  TYPE_UINT32;  }
+template<> constexpr    ULIS3_FORCEINLINE   eType   eTypeFromT< ufloat >()  { return  TYPE_UFLOAT;  }
+template<> constexpr    ULIS3_FORCEINLINE   eType   eTypeFromT< udouble >() { return  TYPE_UDOUBLE; }
 
 // _min _max _clamp
 template< typename T > static constexpr ULIS3_FORCEINLINE T _min( T iA, T iB ) { return  iA < iB ? iA : iB; }
@@ -89,8 +89,8 @@ constexpr udouble   fix8d() { return ( 128.0 / 255.0 ) - 0.5; }
 #define UEncodeLabA( L, a, b, A )   { double(L##_L), double(a##_a), double(b##_b), double(A) }
 
 // Macro for switch enumerators
-#define ULIS3_COMP_OP_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )                          case _CASE: { _ACTION( _CASE, _E1, _E2, _E3 ); break; }
-#define ULIS3_SWITCH_FOR_ALL_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )      switch( iValue ) { _SUBSET( ULIS3_COMP_OP_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
+#define ULIS3_COMP_OP_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )              case _CASE: { _ACTION( _CASE, _E1, _E2, _E3 ); break; }
+#define ULIS3_SWITCH_FOR_ALL_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )  switch( iValue ) { _SUBSET( ULIS3_COMP_OP_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
 
 // Macro for all types for template instanciation
 #define ULIS3_FOR_ALL_TYPES_DO( X, _E0, _E1, _E2, _E3 )     \
@@ -99,6 +99,14 @@ constexpr udouble   fix8d() { return ( 128.0 / 255.0 ) - 0.5; }
     X( uint32,  _E0, _E1, _E2, _E3 )                        \
     X( ufloat,  _E0, _E1, _E2, _E3 )                        \
     X( udouble, _E0, _E1, _E2, _E3 )
+
+// Macro for all types ID for template instanciation
+#define ULIS3_FOR_ALL_TYPES_ID_DO( X, _E0, _E1, _E2, _E3 )  \
+    X( TYPE_UINT8,      _E0, uint8, _E2, _E3 )              \
+    X( TYPE_UINT16,     _E0, uint16, _E2, _E3 )             \
+    X( TYPE_UINT32,     _E0, uint32, _E2, _E3 )             \
+    X( TYPE_UFLOAT,     _E0, ufloat, _E2, _E3 )             \
+    X( TYPE_UDOUBLE,    _E0, udouble, _E2, _E3 )
 
 // Macro for all types for combination template instanciation
 #define ULIS3_FOR_ALL_TYPES_COMBINATIONS_DO( X )    \
