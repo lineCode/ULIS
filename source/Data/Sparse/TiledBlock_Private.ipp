@@ -156,7 +156,10 @@ TTiledBlock< _MICRO, _MACRO >::RecomputeRoughRootGeometry() {
     mRoughRootGeometry = FRect();
     for( typename tMap::iterator it = mSparseMap.begin(); it != mSparseMap.end(); ++it ) {
         auto pos = PixelCoordinatesFromKey( it->first );
-        mRoughRootGeometry = mRoughRootGeometry.UnionLeaveEmpty( FRect( pos.x, pos.y, macro_chunk_size_as_pixels, macro_chunk_size_as_pixels ) );
+        mRoughRootGeometry = mRoughRootGeometry.UnionLeaveEmpty( FRect( static_cast< int >( pos.x )
+                                                                      , static_cast< int >( pos.y )
+                                                                      , static_cast< int >( macro_chunk_size_as_pixels )
+                                                                      , static_cast< int >( macro_chunk_size_as_pixels ) ) );
     }
 
     mOperativeGeometry = mRoughRootGeometry & mOperativeGeometry;
@@ -252,8 +255,8 @@ void
 TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) {
     for( auto& it : mSparseMap ) {
         auto pos = PixelCoordinatesFromKey( it.first );
-        pos.x *= iScale;
-        pos.y *= iScale;
+        pos.x = static_cast< int64 >( pos.x * iScale );
+        pos.y = static_cast< int64 >( pos.y * iScale );
         it.second->DrawDebugWireframe( iDst, iPos + pos, iScale );
     }
 }

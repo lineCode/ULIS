@@ -183,7 +183,10 @@ public:
 
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
         auto size = round( tSuperClass::local_chunk_size_as_pixels * iScale );
-        DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
+        DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRect( static_cast< int >( iPos.x )
+                                                                       , static_cast< int >( iPos.y )
+                                                                       , static_cast< int >( size )
+                                                                       , static_cast< int >( size ) ) );
         if( mChild )
             mChild->DrawDebugWireframe( iDst, iPos, iScale );
     }
@@ -288,11 +291,11 @@ public:
     }
 
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
-        auto size = round( tSuperClass::local_chunk_size_as_pixels * iScale );
+        auto size = static_cast< int >( round( tSuperClass::local_chunk_size_as_pixels * iScale ) );
         if( mPtr->mDirty )
-            DrawRectOutlineNoAA( iDst, dirty_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
+            DrawRectOutlineNoAA( iDst, dirty_wireframe_debug_color, FRect( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
         else
-            DrawRectOutlineNoAA( iDst, correct_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
+            DrawRectOutlineNoAA( iDst, correct_wireframe_debug_color, FRect( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
     }
 
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
@@ -310,7 +313,10 @@ public:
 
     virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
         if( mPtr )
-            return  FRect( iPos.x, iPos.y, tSuperClass::local_chunk_size_as_pixels, tSuperClass::local_chunk_size_as_pixels );
+            return  FRect( static_cast< int >( iPos.x )
+                         , static_cast< int >( iPos.y )
+                         , static_cast< int >( tSuperClass::local_chunk_size_as_pixels )
+                         , static_cast< int >( tSuperClass::local_chunk_size_as_pixels ) );
         else
             return  FRect();
     }
@@ -364,7 +370,7 @@ private:
     FVec2I64  LocalPixelCoordinatesFromSubChunkCoordinates( const FVec2I64& iPos )  const { return  iPos * tSuperClass::local_chunk_halfsize_as_pixels; }
 
     uint8 IndexFromSubChunkCoordinates( const FVec2I64& iPos )  const {
-        return  iPos.y * 2  + iPos.x;
+        return  static_cast< uint8 >( iPos.y * 2  + iPos.x ); // May Theoretically Overflow, But in context is called with safe values.
     }
 
     FVec2I64 SubChunkCoordinatesFromIndex( uint8 iIndex )  const {
@@ -407,17 +413,17 @@ public:
     }
 
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
-        auto size  = round( tSuperClass::local_chunk_size_as_pixels * iScale );
-        auto hsize = round( tSuperClass::local_chunk_halfsize_as_pixels * iScale );
-        DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRect( iPos.x, iPos.y, size, size ) );
+        auto size  = static_cast< int >( round( tSuperClass::local_chunk_size_as_pixels * iScale ) );
+        auto hsize = static_cast< int >( round( tSuperClass::local_chunk_halfsize_as_pixels * iScale ) );
+        DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRect( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
         for( int i = 0; i < 4; ++i )
             if( mQuad[i] )
                 mQuad[i]->DrawDebugWireframe( iDst, iPos + SubChunkCoordinatesFromIndex( i ) * hsize, iScale );
     }
 
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
-        auto size  = round( tSuperClass::local_chunk_size_as_pixels );
-        auto hsize = round( tSuperClass::local_chunk_halfsize_as_pixels );
+        auto size  = tSuperClass::local_chunk_size_as_pixels;
+        auto hsize = tSuperClass::local_chunk_halfsize_as_pixels;
         for( int i = 0; i < 4; ++i )
             if( mQuad[i] )
                 mQuad[i]->DrawDebugTileContent( iDst, iPos + SubChunkCoordinatesFromIndex( i ) * hsize );

@@ -28,7 +28,7 @@ FKernel::FKernel( const FVec2I& iSize, float iValue )
     , mPivot( iSize / 2 )
 {
     float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
+    for( tSize i = 0; i < Length(); ++i )
         data[ i ] = iValue;
 
 }
@@ -125,7 +125,7 @@ FKernel::Clear() {
 void
 FKernel::Fill( float iValue ) {
     float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
+    for( tSize i = 0; i < Length(); ++i )
         data[ i ] = iValue;
 }
 
@@ -143,7 +143,7 @@ float
 FKernel::Sum() const {
     float res = 0.f;
     float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
+    for( tSize i = 0; i < Length(); ++i )
         res += data[ i ];
     return  res;
 }
@@ -151,14 +151,14 @@ FKernel::Sum() const {
 void
 FKernel::Add( float iValue ) {
     float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
+    for( tSize i = 0; i < Length(); ++i )
         data[ i ] += iValue;
 }
 
 void
 FKernel::Mul( float iValue ) {
     float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
+    for( tSize i = 0; i < Length(); ++i )
         data[ i ] *= iValue;
 }
 
@@ -166,7 +166,7 @@ void
 FKernel::Normalize() {
     float sum = Sum();
     float* data = reinterpret_cast< float* >( mData );
-    for( int i = 0; i < Length(); ++i )
+    for( tSize i = 0; i < Length(); ++i )
         data[ i ] /= sum;
 }
 
@@ -178,9 +178,9 @@ FKernel::IsNormalized() const {
 void
 FKernel::FlipX() {
     const tSize w = Width() - 1;
-    FKernel ret( mWidth, mHeight );
-    for( int x = 0; x < mWidth; ++x )
-        for( int y = 0; y < mHeight; ++y )
+    FKernel ret( FVec2I( mWidth, mHeight ) );
+    for( tSize x = 0; x < mWidth; ++x )
+        for( tSize y = 0; y < mHeight; ++y )
             ret.SetAt( x, y, At( w - x, y ) );
     *this = std::move( ret );
 }
@@ -188,42 +188,42 @@ FKernel::FlipX() {
 void
 FKernel::FlipY() {
     const tSize h = Height() - 1;
-    FKernel ret( mWidth, mHeight );
-    for( int x = 0; x < mWidth; ++x )
-        for( int y = 0; y < mHeight; ++y )
+    FKernel ret( FVec2I( mWidth, mHeight ) );
+    for( tSize x = 0; x < mWidth; ++x )
+        for( tSize y = 0; y < mHeight; ++y )
             ret.SetAt( x, y, At( x, h - y ) );
     *this = std::move( ret );
 }
 
 void
 FKernel::Rotate90CW() {
-    FKernel ret( mHeight, mWidth );
+    FKernel ret( FVec2I( mHeight, mWidth ) );
     const int w = Height() - 1;
     const int h = Width() - 1;
-    for( int x = 0; x < mHeight; ++x )
-        for( int y = 0; y < mWidth; ++y )
+    for( tSize x = 0; x < mHeight; ++x )
+        for( tSize y = 0; y < mWidth; ++y )
             ret.SetAt( x, y, At( y, w - x ) );
     *this = std::move( ret );
 }
 
 void
 FKernel::Rotate90CCW() {
-    FKernel ret( mHeight, mWidth );
+    FKernel ret( FVec2I( mHeight, mWidth ) );
     const int w = Height() - 1;
     const int h = Width() - 1;
-    for( int x = 0; x < mHeight; ++x )
-        for( int y = 0; y < mWidth; ++y )
+    for( tSize x = 0; x < mHeight; ++x )
+        for( tSize y = 0; y < mWidth; ++y )
             ret.SetAt( x, y, At( h - y, x ) );
     *this = std::move( ret );
 }
 
 void
 FKernel::Rotate180() {
-    FKernel ret( mWidth, mHeight );
+    FKernel ret( FVec2I( mWidth, mHeight ) );
     const int w = Width() - 1;
     const int h = Height() - 1;
-    for( int x = 0; x < mWidth; ++x )
-        for( int y = 0; y < mHeight; ++y )
+    for( tSize x = 0; x < mWidth; ++x )
+        for( tSize y = 0; y < mHeight; ++y )
             ret.SetAt( x, y, At( w - x, h - y ) );
     *this = std::move( ret );
 }
