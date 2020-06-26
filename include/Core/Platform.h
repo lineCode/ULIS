@@ -14,8 +14,6 @@
 #pragma once
 #include <cstring>
 #include <iostream>
-#include <memory>
-#include <cstdint>
 
 /////////////////////////////////////////////////////
 // Detect Build Configuration
@@ -177,7 +175,7 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Crash Behaviours
-#define ULIS3_CRASH             *((volatile int*)0) = 0
+#define ULIS3_CRASH *((volatile int*)0) = 0
 
 /////////////////////////////////////////////////////
 // Assert Behaviours
@@ -190,7 +188,7 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // SIMD PATCH FOR GNU < 9
-// CHECK: this conflicts with xcode sometimes identifying itself as GNUC < 9 but defining the appropriate simd instructions ??
+// CHECK: this conflicts with xcode sometimes identifying itself as GNUC < 9 but defining the appropriate simd instructions.
 #ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
 //#ifdef __GNUC__
 //#if __GNUC__ < 9
@@ -216,3 +214,11 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
         #define ULIS3_COMPILETIME_SSE42_SUPPORT
     #endif
 #endif
+
+/////////////////////////////////////////////////////
+// glm FORCE extensions, before any glm related includes
+#ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
+#define GLM_FORCE_SSE42
+#define GLM_FORCE_INTRINSICS
+#endif
+#define GLM_FORCE_SWIZZLE

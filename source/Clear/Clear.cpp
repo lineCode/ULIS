@@ -7,17 +7,21 @@
 *
 * @file         Clear.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the Clear entry point functions.
+* @brief        This file provides the implementations for the Clear functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
-#include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
+#include "Base/HostDeviceInfo.h"
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Invocations
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- AVX
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iStride ) {
     int64 index;
@@ -30,6 +34,8 @@ void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSi
 }
 #endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- SSE
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const tSize iStride ) {
     int64 index;
@@ -42,25 +48,30 @@ void InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const 
 }
 #endif // __SE4_2__
 
-void InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, tSize iStride ) {
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
+void InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, const tSize iStride ) {
+    // Full scanline width instead of many BPP clears
     memset( iDst, 0, iCount );
 }
 
+/////////////////////////////////////////////////////
+// Implementation
 void Clear_imp( FThreadPool*            iThreadPool
-           , bool                       iBlocking
-           , uint32                     iPerfIntent
-           , const FHostDeviceInfo&     iHostDeviceInfo
-           , bool                       iCallCB
-           , FBlock*                    iDestination
-           , const FRect&               iArea )
+              , bool                    iBlocking
+              , uint32                  iPerfIntent
+              , const FHostDeviceInfo&  iHostDeviceInfo
+              , bool                    iCallCB
+              , FBlock*                 iDestination
+              , const FRect&            iArea )
 {
-    const FFormatInfo& fmt = iDestination->FormatInfo();
-    const tSize bpp = fmt.BPP;
-    const tSize w   = iDestination->Width();
-    const tSize bps = iDestination->BytesPerScanLine();
-    const tSize dsh = iArea.x * bpp;
-    tByte*      dsb = iDestination->DataPtr() + dsh;
-    const tSize count = iArea.w * bpp;
+    const FFormatInfo&  fmt     = iDestination->FormatInfo();
+    const tSize         bpp     = fmt.BPP;
+    const tSize         w       = iDestination->Width();
+    const tSize         bps     = iDestination->BytesPerScanLine();
+    const tSize         dsh     = iArea.x * bpp;
+    tByte*              dsb     = iDestination->DataPtr() + dsh;
+    const tSize         count   = iArea.w * bpp;
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
     #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
@@ -86,6 +97,8 @@ void Clear_imp( FThreadPool*            iThreadPool
     }
 }
 
+/////////////////////////////////////////////////////
+// Clear
  void Clear( FThreadPool*              iThreadPool
            , bool                      iBlocking
            , uint32                    iPerfIntent
@@ -112,6 +125,8 @@ void Clear_imp( FThreadPool*            iThreadPool
     iDestination->Invalidate( roi, iCallCB );
 }
 
+/////////////////////////////////////////////////////
+// ClearRaw
 void ClearRaw( FBlock* iDst, bool iCallCB ) {
     ULIS3_ASSERT( iDst, "Bad destination" );
     memset( iDst->DataPtr(), 0, iDst->BytesTotal() );

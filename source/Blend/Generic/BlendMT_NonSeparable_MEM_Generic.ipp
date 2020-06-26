@@ -46,8 +46,8 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const tByte* iSr
 
     // Query dispatched method
     FFormatInfo rgbfFormatInfo( ULIS3_FORMAT_RGBF );
-    fpDispatchedConvInvoke conv_forward_fptr = QueryDispatchedConvInvokeForParameters( fmt.FMT, ULIS3_FORMAT_RGBF );
-    fpDispatchedConvInvoke conv_backward_fptr = QueryDispatchedConvInvokeForParameters( ULIS3_FORMAT_RGBF, fmt.FMT );
+    fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, ULIS3_FORMAT_RGBF );
+    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( ULIS3_FORMAT_RGBF, fmt.FMT );
     ULIS3_ASSERT( conv_forward_fptr, "No Conversion invocation found" );
     ULIS3_ASSERT( conv_backward_fptr, "No Conversion invocation found" );
 
@@ -131,8 +131,8 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const tByte* iSrc, tByte*
 
     // Query dispatched method
     FFormatInfo rgbfFormatInfo( ULIS3_FORMAT_RGBF );
-    fpDispatchedConvInvoke conv_forward_fptr = QueryDispatchedConvInvokeForParameters( fmt.FMT, ULIS3_FORMAT_RGBF );
-    fpDispatchedConvInvoke conv_backward_fptr = QueryDispatchedConvInvokeForParameters( ULIS3_FORMAT_RGBF, fmt.FMT );
+    fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, ULIS3_FORMAT_RGBF );
+    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( ULIS3_FORMAT_RGBF, fmt.FMT );
     ULIS3_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
     ULIS3_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 

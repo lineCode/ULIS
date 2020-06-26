@@ -23,7 +23,7 @@ void DrawDotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos ) {
         return;
 
     tByte* ptr = iDst->PixelPtr( iPos.x, iPos.y );
-    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iColor.Format(), iDst->Format() );
+    fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iColor.Format(), iDst->Format() );
     fptr( &iColor.FormatInfo(), iColor.Ptr(), &iDst->FormatInfo(), ptr, 1 );
 }
 

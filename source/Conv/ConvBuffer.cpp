@@ -11,12 +11,50 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Conv/Conv.h"
-#include <cmath>
-//Dispatch
-#include "Conv/Dispatch/DispatchType.ipp"
+#include "Conv/ConvBuffer.h"
+#include "Conv/ConvDispatch.h"
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Conversion Dispatcher
+fpConversionInvocation QueryDispatchedConversionInvocation( uint32 iSrcFormat, uint32 iDstFormat )
+{
+        switch( static_cast< eType >( ULIS3_R_TYPE( iSrcFormat ) ) ) {
+        case TYPE_UINT8: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
+                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint8       >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint16      >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint32      >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, ufloat      >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< uint8, udouble     >( iSrcFormat, iDstFormat ); }
+        case TYPE_UINT16: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
+                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint8      >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint16     >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint32     >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, ufloat     >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< uint16, udouble    >( iSrcFormat, iDstFormat ); }
+        case TYPE_UINT32: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
+                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint8      >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint16     >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint32     >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, ufloat     >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< uint32, udouble    >( iSrcFormat, iDstFormat ); }
+        case TYPE_UFLOAT: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
+                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint8      >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint16     >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint32     >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, ufloat     >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< ufloat, udouble    >( iSrcFormat, iDstFormat ); }
+        case TYPE_UDOUBLE: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {
+                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint8     >( iSrcFormat, iDstFormat );
+                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint16    >( iSrcFormat, iDstFormat );
+                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint32    >( iSrcFormat, iDstFormat );
+                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, ufloat    >( iSrcFormat, iDstFormat );
+                case TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< udouble, udouble   >( iSrcFormat, iDstFormat ); }
+    }
+
+    return  nullptr;
+}
+
 /////////////////////////////////////////////////////
 // Template Instanciations
 #define X_DO_01( t1, t2 )   ULIS3_API_TEMPLATE void ConvBufferGreyToGrey<   t1, t2 >( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -319,5 +357,6 @@ ULIS3_FOR_ALL_TYPES_COMBINATIONS_DO( X_DO_FF )
 #undef X_DO_98
 #undef X_DO_99
 #undef X_DO_FF
+
 ULIS3_NAMESPACE_END
 

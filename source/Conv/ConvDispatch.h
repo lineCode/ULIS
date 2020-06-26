@@ -5,43 +5,35 @@
 *   ULIS3
 *__________________
 *
-* @file         DispatchModel.ipp
+* @file         ConvDispatch.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the model dispatcher for the conv entry point functions
+* @brief        This file provides the dispatch implementation for the conversion functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 #include "Conv/ConvBuffer.h"
-
-// Macro utils for implementations
-#define U2_DREF_RED_CHAN( T, iPtr, iFmt, iChan )    ( *( ( T* )( iPtr ) + iFmt->IDT[ iChan ] ) )
-#define U2_DREF_CHAN( T, iPtr, iChan )              ( *( ( T* )( iPtr ) + iChan ) )
-#define U2_FWD_ALPHA                                if( iDstFormat->HEA ) { U2_DREF_CHAN( T2, iDst, iDstFormat->AID ) = iSrcFormat->HEA? ConvType< T1, T2 >( U2_DREF_CHAN( T1, iSrc, iSrcFormat->AID ) ) : MaxType< T2 >(); }
-
-#define U2_DREF_SRC( iChan )                        U2_DREF_RED_CHAN( T1, iSrc, iSrcFormat, iChan )
-#define U2_DREF_DST( iChan )                        U2_DREF_RED_CHAN( T2, iDst, iDstFormat, iChan )
-#define U2_DREF_TEMP( iChan )                       U2_DREF_RED_CHAN( ufloat, temp.Ptr(), &temp.FormatInfo(), iChan )
-
-//Dispatch
-#include "Conv/Dispatch/Generic/ToGrey.ipp"
-#include "Conv/Dispatch/Generic/ToRGB.ipp"
-#include "Conv/Dispatch/Generic/ToHSV.ipp"
-#include "Conv/Dispatch/Generic/ToHSL.ipp"
-#include "Conv/Dispatch/Generic/ToCMY.ipp"
-#include "Conv/Dispatch/Generic/ToCMYK.ipp"
-#include "Conv/Dispatch/Generic/ToYUV.ipp"
-#include "Conv/Dispatch/Generic/ToLab.ipp"
-#include "Conv/Dispatch/Generic/ToXYZ.ipp"
-#include "Conv/Dispatch/Generic/ToYxy.ipp"
+#include "Conv/Generic/ToGrey.ipp"
+#include "Conv/Generic/ToRGB.ipp"
+#include "Conv/Generic/ToHSV.ipp"
+#include "Conv/Generic/ToHSL.ipp"
+#include "Conv/Generic/ToCMY.ipp"
+#include "Conv/Generic/ToCMYK.ipp"
+#include "Conv/Generic/ToYUV.ipp"
+#include "Conv/Generic/ToLab.ipp"
+#include "Conv/Generic/ToXYZ.ipp"
+#include "Conv/Generic/ToYxy.ipp"
 
 ULIS3_NAMESPACE_BEGIN
-
+/////////////////////////////////////////////////////
+// Per Model Select
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------ To Grey
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectGrey( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectGrey( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToGrey < T1, T2 >;
@@ -58,11 +50,12 @@ QueryDispatchedConvInvokeForParameters_SelectGrey( tFormat iSrcFormat, tFormat i
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- To RGB
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectRGB( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectRGB( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToRGB  < T1, T2 >;
@@ -79,11 +72,12 @@ QueryDispatchedConvInvokeForParameters_SelectRGB( tFormat iSrcFormat, tFormat iD
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- To HSV
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectHSV( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectHSV( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToHSV  < T1, T2 >;
@@ -100,11 +94,12 @@ QueryDispatchedConvInvokeForParameters_SelectHSV( tFormat iSrcFormat, tFormat iD
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- To HSL
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectHSL( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectHSL( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToHSL  < T1, T2 >;
@@ -121,11 +116,12 @@ QueryDispatchedConvInvokeForParameters_SelectHSL( tFormat iSrcFormat, tFormat iD
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- To CMY
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectCMY( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectCMY( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToCMY  < T1, T2 >;
@@ -142,11 +138,12 @@ QueryDispatchedConvInvokeForParameters_SelectCMY( tFormat iSrcFormat, tFormat iD
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------ To CMYK
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectCMYK( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectCMYK( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToCMYK < T1, T2 >;
@@ -163,11 +160,12 @@ QueryDispatchedConvInvokeForParameters_SelectCMYK( tFormat iSrcFormat, tFormat i
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- To YUV
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectYUV( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectYUV( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToYUV  < T1, T2 >;
@@ -184,11 +182,12 @@ QueryDispatchedConvInvokeForParameters_SelectYUV( tFormat iSrcFormat, tFormat iD
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- To Lab
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectLab( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectLab( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToLab  < T1, T2 >;
@@ -205,11 +204,12 @@ QueryDispatchedConvInvokeForParameters_SelectLab( tFormat iSrcFormat, tFormat iD
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- To XYZ
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectXYZ( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectXYZ( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToXYZ  < T1, T2 >;
@@ -226,11 +226,12 @@ QueryDispatchedConvInvokeForParameters_SelectXYZ( tFormat iSrcFormat, tFormat iD
     return  nullptr;
 }
 
-
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- To Yxy
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectYxy( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectYxy( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToYxy  < T1, T2 >;
@@ -247,23 +248,25 @@ QueryDispatchedConvInvokeForParameters_SelectYxy( tFormat iSrcFormat, tFormat iD
     return  nullptr;
 }
 
+/////////////////////////////////////////////////////
+// Select Model
 template< typename T1, typename T2 >
 ULIS3_FORCEINLINE
-fpDispatchedConvInvoke
-QueryDispatchedConvInvokeForParameters_SelectModel( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation
+QueryDispatchedConversionInvocation_SelectModel( tFormat iSrcFormat, tFormat iDstFormat )
 {
     switch( static_cast< eColorModel >( ULIS3_R_MODEL( iDstFormat ) ) )
     {
-        case CM_GREY    :   return  QueryDispatchedConvInvokeForParameters_SelectGrey< T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_RGB     :   return  QueryDispatchedConvInvokeForParameters_SelectRGB<  T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_HSV     :   return  QueryDispatchedConvInvokeForParameters_SelectHSV<  T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_HSL     :   return  QueryDispatchedConvInvokeForParameters_SelectHSL<  T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_CMY     :   return  QueryDispatchedConvInvokeForParameters_SelectCMY<  T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_CMYK    :   return  QueryDispatchedConvInvokeForParameters_SelectCMYK< T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_YUV     :   return  QueryDispatchedConvInvokeForParameters_SelectYUV<  T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_Lab     :   return  QueryDispatchedConvInvokeForParameters_SelectLab<  T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_XYZ     :   return  QueryDispatchedConvInvokeForParameters_SelectXYZ<  T1, T2 >( iSrcFormat, iDstFormat );
-        case CM_Yxy     :   return  QueryDispatchedConvInvokeForParameters_SelectYxy<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_GREY    :   return  QueryDispatchedConversionInvocation_SelectGrey< T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_RGB     :   return  QueryDispatchedConversionInvocation_SelectRGB<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_HSV     :   return  QueryDispatchedConversionInvocation_SelectHSV<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_HSL     :   return  QueryDispatchedConversionInvocation_SelectHSL<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_CMY     :   return  QueryDispatchedConversionInvocation_SelectCMY<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_CMYK    :   return  QueryDispatchedConversionInvocation_SelectCMYK< T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_YUV     :   return  QueryDispatchedConversionInvocation_SelectYUV<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_Lab     :   return  QueryDispatchedConversionInvocation_SelectLab<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_XYZ     :   return  QueryDispatchedConversionInvocation_SelectXYZ<  T1, T2 >( iSrcFormat, iDstFormat );
+        case CM_Yxy     :   return  QueryDispatchedConversionInvocation_SelectYxy<  T1, T2 >( iSrcFormat, iDstFormat );
     }
     return  nullptr;
 }

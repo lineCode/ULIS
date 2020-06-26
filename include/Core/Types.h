@@ -13,6 +13,8 @@
 */
 #pragma once
 #include "Core/Platform.h"
+#include <cstdint>
+#include <memory>
 
 ULIS3_NAMESPACE_BEGIN
 // Typedefs

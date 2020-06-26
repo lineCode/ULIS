@@ -13,11 +13,11 @@
 */
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
-#include "Copy/Copy.h"
-#include "Data/Pixel.h"
-#include "Data/Block.h"
-#include "Maths/Maths.h"
 #include "Conv/srgb2linear.h"
+#include "Copy/Copy.h"
+#include "Data/Block.h"
+#include "Data/Pixel.h"
+#include "Maths/Maths.h"
 #include "Thread/ThreadPool.h"
 #include "lcms2.h"
 
@@ -26,7 +26,7 @@ void Conv( const IPixel& iSrc, IPixel& iDst ) {
     if( iSrc.Format() == iDst.Format() ) {
         iDst.AssignMemoryUnsafe( iSrc );
     } else {
-        fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst.Format() );
+        fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst.Format() );
         fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &iDst.FormatInfo(), iDst.Ptr(), 1 );
     }
 }
@@ -36,7 +36,7 @@ FPixelValue Conv( const IPixel& iSrc, tFormat iDst ) {
     if( iSrc.Format() == iDst ) {
         dst.AssignMemoryUnsafe( iSrc );
     } else {
-        fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSrc.Format(), iDst );
+        fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst );
         fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &dst.FormatInfo(), dst.Ptr(), 1 );
     }
     return  dst;
@@ -69,7 +69,7 @@ void Conv( FThreadPool*           iThreadPool
     }
 
     // Query dispatched method
-    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iSource->Format(), iDestination->Format() );
+    fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSource->Format(), iDestination->Format() );
     ULIS3_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params and call
