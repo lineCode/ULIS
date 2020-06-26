@@ -23,6 +23,9 @@
 //
 //    Example: RGBA8
 //                            1     1000 0010 0011 0000
+//          1111 1111 1111 1111     1001 1111 1111 1111 // Layout Mask
+//          0000 0000 0000 1111     1111 1111 1111 1111 // Lo Mask
+//          1111 1111 1111 0000     0000 0000 0000 0000 // Hi Mask
 //
 //          T: Type                 R: Reverse
 //          C: Num Channels         S: Swap
@@ -75,6 +78,7 @@
 #define ULIS3_LabD65        10
 #define ULIS3_FORMAT_MASK_LO 0x000FFFFF
 #define ULIS3_FORMAT_MASK_HI 0xFFF00000
+#define ULIS3_FORMAT_MASK_LAYOUT 0b11111111111111111001111111111111
 
 #define ULIS3_PREMULTIPLIED         1
 #define ULIS3_UNPREMULTIPLIED       0

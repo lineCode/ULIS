@@ -24,7 +24,7 @@ int main( int argc, char *argv[] ) {
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42;
     int size = 64;
-    uint32 format = ULIS3_FORMAT_RGBA8;
+    uint32 format = ULIS3_FORMAT_BGRA8;
     uint32 repeat = 1000000;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
