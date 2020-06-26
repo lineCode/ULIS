@@ -16,7 +16,7 @@
 #include "Conv/ConvBuffer.h"
 #include "Data/FormatInfo.h"
 #include "Data/Pixel.h"
-#include "Color/srgb2linear.h"
+#include "Conv/srgb2linear.h"
 #include "lcms2.h"
 
 ULIS3_NAMESPACE_BEGIN

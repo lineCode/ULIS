@@ -13,7 +13,7 @@
 */
 #include "Misc/GammaCompress.h"
 #include "Base/HostDeviceInfo.h"
-#include "Color/srgb2linear.h"
+#include "Conv/srgb2linear.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"

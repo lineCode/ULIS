@@ -12,11 +12,12 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Blend/Blend.h"
+#include "Blend/BlendArgs.h"
+#include "Blend/BlendDispatch.ipp"
+#include "Conv/Conv.h"
 #include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
-#include "Blend/Dispatch/BlendInfo.h"
-#include "Blend/Dispatch/Dispatch.ipp"
 
 ULIS3_NAMESPACE_BEGIN
 
@@ -63,8 +64,8 @@ void Blend( FThreadPool*            iThreadPool
     const int   coverageY           = src_roi.h - ( src_roi.y + translationY ) >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    auto forwardBlendInfo = std::make_shared< _FBlendInfoPrivate >();
-    _FBlendInfoPrivate& forwardBlendInfoAlias   = *forwardBlendInfo;
+    auto forwardBlendInfo = std::make_shared< FBlendArgs >();
+    FBlendArgs& forwardBlendInfoAlias   = *forwardBlendInfo;
     forwardBlendInfoAlias.pool                  = iThreadPool;
     forwardBlendInfoAlias.blocking              = iBlocking;
     forwardBlendInfoAlias.hostDeviceInfo        = &iHostDeviceInfo;
@@ -83,8 +84,7 @@ void Blend( FThreadPool*            iThreadPool
     forwardBlendInfoAlias.backdropWorkingRect   = dst_fit;
 
     // Query dispatched method
-    fpDispatchedBlendFunc fptr = QueryDispatchedBlendFunctionForParameters( forwardBlendInfoAlias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
+    fpBlendInvocation fptr = TDispatcher< FBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), forwardBlendInfoAlias );
     fptr( forwardBlendInfo );
 
     // Invalid
@@ -92,17 +92,17 @@ void Blend( FThreadPool*            iThreadPool
 }
 
 
-void AlphaBlend( FThreadPool*            iThreadPool
-               , bool                    iBlocking
-               , uint32                  iPerfIntent
-               , const FHostDeviceInfo&  iHostDeviceInfo
-               , bool                    iCallCB
-               , const FBlock*           iSource
-               , FBlock*                 iBackdrop
-               , const FRect&            iSourceRect
-               , const FVec2F&           iPosition
-               , bool                    iSubpixelFlag
-               , float                   iOpacityValue )
+void AlphaBlend( FThreadPool*           iThreadPool
+               , bool                   iBlocking
+               , uint32                 iPerfIntent
+               , const FHostDeviceInfo& iHostDeviceInfo
+               , bool                   iCallCB
+               , const FBlock*          iSource
+               , FBlock*                iBackdrop
+               , const FRect&           iSourceRect
+               , const FVec2F&          iPosition
+               , bool                   iSubpixelFlag
+               , float                  iOpacityValue )
 {
     // Assertions
     ULIS3_ASSERT( iSource,                                  "Bad source."                                               );
@@ -134,32 +134,31 @@ void AlphaBlend( FThreadPool*            iThreadPool
     const int   coverageY           = src_roi.h - ( src_roi.y + translationY ) >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    auto forwardAlphaBlendInfo = std::make_shared< _FBlendInfoPrivate >();
-    _FBlendInfoPrivate& forwardAlphaBlendInfoAlias  = *forwardAlphaBlendInfo;
-    forwardAlphaBlendInfoAlias.pool                 = iThreadPool;
-    forwardAlphaBlendInfoAlias.blocking             = iBlocking;
-    forwardAlphaBlendInfoAlias.hostDeviceInfo       = &iHostDeviceInfo;
-    forwardAlphaBlendInfoAlias.perfIntent           = iPerfIntent;
-    forwardAlphaBlendInfoAlias.source               = iSource;
-    forwardAlphaBlendInfoAlias.backdrop             = iBackdrop;
-    forwardAlphaBlendInfoAlias.sourceRect           = src_roi;
-    forwardAlphaBlendInfoAlias.subpixelComponent    = subpixelComponent;
-    forwardAlphaBlendInfoAlias.buspixelComponent    = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
-    forwardAlphaBlendInfoAlias.subpixelFlag         = iSubpixelFlag;
-    forwardAlphaBlendInfoAlias.blendingMode         = BM_NORMAL;
-    forwardAlphaBlendInfoAlias.alphaMode            = AM_NORMAL;
-    forwardAlphaBlendInfoAlias.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
-    forwardAlphaBlendInfoAlias.shift                = FVec2I( translationX, translationY );
-    forwardAlphaBlendInfoAlias.backdropCoverage     = FVec2I( coverageX, coverageY );
-    forwardAlphaBlendInfoAlias.backdropWorkingRect  = dst_fit;
+    auto forwardBlendInfo = std::make_shared< FBlendArgs >();
+    FBlendArgs& forwardBlendInfoAlias  = *forwardBlendInfo;
+    forwardBlendInfoAlias.pool                 = iThreadPool;
+    forwardBlendInfoAlias.blocking             = iBlocking;
+    forwardBlendInfoAlias.hostDeviceInfo       = &iHostDeviceInfo;
+    forwardBlendInfoAlias.perfIntent           = iPerfIntent;
+    forwardBlendInfoAlias.source               = iSource;
+    forwardBlendInfoAlias.backdrop             = iBackdrop;
+    forwardBlendInfoAlias.sourceRect           = src_roi;
+    forwardBlendInfoAlias.subpixelComponent    = subpixelComponent;
+    forwardBlendInfoAlias.buspixelComponent    = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
+    forwardBlendInfoAlias.subpixelFlag         = iSubpixelFlag;
+    forwardBlendInfoAlias.blendingMode         = BM_NORMAL;
+    forwardBlendInfoAlias.alphaMode            = AM_NORMAL;
+    forwardBlendInfoAlias.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
+    forwardBlendInfoAlias.shift                = FVec2I( translationX, translationY );
+    forwardBlendInfoAlias.backdropCoverage     = FVec2I( coverageX, coverageY );
+    forwardBlendInfoAlias.backdropWorkingRect  = dst_fit;
 
     // Query dispatched method
-    fpDispatchedAlphaBlendFunc fptr = QueryDispatchedAlphaBlendFunctionForParameters( forwardAlphaBlendInfoAlias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
-    fptr( forwardAlphaBlendInfo );
+    fpBlendInvocation fptr = TDispatcher< FAlphaBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), forwardBlendInfoAlias );
+    fptr( forwardBlendInfo );
 
     // Invalid
-    forwardAlphaBlendInfo->backdrop->Invalidate( dst_fit, iCallCB );
+    forwardBlendInfo->backdrop->Invalidate( dst_fit, iCallCB );
 }
 
 void BlendTiled( FThreadPool*               iThreadPool
@@ -203,8 +202,8 @@ void BlendTiled( FThreadPool*               iThreadPool
     FVec2I mod_shift = FMaths::PyModulo( - FMaths::PyModulo( iShift - translation, src_size ), src_size );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    auto forwardBlendInfo = std::make_shared< _FBlendInfoPrivate >();
-    _FBlendInfoPrivate& forwardBlendInfoAlias   = *forwardBlendInfo;
+    auto forwardBlendInfo = std::make_shared< FBlendArgs >();
+    FBlendArgs& forwardBlendInfoAlias   = *forwardBlendInfo;
     forwardBlendInfoAlias.pool                  = iThreadPool;
     forwardBlendInfoAlias.blocking              = iBlocking;
     forwardBlendInfoAlias.hostDeviceInfo        = &iHostDeviceInfo;
@@ -223,24 +222,23 @@ void BlendTiled( FThreadPool*               iThreadPool
     forwardBlendInfoAlias.backdropWorkingRect   = dst_roi;
 
     // Query dispatched method
-    fpDispatchedTiledBlendFunc fptr = QueryDispatchedTiledBlendFunctionForParameters( forwardBlendInfoAlias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
+    fpBlendInvocation fptr = TDispatcher< FTiledBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), forwardBlendInfoAlias );
     fptr( forwardBlendInfo );
 
     // Invalid
     forwardBlendInfo->backdrop->Invalidate( dst_roi, iCallCB );
 }
 
-void BlendColor( FThreadPool*              iThreadPool
-               , uint32                    iPerfIntent
-               , const FHostDeviceInfo&    iHostDeviceInfo
-               , bool                      iCallCB
-               , const FPixelValue&        iColor
-               , FBlock*                   iBackdrop
-               , const FRect&              iDestRect
-               , eBlendingMode             iBlendingMode
-               , eAlphaMode                iAlphaMode
-               , float                     iOpacityValue )
+void BlendColor( FThreadPool*           iThreadPool
+               , uint32                 iPerfIntent
+               , const FHostDeviceInfo& iHostDeviceInfo
+               , bool                   iCallCB
+               , const FPixelValue&     iColor
+               , FBlock*                iBackdrop
+               , const FRect&           iDestRect
+               , eBlendingMode          iBlendingMode
+               , eAlphaMode             iAlphaMode
+               , float                  iOpacityValue )
 {
     // Assertions
     ULIS3_ASSERT( iBackdrop,                                "Bad destination."                                          );

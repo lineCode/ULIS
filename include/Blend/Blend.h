@@ -30,42 +30,42 @@ ULIS3_API void Blend( FThreadPool*              iThreadPool
                     , eAlphaMode                iAlphaMode
                     , float                     iOpacityValue );
 
-ULIS3_API void AlphaBlend( FThreadPool*              iThreadPool
-                         , bool                      iBlocking
-                         , uint32                    iPerfIntent
-                         , const FHostDeviceInfo&    iHostDeviceInfo
-                         , bool                      iCallCB
-                         , const FBlock*             iSource
-                         , FBlock*                   iBackdrop
-                         , const FRect&              iSourceRect
-                         , const FVec2F&             iPosition
-                         , bool                      iSubpixelFlag
-                         , float                     iOpacityValue );
+ULIS3_API void AlphaBlend( FThreadPool*             iThreadPool
+                         , bool                     iBlocking
+                         , uint32                   iPerfIntent
+                         , const FHostDeviceInfo&   iHostDeviceInfo
+                         , bool                     iCallCB
+                         , const FBlock*            iSource
+                         , FBlock*                  iBackdrop
+                         , const FRect&             iSourceRect
+                         , const FVec2F&            iPosition
+                         , bool                     iSubpixelFlag
+                         , float                    iOpacityValue );
 
-ULIS3_API void BlendTiled( FThreadPool*              iThreadPool
-                         , bool                      iBlocking
-                         , uint32                    iPerfIntent
-                         , const FHostDeviceInfo&    iHostDeviceInfo
-                         , bool                      iCallCB
-                         , const FBlock*             iSource
-                         , FBlock*                   iBackdrop
-                         , const FRect&              iSourceRect
-                         , const FRect&              iDestRect
-                         , const FVec2I&             iShift
-                         , eBlendingMode             iBlendingMode
-                         , eAlphaMode                iAlphaMode
-                         , float                     iOpacityValue );
+ULIS3_API void BlendTiled( FThreadPool*             iThreadPool
+                         , bool                     iBlocking
+                         , uint32                   iPerfIntent
+                         , const FHostDeviceInfo&   iHostDeviceInfo
+                         , bool                     iCallCB
+                         , const FBlock*            iSource
+                         , FBlock*                  iBackdrop
+                         , const FRect&             iSourceRect
+                         , const FRect&             iDestRect
+                         , const FVec2I&            iShift
+                         , eBlendingMode            iBlendingMode
+                         , eAlphaMode               iAlphaMode
+                         , float                    iOpacityValue );
 
-ULIS3_API void BlendColor( FThreadPool*              iThreadPool
-                         , uint32                    iPerfIntent
-                         , const FHostDeviceInfo&    iHostDeviceInfo
-                         , bool                      iCallCB
-                         , const FPixelValue&        iColor
-                         , FBlock*                   iBackdrop
-                         , const FRect&              iDestRect
-                         , eBlendingMode             iBlendingMode
-                         , eAlphaMode                iAlphaMode
-                         , float                     iOpacityValue );
+ULIS3_API void BlendColor( FThreadPool*             iThreadPool
+                         , uint32                   iPerfIntent
+                         , const FHostDeviceInfo&   iHostDeviceInfo
+                         , bool                     iCallCB
+                         , const FPixelValue&       iColor
+                         , FBlock*                  iBackdrop
+                         , const FRect&             iDestRect
+                         , eBlendingMode            iBlendingMode
+                         , eAlphaMode               iAlphaMode
+                         , float                    iOpacityValue );
 
 ULIS3_NAMESPACE_END
 

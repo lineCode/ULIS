@@ -5,9 +5,9 @@
 *   ULIS3
 *__________________
 *
-* @file         Dispatch.ipp
+* @file         BlendArgs.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the generic Blend entry point functions.
+* @brief        This file provides the declaration for the FBlendArgs structure.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -17,7 +17,7 @@
 #include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
-struct _FBlendInfoPrivate {
+struct FBlendArgs {
     FThreadPool*            pool;
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;

@@ -30,7 +30,7 @@ int main( int argc, char *argv[] ) {
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
-        Blend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+        AlphaBlend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, 0.5f );
         //AlphaBlend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, 0.5f );
 
     auto endTime = std::chrono::steady_clock::now();

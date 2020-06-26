@@ -7,7 +7,7 @@
 *
 * @file         AlphaFuncAVX.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the Vec8f Blending functions.
+* @brief        This file provides the implementations for the Vec8f Alpha Modes functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -65,21 +65,28 @@ ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaMinAVXF( Vec8f iCs, Vec8f iCb ) {
 ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaMaxAVXF( Vec8f iCs, Vec8f iCb ) {
     return  max( iCs, iCb );
 }
+
+/////////////////////////////////////////////////////
+// AlphaAVXF Template Selector
 //--------------------------------------------------------------------------------------
-//------------------------------------------------------------- AlphaF Template Selector
+//-------------------------------------------------- Generic AlphaAVXF Template Selector
 template< eAlphaMode _AM >
 ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF( Vec8f iCs, Vec8f iCb ) {
     ULIS3_ASSERT( false, "Alpha Specialization Not Implemented" );
     return  Vec8f( 0.f );
 }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_NORMAL   >( Vec8f iCs, Vec8f iCb ) { return  AlphaNormalAVXF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_ERASE    >( Vec8f iCs, Vec8f iCb ) { return  AlphaEraseAVXF(  iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_TOP      >( Vec8f iCs, Vec8f iCb ) { return  AlphaTopAVXF(    iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_BACK     >( Vec8f iCs, Vec8f iCb ) { return  AlphaBackAVXF(   iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_SUB      >( Vec8f iCs, Vec8f iCb ) { return  AlphaSubAVXF(    iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_ADD      >( Vec8f iCs, Vec8f iCb ) { return  AlphaAddAVXF(    iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_MUL      >( Vec8f iCs, Vec8f iCb ) { return  AlphaMulAVXF(    iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_MIN      >( Vec8f iCs, Vec8f iCb ) { return  AlphaMinAVXF(    iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_MAX      >( Vec8f iCs, Vec8f iCb ) { return  AlphaMaxAVXF(    iCs, iCb ); }
+
+//--------------------------------------------------------------------------------------
+//------------------------------------------ AlphaAVXF Template Selector Specializations
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_NORMAL    >( Vec8f iCs, Vec8f iCb ) { return  AlphaNormalAVXF(    iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_ERASE     >( Vec8f iCs, Vec8f iCb ) { return  AlphaEraseAVXF(     iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_TOP       >( Vec8f iCs, Vec8f iCb ) { return  AlphaTopAVXF(       iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_BACK      >( Vec8f iCs, Vec8f iCb ) { return  AlphaBackAVXF(      iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_SUB       >( Vec8f iCs, Vec8f iCb ) { return  AlphaSubAVXF(       iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_ADD       >( Vec8f iCs, Vec8f iCb ) { return  AlphaAddAVXF(       iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_MUL       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMulAVXF(       iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_MIN       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMinAVXF(       iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec8f ULIS3_VECTORCALL AlphaAVXF< AM_MAX       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMaxAVXF(       iCs, iCb ); }
+
 ULIS3_NAMESPACE_END
 

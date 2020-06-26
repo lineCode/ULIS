@@ -7,14 +7,13 @@
 *
 * @file         SeparableBlendFuncAVXF.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the Vec8f Blending functions.
+* @brief        This file provides the implementations for the Vec8f Separable Blending Modes functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Color/ModelStructs.h"
 #include "Maths/Maths.h"
 #include <vectorclass.h>
 
@@ -175,14 +174,18 @@ ULIS3_FORCEINLINE Vec8f BlendGlowAVXF( Vec8f iCs, Vec8f iCb ) {
     return  BlendReflectAVXF( iCb, iCs );
 }
 
+/////////////////////////////////////////////////////
+// SeparableCompOpAVXF Template Selector
 //--------------------------------------------------------------------------------------
-//--------------------------------------------------- SeparableCompOpAVXF Template Selector
+//------------------------------------------- Generic SeparableCompOpAVXF Template Selector
 template< eBlendingMode _BM >
 ULIS3_FORCEINLINE Vec8f SeparableCompOpAVXF( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) {
     ULIS3_ASSERT( false, "Blend Specialization Not Implemented" );
     return  0.f;
 }
 
+//--------------------------------------------------------------------------------------
+//----------------------------------- SeparableCompOpAVXF Template Selector Specializations
 template<> ULIS3_FORCEINLINE Vec8f SeparableCompOpAVXF< BM_NORMAL      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendNormalAVXF( iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE Vec8f SeparableCompOpAVXF< BM_BEHIND      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendBehindAVXF( iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE Vec8f SeparableCompOpAVXF< BM_DARKEN      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendDarkenAVXF( iCs, iCb ) ); }

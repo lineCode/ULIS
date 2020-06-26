@@ -5,18 +5,18 @@
 *   ULIS3
 *__________________
 *
-* @file         NonSeparableBlendFuncF.h
+* @file         NonSeparableBlendFuncSSEF.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the ufloat Blending functions.
+* @brief        This file provides the implementations for the Vec4f Non Separable Blending Modes functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#define GLM_FORCE_SWIZZLE
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Color/ModelStructs.h"
 #include "Maths/Maths.h"
+
+#define GLM_FORCE_SWIZZLE
 #include <glm/glm.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -24,11 +24,21 @@
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Non Separable Blending Modes for RGB
+// Compositing
+ULIS3_FORCEINLINE Vec4f ComposeNonSeparableSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar, Vec4f iCr ) {
+    return ( 1.f - iVar ) * iCb + iVar * ( ( 1.f - iAb ) * iCs + iAb * iCr );
+}
+
+/////////////////////////////////////////////////////
+// Helper static values for Computing Non Separable Blending functions
 static Vec4f gLum( 0.3f, 0.59f, 0.11f, 0.0f );
 static Vec4f gFixMin( 0.f, 0.f, 0.f, FLT_MAX );
 static Vec4f gFixFind( 1.0e-20F, 1.0e-21F, 1.0e-22F, 0.f );
 
+/////////////////////////////////////////////////////
+// Helpers functions for Non Separable FRGBF Blending Modes Function
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------- myHorizontalMin
 ULIS3_FORCEINLINE ufloat myHorizontalMin( Vec4f iC ) {
     Vec4f a = permute4<2, 3, V_DC, V_DC>( iC );
     Vec4f b = min( a, iC );
@@ -37,6 +47,8 @@ ULIS3_FORCEINLINE ufloat myHorizontalMin( Vec4f iC ) {
     return  b[0];
 }
 
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------- myHorizontalMax
 ULIS3_FORCEINLINE ufloat myHorizontalMax( Vec4f iC ) {
     Vec4f a = permute4< 2, 3, V_DC, V_DC >( iC );
     Vec4f b = max( a, iC );
@@ -45,17 +57,23 @@ ULIS3_FORCEINLINE ufloat myHorizontalMax( Vec4f iC ) {
     return  b[0];
 }
 
-ULIS3_FORCEINLINE ufloat LumF( Vec4f iC ) {
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------ LumSSEF
+ULIS3_FORCEINLINE ufloat LumSSEF( Vec4f iC ) {
     return  horizontal_add( iC * gLum );
 }
 
-ULIS3_FORCEINLINE ufloat SatF( Vec4f iC ) {
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------ SatSSEF
+ULIS3_FORCEINLINE ufloat SatSSEF( Vec4f iC ) {
     return  myHorizontalMax( iC ) - myHorizontalMin( iC + gFixMin );
 }
 
-ULIS3_FORCEINLINE Vec4f ClipColorF( Vec4f iC ) {
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------ ClipColorSSEF
+ULIS3_FORCEINLINE Vec4f ClipColorSSEF( Vec4f iC ) {
     iC += gFixFind;
-    ufloat l = LumF( iC );
+    ufloat l = LumSSEF( iC );
     ufloat n = myHorizontalMax( iC );
     ufloat x = myHorizontalMin( iC + gFixMin );
     if( n < 0.0f ) {
@@ -73,11 +91,15 @@ ULIS3_FORCEINLINE Vec4f ClipColorF( Vec4f iC ) {
     return  iC;
 }
 
-ULIS3_FORCEINLINE Vec4f SetLumF( Vec4f iC, ufloat iL ) {
-    return  ClipColorF( iC + ( iL - LumF( iC ) ) );
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- SetLumSSEF
+ULIS3_FORCEINLINE Vec4f SetLumSSEF( Vec4f iC, ufloat iL ) {
+    return  ClipColorSSEF( iC + ( iL - LumSSEF( iC ) ) );
 }
 
-ULIS3_FORCEINLINE Vec4f SetSatF( Vec4f iC, ufloat iS ) {
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------- SetSatSSEF
+ULIS3_FORCEINLINE Vec4f SetSatSSEF( Vec4f iC, ufloat iS ) {
     iC += gFixFind;
     ufloat hmax = myHorizontalMax( iC );
     ufloat hmin = myHorizontalMin( iC + gFixMin );
@@ -101,35 +123,37 @@ ULIS3_FORCEINLINE Vec4f SetSatF( Vec4f iC, ufloat iS ) {
     return  ret;
 }
 
+/////////////////////////////////////////////////////
+// Stantard Non Separable SSEF Blending Modes Function
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- DarkerColor
 ULIS3_FORCEINLINE Vec4f BlendDarkerColorSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  LumF( iCb ) < LumF( iCs ) ? iCb : iCs;
+    return  LumSSEF( iCb ) < LumSSEF( iCs ) ? iCb : iCs;
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------- LighterColor
 ULIS3_FORCEINLINE Vec4f BlendLighterColorSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  LumF( iCb ) > LumF( iCs ) ? iCb : iCs;
+    return  LumSSEF( iCb ) > LumSSEF( iCs ) ? iCb : iCs;
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Hue
 ULIS3_FORCEINLINE Vec4f BlendHueSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  SetLumF( SetSatF( iCs, SatF( iCb ) ), LumF( iCb ) );
+    return  SetLumSSEF( SetSatSSEF( iCs, SatSSEF( iCb ) ), LumSSEF( iCb ) );
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Saturation
 ULIS3_FORCEINLINE Vec4f BlendSaturationSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  SetLumF( SetSatF( iCb, SatF( iCs ) ), LumF( iCb ) );
+    return  SetLumSSEF( SetSatSSEF( iCb, SatSSEF( iCs ) ), LumSSEF( iCb ) );
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- Color
 ULIS3_FORCEINLINE Vec4f BlendColorSSEF( Vec4f iCs, Vec4f iCb ) {
-    return  SetLumF( iCs, LumF( iCb ) );
+    return  SetLumSSEF( iCs, LumSSEF( iCb ) );
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Luminosity
 ULIS3_FORCEINLINE Vec4f BlendLuminositySSEF( Vec4f iCs, Vec4f iCb ) {
-    return  SetLumF( iCb, LumF( iCs ) );
+    return  SetLumSSEF( iCb, LumSSEF( iCs ) );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------- Partial Derivative
@@ -172,28 +196,31 @@ ULIS3_FORCEINLINE Vec4f BlendAngleCorrectedSSEF( Vec4f iCs, Vec4f iCb ) {
     return  tmp;
 }
 
+/////////////////////////////////////////////////////
+// NonSeparableOpSSEF Template Selector
 //--------------------------------------------------------------------------------------
-//-------------------------------------------- NonSeparableOpF Template Selector for RGB
+//-------------------------------------------- Generic NonSeparableOpSSEF Template Selector
 template< eBlendingMode _BM >
-ULIS3_FORCEINLINE Vec4f NonSeparableOpF( Vec4f iCs, Vec4f iCb ) {
+ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF( Vec4f iCs, Vec4f iCb ) {
     ULIS3_ASSERT( false, "Blend Specialization Not Implemented" );
     return  {};
 }
 
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_DARKERCOLOR          >( Vec4f iCs, Vec4f iCb ) { return  BlendDarkerColorSSEF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_LIGHTERCOLOR         >( Vec4f iCs, Vec4f iCb ) { return  BlendLighterColorSSEF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_HUE                  >( Vec4f iCs, Vec4f iCb ) { return  BlendHueSSEF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_SATURATION           >( Vec4f iCs, Vec4f iCb ) { return  BlendSaturationSSEF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_COLOR                >( Vec4f iCs, Vec4f iCb ) { return  BlendColorSSEF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_LUMINOSITY           >( Vec4f iCs, Vec4f iCb ) { return  BlendLuminositySSEF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_PARTIALDERIVATIVE    >( Vec4f iCs, Vec4f iCb ) { return  BlendPartialDerivativeSSEF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_WHITEOUT             >( Vec4f iCs, Vec4f iCb ) { return  BlendWhiteoutSSEF( iCs, iCb ); }
-template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpF< BM_ANGLECORRECTED       >( Vec4f iCs, Vec4f iCb ) { return  BlendAngleCorrectedSSEF( iCs, iCb ); }
+//--------------------------------------------------------------------------------------
+//------------------------------------ NonSeparableOpSSEF Template Selector Specializations
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_DARKERCOLOR          >( Vec4f iCs, Vec4f iCb ) { return  BlendDarkerColorSSEF( iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_LIGHTERCOLOR         >( Vec4f iCs, Vec4f iCb ) { return  BlendLighterColorSSEF( iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_HUE                  >( Vec4f iCs, Vec4f iCb ) { return  BlendHueSSEF( iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_SATURATION           >( Vec4f iCs, Vec4f iCb ) { return  BlendSaturationSSEF( iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_COLOR                >( Vec4f iCs, Vec4f iCb ) { return  BlendColorSSEF( iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_LUMINOSITY           >( Vec4f iCs, Vec4f iCb ) { return  BlendLuminositySSEF( iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_PARTIALDERIVATIVE    >( Vec4f iCs, Vec4f iCb ) { return  BlendPartialDerivativeSSEF( iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_WHITEOUT             >( Vec4f iCs, Vec4f iCb ) { return  BlendWhiteoutSSEF( iCs, iCb ); }
+template<> ULIS3_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_ANGLECORRECTED       >( Vec4f iCs, Vec4f iCb ) { return  BlendAngleCorrectedSSEF( iCs, iCb ); }
 
-template< eBlendingMode _BM > ULIS3_FORCEINLINE Vec4f NonSeparableCompOpSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeSSEF( iCs, iCb, iAb, iVar, NonSeparableOpF< _BM >( iCs, iCb ) ); }
-
-
-
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------------------- CompOp Version
+template< eBlendingMode _BM > ULIS3_FORCEINLINE Vec4f NonSeparableCompOpSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeNonSeparableSSEF( iCs, iCb, iAb, iVar, NonSeparableOpSSEF< _BM >( iCs, iCb ) ); }
 
 ULIS3_NAMESPACE_END
 

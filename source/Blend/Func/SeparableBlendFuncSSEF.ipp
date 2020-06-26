@@ -7,14 +7,13 @@
 *
 * @file         SeparableBlendFuncSSEF.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the Vec4f Blending functions.
+* @brief        This file provides the implementations for the Vec4f Separable Blending Modes functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Color/ModelStructs.h"
 #include "Maths/Maths.h"
 #include <vectorclass.h>
 
@@ -175,14 +174,18 @@ ULIS3_FORCEINLINE Vec4f BlendGlowSSEF( Vec4f iCs, Vec4f iCb ) {
     return  BlendReflectSSEF( iCb, iCs );
 }
 
+/////////////////////////////////////////////////////
+// SeparableCompOpSSEF Template Selector
 //--------------------------------------------------------------------------------------
-//--------------------------------------------------- SeparableCompOpSSEF Template Selector
+//------------------------------------------- Generic SeparableCompOpSSEF Template Selector
 template< eBlendingMode _BM >
 ULIS3_FORCEINLINE Vec4f SeparableCompOpSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) {
     ULIS3_ASSERT( false, "Blend Specialization Not Implemented" );
     return  0.f;
 }
 
+//--------------------------------------------------------------------------------------
+//----------------------------------- SeparableCompOpSSEF Template Selector Specializations
 template<> ULIS3_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_NORMAL      >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeSSEF( iCs, iCb, iAb, iVar, BlendNormalSSEF( iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_BEHIND      >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeSSEF( iCs, iCb, iAb, iVar, BlendBehindSSEF( iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE Vec4f SeparableCompOpSSEF< BM_DARKEN      >( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeSSEF( iCs, iCb, iAb, iVar, BlendDarkenSSEF( iCs, iCb ) ); }

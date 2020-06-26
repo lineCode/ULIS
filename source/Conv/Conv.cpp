@@ -17,8 +17,7 @@
 #include "Data/Pixel.h"
 #include "Data/Block.h"
 #include "Maths/Maths.h"
-#include "Color/ModelStructs.h"
-#include "Color/srgb2linear.h"
+#include "Conv/srgb2linear.h"
 #include "Thread/ThreadPool.h"
 #include "lcms2.h"
 

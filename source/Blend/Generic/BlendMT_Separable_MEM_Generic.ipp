@@ -7,28 +7,29 @@
 *
 * @file         BlendMT_Separable_MEM_Generic.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the generic Blend entry point functions.
+* @brief        This file provides the implementation for a Blend specialization as described in the title.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
+#include "Blend/BlendArgs.h"
+#include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
-#include "Blend/Dispatch/BlendInfo.h"
 #include "Blend/Func/AlphaFuncF.ipp"
-#include "Blend/Func/CompositingHelpers.ipp"
 #include "Blend/Func/SeparableBlendFuncF.ipp"
+#include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
-    const _FBlendInfoPrivate&   info    = *iInfo;
-    const FFormatInfo&          fmt     = info.source->FormatInfo();
-    const tByte*                src     = iSrc;
-    tByte*                      bdp     = iBdp;
+InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
+    const FBlendArgs&   info    = *iInfo;
+    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const tByte*        src     = iSrc;
+    tByte*              bdp     = iBdp;
     const bool notLastLine  = iLine < info.backdropCoverage.y;
     const bool notFirstLine = iLine > 0;
     const bool onLeftBorder = info.backdropWorkingRect.x == 0;
@@ -71,15 +72,15 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const tByte* iSrc, 
 
 template< typename T >
 void
-BlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
-    const _FBlendInfoPrivate&   info        = *iInfo;
-    const tByte*                src         = info.source->DataPtr();
-    tByte*                      bdp         = info.backdrop->DataPtr();
-    const tSize                 src_bps     = info.source->BytesPerScanLine();
-    const tSize                 bdp_bps     = info.backdrop->BytesPerScanLine();
-    const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
-    const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
+BlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
+    const FBlendArgs&   info        = *iInfo;
+    const tByte*        src         = info.source->DataPtr();
+    tByte*              bdp         = info.backdrop->DataPtr();
+    const tSize         src_bps     = info.source->BytesPerScanLine();
+    const tSize         bdp_bps     = info.backdrop->BytesPerScanLine();
+    const tSize         src_decal_y = info.shift.y + info.sourceRect.y;
+    const tSize         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const tSize         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T >
@@ -90,11 +91,11 @@ BlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const _FBlendInfoPrivat
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iBdp, int32 iLine, std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
-    const _FBlendInfoPrivate&   info    = *iInfo;
-    const FFormatInfo&          fmt     = info.source->FormatInfo();
-    const tByte*                src     = iSrc;
-    tByte*                      bdp     = iBdp;
+InvokeBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
+    const FBlendArgs&   info    = *iInfo;
+    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const tByte*        src     = iSrc;
+    tByte*              bdp     = iBdp;
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
         const float alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;
@@ -119,15 +120,15 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( const tByte* iSrc, tByte* iB
 
 template< typename T >
 void
-BlendMT_Separable_MEM_Generic( std::shared_ptr< const _FBlendInfoPrivate > iInfo ) {
-    const _FBlendInfoPrivate&   info        = *iInfo;
-    const tByte*                src         = info.source->DataPtr();
-    tByte*                      bdp         = info.backdrop->DataPtr();
-    const tSize                 src_bps     = info.source->BytesPerScanLine();
-    const tSize                 bdp_bps     = info.backdrop->BytesPerScanLine();
-    const tSize                 src_decal_y = info.shift.y + info.sourceRect.y;
-    const tSize                 src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const tSize                 bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
+BlendMT_Separable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
+    const FBlendArgs&   info        = *iInfo;
+    const tByte*        src         = info.source->DataPtr();
+    tByte*              bdp         = info.backdrop->DataPtr();
+    const tSize         src_bps     = info.source->BytesPerScanLine();
+    const tSize         bdp_bps     = info.backdrop->BytesPerScanLine();
+    const tSize         src_decal_y = info.shift.y + info.sourceRect.y;
+    const tSize         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const tSize         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >

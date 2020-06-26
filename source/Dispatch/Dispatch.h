@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Base/HostDeviceInfo.h"
 #include "Data/FormatInfo.h"
 
 ULIS3_NAMESPACE_BEGIN
@@ -123,7 +124,7 @@ ULIS3_DISPATCH_SELECT_GENSSE( TAG, GENSSE );                            \
 ULIS3_DISPATCH_SELECT_GENMEM( TAG, GENMEM );                            \
 const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
-#define ULIS3_BEGIN_DISPATCHER_NO_GENERIC_OPT( TAG, FPT, EXT, GENMEM )  ULIS3_BEGIN_DISPATCHER( TAG, FPT, EXT, GENMEM, GENMEM, GENMEM )
+#define ULIS3_BEGIN_DISPATCHER_GENERIC( TAG, FPT, EXT, GENMEM )  ULIS3_BEGIN_DISPATCHER( TAG, FPT, EXT, GENMEM, GENMEM, GENMEM )
 
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
     #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
@@ -143,13 +144,6 @@ const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
     { nullptr, nullptr, nullptr, nullptr }                                                                      \
 };                                                                                                              \
 const int TAG::spec_size = sizeof( TAG::spec_table ) / sizeof( TAG::FSpecDispatchGroup ) - 1;
-
-/////////////////////////////////////////////////////
-// Example Usage
-//  ULIS3_BEGIN_DISPATCHER( FBlendDispatchTable, fpDispatchedXFunc, int, &SelectDispatchAVXGeneric< T >, &SelectDispatchSSEGeneric< T >, &SelectDispatchMEMGeneric< T > )
-//      ULIS3_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectDispatchAVXRGBA8, &SelectDispatchSSERGBA8, &SelectDispatchMEMRGBA8 )
-//      ULIS3_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBAF, &SelectDispatchAVXRGBAF, &SelectDispatchSSERGBAF, &SelectDispatchMEMRGBAF )
-//  ULIS3_END_DISPATCHER( FBlendDispatchTable )
 
 ULIS3_NAMESPACE_END
 

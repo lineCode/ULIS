@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Color/srgb2linear.h"
+#include "Conv/srgb2linear.h"
 #include <cmath>
 
 ULIS3_NAMESPACE_BEGIN

@@ -15,7 +15,7 @@
 #include "Conv/Conv.h"
 #include "Data/Pixel.h"
 #include "Maths/Maths.h"
-#include "Color/srgb2linear.h"
+#include "Conv/srgb2linear.h"
 
 ULIS3_NAMESPACE_BEGIN
 FPixelValue
