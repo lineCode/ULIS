@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Conv/ConvBuffer.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvDispatch.ipp"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

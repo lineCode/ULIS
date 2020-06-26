@@ -65,7 +65,7 @@ public:
     FKernel Rotated90CW() const;
     FKernel Rotated90CCW() const;
     FKernel Rotated180() const;
-    const FVec2I& Size() const;
+    const FVec2I Size() const;
     const FVec2I& Pivot() const;
     void SetPivot( const FVec2I& iPivot );
 

@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         ConvDispatch.h
+* @file         ConvDispatch.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the dispatch implementation for the conversion functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

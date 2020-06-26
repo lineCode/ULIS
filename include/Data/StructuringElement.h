@@ -65,7 +65,7 @@ public:
     FStructuringElement Rotated90CW() const;
     FStructuringElement Rotated90CCW() const;
     FStructuringElement Rotated180() const;
-    const FVec2I& Size() const;
+    const FVec2I Size() const;
     const FVec2I& Pivot() const;
     void SetPivot( const FVec2I& iPivot );
 

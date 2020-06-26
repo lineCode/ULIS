@@ -66,28 +66,6 @@ template<> uint32   constexpr ULIS3_FORCEINLINE MaxType< uint32  >() { return UI
 template<> ufloat   constexpr ULIS3_FORCEINLINE MaxType< ufloat  >() { return 1.f;          }
 template<> udouble  constexpr ULIS3_FORCEINLINE MaxType< udouble >() { return 1.0;          }
 
-// User define literal oprators
-constexpr uint8     operator "" _u8(  unsigned long long int i ) { return  (uint8)_clamp( i, (unsigned long long int)0, (unsigned long long int)UINT8_MAX ); }
-constexpr uint16    operator "" _u16( unsigned long long int i ) { return  ConvType< uint8, uint16 >( (uint8)_clamp( i, (unsigned long long int)0, (unsigned long long int)UINT8_MAX ) ); }
-constexpr uint32    operator "" _u32( unsigned long long int i ) { return  ConvType< uint8, uint32 >( (uint8)_clamp( i, (unsigned long long int)0, (unsigned long long int)UINT8_MAX ) ); }
-
-struct __encodedlab_ab
-{
-    constexpr __encodedlab_ab( udouble i ) : m( i ) {}
-    constexpr udouble operator-(){        return  _clamp( -m + 0.5, 0.0, 1.0 ); }
-    constexpr udouble operator+(){        return  _clamp( +m + 0.5, 0.0, 1.0 ); }
-    constexpr operator udouble() const {  return  _clamp( +m + 0.5, 0.0, 1.0 ); }
-    udouble m;
-};
-
-constexpr udouble operator "" _L( unsigned long long int i) { return _clamp( i, (unsigned long long int)0, (unsigned long long int)100 ) / 100.0; }
-constexpr __encodedlab_ab operator "" _a( unsigned long long int i) { return  __encodedlab_ab( _clamp( i, (unsigned long long int)0, (unsigned long long int)128 ) / 255.0 ); }
-constexpr __encodedlab_ab operator "" _b( unsigned long long int i) { return  __encodedlab_ab( _clamp( i, (unsigned long long int)0, (unsigned long long int)128 ) / 255.0 ); }
-constexpr ufloat    fix8f() { return ( 128.0f / 255.0f ) - 0.5f; }
-constexpr udouble   fix8d() { return ( 128.0 / 255.0 ) - 0.5; }
-#define UEncodeLab( L, a, b )       { double(L##_L), double(a##_a), double(b##_b) }
-#define UEncodeLabA( L, a, b, A )   { double(L##_L), double(a##_a), double(b##_b), double(A) }
-
 // Macro for switch enumerators
 #define ULIS3_COMP_OP_CASE_DO( _CASE, _ACTION, _E1, _E2, _E3 )              case _CASE: { _ACTION( _CASE, _E1, _E2, _E3 ); break; }
 #define ULIS3_SWITCH_FOR_ALL_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )  switch( iValue ) { _SUBSET( ULIS3_COMP_OP_CASE_DO, _ACTION, _E1, _E2, _E3 ) }

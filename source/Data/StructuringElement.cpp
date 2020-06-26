@@ -223,7 +223,7 @@ FStructuringElement::Rotated180() const {
     return  ret;
 }
 
-const FVec2I&
+const FVec2I
 FStructuringElement::Size() const {
     return  FVec2I( Width(), Height() );
 }

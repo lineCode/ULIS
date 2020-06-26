@@ -270,7 +270,7 @@ FKernel::Rotated180() const {
     return  ret;
 }
 
-const FVec2I&
+const FVec2I
 FKernel::Size() const {
     return  FVec2I( Width(), Height() );
 }
