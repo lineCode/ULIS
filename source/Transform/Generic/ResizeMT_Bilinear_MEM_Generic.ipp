@@ -7,22 +7,24 @@
 *
 * @file         ResizeMT_Bilinear_MEM_Generic.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the generic transform entry point functions.
+* @brief        This file provides the implementation for a Transform specialization as described in the title.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
+#include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
+#include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
 InvokeResizeMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
-    const FResizeArgs&      info    = *iInfo;
-    const FFormatInfo&              fmt     = info.destination->FormatInfo();
-    tByte*                          dst     = iDst;
+    const FResizeArgs&  info    = *iInfo;
+    const FFormatInfo&  fmt     = info.destination->FormatInfo();
+    tByte*              dst     = iDst;
 
     FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
     FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
@@ -68,17 +70,16 @@ InvokeResizeMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 iLine, st
 
 template< typename T > void
 ResizeMT_Bilinear_MEM_Generic( std::shared_ptr< const FResizeArgs > iInfo ) {
-    const FResizeArgs&      info        = *iInfo;
-    tByte*                          dst         = info.destination->DataPtr();
-    const tSize                     dst_bps     = info.destination->BytesPerScanLine();
-    const tSize                     dst_decal_y = info.dst_roi.y;
-    const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    const FResizeArgs&  info        = *iInfo;
+    tByte*              dst         = info.destination->DataPtr();
+    const tSize         dst_bps     = info.destination->BytesPerScanLine();
+    const tSize         dst_decal_y = info.dst_roi.y;
+    const tSize         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeResizeMTProcessScanline_Bilinear_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
-
 
 ULIS3_NAMESPACE_END
 

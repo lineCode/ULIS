@@ -7,24 +7,27 @@
 *
 * @file         TransformBezier_Bicubic_SSE_RGBA8.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the generic transform entry point functions.
+* @brief        This file provides the implementation for a Transform specialization as described in the title.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
+#include "Data/Block.h"
 #include "Maths/Geometry.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
+#include "Thread/ThreadPool.h"
+#include <vectorclass.h>
 
 ULIS3_NAMESPACE_BEGIN
 void
 InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask, const Vec4i iIDT ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormatInfo&              fmt     = info.destination->FormatInfo();
-    tByte*                          dst     = iDst;
-    const float*                    field   = reinterpret_cast< const float* >( iField->ScanlinePtr( iLine ) );
-    const uint8*                    mask    = reinterpret_cast< const uint8* >( iMask->ScanlinePtr( iLine ) );
+    const FFormatInfo&      fmt     = info.destination->FormatInfo();
+    tByte*                  dst     = iDst;
+    const float*            field   = reinterpret_cast< const float* >( iField->ScanlinePtr( iLine ) );
+    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlinePtr( iLine ) );
     const int rangex = info.src_roi.w - 1;
     const int rangey = info.src_roi.h - 1;
 
@@ -89,10 +92,10 @@ InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8( tByte* iDst, int32 iLi
 void
 TransformBezierMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const FTransformArgs&   info        = *iInfo;
-    tByte*                          dst         = info.destination->DataPtr();
-    const tSize                     dst_bps     = info.destination->BytesPerScanLine();
-    const tSize                     dst_decal_y = info.dst_roi.y;
-    const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    tByte*                  dst         = info.destination->DataPtr();
+    const tSize             dst_bps     = info.destination->BytesPerScanLine();
+    const tSize             dst_decal_y = info.dst_roi.y;
+    const tSize             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     Vec4i idt;
     BuildRGBA8IndexTable( info.source->FormatInfo().COD, &idt );
     idt.insert( info.source->FormatInfo().AID, 4 );
@@ -101,7 +104,6 @@ TransformBezierMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iIn
                                    , InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, iField, iMask, idt );
 }
-
 
 ULIS3_NAMESPACE_END
 

@@ -7,23 +7,26 @@
 *
 * @file         TransformPerspectiveMT_NN_SSE_RGBA8.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the generic transform entry point functions.
+* @brief        This file provides the implementation for a Transform specialization as described in the title.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
+#include "Data/Block.h"
 #include "Maths/Geometry.h"
+#include "Maths/Transform2D_Private.h"
 #include "Transform/TransformArgs.h"
-#include "Maths/Geometry.h"
+#include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"
+#include <vectorclass.h>
 
 ULIS3_NAMESPACE_BEGIN
 void
 InvokeTransformPerspectiveMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormatInfo&              fmt     = info.destination->FormatInfo();
-    tByte*                          dst     = iDst;
+    const FFormatInfo&      fmt     = info.destination->FormatInfo();
+    tByte*                  dst     = iDst;
 
     FVec2F pointInDst( static_cast< float >( info.dst_roi.x ), static_cast< float >( info.dst_roi.y + iLine ) );
 
@@ -46,10 +49,10 @@ InvokeTransformPerspectiveMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLi
 void
 TransformPerspectiveMT_NN_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info        = *iInfo;
-    tByte*                          dst         = info.destination->DataPtr();
-    const tSize                     dst_bps     = info.destination->BytesPerScanLine();
-    const tSize                     dst_decal_y = info.dst_roi.y;
-    const tSize                     dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    tByte*                  dst         = info.destination->DataPtr();
+    const tSize             dst_bps     = info.destination->BytesPerScanLine();
+    const tSize             dst_decal_y = info.dst_roi.y;
+    const tSize             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformPerspectiveMTProcessScanline_NN_SSE_RGBA8
