@@ -56,23 +56,22 @@ void TransformAffine( FThreadPool*              iThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< FTransformArgs > forwardTransformParams = std::make_shared< FTransformArgs >();
-    FTransformArgs& alias = *forwardTransformParams;
-    alias.pool              = iThreadPool;
-    alias.blocking          = iBlocking;
-    alias.hostDeviceInfo    = &iHostDeviceInfo;
-    alias.perfIntent        = iPerfIntent;
-    alias.source            = iSource;
-    alias.destination       = iDestination;
-    alias.src_roi           = src_fit;
-    alias.dst_roi           = dst_fit;
-    alias.method            = iMethod;
-    alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
+    std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
+    FTransformArgs& commandArgsRef = *commandArgs;
+    commandArgsRef.pool             = iThreadPool;
+    commandArgsRef.blocking         = iBlocking;
+    commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
+    commandArgsRef.perfIntent       = iPerfIntent;
+    commandArgsRef.source           = iSource;
+    commandArgsRef.destination      = iDestination;
+    commandArgsRef.src_roi          = src_fit;
+    commandArgsRef.dst_roi          = dst_fit;
+    commandArgsRef.method           = iMethod;
+    commandArgsRef.inverseTransform = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
-    fpTransformInvocation fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
-    fptr( forwardTransformParams );
+    fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformAffineInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    dispatchedInvocation( commandArgs );
 
     // Invalid
     iDestination->Invalidate( dst_fit, iCallCB );
@@ -108,23 +107,23 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return;
 
-    std::shared_ptr< FTransformArgs > forwardTransformParams = std::make_shared< FTransformArgs >();
-    FTransformArgs& alias = *forwardTransformParams;
-    alias.pool              = iThreadPool;
-    alias.blocking          = iBlocking;
-    alias.hostDeviceInfo    = &iHostDeviceInfo;
-    alias.perfIntent        = iPerfIntent;
-    alias.source            = iSource;
-    alias.destination       = iDestination;
-    alias.src_roi           = src_fit;
-    alias.dst_roi           = dst_fit;
-    alias.method            = iMethod;
-    alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
+    std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
+    FTransformArgs& commandArgsRef = *commandArgs;
+    commandArgsRef.pool             = iThreadPool;
+    commandArgsRef.blocking         = iBlocking;
+    commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
+    commandArgsRef.perfIntent       = iPerfIntent;
+    commandArgsRef.source           = iSource;
+    commandArgsRef.destination      = iDestination;
+    commandArgsRef.src_roi          = src_fit;
+    commandArgsRef.dst_roi          = dst_fit;
+    commandArgsRef.method           = iMethod;
+    commandArgsRef.inverseTransform = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
-    fpTransformInvocation fptr = QueryDispatchedTransformAffineTiledFunctionForParameters( alias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
-    fptr( forwardTransformParams );
+    fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformAffineTiledInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    dispatchedInvocation( commandArgs );
+
 
     // Invalid
     iDestination->Invalidate( dst_fit, iCallCB );
@@ -163,23 +162,22 @@ void TransformPerspective( FThreadPool*         iThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< FTransformArgs > forwardTransformParams = std::make_shared< FTransformArgs >();
-    FTransformArgs& alias = *forwardTransformParams;
-    alias.pool              = iThreadPool;
-    alias.blocking          = iBlocking;
-    alias.hostDeviceInfo    = &iHostDeviceInfo;
-    alias.perfIntent        = iPerfIntent;
-    alias.source            = iSource;
-    alias.destination       = iDestination;
-    alias.src_roi           = src_fit;
-    alias.dst_roi           = dst_fit;
-    alias.method            = iMethod;
-    alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
+    std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
+    FTransformArgs& commandArgsRef = *commandArgs;
+    commandArgsRef.pool             = iThreadPool;
+    commandArgsRef.blocking         = iBlocking;
+    commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
+    commandArgsRef.perfIntent       = iPerfIntent;
+    commandArgsRef.source           = iSource;
+    commandArgsRef.destination      = iDestination;
+    commandArgsRef.src_roi          = src_fit;
+    commandArgsRef.dst_roi          = dst_fit;
+    commandArgsRef.method           = iMethod;
+    commandArgsRef.inverseTransform = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
-    fpTransformInvocation fptr = QueryDispatchedTransformPerspectiveFunctionForParameters( alias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
-    fptr( forwardTransformParams );
+    fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformPerspectiveInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    dispatchedInvocation( commandArgs );
 
     // Invalid
     iDestination->Invalidate( dst_fit, iCallCB );
@@ -264,23 +262,23 @@ void TransformBezier( FThreadPool*                                      iThreadP
         }
     }
 
-    std::shared_ptr< FTransformArgs > forwardTransformParams = std::make_shared< FTransformArgs >();
-    FTransformArgs& alias = *forwardTransformParams;
-    alias.pool              = iThreadPool;
-    alias.blocking          = iBlocking;
-    alias.hostDeviceInfo    = &iHostDeviceInfo;
-    alias.perfIntent        = iPerfIntent;
-    alias.source            = iSource;
-    alias.destination       = iDestination;
-    alias.src_roi           = src_fit;
-    alias.dst_roi           = dst_fit;
-    alias.method            = iMethod;
-    alias.inverseTransform  = glm::mat3( 1.f );
+    std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
+    FTransformArgs& commandArgsRef = *commandArgs;
+    commandArgsRef.pool             = iThreadPool;
+    commandArgsRef.blocking         = iBlocking;
+    commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
+    commandArgsRef.perfIntent       = iPerfIntent;
+    commandArgsRef.source           = iSource;
+    commandArgsRef.destination      = iDestination;
+    commandArgsRef.src_roi          = src_fit;
+    commandArgsRef.dst_roi          = dst_fit;
+    commandArgsRef.method           = iMethod;
+    commandArgsRef.inverseTransform = glm::mat3( 1.f );
 
     // Query dispatched method
-    fpBezierTransformInvocation fptr = QueryDispatchedTransformBezierFunctionForParameters( alias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
-    fptr( forwardTransformParams, field, mask );
+    fpBezierTransformInvocation dispatchedInvocation = TDispatcher< FTransformBezierInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    dispatchedInvocation( commandArgs, field, mask );
+
 
     // Invalid
     iDestination->Invalidate( dst_fit, iCallCB );
@@ -331,31 +329,30 @@ void Resize( FThreadPool*             iThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< FResizeArgs > forwardResizeParams = std::make_shared< FResizeArgs >();
-    FResizeArgs& alias = *forwardResizeParams;
-    alias.pool              = iThreadPool;
-    alias.blocking          = iBlocking;
-    alias.hostDeviceInfo    = &iHostDeviceInfo;
-    alias.perfIntent        = iPerfIntent;
-    alias.source            = iSource;
-    alias.destination       = iDestination;
-    alias.src_roi           = src_fit;
-    alias.dst_roi           = dst_fit;
-    alias.method            = iMethod;
-    alias.inverseScale      = inverseScale;
-    alias.shift             = shift;
+    std::shared_ptr< FResizeArgs > commandArgs = std::make_shared< FResizeArgs >();
+    FResizeArgs& commandArgsRef = *commandArgs;
+    commandArgsRef.pool              = iThreadPool;
+    commandArgsRef.blocking          = iBlocking;
+    commandArgsRef.hostDeviceInfo    = &iHostDeviceInfo;
+    commandArgsRef.perfIntent        = iPerfIntent;
+    commandArgsRef.source            = iSource;
+    commandArgsRef.destination       = iDestination;
+    commandArgsRef.src_roi           = src_fit;
+    commandArgsRef.dst_roi           = dst_fit;
+    commandArgsRef.method            = iMethod;
+    commandArgsRef.inverseScale      = inverseScale;
+    commandArgsRef.shift             = shift;
 
     if( iMethod == INTERP_AREA ) {
         std::shared_ptr< FBlock > sh( XGetPremultipliedSummedAreaTable( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS3_NOCB, iSource ) );
-        alias.optionalSAT = sh;
+        commandArgsRef.optionalSAT = sh;
     } else {
-        alias.optionalSAT = nullptr;
+        commandArgsRef.optionalSAT = nullptr;
     }
 
     // Query dispatched method
-    fpResizeInvocation fptr = QueryDispatchedResizeFunctionForParameters( alias );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
-    fptr( forwardResizeParams );
+    fpResizeInvocation dispatchedInvocation = TDispatcher< FResizeInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    dispatchedInvocation( commandArgs );
 
     // Invalid
     iDestination->Invalidate( dst_fit, iCallCB );

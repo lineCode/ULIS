@@ -65,31 +65,31 @@ void Blend( FThreadPool*            iThreadPool
     const int   coverageY           = src_roi.h - ( src_roi.y + translationY ) >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    auto forwardBlendInfo = std::make_shared< FBlendArgs >();
-    FBlendArgs& forwardBlendInfoAlias   = *forwardBlendInfo;
-    forwardBlendInfoAlias.pool                  = iThreadPool;
-    forwardBlendInfoAlias.blocking              = iBlocking;
-    forwardBlendInfoAlias.hostDeviceInfo        = &iHostDeviceInfo;
-    forwardBlendInfoAlias.perfIntent            = iPerfIntent;
-    forwardBlendInfoAlias.source                = iSource;
-    forwardBlendInfoAlias.backdrop              = iBackdrop;
-    forwardBlendInfoAlias.sourceRect            = src_roi;
-    forwardBlendInfoAlias.subpixelComponent     = subpixelComponent;
-    forwardBlendInfoAlias.buspixelComponent     = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
-    forwardBlendInfoAlias.subpixelFlag          = iSubpixelFlag;
-    forwardBlendInfoAlias.blendingMode          = iBlendingMode;
-    forwardBlendInfoAlias.alphaMode             = iAlphaMode;
-    forwardBlendInfoAlias.opacityValue          = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
-    forwardBlendInfoAlias.shift                 = FVec2I( translationX, translationY );
-    forwardBlendInfoAlias.backdropCoverage      = FVec2I( coverageX, coverageY );
-    forwardBlendInfoAlias.backdropWorkingRect   = dst_fit;
+    auto commandArgs = std::make_shared< FBlendArgs >();
+    FBlendArgs& commandArgsRef = *commandArgs;
+    commandArgsRef.pool                 = iThreadPool;
+    commandArgsRef.blocking             = iBlocking;
+    commandArgsRef.hostDeviceInfo       = &iHostDeviceInfo;
+    commandArgsRef.perfIntent           = iPerfIntent;
+    commandArgsRef.source               = iSource;
+    commandArgsRef.backdrop             = iBackdrop;
+    commandArgsRef.sourceRect           = src_roi;
+    commandArgsRef.subpixelComponent    = subpixelComponent;
+    commandArgsRef.buspixelComponent    = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
+    commandArgsRef.subpixelFlag         = iSubpixelFlag;
+    commandArgsRef.blendingMode         = iBlendingMode;
+    commandArgsRef.alphaMode            = iAlphaMode;
+    commandArgsRef.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
+    commandArgsRef.shift                = FVec2I( translationX, translationY );
+    commandArgsRef.backdropCoverage     = FVec2I( coverageX, coverageY );
+    commandArgsRef.backdropWorkingRect  = dst_fit;
 
     // Query dispatched method
-    fpBlendInvocation fptr = TDispatcher< FBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), forwardBlendInfoAlias );
-    fptr( forwardBlendInfo );
+    fpBlendInvocation dispatchedInvocation = TDispatcher< FBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    dispatchedInvocation( commandArgs );
 
     // Invalid
-    forwardBlendInfo->backdrop->Invalidate( dst_fit, iCallCB );
+    iBackdrop->Invalidate( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -136,31 +136,31 @@ void AlphaBlend( FThreadPool*           iThreadPool
     const int   coverageY           = src_roi.h - ( src_roi.y + translationY ) >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    auto forwardBlendInfo = std::make_shared< FBlendArgs >();
-    FBlendArgs& forwardBlendInfoAlias  = *forwardBlendInfo;
-    forwardBlendInfoAlias.pool                 = iThreadPool;
-    forwardBlendInfoAlias.blocking             = iBlocking;
-    forwardBlendInfoAlias.hostDeviceInfo       = &iHostDeviceInfo;
-    forwardBlendInfoAlias.perfIntent           = iPerfIntent;
-    forwardBlendInfoAlias.source               = iSource;
-    forwardBlendInfoAlias.backdrop             = iBackdrop;
-    forwardBlendInfoAlias.sourceRect           = src_roi;
-    forwardBlendInfoAlias.subpixelComponent    = subpixelComponent;
-    forwardBlendInfoAlias.buspixelComponent    = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
-    forwardBlendInfoAlias.subpixelFlag         = iSubpixelFlag;
-    forwardBlendInfoAlias.blendingMode         = BM_NORMAL;
-    forwardBlendInfoAlias.alphaMode            = AM_NORMAL;
-    forwardBlendInfoAlias.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
-    forwardBlendInfoAlias.shift                = FVec2I( translationX, translationY );
-    forwardBlendInfoAlias.backdropCoverage     = FVec2I( coverageX, coverageY );
-    forwardBlendInfoAlias.backdropWorkingRect  = dst_fit;
+    auto commandArgs = std::make_shared< FBlendArgs >();
+    FBlendArgs& commandArgsRef  = *commandArgs;
+    commandArgsRef.pool                 = iThreadPool;
+    commandArgsRef.blocking             = iBlocking;
+    commandArgsRef.hostDeviceInfo       = &iHostDeviceInfo;
+    commandArgsRef.perfIntent           = iPerfIntent;
+    commandArgsRef.source               = iSource;
+    commandArgsRef.backdrop             = iBackdrop;
+    commandArgsRef.sourceRect           = src_roi;
+    commandArgsRef.subpixelComponent    = subpixelComponent;
+    commandArgsRef.buspixelComponent    = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
+    commandArgsRef.subpixelFlag         = iSubpixelFlag;
+    commandArgsRef.blendingMode         = BM_NORMAL;
+    commandArgsRef.alphaMode            = AM_NORMAL;
+    commandArgsRef.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
+    commandArgsRef.shift                = FVec2I( translationX, translationY );
+    commandArgsRef.backdropCoverage     = FVec2I( coverageX, coverageY );
+    commandArgsRef.backdropWorkingRect  = dst_fit;
 
     // Query dispatched method
-    fpBlendInvocation fptr = TDispatcher< FAlphaBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), forwardBlendInfoAlias );
-    fptr( forwardBlendInfo );
+    fpBlendInvocation dispatchedInvocation = TDispatcher< FAlphaBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    dispatchedInvocation( commandArgs );
 
     // Invalid
-    forwardBlendInfo->backdrop->Invalidate( dst_fit, iCallCB );
+    iBackdrop->Invalidate( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -206,31 +206,31 @@ void BlendTiled( FThreadPool*               iThreadPool
     FVec2I mod_shift = FMaths::PyModulo( - FMaths::PyModulo( iShift - translation, src_size ), src_size );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    auto forwardBlendInfo = std::make_shared< FBlendArgs >();
-    FBlendArgs& forwardBlendInfoAlias   = *forwardBlendInfo;
-    forwardBlendInfoAlias.pool                  = iThreadPool;
-    forwardBlendInfoAlias.blocking              = iBlocking;
-    forwardBlendInfoAlias.hostDeviceInfo        = &iHostDeviceInfo;
-    forwardBlendInfoAlias.perfIntent            = iPerfIntent;
-    forwardBlendInfoAlias.source                = iSource;
-    forwardBlendInfoAlias.backdrop              = iBackdrop;
-    forwardBlendInfoAlias.sourceRect            = src_roi;
-    forwardBlendInfoAlias.subpixelComponent     = FVec2F();
-    forwardBlendInfoAlias.buspixelComponent     = FVec2F( 1.f );
-    forwardBlendInfoAlias.subpixelFlag          = ULIS3_NOAA;
-    forwardBlendInfoAlias.blendingMode          = iBlendingMode;
-    forwardBlendInfoAlias.alphaMode             = iAlphaMode;
-    forwardBlendInfoAlias.opacityValue          = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
-    forwardBlendInfoAlias.shift                 = mod_shift;
-    forwardBlendInfoAlias.backdropCoverage      = FVec2I( coverageX, coverageY );
-    forwardBlendInfoAlias.backdropWorkingRect   = dst_roi;
+    auto commandArgs = std::make_shared< FBlendArgs >();
+    FBlendArgs& commandArgsRef   = *commandArgs;
+    commandArgsRef.pool                 = iThreadPool;
+    commandArgsRef.blocking             = iBlocking;
+    commandArgsRef.hostDeviceInfo       = &iHostDeviceInfo;
+    commandArgsRef.perfIntent           = iPerfIntent;
+    commandArgsRef.source               = iSource;
+    commandArgsRef.backdrop             = iBackdrop;
+    commandArgsRef.sourceRect           = src_roi;
+    commandArgsRef.subpixelComponent    = FVec2F();
+    commandArgsRef.buspixelComponent    = FVec2F( 1.f );
+    commandArgsRef.subpixelFlag         = ULIS3_NOAA;
+    commandArgsRef.blendingMode         = iBlendingMode;
+    commandArgsRef.alphaMode            = iAlphaMode;
+    commandArgsRef.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
+    commandArgsRef.shift                = mod_shift;
+    commandArgsRef.backdropCoverage     = FVec2I( coverageX, coverageY );
+    commandArgsRef.backdropWorkingRect  = dst_roi;
 
     // Query dispatched method
-    fpBlendInvocation fptr = TDispatcher< FTiledBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), forwardBlendInfoAlias );
-    fptr( forwardBlendInfo );
+    fpBlendInvocation dispatchedInvocation = TDispatcher< FTiledBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    dispatchedInvocation( commandArgs );
 
     // Invalid
-    forwardBlendInfo->backdrop->Invalidate( dst_roi, iCallCB );
+    iBackdrop->Invalidate( dst_roi, iCallCB );
 }
 
 /////////////////////////////////////////////////////

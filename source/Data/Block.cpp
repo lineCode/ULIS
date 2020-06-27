@@ -12,10 +12,10 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Data/Block.h"
-//#include "Base/UUID.h"
-#include "Maths/Geometry.h"
 #include "Base/CRC32.h"
 #include "Base/MD5.h"
+//#include "Base/UUID.h"
+#include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
