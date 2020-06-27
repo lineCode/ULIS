@@ -69,15 +69,6 @@ typedef  uint32_t   tSize;
 #define ULIS3_AA            true
 #define ULIS3_NOAA          false
 
-// Perf enum
-enum ePerf {
-      PERF_MT       = ULIS3_PERF_MT
-    , PERF_TSPEC    = ULIS3_PERF_TSPEC
-    , PERF_SSE42    = ULIS3_PERF_SSE42
-    , PERF_AVX2     = ULIS3_PERF_AVX2
-    , PERF_GPU      = ULIS3_PERF_GPU
-};
-
 // Type enum
 enum eType {
       TYPE_UINT8     = ULIS3_TYPE_UINT8
