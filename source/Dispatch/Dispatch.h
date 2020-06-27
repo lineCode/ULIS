@@ -84,7 +84,7 @@ private:
     #define ULIS3_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_AVX_Generic = AVX;
 #else
-    #define ULIS3_DISPATCH_SELECT_GENAVX( AVX )                                                                         \
+    #define ULIS3_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_AVX_Generic = nullptr;
 #endif
 
@@ -92,7 +92,7 @@ private:
     #define ULIS3_DISPATCH_SELECT_GENSSE( TAG, SSE )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_SSE_Generic = SSE;
 #else
-    #define ULIS3_DISPATCH_SELECT_GENAVX( AVX )                                                                         \
+    #define ULIS3_DISPATCH_SELECT_GENSSE( TAG, AVX )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_SSE_Generic = nullptr;
 #endif
 

@@ -22,9 +22,9 @@ int main( int argc, char *argv[] ) {
 
     FThreadPool* pool = XCreateThreadPool();
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = 0;
     int size = 4096;
-    uint32 format = ULIS3_FORMAT_BGRA8;
+    uint32 format = ULIS3_FORMAT_BGRAF;
     uint32 repeat = 1000;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
