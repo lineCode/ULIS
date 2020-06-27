@@ -17,6 +17,7 @@
 #include "Conv/ConvHelpers.h"
 #include "Data/FormatInfo.h"
 #include "Data/Pixel.h"
+#include <cmath>
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

@@ -53,6 +53,7 @@ int main( int argc, char *argv[] ) {
     std::cout << "HW_AVX512_DQ      : " << out[ deviceInfo.HW_AVX512_DQ     ] << std::endl;
     std::cout << "HW_AVX512_IFMA    : " << out[ deviceInfo.HW_AVX512_IFMA   ] << std::endl;
     std::cout << "HW_AVX512_VBMI    : " << out[ deviceInfo.HW_AVX512_VBMI   ] << std::endl;
+    std::cout << "MAX WORKERS       : " << ::ul3::MaxWorkers()                << std::endl;
     return  0;
 }
 

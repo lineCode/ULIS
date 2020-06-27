@@ -19,6 +19,7 @@
 #include "Data/Pixel.h"
 #include "Conv/srgb2linear.h"
 #include "lcms2.h"
+#include <cmath>
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

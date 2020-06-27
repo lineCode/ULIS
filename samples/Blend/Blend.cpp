@@ -34,7 +34,7 @@ main( int argc, char *argv[] ) {
     // ( Note 2: often, SSE42 and AVX2 optimisations are available only if Type Specializations are enabled too. )
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
     FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = 0;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     // Collect hard-coded paths to images.

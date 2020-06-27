@@ -66,15 +66,15 @@ private:
     static ULIS3_FORCEINLINE typename _DISPATCHER::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
         #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
             if( iPerfIntent & ULIS3_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
-                return  _DISPATCHER::TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );
+                return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );
             else
         #endif
         #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
             if( iPerfIntent & ULIS3_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
-                return  _DISPATCHER::TGenericDispatchGroup< T >::select_SSE_Generic( iExtra );
+                return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_SSE_Generic( iExtra );
             else
         #endif
-                return  _DISPATCHER::TGenericDispatchGroup< T >::select_MEM_Generic( iExtra );
+                return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_MEM_Generic( iExtra );
     }
 };
 
