@@ -17,6 +17,8 @@
 #include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// FBlendArgs
 struct FBlendArgs {
     FThreadPool*            pool;
     bool                    blocking;

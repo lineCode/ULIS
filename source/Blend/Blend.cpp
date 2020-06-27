@@ -20,7 +20,8 @@
 #include "Maths/Maths.h"
 
 ULIS3_NAMESPACE_BEGIN
-
+/////////////////////////////////////////////////////
+// Blend
 void Blend( FThreadPool*            iThreadPool
           , bool                    iBlocking
           , uint32                  iPerfIntent
@@ -91,7 +92,8 @@ void Blend( FThreadPool*            iThreadPool
     forwardBlendInfo->backdrop->Invalidate( dst_fit, iCallCB );
 }
 
-
+/////////////////////////////////////////////////////
+// AlphaBlend
 void AlphaBlend( FThreadPool*           iThreadPool
                , bool                   iBlocking
                , uint32                 iPerfIntent
@@ -161,6 +163,8 @@ void AlphaBlend( FThreadPool*           iThreadPool
     forwardBlendInfo->backdrop->Invalidate( dst_fit, iCallCB );
 }
 
+/////////////////////////////////////////////////////
+// BlendTiled
 void BlendTiled( FThreadPool*               iThreadPool
                , bool                       iBlocking
                , uint32                     iPerfIntent
@@ -229,6 +233,8 @@ void BlendTiled( FThreadPool*               iThreadPool
     forwardBlendInfo->backdrop->Invalidate( dst_roi, iCallCB );
 }
 
+/////////////////////////////////////////////////////
+// BlendColor
 void BlendColor( FThreadPool*           iThreadPool
                , uint32                 iPerfIntent
                , const FHostDeviceInfo& iHostDeviceInfo

@@ -5,9 +5,9 @@
 *   ULIS3
 *__________________
 *
-* @file         DispatchAlternative.ipp
+* @file         BlendDispatch.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the generic Blend entry point functions.
+* @brief        This file provides the dispatch mechanism for Blend invocations.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

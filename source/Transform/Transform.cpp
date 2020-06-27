@@ -12,22 +12,22 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Transform/Transform.h"
-#include "Base/HostDeviceInfo.h"
+#include "Transform/TransformArgs.h"
+#include "Transform/TransformDispatch.ipp"
+#include "Clear/Clear.h"
 #include "Data/Block.h"
+#include "Maths/Bezier.h"
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
-#include "Maths/Transform2D.h"
 #include "Maths/Transform2D_Private.h"
-#include "Transform/Dispatch/TransformInfo.h"
-#include "Transform/Dispatch/Dispatch.ipp"
-#include "Clear/Clear.h"
 #include "Misc/SummedAreaTable.h"
-
 #include <glm/matrix.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// TransformAffine
 void TransformAffine( FThreadPool*              iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
@@ -56,8 +56,8 @@ void TransformAffine( FThreadPool*              iThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
-    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    std::shared_ptr< FTransformArgs > forwardTransformParams = std::make_shared< FTransformArgs >();
+    FTransformArgs& alias = *forwardTransformParams;
     alias.pool              = iThreadPool;
     alias.blocking          = iBlocking;
     alias.hostDeviceInfo    = &iHostDeviceInfo;
@@ -70,7 +70,7 @@ void TransformAffine( FThreadPool*              iThreadPool
     alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
-    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
+    fpTransformInvocation fptr = QueryDispatchedTransformAffineFunctionForParameters( alias );
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams );
 
@@ -78,7 +78,8 @@ void TransformAffine( FThreadPool*              iThreadPool
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
-
+/////////////////////////////////////////////////////
+// TransformAffineTiled
 void TransformAffineTiled( FThreadPool*              iThreadPool
                          , bool                      iBlocking
                          , uint32                    iPerfIntent
@@ -107,8 +108,8 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return;
 
-    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
-    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    std::shared_ptr< FTransformArgs > forwardTransformParams = std::make_shared< FTransformArgs >();
+    FTransformArgs& alias = *forwardTransformParams;
     alias.pool              = iThreadPool;
     alias.blocking          = iBlocking;
     alias.hostDeviceInfo    = &iHostDeviceInfo;
@@ -121,7 +122,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
-    fpDispatchedTransformFunc fptr = QueryDispatchedTransformAffineTiledFunctionForParameters( alias );
+    fpTransformInvocation fptr = QueryDispatchedTransformAffineTiledFunctionForParameters( alias );
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams );
 
@@ -129,6 +130,8 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
+/////////////////////////////////////////////////////
+// TransformPerspective
 void TransformPerspective( FThreadPool*         iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
@@ -160,8 +163,8 @@ void TransformPerspective( FThreadPool*         iThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
-    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    std::shared_ptr< FTransformArgs > forwardTransformParams = std::make_shared< FTransformArgs >();
+    FTransformArgs& alias = *forwardTransformParams;
     alias.pool              = iThreadPool;
     alias.blocking          = iBlocking;
     alias.hostDeviceInfo    = &iHostDeviceInfo;
@@ -174,7 +177,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
     alias.inverseTransform  = glm::inverse( iTransform.GetImp().Matrix() );
 
     // Query dispatched method
-    fpDispatchedTransformFunc fptr = QueryDispatchedTransformPerspectiveFunctionForParameters( alias );
+    fpTransformInvocation fptr = QueryDispatchedTransformPerspectiveFunctionForParameters( alias );
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams );
 
@@ -182,6 +185,8 @@ void TransformPerspective( FThreadPool*         iThreadPool
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
+/////////////////////////////////////////////////////
+// TransformBezier
 void TransformBezier( FThreadPool*                                      iThreadPool
                     , bool                                              iBlocking
                     , uint32                                            iPerfIntent
@@ -259,8 +264,8 @@ void TransformBezier( FThreadPool*                                      iThreadP
         }
     }
 
-    std::shared_ptr< _FTransformInfoPrivate > forwardTransformParams = std::make_shared< _FTransformInfoPrivate >();
-    _FTransformInfoPrivate& alias = *forwardTransformParams;
+    std::shared_ptr< FTransformArgs > forwardTransformParams = std::make_shared< FTransformArgs >();
+    FTransformArgs& alias = *forwardTransformParams;
     alias.pool              = iThreadPool;
     alias.blocking          = iBlocking;
     alias.hostDeviceInfo    = &iHostDeviceInfo;
@@ -273,7 +278,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
     alias.inverseTransform  = glm::mat3( 1.f );
 
     // Query dispatched method
-    fpDispatchedBezierTransformFunc fptr = QueryDispatchedTransformBezierFunctionForParameters( alias );
+    fpBezierTransformInvocation fptr = QueryDispatchedTransformBezierFunctionForParameters( alias );
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardTransformParams, field, mask );
 
@@ -281,6 +286,8 @@ void TransformBezier( FThreadPool*                                      iThreadP
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
+/////////////////////////////////////////////////////
+// Resize
 void Resize( FThreadPool*             iThreadPool
            , bool                     iBlocking
            , uint32                   iPerfIntent
@@ -324,8 +331,8 @@ void Resize( FThreadPool*             iThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< _FResizeInfoPrivate > forwardResizeParams = std::make_shared< _FResizeInfoPrivate >();
-    _FResizeInfoPrivate& alias = *forwardResizeParams;
+    std::shared_ptr< FResizeArgs > forwardResizeParams = std::make_shared< FResizeArgs >();
+    FResizeArgs& alias = *forwardResizeParams;
     alias.pool              = iThreadPool;
     alias.blocking          = iBlocking;
     alias.hostDeviceInfo    = &iHostDeviceInfo;
@@ -346,7 +353,7 @@ void Resize( FThreadPool*             iThreadPool
     }
 
     // Query dispatched method
-    fpDispatchedResizeFunc fptr = QueryDispatchedResizeFunctionForParameters( alias );
+    fpResizeInvocation fptr = QueryDispatchedResizeFunctionForParameters( alias );
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( forwardResizeParams );
 
@@ -354,6 +361,8 @@ void Resize( FThreadPool*             iThreadPool
     iDestination->Invalidate( dst_fit, iCallCB );
 }
 
+/////////////////////////////////////////////////////
+// XResize
 FBlock* XResize( FThreadPool*           iThreadPool
                , bool                   iBlocking
                , uint32                 iPerfIntent
@@ -378,7 +387,8 @@ FBlock* XResize( FThreadPool*           iThreadPool
     return  dst;
 }
 
-
+/////////////////////////////////////////////////////
+// XTransformAffine
 FBlock* XTransformAffine( FThreadPool*              iThreadPool
                         , bool                      iBlocking
                         , uint32                    iPerfIntent
@@ -407,6 +417,8 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
     return  dst;
 }
 
+/////////////////////////////////////////////////////
+// XTransformAffineTiled
 FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                              , bool                      iBlocking
                              , uint32                    iPerfIntent
@@ -436,6 +448,8 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
     return  dst;
 }
 
+/////////////////////////////////////////////////////
+// XMakeTileableTransformedPattern
 FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
                                        , bool                      iBlocking
                                        , uint32                    iPerfIntent
@@ -464,6 +478,8 @@ FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
     return  dst;
 }
 
+/////////////////////////////////////////////////////
+// XTransformPerspective
 FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
                              , bool                         iBlocking
                              , uint32                       iPerfIntent
@@ -504,6 +520,8 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
     return  dst;
 }
 
+/////////////////////////////////////////////////////
+// TransformAffineMetrics
 FRect TransformAffineMetrics( const FRect&          iSourceRect
                             , const FTransform2D&   iTransform
                             , eResamplingMethod     iMethod )
@@ -523,7 +541,8 @@ FRect TransformAffineMetrics( const FRect&          iSourceRect
     return  trans;
 }
 
-
+/////////////////////////////////////////////////////
+// TransformPerspectiveMetrics
 FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
                                  , const FTransform2D&   iTransform
                                  , eResamplingMethod     iMethod )
@@ -540,6 +559,8 @@ FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
     return  trans;
 }
 
+/////////////////////////////////////////////////////
+// TransformBezierMetrics
 FRect TransformBezierMetrics( const FRect&                                    iSourceRect
                             , const std::vector< FBezierCubicControlPoint >&  iControlPoints
                             , eResamplingMethod                               iMethod )

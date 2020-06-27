@@ -16,6 +16,8 @@
 #include "Blend/Modes.h"
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Blend
 ULIS3_API void Blend( FThreadPool*              iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
@@ -30,6 +32,8 @@ ULIS3_API void Blend( FThreadPool*              iThreadPool
                     , eAlphaMode                iAlphaMode
                     , float                     iOpacityValue );
 
+/////////////////////////////////////////////////////
+// AlphaBlend
 ULIS3_API void AlphaBlend( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
@@ -42,6 +46,8 @@ ULIS3_API void AlphaBlend( FThreadPool*             iThreadPool
                          , bool                     iSubpixelFlag
                          , float                    iOpacityValue );
 
+/////////////////////////////////////////////////////
+// BlendTiled
 ULIS3_API void BlendTiled( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
@@ -56,6 +62,8 @@ ULIS3_API void BlendTiled( FThreadPool*             iThreadPool
                          , eAlphaMode               iAlphaMode
                          , float                    iOpacityValue );
 
+/////////////////////////////////////////////////////
+// BlendColor
 ULIS3_API void BlendColor( FThreadPool*             iThreadPool
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
