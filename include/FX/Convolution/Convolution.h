@@ -15,13 +15,6 @@
 #include "Core/Core.h"
 
 ULIS3_NAMESPACE_BEGIN
-enum eExtrapolationMethod {
-      EM_TRANSPARENT
-    , EM_CONSTANT
-    , EM_EXTEND
-    , EM_WRAP
-    , EM_MIRROR
-};
 
 ULIS3_API void Convolution( FThreadPool*            iThreadPool
                           , bool                    iBlocking

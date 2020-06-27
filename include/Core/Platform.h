@@ -12,7 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include <cstring>
 #include <iostream>
 
 /////////////////////////////////////////////////////

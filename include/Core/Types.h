@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Platform.h"
 #include <cstdint>
+#include <cstring>
 #include <memory>
 
 ULIS3_NAMESPACE_BEGIN
@@ -34,10 +35,8 @@ typedef  uint32_t   tSize;
 
 // Perf codes
 #define ULIS3_PERF_MT           0x1
-#define ULIS3_PERF_TSPEC        0x2     // Deprecated legacy, will be removed.
-#define ULIS3_PERF_SSE42        0x4
-#define ULIS3_PERF_AVX2         0x8
-#define ULIS3_PERF_GPU          0x10
+#define ULIS3_PERF_SSE42        0x2
+#define ULIS3_PERF_AVX2         0x4
 
 // Type codes
 #define ULIS3_TYPE_UINT8    0x0
@@ -58,7 +57,6 @@ typedef  uint32_t   tSize;
 #define ULIS3_CM_Lab    8
 #define ULIS3_CM_XYZ    9
 #define ULIS3_CM_Yxy    10
-
 
 /////////////////////////////////////////////////////
 // Named booleans literals
@@ -90,6 +88,15 @@ enum eColorModel {
     , CM_Lab    = ULIS3_CM_Lab
     , CM_XYZ    = ULIS3_CM_XYZ
     , CM_Yxy    = ULIS3_CM_Yxy
+};
+
+// Extrapolation Method
+enum eExtrapolationMethod {
+      EM_TRANSPARENT
+    , EM_CONSTANT
+    , EM_EXTEND
+    , EM_WRAP
+    , EM_MIRROR
 };
 
 ULIS3_NAMESPACE_END
