@@ -137,7 +137,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8( const tByte* iSrc, tByte*
         __m128i termE = Downscale( _mm_mullo_epi16( var, termD ) );
         __m128i termF = _mm_add_epi16( termA, termE );
         __m128i pack = _mm_packus_epi16( termF, termF );
-        *( reinterpret_cast< __int64* >( bdp ) )= _mm_cvtsi128_si64( pack );
+        *( reinterpret_cast< int64* >( bdp ) )= _mm_cvtsi128_si64( pack );
         bdp[fmt.AID] = static_cast< uint8 >( alpha_result0 );
         bdp[fmt.AID + 4] = static_cast< uint8 >( alpha_result1 );
         src += 8;
