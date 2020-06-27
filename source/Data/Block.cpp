@@ -385,7 +385,7 @@ FBlock::ResyncNonOwnedData( tByte* iData ) {
 }
 
 /////////////////////////////////////////////////////
-// XDeleteBlock
+// X ... Block
 // for safety with different CRT and heaps when using dynamic link on windows.
 FBlock* XCreateBlock( int iWidth, int iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
     return  new FBlock( iWidth, iHeight, iFormat, iProfile, iOnInvalid, iOnCleanup );

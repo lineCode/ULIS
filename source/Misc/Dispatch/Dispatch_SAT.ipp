@@ -204,7 +204,6 @@ QueryDispatchedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const 
     if( iFormatInfo.HEA
      && iFormatInfo.NCC == 3
      && iFormatInfo.CM  == CM_RGB
-     && iPerfIntent & ULIS3_PERF_TSPEC
      && ( iPerfIntent & ULIS3_PERF_SSE42 || iPerfIntent & ULIS3_PERF_AVX2 )
      && ( iHostDeviceInfo.HW_SSE42 || iHostDeviceInfo.HW_AVX2 ) ) {
         return  QueryDispatchedSATFunctionForParameters_RGBA8( iPerfIntent, iHostDeviceInfo, iFormatInfo );

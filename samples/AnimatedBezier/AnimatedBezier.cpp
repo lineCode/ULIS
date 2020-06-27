@@ -45,7 +45,7 @@ SWindow::SWindow()
     , mLeftButtonDown( false )
     , mEvolutiveAngle( 0.f )
 {
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     std::string path = "C:/Users/PRAXINOS/Documents/work/TEST.png";
     mSRC = XLoadFromFile( mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, path, ULIS3_FORMAT_RGBA8 );
     mDST = new  FBlock( 1024, 512, ULIS3_FORMAT_RGBA8 );
@@ -107,7 +107,7 @@ SWindow::tickEvent() {
 
     Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
 
-    TransformBezier( mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BILINEAR );
+    TransformBezier( mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BILINEAR );
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }

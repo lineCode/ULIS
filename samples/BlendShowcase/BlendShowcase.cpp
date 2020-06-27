@@ -31,10 +31,10 @@ main( int argc, char *argv[] ) {
     std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
     std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
 
-    uint32 perfIntentLoad   = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
-    uint32 perfIntentFill   = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
-    uint32 perfIntentCopy   = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
-    uint32 perfIntentBlend  = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntentLoad   = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntentFill   = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntentCopy   = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntentBlend  = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     uint32 perfIntentText   = 0;
     FBlock* blockBase = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
     FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
@@ -51,7 +51,7 @@ main( int argc, char *argv[] ) {
     FRect shadeRect = blockBase->Rect();
     FPixelValue black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
     FPixelValue white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
-    Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_TSPEC | ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockShade, black, shadeRect );
+    Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockShade, black, shadeRect );
 
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );

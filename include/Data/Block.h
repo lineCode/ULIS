@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Base/Callbacks.h"
 #include "Data/FormatInfo.h"
 #include "Data/Pixel.h"
-#include "Base/Callbacks.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

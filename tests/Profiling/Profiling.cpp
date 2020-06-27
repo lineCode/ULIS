@@ -22,7 +22,7 @@ int main( int argc, char *argv[] ) {
 
     FThreadPool* pool = XCreateThreadPool();
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     int size = 4096;
     uint32 format = ULIS3_FORMAT_BGRA8;
     uint32 repeat = 1000;

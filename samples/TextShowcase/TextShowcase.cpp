@@ -43,7 +43,7 @@ main( int argc, char *argv[] ) {
     FBlock* blockCanvas = new  FBlock( globalRect.w, globalRect.h, ULIS3_FORMAT_RGBA8 );
     FPixelValue black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
     FPixelValue white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
-    Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockCanvas, white, globalRect );
+    Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockCanvas, white, globalRect );
     std::cout << fontRegistry.NumStyles();
     int i = 0;
     for( auto family : fontRegistry.GetFamilies() ) {

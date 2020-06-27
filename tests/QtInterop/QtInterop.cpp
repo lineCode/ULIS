@@ -24,7 +24,7 @@ using namespace ::ul3;
 int
 main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     FBlock* blockA = new FBlock( 256, 256, ULIS3_FORMAT_RGBA8 );

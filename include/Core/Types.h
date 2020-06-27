@@ -34,7 +34,7 @@ typedef  uint32_t   tSize;
 
 // Perf codes
 #define ULIS3_PERF_MT           0x1
-#define ULIS3_PERF_TSPEC        0x2
+#define ULIS3_PERF_TSPEC        0x2     // Deprecated legacy, will be removed.
 #define ULIS3_PERF_SSE42        0x4
 #define ULIS3_PERF_AVX2         0x8
 #define ULIS3_PERF_GPU          0x10

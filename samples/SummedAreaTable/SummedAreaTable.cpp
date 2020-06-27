@@ -19,8 +19,8 @@ main() {
     FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent1  = 0;
     uint32 perfIntent2  = ULIS3_PERF_MT;
-    uint32 perfIntent3  = ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
-    uint32 perfIntent4  = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent3  = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent4  = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     int size = 9;

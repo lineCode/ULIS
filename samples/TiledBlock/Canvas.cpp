@@ -52,7 +52,7 @@ SCanvas::SCanvas()
     , mLabel(       nullptr                             )
     , mTimer(       nullptr                             )
 {
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
 
     mCanvas = new  FBlock( 320, 600, ULIS3_FORMAT_RGBA8 );
 

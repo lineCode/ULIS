@@ -161,10 +161,10 @@ SWindow::tickEvent() {
     for( size_t i = 0; i < mParticles.size(); ++i ) {
         mParticles[i].p.x += mParticles[i].v.x = mParticles[i].v.x * 0.9f;
         mParticles[i].p.y += mParticles[i].v.y = mParticles[i].v.y * 0.9f;
-        Blend( mPool, ULIS3_BLOCKING, ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mWetCanvas, sourceRect, mParticles[i].p, ULIS3_NOAA, mCurrentBlendingMode, AM_NORMAL, mCurrentOpacity );
+        Blend( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mWetCanvas, sourceRect, mParticles[i].p, ULIS3_NOAA, mCurrentBlendingMode, AM_NORMAL, mCurrentOpacity );
 
         if( abs( mParticles[i].v.x ) + abs( mParticles[i].v.y ) <= 1 ) {
-            Blend( mPool, ULIS3_BLOCKING, ULIS3_PERF_TSPEC | ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mDryCanvas, sourceRect, mParticles[i].p, ULIS3_NOAA, mCurrentBlendingMode, AM_NORMAL, mCurrentOpacity );
+            Blend( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mDryCanvas, sourceRect, mParticles[i].p, ULIS3_NOAA, mCurrentBlendingMode, AM_NORMAL, mCurrentOpacity );
             mParticles.erase( mParticles.begin() + i );
             --i;
         }

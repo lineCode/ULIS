@@ -41,7 +41,7 @@ int clear( int argc, char *argv[] ) {
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* block = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
@@ -68,7 +68,7 @@ int fill( int argc, char *argv[] ) {
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* block = new FBlock( size, size, format );
     FPixelValue source( format );
     auto startTime = std::chrono::steady_clock::now();
@@ -96,7 +96,7 @@ int copy( int argc, char *argv[] ) {
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
@@ -128,7 +128,7 @@ int blend( int argc, char *argv[] ) {
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
@@ -159,7 +159,7 @@ int conv( int argc, char *argv[] ) {
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, dstFormat );
     auto startTime = std::chrono::steady_clock::now();
@@ -241,7 +241,7 @@ int transform( int argc, char *argv[] ) {
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FRect dstmetrics = TransformAffineMetrics( src->Rect(), mat, method );
     FBlock* dst = new FBlock( dstmetrics.w, dstmetrics.h, format );
@@ -280,7 +280,7 @@ int text( int argc, char *argv[] ) {
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );
     FFont font( fontRegistry, fam, style );
