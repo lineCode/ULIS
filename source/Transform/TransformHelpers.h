@@ -111,17 +111,6 @@ SampleBicubicV( tByte* iDst, const float* iA, const float* iB, const float* iC, 
 // SSE Helpers functions for specialized Transform Operations
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 //--------------------------------------------------------------------------------------
-//----------------------------------------------------------------- BuildRGBA8IndexTable
-ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
-    switch( iRS ) {
-        case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
-        case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); break;
-        case 3:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); break;
-        default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); break;
-    }
-}
-
-//--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- InterpCubic
 ULIS3_FORCEINLINE Vec4f InterpCubic( Vec4f iA, Vec4f iB, Vec4f iC, Vec4f iD, Vec4f iT ) {
     Vec4f a = -iA / 2.0f + (3.0f*iB) / 2.0f - (3.0f*iC) / 2.0f + iD / 2.0f;
