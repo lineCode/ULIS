@@ -44,7 +44,6 @@ float NextKnot(float t, const T& p0, const T& p1, float alpha ) {
     return (b + t);
 }
 
-
 template< class T >
 void
 CatmullRomPoints( const T& iP0
@@ -55,10 +54,14 @@ CatmullRomPoints( const T& iP0
                 , std::vector< T >* oOut
                 , float iKnotParameter = sCatmullRomKnotParametricConstant_Centripetal )
 {
-    static constexpr float epsilon = 10E-3;
-
     oOut->clear();
 
+    // TODO: using epsilon and shifting inputs slightly makes it easy to handle the special case when two successive control points are equal
+    // in the definition of a cubic hermite spline, the point is to extract tangent from the derivative at each control point.
+    // CatmullRom is just a name for a particular way to chose tangents, and you cannot extract tangent from two points with same value
+    // since their delta is 0. By examining the calculations you can see it can result in division by zero.
+    // So we shift inputs in such a way no two successive control points Pi are equals.
+    static constexpr float epsilon = 10E-3;
     T P0 = iP0;
     T P1 = P0 == iP1 ? iP1 + FVec2F( epsilon, 0.0f ) : iP1;
     T P2 = P1 == iP2 ? iP2 + FVec2F( 0.0f, epsilon ) : iP2;
