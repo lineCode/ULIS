@@ -31,6 +31,7 @@ main( int argc, char *argv[] ) {
 
     ::ul3::Clear( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, blockA->Rect() );
     FPixelValue color = FPixelValue::FromRGBA8( 255, 0, 0, 255 );
+    FBlock col( color.Ptr(), 1, 1, ULIS3_FORMAT_RGBA8 );
 
     FVec2F P0( 75, 52 );
     FVec2F P1( 75, 52 );
@@ -41,8 +42,7 @@ main( int argc, char *argv[] ) {
     uint32 count = 10;
     CatmullRomPoints( P0, P1, P2, P3, count, &points, 0.5f );
     for( int i = 0; i < count; ++i ) {
-        FPixelProxy prox = blockA->PixelProxy( points[i].x, points[i].y );
-        prox.SetA8( 255 );
+        Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), points[i], ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
     }
 
     // Qt Window

@@ -61,7 +61,10 @@ CatmullRomPoints( const T& iP0
     // CatmullRom is just a name for a particular way to chose tangents, and you cannot extract tangent from two points with same value
     // since their delta is 0. By examining the calculations you can see it can result in division by zero.
     // So we shift inputs in such a way no two successive control points Pi are equals.
-    static constexpr float epsilon = 10E-3;
+    // A more elegant way to express the undefined tangent is to chose the alignment of the next point and align towards that, instead of
+    // a random epsilon value. This will yield better looking results and does not make assumptions on an arbitrary orientation,
+    // at the cost of a normalization and a few other operations.
+    static constexpr float epsilon = 10E-3f;
     T P0 = iP0;
     T P1 = P0 == iP1 ? iP1 + FVec2F( epsilon, 0.0f ) : iP1;
     T P2 = P1 == iP2 ? iP2 + FVec2F( 0.0f, epsilon ) : iP2;
