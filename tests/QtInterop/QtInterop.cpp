@@ -29,13 +29,21 @@ main( int argc, char *argv[] ) {
 
     FBlock* blockA = new FBlock( 256, 256, ULIS3_FORMAT_RGBA8 );
 
-    for( int i = 0; i < 256; ++i ) {
-        for( int j = 0; j < 256; ++j ) {
-            Conv( FPixelValue::FromRGBA8( 0, 0, 0, j ), blockA->PixelProxy( i, j ) );
-        }
-    }
+    ::ul3::Clear( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, blockA->Rect() );
+    FPixelValue color = FPixelValue::FromRGBA8( 255, 0, 0, 255 );
 
-    ::ul3::FillPreserveAlpha( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, FPixelValue::FromRGBA8( 255, 0, 0, 255 ), blockA->Rect() );
+    FVec2F P0( 75, 52 );
+    FVec2F P1( 75, 52 );
+    FVec2F P2( 139, 69 );
+    FVec2F P3( 202, 17 );
+
+    std::vector< FVec2F > points;
+    uint32 count = 10;
+    CatmullRomPoints( P0, P1, P2, P3, count, &points, 0.5f );
+    for( int i = 0; i < count; ++i ) {
+        FPixelProxy prox = blockA->PixelProxy( points[i].x, points[i].y );
+        prox.SetA8( 255 );
+    }
 
     // Qt Window
     QApplication    app( argc, argv );
@@ -54,7 +62,6 @@ main( int argc, char *argv[] ) {
     delete  widget;
 
     delete  blockA;
-
     XDeleteThreadPool( threadPool );
     return  exit_code;
 }

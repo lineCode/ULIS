@@ -27,6 +27,7 @@
 #include "Maths/Maths.h"
 #include "Maths/Transform2D.h"
 #include "Maths/Bezier.h"
+#include "Maths/CatmullRom.h"
 // Interface
 #include "Conv/Conv.h"
 #include "Misc/Extract.h"
