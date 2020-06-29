@@ -524,7 +524,7 @@ FRect TransformAffineMetrics( const FRect&          iSourceRect
                             , eResamplingMethod     iMethod )
 {
     FRect trans = iSourceRect.TransformedAffine( iTransform );
-    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC ) {
+    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
         float angle = FMaths::Max( abs( cos( r ) ), abs( sin( r ) ) );
@@ -545,7 +545,7 @@ FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
                                  , eResamplingMethod     iMethod )
 {
     FRect trans = iSourceRect.TransformedPerspective( iTransform );
-    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC ) {
+    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA  ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
         trans.x -= static_cast< int >( ceil( sx ) );
