@@ -21,20 +21,13 @@
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // CatmullRom Functions
-static constexpr float sCatmullRomKnotParametricConstant_Uniform     = 0.0f;
-static constexpr float sCatmullRomKnotParametricConstant_Centripetal = 0.5f;
-static constexpr float sCatmullRomKnotParametricConstant_Chordal     = 1.f;
+static constexpr float sCatmullRomKnotParametricConstant_Uniform        = 0.0f;
+static constexpr float sCatmullRomKnotParametricConstant_Centripetal    = 0.5f;
+static constexpr float sCatmullRomKnotParametricConstant_Chordal        = 1.f;
 
 struct ULIS3_API FCatmullRomLUTElement {
-    FVec2F point;
-    float length;
-    float param;
-};
-
-struct ULIS3_API FCatmullRomControlPoint {
-    FVec2F point;
-    FVec2F ctrlCW;
-    FVec2F ctrlCCW;
+    FVec2F  position;
+    float   lengthSquared;
 };
 
 template< class T >
@@ -90,6 +83,93 @@ CatmullRomPoints( const T& iP0
         oOut->push_back( C );
     }
 }
+
+struct FCatmullRomSpline {
+public:
+    FCatmullRomSpline( const FVec2F& iP0
+                     , const FVec2F& iP1
+                     , const FVec2F& iP2
+                     , const FVec2F& iP3
+                     , float iAlpha = sCatmullRomKnotParametricConstant_Centripetal ) {
+        static constexpr float epsilon = 10E-3f;
+        P0 = iP0;
+        P1 = P0 == iP1 ? iP1 + FVec2F( epsilon, 0.0f ) : iP1;
+        P2 = P1 == iP2 ? iP2 + FVec2F( 0.0f, epsilon ) : iP2;
+        P3 = P2 == iP3 ? iP3 - FVec2F( epsilon, 0.0f ) : iP3;
+
+        t0 = 0.0f;
+        t1 = NextKnot( t0, P0, P1, iAlpha );
+        t2 = NextKnot( t1, P1, P2, iAlpha );
+        t3 = NextKnot( t2, P2, P3, iAlpha );
+        t1mt0 = ( t1 - t0 );
+        t2mt1 = ( t2 - t1 );
+        t3mt2 = ( t3 - t2 );
+        t2mt0 = ( t2 - t0 );
+        t3mt1 = ( t3 - t1 );
+        alpha = iAlpha;
+    }
+
+public:
+    FVec2F Eval( float iT ) {
+        std::cout << "ev\n";
+        float t = t1 + t2mt1 * iT;
+        FVec2F A1 = P0 * ( t1 - t ) / t1mt0 + P1 * ( t - t0 ) / t1mt0;
+        FVec2F A2 = P1 * ( t2 - t ) / t2mt1 + P2 * ( t - t1 ) / t2mt1;
+        FVec2F A3 = P2 * ( t3 - t ) / t3mt2 + P3 * ( t - t2 ) / t3mt2;
+        FVec2F B1 = A1 * ( t2 - t ) / t2mt0 + A2 * ( t - t0 ) / t2mt0;
+        FVec2F B2 = A2 * ( t3 - t ) / t3mt1 + A3 * ( t - t1 ) / t3mt1;
+        FVec2F C  = B1 * ( t2 - t ) / t2mt1 + B2 * ( t - t1 ) / t2mt1;
+        return  C;
+    }
+
+    void GenerateLinearLUT( std::vector< FCatmullRomLUTElement >* oArray, float iStep ) {
+        oArray->clear();
+        oArray->push_back( { P1, 0.f } );
+        float lengthSquared = GenerateLinearLUTAndGetLengthSquared_imp( oArray, pow( iStep * 1.5f, 2 ), P1, P2 );
+        oArray->push_back( { P2, lengthSquared } );
+    }
+
+private:
+    float GenerateLinearLUTAndGetLengthSquared_imp( std::vector< FCatmullRomLUTElement >* oArray
+                                           , float iStepSquared
+                                           , const FVec2F& iLeft
+                                           , const FVec2F& iRight
+                                           , float iLengthOffset = 0.f
+                                           , float iParamOffset = 0.f
+                                           , float iParamDepth = 1.f ) {
+        FVec2F mid = Eval( iParamOffset + iParamDepth * 0.5f );
+        float lengthSquaredSegmentA = ( iLeft - mid  ).DistanceSquared();
+        float lengthSquaredSegmentB = ( mid - iRight ).DistanceSquared();
+
+        if( lengthSquaredSegmentA >= iStepSquared ) {
+            lengthSquaredSegmentA = GenerateLinearLUTAndGetLengthSquared_imp( oArray, iStepSquared, iLeft, mid, iLengthOffset, iParamOffset, iParamDepth * 0.5f );
+        }
+
+        oArray->push_back( { mid, ( iLengthOffset + lengthSquaredSegmentA ) } );
+
+        if( lengthSquaredSegmentB >= iStepSquared ) {
+            lengthSquaredSegmentB = GenerateLinearLUTAndGetLengthSquared_imp( oArray, iStepSquared, mid, iRight, iLengthOffset + lengthSquaredSegmentA, iParamOffset + iParamDepth * 0.5f, iParamDepth * 0.5f );
+        }
+
+        return ( lengthSquaredSegmentA + lengthSquaredSegmentB );
+    }
+
+private:
+    FVec2F P0;
+    FVec2F P1;
+    FVec2F P2;
+    FVec2F P3;
+    float t0;
+    float t1;
+    float t2;
+    float t3;
+    float t1mt0;
+    float t2mt1;
+    float t3mt2;
+    float t2mt0;
+    float t3mt1;
+    float alpha;
+};
 
 ULIS3_NAMESPACE_END
 

@@ -27,22 +27,34 @@ main( int argc, char *argv[] ) {
     uint32 perfIntent = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
-    FBlock* blockA = new FBlock( 256, 256, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockA = new FBlock( 1024, 1024, ULIS3_FORMAT_RGBA8 );
 
     ::ul3::Clear( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, blockA->Rect() );
     FPixelValue color = FPixelValue::FromRGBA8( 255, 0, 0, 255 );
     FBlock col( color.Ptr(), 1, 1, ULIS3_FORMAT_RGBA8 );
 
-    FVec2F P0( 75, 52 );
-    FVec2F P1( 75, 52 );
-    FVec2F P2( 139, 69 );
-    FVec2F P3( 202, 17 );
+    FVec2F P0( 200, 150 );
+    FVec2F P1( 200, 150 );
+    FVec2F P2( 700, 450 );
+    FVec2F P3( 900, 50 );
 
-    std::vector< FVec2F > points;
-    uint32 count = 10;
-    CatmullRomPoints( P0, P1, P2, P3, count, &points, 0.5f );
-    for( int i = 0; i < count; ++i ) {
-        Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), points[i], ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P0, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P1, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P2, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P3, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    //std::vector< FVec2F > points;
+    //uint32 count = 2;
+    //CatmullRomPoints( P0, P1, P2, P3, count, &points, 0.5f );
+    FCatmullRomSpline spline( P0, P1, P2, P3 );
+    std::vector< FCatmullRomLUTElement > points;
+    spline.GenerateLinearLUT( &points, 5.f );
+    for( int i = 0; i < points.size(); ++i ) {
+        Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), points[i].position, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+        /*
+        int x = points[i].position.x;
+        int y = points[i].position.y;
+        Fill( threadPool, 1, 2, host, 0, blockA, color, FRect( x, y, 5, 5 ) );
+        */
     }
 
     // Qt Window
