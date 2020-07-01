@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include <cmath>
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
