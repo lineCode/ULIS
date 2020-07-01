@@ -25,9 +25,9 @@ static constexpr float sCatmullRomKnotParametricConstant_Uniform        = 0.0f;
 static constexpr float sCatmullRomKnotParametricConstant_Centripetal    = 0.5f;
 static constexpr float sCatmullRomKnotParametricConstant_Chordal        = 1.f;
 
-struct ULIS3_API FCatmullRomLUTElement {
+struct FCatmullRomLUTElement {
     FVec2F  position;
-    float   lengthSquared;
+    float   length;
 };
 
 template< class T >
@@ -125,33 +125,33 @@ public:
     void GenerateLinearLUT( std::vector< FCatmullRomLUTElement >* oArray, float iStep ) {
         oArray->clear();
         oArray->push_back( { P1, 0.f } );
-        float lengthSquared = GenerateLinearLUTAndGetLengthSquared_imp( oArray, pow( iStep * 1.5f, 2 ), P1, P2 );
-        oArray->push_back( { P2, lengthSquared } );
+        float length = GenerateLinearLUTAndGetLength_imp( oArray, iStep, P1, P2 );
+        oArray->push_back( { P2, length } );
     }
 
 private:
-    float GenerateLinearLUTAndGetLengthSquared_imp( std::vector< FCatmullRomLUTElement >* oArray
-                                           , float iStepSquared
+    float GenerateLinearLUTAndGetLength_imp( std::vector< FCatmullRomLUTElement >* oArray
+                                           , float iStep
                                            , const FVec2F& iLeft
                                            , const FVec2F& iRight
                                            , float iLengthOffset = 0.f
                                            , float iParamOffset = 0.f
                                            , float iParamDepth = 1.f ) {
         FVec2F mid = Eval( iParamOffset + iParamDepth * 0.5f );
-        float lengthSquaredSegmentA = ( iLeft - mid  ).DistanceSquared();
-        float lengthSquaredSegmentB = ( mid - iRight ).DistanceSquared();
+        float lengthSegmentA = ( iLeft - mid  ).Distance();
+        float lengthSegmentB = ( mid - iRight ).Distance();
 
-        if( lengthSquaredSegmentA >= iStepSquared ) {
-            lengthSquaredSegmentA = GenerateLinearLUTAndGetLengthSquared_imp( oArray, iStepSquared, iLeft, mid, iLengthOffset, iParamOffset, iParamDepth * 0.5f );
+        if( lengthSegmentA >= iStep ) {
+            lengthSegmentA = GenerateLinearLUTAndGetLength_imp( oArray, iStep, iLeft, mid, iLengthOffset, iParamOffset, iParamDepth * 0.5f );
         }
 
-        oArray->push_back( { mid, ( iLengthOffset + lengthSquaredSegmentA ) } );
+        oArray->push_back( { mid, ( iLengthOffset + lengthSegmentA ) } );
 
-        if( lengthSquaredSegmentB >= iStepSquared ) {
-            lengthSquaredSegmentB = GenerateLinearLUTAndGetLengthSquared_imp( oArray, iStepSquared, mid, iRight, iLengthOffset + lengthSquaredSegmentA, iParamOffset + iParamDepth * 0.5f, iParamDepth * 0.5f );
+        if( lengthSegmentB >= iStep ) {
+            lengthSegmentB = GenerateLinearLUTAndGetLength_imp( oArray, iStep, mid, iRight, iLengthOffset + lengthSegmentA, iParamOffset + iParamDepth * 0.5f, iParamDepth * 0.5f );
         }
 
-        return ( lengthSquaredSegmentA + lengthSquaredSegmentB );
+        return ( lengthSegmentA + lengthSegmentB );
     }
 
 private:

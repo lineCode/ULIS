@@ -33,10 +33,10 @@ main( int argc, char *argv[] ) {
     FPixelValue color = FPixelValue::FromRGBA8( 255, 0, 0, 255 );
     FBlock col( color.Ptr(), 1, 1, ULIS3_FORMAT_RGBA8 );
 
-    FVec2F P0( 200, 150 );
-    FVec2F P1( 200, 150 );
-    FVec2F P2( 700, 450 );
-    FVec2F P3( 900, 50 );
+    FVec2F P0( 474.984253, 551.79988 );
+    FVec2F P1( 474.984253, 551.79988 );
+    FVec2F P2( 561.006348, 549.796814 );
+    FVec2F P3( 687.998413, 551.799988 );
 
     Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P0, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
     Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P1, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
@@ -47,7 +47,7 @@ main( int argc, char *argv[] ) {
     //CatmullRomPoints( P0, P1, P2, P3, count, &points, 0.5f );
     FCatmullRomSpline spline( P0, P1, P2, P3 );
     std::vector< FCatmullRomLUTElement > points;
-    spline.GenerateLinearLUT( &points, 5.f );
+    spline.GenerateLinearLUT( &points, 10.f );
     for( int i = 0; i < points.size(); ++i ) {
         Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), points[i].position, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
         /*
