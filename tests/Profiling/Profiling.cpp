@@ -25,13 +25,14 @@ int main( int argc, char *argv[] ) {
     uint32 perfIntent = 0;
     int size = 4096;
     uint32 format = ULIS3_FORMAT_BGRAF;
-    uint32 repeat = 1000;
+    uint32 repeat = 200;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
-        AlphaBlend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, 0.5f );
-        //Blend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+        Blend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+
+    //AlphaBlend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, 0.5f );
 
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = static_cast< double >( std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count() ) / static_cast< double >( repeat );

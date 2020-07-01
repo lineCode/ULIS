@@ -39,7 +39,7 @@ FKernelSSE::FKernelSSE( const FVec2I& iSize, std::initializer_list< float > iNum
     : mSize( iSize )
     , mPivot( iSize / 2 )
 {
-    ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for KernelSSE" );
+    ULIS3_ASSERT( Area() == iNums.size(), "Bad input initialized list for KernelSSE" );
     mData = new Vec4f[ Area() ];
     for( int i = 0; i < iNums.size(); ++i )
         mData[ i ] = *( iNums.begin() + i );
@@ -103,7 +103,7 @@ FKernelSSE::operator=( FKernelSSE&& iOther ) {
 //--------------------------------------------------------------------------- Public API
 void
 FKernelSSE::Set( std::initializer_list< float > iNums ) {
-    ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for KernelSSE" );
+    ULIS3_ASSERT( Area() == iNums.size(), "Bad input initialized list for KernelSSE" );
     for( int i = 0; i < iNums.size(); ++i )
         mData[ i ] = *( iNums.begin() + i );
 }
