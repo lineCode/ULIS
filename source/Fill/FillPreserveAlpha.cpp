@@ -20,7 +20,8 @@
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
-
+/////////////////////////////////////////////////////
+// Invocation Implementation
 template< typename T >
 void InvokeFillPreserveAlpha( size_t iW, tByte* iDst, const FFormatInfo* iFmt, std::shared_ptr< FPixelValue > iColor ) {
     const tByte* src = iColor->Ptr();
@@ -33,6 +34,8 @@ void InvokeFillPreserveAlpha( size_t iW, tByte* iDst, const FFormatInfo* iFmt, s
     }
 }
 
+/////////////////////////////////////////////////////
+// Dispatch
 typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, tByte* iDst, const FFormatInfo* iFmt, std::shared_ptr< FPixelValue > iColor );
 fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForParameters( eType iType ) {
     switch( iType ) {
@@ -45,6 +48,8 @@ fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForPar
     return  nullptr;
 }
 
+/////////////////////////////////////////////////////
+// FillPreserveAlpha
 void
 FillPreserveAlpha( FThreadPool*             iThreadPool
                  , bool                     iBlocking

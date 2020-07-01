@@ -20,6 +20,10 @@
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Invocations
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- AVX
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void ULIS3_VECTORCALL
 InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, const tSize iStride ) {
@@ -34,6 +38,8 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, 
 }
 #endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- SSE
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void ULIS3_VECTORCALL
 InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, const tSize iStride ) {
@@ -47,6 +53,8 @@ InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, 
 }
 #endif // __SE4_2__
 
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
 void
 InvokeFillMTProcessScanline_MEM( tByte* iDst, std::shared_ptr< const FPixelValue > iSrc, tSize iCount, tSize iStride ) {
     const tByte* src = iSrc->Ptr();
@@ -56,6 +64,8 @@ InvokeFillMTProcessScanline_MEM( tByte* iDst, std::shared_ptr< const FPixelValue
     }
 }
 
+/////////////////////////////////////////////////////
+// Implementation
 void
 Fill_imp( FThreadPool*                          iThreadPool
         , bool                                  iBlocking
@@ -116,6 +126,8 @@ Fill_imp( FThreadPool*                          iThreadPool
     }
 }
 
+/////////////////////////////////////////////////////
+// Fill
 void
 Fill( FThreadPool*              iThreadPool
     , bool                      iBlocking

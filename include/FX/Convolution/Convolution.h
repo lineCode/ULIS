@@ -15,7 +15,8 @@
 #include "Core/Core.h"
 
 ULIS3_NAMESPACE_BEGIN
-
+/////////////////////////////////////////////////////
+// Convolution
 ULIS3_API void Convolution( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
@@ -25,5 +26,6 @@ ULIS3_API void Convolution( FThreadPool*            iThreadPool
                           , const FKernel&          iKernel
                           , const FRect&            iArea
                           , eExtrapolationMethod    iEdgeMode );
+
 ULIS3_NAMESPACE_END
 

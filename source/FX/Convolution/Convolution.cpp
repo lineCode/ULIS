@@ -12,14 +12,18 @@
 * @license      Please refer to LICENSE.md
 */
 #include "FX/Convolution/Convolution.h"
+#include "FX/Convolution/KernelSSE.h"
 #include "Base/HostDeviceInfo.h"
 #include "Conv/Conv.h"
 #include "Data/Block.h"
 #include "Data/Pixel.h"
+#include "Data/Kernel.h"
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Convolution
 void
 Convolution( FThreadPool*            iThreadPool
            , bool                    iBlocking

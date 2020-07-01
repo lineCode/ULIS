@@ -15,6 +15,8 @@
 #include "Core/Core.h"
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Clear
 ULIS3_API void Clear( FThreadPool*              iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
@@ -23,6 +25,8 @@ ULIS3_API void Clear( FThreadPool*              iThreadPool
                     , FBlock*                   iDestination
                     , const FRect&              iArea );
 
+/////////////////////////////////////////////////////
+// ClearRaw
 ULIS3_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
 
 ULIS3_NAMESPACE_END

@@ -15,6 +15,8 @@
 #include "Core/Core.h"
 
 ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// FillPreserveAlpha
 ULIS3_API void FillPreserveAlpha( FThreadPool* iThreadPool
                                 , bool iBlocking
                                 , uint32 iPerfIntent
@@ -23,5 +25,6 @@ ULIS3_API void FillPreserveAlpha( FThreadPool* iThreadPool
                                 , FBlock* iDestination
                                 , const IPixel& iColor
                                 , const FRect& iArea );
+
 ULIS3_NAMESPACE_END
 
