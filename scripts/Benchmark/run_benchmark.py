@@ -7,7 +7,8 @@ import subprocess
 import os
 import fileinput
 
-numWorkers = os.cpu_count()
+#os.cpu_count()
+numWorkers = 12
 criticalError = 0xB00BA420
 
 benchmark_msvc_path   = abspath( join( dirname( __file__ ), 'bin/msvc/Benchmark.exe' ) )
@@ -132,13 +133,14 @@ print( "get visual feedback @" + join( dirname( __file__ ), "benchmark.html" ) )
 webbrowser.open('benchmark.html', new=2)
 
 sizes   = [ 64,     128,    256,    512,    1024,   2048,   4096,   8192,   16384   ]
-repeats = [ 4000,   2000,   1000,   500,    250,    175,    120,    60,     30      ]
-repeatModifier = 0.75
+repeats = [ 16384,  8192,   4096,   2048,   1024,   512,    256,    128,    64      ]
+repeatModifier = 1
 numBlendingModes    = 40
 numAlphaModes       = 9
 op      = [ "clear", "fill", "blend", "copy", "conv" ]
 subWorker = numWorkers
 workers = [numWorkers]
+
 while subWorker > 1:
     subWorker = int( subWorker / 2 )
     workers.append( subWorker )
@@ -201,6 +203,7 @@ for i in range( len(sizes) ):
                                                        , GCCTimeAVX     = "-" ) )
         fileObjectBenchmarkHtml.close()
 
+#blend noAA
 for i in range( len(sizes) ):
     for _threads in workers:
         modRepeat = math.ceil( repeats[i] * repeatModifier )
@@ -213,6 +216,68 @@ for i in range( len(sizes) ):
         timeGCCMEM      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
         timeGCCSSE      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
         timeGCCAVX      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
+        fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
+        fileObjectBenchmarkHtml.write( htmlEntry.format( size           = sizes[i]
+                                                       , op             = "blend"
+                                                       , format         = "RGBA8"
+                                                       , threads        = _threads
+                                                       , repeat         = modRepeat
+                                                       , parameters     = "BM_NORMAL | AM_NORMAL | NO_AA"
+                                                       , MSVCTimeMEM    = format( timeMSVCMEM, '.6f')
+                                                       , MSVCTimeSSE    = format( timeMSVCSSE, '.6f')
+                                                       , MSVCTimeAVX    = format( timeMSVCAVX, '.6f')
+                                                       , CLANGTimeMEM   = format( timeCLANGMEM, '.6f')
+                                                       , CLANGTimeSSE   = format( timeCLANGSSE, '.6f')
+                                                       , CLANGTimeAVX   = format( timeCLANGAVX, '.6f')
+                                                       , GCCTimeMEM     = format( timeGCCMEM, '.6f' )
+                                                       , GCCTimeSSE     = format( timeGCCSSE, '.6f' )
+                                                       , GCCTimeAVX     = format( timeGCCAVX, '.6f' ) ) )
+        fileObjectBenchmarkHtml.close()
+
+#blend yesAA
+for i in range( len(sizes) ):
+    for _threads in workers:
+        modRepeat = math.ceil( repeats[i] * repeatModifier )
+        timeMSVCMEM     = Popen( [ benchmark_msvc_path,     "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeMSVCSSE     = Popen( [ benchmark_msvc_path,     "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeMSVCAVX     = Popen( [ benchmark_msvc_path,     "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGMEM    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGSSE    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGAVX    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCMEM      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCSSE      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCAVX      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
+        fileObjectBenchmarkHtml.write( htmlEntry.format( size           = sizes[i]
+                                                       , op             = "blend"
+                                                       , format         = "RGBA8"
+                                                       , threads        = _threads
+                                                       , repeat         = modRepeat
+                                                       , parameters     = "BM_NORMAL | AM_NORMAL | YES_AA"
+                                                       , MSVCTimeMEM    = format( timeMSVCMEM, '.6f')
+                                                       , MSVCTimeSSE    = format( timeMSVCSSE, '.6f')
+                                                       , MSVCTimeAVX    = format( timeMSVCAVX, '.6f')
+                                                       , CLANGTimeMEM   = format( timeCLANGMEM, '.6f')
+                                                       , CLANGTimeSSE   = format( timeCLANGSSE, '.6f')
+                                                       , CLANGTimeAVX   = format( timeCLANGAVX, '.6f')
+                                                       , GCCTimeMEM     = format( timeGCCMEM, '.6f' )
+                                                       , GCCTimeSSE     = format( timeGCCSSE, '.6f' )
+                                                       , GCCTimeAVX     = format( timeGCCAVX, '.6f' ) ) )
+        fileObjectBenchmarkHtml.close()
+
+#transform
+for i in range( len(sizes) ):
+    for _threads in workers:
+        modRepeat = math.ceil( repeats[i] * repeatModifier )
+        timeMSVCMEM     = Popen( [ benchmark_msvc_path,     "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeMSVCSSE     = Popen( [ benchmark_msvc_path,     "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeMSVCAVX     = Popen( [ benchmark_msvc_path,     "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGMEM    = Popen( [ benchmark_clang_path,    "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGSSE    = Popen( [ benchmark_clang_path,    "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGAVX    = Popen( [ benchmark_clang_path,    "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCMEM      = Popen( [ benchmark_gcc_path,      "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCSSE      = Popen( [ benchmark_gcc_path,      "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCAVX      = Popen( [ benchmark_gcc_path,      "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
         fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
         fileObjectBenchmarkHtml.write( htmlEntry.format( size           = sizes[i]
                                                        , op             = "conv"
