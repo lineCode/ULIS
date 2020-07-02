@@ -283,7 +283,7 @@ FKernelSSE::Rotated180() const {
 
 const FVec2I&
 FKernelSSE::Size() const {
-    return  FVec2I( Width(), Height() );
+    return  mSize;
 }
 
 int
