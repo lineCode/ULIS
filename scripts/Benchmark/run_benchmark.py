@@ -7,8 +7,7 @@ import subprocess
 import os
 import fileinput
 
-#os.cpu_count()
-numWorkers = 12
+numWorkers = os.cpu_count()
 criticalError = 0xB00BA420
 
 benchmark_msvc_path   = abspath( join( dirname( __file__ ), 'bin/msvc/Benchmark.exe' ) )
@@ -134,7 +133,7 @@ webbrowser.open('benchmark.html', new=2)
 
 sizes   = [ 64,     128,    256,    512,    1024,   2048,   4096,   8192,   16384   ]
 repeats = [ 16384,  8192,   4096,   2048,   1024,   512,    256,    128,    64      ]
-repeatModifier = 1
+repeatModifier = 0.5
 numBlendingModes    = 40
 numAlphaModes       = 9
 op      = [ "clear", "fill", "blend", "copy", "conv" ]
