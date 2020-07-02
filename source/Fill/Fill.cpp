@@ -26,15 +26,17 @@ ULIS3_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void ULIS3_VECTORCALL
-InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, const tSize iStride ) {
+InvokeFillMTProcessScanline_AX2( tByte* iDst, std::shared_ptr< const FBlock > iBuf, const tSize iCount, const tSize iStride ) {
+    __m256i src = _mm256_lddqu_si256( (const __m256i*)iBuf->DataPtr() );
+
     tSize index = 0;
     for( index = 0; index < ( iCount - 32 ); index += iStride ) {
-        _mm256_storeu_si256( (__m256i*)iDst, iSrc );
+        _mm256_storeu_si256( (__m256i*)iDst, src );
         iDst += iStride;
     }
 
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memcpy instead
-    memcpy( iDst, &iSrc, iCount - index );
+    memcpy( iDst, iBuf->DataPtr(), iCount - index );
 }
 #endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
@@ -42,14 +44,16 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, __m256i iSrc, const tSize iCount, 
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void ULIS3_VECTORCALL
-InvokeFillMTProcessScanline_SSE( tByte* iDst, __m128i iSrc, const tSize iCount, const tSize iStride ) {
+InvokeFillMTProcessScanline_SSE( tByte* iDst, std::shared_ptr< const FBlock > iBuf, const tSize iCount, const tSize iStride ) {
+    __m128i src = _mm_lddqu_si128( (const __m128i*)iBuf->DataPtr() );
+
     tSize index;
     for( index = 0; index < ( iCount - 16 ); index += iStride ) {
-        _mm_storeu_si128( (__m128i*)iDst, iSrc );
+        _mm_storeu_si128( (__m128i*)iDst, src );
         iDst += iStride;
     }
     // Remaining unaligned scanline end: avoid concurrent write on 128 bit with SSE and perform a memcpy instead
-    memcpy( iDst, &iSrc, iCount - index );
+    memcpy( iDst, iBuf->DataPtr(), iCount - index );
 }
 #endif // __SE4_2__
 
@@ -87,36 +91,30 @@ Fill_imp( FThreadPool*                          iThreadPool
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
         tSize   count   = iDstROI.w * bpp;
         tSize   stride  = 32 - ( 32 % bpp );
-        tByte*  srcb    = new tByte[32];
+        std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 32, 1, ULIS3_FORMAT_G8 );
+        tByte* srcb = buf->DataPtr();
 
         for( tSize i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
-        __m256i src = _mm256_lddqu_si256( (const __m256i*)srcb );
-
-        delete [] srcb;
-
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
-                                       , InvokeFillMTProcessScanline_AX2, DST, src, count, stride )
+                                       , InvokeFillMTProcessScanline_AX2, DST, buf, count, stride )
     } else
 #endif
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
         tSize   count   = iDstROI.w * bpp;
         tSize   stride  = 16 - ( 16 % bpp );
-        tByte*  srcb    = new tByte[16];
+        std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 16, 1, ULIS3_FORMAT_G8 );
+        tByte* srcb = buf->DataPtr();
 
         for( tSize i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
-        __m128i src = _mm_lddqu_si128( (const __m128i*)srcb );
-
-        delete [] srcb;
-
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
-                                       , InvokeFillMTProcessScanline_SSE, DST, src, count, stride )
+                                       , InvokeFillMTProcessScanline_SSE, DST, buf, count, stride )
     } else
 #endif
     {
