@@ -14,88 +14,90 @@
 #include <ULIS3>
 #include <immintrin.h>
 #include <vectorclass.h>
+#include <stdlib.h>
+#include <chrono>
+#include <iostream>
 
 using namespace ::ul3;
 
 int
 main() {
-    uint8 val1 = 128;
-    uint8 val2 = 255;
-    uint8 src[16];
-    uint8 bdp[16];
-    for( int i = 0; i < 16; ++i ) {
-        src[i] = 127;
-        bdp[i] = 0;
+    const int repeat = 10000000;
+    // unaligned premult: 0.0010823
+
+    const int size = 64;
+    const int area = size * size;
+    const int bps  = 8;
+    const int spp  = 4;
+    const int bpp  = 4 * 8;
+    const int bytesTotal = area * bpp;
+    const int numPixelsAtATime = 4;
+    const int len = area / numPixelsAtATime;
+    const float opacity = 0.5f;
+    const int iopacity = static_cast< int >( opacity * 255 );
+    const __m128i alpha16 = _mm_set1_epi16( iopacity );
+    uint8* base     = reinterpret_cast< uint8* >( _aligned_malloc( bytesTotal, 16 ) );
+    uint8* over     = reinterpret_cast< uint8* >( _aligned_malloc( bytesTotal, 16 ) );
+    memset( base, 0xFF, bytesTotal );
+    memset( over, 0xAA, bytesTotal );
+
+    const __m128i allo = _mm_setr_epi32( 0xff03ff03, 0xff03ff03, 0xff07ff07, 0x0ff7ff07 );
+    const __m128i alhi = _mm_setr_epi32( 0xff0bff0b, 0xff0bff0b, 0xff0fff0f, 0x0fffff0f );
+    const __m128i zero = _mm_setr_epi32( 0x00000000, 0x00000000, 0x00000000, 0x00000000 );
+    const __m128i i255 = _mm_setr_epi32( 0xff00ff00, 0xff00ff00, 0xff00ff00, 0xff00ff00 );
+
+    auto startTime = std::chrono::steady_clock::now();
+    for( int r = 0; r < repeat; ++r ) {
+
+        const __m128i* psrc = reinterpret_cast< const __m128i* >( over );
+              __m128i* pbdp = reinterpret_cast< __m128i* >( base );
+
+        for( tSize i = 0; i < len; ++i ) {
+            const __m128i src = _mm_load_si128( psrc );
+            const __m128i bdp = _mm_load_si128( pbdp );
+
+            /*
+            __m128i under0      = _mm_cvtepu8_epi16( bdp );
+            __m128i under1      = _mm_unpackhi_epi8( bdp, zero );
+            __m128i over0       = _mm_cvtepu8_epi16( src );
+            __m128i over1       = _mm_unpackhi_epi8( src, zero );
+            __m128i alpha0      = _mm_mullo_epi16(_mm_shuffle_epi8( src, allo ), alpha16 );
+            __m128i alpha1      = _mm_mullo_epi16(_mm_shuffle_epi8( src, alhi ), alpha16 );
+            __m128i invAlpha0   = _mm_xor_si128( i255, alpha0 );
+            __m128i invAlpha1   = _mm_xor_si128( i255, alpha1 );
+            __m128i underMul0   = _mm_mulhi_epu16( under0, invAlpha0 );
+            __m128i underMul1   = _mm_mulhi_epu16( under1, invAlpha1 );
+            __m128i overMul0    = _mm_mulhi_epu16( over0, alpha0 );
+            __m128i overMul1    = _mm_mulhi_epu16( over1, alpha1 );
+            __m128i underFinal  = _mm_packus_epi16( underMul0, underMul1 );
+            __m128i overFinal   = _mm_packus_epi16( overMul0, overMul1 );
+            __m128i res         = _mm_adds_epu8( overFinal, underFinal );
+            _mm_storeu_si128( pbdp, res );
+            ++psrc;
+            ++pbdp;
+            */
+            const __m128i u16_0 = _mm_cvtepu8_epi16(bdp);
+            const __m128i u16_1 = _mm_unpackhi_epi8(bdp, zero);
+            const __m128i al8_0 = _mm_shuffle_epi8 (src,  allo);
+            const __m128i al8_1 = _mm_shuffle_epi8 (src,  alhi);
+            const __m128i mal_0 = _mm_xor_si128(i255, al8_0);
+            const __m128i mal_1 = _mm_xor_si128(i255, al8_1);
+            const __m128i mul_0 = _mm_mulhi_epu16  (u16_0, mal_0);
+            const __m128i mul_1 = _mm_mulhi_epu16  (u16_1, mal_1);
+            const __m128i pixel = _mm_packus_epi16 (mul_0, mul_1);
+            const __m128i res   = _mm_adds_epi8(src, pixel);
+            _mm_storeu_si128( pbdp, res );
+            ++psrc;
+            ++pbdp;
+        }
     }
 
-    uint8 aid = 3;
-    uint8 ard[4];
-    ard[0] = aid;
-    ard[1] = aid + 4;
-    ard[2] = aid + 8;
-    ard[3] = aid + 12;
-    __m128i alpha_mask = _mm_set_epi8( ard[3], ard[3], ard[3], ard[3]
-                                     , ard[2], ard[2], ard[2], ard[2]
-                                     , ard[1], ard[1], ard[1], ard[1]
-                                     , ard[0], ard[0], ard[0], ard[0] );
-    uint8 alpha_s0 = 128;
-    uint8 alpha_s1 = 128;
-    uint8 alpha_b0 = 128;
-    uint8 alpha_b1 = 128;
-    uint8 alpha_c0 = ( alpha_s0 + alpha_b0 ) - ConvType< uint16, uint8 >( alpha_s0 * alpha_b0 );
-    uint8 alpha_c1 = ( alpha_s1 + alpha_b1 ) - ConvType< uint16, uint8 >( alpha_s1 * alpha_b1 );
-    uint8 var0 = alpha_c0 == 0 ? 0 : ( alpha_s0 * 0xFF ) / alpha_c0;
-    uint8 var1 = alpha_c1 == 0 ? 0 : ( alpha_s1 * 0xFF ) / alpha_c1;
-    const __m128i var = _mm_set_epi16( var1, var1, var1, var1, var0, var0, var0, var0 );
-    const __m128i cb = _mm_set_epi16( alpha_b1, alpha_b1, alpha_b1, alpha_b1, alpha_b0, alpha_b0, alpha_b0, alpha_b0 );
-    const __m128i cs = _mm_set_epi16( var1, var1, var1, var1, var0, var0, var0, var0 );
-    __m128i src_chan = _mm_cvtepu8_epi16( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) );
-    __m128i bdp_chan = _mm_cvtepu8_epi16( _mm_loadu_si128( reinterpret_cast< const __m128i* >( bdp ) ) );
+    auto endTime = std::chrono::steady_clock::now();
+    auto deltaMs = static_cast< double >( std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count() ) / static_cast< double >( repeat );
+    std::cout << deltaMs << std::endl;
 
-    __m128i termA = _mm_sub_epi16( _mm_set1_epi16( 0xFF ), var );
-    __m128i termB = _mm_mullo_epi16( termA, cb );
-    __m128i termC = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( termB, _mm_set1_epi16( 1 ) ), _mm_srli_epi16( termB, 8 ) ), 8 );
-
-    //return ( 1.f - iVar ) * iCb + iVar * ( ( 1.f - iAb ) * iCs + iAb * iCr );
-    //                            |
-    int ghi = 010;
-
-    /*
-    const __m128i maskLo    = _mm_set_epi8(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 14, 12, 10, 8, 6, 4, 2, 0);
-    const __m128i maskHi    = _mm_set_epi8(14, 12, 10, 8, 6, 4, 2, 0, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80);
-    __m128i src_chan        = _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) );
-    __m128i bdp_chan        = _mm_loadu_si128( reinterpret_cast< const __m128i* >( bdp ) );
-    __m128i src_alpha_LO    = _mm_cvtepu8_epi16( _mm_shuffle_epi8( src_chan, alpha_mask ) );
-    __m128i bdp_alpha_LO    = _mm_cvtepu8_epi16( _mm_shuffle_epi8( bdp_chan, alpha_mask ) );
-    __m128i alpha_addo16    = _mm_add_epi16( src_alpha_LO, bdp_alpha_LO );
-    __m128i alpha_mullo16   = _mm_mullo_epi16( src_alpha_LO, bdp_alpha_LO );
-    __m128i alpha_mullo8    = _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( alpha_mullo16, _mm_set1_epi16( 1 ) ), _mm_srli_epi16( alpha_mullo16, 8 ) ), 8 );
-    __m128i alpha_comp16    = _mm_sub_epi16( alpha_addo16, alpha_mullo8 );
-    __m128i eq = _mm_cmpeq_epi16( alpha_comp16, _mm_setzero_si128() );
-    int mask = _mm_movemask_epi8( eq );
-    __m128i var = _mm_cvtepi32_epi16( _mm_cvtps_epi32( 
-
-    Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) ) ) ) / 255.f;
-    */
-
-    auto dummy = 0;
-
-    //Vec4f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
-
-    //__m128i C = _mm_or_si128( _mm_shuffle_epi8( Clodown, maskLo ), _mm_shuffle_epi8( Chidown, maskHi ) );
-
-    /*
-    ULIS3_FORCEINLINE Vec4f ULIS3_VECTORCALL AlphaNormalSSEF( Vec4f iCs, Vec4f iCb ) {
-    return ( iCb + iCs ) - ( iCb * iCs );
-    }
-    */
-
-
-    /*
-    ULIS3_FORCEINLINE Vec4f ComposeSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar, Vec4f iCr ) {
-        return ( 1.f - iVar ) * iCb + iVar * ( ( 1.f - iAb ) * iCs + iAb * iCr );
-    }
-    */
+    _aligned_free( base );
+    _aligned_free( over );
     return  0;
 }
 
