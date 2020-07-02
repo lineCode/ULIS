@@ -12,53 +12,57 @@ public class ULIS : ModuleRules
         if (Target.Platform == UnrealTargetPlatform.Win64 ||
             Target.Platform == UnrealTargetPlatform.Win32 )
         {
-            string IncludeBase                      = Path.Combine( ModuleDirectory, "redist", "include" );
+            string IncludeBase = Path.Combine( ModuleDirectory, "redist", "include" );
             PublicSystemIncludePaths.AddRange(
                 new string[] {
-                      Path.Combine( IncludeBase, "ULIS3" )
+                    Path.Combine( IncludeBase, "ULIS3" )
                 }
             );
 
-            string LibBase          = Path.Combine( ModuleDirectory, "redist", "lib" );
-            string ULIS_LibName         = "ULIS3";
+            string LibBase      = Path.Combine( ModuleDirectory, "redist", "lib" );
+            string BinBase      = Path.Combine( ModuleDirectory, "redist", "bin" );
+            string ULIS_LibName = "ULIS3";
 
             if (Target.Configuration == UnrealTargetConfiguration.Debug && Target.bDebugBuildsActuallyUseDebugCRT) {
-                    ULIS_LibName        += "d";
+                ULIS_LibName += "d";
             }
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                      Path.Combine( LibBase, ULIS_LibName ) + ".lib"
+                    Path.Combine( LibBase, ULIS_LibName ) + ".lib"
                 }
             );
 
             PublicDefinitions.Add("WITH_ULIS=1");
             PublicDefinitions.Add("ULIS3_DYNAMIC_LIBRARY");
+            RuntimeDependencies.Add( Path.Combine( LibBase, ULIS_LibName ) + ".dll" );
         }
         else if ( Target.Platform == UnrealTargetPlatform.Mac )
         {
-            string IncludeBase                      = Path.Combine( ModuleDirectory, "redist", "include" );
+            string IncludeBase = Path.Combine( ModuleDirectory, "redist", "include" );
             PublicSystemIncludePaths.AddRange(
                 new string[] {
-                      Path.Combine( IncludeBase, "ULIS3" )
+                    Path.Combine( IncludeBase, "ULIS3" )
                 }
             );
 
-            string LibBase          = Path.Combine( ModuleDirectory, "redist", "bin" );
-            string ULIS_LibName         = "ULIS3";
+            string LibBase      = Path.Combine( ModuleDirectory, "redist", "bin" );
+            string BinBase      = Path.Combine( ModuleDirectory, "redist", "bin" );
+            string ULIS_LibName = "ULIS3";
 
             if (Target.Configuration == UnrealTargetConfiguration.Debug && Target.bDebugBuildsActuallyUseDebugCRT) {
-                    ULIS_LibName        += "d";
+                ULIS_LibName += "d";
             }
 
             PublicAdditionalLibraries.AddRange(
                 new string[] {
-                      Path.Combine( LibBase, ULIS_LibName ) + ".dylib"
+                    Path.Combine( LibBase, ULIS_LibName ) + ".dylib"
                 }
             );
 
             PublicDefinitions.Add("WITH_ULIS=1");
             PublicDefinitions.Add("ULIS3_DYNAMIC_LIBRARY");
+            RuntimeDependencies.Add( Path.Combine( LibBase, ULIS_LibName ) + ".dylib" );
         }
         else // unsupported platform
         {
