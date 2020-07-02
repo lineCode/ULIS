@@ -35,7 +35,11 @@ public class ULIS : ModuleRules
 
             PublicDefinitions.Add("WITH_ULIS=1");
             PublicDefinitions.Add("ULIS3_DYNAMIC_LIBRARY");
-            RuntimeDependencies.Add( Path.Combine( LibBase, ULIS_LibName ) + ".dll" );
+            RuntimeDependencies.AddRange(
+                new string[] {
+                    Path.Combine( BinBase, ULIS_LibName ) + ".dll"
+                }
+            );
         }
         else if ( Target.Platform == UnrealTargetPlatform.Mac )
         {
@@ -62,7 +66,11 @@ public class ULIS : ModuleRules
 
             PublicDefinitions.Add("WITH_ULIS=1");
             PublicDefinitions.Add("ULIS3_DYNAMIC_LIBRARY");
-            RuntimeDependencies.Add( Path.Combine( LibBase, ULIS_LibName ) + ".dylib" );
+            RuntimeDependencies.AddRange(
+                new string[] {
+                    Path.Combine( BinBase, ULIS_LibName ) + ".dylib"
+                }
+            );
         }
         else // unsupported platform
         {
