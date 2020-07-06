@@ -26,7 +26,7 @@ enum eBlendingMode
     , BM_DISSOLVE
     , BM_BAYERDITHER8x8
     , BM_DARKEN
-    , BM_MULTIPY
+    , BM_MULTIPLY
     , BM_COLORBURN
     , BM_LINEARBURN
     , BM_DARKERCOLOR
@@ -179,7 +179,7 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( BM_BACK              , _E0, _E1, _E2, _E3 )              \
     X( BM_BEHIND            , _E0, _E1, _E2, _E3 )              \
     X( BM_DARKEN            , _E0, _E1, _E2, _E3 )              \
-    X( BM_MULTIPY           , _E0, _E1, _E2, _E3 )              \
+    X( BM_MULTIPLY          , _E0, _E1, _E2, _E3 )              \
     X( BM_COLORBURN         , _E0, _E1, _E2, _E3 )              \
     X( BM_LINEARBURN        , _E0, _E1, _E2, _E3 )              \
     X( BM_LIGHTEN           , _E0, _E1, _E2, _E3 )              \

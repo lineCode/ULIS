@@ -188,7 +188,7 @@ ULIS3_FORCEINLINE ufloat SeparableCompOpF( ufloat iCs, ufloat iCb, ufloat iAb, u
 template<> ULIS3_FORCEINLINE ufloat SeparableCompOpF< BM_NORMAL         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendNormalF(         iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE ufloat SeparableCompOpF< BM_BEHIND         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendBehindF(         iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE ufloat SeparableCompOpF< BM_DARKEN         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendDarkenF(         iCs, iCb ) ); }
-template<> ULIS3_FORCEINLINE ufloat SeparableCompOpF< BM_MULTIPY        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendMultiplyF(       iCs, iCb ) ); }
+template<> ULIS3_FORCEINLINE ufloat SeparableCompOpF< BM_MULTIPLY       >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendMultiplyF(       iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE ufloat SeparableCompOpF< BM_COLORBURN      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendColorBurnF(      iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE ufloat SeparableCompOpF< BM_LINEARBURN     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLinearBurnF(     iCs, iCb ) ); }
 template<> ULIS3_FORCEINLINE ufloat SeparableCompOpF< BM_LIGHTEN        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLightenF(        iCs, iCb ) ); }

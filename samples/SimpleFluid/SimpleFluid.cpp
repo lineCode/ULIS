@@ -72,7 +72,7 @@ SWindow::SWindow()
     mDarkParticleColor      = new FPixelValue( ULIS3_FORMAT_RGBA8, { 170, 40, 0, 255 } );
     mLightParticleColor     = new FPixelValue( ULIS3_FORMAT_RGBA8, { 255, 130, 80, 255 } );
     mCurrentParticleColor   = mBGParticleColor;
-    mCurrentBlendingMode = BM_MULTIPY;
+    mCurrentBlendingMode = BM_MULTIPLY;
     mCurrentOpacity = 0.05f;
     mMul = 1.f;
     RedrawParticle();
@@ -108,7 +108,7 @@ SWindow::keyPressEvent( QKeyEvent* event ) {
 
     if( event->key() == Qt::Key_1 ) {
         mCurrentParticleColor = mDarkParticleColor;
-        mCurrentBlendingMode = BM_MULTIPY;
+        mCurrentBlendingMode = BM_MULTIPLY;
         RedrawParticle();
     }
 
