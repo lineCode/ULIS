@@ -117,7 +117,6 @@ struct ULIS3_API FMaths
         return  ( val1 > val2 ) ? VMax( val1, std::forward< Ts >( vs )... ) : VMax( val2, std::forward< Ts >( vs )... );
     }
 
-
     template< typename T >
     static ULIS3_FORCEINLINE T Clamp( T iValue, T iMin, T iMax ) {
         return  Max( iMin, Min( iValue, iMax ) );
@@ -183,7 +182,7 @@ struct ULIS3_API FMaths
         return  FVec2F( Abs( iVec.x ), Abs( iVec.y ) );
     }
 
-    static ULIS3_FORCEINLINE int RoundNumber( float iNumber )
+    static ULIS3_FORCEINLINE int Round( float iNumber )
     {
         return  (int)( iNumber + 0.5f );
     }
