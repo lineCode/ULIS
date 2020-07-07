@@ -7,70 +7,66 @@
 *
 * @file         FontRegistry.h
 * @author       Clement Berthaud
-* @brief        This file provides the registry classes for the Font Registry tools.
+* @brief        This file provides the classes for the Font Registry tools.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 #include <map>
-#include <vector>
+#include <list>
 
 ULIS3_NAMESPACE_BEGIN
-class FFontRegistry;
-class FFontFamilyKey;
-class FFontStyleKey;
-
 /////////////////////////////////////////////////////
-/// @class      FFontStyleKey
-/// @brief      The FFontStyleKey class provides a mean of storing and manipulating font families file paths.
-class ULIS3_API FFontStyleKey
+/// @class FFontStyleEntry
+/// @brief The FFontStyleEntry class provides a mean of storing and manipulating font files entries along with their family, style and path.
+class ULIS3_API FFontStyleEntry
 {
 public:
     // Construction / Destruction
-    ~FFontStyleKey();
-    FFontStyleKey( const std::string& iFamilyName, const std::string& iStyleName, const std::string& iFontPath );
+    ~FFontStyleEntry();
+    FFontStyleEntry( const std::string& iFamily, const std::string& iStyle, const std::string& iFont );
 
 public:
     // Public API
-    const std::string& GetFamilyName() const;
-    const std::string& GetStyleName() const;
-    const std::string& GetFontPath() const;
+    const std::string& Family() const;
+    const std::string& Style() const;
+    const std::string& Path() const;
 
 private:
     // Private Data Members
-    std::string mFamilyName;
-    std::string mStyleName;
-    std::string mFontPath;
+    std::string mFamily;
+    std::string mStyle;
+    std::string mPath;
 };
 
 /////////////////////////////////////////////////////
-/// @class      FFontFamilyKey
-/// @brief      The FFontFamilyKey class provides a mean of storing and manipulating font families file paths.
-class ULIS3_API FFontFamilyKey
+/// @class FFontFamilyEntry
+/// @brief The FFontFamilyEntry class provides a mean of storing and manipulating font family entries.
+class ULIS3_API FFontFamilyEntry
 {
 public:
     // Construction / Destruction
-    ~FFontFamilyKey();
-    FFontFamilyKey( const std::string& iFamilyName );
+    ~FFontFamilyEntry();
+    FFontFamilyEntry( const std::string& iName );
 
 public:
     // Public API
-    void AddFontStyleKey( const std::string& iStyle, const FFontStyleKey& iFontStyleKey );
-    int NumStyles() const;
-    const std::map< std::string, FFontStyleKey >& GetStyles() const;
-    const std::string& GetFamilyName() const;
-    const FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iName ) const;
+    void AddFontStyleKey( const std::string& iStyle, const FFontStyleEntry& iFontStyleKey );
+    int StyleCount() const;
+    const std::map< std::string, FFontStyleEntry >& Styles() const;
+    const std::string& Family() const;
+    const FFontStyleEntry* FuzzyFindFontStyleKey( const std::string& iStyle ) const;
 
 private:
     // Private Data Members
-    std::string mFamilyName;
-    std::map< std::string, FFontStyleKey > mStyles;
+    std::string mFamily;
+    std::map< std::string, FFontStyleEntry > mStyles;
 };
 
 /////////////////////////////////////////////////////
 /// @class      FFontRegistry
-/// @brief      The FFontRegistry class provides a mean of storing and manipulating font families file paths.
+/// @brief      The FFontRegistry class provides a mean of storing and manipulating all discoverable font entries and their file paths.
 class ULIS3_API FFontRegistry
 {
 public:
@@ -81,21 +77,20 @@ public:
 public:
     // Public API
     void AddLookupPath( const std::string& iPath );
-    void AddLookupPaths( const std::vector< std::string >& iPaths );
-    void Load();
-    int NumFamilies() const;
-    int NumStyles() const;
-    const std::map< std::string, FFontFamilyKey >& GetFamilies() const;
-    const std::vector< std::string >& GetLookupPaths() const;
-    const FFontFamilyKey* FuzzyFindFontFamily( const std::string& iName ) const;
-    const FFontStyleKey* FuzzyFindFontStyleKey( const std::string& iFamily, const std::string& iStyle ) const;
+    void AddLookupPaths( const std::list< std::string >& iPaths );
+    void Refresh();
+    int FamilyCount() const;
+    const std::map< std::string, FFontFamilyEntry >& Records() const;
+    const std::list< std::string >& LookupPaths() const;
+    const FFontFamilyEntry* FuzzyFindFontFamily( const std::string& iName ) const;
+    const FFontStyleEntry* FuzzyFindFontStyle( const std::string& iFamily, const std::string& iStyle ) const;
     std::string FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle ) const;
     const FFontEngine& FontEngine() const;
 
 private:
     // Private Data Members
-    std::vector< std::string > mLookupPaths;
-    std::map< std::string, FFontFamilyKey > mFamilies;
+    std::list< std::string > mLookupPaths;
+    std::map< std::string, FFontFamilyEntry > mRecords;
     const FFontEngine& mFontEngine;
 };
 

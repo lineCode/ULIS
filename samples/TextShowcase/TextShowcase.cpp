@@ -33,7 +33,6 @@ main( int argc, char *argv[] ) {
     int fontSize = 12;
     int entryHeight = 16;
     int entryWidth = 256;
-    int numEntries = fontRegistry.NumStyles();
     int gridx = 5;
     int gridy = 40;
     int canvasWidth = entryWidth * gridx;
@@ -44,17 +43,17 @@ main( int argc, char *argv[] ) {
     FPixelValue black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
     FPixelValue white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
     Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockCanvas, white, globalRect );
-    std::cout << fontRegistry.NumStyles();
+
     int i = 0;
-    for( auto family : fontRegistry.GetFamilies() ) {
-        for( auto style : family.second.GetStyles() ) {
+    for( auto family : fontRegistry.Records() ) {
+        for( auto style : family.second.Styles() ) {
             int x = ( i / gridy ) * entryWidth;
             int y = ( i % gridy ) * entryHeight;
-            const FFontStyleKey& key = style.second;
+            const FFontStyleEntry& key = style.second;
 
-            FFont font( fontRegistry, key.GetFamilyName(), key.GetStyleName() );
+            FFont font( fontRegistry, key.Family(), key.Style() );
 
-            std::string txt = key.GetFamilyName() + " " + key.GetStyleName();
+            std::string txt = key.Family() + " " + key.Style();
             typedef std::codecvt_utf8<wchar_t> convert_type;
             std::wstring_convert<convert_type, wchar_t> converter;
             std::wstring wtxt = converter.from_bytes(txt);

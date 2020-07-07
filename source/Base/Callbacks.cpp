@@ -23,52 +23,5 @@ void OnCleanup_DoNothing( tByte* iData, void* iInfo )
 {
 }
 
-/////////////////////////////////////////////////////
-/// FOnInvalid
-FOnInvalid::FOnInvalid()
-    : execute( nullptr )
-    , info( nullptr )
-{
-}
-
-
-FOnInvalid::FOnInvalid( fpInvalidateFunction iInvalidateFunction, void* iInvalidateInfo )
-    : execute( iInvalidateFunction )
-    , info( iInvalidateInfo )
-{
-}
-
-
-void
-FOnInvalid::ExecuteIfBound( const FBlock* iBlock, const FRect& iRect ) const
-{
-    if( execute )
-        execute( iBlock, info, iRect );
-}
-
-
-/////////////////////////////////////////////////////
-/// FOnCleanup
-FOnCleanup::FOnCleanup()
-    : execute( nullptr )
-    , info( nullptr )
-{
-}
-
-
-FOnCleanup::FOnCleanup( fpCleanupFunction iCleanupFunction, void* iCleanupInfo )
-    : execute( iCleanupFunction )
-    , info( iCleanupInfo )
-{
-}
-
-
-void
-FOnCleanup::ExecuteIfBound( tByte* iData ) const
-{
-    if( execute )
-        execute( iData, info );
-}
-
 ULIS3_NAMESPACE_END
 

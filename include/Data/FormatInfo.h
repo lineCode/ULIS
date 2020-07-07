@@ -16,7 +16,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FFormatInfo
+/// @class  FFormatInfo
 struct ULIS3_API FFormatInfo
 {
     ~FFormatInfo();
@@ -25,19 +25,49 @@ struct ULIS3_API FFormatInfo
     FFormatInfo( FFormatInfo&& iOther );
     FFormatInfo& operator=( const FFormatInfo& iOther );
 
-    tFormat     FMT;    // Format
-    eType       TP;     // Type
-    eColorModel CM;     // Color Model
-    uint8*      IDT;    // Index Table
-    uint8       BPC;    // Bytes Per Channel
-    uint8       NCC;    // Num Color Channels
-    uint8       HEA;    // Has Extra Alpha
-    uint8       COD;    // ReverseSwapped Code
-    uint8       SPP;    // Samples Per Pixel
-    uint8       BPP;    // Bytes Per Pixel
-    uint8       AID;    // Alpha Index
-    uint8       REV;    // Reversed
-    uint8       SWA;    // Swapped
+    uint8*      IDT; ///< Index Table
+    tFormat     FMT; ///< Format
+    eType       TP;  ///< Type
+    eColorModel CM;  ///< Color Model
+    uint8       BPC; ///< Bytes Per Channel
+    uint8       NCC; ///< Num Color Channels
+    uint8       HEA; ///< Has Extra Alpha
+    uint8       RSC; ///< ReverseSwapped Code
+    uint8       SPP; ///< Samples Per Pixel
+    uint8       BPP; ///< Bytes Per Pixel
+    uint8       AID; ///< Alpha Index
+    uint8       REV; ///< Reversed
+    uint8       SWA; ///< Swapped
+};
+
+/////////////////////////////////////////////////////
+/// @class  FHasFormat
+class ULIS3_API FHasFormat
+{
+public:
+    // construction / destruction
+    FHasFormat( tFormat iFormat );
+
+public:
+    // public API
+    const FFormatInfo&  FormatInfo()                    const;
+    const uint8*        IndexTable()                    const;
+    tFormat             Format()                        const;
+    eType               Type()                          const;
+    eColorModel         Model()                         const;
+    tSize               BytesPerSample()                const;
+    uint8               NumColorChannels()              const;
+    bool                HasAlpha()                      const;
+    uint8               SamplesPerPixel()               const;
+    tSize               BytesPerPixel()                 const;
+    uint8               AlphaIndex()                    const;
+    bool                Reversed()                      const;
+    bool                Swapped()                       const;
+    uint8               RedirectedIndex( uint8 iIndex ) const;
+
+private:
+    // private data members
+    const FFormatInfo mFormatInfo;
 };
 
 ULIS3_NAMESPACE_END

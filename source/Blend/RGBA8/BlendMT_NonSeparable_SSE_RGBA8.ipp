@@ -113,7 +113,7 @@ BlendMT_NonSeparable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iIn
     const tSize         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const tSize         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
-    BuildRGBA8IndexTable( info.source->FormatInfo().COD, &idt );
+    BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel
@@ -166,7 +166,7 @@ BlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const tSize         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const tSize         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
-    BuildRGBA8IndexTable( info.source->FormatInfo().COD, &idt );
+    BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8

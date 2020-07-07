@@ -75,5 +75,12 @@ ULIS3_API void BlendColor( FThreadPool*             iThreadPool
                          , eAlphaMode               iAlphaMode
                          , float                    iOpacityValue );
 
+/////////////////////////////////////////////////////
+// Blend PRNG for pseudo random modes like Dissolve
+ULIS3_API void ResetBlendPRNGSeed();
+ULIS3_API void SetBlendPRNGSeed( uint32 iVal );
+ULIS3_API uint32 GetBlendPRNGSeed();
+ULIS3_API uint32 GenerateBlendPRNG();
+
 ULIS3_NAMESPACE_END
 

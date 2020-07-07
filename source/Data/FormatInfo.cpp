@@ -13,31 +13,31 @@
 */
 #include "Data/FormatInfo.h"
 
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFormatInfo
-ULIS3_NAMESPACE_BEGIN
 FFormatInfo::~FFormatInfo() {
     if( IDT ) delete [] IDT;
 }
 
 FFormatInfo::FFormatInfo( tFormat iFMT )
-    : FMT( iFMT )
-    , IDT( nullptr )
+    : IDT( nullptr )
+    , FMT( iFMT )
+    , TP( static_cast< eType >( ULIS3_R_TYPE( FMT ) ) )
+    , CM( static_cast< eColorModel >( ULIS3_R_MODEL( FMT ) ) )
+    , BPC( ULIS3_R_DEPTH( FMT ) )
+    , NCC( ULIS3_R_CHANNELS( FMT ) )
+    , HEA( ULIS3_R_ALPHA( FMT ) )
+    , RSC( ULIS3_R_RS( FMT ) )
+    , SPP( NCC + HEA )
+    , BPP( SPP * BPC )
+    , AID( 0 )
+    , REV( ULIS3_R_REVERSE( FMT ) )
+    , SWA( ULIS3_R_SWAP( FMT ) )
 {
-    BPC = ULIS3_R_DEPTH(    FMT );
-    NCC = ULIS3_R_CHANNELS( FMT );
-    HEA = ULIS3_R_ALPHA(    FMT );
-    COD = ULIS3_R_RS(       FMT );
-    SPP = NCC + HEA;
-    BPP = SPP * BPC;
     IDT = new uint8[ SPP ];
-    CM = static_cast< eColorModel >( ULIS3_R_MODEL( FMT ) );
-    TP = static_cast< eType >( ULIS3_R_TYPE( FMT ) );
-    SWA = ULIS3_R_SWAP( FMT );
-    REV = ULIS3_R_REVERSE( FMT );
-
     uint8 msp = SPP - 1;
-    switch( COD ) {
+    switch( RSC ) {
         case 1:  for( int i = 0; i < SPP; ++i ) IDT[i] = ( msp - i );                                   AID = 0;   break;
         case 2:  for( int i = 0; i < SPP; ++i ) IDT[i] = ( i + 1 ) > msp ? 0 : i + 1;                   AID = 0;   break;
         case 3:  for( int i = 0; i < SPP; ++i ) IDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1;   AID = msp; break;
@@ -47,26 +47,26 @@ FFormatInfo::FFormatInfo( tFormat iFMT )
 
 FFormatInfo::FFormatInfo( const FFormatInfo& iOther )
     : IDT( nullptr )
+    , FMT( iOther.FMT )
+    , TP( iOther.TP )
+    , CM( iOther.CM )
+    , BPC( iOther.BPC )
+    , NCC( iOther.NCC )
+    , HEA( iOther.HEA )
+    , RSC( iOther.RSC )
+    , SPP( iOther.SPP )
+    , BPP( iOther.BPP )
+    , AID( iOther.AID )
+    , REV( iOther.REV )
+    , SWA( iOther.SWA )
 {
-    FMT = iOther.FMT;
-    TP  = iOther.TP;
-    CM  = iOther.CM;
-    BPC = iOther.BPC;
-    NCC = iOther.NCC;
-    HEA = iOther.HEA;
-    COD = iOther.COD;
-    SPP = iOther.SPP;
-    BPP = iOther.BPP;
-    AID = iOther.AID;
-    REV = iOther.REV;
-    SWA = iOther.SWA;
-
     IDT = new uint8[ SPP ];
     memcpy( IDT, iOther.IDT, SPP );
 }
 
 FFormatInfo&
-FFormatInfo::operator=( const FFormatInfo& iOther ) {
+FFormatInfo::operator=( const FFormatInfo& iOther )
+{
     if( IDT ) delete [] IDT;
     FMT = iOther.FMT;
     TP  = iOther.TP;
@@ -74,7 +74,7 @@ FFormatInfo::operator=( const FFormatInfo& iOther ) {
     BPC = iOther.BPC;
     NCC = iOther.NCC;
     HEA = iOther.HEA;
-    COD = iOther.COD;
+    RSC = iOther.RSC;
     SPP = iOther.SPP;
     BPP = iOther.BPP;
     AID = iOther.AID;
@@ -86,23 +86,31 @@ FFormatInfo::operator=( const FFormatInfo& iOther ) {
     return  *this;
 }
 
-FFormatInfo::FFormatInfo( FFormatInfo&& iOther ) {
-    FMT = iOther.FMT;
-    TP  = iOther.TP;
-    CM  = iOther.CM;
-    BPC = iOther.BPC;
-    NCC = iOther.NCC;
-    HEA = iOther.HEA;
-    COD = iOther.COD;
-    SPP = iOther.SPP;
-    BPP = iOther.BPP;
-    AID = iOther.AID;
-    REV = iOther.REV;
-    SWA = iOther.SWA;
-
-    IDT = iOther.IDT;
+FFormatInfo::FFormatInfo( FFormatInfo&& iOther )
+    : IDT( iOther.IDT )
+    , FMT( iOther.FMT )
+    , TP( iOther.TP )
+    , CM( iOther.CM )
+    , BPC( iOther.BPC )
+    , NCC( iOther.NCC )
+    , HEA( iOther.HEA )
+    , RSC( iOther.RSC )
+    , SPP( iOther.SPP )
+    , BPP( iOther.BPP )
+    , AID( iOther.AID )
+    , REV( iOther.REV )
+    , SWA( iOther.SWA )
+{
     iOther.IDT = nullptr;
 }
+
+/////////////////////////////////////////////////////
+// FHasFormat
+//--------------------------------------------------------------------------------------
+//----------------------------------------------------------- Construction / Destruction
+FHasFormat::FHasFormat( tFormat iFormat )
+    : mFormatInfo( iFormat )
+{}
 
 ULIS3_NAMESPACE_END
 

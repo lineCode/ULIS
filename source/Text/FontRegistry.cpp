@@ -32,92 +32,84 @@
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FFontStyleKey
+// FFontStyleEntry
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FFontStyleKey::~FFontStyleKey()
+FFontStyleEntry::~FFontStyleEntry()
 {
 }
 
-
-FFontStyleKey::FFontStyleKey( const std::string& iFamilyName, const std::string& iStyleName, const std::string& iFontPath )
-    : mFamilyName( iFamilyName )
-    , mStyleName( iStyleName )
-    , mFontPath( iFontPath )
+FFontStyleEntry::FFontStyleEntry( const std::string& iFamily, const std::string& iStyle, const std::string& iPath )
+    : mFamily( iFamily )
+    , mStyle( iStyle )
+    , mPath( iPath )
 {
 }
-
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 const std::string&
-FFontStyleKey::GetFamilyName() const
+FFontStyleEntry::Family() const
 {
-    return  mFamilyName;
+    return  mFamily;
 }
-
 
 const std::string&
-FFontStyleKey::GetStyleName() const
+FFontStyleEntry::Style() const
 {
-    return  mStyleName;
+    return  mStyle;
 }
-
 
 const std::string&
-FFontStyleKey::GetFontPath() const
+FFontStyleEntry::Path() const
 {
-    return  mFontPath;
+    return  mPath;
 }
-
 
 /////////////////////////////////////////////////////
-// FFontFamilyKey
+// FFontFamilyEntry
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FFontFamilyKey::~FFontFamilyKey()
+FFontFamilyEntry::~FFontFamilyEntry()
 {
 }
 
-
-FFontFamilyKey::FFontFamilyKey( const std::string& iFamilyName )
-    : mFamilyName( iFamilyName )
+FFontFamilyEntry::FFontFamilyEntry( const std::string& iName )
+    : mFamily( iName )
 {
 }
-
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 void
-FFontFamilyKey::AddFontStyleKey( const std::string& iStyle, const FFontStyleKey& iFontStyleKey )
+FFontFamilyEntry::AddFontStyleKey( const std::string& iStyle, const FFontStyleEntry& iFontStyleKey )
 {
     mStyles.emplace( iStyle, iFontStyleKey );
 }
 
-
 int
-FFontFamilyKey::NumStyles() const
+FFontFamilyEntry::StyleCount() const
 {
     return  static_cast< int >( mStyles.size() );
 }
 
 
-const std::map< std::string, FFontStyleKey >&
-FFontFamilyKey::GetStyles() const
+const std::map< std::string, FFontStyleEntry >&
+FFontFamilyEntry::Styles() const
 {
     return  mStyles;
 }
 
 
 const std::string&
-FFontFamilyKey::GetFamilyName() const
+FFontFamilyEntry::Family() const
 {
-    return  mFamilyName;
+    return  mFamily;
 }
 
 
-const FFontStyleKey*
-FFontFamilyKey::FuzzyFindFontStyleKey( const std::string& iName ) const
+const FFontStyleEntry*
+FFontFamilyEntry::FuzzyFindFontStyleKey( const std::string& iName ) const
 {
     std::string lowercase_name = iName;
     std::transform( lowercase_name.begin(), lowercase_name.end(), lowercase_name.begin(), ::tolower);
@@ -142,7 +134,6 @@ FFontFamilyKey::FuzzyFindFontStyleKey( const std::string& iName ) const
 FFontRegistry::~FFontRegistry()
 {
 }
-
 
 FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
     : mFontEngine( iFontEngine )
@@ -169,9 +160,8 @@ FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
         mLookupPaths.push_back( "/etc/fonts/local.conf./" );
     #endif
 
-    Load();
+    Refresh();
 }
-
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
@@ -181,18 +171,16 @@ FFontRegistry::AddLookupPath( const std::string& iPath )
     mLookupPaths.push_back( iPath );
 }
 
-
 void
-FFontRegistry::AddLookupPaths( const std::vector< std::string >& iPaths )
+FFontRegistry::AddLookupPaths( const std::list< std::string >& iPaths )
 {
     for( auto it : iPaths )
         mLookupPaths.push_back( it );
 }
 
-
 void
-FFontRegistry::Load() {
-    mFamilies.clear();
+FFontRegistry::Refresh() {
+    mRecords.clear();
     FFilePathRegistry reg;
     reg.AddLookupPaths( mLookupPaths );
     reg.AddFilter( ".ttf" );
@@ -200,60 +188,44 @@ FFontRegistry::Load() {
     reg.AddFilter( ".otf" );
     reg.Parse();
 
-    for( auto it : reg.GetMap() ) {
+    for( auto it : reg.Records() ) {
         FT_Face face;
         FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.Handle() ), it.second.c_str(), 0, &face );
         ULIS3_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );
         std::string style( face->style_name );
-        mFamilies.emplace( familyName, FFontFamilyKey( familyName ) );
-        mFamilies.at( familyName ).AddFontStyleKey( style, FFontStyleKey( familyName, style, it.second ) );
-        // Free face
+        mRecords.emplace( familyName, FFontFamilyEntry( familyName ) );
+        mRecords.at( familyName ).AddFontStyleKey( style, FFontStyleEntry( familyName, style, it.second ) );
         FT_Done_Face( face );
     }
 }
 
-
 int
-FFontRegistry::NumFamilies() const
+FFontRegistry::FamilyCount() const
 {
-    return  static_cast< int >( mFamilies.size() );
+    return  static_cast< int >( mRecords.size() );
 }
 
-
-int
-FFontRegistry::NumStyles() const
+const std::map< std::string, FFontFamilyEntry >&
+FFontRegistry::Records() const
 {
-    int ret = 0;
-    for( auto it : mFamilies ) {
-        ret += it.second.NumStyles();
-    }
-    return  ret;
+    return  mRecords;
 }
 
-
-const std::map< std::string, FFontFamilyKey >&
-FFontRegistry::GetFamilies() const
-{
-    return  mFamilies;
-}
-
-
-const std::vector< std::string >&
-FFontRegistry::GetLookupPaths() const
+const std::list< std::string >&
+FFontRegistry::LookupPaths() const
 {
     return  mLookupPaths;
 }
 
-
-const FFontFamilyKey*
+const FFontFamilyEntry*
 FFontRegistry::FuzzyFindFontFamily( const std::string& iName ) const
 {
     std::string lowercase_name = iName;
     std::transform( lowercase_name.begin(), lowercase_name.end(), lowercase_name.begin(), ::tolower);
     std::vector< std::tuple< int, std::string > > matches;
-    for( auto it : mFamilies ) {
+    for( auto it : mRecords ) {
         std::string key = it.first;
         std::string lowercase_key = key;
         std::transform( lowercase_key.begin(), lowercase_key.end(), lowercase_key.begin(), ::tolower);
@@ -262,15 +234,15 @@ FFontRegistry::FuzzyFindFontFamily( const std::string& iName ) const
     }
     std::sort( matches.begin(), matches.end() );
 
-    auto it = mFamilies.find( std::get< 1 >( matches[0] ) );
-    return  it == mFamilies.end() ? nullptr : &( mFamilies.at( std::get< 1 >( matches[0] ) ) );
+    auto it = mRecords.find( std::get< 1 >( matches[0] ) );
+    return  it == mRecords.end() ? nullptr : &( mRecords.at( std::get< 1 >( matches[0] ) ) );
 }
 
 
-const FFontStyleKey*
-FFontRegistry::FuzzyFindFontStyleKey( const std::string& iFamily, const std::string& iStyle ) const
+const FFontStyleEntry*
+FFontRegistry::FuzzyFindFontStyle( const std::string& iFamily, const std::string& iStyle ) const
 {
-    const FFontFamilyKey* fam = FuzzyFindFontFamily( iFamily );
+    const FFontFamilyEntry* fam = FuzzyFindFontFamily( iFamily );
 
     if( !fam )
         return  nullptr;
@@ -278,16 +250,15 @@ FFontRegistry::FuzzyFindFontStyleKey( const std::string& iFamily, const std::str
     return  fam->FuzzyFindFontStyleKey( iStyle );
 }
 
-
 std::string
 FFontRegistry::FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle ) const
 {
-    const FFontStyleKey* stk = FuzzyFindFontStyleKey( iFamily, iStyle );
+    const FFontStyleEntry* stk = FuzzyFindFontStyle( iFamily, iStyle );
 
     if( !stk )
         return  "";
 
-    return  stk->GetFontPath();
+    return  stk->Path();
 }
 
 const FFontEngine&

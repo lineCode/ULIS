@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Base/PRNG.h"
 #include "Blend/BlendArgs.h"
 #include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
@@ -34,7 +33,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iB
     switch( info.blendingMode ) {
         case BM_DISSOLVE: {
             int32 seedy = info.backdropWorkingRect.y + iLine + 1;
-            uint32 localPRNGSeed = ( 8253729 % seedy ) * GetWeakPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
+            uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
 
             for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
                 const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;

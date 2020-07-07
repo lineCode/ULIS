@@ -13,15 +13,20 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include <list>
 #include <unordered_map>
-#include <vector>
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFilePathRegistry
-/// @brief      The FFilePathRegistry class provides a mean of storing and manipulating file paths registry with filters.
+/// @brief      The FFilePathRegistry class provides a mean of storing and manipulating file paths registries with custom filters.
 class ULIS3_API FFilePathRegistry
 {
+    typedef std::string  tName;
+    typedef std::string  tPath;
+    typedef std::list< std::string >  tStringList;
+    typedef std::unordered_map< tName, tPath >  tRecords;
+
 public:
     // Construction / Destruction
     virtual ~FFilePathRegistry();
@@ -29,26 +34,26 @@ public:
 
 public:
     // Public API
-    const std::vector< std::string >&                       GetLookupPaths() const;
-    const std::vector< std::string >&                       GetFilters() const;
-    void                                                    AddLookupPath( const std::string& iPath );
-    void                                                    AddLookupPaths( const std::vector< std::string >& iPaths );
-    void                                                    AddFilter( const std::string& iFilter );
-    void                                                    AddFilters( const std::vector< std::string >& iFilters );
-    void                                                    Parse();
-    const std::string&                                      GetFilePathForClosestMatchingName( const std::string& iName );
-    const std::string&                                      GetFilePathForExactMatchingName( const std::string& iName );
-    const std::unordered_map< std::string, std::string >&   GetMap() const;
+    const tStringList& LookupPaths() const;
+    const tStringList& Filters() const;
+    const tRecords&  Records() const;
+    void AddLookupPath( const std::string& iPath );
+    void AddLookupPaths( const tStringList& iPaths );
+    void AddFilter( const std::string& iFilter );
+    void AddFilters( const tStringList& iFilters );
+    void Parse();
+    const std::string FilePathForExactMatchingName( const std::string& iName ) const;
+    const std::string FilePathForClosestMatchingName( const std::string& iName ) const;
 
 private:
     // Private API
-    virtual std::string CreateName( const std::string& iFile );
+    virtual std::string MakeName( const std::string& iFile ) const;
 
 private:
     // Private Data Members
-    std::vector< std::string >                      mLookupPaths;
-    std::vector< std::string >                      mFilters;
-    std::unordered_map< std::string, std::string >  mMap; // < Name, Path >
+    tStringList mLookupPaths;
+    tStringList mFilters;
+    tRecords mRecords;
 };
 
 ULIS3_NAMESPACE_END

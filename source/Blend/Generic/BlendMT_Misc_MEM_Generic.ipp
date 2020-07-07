@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Base/PRNG.h"
 #include "Blend/BlendArgs.h"
 #include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
@@ -40,7 +39,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const tByte* iSrc, tByte
     switch( info.blendingMode ) {
         case BM_DISSOLVE: {
             int32 seedy = info.backdropWorkingRect.y + iLine + 1;
-            uint32 localPRNGSeed = ( 8253729 % seedy ) * GetWeakPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
+            uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
             float m11, m01, m10, m00, vv0, vv1, res;
             m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,              fmt.AID ) : 0.f;
             m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - fmt.BPP,    fmt.AID ) : 0.f;
@@ -129,7 +128,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( const tByte* iSrc, tByte* iBdp, i
     switch( info.blendingMode ) {
         case BM_DISSOLVE: {
             int32 seedy = info.backdropWorkingRect.y + iLine + 1;
-            uint32 localPRNGSeed = ( 8253729 % seedy ) * GetWeakPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
+            uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
 
             for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
                 const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;

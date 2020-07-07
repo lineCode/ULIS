@@ -7,7 +7,7 @@
 *
 * @file         Callbacks.h
 * @author       Clement Berthaud
-* @brief        This file provides declarations for the image callbacks.
+* @brief        This file provides declarations for the generic callbacks mechanisms.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -17,29 +17,43 @@
 ULIS3_NAMESPACE_BEGIN
 typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRect& /* rect */ );
 typedef void (*fpCleanupFunction)( tByte* /* data */, void* /* info */ );
+
 ULIS3_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
 ULIS3_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
-struct ULIS3_API FOnInvalid
+
+template< typename R, typename ... Ts >
+class TCallback
 {
-    FOnInvalid();
-    FOnInvalid( fpInvalidateFunction iInvalidateFunction, void* iInvalidateInfo = nullptr );
-    void ExecuteIfBound( const FBlock* iBlock, const FRect& iRect ) const;
+public:
+    typedef R (*tFptr)( Ts ..., void* );
+    TCallback()
+        : mFptr( nullptr )
+        , mInfo( nullptr )
+    {}
+
+    TCallback( tFptr iFptr, void* iInfo = nullptr )
+        : mFptr( iFptr )
+        , mInfo( iInfo )
+    {}
+
+    // No return value because we can't ensure a generic default return value if not bound.
+    ULIS3_FORCEINLINE void ExecuteIfBound( Ts ... args ) const {
+        if( mFptr )
+            mFptr( args ..., mInfo );
+    }
+
+    ULIS3_FORCEINLINE R Execute( Ts ... args ) const {
+        ULIS3_ASSERT( mFptr, "Error: Callback not set." );
+        return  mFptr( args ..., mInfo );
+    }
 
 private:
-    fpInvalidateFunction    execute;
-    void*                   info;
+    tFptr mFptr;
+    void* mInfo;
 };
 
-struct ULIS3_API FOnCleanup
-{
-    FOnCleanup();
-    FOnCleanup( fpCleanupFunction iCleanupFunction, void* iCleanupInfo = nullptr );
-    void ExecuteIfBound( tByte* iData ) const;
-
-private:
-    fpCleanupFunction       execute;
-    void*                   info;
-};
+typedef TCallback< void, tByte* > FOnCleanup;
+typedef TCallback< void, const FBlock*, const FRect& > FOnInvalid;
 
 ULIS3_NAMESPACE_END
 

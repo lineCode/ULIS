@@ -19,7 +19,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FConvolutionKernelSSE
+/// @class      FKernelSSE
 /// @brief      The FKernelSSE class provides a mean of storing and manipulating convolution kernels optimized for sse.
 /// @details    The KernelSSE is actually a 2D array of __m128 wrapped in Vec4f.
 class ULIS3_API FKernelSSE

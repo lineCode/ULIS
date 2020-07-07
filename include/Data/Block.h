@@ -86,7 +86,6 @@ public:
     //std::string           UUID()                                              const;
     uint8*                  IndexTable()                                        const;
     const FFormatInfo&      FormatInfo()                                        const;
-    void                    TweakFormat( tFormat iFormat );
     void                    SetOnInvalid( const FOnInvalid& iOnInvalid );
     void                    SetOnCleanup( const FOnCleanup& iOnCleanup );
     void                    TakeOwnership();

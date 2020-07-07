@@ -346,16 +346,6 @@ FBlock::FormatInfo() const
 }
 
 void
-FBlock::TweakFormat( tFormat iFormat )
-{
-    FFormatInfo newInfo( iFormat );
-    ULIS3_ASSERT( newInfo.BPP == mInfo.BPP, "Bad tweak operation" );
-    mInfo = newInfo;
-    mBPS = mWidth * mInfo.BPP;
-    mBTT = mHeight * mBPS;
-}
-
-void
 FBlock::SetOnInvalid( const FOnInvalid& iOnInvalid )
 {
     mOnInvalid = iOnInvalid;

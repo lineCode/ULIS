@@ -16,6 +16,24 @@ using namespace ::ul3;
 
 int
 main() {
+    constexpr auto bb = sizeof( FFormatInfo );
+    constexpr auto zz = offsetof( FFormatInfo, SWA );
+    FFormatInfo ll( 0 );
+    FFormatInfo* LL = &ll;
+    uint8*      * IDT   = &ll.IDT;
+    tFormat     * FMT   = &ll.FMT;
+    eType       * TP    = &ll.TP ;
+    eColorModel * CM    = &ll.CM ;
+    uint8       * BPC   = &ll.BPC;
+    uint8       * NCC   = &ll.NCC;
+    uint8       * HEA   = &ll.HEA;
+    uint8       * RSC   = &ll.RSC;
+    uint8       * SPP   = &ll.SPP;
+    uint8       * BPP   = &ll.BPP;
+    uint8       * AID   = &ll.AID;
+    uint8       * REV   = &ll.REV;
+    uint8       * SWA   = &ll.SWA;
+
     FVec2F A[4] = { { 0, 0 }, { 200, 0 }, { 200, 200 }, { 0, 200 } };
     FVec2F B[4] = { { 10, 10 }, { 100, 50 }, { 100, 150 }, { 10, 190 } };
     auto mat = FTransform2D::GetPerspectiveTransform( A, B );
