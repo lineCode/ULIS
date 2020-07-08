@@ -96,7 +96,7 @@
 #define ULIS3_R_LINEAR( i )         ( ( i >> 25 ) & 0x1 )
 
 /////////////////////////////////////////////////////
-// All ~300 formats.
+// All ~680 formats.
 #define ULIS3_FORMAT_G8                             ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )  |                                                                                           ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )
 #define ULIS3_FORMAT_GA8                            ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )  | ULIS3_W_ALPHA( 1 ) |                                                                      ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )
 #define ULIS3_FORMAT_AG8                            ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )  | ULIS3_W_ALPHA( 1 ) |                          ULIS3_W_SWAP( 1 ) |                         ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )
