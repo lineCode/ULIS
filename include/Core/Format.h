@@ -778,7 +778,6 @@
 #define ULIS3_FORMAT_Linear_ARGBD_Premultiplied     ( ULIS3_FORMAT_Linear_ARGBD     | ULIS3_W_PREMULT( 1 ) )
 #define ULIS3_FORMAT_Linear_BGRAD_Premultiplied     ( ULIS3_FORMAT_Linear_BGRAD     | ULIS3_W_PREMULT( 1 ) )
 
-
 ULIS3_NAMESPACE_BEGIN
 static constexpr tFormat FMT_G8                             = ULIS3_FORMAT_G8;
 static constexpr tFormat FMT_GA8                            = ULIS3_FORMAT_GA8;

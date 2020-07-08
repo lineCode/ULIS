@@ -364,7 +364,7 @@ FBlock::TakeOwnership() {
 
 void
 FBlock::ReleaseOwnership() {
-    mOnCleanup = FOnCleanup( &OnCleanup_DoNothing );
+    mOnCleanup = FOnCleanup();
 }
 
 void

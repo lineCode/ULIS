@@ -19,9 +19,5 @@ void OnCleanup_FreeMemory( tByte* iData, void* iInfo )
     delete [] iData;
 }
 
-void OnCleanup_DoNothing( tByte* iData, void* iInfo )
-{
-}
-
 ULIS3_NAMESPACE_END
 

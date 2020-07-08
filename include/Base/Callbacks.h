@@ -19,7 +19,6 @@ typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info *
 typedef void (*fpCleanupFunction)( tByte* /* data */, void* /* info */ );
 
 ULIS3_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
-ULIS3_API void OnCleanup_DoNothing(  tByte* iData, void* iInfo );
 
 template< typename R, typename ... Ts >
 class TCallback

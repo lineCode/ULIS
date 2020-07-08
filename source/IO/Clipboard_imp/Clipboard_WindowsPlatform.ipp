@@ -61,7 +61,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     tFormat dstFormat = iDesiredFormat;
     if( dstFormat <= 0 ) dstFormat = srcFormat;
 
-    FBlock tmp( src, w, h, srcFormat, nullptr, FOnInvalid( nullptr, nullptr ), OnCleanup_DoNothing );
+    FBlock tmp( src, w, h, srcFormat );
     FBlock* ret = new FBlock( w, h, dstFormat );
 
     // Assertions
