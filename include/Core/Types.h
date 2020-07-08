@@ -58,14 +58,39 @@ typedef  uint32_t   tSize;
 #define ULIS3_CM_XYZ    9
 #define ULIS3_CM_Yxy    10
 
-/////////////////////////////////////////////////////
+// Profile codes
+#define ULIS3_None                  0
+#define ULIS3_LinearGrey            1
+#define ULIS3_sGrey                 2
+#define ULIS3_Grey2_2_D65           3
+#define ULIS3_LinearRGB             4
+#define ULIS3_sRGB                  5
+#define ULIS3_AdobeRGB              6
+#define ULIS3_YUV                   7
+#define ULIS3_XYZ                   8
+#define ULIS3_LabD50                9
+#define ULIS3_LabD65                10
+#define ULIS3_Yxy                   11
+
+// Channels codes
+#define ULIS3_MAX_CHANNELS          5
+#define ULIS3_CHANNEL_1_BIT         1
+#define ULIS3_CHANNEL_2_BIT         2
+#define ULIS3_CHANNEL_3_BIT         4
+#define ULIS3_CHANNEL_4_BIT         8
+#define ULIS3_CHANNEL_5_BIT         16
+
 // Named booleans literals
-#define ULIS3_BLOCKING      true
-#define ULIS3_NONBLOCKING   false
-#define ULIS3_CALLCB        true
-#define ULIS3_NOCB          false
-#define ULIS3_AA            true
-#define ULIS3_NOAA          false
+#define ULIS3_BLOCKING              1
+#define ULIS3_NONBLOCKING           0
+#define ULIS3_CALLCB                1
+#define ULIS3_NOCB                  0
+#define ULIS3_AA                    1
+#define ULIS3_NOAA                  0
+#define ULIS3_PREMULTIPLIED         1
+#define ULIS3_UNPREMULTIPLIED       0
+#define ULIS3_GAMMA_COMPRESSED      1
+#define ULIS3_GAMMA_UNCOMPRESSED    0
 
 // Type enum
 enum eType {
