@@ -21,9 +21,9 @@
 ULIS3_NAMESPACE_BEGIN
 
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSize iCount, const tSize iStride )
+void InvokeCopyMTProcessScanline_AX2( uint8* iDst, const uint8* iSrc, const uint32 iCount, const uint32 iStride )
 {
-    tSize index;
+    uint32 index;
     for( index = 0; index < ( iCount - 32 ); index += iStride )
     {
         _mm256_storeu_si256( (__m256i*)iDst, _mm256_loadu_si256( (const __m256i*)iSrc ) );
@@ -36,9 +36,9 @@ void InvokeCopyMTProcessScanline_AX2( tByte* iDst, const tByte* iSrc, const tSiz
 #endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-void InvokeCopyMTProcessScanline_SSE( tByte* iDst, const tByte* iSrc, const tSize iCount, const tSize iStride )
+void InvokeCopyMTProcessScanline_SSE( uint8* iDst, const uint8* iSrc, const uint32 iCount, const uint32 iStride )
 {
-    tSize index;
+    uint32 index;
     for( index = 0; index < ( iCount - 16 ); index += iStride )
     {
         _mm_storeu_si128( (__m128i*)iDst, _mm_loadu_si128( (const __m128i*)iSrc ) );
@@ -50,7 +50,7 @@ void InvokeCopyMTProcessScanline_SSE( tByte* iDst, const tByte* iSrc, const tSiz
 }
 #endif // __SE4_2__
 
-void InvokeCopyMTProcessScanline_MEM( tByte* iDst, const tByte* iSrc, tSize iCount )
+void InvokeCopyMTProcessScanline_MEM( uint8* iDst, const uint8* iSrc, uint32 iCount )
 {
     memcpy( iDst, iSrc, iCount );
 }
@@ -68,18 +68,18 @@ Copy_imp( FThreadPool*              iThreadPool
         , const FRect&              iDstROI
         , const FVec2I&             iShift )
 {
-    const tSize bpp = iDestination->BytesPerPixel();
-    const tSize src_bps = iSource->BytesPerScanLine();
-    const tSize dst_bps = iDestination->BytesPerScanLine();
-    const tSize srh = ( iShift.x + iSrcROI.x ) * bpp;
-    const tSize dsh = iDstROI.x * bpp;
-    const tByte*src = iSource->DataPtr() + srh;
-    tByte*      dst = iDestination->DataPtr() + dsh;
+    const uint32 bpp = iDestination->BytesPerPixel();
+    const uint32 src_bps = iSource->BytesPerScanLine();
+    const uint32 dst_bps = iDestination->BytesPerScanLine();
+    const uint32 srh = ( iShift.x + iSrcROI.x ) * bpp;
+    const uint32 dsh = iDstROI.x * bpp;
+    const uint8*src = iSource->DataPtr() + srh;
+    uint8*      dst = iDestination->DataPtr() + dsh;
     const auto basesrcy = iShift.y + iSrcROI.y;
     const auto basedsty = iDstROI.y;
     #define SRC src + ( ( basesrcy + pLINE ) * src_bps )
     #define DST dst + ( ( basedsty + pLINE ) * dst_bps )
-    const tSize count = iDstROI.w * bpp;
+    const uint32 count = iDstROI.w * bpp;
     #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && ( src_bps + dst_bps ) >= 64 ) {
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking

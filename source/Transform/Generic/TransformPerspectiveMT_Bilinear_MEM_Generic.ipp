@@ -22,18 +22,18 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
+InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatInfo&      fmt     = info.destination->FormatInfo();
-    tByte*                  dst     = iDst;
+    uint8*                  dst     = iDst;
 
     FVec2F pointInDst( static_cast< float >( info.dst_roi.x ), static_cast< float >( info.dst_roi.y + iLine ) );
-    tByte* c00 = new tByte[ fmt.BPP * 4 ];
-    tByte* c10 = c00 + fmt.BPP;
-    tByte* c11 = c10 + fmt.BPP;
-    tByte* c01 = c11 + fmt.BPP;
-    tByte* hh0 = new tByte[ fmt.BPP * 2 ];
-    tByte* hh1 = hh0 + fmt.BPP;
+    uint8* c00 = new uint8[ fmt.BPP * 4 ];
+    uint8* c10 = c00 + fmt.BPP;
+    uint8* c11 = c10 + fmt.BPP;
+    uint8* c01 = c11 + fmt.BPP;
+    uint8* hh0 = new uint8[ fmt.BPP * 2 ];
+    uint8* hh1 = hh0 + fmt.BPP;
 
     const int minx = info.src_roi.x;
     const int miny = info.src_roi.y;
@@ -71,10 +71,10 @@ InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( tByte* iDst, i
 template< typename T > void
 TransformPerspectiveMT_Bilinear_MEM_Generic( std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info        = *iInfo;
-    tByte*                  dst         = info.destination->DataPtr();
-    const tSize             dst_bps     = info.destination->BytesPerScanLine();
-    const tSize             dst_decal_y = info.dst_roi.y;
-    const tSize             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    uint8*                  dst         = info.destination->DataPtr();
+    const uint32             dst_bps     = info.destination->BytesPerScanLine();
+    const uint32             dst_decal_y = info.dst_roi.y;
+    const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic< T >

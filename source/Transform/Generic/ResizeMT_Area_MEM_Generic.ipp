@@ -21,11 +21,11 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
-InvokeResizeMTProcessScanline_Area_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
+InvokeResizeMTProcessScanline_Area_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info    = *iInfo;
     const FFormatInfo&  fmt     = info.destination->FormatInfo();
     const FFormatInfo&  sat_fmt = info.optionalSAT->FormatInfo();
-    tByte*              dst     = iDst;
+    uint8*              dst     = iDst;
 
     FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
     FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
@@ -38,17 +38,17 @@ InvokeResizeMTProcessScanline_Area_MEM_Generic( tByte* iDst, int32 iLine, std::s
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
 
-    tByte* c00 = new tByte[ sat_fmt.BPP * 4 ];
-    tByte* c10 = c00 + sat_fmt.BPP;
-    tByte* c11 = c10 + sat_fmt.BPP;
-    tByte* c01 = c11 + sat_fmt.BPP;
-    tByte* hh0 = new tByte[ sat_fmt.BPP * 2 ];
-    tByte* hh1 = hh0 + sat_fmt.BPP;
+    uint8* c00 = new uint8[ sat_fmt.BPP * 4 ];
+    uint8* c10 = c00 + sat_fmt.BPP;
+    uint8* c11 = c10 + sat_fmt.BPP;
+    uint8* c01 = c11 + sat_fmt.BPP;
+    uint8* hh0 = new uint8[ sat_fmt.BPP * 2 ];
+    uint8* hh1 = hh0 + sat_fmt.BPP;
 
-    tByte* m00 = new tByte[ sat_fmt.BPP * 4 ];
-    tByte* m10 = m00 + sat_fmt.BPP;
-    tByte* m11 = m10 + sat_fmt.BPP;
-    tByte* m01 = m11 + sat_fmt.BPP;
+    uint8* m00 = new uint8[ sat_fmt.BPP * 4 ];
+    uint8* m10 = m00 + sat_fmt.BPP;
+    uint8* m11 = m10 + sat_fmt.BPP;
+    uint8* m01 = m11 + sat_fmt.BPP;
 
     float fpos[4];
     int   ipos[4];
@@ -73,9 +73,9 @@ InvokeResizeMTProcessScanline_Area_MEM_Generic( tByte* iDst, int32 iLine, std::s
             SUBSAMPLE_CORNER_IMP( c10, ipos[ _P0 ] + 1, ipos[ _P1 ]     );                                  \
             SUBSAMPLE_CORNER_IMP( c11, ipos[ _P0 ] + 1, ipos[ _P1 ] + 1 );                                  \
             SUBSAMPLE_CORNER_IMP( c01, ipos[ _P0 ],     ipos[ _P1 ] + 1 );                                  \
-            SampleBilinearSAT< float >( (tByte*)hh0, (tByte*)c00, (tByte*)c10, sat_fmt, t[ _P0 ], u[ _P0 ] );  \
-            SampleBilinearSAT< float >( (tByte*)hh1, (tByte*)c01, (tByte*)c11, sat_fmt, t[ _P0 ], u[ _P0 ] );  \
-            SampleBilinearSAT< float >( (tByte*)_M, (tByte*)hh0, (tByte*)hh1, sat_fmt, t[ _P1 ], u[ _P1 ] );
+            SampleBilinearSAT< float >( (uint8*)hh0, (uint8*)c00, (uint8*)c10, sat_fmt, t[ _P0 ], u[ _P0 ] );  \
+            SampleBilinearSAT< float >( (uint8*)hh1, (uint8*)c01, (uint8*)c11, sat_fmt, t[ _P0 ], u[ _P0 ] );  \
+            SampleBilinearSAT< float >( (uint8*)_M, (uint8*)hh0, (uint8*)hh1, sat_fmt, t[ _P1 ], u[ _P1 ] );
         SUBSAMPLE_CORNER( 0, 1, m00 )
         SUBSAMPLE_CORNER( 2, 1, m10 )
         SUBSAMPLE_CORNER( 2, 3, m11 )
@@ -102,10 +102,10 @@ InvokeResizeMTProcessScanline_Area_MEM_Generic( tByte* iDst, int32 iLine, std::s
 template< typename T > void
 ResizeMT_Area_MEM_Generic( std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info        = *iInfo;
-    tByte*              dst         = info.destination->DataPtr();
-    const tSize         dst_bps     = info.destination->BytesPerScanLine();
-    const tSize         dst_decal_y = info.dst_roi.y;
-    const tSize         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    uint8*              dst         = info.destination->DataPtr();
+    const uint32         dst_bps     = info.destination->BytesPerScanLine();
+    const uint32         dst_decal_y = info.dst_roi.y;
+    const uint32         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeResizeMTProcessScanline_Area_MEM_Generic< T >

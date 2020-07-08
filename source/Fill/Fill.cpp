@@ -26,10 +26,10 @@ ULIS3_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void ULIS3_VECTORCALL
-InvokeFillMTProcessScanline_AX2( tByte* iDst, std::shared_ptr< const FBlock > iBuf, const tSize iCount, const tSize iStride ) {
+InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FBlock > iBuf, const uint32 iCount, const uint32 iStride ) {
     __m256i src = _mm256_lddqu_si256( (const __m256i*)iBuf->DataPtr() );
 
-    tSize index = 0;
+    uint32 index = 0;
     for( index = 0; index < ( iCount - 32 ); index += iStride ) {
         _mm256_storeu_si256( (__m256i*)iDst, src );
         iDst += iStride;
@@ -44,10 +44,10 @@ InvokeFillMTProcessScanline_AX2( tByte* iDst, std::shared_ptr< const FBlock > iB
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void ULIS3_VECTORCALL
-InvokeFillMTProcessScanline_SSE( tByte* iDst, std::shared_ptr< const FBlock > iBuf, const tSize iCount, const tSize iStride ) {
+InvokeFillMTProcessScanline_SSE( uint8* iDst, std::shared_ptr< const FBlock > iBuf, const uint32 iCount, const uint32 iStride ) {
     __m128i src = _mm_lddqu_si128( (const __m128i*)iBuf->DataPtr() );
 
-    tSize index;
+    uint32 index;
     for( index = 0; index < ( iCount - 16 ); index += iStride ) {
         _mm_storeu_si128( (__m128i*)iDst, src );
         iDst += iStride;
@@ -60,8 +60,8 @@ InvokeFillMTProcessScanline_SSE( tByte* iDst, std::shared_ptr< const FBlock > iB
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
 void
-InvokeFillMTProcessScanline_MEM( tByte* iDst, std::shared_ptr< const FPixelValue > iSrc, tSize iCount, tSize iStride ) {
-    const tByte* src = iSrc->Ptr();
+InvokeFillMTProcessScanline_MEM( uint8* iDst, std::shared_ptr< const FPixelValue > iSrc, uint32 iCount, uint32 iStride ) {
+    const uint8* src = iSrc->Ptr();
     for( uint32 i = 0; i < iCount; ++i ) {
         memcpy( iDst, src, iStride );
         iDst += iStride;
@@ -81,20 +81,20 @@ Fill_imp( FThreadPool*                          iThreadPool
         , const FRect&                          iDstROI )
 {
     // Bake Params
-    const tSize bpp     = iDestination->BytesPerPixel();
-    const tSize bps     = iDestination->BytesPerScanLine();
-    const tSize dsh     = iDstROI.x * bpp;
-    tByte*      dsb     = iDestination->DataPtr() + dsh;
+    const uint32 bpp     = iDestination->BytesPerPixel();
+    const uint32 bps     = iDestination->BytesPerScanLine();
+    const uint32 dsh     = iDstROI.x * bpp;
+    uint8*      dsb     = iDestination->DataPtr() + dsh;
     #define DST dsb + ( ( iDstROI.y + pLINE ) * bps )
 
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
-        tSize   count   = iDstROI.w * bpp;
-        tSize   stride  = 32 - ( 32 % bpp );
+        uint32   count   = iDstROI.w * bpp;
+        uint32   stride  = 32 - ( 32 % bpp );
         std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 32, 1, ULIS3_FORMAT_G8 );
-        tByte* srcb = buf->DataPtr();
+        uint8* srcb = buf->DataPtr();
 
-        for( tSize i = 0; i < stride; i+= bpp )
+        for( uint32 i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
@@ -104,12 +104,12 @@ Fill_imp( FThreadPool*                          iThreadPool
 #endif
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
-        tSize   count   = iDstROI.w * bpp;
-        tSize   stride  = 16 - ( 16 % bpp );
+        uint32   count   = iDstROI.w * bpp;
+        uint32   stride  = 16 - ( 16 % bpp );
         std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 16, 1, ULIS3_FORMAT_G8 );
-        tByte* srcb = buf->DataPtr();
+        uint8* srcb = buf->DataPtr();
 
-        for( tSize i = 0; i < stride; i+= bpp )
+        for( uint32 i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
 
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking

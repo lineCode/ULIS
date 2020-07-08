@@ -72,14 +72,14 @@ XLoadFromFile( FThreadPool*             iThreadPool
     if( needgrey )  desiredChannels = needalpha ? 2 : 1;
     if( needrgb )   desiredChannels = needalpha ? 4 : 3;
 
-    tByte* data = nullptr;
+    uint8* data = nullptr;
     int width, height, channels, depth;
     width = height = channels = depth = 1;
     bool floating;
     switch( type ) {
-        case TYPE_UINT8:    data = (tByte*)stbi_load(       iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 1;    floating = false;   break;
-        case TYPE_UINT16:   data = (tByte*)stbi_load_16(    iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 2;    floating = false;   break;
-        case TYPE_UFLOAT:   data = (tByte*)stbi_loadf(      iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
+        case TYPE_UINT8:    data = (uint8*)stbi_load(       iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 1;    floating = false;   break;
+        case TYPE_UINT16:   data = (uint8*)stbi_load_16(    iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 2;    floating = false;   break;
+        case TYPE_UFLOAT:   data = (uint8*)stbi_loadf(      iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
     }
 
     ULIS3_ASSERT( data, "Error bad input file" )

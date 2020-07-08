@@ -22,10 +22,10 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformPerspectiveMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
+InvokeTransformPerspectiveMTProcessScanline_NN_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatInfo&      fmt     = info.destination->FormatInfo();
-    tByte*                  dst     = iDst;
+    uint8*                  dst     = iDst;
 
     FVec2F pointInDst( static_cast< float >( info.dst_roi.x ), static_cast< float >( info.dst_roi.y + iLine ) );
 
@@ -48,10 +48,10 @@ InvokeTransformPerspectiveMTProcessScanline_NN_MEM_Generic( tByte* iDst, int32 i
 template< typename T > void
 TransformPerspectiveMT_NN_MEM_Generic( std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info        = *iInfo;
-    tByte*                  dst         = info.destination->DataPtr();
-    const tSize             dst_bps     = info.destination->BytesPerScanLine();
-    const tSize             dst_decal_y = info.dst_roi.y;
-    const tSize             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    uint8*                  dst         = info.destination->DataPtr();
+    const uint32             dst_bps     = info.destination->BytesPerScanLine();
+    const uint32             dst_decal_y = info.dst_roi.y;
+    const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformPerspectiveMTProcessScanline_NN_MEM_Generic< T >

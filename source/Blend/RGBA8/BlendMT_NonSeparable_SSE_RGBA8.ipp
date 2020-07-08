@@ -35,7 +35,7 @@ ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
 }
 
 void
-InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
+InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormatInfo&  fmt     = info.source->FormatInfo();
 
@@ -105,13 +105,13 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const tByte* iSrc,
 void
 BlendMT_NonSeparable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const tByte*        src         = info.source->DataPtr();
-    tByte*              bdp         = info.backdrop->DataPtr();
-    const tSize         src_bps     = info.source->BytesPerScanLine();
-    const tSize         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const tSize         src_decal_y = info.shift.y + info.sourceRect.y;
-    const tSize         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const tSize         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
+    const uint8*        src         = info.source->DataPtr();
+    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint32         src_bps     = info.source->BytesPerScanLine();
+    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
+    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
+    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
     BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
@@ -123,7 +123,7 @@ BlendMT_NonSeparable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iIn
 }
 
 void
-InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const tByte* iSrc, tByte* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
+InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormatInfo&  fmt     = info.source->FormatInfo();
 
@@ -158,13 +158,13 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const tByte* iSrc, tByte* i
 void
 BlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const tByte*        src         = info.source->DataPtr();
-    tByte*              bdp         = info.backdrop->DataPtr();
-    const tSize         src_bps     = info.source->BytesPerScanLine();
-    const tSize         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const tSize         src_decal_y = info.shift.y + info.sourceRect.y;
-    const tSize         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const tSize         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
+    const uint8*        src         = info.source->DataPtr();
+    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint32         src_bps     = info.source->BytesPerScanLine();
+    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
+    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
+    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
     BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking

@@ -31,7 +31,7 @@ FBlock::~FBlock()
 FBlock::FBlock( int iWidth
               , int iHeight
               , tFormat iFormat
-              , FColorProfile* iProfile
+              , FColorSpace* iProfile
               , const FOnInvalid& iOnInvalid
               , const FOnCleanup& iOnCleanup )
     : mData( nullptr )
@@ -48,14 +48,14 @@ FBlock::FBlock( int iWidth
     mBPS = mWidth * mInfo.BPP;
     mBTT = mHeight * mBPS;
 
-    tSize num = mWidth * mHeight * mInfo.SPP;
+    uint32 num = mWidth * mHeight * mInfo.SPP;
     ULIS3_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" )
 
-    mData = new tByte[ mBTT ];
+    mData = new uint8[ mBTT ];
 }
 
 
-FBlock::FBlock( tByte* iData
+FBlock::FBlock( uint8* iData
               , int iWidth
               , int iHeight
               , tFormat iFormat
@@ -81,14 +81,14 @@ FBlock::FBlock( tByte* iData
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-tByte*
+uint8*
 FBlock::DataPtr()
 {
     return  mData;
 }
 
 
-tByte*
+uint8*
 FBlock::PixelPtr( int iX, int iY )
 {
     ULIS3_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
@@ -97,7 +97,7 @@ FBlock::PixelPtr( int iX, int iY )
 }
 
 
-tByte*
+uint8*
 FBlock::ScanlinePtr( int iRow )
 {
     ULIS3_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" );
@@ -105,7 +105,7 @@ FBlock::ScanlinePtr( int iRow )
 }
 
 
-const tByte*
+const uint8*
 FBlock::DataPtr() const
 {
     return  mData;
@@ -113,13 +113,13 @@ FBlock::DataPtr() const
 
 
 void
-FBlock::AssignProfile( FColorProfile* iProfile )
+FBlock::AssignProfile( FColorSpace* iProfile )
 {
     mProfile = iProfile;
 }
 
 
-const tByte*
+const uint8*
 FBlock::PixelPtr( int iX, int iY ) const
 {
     ULIS3_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" )
@@ -128,7 +128,7 @@ FBlock::PixelPtr( int iX, int iY ) const
 }
 
 
-const tByte*
+const uint8*
 FBlock::ScanlinePtr( int iRow ) const
 {
     ULIS3_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" )
@@ -136,47 +136,47 @@ FBlock::ScanlinePtr( int iRow ) const
 }
 
 
-tSize
+uint32
 FBlock::Width() const
 {
     return  mWidth;
 }
 
 
-tSize
+uint32
 FBlock::Height() const
 {
     return  mHeight;
 }
 
-tSize
+uint32
 FBlock::Length() const
 {
     return  mWidth * mHeight;
 }
 
-tSize
+uint32
 FBlock::BytesPerSample() const
 {
     return  mInfo.BPC;
 }
 
 
-tSize
+uint32
 FBlock::BytesPerPixel() const
 {
     return  mInfo.BPP;
 }
 
 
-tSize
+uint32
 FBlock::BytesPerScanLine() const
 {
     return  mBPS;
 }
 
 
-tSize
+uint32
 FBlock::BytesTotal() const
 {
     return  mBTT;
@@ -239,7 +239,7 @@ FBlock::NumColorChannels() const
 }
 
 
-FColorProfile*
+FColorSpace*
 FBlock::Profile() const
 {
     return  mProfile;
@@ -368,7 +368,7 @@ FBlock::ReleaseOwnership() {
 }
 
 void
-FBlock::ResyncNonOwnedData( tByte* iData ) {
+FBlock::ResyncNonOwnedData( uint8* iData ) {
     mOnCleanup.ExecuteIfBound( mData );
     ReleaseOwnership();
     mData = iData;
@@ -377,11 +377,11 @@ FBlock::ResyncNonOwnedData( tByte* iData ) {
 /////////////////////////////////////////////////////
 // X ... Block
 // for safety with different CRT and heaps when using dynamic link on windows.
-FBlock* XCreateBlock( int iWidth, int iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
+FBlock* XCreateBlock( int iWidth, int iHeight, tFormat iFormat, FColorSpace* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
     return  new FBlock( iWidth, iHeight, iFormat, iProfile, iOnInvalid, iOnCleanup );
 }
 
-FBlock* XCreateBlock( tByte* iData, int iWidth, int iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
+FBlock* XCreateBlock( uint8* iData, int iWidth, int iHeight, tFormat iFormat, FColorSpace* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
     return  new FBlock( iData, iWidth, iHeight, iFormat, iProfile, iOnInvalid, iOnCleanup );
 }
 

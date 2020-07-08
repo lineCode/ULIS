@@ -57,7 +57,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     if( bits_per_pixel == 24 ) srcFormat = ULIS3_FORMAT_BGR8;
     if( bits_per_pixel == 32 ) srcFormat = ULIS3_FORMAT_BGRA8;
 
-    tByte* src = ( ((tByte*)bi) + bi->bmiHeader.biSize );
+    uint8* src = ( ((uint8*)bi) + bi->bmiHeader.biSize );
     tFormat dstFormat = iDesiredFormat;
     if( dstFormat <= 0 ) dstFormat = srcFormat;
 
@@ -70,12 +70,12 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
 
     // Bake Params
     int             dc          = bits_per_pixel == 24 ? 3 & w : 0;
-    tSize           src_bps     = ( bits_per_pixel / 8 ) * tmp.Width() + dc;
-    tSize           dst_bps     = ret->BytesPerScanLine();
+    uint32           src_bps     = ( bits_per_pixel / 8 ) * tmp.Width() + dc;
+    uint32           dst_bps     = ret->BytesPerScanLine();
     const int       numLines    = h;
-    const tSize     len         = w;
-    const tByte*    srb         = tmp.DataPtr() + src_bps * ( numLines - 1 );
-    tByte*          dsb         = ret->DataPtr();
+    const uint32     len         = w;
+    const uint8*    srb         = tmp.DataPtr() + src_bps * ( numLines - 1 );
+    uint8*          dsb         = ret->DataPtr();
     #define SRC srb - ( pLINE * src_bps )
     #define DST dsb + ( pLINE * dst_bps )
     const FFormatInfo* srcnfo = &tmp.FormatInfo();

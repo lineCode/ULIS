@@ -38,6 +38,9 @@ struct ULIS3_API FFormatInfo
     uint8       AID; ///< Alpha Index
     uint8       REV; ///< Reversed
     uint8       SWA; ///< Swapped
+    uint8       PRE; ///< Premultiplied
+    uint8       LIN; ///< Linear
+    uint8       PRO; ///< Default Profile Code
 };
 
 /////////////////////////////////////////////////////
@@ -45,29 +48,35 @@ struct ULIS3_API FFormatInfo
 class ULIS3_API FHasFormat
 {
 public:
-    // construction / destruction
-    FHasFormat( tFormat iFormat );
+    virtual ~FHasFormat() {}
 
-public:
-    // public API
-    const FFormatInfo&  FormatInfo()                    const;
-    const uint8*        IndexTable()                    const;
-    tFormat             Format()                        const;
-    eType               Type()                          const;
-    eColorModel         Model()                         const;
-    tSize               BytesPerSample()                const;
-    uint8               NumColorChannels()              const;
-    bool                HasAlpha()                      const;
-    uint8               SamplesPerPixel()               const;
-    tSize               BytesPerPixel()                 const;
-    uint8               AlphaIndex()                    const;
-    bool                Reversed()                      const;
-    bool                Swapped()                       const;
-    uint8               RedirectedIndex( uint8 iIndex ) const;
+    FHasFormat( tFormat iFormat )
+        : mFormatInfo( iFormat )
+    {}
+
+    ULIS3_FORCEINLINE const FFormatInfo&    FormatInfo()                    const { return  mFormatInfo; }
+    ULIS3_FORCEINLINE const uint8*          IndexTable()                    const { return  mFormatInfo.IDT; }
+    ULIS3_FORCEINLINE tFormat               Format()                        const { return  mFormatInfo.FMT; }
+    ULIS3_FORCEINLINE eType                 Type()                          const { return  mFormatInfo.TP; }
+    ULIS3_FORCEINLINE eColorModel           Model()                         const { return  mFormatInfo.CM; }
+    ULIS3_FORCEINLINE uint8                 BytesPerSample()                const { return  mFormatInfo.BPC; }
+    ULIS3_FORCEINLINE uint8                 NumColorChannels()              const { return  mFormatInfo.NCC; }
+    ULIS3_FORCEINLINE bool                  HasAlpha()                      const { return  mFormatInfo.HEA; }
+    ULIS3_FORCEINLINE uint8                 SamplesPerPixel()               const { return  mFormatInfo.SPP; }
+    ULIS3_FORCEINLINE uint8                 BytesPerPixel()                 const { return  mFormatInfo.BPP; }
+    ULIS3_FORCEINLINE uint8                 AlphaIndex()                    const { return  mFormatInfo.AID; }
+    ULIS3_FORCEINLINE bool                  Reversed()                      const { return  mFormatInfo.REV; }
+    ULIS3_FORCEINLINE bool                  Swapped()                       const { return  mFormatInfo.SWA; }
+    ULIS3_FORCEINLINE bool                  Premultiplied()                 const { return  mFormatInfo.PRE; }
+    ULIS3_FORCEINLINE bool                  Linear()                        const { return  mFormatInfo.LIN; }
+    ULIS3_FORCEINLINE uint8                 DefaultProfileCode()            const { return  mFormatInfo.PRO; }
+    ULIS3_FORCEINLINE uint8                 RedirectedIndex( uint8 iIndex ) const {
+        ULIS3_ASSERT( iIndex >= 0 && iIndex < mFormatInfo.SPP, "Bad Index" );
+        return  mFormatInfo.IDT[ iIndex ];
+    }
 
 private:
-    // private data members
-    const FFormatInfo mFormatInfo;
+    FFormatInfo mFormatInfo;
 };
 
 ULIS3_NAMESPACE_END

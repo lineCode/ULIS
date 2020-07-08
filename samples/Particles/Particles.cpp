@@ -64,8 +64,8 @@ SWindow::SWindow()
     float midx = mParticle->Width() / 2.f;
     float midy = mParticle->Height() / 2.f;
     float ray2 = midx * midx;
-    for( tSize i = 0; i < mParticle->Width(); ++i ) {
-        for( tSize j = 0; j < mParticle->Height(); ++j ) {
+    for( uint32 i = 0; i < mParticle->Width(); ++i ) {
+        for( uint32 j = 0; j < mParticle->Height(); ++j ) {
             float dx = midx - i;
             float dy = midy - j;
             float dist2 = dx * dx + dy * dy;

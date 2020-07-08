@@ -25,7 +25,7 @@ class ULIS3_API IPixel
 public:
     // Construction / Destruction
     virtual ~IPixel() = 0;
-    IPixel( uint32 iFormat, FColorProfile* iProfile = nullptr );
+    IPixel( uint32 iFormat, FColorSpace* iProfile = nullptr );
 
 public:
     // Comparison Operators
@@ -34,9 +34,9 @@ public:
 
 public:
     // Public API
-    tByte*              Ptr();
-    void                AssignProfile( FColorProfile* iProfile );
-    const tByte*        Ptr()                           const;
+    uint8*              Ptr();
+    void                AssignProfile( FColorSpace* iProfile );
+    const uint8*        Ptr()                           const;
     uint8               BytesPerSample()                const;
     uint8               Depth()                         const;
     tFormat             Format()                        const;
@@ -49,7 +49,7 @@ public:
     uint8               NumColorChannels()              const;
     uint8*              IndexTable()                    const;
     const FFormatInfo&  FormatInfo()                    const;
-    FColorProfile*      Profile()                       const;
+    FColorSpace*      Profile()                       const;
     uint8               RedirectedIndex( uint8 iIndex ) const;
     uint8               AlphaIndex()                    const;
     void                TweakFormat( tFormat iFormat );
@@ -58,9 +58,9 @@ public:
 
 public:
     // Generic access API
-    tByte*                              SamplePtr( uint8 iIndex );
+    uint8*                              SamplePtr( uint8 iIndex );
     template< typename T > T*           SamplePtrT( uint8 iIndex );
-    const tByte*                        SamplePtr( uint8 iIndex )               const;
+    const uint8*                        SamplePtr( uint8 iIndex )               const;
     template< typename T > const T*     SamplePtrT( uint8 iIndex )              const;
     template< typename T > T            GetValueRaw( uint8 iIndex )             const;
     template< typename T > void         SetValueRaw( uint8 iIndex, T iValue  ) ;
@@ -425,9 +425,9 @@ public:
 
 protected:
     // Protected Data Members
-    tByte*          mData;
+    uint8*          mData;
     FFormatInfo     mInfo;
-    FColorProfile*  mProfile;
+    FColorSpace*  mProfile;
 };
 
 /////////////////////////////////////////////////////
@@ -442,14 +442,14 @@ public:
     // Construction / Destruction
     virtual ~FPixelValue();
     FPixelValue();
-    FPixelValue( uint32 iFormat, FColorProfile* iProfile = nullptr );
-    FPixelValue( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
+    FPixelValue( uint32 iFormat, FColorSpace* iProfile = nullptr );
+    FPixelValue( const uint8* iData, tFormat iFormat, FColorSpace* iProfile = nullptr );
     FPixelValue( const FPixelProxy& iProxy );
     FPixelValue( const FPixelValue& iValue );
     FPixelValue( FPixelValue&& iValue );
 
     FPixelValue& operator=( const FPixelValue& iOther );
-    template< typename T > FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile = nullptr );
+    template< typename T > FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorSpace* iProfile = nullptr );
 
 private:
     template< typename T1, typename T2 >
@@ -525,23 +525,23 @@ class ULIS3_API FPixelProxy : public IPixel
 public:
     // Construction / Destruction
     virtual ~FPixelProxy();
-    FPixelProxy( tFormat iFormat, FColorProfile* iProfile = nullptr );
-    FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
-    FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iProfile = nullptr );
+    FPixelProxy( tFormat iFormat, FColorSpace* iProfile = nullptr );
+    FPixelProxy( uint8* iData, tFormat iFormat, FColorSpace* iProfile = nullptr );
+    FPixelProxy( const uint8* iData, tFormat iFormat, FColorSpace* iProfile = nullptr );
     FPixelProxy( const FPixelProxy& iValue );
     FPixelProxy( FPixelProxy&& iValue );
     FPixelProxy& operator=( const FPixelProxy& iValue );
-    void SetPtr( tByte* iPtr );
-    void SetPtr( const tByte* iPtr );
+    void SetPtr( uint8* iPtr );
+    void SetPtr( const uint8* iPtr );
 };
 
-extern template FPixelValue::FPixelValue( uint32, std::initializer_list< int >, FColorProfile* );
-extern template FPixelValue::FPixelValue( uint32, std::initializer_list< float >, FColorProfile* );
-extern template FPixelValue::FPixelValue( uint32, std::initializer_list< double >, FColorProfile* );
-extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint8 >, FColorProfile* );
-extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint16 >, FColorProfile* );
-extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint32 >, FColorProfile* );
-extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint64 >, FColorProfile* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< int >, FColorSpace* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< float >, FColorSpace* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< double >, FColorSpace* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint8 >, FColorSpace* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint16 >, FColorSpace* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint32 >, FColorSpace* );
+extern template FPixelValue::FPixelValue( uint32, std::initializer_list< uint64 >, FColorSpace* );
 
 ULIS3_NAMESPACE_END
 

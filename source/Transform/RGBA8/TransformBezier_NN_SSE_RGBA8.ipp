@@ -22,10 +22,10 @@
 
 ULIS3_NAMESPACE_BEGIN
 void
-InvokeTransformBezierMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
+InvokeTransformBezierMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatInfo&      fmt     = info.destination->FormatInfo();
-    tByte*                  dst     = iDst;
+    uint8*                  dst     = iDst;
     const float*            field   = reinterpret_cast< const float* >( iField->ScanlinePtr( iLine ) );
     const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlinePtr( iLine ) );
     const int rangex = info.src_roi.w - 1;
@@ -46,10 +46,10 @@ InvokeTransformBezierMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLine, s
 void
 TransformBezierMT_NN_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const FTransformArgs&   info        = *iInfo;
-    tByte*                  dst         = info.destination->DataPtr();
-    const tSize             dst_bps     = info.destination->BytesPerScanLine();
-    const tSize             dst_decal_y = info.dst_roi.y;
-    const tSize             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    uint8*                  dst         = info.destination->DataPtr();
+    const uint32             dst_bps     = info.destination->BytesPerScanLine();
+    const uint32             dst_decal_y = info.dst_roi.y;
+    const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformBezierMTProcessScanline_NN_SSE_RGBA8

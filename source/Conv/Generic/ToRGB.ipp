@@ -26,7 +26,7 @@ ULIS3_NAMESPACE_BEGIN
 // To RGB
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- From Grey
-template< typename T1, typename T2 > void ConvBufferGreyToRGB( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferGreyToRGB( const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         T2 grey = ConvType< T1, T2 >( U2_DREF_SRC( 0 ) );
         U2_DREF_DST( 0 ) = grey;
@@ -40,7 +40,7 @@ template< typename T1, typename T2 > void ConvBufferGreyToRGB( const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From RGB
-template< typename T1, typename T2 > void ConvBufferRGBToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferRGBToRGB(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         U2_DREF_DST( 0 ) = ConvType< T1, T2 >( U2_DREF_SRC( 0 ) );
         U2_DREF_DST( 1 ) = ConvType< T1, T2 >( U2_DREF_SRC( 1 ) );
@@ -53,7 +53,7 @@ template< typename T1, typename T2 > void ConvBufferRGBToRGB(  const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From HSV
-template< typename T1, typename T2 > void ConvBufferHSVToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferHSVToRGB(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         T1 _H = U2_DREF_SRC( 0 );
         T1 _S = U2_DREF_SRC( 1 );
@@ -94,7 +94,7 @@ template< typename T1, typename T2 > void ConvBufferHSVToRGB(  const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From HSL
-template< typename T1, typename T2 > void ConvBufferHSLToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferHSLToRGB(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         T1 _H = U2_DREF_SRC( 0 );
         T1 _S = U2_DREF_SRC( 1 );
@@ -127,7 +127,7 @@ template< typename T1, typename T2 > void ConvBufferHSLToRGB(  const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From CMY
-template< typename T1, typename T2 > void ConvBufferCMYToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferCMYToRGB(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         T2 max = MaxType< T2 >();
         U2_DREF_DST( 0 ) = max - ConvType< T1, T2 >( U2_DREF_SRC( 0 ) );
@@ -141,7 +141,7 @@ template< typename T1, typename T2 > void ConvBufferCMYToRGB(  const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- From CMYK
-template< typename T1, typename T2 > void ConvBufferCMYKToRGB( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferCMYKToRGB( const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         ufloat c = ConvType< T1, ufloat >( U2_DREF_SRC( 0 ) );
         ufloat m = ConvType< T1, ufloat >( U2_DREF_SRC( 1 ) );
@@ -161,7 +161,7 @@ template< typename T1, typename T2 > void ConvBufferCMYKToRGB( const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From YUV
-template< typename T1, typename T2 > void ConvBufferYUVToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferYUVToRGB(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         ufloat y = ConvType< T1, ufloat >( U2_DREF_SRC( 0 ) );
         ufloat u = ConvType< T1, ufloat >( U2_DREF_SRC( 1 ) );
@@ -180,7 +180,7 @@ template< typename T1, typename T2 > void ConvBufferYUVToRGB(  const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From Lab
-template< typename T1, typename T2 > void ConvBufferLabToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferLabToRGB(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         cmsCIELab Lab; 
         cmsCIEXYZ XYZ;
@@ -206,7 +206,7 @@ template< typename T1, typename T2 > void ConvBufferLabToRGB(  const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From XYZ
-template< typename T1, typename T2 > void ConvBufferXYZToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferXYZToRGB(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         ufloat x = ConvType< T1, ufloat >( U2_DREF_SRC( 0 ) );
         ufloat y = ConvType< T1, ufloat >( U2_DREF_SRC( 1 ) );
@@ -225,7 +225,7 @@ template< typename T1, typename T2 > void ConvBufferXYZToRGB(  const FFormatInfo
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From Yxy
-template< typename T1, typename T2 > void ConvBufferYxyToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferYxyToRGB(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         cmsCIExyY xyY;
         cmsCIEXYZ XYZ;

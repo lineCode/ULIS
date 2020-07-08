@@ -22,7 +22,7 @@ ULIS3_NAMESPACE_BEGIN
 /// TTilePool
 //static
 ITilePool*
-ITilePool::XCreateTilePool( tFormat iFormat, FColorProfile* iProfile, eMicro iMicro, eMacro iMacro ) {
+ITilePool::XCreateTilePool( tFormat iFormat, FColorSpace* iProfile, eMicro iMicro, eMacro iMacro ) {
     /*
     #ifdef ULIS3_COMPILED_WITH_THREAD_SUPPORT
         return  new  TTilePool< 1, 5 >( iFormat, iProfile );

@@ -25,11 +25,11 @@
 
 ULIS3_NAMESPACE_BEGIN
 void
-InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const tByte* iSrc, tByte* iBdp, int32 iLine, const tSize iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
+InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormatInfo&  fmt     = info.source->FormatInfo();
-    const tByte*        src     = iSrc;
-    tByte*              bdp     = iBdp;
+    const uint8*        src     = iSrc;
+    uint8*              bdp     = iBdp;
 
     const bool notLastLine  = iLine < info.backdropCoverage.y;
     const bool notFirstLine = iLine > 0;
@@ -56,10 +56,10 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const tByte* iSr
     //            \ /   \ /
     //             |     |
     //          vv0vv1 vv1vv2 -> res
-    const tByte* p00 = iSrc - iSrcBps;
-    const tByte* p10 = iSrc - iSrcBps + 4;
-    const tByte* p01 = iSrc;
-    const tByte* p11 = iSrc + 4;
+    const uint8* p00 = iSrc - iSrcBps;
+    const uint8* p10 = iSrc - iSrcBps + 4;
+    const uint8* p01 = iSrc;
+    const uint8* p11 = iSrc + 4;
     Vec8f alpha_m00m10, alpha_m10m20, alpha_m01m11, alpha_m11m21, alpha_vv0, alpha_vv1, alpha_smp;
     Vec8f smpch_m00m10, smpch_m10m20, smpch_m01m11, smpch_m11m21, smpch_vv0, smpch_vv1, smpch_smp;
     Vec4f alpha_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? *( iSrc - 4 + fmt.AID - iSrcBps   ) / 255.f : 0.f;
@@ -138,13 +138,13 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const tByte* iSr
 void
 AlphaBlendMT_Separable_AVX_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const tByte*        src         = info.source->DataPtr();
-    tByte*              bdp         = info.backdrop->DataPtr();
-    const tSize         src_bps     = info.source->BytesPerScanLine();
-    const tSize         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const tSize         src_decal_y = info.shift.y + info.sourceRect.y;
-    const tSize         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const tSize         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
+    const uint8*        src         = info.source->DataPtr();
+    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint32         src_bps     = info.source->BytesPerScanLine();
+    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
+    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
+    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel
@@ -154,11 +154,11 @@ AlphaBlendMT_Separable_AVX_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > i
 }
 
 void
-InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte* iSrc, tByte* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
+InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormatInfo&  fmt     = info.source->FormatInfo();
-    const tByte*        src     = iSrc;
-    tByte*              bdp     = iBdp;
+    const uint8*        src     = iSrc;
+    uint8*              bdp     = iBdp;
 
     const uint32 len = info.backdropWorkingRect.w / 2;
     for( uint32 i = 0; i < len; ++i ) {
@@ -208,13 +208,13 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8( const tByte* iSrc, tByte*
 void
 AlphaBlendMT_Separable_AVX_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const tByte*        src         = info.source->DataPtr();
-    tByte*              bdp         = info.backdrop->DataPtr();
-    const tSize         src_bps     = info.source->BytesPerScanLine();
-    const tSize         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const tSize         src_decal_y = info.shift.y + info.sourceRect.y;
-    const tSize         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const tSize         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
+    const uint8*        src         = info.source->DataPtr();
+    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint32         src_bps     = info.source->BytesPerScanLine();
+    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
+    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
+    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
+    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8

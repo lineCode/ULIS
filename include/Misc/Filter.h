@@ -17,9 +17,9 @@
 
 ULIS3_NAMESPACE_BEGIN
 
-typedef void (*fpFilterOPFunc)( const FBlock* iBlock, const tByte* iPtr );
-typedef void (*fpFilterOPInPlaceFunc)( FBlock* iBlock, tByte* iPtr );
-typedef void (*fpFilterOPInto)( const FBlock* iSrcBlock, const tByte* iSrcPtr, FBlock* iDstBlock, tByte* iDstPtr );
+typedef void (*fpFilterOPFunc)( const FBlock* iBlock, const uint8* iPtr );
+typedef void (*fpFilterOPInPlaceFunc)( FBlock* iBlock, uint8* iPtr );
+typedef void (*fpFilterOPInto)( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr );
 
 ULIS3_API void Filter( FThreadPool*             iThreadPool
                      , bool                     iBlocking
@@ -27,7 +27,7 @@ ULIS3_API void Filter( FThreadPool*             iThreadPool
                      , const FHostDeviceInfo&   iHostDeviceInfo
                      , bool                     iCallCB
                      , const FBlock*            iSource
-                     , std::function< void( const FBlock* iBlock, const tByte* iPtr ) > iFunc );
+                     , std::function< void( const FBlock* iBlock, const uint8* iPtr ) > iFunc );
 
 ULIS3_API void FilterInPlace( FThreadPool*              iThreadPool
                             , bool                      iBlocking
@@ -35,7 +35,7 @@ ULIS3_API void FilterInPlace( FThreadPool*              iThreadPool
                             , const FHostDeviceInfo&    iHostDeviceInfo
                             , bool                      iCallCB
                             , FBlock*                   iSource
-                            , std::function< void( FBlock* iBlock, tByte* iPtr ) > iFunc );
+                            , std::function< void( FBlock* iBlock, uint8* iPtr ) > iFunc );
 
 ULIS3_API void FilterInto( FThreadPool*             iThreadPool
                          , bool                     iBlocking
@@ -44,6 +44,6 @@ ULIS3_API void FilterInto( FThreadPool*             iThreadPool
                          , bool                     iCallCB
                          , const FBlock*            iSource
                          , FBlock*                  iDestination
-                         , std::function< void( const FBlock* iSrcBlock, const tByte* iSrcPtr, FBlock* iDstBlock, tByte* iDstPtr ) > iFunc );
+                         , std::function< void( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr ) > iFunc );
 ULIS3_NAMESPACE_END
 

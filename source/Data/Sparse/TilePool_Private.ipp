@@ -37,7 +37,7 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::~TTilePool()
     delete  mEmptyTile;
 }
 
-template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( tFormat iFormat, FColorProfile* iProfile )
+template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( tFormat iFormat, FColorSpace* iProfile )
     : mTileSize                                             ( scPixelDim, scPixelDim                                                                                        )
     , mTileFormat                                           ( iFormat                                                                                                       )
     , mTileColorProfile                                     ( iProfile                                                                                                      )
@@ -73,7 +73,7 @@ template< uint8 _MICRO, uint8 _MACRO > uint32               TTilePool< _MICRO, _
 template< uint8 _MICRO, uint8 _MACRO > const FBlock*        TTilePool< _MICRO, _MACRO >::EmptyTile()                                const   { return  mEmptyTile;                                   }
 template< uint8 _MICRO, uint8 _MACRO > tFormat              TTilePool< _MICRO, _MACRO >::TileFormat()                               const   { return  mTileFormat;                                  }
 template< uint8 _MICRO, uint8 _MACRO > const FFormatInfo&   TTilePool< _MICRO, _MACRO >::TileFormatInfo()                           const   { return  mEmptyTile->FormatInfo();                     }
-template< uint8 _MICRO, uint8 _MACRO > const FColorProfile* TTilePool< _MICRO, _MACRO >::TileColorProfile()                         const   { return  mTileColorProfile;                            }
+template< uint8 _MICRO, uint8 _MACRO > const FColorSpace* TTilePool< _MICRO, _MACRO >::TileColorProfile()                         const   { return  mTileColorProfile;                            }
 template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentRAMUsage()                          const   { return  mCurrentRAMUsageAtomic.load();                }
 template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentSwapUsage()                         const   { return  0;                                            }
 template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::RAMUsageCapTarget()                        const   { return  mRAMUsageCapTargetAtomic.load();              }

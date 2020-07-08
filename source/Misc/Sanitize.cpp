@@ -20,7 +20,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T >
-void InvokeSanitize( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
+void InvokeSanitize( size_t iW, uint8* iDst, const FFormatInfo* iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     const T zero = MinType< T >();
     for( int i = 0; i < iW; ++i ) {
@@ -33,7 +33,7 @@ void InvokeSanitize( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
     }
 }
 
-typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, tByte* iDst, const FFormatInfo* iFmt );
+typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormatInfo* iFmt );
 fpDispatchedAlphamulInvoke QueryDispatchedSanitizeForParameters( eType iType ) {
         switch( iType ) {
         case TYPE_UINT8     : return  InvokeSanitize< uint8 >;
@@ -62,7 +62,7 @@ SanitizeZeroAlpha( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
-    tByte*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->DataPtr();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();

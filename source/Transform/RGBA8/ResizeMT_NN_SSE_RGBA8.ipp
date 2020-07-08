@@ -22,10 +22,10 @@
 
 ULIS3_NAMESPACE_BEGIN
 void
-InvokeResizeMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
+InvokeResizeMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info    = *iInfo;
     const FFormatInfo&  fmt     = info.destination->FormatInfo();
-    tByte*              dst     = iDst;
+    uint8*              dst     = iDst;
 
     FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
     FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
@@ -49,10 +49,10 @@ InvokeResizeMTProcessScanline_NN_SSE_RGBA8( tByte* iDst, int32 iLine, std::share
 void
 ResizeMT_NN_SSE_RGBA8( std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info        = *iInfo;
-    tByte*              dst         = info.destination->DataPtr();
-    const tSize         dst_bps     = info.destination->BytesPerScanLine();
-    const tSize         dst_decal_y = info.dst_roi.y;
-    const tSize         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    uint8*              dst         = info.destination->DataPtr();
+    const uint32         dst_bps     = info.destination->BytesPerScanLine();
+    const uint32         dst_decal_y = info.dst_roi.y;
+    const uint32         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeResizeMTProcessScanline_NN_SSE_RGBA8

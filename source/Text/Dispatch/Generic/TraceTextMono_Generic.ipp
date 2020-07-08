@@ -36,8 +36,8 @@ RasterBitmap( std::shared_ptr< _FPrivateTextInfo > iTextParams, FT_Bitmap* iBitm
     int xmax = iX + iBitmap->width;
     int ymax = iY + iBitmap->rows;
 
-    tByte* dst = iTextParams->destination->DataPtr() + ( iY * (int64)bps ) + ( iX * (int64)fmtInfo.BPP );
-    tSize jmp = ( width - iBitmap->width ) * fmtInfo.BPP; 
+    uint8* dst = iTextParams->destination->DataPtr() + ( iY * (int64)bps ) + ( iX * (int64)fmtInfo.BPP );
+    uint32 jmp = ( width - iBitmap->width ) * fmtInfo.BPP; 
 
     int x, y, p, q;
     for( y = iY, q = 0; y < ymax; ++y, ++q ) {

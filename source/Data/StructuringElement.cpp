@@ -27,7 +27,7 @@ FStructuringElement::FStructuringElement( const FVec2I& iSize, eMorphologicalEle
     : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_G8 )
     , mPivot( iSize / 2 )
 {
-    for( tSize i = 0; i < Length(); ++i )
+    for( uint32 i = 0; i < Length(); ++i )
         mData[ i ] = static_cast< uint8 >( iValue );
 
 }
@@ -65,7 +65,7 @@ FStructuringElement::operator=( const FStructuringElement& iOther ) {
     mHeight = iOther.Height();
     mBPS = mWidth * FormatInfo().BPP;
     mBTT = mHeight * mBPS;
-    mData = new tByte[ mBTT ];
+    mData = new uint8[ mBTT ];
     memcpy( mData, iOther.mData, BytesTotal() );
     return  *this;
 }
@@ -121,7 +121,7 @@ FStructuringElement::Clear() {
 
 void
 FStructuringElement::Fill( eMorphologicalElementValue iValue ) {
-    for( tSize i = 0; i < Length(); ++i )
+    for( uint32 i = 0; i < Length(); ++i )
         mData[ i ] = static_cast< uint8 >( iValue );
 }
 
@@ -137,20 +137,20 @@ FStructuringElement::SetOnes() {
 
 void
 FStructuringElement::FlipX() {
-    const tSize w = Width() - 1;
+    const uint32 w = Width() - 1;
     FStructuringElement ret( FVec2I( mWidth, mHeight ) );
-    for( tSize x = 0; x < mWidth; ++x )
-        for( tSize y = 0; y < mHeight; ++y )
+    for( uint32 x = 0; x < mWidth; ++x )
+        for( uint32 y = 0; y < mHeight; ++y )
             ret.SetAt( x, y, At( w - x, y ) );
     *this = std::move( ret );
 }
 
 void
 FStructuringElement::FlipY() {
-    const tSize h = Height() - 1;
+    const uint32 h = Height() - 1;
     FStructuringElement ret( FVec2I( mWidth, mHeight ) );
-    for( tSize x = 0; x < mWidth; ++x )
-        for( tSize y = 0; y < mHeight; ++y )
+    for( uint32 x = 0; x < mWidth; ++x )
+        for( uint32 y = 0; y < mHeight; ++y )
             ret.SetAt( x, y, At( x, h - y ) );
     *this = std::move( ret );
 }
@@ -160,8 +160,8 @@ FStructuringElement::Rotate90CW() {
     FStructuringElement ret( FVec2I( mHeight, mWidth ) );
     const int w = Height() - 1;
     const int h = Width() - 1;
-    for( tSize x = 0; x < mHeight; ++x )
-        for( tSize y = 0; y < mWidth; ++y )
+    for( uint32 x = 0; x < mHeight; ++x )
+        for( uint32 y = 0; y < mWidth; ++y )
             ret.SetAt( x, y, At( y, w - x ) );
     *this = std::move( ret );
 }
@@ -171,8 +171,8 @@ FStructuringElement::Rotate90CCW() {
     FStructuringElement ret( FVec2I( mHeight, mWidth ) );
     const int w = Height() - 1;
     const int h = Width() - 1;
-    for( tSize x = 0; x < mHeight; ++x )
-        for( tSize y = 0; y < mWidth; ++y )
+    for( uint32 x = 0; x < mHeight; ++x )
+        for( uint32 y = 0; y < mWidth; ++y )
             ret.SetAt( x, y, At( h - y, x ) );
     *this = std::move( ret );
 }
@@ -182,8 +182,8 @@ FStructuringElement::Rotate180() {
     FStructuringElement ret( FVec2I( mWidth, mHeight ) );
     const int w = Width() - 1;
     const int h = Height() - 1;
-    for( tSize x = 0; x < mWidth; ++x )
-        for( tSize y = 0; y < mHeight; ++y )
+    for( uint32 x = 0; x < mWidth; ++x )
+        for( uint32 y = 0; y < mHeight; ++y )
             ret.SetAt( x, y, At( w - x, h - y ) );
     *this = std::move( ret );
 }

@@ -23,7 +23,7 @@ ULIS3_NAMESPACE_BEGIN
 // To Lab
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- From Grey
-template< typename T1, typename T2 > void ConvBufferGreyToLab(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferGreyToLab(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferGreyToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
@@ -35,7 +35,7 @@ template< typename T1, typename T2 > void ConvBufferGreyToLab(  const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From RGB
-template< typename T1, typename T2 > void ConvBufferRGBToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferRGBToLab(   const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         ufloat r = srgb2linear( ConvType< T1, ufloat >( U2_DREF_SRC( 0 ) ) );
         ufloat g = srgb2linear( ConvType< T1, ufloat >( U2_DREF_SRC( 1 ) ) );
@@ -64,7 +64,7 @@ template< typename T1, typename T2 > void ConvBufferRGBToLab(   const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From HSV
-template< typename T1, typename T2 > void ConvBufferHSVToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferHSVToLab(   const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferHSVToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
@@ -76,7 +76,7 @@ template< typename T1, typename T2 > void ConvBufferHSVToLab(   const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From HSL
-template< typename T1, typename T2 > void ConvBufferHSLToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferHSLToLab(   const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferHSLToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
@@ -88,7 +88,7 @@ template< typename T1, typename T2 > void ConvBufferHSLToLab(   const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From CMY
-template< typename T1, typename T2 > void ConvBufferCMYToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferCMYToLab(   const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferCMYToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
@@ -100,7 +100,7 @@ template< typename T1, typename T2 > void ConvBufferCMYToLab(   const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- From CMYK
-template< typename T1, typename T2 > void ConvBufferCMYKToLab(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferCMYKToLab(  const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferCMYKToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
@@ -112,7 +112,7 @@ template< typename T1, typename T2 > void ConvBufferCMYKToLab(  const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From YUV
-template< typename T1, typename T2 > void ConvBufferYUVToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferYUVToLab(   const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     FPixelValue temp( ULIS3_FORMAT_RGBAF );
     while( iLen-- ) {
         ConvBufferYUVToRGB< T1, ufloat >( iSrcFormat, iSrc, &temp.FormatInfo(), temp.Ptr(), 1 );
@@ -124,7 +124,7 @@ template< typename T1, typename T2 > void ConvBufferYUVToLab(   const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From Lab
-template< typename T1, typename T2 > void ConvBufferLabToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferLabToLab(   const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         U2_DREF_DST( 0 ) = ConvType< T1, T2 >( U2_DREF_SRC( 0 ) );
         U2_DREF_DST( 1 ) = ConvType< T1, T2 >( U2_DREF_SRC( 1 ) );
@@ -137,7 +137,7 @@ template< typename T1, typename T2 > void ConvBufferLabToLab(   const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From XYZ
-template< typename T1, typename T2 > void ConvBufferXYZToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferXYZToLab(   const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         cmsCIELab Lab;
         cmsCIEXYZ XYZ;
@@ -160,7 +160,7 @@ template< typename T1, typename T2 > void ConvBufferXYZToLab(   const FFormatInf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From Yxy
-template< typename T1, typename T2 > void ConvBufferYxyToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen ) {
+template< typename T1, typename T2 > void ConvBufferYxyToLab(   const FFormatInfo* iSrcFormat, const uint8* iSrc, const FFormatInfo* iDstFormat, uint8* iDst, tSize iLen ) {
     while( iLen-- ) {
         cmsCIExyY xyY;
         cmsCIEXYZ XYZ;

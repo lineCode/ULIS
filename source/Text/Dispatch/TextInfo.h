@@ -28,7 +28,7 @@ struct _FPrivateTextInfo {
     const std::wstring*     text;
     const FFont*            font;
     int                     size;
-    tByte                   color[64];
+    uint8                   color[64];
     FT_Matrix               matrix;
     FVec2I                  position;
     bool                    antialiasing;

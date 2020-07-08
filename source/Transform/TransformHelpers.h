@@ -25,7 +25,7 @@ ULIS3_NAMESPACE_BEGIN
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- SampleBilinear
 template< typename T > ULIS3_FORCEINLINE void
-SampleBilinear( tByte* iDst, const tByte* iCA, const tByte* iCB, const FFormatInfo& iFMT, const float iT, const float iU ) {
+SampleBilinear( uint8* iDst, const uint8* iCA, const uint8* iCB, const FFormatInfo& iFMT, const float iT, const float iU ) {
     float alphaA, alphaB, alphaC;
     alphaA = alphaB = alphaC = 1.f;
     if( iFMT.HEA ) {
@@ -43,7 +43,7 @@ SampleBilinear( tByte* iDst, const tByte* iCA, const tByte* iCB, const FFormatIn
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------- SampleBilinearSAT
 template< typename T > ULIS3_FORCEINLINE void
-SampleBilinearSAT( tByte* iDst, const tByte* iCA, const tByte* iCB, const FFormatInfo& iFMT, const float iT, const float iU ) {
+SampleBilinearSAT( uint8* iDst, const uint8* iCA, const uint8* iCB, const FFormatInfo& iFMT, const float iT, const float iU ) {
     for( int i = 0; i < iFMT.SPP; ++i ) {
         uint8 r = iFMT.IDT[i];
         *( reinterpret_cast< T* >( iDst ) + r ) = static_cast< T >( ( reinterpret_cast< const T* >( iCA )[r] * iU + reinterpret_cast< const T* >( iCB )[r] * iT ) );
@@ -64,7 +64,7 @@ float InterpCubic( float iA, float iB, float iC, float iD, float iT ) {
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- SampleBicubicH
 template< typename T > ULIS3_FORCEINLINE void
-SampleBicubicH( float* iDst, const tByte* iA, const tByte* iB, const tByte* iC, const tByte* iD, const FFormatInfo& iFMT, const float iT ) {
+SampleBicubicH( float* iDst, const uint8* iA, const uint8* iB, const uint8* iC, const uint8* iD, const FFormatInfo& iFMT, const float iT ) {
     float alphaA, alphaB, alphaC, alphaD, alphaR;
     alphaA = alphaB = alphaC = alphaD = alphaR = 1.f;
     if( iFMT.HEA ) {
@@ -89,7 +89,7 @@ SampleBicubicH( float* iDst, const tByte* iA, const tByte* iB, const tByte* iC, 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- SampleBicubicV
 template< typename T > ULIS3_FORCEINLINE void
-SampleBicubicV( tByte* iDst, const float* iA, const float* iB, const float* iC, const float* iD, const FFormatInfo& iFMT, const float iT ) {
+SampleBicubicV( uint8* iDst, const float* iA, const float* iB, const float* iC, const float* iD, const FFormatInfo& iFMT, const float iT ) {
     float alphaA, alphaB, alphaC, alphaD, alphaR;
     alphaA = alphaB = alphaC = alphaD = alphaR = 1.f;
     if( iFMT.HEA ) {

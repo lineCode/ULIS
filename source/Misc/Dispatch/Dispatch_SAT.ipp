@@ -23,7 +23,7 @@ ULIS3_NAMESPACE_BEGIN
 
 template< typename T >
 void 
-InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
+InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, const uint8* iSrc, uint8* iDst ) {
     const FFormatInfo& fmt = iSAT->FormatInfo();
     const T* src = reinterpret_cast< const T* >( iSrc )  + fmt.SPP;
     float*   dst = reinterpret_cast< float* >( iDst )    + fmt.SPP;
@@ -38,9 +38,9 @@ InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FBlock* iSAT,
 
 template< typename T >
 void 
-InvokeComputeSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, tByte* iDst ) {
+InvokeComputeSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, uint8* iDst ) {
     const FFormatInfo& fmt = iSAT->FormatInfo();
-    const tSize stride = iSAT->Width() * fmt.SPP;
+    const uint32 stride = iSAT->Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( iDst ) + stride;
 
     for( uint32 y = 1; y < iLen; ++y ) {
@@ -58,12 +58,12 @@ void ComputeSummedAreaTable_MEM_Generic( FThreadPool*           iThreadPool
                                    , const FBlock*              iSource
                                    , FBlock*                    iSAT )
 {
-    const tByte*    src     = iSource->DataPtr();
-    tByte*          bdp     = iSAT->DataPtr();
-    const tSize     src_bps = iSource->BytesPerScanLine();
-    const tSize     bdp_bps = iSAT->BytesPerScanLine();
-    const tSize     src_bpp = iSource->BytesPerPixel();
-    const tSize     bdp_bpp = iSAT->BytesPerPixel();
+    const uint8*    src     = iSource->DataPtr();
+    uint8*          bdp     = iSAT->DataPtr();
+    const uint32     src_bps = iSource->BytesPerScanLine();
+    const uint32     bdp_bps = iSAT->BytesPerScanLine();
+    const uint32     src_bpp = iSource->BytesPerPixel();
+    const uint32     bdp_bpp = iSAT->BytesPerPixel();
     const int       w       = iSource->Width();
     const int       h       = iSource->Height();
 
@@ -71,7 +71,7 @@ void ComputeSummedAreaTable_MEM_Generic( FThreadPool*           iThreadPool
         const FFormatInfo& fmt = iSAT->FormatInfo();
         const T* wsrc = reinterpret_cast< const T* >( src );
         float*   wdst = reinterpret_cast< float* >( bdp );
-        const tSize stride = iSAT->Width()   * fmt.SPP;
+        const uint32 stride = iSAT->Width()   * fmt.SPP;
         for( int y = 0; y < h; ++y ) {
             for( uint8 j = 0; j < iSource->SamplesPerPixel(); ++j )
                 wdst[j] = static_cast< float >( wsrc[j] );
@@ -96,7 +96,7 @@ void ComputeSummedAreaTable_MEM_Generic( FThreadPool*           iThreadPool
 
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void 
-InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const tByte* iSrc, tByte* iDst ) {
+InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const uint8* iSrc, uint8* iDst ) {
     const uint8* src = reinterpret_cast< const uint8* >( iSrc ) + 4;
     float*       dst = reinterpret_cast< float* >( iDst )       + 4;
     for( uint32 x = 1; x < iLen; ++x ) {
@@ -110,8 +110,8 @@ InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const tByte* 
 }
 
 void 
-InvokeComputeSummedAreaTable_YPass_SSE42_RGBA8( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const tByte* iSrc, tByte* iDst ) {
-    const tSize stride = iSAT->Width() * 4;
+InvokeComputeSummedAreaTable_YPass_SSE42_RGBA8( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const uint8* iSrc, uint8* iDst ) {
+    const uint32 stride = iSAT->Width() * 4;
     float* dst = reinterpret_cast< float* >( iDst ) + stride;
     for( uint32 y = 1; y < iLen; ++y ) {
         __m128 n = _mm_loadu_ps( dst );
@@ -129,20 +129,20 @@ void ComputeSummedAreaTable_SSE42_RGBA8( FThreadPool*             iThreadPool
                                        , const FBlock*            iSource
                                        , FBlock*                  iSAT )
 {
-    const tByte*    src     = iSource->DataPtr();
-    tByte*          bdp     = iSAT->DataPtr();
-    const tSize     src_bps = iSource->BytesPerScanLine();
-    const tSize     bdp_bps = iSAT->BytesPerScanLine();
-    const tSize     src_bpp = iSource->BytesPerPixel();
-    const tSize     bdp_bpp = iSAT->BytesPerPixel();
+    const uint8*    src     = iSource->DataPtr();
+    uint8*          bdp     = iSAT->DataPtr();
+    const uint32     src_bps = iSource->BytesPerScanLine();
+    const uint32     bdp_bps = iSAT->BytesPerScanLine();
+    const uint32     src_bpp = iSource->BytesPerPixel();
+    const uint32     bdp_bpp = iSAT->BytesPerPixel();
     const int       w       = iSource->Width();
     const int       h       = iSource->Height();
 
     {
         const uint8* wsrc = reinterpret_cast< const uint8* >( src );
         float*   wdst = reinterpret_cast< float* >( bdp );
-        const tSize src_stride = iSource->Width()   * 4;
-        const tSize dst_stride = iSAT->Width()      * 4;
+        const uint32 src_stride = iSource->Width()   * 4;
+        const uint32 dst_stride = iSAT->Width()      * 4;
         for( int y = 0; y < h; ++y ) {
             _mm_storeu_ps( wdst, _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( wsrc ) ) ) ) );
             wsrc += src_stride;

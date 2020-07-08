@@ -23,7 +23,7 @@ ULIS3_NAMESPACE_BEGIN
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iStride ) {
+void InvokeFillMTProcessScanline_AX2( uint8* iDst, const uint32 iCount, const uint32 iStride ) {
     int64 index;
     for( index = 0; index < int64( iCount ) - 32; index += iStride ) {
         _mm256_storeu_si256( (__m256i*)iDst, _mm256_setzero_si256() );
@@ -37,7 +37,7 @@ void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSi
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-void InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const tSize iStride ) {
+void InvokeFillMTProcessScanline_SSE4_2( uint8* iDst, const uint32 iCount, const uint32 iStride ) {
     int64 index;
     for( index = 0; index < int64( iCount ) - 16; index += iStride ) {
         _mm_storeu_si128( (__m128i*)iDst, _mm_setzero_si128() );
@@ -50,7 +50,7 @@ void InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const 
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
-void InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, const tSize iStride ) {
+void InvokeFillMTProcessScanline_MEM( uint8* iDst, uint32 iCount, const uint32 iStride ) {
     // Full scanline width instead of many BPP clears
     memset( iDst, 0, iCount );
 }
@@ -66,17 +66,17 @@ void Clear_imp( FThreadPool*            iThreadPool
               , const FRect&            iArea )
 {
     const FFormatInfo&  fmt     = iDestination->FormatInfo();
-    const tSize         bpp     = fmt.BPP;
-    const tSize         w       = iDestination->Width();
-    const tSize         bps     = iDestination->BytesPerScanLine();
-    const tSize         dsh     = iArea.x * bpp;
-    tByte*              dsb     = iDestination->DataPtr() + dsh;
-    const tSize         count   = iArea.w * bpp;
+    const uint32         bpp     = fmt.BPP;
+    const uint32         w       = iDestination->Width();
+    const uint32         bps     = iDestination->BytesPerScanLine();
+    const uint32         dsh     = iArea.x * bpp;
+    uint8*              dsb     = iDestination->DataPtr() + dsh;
+    const uint32         count   = iArea.w * bpp;
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
     #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
-        const tSize stride = 32;
+        const uint32 stride = 32;
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_AX2, DST, count, stride )
@@ -84,7 +84,7 @@ void Clear_imp( FThreadPool*            iThreadPool
     #endif
     #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
     if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
-        const tSize stride = 16;
+        const uint32 stride = 16;
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )

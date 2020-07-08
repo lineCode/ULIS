@@ -28,7 +28,7 @@ public:
 public:
     // Static Maker
     static ITilePool* XCreateTilePool( tFormat          iFormat
-                                     , FColorProfile*   iProfile
+                                     , FColorSpace*   iProfile
                                      , eMicro           iMicro
                                      , eMacro           iMacro );
     static void XDeleteTilePool( ITilePool* iTilePool );
@@ -40,7 +40,7 @@ public:
     virtual const FBlock*                               EmptyTile()                             const       = 0;
     virtual tFormat                                     TileFormat()                            const       = 0;
     virtual const FFormatInfo&                          TileFormatInfo()                        const       = 0;
-    virtual const FColorProfile*                        TileColorProfile()                      const       = 0;
+    virtual const FColorSpace*                        TileColorProfile()                      const       = 0;
     virtual uint64                                      CurrentRAMUsage()                       const       = 0;
     virtual uint64                                      CurrentSwapUsage()                      const       = 0;
     virtual uint64                                      RAMUsageCapTarget()                     const       = 0;

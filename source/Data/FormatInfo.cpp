@@ -104,13 +104,5 @@ FFormatInfo::FFormatInfo( FFormatInfo&& iOther )
     iOther.IDT = nullptr;
 }
 
-/////////////////////////////////////////////////////
-// FHasFormat
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------- Construction / Destruction
-FHasFormat::FHasFormat( tFormat iFormat )
-    : mFormatInfo( iFormat )
-{}
-
 ULIS3_NAMESPACE_END
 

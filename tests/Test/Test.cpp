@@ -39,6 +39,10 @@ main() {
     auto mat = FTransform2D::GetPerspectiveTransform( A, B );
     auto inverse = mat.Inverse();
 
+    FBlock PP( 0, 0, 0 );
+    FBlock MM( 0, 0, 0 );
+    PP = MM;
+
     FVec2F C[4];
     C[0] = FTransform2D::DoHomographyTransform( A[0], mat );
     C[1] = FTransform2D::DoHomographyTransform( A[1], mat );

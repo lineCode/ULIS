@@ -16,9 +16,9 @@
 
 ULIS3_NAMESPACE_BEGIN
 typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRect& /* rect */ );
-typedef void (*fpCleanupFunction)( tByte* /* data */, void* /* info */ );
+typedef void (*fpCleanupFunction)( uint8* /* data */, void* /* info */ );
 
-ULIS3_API void OnCleanup_FreeMemory( tByte* iData, void* iInfo );
+ULIS3_API void OnCleanup_FreeMemory( uint8* iData, void* iInfo );
 
 template< typename R, typename ... Ts >
 class TCallback
@@ -51,7 +51,7 @@ private:
     void* mInfo;
 };
 
-typedef TCallback< void, tByte* > FOnCleanup;
+typedef TCallback< void, uint8* > FOnCleanup;
 typedef TCallback< void, const FBlock*, const FRect& > FOnInvalid;
 
 ULIS3_NAMESPACE_END

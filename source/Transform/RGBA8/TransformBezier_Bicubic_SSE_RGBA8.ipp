@@ -22,10 +22,10 @@
 
 ULIS3_NAMESPACE_BEGIN
 void
-InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask, const Vec4i iIDT ) {
+InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask, const Vec4i iIDT ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatInfo&      fmt     = info.destination->FormatInfo();
-    tByte*                  dst     = iDst;
+    uint8*                  dst     = iDst;
     const float*            field   = reinterpret_cast< const float* >( iField->ScanlinePtr( iLine ) );
     const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlinePtr( iLine ) );
     const int rangex = info.src_roi.w - 1;
@@ -54,7 +54,7 @@ InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8( tByte* iDst, int32 iLi
             #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
             #define GETPIXEL( _C, _X, _Y )                                                                                                                      \
                 if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
-                    const tByte* pptr = info.source->PixelPtr( _X, _Y );                                                                                        \
+                    const uint8* pptr = info.source->PixelPtr( _X, _Y );                                                                                        \
                     Vec4f _ch = LOAD( pptr );                                                                                                                   \
                     Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
                     _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \
@@ -92,10 +92,10 @@ InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8( tByte* iDst, int32 iLi
 void
 TransformBezierMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const FTransformArgs&   info        = *iInfo;
-    tByte*                  dst         = info.destination->DataPtr();
-    const tSize             dst_bps     = info.destination->BytesPerScanLine();
-    const tSize             dst_decal_y = info.dst_roi.y;
-    const tSize             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    uint8*                  dst         = info.destination->DataPtr();
+    const uint32             dst_bps     = info.destination->BytesPerScanLine();
+    const uint32             dst_decal_y = info.dst_roi.y;
+    const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     Vec4i idt( 0, 1, 2, 3 );
     idt.insert( info.source->FormatInfo().AID, 4 );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking

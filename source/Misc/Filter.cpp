@@ -20,21 +20,21 @@
 
 ULIS3_NAMESPACE_BEGIN
 
-void InvokeFilter( const size_t iLen, const FBlock* iBlock, const tByte* iPtr, const size_t iSrcBPP, std::function< void( const FBlock* iBlock, const tByte* iPtr ) > iFunc ) {
+void InvokeFilter( const size_t iLen, const FBlock* iBlock, const uint8* iPtr, const size_t iSrcBPP, std::function< void( const FBlock* iBlock, const uint8* iPtr ) > iFunc ) {
     for( size_t i = 0; i < iLen; ++i ) {
         iFunc( iBlock, iPtr );
         iPtr += iSrcBPP;
     }
 }
 
-void InvokeFilterInPlace( const size_t iLen, FBlock* iBlock, tByte* iPtr, const size_t iSrcBPP, std::function< void( FBlock* iBlock, tByte* iPtr ) > iFunc ) {
+void InvokeFilterInPlace( const size_t iLen, FBlock* iBlock, uint8* iPtr, const size_t iSrcBPP, std::function< void( FBlock* iBlock, uint8* iPtr ) > iFunc ) {
     for( size_t i = 0; i < iLen; ++i ) {
         iFunc( iBlock, iPtr );
         iPtr += iSrcBPP;
     }
 }
 
-void InvokeFilterInto( const size_t iLen, const FBlock* iSrcBlock, const tByte* iSrcPtr, const size_t iSrcBPP, FBlock* iDstBlock, tByte* iDstPtr, const size_t iDstBPP, std::function< void( const FBlock* iSrcBlock, const tByte* iSrcPtr, FBlock* iDstBlock, tByte* iDstPtr ) > iFunc ) {
+void InvokeFilterInto( const size_t iLen, const FBlock* iSrcBlock, const uint8* iSrcPtr, const size_t iSrcBPP, FBlock* iDstBlock, uint8* iDstPtr, const size_t iDstBPP, std::function< void( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr ) > iFunc ) {
     for( size_t i = 0; i < iLen; ++i ) {
         iFunc( iSrcBlock, iSrcPtr, iDstBlock, iDstPtr );
         iSrcPtr += iSrcBPP;
@@ -48,7 +48,7 @@ void Filter( FThreadPool*           iThreadPool
            , const FHostDeviceInfo& iHostDeviceInfo
            , bool                   iCallCB
            , const FBlock*          iSource
-           , std::function< void( const FBlock* iBlock, const tByte* iPtr ) > iFunc )
+           , std::function< void( const FBlock* iBlock, const uint8* iPtr ) > iFunc )
 {
     // Assertions
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
@@ -60,10 +60,10 @@ void Filter( FThreadPool*           iThreadPool
     const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
 
     // Bake Params and call
-    const tByte*    src     = iSource->DataPtr();
-    tSize           src_bps = iSource->BytesPerScanLine();
+    const uint8*    src     = iSource->DataPtr();
+    uint32           src_bps = iSource->BytesPerScanLine();
     const int       max     = iSource->Height();
-    const tSize     len     = iSource->Width();
+    const uint32     len     = iSource->Width();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , InvokeFilter
@@ -76,7 +76,7 @@ void FilterInPlace( FThreadPool*            iThreadPool
                   , const FHostDeviceInfo&  iHostDeviceInfo
                   , bool                    iCallCB
                   , FBlock*                 iSource
-                  , std::function< void( FBlock* iBlock, tByte* iPtr ) > iFunc )
+                  , std::function< void( FBlock* iBlock, uint8* iPtr ) > iFunc )
 {
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
@@ -87,10 +87,10 @@ void FilterInPlace( FThreadPool*            iThreadPool
     const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
 
     // Bake Params and call
-    tByte*      src     = iSource->DataPtr();
-    tSize       src_bps = iSource->BytesPerScanLine();
+    uint8*      src     = iSource->DataPtr();
+    uint32       src_bps = iSource->BytesPerScanLine();
     const int   max     = iSource->Height();
-    const tSize len     = iSource->Width();
+    const uint32 len     = iSource->Width();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , InvokeFilterInPlace
@@ -106,7 +106,7 @@ void FilterInto( FThreadPool*              iThreadPool
                , bool                      iCallCB
                , const FBlock*             iSource
                , FBlock*                   iDestination
-               , std::function< void( const FBlock* iSrcBlock, const tByte* iSrcPtr, FBlock* iDstBlock, tByte* iDstPtr ) > iFunc )
+               , std::function< void( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr ) > iFunc )
 {
     ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
@@ -122,12 +122,12 @@ void FilterInto( FThreadPool*              iThreadPool
     const FFormatInfo& dstFormatInfo( iDestination->FormatInfo() );
 
     // Bake Params and call
-    const tByte*    src     = iSource->DataPtr();
-    tSize           src_bps = iSource->BytesPerScanLine();
-    tByte*          dst     = iDestination->DataPtr();
-    tSize           dst_bps = iDestination->BytesPerScanLine();
+    const uint8*    src     = iSource->DataPtr();
+    uint32           src_bps = iSource->BytesPerScanLine();
+    uint8*          dst     = iDestination->DataPtr();
+    uint32           dst_bps = iDestination->BytesPerScanLine();
     const int       max     = iSource->Height();
-    const tSize     len     = iSource->Width();
+    const uint32     len     = iSource->Width();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , InvokeFilterInto

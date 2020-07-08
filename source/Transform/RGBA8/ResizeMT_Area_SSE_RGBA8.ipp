@@ -22,11 +22,11 @@
 
 ULIS3_NAMESPACE_BEGIN
 void
-InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo, const Vec4i iIDT ) {
+InvokeResizeMTProcessScanline_Area_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo, const Vec4i iIDT ) {
     const FResizeArgs&  info    = *iInfo;
     const FFormatInfo&  fmt     = info.destination->FormatInfo();
     const FFormatInfo&  sat_fmt = info.optionalSAT->FormatInfo();
-    tByte*              dst     = iDst;
+    uint8*              dst     = iDst;
 
     FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
     FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
@@ -62,7 +62,7 @@ InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::sha
         #define LOAD( X )   _mm_loadu_ps( reinterpret_cast< const float* >( X ) )
         #define SUBSAMPLE_CORNER_IMP( _C, _X, _Y )                                                                                                          \
             if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
-                const tByte* pptr = info.optionalSAT->PixelPtr( _X, _Y );                                                                                   \
+                const uint8* pptr = info.optionalSAT->PixelPtr( _X, _Y );                                                                                   \
                 _C = LOAD( pptr );                                                                                                                          \
             } else {                                                                                                                                        \
                 _C = _mm_setzero_ps();                                                                                                                      \
@@ -100,10 +100,10 @@ InvokeResizeMTProcessScanline_Area_SSE_RGBA8( tByte* iDst, int32 iLine, std::sha
 void
 ResizeMT_Area_SSE_RGBA8( std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info        = *iInfo;
-    tByte*              dst         = info.destination->DataPtr();
-    const tSize         dst_bps     = info.destination->BytesPerScanLine();
-    const tSize         dst_decal_y = info.dst_roi.y;
-    const tSize         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    uint8*              dst         = info.destination->DataPtr();
+    const uint32         dst_bps     = info.destination->BytesPerScanLine();
+    const uint32         dst_decal_y = info.dst_roi.y;
+    const uint32         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     Vec4i idt( 0, 1, 2, 3 );
     idt.insert( info.source->FormatInfo().AID, 4 );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking

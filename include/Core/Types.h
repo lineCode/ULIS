@@ -18,20 +18,20 @@
 #include <memory>
 
 ULIS3_NAMESPACE_BEGIN
-// Typedefs
-typedef  uint8_t    uint8;
-typedef  uint16_t   uint16;
-typedef  uint32_t   uint32;
-typedef  uint64_t   uint64;
-typedef  int8_t     int8;
-typedef  int16_t    int16;
-typedef  int32_t    int32;
-typedef  int64_t    int64;
-typedef  float      ufloat;
-typedef  double     udouble;
-typedef  uint8_t    tByte;
-typedef  uint32_t   tFormat;
-typedef  uint32_t   tSize;
+// Domain Range Typdefs
+typedef  uint8_t    uint8;      ///< Used for the smallest adressable type, unsigned 8bit images domain range values and main type for image bits memory storage.
+typedef  uint16_t   uint16;     ///< Used for unsigned 16bit images domain range values.
+typedef  uint32_t   uint32;     ///< Used for unsigned 32bit images domain range values and sizes such as width and height.
+typedef  uint64_t   uint64;     ///< Used for unsigned 64bit images domain range values and whole buffer sizes that might overflow 32bit range.
+typedef  int8_t     int8;       ///< Used for signed 8bit images domain range values.
+typedef  int16_t    int16;      ///< Used for signed 16bit images domain range values.
+typedef  int32_t    int32;      ///< Used for signed 32bit images domain range values.
+typedef  int64_t    int64;      ///< Used for signed 64bit images domain range values.
+typedef  float      ufloat;     ///< Used for float images domain range values, indicates normalized range [0;1]
+typedef  double     udouble;    ///< Used for double images domain range values, indicates normalized range [0;1]
+
+// Semantic Typedefs
+typedef  uint32_t   tFormat;    ///< Used for formats magic numbers, it might get changed to 64bit in the future.
 
 // Perf codes
 #define ULIS3_PERF_MT           0x1

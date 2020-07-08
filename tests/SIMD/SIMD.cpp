@@ -123,7 +123,7 @@ main() {
         const __m128i* psrc = reinterpret_cast< const __m128i* >( over );
               __m128i* pbdp = reinterpret_cast< __m128i* >( base );
 
-        for( tSize i = 0; i < len; ++i ) {
+        for( uint32 i = 0; i < len; ++i ) {
             const __m128i src = _mm_load_si128( psrc );
             const __m128i bdp = _mm_load_si128( pbdp );
 

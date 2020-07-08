@@ -52,7 +52,7 @@ FTransform2D::GetImp() const {
     return  *mImp;
 }
 
-const tByte*
+const uint8*
 FTransform2D::Ptr() const {
     return  mImp->Ptr();
 }

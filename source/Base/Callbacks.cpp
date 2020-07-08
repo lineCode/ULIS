@@ -14,7 +14,7 @@
 #include "Base/Callbacks.h"
 
 ULIS3_NAMESPACE_BEGIN
-void OnCleanup_FreeMemory( tByte* iData, void* iInfo )
+void OnCleanup_FreeMemory( uint8* iData, void* iInfo )
 {
     delete [] iData;
 }

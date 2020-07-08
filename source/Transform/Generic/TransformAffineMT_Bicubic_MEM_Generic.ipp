@@ -23,23 +23,23 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
+InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatInfo&      fmt     = info.destination->FormatInfo();
-    tByte*                  dst     = iDst;
+    uint8*                  dst     = iDst;
 
     glm::vec3 point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
     glm::vec2 point_in_src( info.inverseTransform * point_in_dst );
     glm::vec2 src_dx( info.inverseTransform * glm::vec3( 1.f, 0.f, 0.f ) );
 
-    tByte* p00 = new tByte[ fmt.BPP * 4 ];      tByte* p01 = new tByte[ fmt.BPP * 4 ];
-    tByte* p10 = p00 + fmt.BPP;                 tByte* p11 = p01 + fmt.BPP;
-    tByte* p20 = p10 + fmt.BPP;                 tByte* p21 = p11 + fmt.BPP;
-    tByte* p30 = p20 + fmt.BPP;                 tByte* p31 = p21 + fmt.BPP;
-    tByte* p02 = new tByte[ fmt.BPP * 4 ];      tByte* p03 = new tByte[ fmt.BPP * 4 ];
-    tByte* p12 = p02 + fmt.BPP;                 tByte* p13 = p03 + fmt.BPP;
-    tByte* p22 = p12 + fmt.BPP;                 tByte* p23 = p13 + fmt.BPP;
-    tByte* p32 = p22 + fmt.BPP;                 tByte* p33 = p23 + fmt.BPP;
+    uint8* p00 = new uint8[ fmt.BPP * 4 ];      uint8* p01 = new uint8[ fmt.BPP * 4 ];
+    uint8* p10 = p00 + fmt.BPP;                 uint8* p11 = p01 + fmt.BPP;
+    uint8* p20 = p10 + fmt.BPP;                 uint8* p21 = p11 + fmt.BPP;
+    uint8* p30 = p20 + fmt.BPP;                 uint8* p31 = p21 + fmt.BPP;
+    uint8* p02 = new uint8[ fmt.BPP * 4 ];      uint8* p03 = new uint8[ fmt.BPP * 4 ];
+    uint8* p12 = p02 + fmt.BPP;                 uint8* p13 = p03 + fmt.BPP;
+    uint8* p22 = p12 + fmt.BPP;                 uint8* p23 = p13 + fmt.BPP;
+    uint8* p32 = p22 + fmt.BPP;                 uint8* p33 = p23 + fmt.BPP;
     float* hh0 = new float[ fmt.SPP * 4 ];
     float* hh1 = new float[ fmt.SPP * 4 ];
     float* hh2 = new float[ fmt.SPP * 4 ];
@@ -84,10 +84,10 @@ InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic( tByte* iDst, int32 i
 template< typename T > void
 TransformAffineMT_Bicubic_MEM_Generic( std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info        = *iInfo;
-    tByte*                  dst         = info.destination->DataPtr();
-    const tSize             dst_bps     = info.destination->BytesPerScanLine();
-    const tSize             dst_decal_y = info.dst_roi.y;
-    const tSize             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
+    uint8*                  dst         = info.destination->DataPtr();
+    const uint32             dst_bps     = info.destination->BytesPerScanLine();
+    const uint32             dst_decal_y = info.dst_roi.y;
+    const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic< T >

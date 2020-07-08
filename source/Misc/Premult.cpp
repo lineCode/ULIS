@@ -20,7 +20,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T >
-void InvokesPremult( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
+void InvokesPremult( size_t iW, uint8* iDst, const FFormatInfo* iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         T alpha = iFmt->HEA ? *( dst + iFmt->AID ) : MaxType< T >();
@@ -33,7 +33,7 @@ void InvokesPremult( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
 }
 
 template< typename T >
-void InvokesUnpremult( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
+void InvokesUnpremult( size_t iW, uint8* iDst, const FFormatInfo* iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         T alpha = iFmt->HEA ? *( dst + iFmt->AID ) : MaxType< T >();
@@ -45,7 +45,7 @@ void InvokesUnpremult( size_t iW, tByte* iDst, const FFormatInfo* iFmt ) {
     }
 }
 
-typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, tByte* iDst, const FFormatInfo* iFmt );
+typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormatInfo* iFmt );
 fpDispatchedAlphamulInvoke QueryDispatchedPremultInvokeForParameters( eType iType ) {
     switch( iType ) {
         case TYPE_UINT8     : return  InvokesPremult< uint8 >;
@@ -86,7 +86,7 @@ Premultiply( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
-    tByte*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->DataPtr();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
@@ -115,7 +115,7 @@ Unpremultiply( FThreadPool*             iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
-    tByte*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->DataPtr();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();

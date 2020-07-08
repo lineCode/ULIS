@@ -1,5 +1,5 @@
 body {
-    background: rgb( 230, 230, 230 );
+    background: rgb( 245, 245, 245 );
     color: #282828;
 }
 
@@ -9,12 +9,21 @@ body {
     box-sizing: border-box;
     margin: 0px;
     width: 100%;
-    color: #00a99d;
+    color: #2b91af;
     background-color: #FFFFFF;
+}
+
+div.dynheader {
+    visibility:hidden;
 }
 
 #projectname {
     visibility:hidden;
+}
+
+dl.warning, dl.attention {
+    border-left: 0px solid;
+    border-color: #FFFFFF;
 }
 
 #projectbrief {
@@ -26,9 +35,10 @@ table.classindex {
 }
 
 div.contents {
-    width: 80%;
+    width: 60%;
     margin: auto;
     background:white;
+    padding: 5px 35px 10px 35px;
 }
 
 /* Class Index Title */
@@ -43,22 +53,25 @@ div.ah, span.ah {
     width:100%;
     border: none;
     box-shadow: none;
-    border-bottom: 2px solid #00a99d;
+    border-bottom: 2px solid #2b91af;
 }
 
 a {
-    color: #00a99d;
+    color: #2b91af;
 }
 
 .contents a:visited {
-    color: #00a99d;
+    color: #2b91af;
 }
 
 div.header {
+    width: 60%;
     background-image: none;
-    background: rgb( 248, 248, 248 );
-    margin: 0px;
-    border-bottom: 5px solid #00a99d;
+    background:white;
+    margin: auto;
+    margin-top: 15px;
+    border-bottom: 0px solid #2b91af;
+    padding: 15px 35px 5px 35px;
 }
 
 div.qindex, div.navtab {
@@ -85,7 +98,7 @@ hr {
     height: 14px;
     width: 16px;
     display: inline-block;
-    background-color: #00a99d;
+    background-color: #2b91af;
     color: white;
     text-align: center;
     border-radius: 4px;
@@ -99,17 +112,21 @@ hr {
     padding-left: 40px;
 }
 
+div.headertitle {
+    padding: 0;
+}
+
 table.memberdecls {
 
     border-spacing: 0px;
     padding: 0px;
-    width:80%;
+    width:100%;
     margin:auto;
 }
 
 h2.groupheader {
-    border-bottom: 2px solid #00a99d;
-    color: #00a99d;
+    border-bottom: 2px solid #2b91af;
+    color: #2b91af;
     font-size: 150%;
     font-weight: normal;
     margin-top: 1.75em;
@@ -119,7 +136,7 @@ h2.groupheader {
 }
 
 span.mlabel {
-    background-color: #00a99d;
+    background-color: #2b91af;
     border: none;
     text-shadow: none;
     color: white;
@@ -154,7 +171,7 @@ span.mlabel {
 
 .memproto, dl.reflist dt {
     border:none;
-    border-bottom: 2px solid #00a99d;
+    border-bottom: 2px solid #2b91af;
     padding: 6px 0px 6px 0px;
     color: #282828;
     font-weight: bold;
@@ -233,7 +250,7 @@ div.textblock {
 
 .sm-dox a:hover {
     background-image: none;
-    background: #00a99d;
+    background: #2b91af;
     color: white;
     text-shadow: 0 1px 1px black;
     border:none;

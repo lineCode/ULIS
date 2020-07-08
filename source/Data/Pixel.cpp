@@ -24,7 +24,7 @@ IPixel::~IPixel()
 }
 
 
-IPixel::IPixel( tFormat iFormat, FColorProfile* iProfile )
+IPixel::IPixel( tFormat iFormat, FColorSpace* iProfile )
     : mData( nullptr )
     , mInfo( iFormat )
     , mProfile( iProfile )
@@ -55,7 +55,7 @@ IPixel::operator!=( const  IPixel& iOther )  const {
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
-tByte*
+uint8*
 IPixel::Ptr()
 {
     return  mData;
@@ -63,13 +63,13 @@ IPixel::Ptr()
 
 
 void
-IPixel::AssignProfile( FColorProfile* iProfile )
+IPixel::AssignProfile( FColorSpace* iProfile )
 {
     mProfile = iProfile;
 }
 
 
-const tByte*
+const uint8*
 IPixel::Ptr() const
 {
     return  mData;
@@ -157,7 +157,7 @@ IPixel::FormatInfo() const
     return  mInfo;
 }
 
-FColorProfile*
+FColorSpace*
 IPixel::Profile() const
 {
     return  mProfile;
@@ -198,11 +198,11 @@ IPixel::AssignMemoryUnsafe( const IPixel& iOther )
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------ Generic Accesss API
-tByte*
+uint8*
 IPixel::SamplePtr( uint8 iIndex )
 {
     ULIS3_ASSERT( iIndex < NumSamples(), "Index out of range" );
-    return  ( tByte* )( Ptr() + ( (uint64)iIndex * BytesPerSample() ) );
+    return  ( uint8* )( Ptr() + ( (uint64)iIndex * BytesPerSample() ) );
 }
 
 
@@ -215,11 +215,11 @@ IPixel::SamplePtrT( uint8 iIndex )
 }
 
 
-const tByte*
+const uint8*
 IPixel::SamplePtr( uint8 iIndex ) const
 {
     ULIS3_ASSERT( iIndex < NumSamples(), "Index out of range" );
-    return  ( tByte* )( Ptr() + ( (uint64)iIndex * BytesPerSample() ) );
+    return  ( uint8* )( Ptr() + ( (uint64)iIndex * BytesPerSample() ) );
 }
 
 
@@ -322,22 +322,22 @@ FPixelValue::~FPixelValue()
 FPixelValue::FPixelValue()
     : tParent( ULIS3_FORMAT_RGBA8, nullptr )
 {
-    mData = new tByte[ Depth() ];
+    mData = new uint8[ Depth() ];
     memset( mData, 0, Depth() );
 }
 
-FPixelValue::FPixelValue( uint32 iFormat, FColorProfile* iProfile )
+FPixelValue::FPixelValue( uint32 iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
-    mData = new tByte[ Depth() ];
+    mData = new uint8[ Depth() ];
     memset( mData, 0, Depth() );
 }
 
 
-FPixelValue::FPixelValue( const tByte* iData, tFormat iFormat, FColorProfile* iProfile )
+FPixelValue::FPixelValue( const uint8* iData, tFormat iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
-    mData = new tByte[ Depth() ];
+    mData = new uint8[ Depth() ];
     memcpy( mData, iData, Depth() );
 }
 
@@ -345,14 +345,14 @@ FPixelValue::FPixelValue( const tByte* iData, tFormat iFormat, FColorProfile* iP
 FPixelValue::FPixelValue( const FPixelProxy& iProxy )
     : tParent( iProxy.Format(), iProxy.Profile() )
 {
-    mData = new tByte[ Depth() ];
+    mData = new uint8[ Depth() ];
     memcpy( mData, iProxy.Ptr(), Depth() );
 }
 
 FPixelValue::FPixelValue( const FPixelValue& iValue )
     : tParent( iValue.Format(), iValue.Profile() )
 {
-    mData = new tByte[ Depth() ];
+    mData = new uint8[ Depth() ];
     memcpy( mData, iValue.Ptr(), Depth() );
 }
 
@@ -371,7 +371,7 @@ FPixelValue::operator=( const FPixelValue& iOther ) {
 
     mInfo = iOther.mInfo;
     mProfile = iOther.mProfile;
-    mData = new tByte[ Depth() ];
+    mData = new uint8[ Depth() ];
     memcpy( mData, iOther.Ptr(), Depth() );
 
     return  *this;
@@ -379,10 +379,10 @@ FPixelValue::operator=( const FPixelValue& iOther ) {
 
 
 template< typename T >
-FPixelValue::FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorProfile* iProfile )
+FPixelValue::FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
-    mData = new tByte[ Depth() ];
+    mData = new uint8[ Depth() ];
     switch( Type() )
     {
         case TYPE_UINT8:        Set_imp< T, uint8   >( iValues ); return;
@@ -803,13 +803,13 @@ FPixelProxy::~FPixelProxy()
 {
 }
 
-FPixelProxy::FPixelProxy( tFormat iFormat, FColorProfile* iProfile )
+FPixelProxy::FPixelProxy( tFormat iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     mData = nullptr;
 }
 
-FPixelProxy::FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile )
+FPixelProxy::FPixelProxy( uint8* iData, tFormat iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     ULIS3_ASSERT( iData, "Bad data provided." );
@@ -817,11 +817,11 @@ FPixelProxy::FPixelProxy( tByte* iData, tFormat iFormat, FColorProfile* iProfile
 }
 
 
-FPixelProxy::FPixelProxy( const tByte* iData, tFormat iFormat, FColorProfile* iProfile )
+FPixelProxy::FPixelProxy( const uint8* iData, tFormat iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     ULIS3_ASSERT( iData, "Bad data provided." );
-    mData = const_cast< tByte* >( iData );
+    mData = const_cast< uint8* >( iData );
 }
 
 FPixelProxy::FPixelProxy( const FPixelProxy& iValue )
@@ -845,15 +845,15 @@ FPixelProxy::operator=( const FPixelProxy& iValue ) {
 }
 
 void
-FPixelProxy::SetPtr( tByte* iPtr )
+FPixelProxy::SetPtr( uint8* iPtr )
 {
     mData = iPtr;
 }
 
 void
-FPixelProxy::SetPtr( const tByte* iPtr )
+FPixelProxy::SetPtr( const uint8* iPtr )
 {
-    mData = const_cast< tByte* >( iPtr );
+    mData = const_cast< uint8* >( iPtr );
 }
 
 
@@ -892,13 +892,13 @@ ULIS3_FOR_ALL_TYPES_DO( X_DO_J, 0, 0, 0, 0 )
 #undef X_DO_I
 #undef X_DO_J
 
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< int >, FColorProfile* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< float >, FColorProfile* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< double >, FColorProfile* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint8 >, FColorProfile* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint16 >, FColorProfile* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint32 >, FColorProfile* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint64 >, FColorProfile* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< int >, FColorSpace* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< float >, FColorSpace* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< double >, FColorSpace* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint8 >, FColorSpace* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint16 >, FColorSpace* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint32 >, FColorSpace* );
+template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint64 >, FColorSpace* );
 
 ULIS3_NAMESPACE_END
 

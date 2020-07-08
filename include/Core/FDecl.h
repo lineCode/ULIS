@@ -22,7 +22,7 @@ class   IPixel;
 class   FPixelValue;
 class   FPixelProxy;
 class   FProfileRegistry;
-class   FColorProfile;
+class   FColorSpace;
 class   FThreadPool;
 class   FFontRegistry;
 class   FFontEngine;

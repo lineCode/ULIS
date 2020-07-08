@@ -21,7 +21,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T1, typename T2 >
-void InvokeExtractInto( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP ) {
+void InvokeExtractInto( size_t iW, const uint8* iSrc, uint8* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP ) {
     const T1*   src = reinterpret_cast< const T1* >( iSrc );
     T2*         dst = reinterpret_cast< T2* >( iDst );
     const size_t len = iStridesSrc.size();
@@ -33,7 +33,7 @@ void InvokeExtractInto( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< 
     }
 }
 
-typedef void (*fpDispatchedExtractInvoke)( size_t iW, const tByte* iSrc, tByte* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP );
+typedef void (*fpDispatchedExtractInvoke)( size_t iW, const uint8* iSrc, uint8* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP );
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType );
 
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType ) {
@@ -137,8 +137,8 @@ Extract( FThreadPool*           iThreadPool
     // Bake Params
     uint8           src_spp = iSource->SamplesPerPixel();
     uint8           dst_spp = iDestination->SamplesPerPixel();
-    const tByte*    srb = iSource->DataPtr();
-    tByte*          dsb = iDestination->DataPtr();
+    const uint8*    srb = iSource->DataPtr();
+    uint8*          dsb = iDestination->DataPtr();
     size_t          src_bps = iSource->BytesPerScanLine();
     size_t          dst_bps = iDestination->BytesPerScanLine();
     #define SRC srb + ( pLINE * src_bps )

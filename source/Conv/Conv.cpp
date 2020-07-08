@@ -73,12 +73,12 @@ void Conv( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params and call
-    const tByte*    src = iSource->DataPtr();
-    tByte*          dst = iDestination->DataPtr();
-    tSize           src_bps = iSource->BytesPerScanLine();
-    tSize           dst_bps = iDestination->BytesPerScanLine();
+    const uint8*    src = iSource->DataPtr();
+    uint8*          dst = iDestination->DataPtr();
+    uint32           src_bps = iSource->BytesPerScanLine();
+    uint32           dst_bps = iDestination->BytesPerScanLine();
     const int   max = iSource->Height();
-    const tSize len = iSource->Width();
+    const uint32 len = iSource->Width();
     const FFormatInfo* srcnfo = &iSource->FormatInfo();
     const FFormatInfo* dstnfo = &iDestination->FormatInfo();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
