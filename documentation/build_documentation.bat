@@ -10,4 +10,6 @@ pushd %~dp0
 cd ..
 
 doxygen %~dp0Doxyfile
-PAUSE
+copy /Y "documentation\doc.png"           "documentation\ULIS3\html\doc.png"
+copy /Y "documentation\folderclosed.png"  "documentation\ULIS3\html\folderclosed.png"
+copy /Y "documentation\folderopen.png"    "documentation\ULIS3\html\folderopen.png"

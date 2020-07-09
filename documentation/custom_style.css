@@ -1,7 +1,8 @@
 body {
-    background: rgb( 245, 245, 245 );
-    color: #282828;
-    font-family: 'Helvetica';
+    /*background: rgb( 245, 245, 245 );*/
+    background: white;
+    color: #24292e;
+    font-family: 'Segoe UI Light';
 }
 
 #titlearea {
@@ -10,9 +11,14 @@ body {
     box-sizing: border-box;
     margin: 0px;
     width: initial;
-    color: #2b91af;
+    color: #0366d6;
     background-color: #FFFFFF;
     border: 0px;
+    background: rgb( 245, 245, 245 );
+}
+
+#titlearea table tbody tr {
+    height:initial !important;
 }
 
 div.dynheader {
@@ -25,12 +31,19 @@ div.dynheader {
 }
 
 #projectbrief {
+    display:none;
     visibility:hidden;
     font: 0%;
 }
 
-#projectlogo {
+table #projectlogo {
     text-align: left;
+    font-size:0px !important;
+    padding: 5px 20px 5px 20px;
+}
+
+#projectalign {
+    display: none;
 }
 
 dl.warning, dl.attention {
@@ -47,6 +60,11 @@ div.contents {
     margin: auto;
     background:white;
     padding: 5px 35px 10px 35px;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-bottom-left-radius:2px;
+    border-bottom-right-radius:2px;
 }
 
 /* Class Index Title */
@@ -61,15 +79,21 @@ div.ah, span.ah {
     width:100%;
     border: none;
     box-shadow: none;
-    border-bottom: 2px solid #2b91af;
+    border-bottom: 1px solid #ccc;
 }
 
 a {
-    color: #2b91af;
+    font-weight: normal;
+    color: #0366d6;
+}
+
+a.el {
+    font-weight: normal;
+    font-family: 'Segoe UI';
 }
 
 .contents a:visited {
-    color: #2b91af;
+    color: #0366d6;
 }
 
 div.header {
@@ -77,14 +101,20 @@ div.header {
     background-image: none;
     background:white;
     margin: auto;
-    margin-top: 15px;
-    border-bottom: 0px solid #2b91af;
+    margin-top: 50px;
+    border-bottom: 0px solid #0366d6;
     padding: 15px 35px 5px 35px;
+
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-top-left-radius:2px;
+    border-top-right-radius:2px;
 }
 
 div.qindex, div.navtab {
     border: none;
-    background: rgb( 248, 248, 248 );
+    background: white;
     text-transform: uppercase;
 }
 
@@ -106,7 +136,7 @@ hr {
     height: 14px;
     width: 16px;
     display: inline-block;
-    background-color: #2b91af;
+    background-color: #0366d6;
     color: white;
     text-align: center;
     border-radius: 4px;
@@ -144,7 +174,7 @@ h2.groupheader {
 }
 
 span.mlabel {
-    background-color: #2b91af;
+    background-color: #0366d6;
     border: none;
     text-shadow: none;
     color: white;
@@ -201,7 +231,7 @@ div.memproto {
 div.textblock {
     padding: 15px;
     color: #282828;
-    font-weight: bold;
+    /*font-weight: bold;*/
     background-color: #white;
 }
 
@@ -257,12 +287,12 @@ div.textblock {
 }
 
 a:hover {
-    text-decoration: none;
+    /*text-decoration: none;*/
 }
 
 .sm-dox a:hover {
     background-image: none;
-    color: #2b91af;
+    color: #0366d6;
     text-shadow: 0 0px 0px black;
     border:none;
     text-decoration: none;
@@ -329,19 +359,19 @@ tr.heading {
 #main-nav {
     display: block;
     width:100%;
-    background:white
+    background: rgb( 245, 245, 245 );
 }
 
 #main-menu li a {
-    background: white;
     background-image: none;
-    color: #2C2C2C;
+    color: #4C4C4C;
     text-shadow: 0 0px 0px black;
     border:none;
     text-decoration: none;
 }
 
 .memTemplParams {
+    display:none;
     visibility: hidden;
     font: 0%;
     height:0px;
@@ -374,4 +404,106 @@ tr.heading {
 .section.warning dd {
     display: inline;
     margin: 5px;
+}
+
+.title {
+    font: 400 14px/28px Segoe UI Black,sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    font-size: 150%;
+    font-weight: bold;
+    margin: 10px 2px;
+}
+
+body, table, div, p, dl {
+    font: 400 14px/22px Segoe UI Semilight,sans-serif;
+}
+
+.sm-dox a, .sm-dox a:focus, .sm-dox a:hover, .sm-dox a:active {
+    padding: 0 12px;
+    padding-right: 43px;
+    font-family: "Segoe UI Light";
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 36px;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.9);
+    color: #283a5d;
+    outline: 0;
+}
+
+dl.see {
+    margin-left: -7px;
+    padding-left: 3px;
+}
+
+table.directory tbody tr td:first-child {
+    width:80%;
+    text-overflow: ellipsis;
+    overflow:hidden;
+}
+
+table.directory tbody tr td:last-child {
+    text-align:right;
+}
+
+table.directory {
+    font: 400 14px/22px Segoe UI Semilight,sans-serif;
+    width: 100%;
+    table-layout: fixed;
+}
+
+div.directory {
+    margin: 10px 0px;
+    border-top: 1px solid #ccc;
+    border-bottom: 0px;
+    width: 100%;
+}
+
+.arrow {
+    color: #79b8ff;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    font-size: 80%;
+    display: inline-block;
+    width: 16px;
+    height: 22px;
+    font-family: "Arial Black";
+}
+
+.iconfopen {
+    width: 24px;
+    height: 18px;
+    margin-bottom: 4px;
+    background-image: url('folderopen.png');
+    background-position: 0px 0px;
+    background-repeat: repeat-y;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.iconfclosed {
+    width: 24px;
+    height: 18px;
+    margin-bottom: 4px;
+    background-image: url('folderclosed.png');
+    background-position: 0px 0px;
+    background-repeat: repeat-y;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.icondoc {
+    width: 24px;
+    height: 18px;
+    margin-bottom: 4px;
+    background-image: url('doc.png');
+    background-position: 0px 0px;
+    background-repeat: repeat-y;
+    vertical-align: top;
+    display: inline-block;
 }

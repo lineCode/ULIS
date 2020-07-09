@@ -424,6 +424,7 @@ public:
 
     \sa Pixel()
     \sa PixelData()
+    \sa FColor
     */
     FColor Color( uint16 iX, uint16 iY ) const;
 
@@ -443,6 +444,7 @@ public:
 
     \sa Color()
     \sa PixelData()
+    \sa FPixel
     */
     FPixel Pixel( uint16 iX, uint16 iY );
 
@@ -461,6 +463,7 @@ public:
 
     \sa Color()
     \sa PixelData()
+    \sa FPixel
     */
     const FPixel Pixel( uint16 iX, uint16 iY ) const;
 

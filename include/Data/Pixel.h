@@ -63,12 +63,60 @@ public:
     /*! Construct a IHasChannels interface in a derived class */
     IHasChannels( uint32 iFormat, FColorSpace* iColorSpace = nullptr );
 
+    /*! Comparison strict equal operator */
     bool operator==( const IHasChannels& iOther ) const;
+
+    /*! Comparison strict not equal operator */
     bool operator!=( const IHasChannels& iOther ) const;
+
+    /*!
+    Obtain a pointer to the raw data at the base element of the underlying
+    buffer.
+
+    The data is accessible through the returned pointer and can be modified
+    safely, as long as you don't dereference elements outside of the buffer
+    boundaries.
+
+    \sa SampleData()
+    */
     uint8* Data();
+
+    /*!
+    Obtain a const pointer to the raw data at the base element of the underlying
+    buffer.
+
+    The data is accessible through the returned pointer and can be read
+    safely, as long as you don't dereference elements outside of the buffer
+    boundaries.
+
+    \sa SampleData()
+    */
     const uint8* Data() const;
-    uint8* SampleData( uint8 iIndex );
-    const uint8* SampleData( uint8 iIndex ) const;
+
+    /*!
+    Obtain a pointer to the data at the specified sample index in the
+    underlying buffer, without using the format index redirection.
+
+    This method is aware of the format depth though, and the returned pointer
+    can be modified safely, as long as you don't dereference elements outside of
+    the buffer boundaries.
+
+    \sa Data()
+    */
+    uint8* SampleDataRaw( uint8 iIndex );
+
+    /*!
+    Obtain a pointer to the data at the specified sample index in the
+    underlying buffer, without using the format index redirection.
+
+    This method is aware of the format depth though, and the returned pointer
+    can be read safely, as long as you don't dereference elements outside of
+    the buffer boundaries.
+
+    \sa Data()
+    */
+    const uint8* SampleDataRaw( uint8 iIndex ) const;
+
     template< typename T > T* SampleDataT( uint8 iIndex );
     template< typename T > const T* SampleDataT( uint8 iIndex ) const;
     template< typename T > T ValueRaw( uint8 iIndex ) const;
