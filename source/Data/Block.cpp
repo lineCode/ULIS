@@ -12,276 +12,176 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Data/Block.h"
-#include "Base/CRC32.h"
-#include "Base/MD5.h"
-//#include "Base/UUID.h"
-#include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// FBlock
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------- Construction / Destruction
 FBlock::~FBlock()
 {
     mOnCleanup.ExecuteIfBound( mData );
 }
 
-
-FBlock::FBlock( int iWidth
-              , int iHeight
-              , tFormat iFormat
-              , FColorSpace* iProfile
-              , const FOnInvalid& iOnInvalid
-              , const FOnCleanup& iOnCleanup )
-    : mData( nullptr )
+FBlock::FBlock(
+          uint16 iWidth
+        , uint16 iHeight
+        , tFormat iFormat
+        , const FColorSpace* iColorSpace
+        , const FOnInvalid& iOnInvalid
+        , const FOnCleanup& iOnCleanup
+    )
+    : FHasFormat( iFormat )
+    , mData( nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
+    , mBytesPerScanline( 0 )
+    , mBytesTotal( 0 )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
-    , mProfile( iProfile )
-    //, mUUID( GenerateWeakUUID( 16 ) )
-    , mInfo( iFormat )
+    , mColorSpace( iColorSpace )
 {
     ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
-    mBPS = mWidth * mInfo.BPP;
-    mBTT = mHeight * mBPS;
+    mBytesPerScanline = mWidth * FormatInfo().BPP;
+    mBytesTotal = mHeight * mBytesPerScanline;
 
-    uint32 num = mWidth * mHeight * mInfo.SPP;
-    ULIS3_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" )
+    uint32 num = mWidth * mHeight * FormatInfo().SPP;
+    ULIS3_ASSERT( num != 0, "Cannot allocate a buffer of size 0" )
 
-    mData = new uint8[ mBTT ];
+    // Default allocator
+    mData = new uint8[ mBytesTotal ];
 }
 
-
-FBlock::FBlock( uint8* iData
-              , int iWidth
-              , int iHeight
-              , tFormat iFormat
-              , FColorProfile* iProfile
-              , const FOnInvalid& iOnInvalid
-              , const FOnCleanup& iOnCleanup )
-    : mData( iData )
+FBlock::FBlock(
+          uint8* iData
+        , uint16 iWidth
+        , uint16 iHeight
+        , tFormat iFormat
+        , const FColorSpace* iColorSpace = nullptr
+        , const FOnInvalid& iOnInvalid = FOnInvalid()
+        , const FOnCleanup& iOnCleanup = FOnCleanup()
+    )
+    : FHasFormat( iFormat )
+    , mData( iData )
     , mWidth( iWidth )
     , mHeight( iHeight )
+    , mBytesPerScanline( 0 )
+    , mBytesTotal( 0 )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
-    , mProfile( iProfile )
-    //, mUUID( GenerateWeakUUID( 16 ) )
-    , mInfo( iFormat )
+    , mColorSpace( iColorSpace )
 {
     ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
-    mBPS = mWidth * mInfo.BPP;
-    mBTT = mHeight * mBPS;
-
+    mBytesPerScanline = mWidth * FormatInfo().BPP;
+    mBytesTotal = mHeight * mBytesPerScanline;
 }
 
+//static
+FBlock*
+FBlock::XMake(
+      uint16 iWidth
+    , uint16 iHeight
+    , tFormat iFormat
+    , FColorSpace* iColorSpace = nullptr
+    , const FOnInvalid& iOnInvalid = FOnInvalid()
+    , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory )
+)
+{
+    return  new FBlock( iWidth, iHeight, iFormat, iColorSpace, iOnInvalid, iOnCleanup );
+}
 
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------- Public API
+//static
+FBlock* XMake(
+      uint8* iData
+    , uint16 iWidth
+    , uint16 iHeight
+    , tFormat iFormat
+    , FColorSpace* iColorSpace = nullptr
+    , const FOnInvalid& iOnInvalid = FOnInvalid()
+    , const FOnCleanup& iOnCleanup = FOnCleanup()
+)
+{
+    return  new FBlock( iData, iWidth, iHeight, iFormat, iColorSpace, iOnInvalid, iOnCleanup );
+}
+
+//static
+void
+FBlock::XDelete( FBlock* iBlock )
+{
+    delete  iBlock;
+}
+
 uint8*
-FBlock::DataPtr()
+FBlock::Data()
 {
     return  mData;
 }
 
-
 uint8*
-FBlock::PixelPtr( int iX, int iY )
+FBlock::ScanlineData( uint16 iRow )
 {
-    ULIS3_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
-    ULIS3_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" );
-    return  mData + ( iX * mInfo.BPP + iY * mBPS );
+    ULIS3_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
+    return  mData + ( iRow * mBytesPerScanline );
 }
 
 
 uint8*
-FBlock::ScanlinePtr( int iRow )
+FBlock::PixelData( uint16 iX, uint16 iY )
 {
-    ULIS3_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" );
-    return  mData + ( iRow * mBPS );
+    ULIS3_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
+    ULIS3_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
+    return  mData + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
 }
-
 
 const uint8*
-FBlock::DataPtr() const
+FBlock::Data() const
 {
     return  mData;
 }
 
+const uint8*
+FBlock::ScanlineData( uint16 iRow ) const
+{
+    ULIS3_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
+    return  mData + ( iRow * mBytesPerScanline );
+}
+
+const uint8*
+FBlock::PixelData( uint16 iX, uint16 iY ) const
+{
+    ULIS3_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
+    ULIS3_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
+    return  mData + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
+}
 
 void
-FBlock::AssignProfile( FColorSpace* iProfile )
+FBlock::AssignColorSpace( const FColorSpace* iColorSpace )
 {
-    mProfile = iProfile;
+    mColorSpace = iColorSpace;
 }
 
-
-const uint8*
-FBlock::PixelPtr( int iX, int iY ) const
+const FColorSpace*
+FBlock::ColorSpace() const
 {
-    ULIS3_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" )
-    ULIS3_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" )
-    return  mData + ( iX * mInfo.BPP + iY * mBPS );
+    return  mColorSpace;
 }
 
-
-const uint8*
-FBlock::ScanlinePtr( int iRow ) const
-{
-    ULIS3_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" )
-    return  mData + ( iRow * mBPS );
-}
-
-
-uint32
+uint16
 FBlock::Width() const
 {
     return  mWidth;
 }
 
 
-uint32
+uint16
 FBlock::Height() const
 {
     return  mHeight;
 }
 
 uint32
-FBlock::Length() const
+FBlock::Area() const
 {
     return  mWidth * mHeight;
 }
-
-uint32
-FBlock::BytesPerSample() const
-{
-    return  mInfo.BPC;
-}
-
-
-uint32
-FBlock::BytesPerPixel() const
-{
-    return  mInfo.BPP;
-}
-
-
-uint32
-FBlock::BytesPerScanLine() const
-{
-    return  mBPS;
-}
-
-
-uint32
-FBlock::BytesTotal() const
-{
-    return  mBTT;
-}
-
-
-tFormat
-FBlock::Format() const
-{
-    return  mInfo.FMT;
-}
-
-
-eColorModel
-FBlock::Model() const
-{
-    return  mInfo.CM;
-}
-
-
-eType
-FBlock::Type() const
-{
-    return  mInfo.TP;
-}
-
-
-bool
-FBlock::HasAlpha() const
-{
-    return  mInfo.HEA;
-}
-
-
-bool
-FBlock::Swapped() const
-{
-    return  static_cast< bool >( mInfo.SWA );
-}
-
-
-bool
-FBlock::Reversed() const
-{
-    return  static_cast< bool >( mInfo.REV );
-}
-
-
-uint8
-FBlock::SamplesPerPixel() const
-{
-    return  mInfo.SPP;
-}
-
-
-uint8
-FBlock::NumColorChannels() const
-{
-    return  mInfo.NCC;
-}
-
-
-FColorSpace*
-FBlock::Profile() const
-{
-    return  mProfile;
-}
-
-
-uint8
-FBlock::RedirectedIndex( uint8 iIndex ) const
-{
-    ULIS3_ASSERT( iIndex >= 0 && iIndex < mInfo.SPP, "Bad Index" );
-    return  mInfo.IDT[ iIndex ];
-}
-
-
-uint8
-FBlock::AlphaIndex() const
-{
-    ULIS3_ASSERT( mInfo.HEA, "Bad Call" );
-    return  mInfo.AID;
-}
-
-
-void
-FBlock::Invalidate( bool iCall ) const
-{
-    Invalidate( FRect( 0, 0, Width(), Height() ), iCall );
-}
-
-
-void
-FBlock::Invalidate( const FRect& iRect, bool iCall ) const
-{
-    if( !iCall )
-        return;
-
-    ULIS3_ASSERT( iRect.x >= 0 && iRect.x < (int)mWidth,                            "Index out of range" );
-    ULIS3_ASSERT( iRect.y >= 0 && iRect.y < (int)mHeight,                           "Index out of range" );
-    ULIS3_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int)mWidth,       "Index out of range" );
-    ULIS3_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= (int)mHeight,      "Index out of range" );
-    mOnInvalid.ExecuteIfBound( this, iRect );
-}
-
 
 FRect
 FBlock::Rect() const
@@ -289,105 +189,108 @@ FBlock::Rect() const
     return  FRect( 0, 0, mWidth, mHeight );
 }
 
-FPixelValue
-FBlock::PixelValue( int iX, int iY ) const
-{
-    return  FPixelValue( PixelPtr( iX, iY ), Format(), Profile() );
-}
-
-
-FPixelProxy
-FBlock::PixelProxy( int iX, int iY )
-{
-    return  FPixelProxy( PixelPtr( iX, iY ), Format(), Profile() );
-}
-
-
-const FPixelProxy
-FBlock::PixelProxy( int iX, int iY ) const
-{
-    return  FPixelProxy( PixelPtr( iX, iY ), Format(), Profile() );
-}
-
-
 uint32
-FBlock::CRC32() const
+FBlock::BytesPerScanLine() const
 {
-    return  ::ULIS3::CRC32( mData, BytesTotal() );
+    return  mBytesPerScanline;
 }
 
 
-std::string
-FBlock::MD5() const
+uint64
+FBlock::BytesTotal() const
 {
-    return  ::ULIS3::MD5( mData, BytesTotal() );
-}
-
-
-/*
-std::string
-FBlock::UUID() const
-{
-    return  mUUID;
-}
-*/
-
-uint8*
-FBlock::IndexTable() const
-{
-    return  mInfo.IDT;
-}
-
-
-const FFormatInfo&
-FBlock::FormatInfo() const
-{
-    return  mInfo;
+    return  mBytesTotal;
 }
 
 void
-FBlock::SetOnInvalid( const FOnInvalid& iOnInvalid )
+FBlock::Dirty( bool iCall ) const
+{
+    Dirty( Rect(), iCall );
+}
+
+
+void
+FBlock::Dirty( const FRect& iRect, bool iCall ) const
+{
+    if( !iCall )
+        return;
+
+#ifdef ULIS3_ASSERT_ENABLED
+    int w = static_cast< int >( mWidth );
+    int h = static_cast< int >( mHeight );
+    int x1 = iRect.x;
+    int y1 = iRect.y;
+    int x2 = iRect.x + iRect.w;
+    int y2 = iRect.y + iRect.h;
+#endif
+    ULIS3_ASSERT( iRect.w >= 0, "Bad dirty geometry out of range" );
+    ULIS3_ASSERT( iRect.h >= 0, "Bad dirty geometry out of range" );
+    ULIS3_ASSERT( x1 >= 0 && x1 < w, "Bad dirty geometry out of range" );
+    ULIS3_ASSERT( y1 >= 0 && y1 < h, "Bad dirty geometry out of range" );
+    ULIS3_ASSERT( x2 >= 0 && x2 < w, "Bad dirty geometry out of range" );
+    ULIS3_ASSERT( y2 >= 0 && y2 < h, "Bad dirty geometry out of range" );
+
+    mOnInvalid.ExecuteIfBound( this, iRect );
+}
+
+FColor
+FBlock::Color( int iX, int iY ) const
+{
+    return  FColor( PixelData( iX, iY ), Format(), ColorSpace() );
+}
+
+FPixel
+FBlock::Pixel( int iX, int iY )
+{
+    return  FPixel( PixelData( iX, iY ), Format(), ColorSpace() );
+}
+
+
+const FPixel
+FBlock::Pixel( int iX, int iY ) const
+{
+    return  FPixel( PixelData( iX, iY ), Format(), ColorSpace() );
+}
+
+void
+FBlock::OnInvalid( const FOnInvalid& iOnInvalid )
 {
     mOnInvalid = iOnInvalid;
 }
 
 void
-FBlock::SetOnCleanup( const FOnCleanup& iOnCleanup )
+FBlock::OnCleanup( const FOnCleanup& iOnCleanup )
 {
     mOnCleanup = iOnCleanup;
 }
 
 void
-FBlock::TakeOwnership() {
-    mOnCleanup = FOnCleanup( &OnCleanup_FreeMemory );
-}
+FBlock::ReloadFromData(
+      uint8* iData
+    , uint16 iWidth
+    , uint16 iHeight
+    , tFormat iFormat
+    , const FColorSpace* iColorSpace = nullptr
+    , const FOnInvalid& iOnInvalid = FOnInvalid()
+    , const FOnCleanup& iOnCleanup = FOnCleanup()
+    )
+{
+    ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
 
-void
-FBlock::ReleaseOwnership() {
-    mOnCleanup = FOnCleanup();
-}
-
-void
-FBlock::ResyncNonOwnedData( uint8* iData ) {
     mOnCleanup.ExecuteIfBound( mData );
-    ReleaseOwnership();
+
+    ReinterpretAsFormat( iFormat );
+
     mData = iData;
-}
+    mWidth = iWidth;
+    mHeight = iHeight;
+    mOnInvalid = iOnInvalid;
+    mOnCleanup = iOnCleanup;
+    mColorSpace = iColorSpace;
 
-/////////////////////////////////////////////////////
-// X ... Block
-// for safety with different CRT and heaps when using dynamic link on windows.
-FBlock* XCreateBlock( int iWidth, int iHeight, tFormat iFormat, FColorSpace* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
-    return  new FBlock( iWidth, iHeight, iFormat, iProfile, iOnInvalid, iOnCleanup );
-}
-
-FBlock* XCreateBlock( uint8* iData, int iWidth, int iHeight, tFormat iFormat, FColorSpace* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
-    return  new FBlock( iData, iWidth, iHeight, iFormat, iProfile, iOnInvalid, iOnCleanup );
-}
-
-void
-XDeleteBlock( FBlock* iBlock ) {
-    delete  iBlock;
+    mBytesPerScanline = mWidth * FormatInfo().BPP;
+    mBytesTotal = mHeight * mBytesPerScanline;
 }
 
 ULIS3_NAMESPACE_END

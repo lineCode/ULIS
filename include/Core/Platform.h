@@ -181,6 +181,7 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 
 #if defined( ULIS3_DEBUG ) || defined( ULIS3_FORCE_ASSERT )
     #define ULIS3_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS3_CRASH; }
+    #define ULIS3_ASSERT_ENABLED
 #else
     #define ULIS3_ASSERT( cond, log )
 #endif

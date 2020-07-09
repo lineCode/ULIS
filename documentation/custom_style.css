@@ -1,6 +1,7 @@
 body {
     background: rgb( 245, 245, 245 );
     color: #282828;
+    font-family: 'Helvetica';
 }
 
 #titlearea {
@@ -8,9 +9,10 @@ body {
     display:block;
     box-sizing: border-box;
     margin: 0px;
-    width: 100%;
+    width: initial;
     color: #2b91af;
     background-color: #FFFFFF;
+    border: 0px;
 }
 
 div.dynheader {
@@ -19,15 +21,21 @@ div.dynheader {
 
 #projectname {
     visibility:hidden;
+    font: 0%;
+}
+
+#projectbrief {
+    visibility:hidden;
+    font: 0%;
+}
+
+#projectlogo {
+    text-align: left;
 }
 
 dl.warning, dl.attention {
     border-left: 0px solid;
     border-color: #FFFFFF;
-}
-
-#projectbrief {
-    visibility:hidden;
 }
 
 table.classindex {
@@ -125,8 +133,8 @@ table.memberdecls {
 }
 
 h2.groupheader {
-    border-bottom: 2px solid #2b91af;
-    color: #2b91af;
+    border-bottom: 0px;
+    color: #2C2C2C;
     font-size: 150%;
     font-weight: normal;
     margin-top: 1.75em;
@@ -171,7 +179,7 @@ span.mlabel {
 
 .memproto, dl.reflist dt {
     border:none;
-    border-bottom: 2px solid #2b91af;
+    border-bottom: 1px solid #ccc;
     padding: 6px 0px 6px 0px;
     color: #282828;
     font-weight: bold;
@@ -248,12 +256,16 @@ div.textblock {
     padding: 0px;
 }
 
+a:hover {
+    text-decoration: none;
+}
+
 .sm-dox a:hover {
     background-image: none;
-    background: #2b91af;
-    color: white;
-    text-shadow: 0 1px 1px black;
+    color: #2b91af;
+    text-shadow: 0 0px 0px black;
     border:none;
+    text-decoration: none;
 }
 
 .image > img {
@@ -263,4 +275,68 @@ div.textblock {
 th.markdownTableHeadLeft, th.markdownTableHeadRight, th.markdownTableHeadCenter, th.markdownTableHeadNone {
     background: #FFFFFF;
     color:#000000;
+}
+
+table, table td, table th {
+    border: 0px solid #eee;
+    margin:0;
+    padding:0;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+[class^="separator"] {
+    height: 0px;
+    visibility: hidden;
+}
+
+table [class^="memitem"] {
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    background: white;
+}
+
+tr.heading {
+    border-bottom: 1px solid #eee;
+}
+
+.memSeparator {
+    border-bottom: 0px;
+    margin: 0px;
+    line-height: 0px;
+    padding: 0px;
+    visibility: hidden;
+}
+
+.mdescLeft, .mdescRight, .memItemLeft, .memItemRight, .memTemplItemLeft, .memTemplItemRight, .memTemplParams {
+    background-color: white;
+}
+
+.memItemRight {
+    border-left: 1px solid #eee;
+}
+
+.memitem {
+    padding-bottom: 25px;
+}
+
+#main-nav {
+    display: block;
+    width:100%;
+    background:white
+}
+
+#main-menu li a {
+    background: white;
+    background-image: none;
+    color: #2C2C2C;
+    text-shadow: 0 0px 0px black;
+    border:none;
+    text-decoration: none;
 }

@@ -16,6 +16,7 @@
 #include "Base/Callbacks.h"
 #include "Data/FormatInfo.h"
 #include "Data/Pixel.h"
+#include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

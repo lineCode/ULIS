@@ -75,6 +75,10 @@ public:
         return  mFormatInfo.IDT[ iIndex ];
     }
 
+    ULIS3_FORCEINLINE void ReinterpretAsFormat( tFormat iFormat ) {
+        mFormatInfo = FFormatInfo( iFormat );
+    }
+
 private:
     FFormatInfo mFormatInfo;
 };
