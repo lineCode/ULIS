@@ -21,7 +21,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T >
-void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormatInfo* iFmt ) {
+void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormat* iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         for( int j = 0; j < iFmt->NCC; ++j ) {
@@ -33,7 +33,7 @@ void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormatInfo* iFmt ) {
 }
 
 template< typename T >
-void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormatInfo* iFmt ) {
+void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormat* iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         for( int j = 0; j < iFmt->NCC; ++j ) {
@@ -44,7 +44,7 @@ void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormatInfo* iFmt ) {
     }
 }
 
-typedef void (*fpDispatchedGammaCompressInvoke)( size_t iW, uint8* iDst, const FFormatInfo* iFmt );
+typedef void (*fpDispatchedGammaCompressInvoke)( size_t iW, uint8* iDst, const FFormat* iFmt );
 fpDispatchedGammaCompressInvoke QueryDispatchedsRGB2LinearInvokeForParameters( eType iType ) {
     switch( iType ) {
         case TYPE_UINT8     : return  InvokesRGB2Linear< uint8 >;

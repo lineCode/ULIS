@@ -24,17 +24,17 @@
 ULIS3_NAMESPACE_BEGIN
 void Conv( const IPixel& iSrc, IPixel& iDst ) {
     if( iSrc.Format() == iDst.Format() ) {
-        iDst.AssignMemoryUnsafe( iSrc );
+        memcpy( iDst.Data(), iSrc.Data(), iDst.Depth() );
     } else {
         fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst.Format() );
         fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &iDst.FormatInfo(), iDst.Ptr(), 1 );
     }
 }
 
-FPixelValue Conv( const IPixel& iSrc, tFormat iDst ) {
-    FPixelValue dst( iDst );
+FColor Conv( const IPixel& iSrc, tFormat iDst ) {
+    FColor dst( iDst );
     if( iSrc.Format() == iDst ) {
-        dst.AssignMemoryUnsafe( iSrc );
+        memcpy( iDst.Data(), iSrc.Data(), iDst.Depth() );
     } else {
         fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst );
         fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &dst.FormatInfo(), dst.Ptr(), 1 );
@@ -79,8 +79,8 @@ void Conv( FThreadPool*           iThreadPool
     uint32           dst_bps = iDestination->BytesPerScanLine();
     const int   max = iSource->Height();
     const uint32 len = iSource->Width();
-    const FFormatInfo* srcnfo = &iSource->FormatInfo();
-    const FFormatInfo* dstnfo = &iDestination->FormatInfo();
+    const FFormat* srcnfo = &iSource->FormatInfo();
+    const FFormat* dstnfo = &iDestination->FormatInfo();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr

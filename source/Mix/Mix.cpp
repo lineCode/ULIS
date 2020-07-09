@@ -18,14 +18,14 @@
 #include "Conv/srgb2linear.h"
 
 ULIS3_NAMESPACE_BEGIN
-FPixelValue
+FColor
 MixNative( ufloat iT, IPixel* iA, IPixel* iB )
 {
     ULIS3_ASSERT( iA, "Bad input A" );
     ULIS3_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FPixelValue native_ret( iA->Format() );
-    FPixelValue native_B( iA->Format() );
+    FColor native_ret( iA->Format() );
+    FColor native_B( iA->Format() );
     Conv( *iB, native_B );
     const uint8 spp = iA->NumSamples();
     for( uint8 i = 0; i < spp; ++i )
@@ -34,15 +34,15 @@ MixNative( ufloat iT, IPixel* iA, IPixel* iB )
 }
 
 
-FPixelValue
+FColor
 MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB )
 {
     ULIS3_ASSERT( iA, "Bad input A" );
     ULIS3_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FPixelValue rgbA( ULIS3_FORMAT_RGBAF );
-    FPixelValue rgbB( ULIS3_FORMAT_RGBAF );
-    FPixelValue rgbResult( ULIS3_FORMAT_RGBAF );
+    FColor rgbA( ULIS3_FORMAT_RGBAF );
+    FColor rgbB( ULIS3_FORMAT_RGBAF );
+    FColor rgbResult( ULIS3_FORMAT_RGBAF );
     Conv( *iA, rgbA );
     Conv( *iB, rgbB );
     rgbResult.SetRF( srgb2linear( ( 1.f - t ) * rgbA.RF() + t * rgbB.RF() ) );
@@ -53,15 +53,15 @@ MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB )
 }
 
 
-FPixelValue
+FColor
 MixRGB( ufloat iT, IPixel* iA, IPixel* iB )
 {
     ULIS3_ASSERT( iA, "Bad input A" );
     ULIS3_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FPixelValue rgbA( ULIS3_FORMAT_RGBAF );
-    FPixelValue rgbB( ULIS3_FORMAT_RGBAF );
-    FPixelValue rgbResult( ULIS3_FORMAT_RGBAF );
+    FColor rgbA( ULIS3_FORMAT_RGBAF );
+    FColor rgbB( ULIS3_FORMAT_RGBAF );
+    FColor rgbResult( ULIS3_FORMAT_RGBAF );
     Conv( *iA, rgbA );
     Conv( *iB, rgbB );
     rgbResult.SetRF( ( 1.f - t ) * rgbA.RF() + t * rgbB.RF() );
@@ -72,15 +72,15 @@ MixRGB( ufloat iT, IPixel* iA, IPixel* iB )
 }
 
 
-FPixelValue
+FColor
 MixLab( ufloat iT, IPixel* iA, IPixel* iB )
 {
     ULIS3_ASSERT( iA, "Bad input A" );
     ULIS3_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FPixelValue LabA( ULIS3_FORMAT_LabAF );
-    FPixelValue LabB( ULIS3_FORMAT_LabAF );
-    FPixelValue LabResult( ULIS3_FORMAT_LabAF );
+    FColor LabA( ULIS3_FORMAT_LabAF );
+    FColor LabB( ULIS3_FORMAT_LabAF );
+    FColor LabResult( ULIS3_FORMAT_LabAF );
     Conv( *iA, LabA );
     Conv( *iB, LabB );
     LabResult.SetLF( ( 1.f - t ) * LabA.LF() + t * LabB.LF() );

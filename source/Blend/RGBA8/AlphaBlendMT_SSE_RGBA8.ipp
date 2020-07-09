@@ -33,7 +33,7 @@ ULIS3_FORCEINLINE __m128i Downscale( __m128i iVal ) {
 void
 InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
     const bool notLastLine  = iLine < info.backdropCoverage.y;
@@ -113,7 +113,7 @@ AlphaBlendMT_Separable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > i
 void
 InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
     const __m128i FF = _mm_set1_epi16( 0xFF );

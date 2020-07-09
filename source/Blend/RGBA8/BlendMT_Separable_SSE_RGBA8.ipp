@@ -28,7 +28,7 @@ ULIS3_NAMESPACE_BEGIN
 void
 InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
     const bool notLastLine  = iLine < info.backdropCoverage.y;
@@ -112,7 +112,7 @@ BlendMT_Separable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iInfo 
 void
 InvokeBlendMTProcessScanline_Separable_SSE_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 

@@ -37,7 +37,7 @@ ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
 
     const bool notLastLine  = iLine < info.backdropCoverage.y;
     const bool notFirstLine = iLine > 0;
@@ -125,7 +125,7 @@ BlendMT_NonSeparable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iIn
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
         ufloat alpha_bdp    = iBdp[fmt.AID] / 255.f;

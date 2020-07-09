@@ -49,8 +49,8 @@ main( int argc, char *argv[] ) {
     FBlock* blockCanvas = new  FBlock( w, h, ULIS3_FORMAT_RGBA8 );
     FBlock* blockShade = new  FBlock( shadeW, shadeH, ULIS3_FORMAT_RGBA8 );
     FRect shadeRect = blockBase->Rect();
-    FPixelValue black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
-    FPixelValue white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
+    FColor black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
+    FColor white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
     Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockShade, black, shadeRect );
 
     FFontEngine fontEngine;

@@ -19,8 +19,8 @@
 ULIS3_NAMESPACE_BEGIN
 class   FBlock;
 class   IPixel;
-class   FPixelValue;
-class   FPixelProxy;
+class   FColor;
+class   FPixel;
 class   FProfileRegistry;
 class   FColorSpace;
 class   FThreadPool;
@@ -34,7 +34,7 @@ class   FStructuringElement;
 struct  FRect;
 struct  FPerfInfo;
 struct  FHostDeviceInfo;
-struct  FFormatInfo;
+struct  FFormat;
 struct  FTileElement;
 class   ITiledBlock;
 class   ITilePool;

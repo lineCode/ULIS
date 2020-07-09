@@ -76,7 +76,7 @@ SCanvas::SCanvas()
     mRAMUSAGEBLOCK1 = new FBlock( 300, 100, ULIS3_FORMAT_RGBA8 );
     mRAMUSAGEBLOCK2 = new FBlock( 300, 100, ULIS3_FORMAT_RGBA8 );
     mRAMUSAGESWAPBUFFER = mRAMUSAGEBLOCK1;
-    Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mRAMUSAGEBLOCK1, FPixelValue( ULIS3_FORMAT_G8, { 15 } ), mRAMUSAGEBLOCK1->Rect() );
+    Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mRAMUSAGEBLOCK1, FColor( ULIS3_FORMAT_G8, { 15 } ), mRAMUSAGEBLOCK1->Rect() );
 }
 
 void
@@ -93,7 +93,7 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
                 FVec2I64 res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
                 if( res.x >= 0 && res.x < 256 && res.y >= 0 && res.y < 256 ) {
                     FTileElement** tileptr = mTiledBlock->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( res, &res );
-                    DrawDotNoAA( (*tileptr)->mBlock, FPixelValue( ULIS3_FORMAT_G8, {0} ), FVec2I( res.x, res.y ) );
+                    DrawDotNoAA( (*tileptr)->mBlock, FColor( ULIS3_FORMAT_G8, {0} ), FVec2I( res.x, res.y ) );
                 }
             }
         }
@@ -117,7 +117,7 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
                 FVec2I64 res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
                 if( res.x >= 0 && res.x < 256 && res.y >= 0 && res.y < 256 ) {
                     FTileElement** tileptr = mTiledBlock->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( res, &res );
-                    DrawDotNoAA( (*tileptr)->mBlock, FPixelValue( ULIS3_FORMAT_GA8, {0,0} ), FVec2I( res.x, res.y ) );
+                    DrawDotNoAA( (*tileptr)->mBlock, FColor( ULIS3_FORMAT_GA8, {0,0} ), FVec2I( res.x, res.y ) );
                 }
             }
         }
@@ -172,26 +172,26 @@ SCanvas::tickEvent() {
     float tramu = cramu / maxramu;
     int iramu = FMaths::Min( HH, int( tramu * HH ) );
     for( int i = 0; i < iramu; ++i ) {
-        FPixelProxy prox = mRAMUSAGESWAPBUFFER->PixelProxy( WW, HH - i );
+        FPixel prox = mRAMUSAGESWAPBUFFER->PixelProxy( WW, HH - i );
         prox.SetR8( 20 );
         prox.SetG8( 80 );
         prox.SetB8( 200 );
         prox.SetA8( 255 );
     }
 
-    Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mCanvas, FPixelValue( ULIS3_FORMAT_G8, { 40 } ), mCanvas->Rect() );
-    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Target  RAM                : " + std::to_wstring( mTilePool->RAMUsageCapTarget() ),                        mFont, 12, FPixelValue( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 10 ), ULIS3_NOAA );
-    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Current RAM                : " + std::to_wstring( mTilePool->CurrentRAMUsage() ),                          mFont, 12, FPixelValue( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 20 ), ULIS3_NOAA );
-    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Scheduled For Clear    : " + std::to_wstring( mTilePool->NumTilesScheduledForClear() ),                mFont, 12, FPixelValue( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 30 ), ULIS3_NOAA );
-    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Available For Query    : " + std::to_wstring( mTilePool->NumFreshTilesAvailableForQuery() ),           mFont, 12, FPixelValue( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 40 ), ULIS3_NOAA );
-    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Dirty In Use           : " + std::to_wstring( mTilePool->NumDirtyHashedTilesCurrentlyInUse() ),        mFont, 12, FPixelValue( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 50 ), ULIS3_NOAA );
-    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Correct In Use         : " + std::to_wstring( mTilePool->NumCorrectlyHashedTilesCurrentlyInUse() ),    mFont, 12, FPixelValue( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 60 ), ULIS3_NOAA );
-    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Registered Blocks      : " + std::to_wstring( mTilePool->NumRegisteredTiledBlocks() ),                 mFont, 12, FPixelValue( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 70 ), ULIS3_NOAA );
+    Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mCanvas, FColor( ULIS3_FORMAT_G8, { 40 } ), mCanvas->Rect() );
+    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Target  RAM                : " + std::to_wstring( mTilePool->RAMUsageCapTarget() ),                        mFont, 12, FColor( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 10 ), ULIS3_NOAA );
+    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Current RAM                : " + std::to_wstring( mTilePool->CurrentRAMUsage() ),                          mFont, 12, FColor( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 20 ), ULIS3_NOAA );
+    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Scheduled For Clear    : " + std::to_wstring( mTilePool->NumTilesScheduledForClear() ),                mFont, 12, FColor( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 30 ), ULIS3_NOAA );
+    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Available For Query    : " + std::to_wstring( mTilePool->NumFreshTilesAvailableForQuery() ),           mFont, 12, FColor( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 40 ), ULIS3_NOAA );
+    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Dirty In Use           : " + std::to_wstring( mTilePool->NumDirtyHashedTilesCurrentlyInUse() ),        mFont, 12, FColor( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 50 ), ULIS3_NOAA );
+    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Correct In Use         : " + std::to_wstring( mTilePool->NumCorrectlyHashedTilesCurrentlyInUse() ),    mFont, 12, FColor( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 60 ), ULIS3_NOAA );
+    RenderText( mPool, ULIS3_BLOCKING, 0, mHost, ULIS3_NOCB, mCanvas, L"Num Registered Blocks      : " + std::to_wstring( mTilePool->NumRegisteredTiledBlocks() ),                 mFont, 12, FColor( ULIS3_FORMAT_G8, { 220 } ), FTransform2D::MakeTranslationTransform( 10, 70 ), ULIS3_NOAA );
     Copy( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mRAMUSAGESWAPBUFFER, mCanvas, mRAMUSAGESWAPBUFFER->Rect(), FVec2I( 10, 80 ) );
 
     FBlock* oldram = mRAMUSAGESWAPBUFFER;
     FBlock* newram = mRAMUSAGESWAPBUFFER == mRAMUSAGEBLOCK1 ? mRAMUSAGEBLOCK2 : mRAMUSAGEBLOCK1;
-    Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, newram, FPixelValue( ULIS3_FORMAT_G8, { 15 } ), newram->Rect() );
+    Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, newram, FColor( ULIS3_FORMAT_G8, { 15 } ), newram->Rect() );
     Copy( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, oldram, newram, oldram->Rect(), FVec2I( -1, 0 ) );
     mRAMUSAGESWAPBUFFER = newram;
 
@@ -201,14 +201,14 @@ SCanvas::tickEvent() {
     mTiledBlock->DrawDebugWireframe(    mCanvas, FVec2I64( 10, 80+HH+10 ), 1.f );
 
     FBlock* shade = new FBlock( 256, 256, ULIS3_FORMAT_RGBA8 );
-    Fill( mPool, ULIS3_BLOCKING,  ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, FPixelValue( ULIS3_FORMAT_G8, { 0 } ), shade->Rect() );
+    Fill( mPool, ULIS3_BLOCKING,  ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, FColor( ULIS3_FORMAT_G8, { 0 } ), shade->Rect() );
     FRect outline = mTiledBlock->GetOperativeGeometry();
     Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, outline );
     Blend( mPool, ULIS3_BLOCKING,  ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, mCanvas, shade->Rect(), FVec2F( 10, 80+HH+10 ), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
     delete shade;
     outline.x += 10;
     outline.y += 80+HH+10;
-    DrawRectOutlineNoAA( mCanvas, FPixelValue( ULIS3_FORMAT_RGB8, { 255, 0, 255 } ), outline );
+    DrawRectOutlineNoAA( mCanvas, FColor( ULIS3_FORMAT_RGB8, { 255, 0, 255 } ), outline );
 
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );

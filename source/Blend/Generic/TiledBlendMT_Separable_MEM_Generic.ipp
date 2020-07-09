@@ -27,7 +27,7 @@ template< typename T >
 void
 InvokeTiledBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
     uint8*              bdp     = iBdp;
 

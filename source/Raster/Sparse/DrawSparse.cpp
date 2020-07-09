@@ -17,7 +17,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 /*
-void DotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos ) {
+void DotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
     tByte* ptr = iDst->PixelPtr( iPos.x, iPos.y );
     fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iColor.Format(), iDst->Format() );
     fptr( &iColor.FormatInfo(), iColor.Ptr(), &iDst->FormatInfo(), ptr, 1 );

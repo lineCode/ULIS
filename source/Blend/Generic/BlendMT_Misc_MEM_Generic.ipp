@@ -26,7 +26,7 @@ template< typename T >
 void
 InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 
@@ -121,7 +121,7 @@ template< typename T >
 void
 InvokeBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 

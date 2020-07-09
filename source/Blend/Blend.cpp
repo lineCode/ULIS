@@ -239,7 +239,7 @@ void BlendColor( FThreadPool*           iThreadPool
                , uint32                 iPerfIntent
                , const FHostDeviceInfo& iHostDeviceInfo
                , bool                   iCallCB
-               , const FPixelValue&     iColor
+               , const FColor&     iColor
                , FBlock*                iBackdrop
                , const FRect&           iDestRect
                , eBlendingMode          iBlendingMode
@@ -250,7 +250,7 @@ void BlendColor( FThreadPool*           iThreadPool
     ULIS3_ASSERT( iBackdrop,                                "Bad destination."                                          );
     ULIS3_ASSERT( iThreadPool,                              "Bad pool."                                                 );
 
-    FPixelValue color( iBackdrop->Format() );
+    FColor color( iBackdrop->Format() );
     Conv( iColor, color );
     FBlock block( color.Ptr(), 1, 1, iBackdrop->Format() );
     BlendTiled( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRect( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );

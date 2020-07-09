@@ -26,7 +26,7 @@ ULIS3_NAMESPACE_BEGIN
 void
 InvokeTransformAffineMTProcessScanline_Bilinear_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, const Vec4i iIDT ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormatInfo&      fmt     = info.destination->FormatInfo();
+    const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
 
     glm::vec3 point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );

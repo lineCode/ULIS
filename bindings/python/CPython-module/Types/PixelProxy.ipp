@@ -54,7 +54,7 @@ _PyULIS3Object_PixelProxy_init( _PyULIS3Object_PixelProxy* self, PyObject* args,
         return -1;
     }
 
-    self->super._mPixel = new ::ul3::FPixelProxy( fmt );
+    self->super._mPixel = new ::ul3::FPixel( fmt );
     return 0;
 }
 
@@ -68,9 +68,9 @@ static PyMethodDef _PyULIS3Object_PixelProxy_methods[] = {
 
 /////////////////////////////////////////////////////
 /// Meta Types
-static PyTypeObject FPixelProxy = {
+static PyTypeObject FPixel = {
 PyVarObject_HEAD_INIT(NULL, 0)
-    "PyULIS3.FPixelProxy", /* tp_name */
+    "PyULIS3.FPixel", /* tp_name */
     sizeof( _PyULIS3Object_PixelProxy ), /* tp_basicsize */
     0, /* tp_itemsize */
     (destructor)_PyULIS3Object_PixelProxy_dealloc, /* tp_dealloc */

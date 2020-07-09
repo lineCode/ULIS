@@ -323,7 +323,7 @@ tr.heading {
 }
 
 .memitem {
-    padding-bottom: 25px;
+    padding-bottom: 50px;
 }
 
 #main-nav {
@@ -339,4 +339,39 @@ tr.heading {
     text-shadow: 0 0px 0px black;
     border:none;
     text-decoration: none;
+}
+
+.memTemplParams {
+    visibility: hidden;
+    font: 0%;
+    height:0px;
+    padding:0;
+    margin:0;
+    padding:0;
+}
+
+.section.see dt {
+    display: inline;
+}
+
+.section.see dt:after {
+    content:":";
+}
+
+.section.see dd {
+    display: inline;
+    margin: 5px;
+}
+
+.section.warning dt {
+    display: inline;
+}
+
+.section.warning dt:after {
+    content:":";
+}
+
+.section.warning dd {
+    display: inline;
+    margin: 5px;
 }

@@ -23,7 +23,7 @@ ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Invocation Implementation
 template< typename T >
-void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormatInfo* iFmt, std::shared_ptr< FPixelValue > iColor ) {
+void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormat* iFmt, std::shared_ptr< FColor > iColor ) {
     const uint8* src = iColor->Ptr();
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
@@ -36,7 +36,7 @@ void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormatInfo* iFmt, s
 
 /////////////////////////////////////////////////////
 // Dispatch
-typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, uint8* iDst, const FFormatInfo* iFmt, std::shared_ptr< FPixelValue > iColor );
+typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, uint8* iDst, const FFormat* iFmt, std::shared_ptr< FColor > iColor );
 fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForParameters( eType iType ) {
     switch( iType ) {
         case TYPE_UINT8     : return  InvokeFillPreserveAlpha< uint8 >;
@@ -80,7 +80,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake color param, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    std::shared_ptr< FPixelValue > color = std::make_shared< FPixelValue >( iDestination->Format() );
+    std::shared_ptr< FColor > color = std::make_shared< FColor >( iDestination->Format() );
     Conv( iColor, *color );
     uint8*          dst = iDestination->DataPtr();
     size_t          bps = iDestination->BytesPerScanLine();

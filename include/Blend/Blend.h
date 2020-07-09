@@ -68,7 +68,7 @@ ULIS3_API void BlendColor( FThreadPool*             iThreadPool
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
                          , bool                     iCallCB
-                         , const FPixelValue&       iColor
+                         , const FColor&       iColor
                          , FBlock*                  iBackdrop
                          , const FRect&             iDestRect
                          , eBlendingMode            iBlendingMode

@@ -70,7 +70,7 @@ int fill( int argc, char *argv[] ) {
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* block = new FBlock( size, size, format );
-    FPixelValue source( format );
+    FColor source( format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         Fill( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, block, source, block->Rect() );
@@ -285,7 +285,7 @@ int text( int argc, char *argv[] ) {
     FFontRegistry fontRegistry( fontEngine );
     FFont font( fontRegistry, fam, style );
     FRect textmetrics = TextMetrics( wtxt, font, fontSize, FTransform2D() );
-    FPixelValue color( format );
+    FColor color( format );
     FBlock* dst = new FBlock( textmetrics.w, textmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )

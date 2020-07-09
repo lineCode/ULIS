@@ -14,7 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Base/Callbacks.h"
-#include "Data/FormatInfo.h"
+#include "Data/ColorSpace.h"
+#include "Data/Format.h"
 #include "Data/Pixel.h"
 #include "Maths/Geometry.h"
 
@@ -60,7 +61,9 @@ ULIS3_NAMESPACE_BEGIN
 ///             It is also sometimes handy to use the CRT safe version if
 ///             using the \a X functions in your application with dynamic link:
 ///             \snippet data/block.h FBlock X Version
-class ULIS3_API FBlock : public FHasFormat
+class ULIS3_API FBlock
+    : public IHasFormat
+    , public IHasColorSpace
 {
 public:
     /*! Destroy the block and invoke the cleanup callback. */
@@ -332,34 +335,6 @@ public:
     const uint8* PixelData( uint16 iX, uint16 iY ) const;
 
     /*!
-    Assign a new optional color-space to the block.
-
-    This functions does not perform any kind of conversion and doesn't modify
-    the image data at all, it just means the block will be interpreted in the
-    given colorspace where needed, such as in conversion functions.
-
-    The \a iColorSpace parameter is optional and can be nullptr, in which case
-    the block will have no colorspace and will fallback to a default colorspace
-    for the color-model default ( e.g: sRGB for RGB ) where needed.
-
-    \warning A block doesn't own nor manage lifetime of its color-space.
-
-    \sa ColorSpace()
-    */
-    void AssignColorSpace( const FColorSpace* iColorSpace );
-
-    /*!
-    Get a pointer to the color-space of the block.
-
-    The returned value can be nullptr.
-
-    \warning A block doesn't own nor manage lifetime of its color-space.
-
-    \sa AssignColorSpace()
-    */
-    const FColorSpace* ColorSpace() const;
-
-    /*!
     Return the width of the block.
 
     \sa Height()
@@ -527,7 +502,6 @@ private:
     uint64 mBytesTotal; ///< Cached number of bytes for the whole buffer.
     FOnInvalid mOnInvalid; ///< The callback for when the block is destroyed.
     FOnCleanup mOnCleanup; ///< The callback for when the block is dirty.
-    const FColorSpace* mColorSpace; ///< The color space of the block to be interpreted in.
 };
 
 ULIS3_NAMESPACE_END

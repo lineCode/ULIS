@@ -28,7 +28,7 @@ template< typename T >
 void
 InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 
@@ -38,14 +38,14 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSr
     const bool hasLeftData  = info.sourceRect.x + info.shift.x > 0;
     const bool hasTopData   = info.sourceRect.y + info.shift.y > 0;
 
-    FPixelValue src_sample( fmt.FMT );
+    FColor src_sample( fmt.FMT );
     FRGBF src_conv;
     FRGBF bdp_conv;
     FRGBF res_conv;
     uint8* result = new uint8[ fmt.SPP ];
 
     // Query dispatched method
-    FFormatInfo rgbfFormatInfo( ULIS3_FORMAT_RGBF );
+    FFormat rgbfFormatInfo( ULIS3_FORMAT_RGBF );
     fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, ULIS3_FORMAT_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( ULIS3_FORMAT_RGBF, fmt.FMT );
     ULIS3_ASSERT( conv_forward_fptr, "No Conversion invocation found" );
@@ -120,7 +120,7 @@ template< typename T >
 void
 InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 
@@ -130,7 +130,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8*
     uint8* result = new uint8[ fmt.SPP ];
 
     // Query dispatched method
-    FFormatInfo rgbfFormatInfo( ULIS3_FORMAT_RGBF );
+    FFormat rgbfFormatInfo( ULIS3_FORMAT_RGBF );
     fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, ULIS3_FORMAT_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( ULIS3_FORMAT_RGBF, fmt.FMT );
     ULIS3_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );

@@ -60,7 +60,7 @@ InvokeFillMTProcessScanline_SSE( uint8* iDst, std::shared_ptr< const FBlock > iB
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
 void
-InvokeFillMTProcessScanline_MEM( uint8* iDst, std::shared_ptr< const FPixelValue > iSrc, uint32 iCount, uint32 iStride ) {
+InvokeFillMTProcessScanline_MEM( uint8* iDst, std::shared_ptr< const FColor > iSrc, uint32 iCount, uint32 iStride ) {
     const uint8* src = iSrc->Ptr();
     for( uint32 i = 0; i < iCount; ++i ) {
         memcpy( iDst, src, iStride );
@@ -77,7 +77,7 @@ Fill_imp( FThreadPool*                          iThreadPool
         , const FHostDeviceInfo&                iHostDeviceInfo
         , bool                                  iCallCB
         , FBlock*                               iDestination
-        , std::shared_ptr< const FPixelValue >  iColor
+        , std::shared_ptr< const FColor >  iColor
         , const FRect&                          iDstROI )
 {
     // Bake Params
@@ -149,7 +149,7 @@ Fill( FThreadPool*              iThreadPool
         return;
 
     // Bake color param, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    std::shared_ptr< FPixelValue > color = std::make_shared< FPixelValue >( iDestination->Format() );
+    std::shared_ptr< FColor > color = std::make_shared< FColor >( iDestination->Format() );
     Conv( iColor, *color );
 
     // Call

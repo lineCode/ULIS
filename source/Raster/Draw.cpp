@@ -18,7 +18,7 @@
 #include "Maths/Maths.h"
 
 ULIS3_NAMESPACE_BEGIN
-void DrawDotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos ) {
+void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
     if( !iDst->Rect().HitTest( iPos ) )
         return;
 
@@ -45,8 +45,8 @@ void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColo
     }
 }
 
-void DrawHorizontalLineNoAA( FBlock* iDst, const FPixelValue& iColor, int iX1, int iX2, int iY ) {
-    FPixelValue color( iDst->Format() );
+void DrawHorizontalLineNoAA( FBlock* iDst, const FColor& iColor, int iX1, int iX2, int iY ) {
+    FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Ptr();
     DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iX1, iX2, iY );
@@ -71,16 +71,16 @@ void DrawVerticalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor,
     }
 }
 
-void DrawVerticalLineNoAA( FBlock* iDst, const FPixelValue& iColor, int iY1, int iY2, int iX ) {
-    FPixelValue color( iDst->Format() );
+void DrawVerticalLineNoAA( FBlock* iDst, const FColor& iColor, int iY1, int iY2, int iX ) {
+    FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Ptr();
     DrawVerticalLineNoAA_UnsafeColor( iDst, src, iY1, iY2, iX );
 }
 
 
-void DrawRectOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& iRect ) {
-    FPixelValue color( iDst->Format() );
+void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect ) {
+    FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Ptr();
     DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iRect.x, iRect.x + iRect.w, iRect.y );
@@ -89,8 +89,8 @@ void DrawRectOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& 
     DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, iRect.x + iRect.w );
 }
 
-void DrawUniformGridOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& iRect, int iNumSubdiv ) {
-    FPixelValue color( iDst->Format() );
+void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect, int iNumSubdiv ) {
+    FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Ptr();
     int stepX = iRect.w / iNumSubdiv;

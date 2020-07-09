@@ -151,7 +151,7 @@ IPixel::IndexTable() const
     return  mInfo.IDT;
 }
 
-const FFormatInfo&
+const FFormat&
 IPixel::FormatInfo() const
 {
     return  mInfo;
@@ -183,17 +183,11 @@ IPixel::AlphaIndex() const
 void
 IPixel::TweakFormat( tFormat iFormat )
 {
-    FFormatInfo newInfo( iFormat );
+    FFormat newInfo( iFormat );
     ULIS3_ASSERT( newInfo.BPP == mInfo.BPP, "Bad tweak operation" );
     mInfo = newInfo;
 }
 
-
-void
-IPixel::AssignMemoryUnsafe( const IPixel& iOther )
-{
-    memcpy( mData, iOther.Ptr(), Depth() );
-}
 
 
 //--------------------------------------------------------------------------------------
@@ -310,23 +304,23 @@ IPixel::SetValue( uint8 iIndex, T iValue )
 
 
 /////////////////////////////////////////////////////
-// FPixelValue
+// FColor
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FPixelValue::~FPixelValue()
+FColor::~FColor()
 {
     if( mData )
         delete [] mData;
 }
 
-FPixelValue::FPixelValue()
+FColor::FColor()
     : tParent( ULIS3_FORMAT_RGBA8, nullptr )
 {
     mData = new uint8[ Depth() ];
     memset( mData, 0, Depth() );
 }
 
-FPixelValue::FPixelValue( uint32 iFormat, FColorSpace* iProfile )
+FColor::FColor( uint32 iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     mData = new uint8[ Depth() ];
@@ -334,7 +328,7 @@ FPixelValue::FPixelValue( uint32 iFormat, FColorSpace* iProfile )
 }
 
 
-FPixelValue::FPixelValue( const uint8* iData, tFormat iFormat, FColorSpace* iProfile )
+FColor::FColor( const uint8* iData, tFormat iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     mData = new uint8[ Depth() ];
@@ -342,14 +336,14 @@ FPixelValue::FPixelValue( const uint8* iData, tFormat iFormat, FColorSpace* iPro
 }
 
 
-FPixelValue::FPixelValue( const FPixelProxy& iProxy )
+FColor::FColor( const FPixel& iProxy )
     : tParent( iProxy.Format(), iProxy.Profile() )
 {
     mData = new uint8[ Depth() ];
     memcpy( mData, iProxy.Ptr(), Depth() );
 }
 
-FPixelValue::FPixelValue( const FPixelValue& iValue )
+FColor::FColor( const FColor& iValue )
     : tParent( iValue.Format(), iValue.Profile() )
 {
     mData = new uint8[ Depth() ];
@@ -357,15 +351,15 @@ FPixelValue::FPixelValue( const FPixelValue& iValue )
 }
 
 
-FPixelValue::FPixelValue( FPixelValue&& iValue )
+FColor::FColor( FColor&& iValue )
     : tParent( iValue.Format(), iValue.Profile() )
 {
     mData = iValue.mData;
     iValue.mData = nullptr;
 }
 
-FPixelValue&
-FPixelValue::operator=( const FPixelValue& iOther ) {
+FColor&
+FColor::operator=( const FColor& iOther ) {
     if( mData )
         delete [] mData;
 
@@ -379,7 +373,7 @@ FPixelValue::operator=( const FPixelValue& iOther ) {
 
 
 template< typename T >
-FPixelValue::FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FColorSpace* iProfile )
+FColor::FColor( uint32 iFormat, std::initializer_list< T > iValues, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     mData = new uint8[ Depth() ];
@@ -396,420 +390,420 @@ FPixelValue::FPixelValue( uint32 iFormat, std::initializer_list< T > iValues, FC
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------ Named static constructors
 //static
-FPixelValue
-FPixelValue::FromGreyA8( uint8 iGrey, uint8 iA )
+FColor
+FColor::FromGreyA8( uint8 iGrey, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_GA8, { iGrey, iA } );
+    return  FColor( ULIS3_FORMAT_GA8, { iGrey, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromGreyA16( uint16 iGrey, uint16 iA )
+FColor
+FColor::FromGreyA16( uint16 iGrey, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_GA16, { iGrey, iA } );
+    return  FColor( ULIS3_FORMAT_GA16, { iGrey, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromGreyA32( uint32 iGrey, uint32 iA )
+FColor
+FColor::FromGreyA32( uint32 iGrey, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_GA32, { iGrey, iA } );
+    return  FColor( ULIS3_FORMAT_GA32, { iGrey, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromGreyAF( float iGrey, float iA )
+FColor
+FColor::FromGreyAF( float iGrey, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_GAF, { iGrey, iA } );
+    return  FColor( ULIS3_FORMAT_GAF, { iGrey, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromGreyAD( double iGrey, double iA )
+FColor
+FColor::FromGreyAD( double iGrey, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_GAD, { iGrey, iA } );
+    return  FColor( ULIS3_FORMAT_GAD, { iGrey, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromRGBA8( uint8 iR, uint8 iG, uint8 iB, uint8 iA )
+FColor
+FColor::FromRGBA8( uint8 iR, uint8 iG, uint8 iB, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_RGBA8, { iR, iG, iB, iA } );
+    return  FColor( ULIS3_FORMAT_RGBA8, { iR, iG, iB, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromRGBA16( uint16 iR, uint16 iG, uint16 iB, uint16 iA )
+FColor
+FColor::FromRGBA16( uint16 iR, uint16 iG, uint16 iB, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_RGBA16, { iR, iG, iB, iA } );
+    return  FColor( ULIS3_FORMAT_RGBA16, { iR, iG, iB, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromRGBA32( uint32 iR, uint32 iG, uint32 iB, uint32 iA )
+FColor
+FColor::FromRGBA32( uint32 iR, uint32 iG, uint32 iB, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_RGBA32, { iR, iG, iB, iA } );
+    return  FColor( ULIS3_FORMAT_RGBA32, { iR, iG, iB, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromRGBAF( float iR, float iG, float iB, float iA )
+FColor
+FColor::FromRGBAF( float iR, float iG, float iB, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_RGBAF, { iR, iG, iB, iA } );
+    return  FColor( ULIS3_FORMAT_RGBAF, { iR, iG, iB, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromRGBAD( double iR, double iG, double iB, double iA )
+FColor
+FColor::FromRGBAD( double iR, double iG, double iB, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_RGBAD, { iR, iG, iB, iA } );
+    return  FColor( ULIS3_FORMAT_RGBAD, { iR, iG, iB, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSVA8( uint8 iH, uint8 iS, uint8 iV, uint8 iA )
+FColor
+FColor::FromHSVA8( uint8 iH, uint8 iS, uint8 iV, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSVA8, { iH, iS, iV, iA } );
+    return  FColor( ULIS3_FORMAT_HSVA8, { iH, iS, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSVA16( uint16 iH, uint16 iS, uint16 iV, uint16 iA )
+FColor
+FColor::FromHSVA16( uint16 iH, uint16 iS, uint16 iV, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSVA16, { iH, iS, iV, iA } );
+    return  FColor( ULIS3_FORMAT_HSVA16, { iH, iS, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSVA32( uint32 iH, uint32 iS, uint32 iV, uint32 iA )
+FColor
+FColor::FromHSVA32( uint32 iH, uint32 iS, uint32 iV, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSVA32, { iH, iS, iV, iA } );
+    return  FColor( ULIS3_FORMAT_HSVA32, { iH, iS, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSVAF( float iH, float iS, float iV, float iA )
+FColor
+FColor::FromHSVAF( float iH, float iS, float iV, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSVAF, { iH, iS, iV, iA } );
+    return  FColor( ULIS3_FORMAT_HSVAF, { iH, iS, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSVAD( double iH, double iS, double iV, double iA )
+FColor
+FColor::FromHSVAD( double iH, double iS, double iV, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSVAD, { iH, iS, iV, iA } );
+    return  FColor( ULIS3_FORMAT_HSVAD, { iH, iS, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSLA8( uint8 iH, uint8 iS, uint8 iL, uint8 iA )
+FColor
+FColor::FromHSLA8( uint8 iH, uint8 iS, uint8 iL, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSLA8, { iH, iS, iL, iA } );
+    return  FColor( ULIS3_FORMAT_HSLA8, { iH, iS, iL, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSLA16( uint16 iH, uint16 iS, uint16 iL, uint16 iA )
+FColor
+FColor::FromHSLA16( uint16 iH, uint16 iS, uint16 iL, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSLA16, { iH, iS, iL, iA } );
+    return  FColor( ULIS3_FORMAT_HSLA16, { iH, iS, iL, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSLA32( uint32 iH, uint32 iS, uint32 iL, uint32 iA )
+FColor
+FColor::FromHSLA32( uint32 iH, uint32 iS, uint32 iL, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSLA32, { iH, iS, iL, iA } );
+    return  FColor( ULIS3_FORMAT_HSLA32, { iH, iS, iL, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSLAF( float iH, float iS, float iL, float iA )
+FColor
+FColor::FromHSLAF( float iH, float iS, float iL, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSLAF, { iH, iS, iL, iA } );
+    return  FColor( ULIS3_FORMAT_HSLAF, { iH, iS, iL, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromHSLAD( double iH, double iS, double iL, double iA )
+FColor
+FColor::FromHSLAD( double iH, double iS, double iL, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_HSLAD, { iH, iS, iL, iA } );
+    return  FColor( ULIS3_FORMAT_HSLAD, { iH, iS, iL, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYA8( uint8 iC, uint8 iM, uint8 iY, uint8 iA )
+FColor
+FColor::FromCMYA8( uint8 iC, uint8 iM, uint8 iY, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYA8, { iC, iM, iY, iA } );
+    return  FColor( ULIS3_FORMAT_CMYA8, { iC, iM, iY, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYA16( uint16 iC, uint16 iM, uint16 iY, uint16 iA )
+FColor
+FColor::FromCMYA16( uint16 iC, uint16 iM, uint16 iY, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYA16, { iC, iM, iY, iA } );
+    return  FColor( ULIS3_FORMAT_CMYA16, { iC, iM, iY, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYA32( uint32 iC, uint32 iM, uint32 iY, uint32 iA )
+FColor
+FColor::FromCMYA32( uint32 iC, uint32 iM, uint32 iY, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYA32, { iC, iM, iY, iA } );
+    return  FColor( ULIS3_FORMAT_CMYA32, { iC, iM, iY, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYAF( float iC, float iM, float iY, float iA )
+FColor
+FColor::FromCMYAF( float iC, float iM, float iY, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYAF, { iC, iM, iY, iA } );
+    return  FColor( ULIS3_FORMAT_CMYAF, { iC, iM, iY, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYAD( double iC, double iM, double iY, double iA )
+FColor
+FColor::FromCMYAD( double iC, double iM, double iY, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYAD, { iC, iM, iY, iA } );
+    return  FColor( ULIS3_FORMAT_CMYAD, { iC, iM, iY, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYKA8( uint8 iC, uint8 iM, uint8 iY, uint8 iK, uint8 iA )
+FColor
+FColor::FromCMYKA8( uint8 iC, uint8 iM, uint8 iY, uint8 iK, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYKA8, { iC, iM, iY, iK, iA } );
+    return  FColor( ULIS3_FORMAT_CMYKA8, { iC, iM, iY, iK, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYKA16( uint16 iC, uint16 iM, uint16 iY, uint16 iK, uint16 iA )
+FColor
+FColor::FromCMYKA16( uint16 iC, uint16 iM, uint16 iY, uint16 iK, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYKA16, { iC, iM, iY, iK, iA } );
+    return  FColor( ULIS3_FORMAT_CMYKA16, { iC, iM, iY, iK, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYKA32( uint32 iC, uint32 iM, uint32 iY, uint32 iK, uint32 iA )
+FColor
+FColor::FromCMYKA32( uint32 iC, uint32 iM, uint32 iY, uint32 iK, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYKA32, { iC, iM, iY, iK, iA } );
+    return  FColor( ULIS3_FORMAT_CMYKA32, { iC, iM, iY, iK, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYKAF( float iC, float iM, float iY, float iK, float iA )
+FColor
+FColor::FromCMYKAF( float iC, float iM, float iY, float iK, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYKAF, { iC, iM, iY, iK, iA } );
+    return  FColor( ULIS3_FORMAT_CMYKAF, { iC, iM, iY, iK, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromCMYKAD( double iC, double iM, double iY, double iK, double iA )
+FColor
+FColor::FromCMYKAD( double iC, double iM, double iY, double iK, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_CMYKAD, { iC, iM, iY, iK, iA } );
+    return  FColor( ULIS3_FORMAT_CMYKAD, { iC, iM, iY, iK, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYUVA8( uint8 iY, uint8 iU, uint8 iV, uint8 iA )
+FColor
+FColor::FromYUVA8( uint8 iY, uint8 iU, uint8 iV, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YUVA8, { iY, iU, iV, iA } );
+    return  FColor( ULIS3_FORMAT_YUVA8, { iY, iU, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYUVA16( uint16 iY, uint16 iU, uint16 iV, uint16 iA )
+FColor
+FColor::FromYUVA16( uint16 iY, uint16 iU, uint16 iV, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YUVA16, { iY, iU, iV, iA } );
+    return  FColor( ULIS3_FORMAT_YUVA16, { iY, iU, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYUVA32( uint32 iY, uint32 iU, uint32 iV, uint32 iA )
+FColor
+FColor::FromYUVA32( uint32 iY, uint32 iU, uint32 iV, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YUVA32, { iY, iU, iV, iA } );
+    return  FColor( ULIS3_FORMAT_YUVA32, { iY, iU, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYUVAF( float iY, float iU, float iV, float iA )
+FColor
+FColor::FromYUVAF( float iY, float iU, float iV, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YUVAF, { iY, iU, iV, iA } );
+    return  FColor( ULIS3_FORMAT_YUVAF, { iY, iU, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYUVAD( double iY, double iU, double iV, double iA )
+FColor
+FColor::FromYUVAD( double iY, double iU, double iV, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YUVAD, { iY, iU, iV, iA } );
+    return  FColor( ULIS3_FORMAT_YUVAD, { iY, iU, iV, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromLabA8( uint8 iL, uint8 ia, uint8 ib, uint8 iA )
+FColor
+FColor::FromLabA8( uint8 iL, uint8 ia, uint8 ib, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_LabA8, { iL, ia, ib, iA } );
+    return  FColor( ULIS3_FORMAT_LabA8, { iL, ia, ib, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromLabA16( uint16 iL, uint16 ia, uint16 ib, uint16 iA )
+FColor
+FColor::FromLabA16( uint16 iL, uint16 ia, uint16 ib, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_LabA16, { iL, ia, ib, iA } );
+    return  FColor( ULIS3_FORMAT_LabA16, { iL, ia, ib, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromLabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA )
+FColor
+FColor::FromLabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_LabA32, { iL, ia, ib, iA } );
+    return  FColor( ULIS3_FORMAT_LabA32, { iL, ia, ib, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromLabAF( float iL, float ia, float ib, float iA )
+FColor
+FColor::FromLabAF( float iL, float ia, float ib, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_LabAF, { iL, ia, ib, iA } );
+    return  FColor( ULIS3_FORMAT_LabAF, { iL, ia, ib, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromLabAD( double iL, double ia, double ib, double iA )
+FColor
+FColor::FromLabAD( double iL, double ia, double ib, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_LabAD, { iL, ia, ib, iA } );
+    return  FColor( ULIS3_FORMAT_LabAD, { iL, ia, ib, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromXYZA8( uint8 iX, uint8 iY, uint8 iZ, uint8 iA )
+FColor
+FColor::FromXYZA8( uint8 iX, uint8 iY, uint8 iZ, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_XYZA8, { iX, iY, iZ, iA } );
+    return  FColor( ULIS3_FORMAT_XYZA8, { iX, iY, iZ, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromXYZA16( uint16 iX, uint16 iY, uint16 iZ, uint16 iA )
+FColor
+FColor::FromXYZA16( uint16 iX, uint16 iY, uint16 iZ, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_XYZA16, { iX, iY, iZ, iA } );
+    return  FColor( ULIS3_FORMAT_XYZA16, { iX, iY, iZ, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromXYZA32( uint32 iX, uint32 iY, uint32 iZ, uint32 iA )
+FColor
+FColor::FromXYZA32( uint32 iX, uint32 iY, uint32 iZ, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_XYZA32, { iX, iY, iZ, iA } );
+    return  FColor( ULIS3_FORMAT_XYZA32, { iX, iY, iZ, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromXYZAF( float iX, float iY, float iZ, float iA )
+FColor
+FColor::FromXYZAF( float iX, float iY, float iZ, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_XYZAF, { iX, iY, iZ, iA } );
+    return  FColor( ULIS3_FORMAT_XYZAF, { iX, iY, iZ, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromXYZAD( double iX, double iY, double iZ, double iA )
+FColor
+FColor::FromXYZAD( double iX, double iY, double iZ, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_XYZAD, { iX, iY, iZ, iA } );
+    return  FColor( ULIS3_FORMAT_XYZAD, { iX, iY, iZ, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYxyA8( uint8 iY, uint8 ix, uint8 iy, uint8 iA )
+FColor
+FColor::FromYxyA8( uint8 iY, uint8 ix, uint8 iy, uint8 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YxyA8, { iY, ix, iy, iA } );
+    return  FColor( ULIS3_FORMAT_YxyA8, { iY, ix, iy, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYxyA16( uint16 iY, uint16 ix, uint16 iy, uint16 iA )
+FColor
+FColor::FromYxyA16( uint16 iY, uint16 ix, uint16 iy, uint16 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YxyA16, { iY, ix, iy, iA } );
+    return  FColor( ULIS3_FORMAT_YxyA16, { iY, ix, iy, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYxyA32( uint32 iY, uint32 ix, uint32 iy, uint32 iA )
+FColor
+FColor::FromYxyA32( uint32 iY, uint32 ix, uint32 iy, uint32 iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YxyA32, { iY, ix, iy, iA } );
+    return  FColor( ULIS3_FORMAT_YxyA32, { iY, ix, iy, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYxyAF( float iY, float ix, float iy, float iA )
+FColor
+FColor::FromYxyAF( float iY, float ix, float iy, float iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YxyAF, { iY, ix, iy, iA } );
+    return  FColor( ULIS3_FORMAT_YxyAF, { iY, ix, iy, iA } );
 }
 
 
 //static
-FPixelValue
-FPixelValue::FromYxyAD( double iY, double ix, double iy, double iA )
+FColor
+FColor::FromYxyAD( double iY, double ix, double iy, double iA )
 {
-    return  FPixelValue( ULIS3_FORMAT_YxyAD, { iY, ix, iy, iA } );
+    return  FColor( ULIS3_FORMAT_YxyAD, { iY, ix, iy, iA } );
 }
 
 
 /////////////////////////////////////////////////////
-// FPixelProxy
+// FPixel
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FPixelProxy::~FPixelProxy()
+FPixel::~FPixel()
 {
 }
 
-FPixelProxy::FPixelProxy( tFormat iFormat, FColorSpace* iProfile )
+FPixel::FPixel( tFormat iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     mData = nullptr;
 }
 
-FPixelProxy::FPixelProxy( uint8* iData, tFormat iFormat, FColorSpace* iProfile )
+FPixel::FPixel( uint8* iData, tFormat iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     ULIS3_ASSERT( iData, "Bad data provided." );
@@ -817,27 +811,27 @@ FPixelProxy::FPixelProxy( uint8* iData, tFormat iFormat, FColorSpace* iProfile )
 }
 
 
-FPixelProxy::FPixelProxy( const uint8* iData, tFormat iFormat, FColorSpace* iProfile )
+FPixel::FPixel( const uint8* iData, tFormat iFormat, FColorSpace* iProfile )
     : tParent( iFormat, iProfile )
 {
     ULIS3_ASSERT( iData, "Bad data provided." );
     mData = const_cast< uint8* >( iData );
 }
 
-FPixelProxy::FPixelProxy( const FPixelProxy& iValue )
+FPixel::FPixel( const FPixel& iValue )
     : tParent( iValue.Format(), iValue.mProfile )
 {
     mData = iValue.mData;
 }
 
-FPixelProxy::FPixelProxy( FPixelProxy&& iValue )
+FPixel::FPixel( FPixel&& iValue )
     : tParent( iValue.Format(), iValue.mProfile )
 {
     mData = iValue.mData;
 }
 
-FPixelProxy&
-FPixelProxy::operator=( const FPixelProxy& iValue ) {
+FPixel&
+FPixel::operator=( const FPixel& iValue ) {
     mInfo = iValue.mInfo;
     mProfile = iValue.mProfile;
     mData = iValue.mData;
@@ -845,13 +839,13 @@ FPixelProxy::operator=( const FPixelProxy& iValue ) {
 }
 
 void
-FPixelProxy::SetPtr( uint8* iPtr )
+FPixel::SetPtr( uint8* iPtr )
 {
     mData = iPtr;
 }
 
 void
-FPixelProxy::SetPtr( const uint8* iPtr )
+FPixel::SetPtr( const uint8* iPtr )
 {
     mData = const_cast< uint8* >( iPtr );
 }
@@ -892,13 +886,13 @@ ULIS3_FOR_ALL_TYPES_DO( X_DO_J, 0, 0, 0, 0 )
 #undef X_DO_I
 #undef X_DO_J
 
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< int >, FColorSpace* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< float >, FColorSpace* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< double >, FColorSpace* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint8 >, FColorSpace* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint16 >, FColorSpace* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint32 >, FColorSpace* );
-template ULIS3_API FPixelValue::FPixelValue( uint32, std::initializer_list< uint64 >, FColorSpace* );
+template ULIS3_API FColor::FColor( uint32, std::initializer_list< int >, FColorSpace* );
+template ULIS3_API FColor::FColor( uint32, std::initializer_list< float >, FColorSpace* );
+template ULIS3_API FColor::FColor( uint32, std::initializer_list< double >, FColorSpace* );
+template ULIS3_API FColor::FColor( uint32, std::initializer_list< uint8 >, FColorSpace* );
+template ULIS3_API FColor::FColor( uint32, std::initializer_list< uint16 >, FColorSpace* );
+template ULIS3_API FColor::FColor( uint32, std::initializer_list< uint32 >, FColorSpace* );
+template ULIS3_API FColor::FColor( uint32, std::initializer_list< uint64 >, FColorSpace* );
 
 ULIS3_NAMESPACE_END
 

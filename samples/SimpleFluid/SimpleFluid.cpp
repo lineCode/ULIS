@@ -68,9 +68,9 @@ SWindow::SWindow()
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 
-    mBGParticleColor        = new FPixelValue( ULIS3_FORMAT_RGBA8, { 240, 240, 240, 255 } );
-    mDarkParticleColor      = new FPixelValue( ULIS3_FORMAT_RGBA8, { 170, 40, 0, 255 } );
-    mLightParticleColor     = new FPixelValue( ULIS3_FORMAT_RGBA8, { 255, 130, 80, 255 } );
+    mBGParticleColor        = new FColor( ULIS3_FORMAT_RGBA8, { 240, 240, 240, 255 } );
+    mDarkParticleColor      = new FColor( ULIS3_FORMAT_RGBA8, { 170, 40, 0, 255 } );
+    mLightParticleColor     = new FColor( ULIS3_FORMAT_RGBA8, { 255, 130, 80, 255 } );
     mCurrentParticleColor   = mBGParticleColor;
     mCurrentBlendingMode = BM_MULTIPLY;
     mCurrentOpacity = 0.05f;
@@ -193,7 +193,7 @@ SWindow::RedrawParticle() {
                 float dx = midx - i;
                 float dy = midy - j;
                 float dist2 = dx * dx + dy * dy;
-                FPixelProxy prox = mParticle->PixelProxy( i, j );
+                FPixel prox = mParticle->PixelProxy( i, j );
                 float alpha = 1.f - FMaths::Min( dist2 / ray2, 1.f );
                 prox.SetAlphaF( alpha );
             }

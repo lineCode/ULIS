@@ -16,11 +16,11 @@
 #include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
-ULIS3_API void DrawDotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos );
-ULIS3_API void DrawHorizontalLineNoAA(  FBlock* iDst, const FPixelValue& iColor, int iX1, int iX2, int iY );
-ULIS3_API void DrawVerticalLineNoAA(    FBlock* iDst, const FPixelValue& iColor, int iY1, int iY2, int iX );
-ULIS3_API void DrawRectOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& iRect );
-ULIS3_API void DrawUniformGridOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& iRect, int iNumSubdiv );
+ULIS3_API void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos );
+ULIS3_API void DrawHorizontalLineNoAA(  FBlock* iDst, const FColor& iColor, int iX1, int iX2, int iY );
+ULIS3_API void DrawVerticalLineNoAA(    FBlock* iDst, const FColor& iColor, int iY1, int iY2, int iX );
+ULIS3_API void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect );
+ULIS3_API void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect, int iNumSubdiv );
 /*
 ULIS3_API void DrawDot();
 ULIS3_API void DrawDotNoAA();

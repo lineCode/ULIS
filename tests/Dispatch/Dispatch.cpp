@@ -51,9 +51,9 @@ void InvokeXRGBAFMEM2( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBAFMEM2 call
 
 /////////////////////////////////////////////////////
 // Table
-static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBA8( const FFormatInfo& iFormatInfo ) { return  ( iFormatInfo.TP == TYPE_UINT8 ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB ); }
-static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBAF( const FFormatInfo& iFormatInfo ) { return  ( iFormatInfo.TP == TYPE_UFLOAT ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB ); }
-typedef bool (*fpCond)( const FFormatInfo& iFormatInfo );
+static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) { return  ( iFormatInfo.TP == TYPE_UINT8 ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB ); }
+static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) { return  ( iFormatInfo.TP == TYPE_UFLOAT ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB ); }
+typedef bool (*fpCond)( const FFormat& iFormatInfo );
 
 /*
 template< typename F, typename T, typename E >
@@ -71,7 +71,7 @@ struct TMultiDispatchTable {
 template< typename D >
 class TDispatcher {
 public:
-    static ULIS3_FORCEINLINE typename D::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo, const typename D::tExtra& iExtra ) {
+    static ULIS3_FORCEINLINE typename D::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename D::tExtra& iExtra ) {
         for( int i = 0; i < D::spec_size; ++i ) {
             if( D::spec_table[i].select_cond( iFormatInfo ) ) {
                 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
@@ -98,7 +98,7 @@ public:
 
 private:
     template< typename T >
-    static ULIS3_FORCEINLINE typename D::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo, const typename D::tExtra& iExtra ) {
+    static ULIS3_FORCEINLINE typename D::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename D::tExtra& iExtra ) {
         #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
             if( iPerfIntent & ULIS3_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                 return  D:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );
@@ -212,7 +212,7 @@ main() {
 
     uint32 intent = ULIS3_PERF_SSE42;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    FFormatInfo format( ULIS3_FORMAT_RGBA16 );
+    FFormat format( ULIS3_FORMAT_RGBA16 );
 
     int extra = 1;
 

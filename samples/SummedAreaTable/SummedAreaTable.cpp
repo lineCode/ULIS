@@ -27,7 +27,7 @@ main() {
     FBlock* block = new FBlock( size, size, ULIS3_FORMAT_RGBA8 );
     for( int y = 0; y < size; ++y ) {
         for( int x = 0; x < size; ++x ) {
-            FPixelProxy prox = block->PixelProxy( x, y );
+            FPixel prox = block->PixelProxy( x, y );
             prox.SetR8( 1 );
             prox.SetG8( 1 );
             prox.SetB8( 1 );
@@ -45,7 +45,7 @@ main() {
 
     for( int y = 0; y < size; ++y ) {
         for( int x = 0; x < size; ++x ) {
-            FPixelProxy prox = sat->PixelProxy( x, y );
+            FPixel prox = sat->PixelProxy( x, y );
             float R = prox.RF();
             float G = prox.GF();
             float B = prox.BF();

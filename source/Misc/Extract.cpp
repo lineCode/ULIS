@@ -102,8 +102,8 @@ Extract( FThreadPool*           iThreadPool
         return;
 
     // Format info
-    const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
-    const FFormatInfo& dstFormatInfo( iDestination->FormatInfo() );
+    const FFormat& srcFormatInfo( iSource->FormatInfo() );
+    const FFormat& dstFormatInfo( iDestination->FormatInfo() );
 
     // Channels
     std::vector< uint8 > sourceChannelsToExtract;

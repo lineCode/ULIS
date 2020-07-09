@@ -23,8 +23,8 @@ ULIS3_NAMESPACE_BEGIN
 template< typename T > void
 InvokeResizeMTProcessScanline_Area_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info    = *iInfo;
-    const FFormatInfo&  fmt     = info.destination->FormatInfo();
-    const FFormatInfo&  sat_fmt = info.optionalSAT->FormatInfo();
+    const FFormat&  fmt     = info.destination->FormatInfo();
+    const FFormat&  sat_fmt = info.optionalSAT->FormatInfo();
     uint8*              dst     = iDst;
 
     FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );

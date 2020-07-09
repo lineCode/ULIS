@@ -30,7 +30,7 @@ main( int argc, char *argv[] ) {
     FBlock* blockA = new FBlock( 1024, 1024, ULIS3_FORMAT_RGBA8 );
 
     ::ul3::Clear( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, blockA->Rect() );
-    FPixelValue color = FPixelValue::FromRGBA8( 255, 0, 0, 255 );
+    FColor color = FColor::FromRGBA8( 255, 0, 0, 255 );
     FBlock col( color.Ptr(), 1, 1, ULIS3_FORMAT_RGBA8 );
 
     FVec2F P0( 474.984253, 551.79988 );

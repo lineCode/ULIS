@@ -27,7 +27,7 @@ template< typename T >
 void
 InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
-    const FFormatInfo&  fmt     = info.source->FormatInfo();
+    const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
     uint8*              bdp     = iBdp;
 
@@ -37,7 +37,7 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, u
     uint8* result = new uint8[ fmt.SPP ];
 
     // Query dispatched method
-    FFormatInfo rgbfFormatInfo( ULIS3_FORMAT_RGBF );
+    FFormat rgbfFormatInfo( ULIS3_FORMAT_RGBF );
     fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, ULIS3_FORMAT_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( ULIS3_FORMAT_RGBF, fmt.FMT );
     ULIS3_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );

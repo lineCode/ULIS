@@ -59,7 +59,7 @@ SWindow::SWindow()
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 
-    FPixelValue particleColor = FPixelValue::FromRGBA8( 170, 40, 0, 255 );
+    FColor particleColor = FColor::FromRGBA8( 170, 40, 0, 255 );
     Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mParticle, particleColor, mParticle->Rect() );
     float midx = mParticle->Width() / 2.f;
     float midy = mParticle->Height() / 2.f;
@@ -69,7 +69,7 @@ SWindow::SWindow()
             float dx = midx - i;
             float dy = midy - j;
             float dist2 = dx * dx + dy * dy;
-            FPixelProxy prox = mParticle->PixelProxy( i, j );
+            FPixel prox = mParticle->PixelProxy( i, j );
             float alpha = 1.f - FMaths::Min( dist2 / ray2, 1.f );
             prox.SetAlphaF( alpha );
         }

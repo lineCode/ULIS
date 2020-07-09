@@ -15,9 +15,9 @@
 #include "Core/Core.h"
 
 ULIS3_NAMESPACE_BEGIN
-ULIS3_API FPixelValue MixNative( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS3_API FPixelValue MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS3_API FPixelValue MixRGB( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS3_API FPixelValue MixLab( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_API FColor MixNative( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_API FColor MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_API FColor MixRGB( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_API FColor MixLab( ufloat iT, IPixel* iA, IPixel* iB );
 ULIS3_NAMESPACE_END
 

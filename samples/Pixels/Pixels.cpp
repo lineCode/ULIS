@@ -14,8 +14,8 @@
 #include <ULIS3>
 using namespace ::ul3;
 
-FPixelValue GetOneColor() {
-    FPixelValue aa = FPixelValue::FromRGBA8( 255, 0, 0 );
+FColor GetOneColor() {
+    FColor aa = FColor::FromRGBA8( 255, 0, 0 );
     return  aa;
 }
 
@@ -23,10 +23,10 @@ int
 main() {
 
     {
-        FPixelValue colorA( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 0 } );
-        FPixelValue colorB = Conv( FPixelValue::FromRGBA8( 0, 0, 0, 255 ), ULIS3_FORMAT_HSVA8 );
+        FColor colorA( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 0 } );
+        FColor colorB = Conv( FColor::FromRGBA8( 0, 0, 0, 255 ), ULIS3_FORMAT_HSVA8 );
         colorA = colorB;
-        FPixelValue colorC = GetOneColor();
+        FColor colorC = GetOneColor();
         auto dummy = 0;
     }
 

@@ -110,9 +110,9 @@ _PyULIS3Object_Block_PixelProxy( _PyULIS3Object_Block* self, PyObject* args ) {
     assert( x >= 0 && x < self->_mBlock->Width() );
     assert( y >= 0 && x < self->_mBlock->Height() );
 
-    PyObject* inst = _PyULIS3Object_PixelProxy_new( &FPixelProxy, nullptr, nullptr );
+    PyObject* inst = _PyULIS3Object_PixelProxy_new( &FPixel, nullptr, nullptr );
     _PyULIS3Object_PixelProxy* O = (_PyULIS3Object_PixelProxy*)inst;
-    O->super._mPixel = new ::ul3::FPixelProxy( self->_mBlock->PixelProxy( x, y ) );
+    O->super._mPixel = new ::ul3::FPixel( self->_mBlock->PixelProxy( x, y ) );
     return  inst;
 }
 
@@ -125,9 +125,9 @@ _PyULIS3Object_Block_PixelValue( _PyULIS3Object_Block* self, PyObject* args ) {
     assert( x >= 0 && x < self->_mBlock->Width() );
     assert( y >= 0 && x < self->_mBlock->Height() );
 
-    PyObject* inst = _PyULIS3Object_PixelValue_new( &FPixelValue, nullptr, nullptr );
+    PyObject* inst = _PyULIS3Object_PixelValue_new( &FColor, nullptr, nullptr );
     _PyULIS3Object_PixelValue* O = (_PyULIS3Object_PixelValue*)inst;
-    O->super._mPixel = new ::ul3::FPixelValue( self->_mBlock->PixelProxy( x, y ) );
+    O->super._mPixel = new ::ul3::FColor( self->_mBlock->PixelProxy( x, y ) );
     return  inst;
 }
 

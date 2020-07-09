@@ -48,10 +48,10 @@ main( int argc, char *argv[] ) {
     // To illustrate the conversion operation, we will first perform a gradient in the Lab block, taking avantage of the nice color interpolation in LAB
     // We will then convert the Lab gradient to RGB to see the result, and observe the interpolation goes through a more appropriate chromatic path
     // We first bake our colors here, we specify pure red and green in RGB, then we convert this to Lab in order to be able to interpolate Lab values directly.
-    FPixelValue rgbGreen(   ULIS3_FORMAT_RGB8, {   0, 255,   0 } );
-    FPixelValue rgbRed(     ULIS3_FORMAT_RGB8, { 255,   0,   0 } );
-    FPixelValue labGreen = Conv( rgbGreen,  ULIS3_FORMAT_LabD );
-    FPixelValue labRed   = Conv( rgbRed,    ULIS3_FORMAT_LabD );
+    FColor rgbGreen(   ULIS3_FORMAT_RGB8, {   0, 255,   0 } );
+    FColor rgbRed(     ULIS3_FORMAT_RGB8, { 255,   0,   0 } );
+    FColor labGreen = Conv( rgbGreen,  ULIS3_FORMAT_LabD );
+    FColor labRed   = Conv( rgbRed,    ULIS3_FORMAT_LabD );
 
     // Now we perform a gradient manually in the lab block here to illustrate the interpolation occured in LAB
     // When performing later conversion to RGB, we'll see the nice result of the color blending.
@@ -64,7 +64,7 @@ main( int argc, char *argv[] ) {
         double b = lerp * labGreen.bD() + ( 1.0 - lerp ) * labRed.bD();
         for( int y = 0; y < h; ++y ) {
             // We won't explain proxies here, see the Pixel sample for more info.
-            FPixelProxy prox = blockLAB->PixelProxy( x, y );
+            FPixel prox = blockLAB->PixelProxy( x, y );
             prox.SetLD( L );
             prox.SetaD( a );
             prox.SetbD( b );

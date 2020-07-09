@@ -40,7 +40,7 @@ main( int argc, char *argv[] ) {
             FVec2I delta = pos - mid;
             int dist = delta.Distance();
             if( abs( dist - rad ) < 2 ) {
-                FPixelProxy prox = blockSRC->PixelProxy( x, y );
+                FPixel prox = blockSRC->PixelProxy( x, y );
                 prox.SetAlpha8( 128 );
             }
         }

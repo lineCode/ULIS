@@ -46,7 +46,7 @@ main( int argc, char *argv[] ) {
     int w = 900;
     int h = 600;
     FBlock* blockCanvas = new FBlock( w, h, ULIS3_FORMAT_RGBA8 );
-    FPixelValue color = FPixelValue::FromRGBA8( 255, 0, 0 );
+    FColor color = FColor::FromRGBA8( 255, 0, 0 );
     std::wstring str1 = L"ULIS";
     std::wstring str2 = L"ユリッス";
     std::wstring str3 = L"ゆりっす";
@@ -73,8 +73,8 @@ main( int argc, char *argv[] ) {
     FTransform2D transform1( FTransform2D::MakeTranslationTransform( rect1.x, rect1.y ) );
     FTransform2D transform2( FTransform2D::MakeTranslationTransform( rect2.x, rect2.y ) );
     FTransform2D transform3( FTransform2D::MakeTranslationTransform( rect3.x, rect3.y ) );
-    FPixelValue backgroundColor = FPixelValue::FromHSVAF( 0.5f, 0.9f, 0.8f, 1.f );
-    FPixelValue fontColor       = FPixelValue::FromRGBA8( 255, 255, 255, 255 );
+    FColor backgroundColor = FColor::FromHSVAF( 0.5f, 0.9f, 0.8f, 1.f );
+    FColor fontColor       = FColor::FromRGBA8( 255, 255, 255, 255 );
 
     // Let's process the block:
     Fill( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, backgroundColor, blockCanvas->Rect() );

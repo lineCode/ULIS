@@ -23,7 +23,7 @@ ULIS3_NAMESPACE_BEGIN
 template< typename T > void
 InvokeTransformBezierMTProcessScanline_NN_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormatInfo&      fmt     = info.destination->FormatInfo();
+    const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
     const float*            field   = reinterpret_cast< const float* >( iField->ScanlinePtr( iLine ) );
     const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlinePtr( iLine ) );

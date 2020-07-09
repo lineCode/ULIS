@@ -20,14 +20,15 @@ FBlock::~FBlock()
 }
 
 FBlock::FBlock(
-          uint16 iWidth
-        , uint16 iHeight
-        , tFormat iFormat
-        , const FColorSpace* iColorSpace
-        , const FOnInvalid& iOnInvalid
-        , const FOnCleanup& iOnCleanup
+      uint16 iWidth
+    , uint16 iHeight
+    , tFormat iFormat
+    , const FColorSpace* iColorSpace
+    , const FOnInvalid& iOnInvalid
+    , const FOnCleanup& iOnCleanup
     )
-    : FHasFormat( iFormat )
+    : IHasFormat( iFormat )
+    , IHasColorSpace( iColorSpace )
     , mData( nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
@@ -35,7 +36,6 @@ FBlock::FBlock(
     , mBytesTotal( 0 )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
-    , mColorSpace( iColorSpace )
 {
     ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
@@ -45,20 +45,20 @@ FBlock::FBlock(
     uint32 num = mWidth * mHeight * FormatInfo().SPP;
     ULIS3_ASSERT( num != 0, "Cannot allocate a buffer of size 0" )
 
-    // Default allocator
     mData = new uint8[ mBytesTotal ];
 }
 
 FBlock::FBlock(
-          uint8* iData
-        , uint16 iWidth
-        , uint16 iHeight
-        , tFormat iFormat
-        , const FColorSpace* iColorSpace = nullptr
-        , const FOnInvalid& iOnInvalid = FOnInvalid()
-        , const FOnCleanup& iOnCleanup = FOnCleanup()
+      uint8* iData
+    , uint16 iWidth
+    , uint16 iHeight
+    , tFormat iFormat
+    , const FColorSpace* iColorSpace = nullptr
+    , const FOnInvalid& iOnInvalid = FOnInvalid()
+    , const FOnCleanup& iOnCleanup = FOnCleanup()
     )
-    : FHasFormat( iFormat )
+    : IHasFormat( iFormat )
+    , IHasColorSpace( iColorSpace )
     , mData( iData )
     , mWidth( iWidth )
     , mHeight( iHeight )
@@ -66,7 +66,6 @@ FBlock::FBlock(
     , mBytesTotal( 0 )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
-    , mColorSpace( iColorSpace )
 {
     ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
@@ -150,18 +149,6 @@ FBlock::PixelData( uint16 iX, uint16 iY ) const
     ULIS3_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
     ULIS3_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
     return  mData + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
-}
-
-void
-FBlock::AssignColorSpace( const FColorSpace* iColorSpace )
-{
-    mColorSpace = iColorSpace;
-}
-
-const FColorSpace*
-FBlock::ColorSpace() const
-{
-    return  mColorSpace;
 }
 
 uint16
@@ -280,14 +267,14 @@ FBlock::ReloadFromData(
 
     mOnCleanup.ExecuteIfBound( mData );
 
-    ReinterpretAsFormat( iFormat );
+    ReinterpretFormat( iFormat );
+    AssignColorSpace( iColorSpace );
 
     mData = iData;
     mWidth = iWidth;
     mHeight = iHeight;
     mOnInvalid = iOnInvalid;
     mOnCleanup = iOnCleanup;
-    mColorSpace = iColorSpace;
 
     mBytesPerScanline = mWidth * FormatInfo().BPP;
     mBytesTotal = mHeight * mBytesPerScanline;

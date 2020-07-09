@@ -26,8 +26,8 @@
 #define PYULIS3_FOR_ALL_TYPES_DO( X, ... )              \
     X( FBlock, __VA_ARGS__ )                            \
     X( IPixel, __VA_ARGS__ )                            \
-    X( FPixelProxy, __VA_ARGS__ )                       \
-    X( FPixelValue, __VA_ARGS__ )
+    X( FPixel, __VA_ARGS__ )                       \
+    X( FColor, __VA_ARGS__ )
 
 #define PYULIS3_CHECK_TYPE_READY( _TYPE, ... )  if( PyType_Ready( & _TYPE ) < 0 ) return NULL;
 #define PYULIS3_CHECK_FOR_ALL_TYPES_READY       PYULIS3_FOR_ALL_TYPES_DO( PYULIS3_CHECK_TYPE_READY )

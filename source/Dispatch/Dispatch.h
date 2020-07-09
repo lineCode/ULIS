@@ -14,29 +14,29 @@
 #pragma once
 #include "Core/Core.h"
 #include "Base/HostDeviceInfo.h"
-#include "Data/FormatInfo.h"
+#include "Data/Format.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Dispatch Tests
-static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBA8( const FFormatInfo& iFormatInfo ) {
+static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) {
     return  ( iFormatInfo.FMT & ULIS3_FORMAT_MASK_LAYOUT ) == ULIS3_FORMAT_RGBA8;
 }
 
-static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBAF( const FFormatInfo& iFormatInfo ) {
+static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) {
     return  ( iFormatInfo.FMT & ULIS3_FORMAT_MASK_LAYOUT ) == ULIS3_FORMAT_RGBAF;
 }
 
 /////////////////////////////////////////////////////
 // Dispatch typedefs
-typedef bool (*fpCond)( const FFormatInfo& iFormatInfo );
+typedef bool (*fpCond)( const FFormat& iFormatInfo );
 
 /////////////////////////////////////////////////////
 // Actual Dispatch Implementation
 template< typename _DISPATCHER >
 class TDispatcher {
 public:
-    static ULIS3_FORCEINLINE typename _DISPATCHER::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
+    static ULIS3_FORCEINLINE typename _DISPATCHER::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
         for( int i = 0; i < _DISPATCHER::spec_size; ++i ) {
             if( _DISPATCHER::spec_table[i].select_cond( iFormatInfo ) ) {
                 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
@@ -63,7 +63,7 @@ public:
 
 private:
     template< typename T >
-    static ULIS3_FORCEINLINE typename _DISPATCHER::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
+    static ULIS3_FORCEINLINE typename _DISPATCHER::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
         #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
             if( iPerfIntent & ULIS3_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                 return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );

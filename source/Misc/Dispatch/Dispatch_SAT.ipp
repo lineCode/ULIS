@@ -24,7 +24,7 @@ ULIS3_NAMESPACE_BEGIN
 template< typename T >
 void 
 InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, const uint8* iSrc, uint8* iDst ) {
-    const FFormatInfo& fmt = iSAT->FormatInfo();
+    const FFormat& fmt = iSAT->FormatInfo();
     const T* src = reinterpret_cast< const T* >( iSrc )  + fmt.SPP;
     float*   dst = reinterpret_cast< float* >( iDst )    + fmt.SPP;
 
@@ -39,7 +39,7 @@ InvokeComputeSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FBlock* iSAT,
 template< typename T >
 void 
 InvokeComputeSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, uint8* iDst ) {
-    const FFormatInfo& fmt = iSAT->FormatInfo();
+    const FFormat& fmt = iSAT->FormatInfo();
     const uint32 stride = iSAT->Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( iDst ) + stride;
 
@@ -68,7 +68,7 @@ void ComputeSummedAreaTable_MEM_Generic( FThreadPool*           iThreadPool
     const int       h       = iSource->Height();
 
     {
-        const FFormatInfo& fmt = iSAT->FormatInfo();
+        const FFormat& fmt = iSAT->FormatInfo();
         const T* wsrc = reinterpret_cast< const T* >( src );
         float*   wdst = reinterpret_cast< float* >( bdp );
         const uint32 stride = iSAT->Width()   * fmt.SPP;
@@ -176,12 +176,12 @@ typedef void (*fpDispatchedSATFunc)( FThreadPool*             iThreadPool
 
 template< typename T >
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+QueryDispatchedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
     return  ComputeSummedAreaTable_MEM_Generic< T >;
 }
 
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+QueryDispatchedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
     #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
         if( iHostDeviceInfo.HW_SSE42 )
             return  ComputeSummedAreaTable_SSE42_RGBA8;
@@ -193,13 +193,13 @@ QueryDispatchedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDe
 
 template< typename T >
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters_imp( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+QueryDispatchedSATFunctionForParameters_imp( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
     return  QueryDispatchedSATFunctionForParameters_Generic< T >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
 }
 
 template<>
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+QueryDispatchedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
     // RGBA8 Signature, any layout
     if( iFormatInfo.HEA
      && iFormatInfo.NCC == 3
@@ -213,7 +213,7 @@ QueryDispatchedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const 
 }
 
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatInfo& iFormatInfo ) {
+QueryDispatchedSATFunctionForParameters( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
     switch( iFormatInfo.TP ) {
         case TYPE_UINT8     : return  QueryDispatchedSATFunctionForParameters_imp< uint8   >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
         case TYPE_UINT16    : return  QueryDispatchedSATFunctionForParameters_imp< uint16  >( iPerfIntent, iHostDeviceInfo, iFormatInfo );

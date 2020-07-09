@@ -64,10 +64,10 @@ private:
     QTimer*                     mTimer;
     bool                        mLeftButtonDown;
     int                         mParticleSize;
-    FPixelValue*                mCurrentParticleColor;
-    FPixelValue*                mBGParticleColor;
-    FPixelValue*                mDarkParticleColor;
-    FPixelValue*                mLightParticleColor;
+    FColor*                mCurrentParticleColor;
+    FColor*                mBGParticleColor;
+    FColor*                mDarkParticleColor;
+    FColor*                mLightParticleColor;
     eBlendingMode               mCurrentBlendingMode;
     float                       mCurrentOpacity;
     float                       mMul;

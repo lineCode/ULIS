@@ -24,7 +24,7 @@ ULIS3_NAMESPACE_BEGIN
 void
 InvokeResizeMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info    = *iInfo;
-    const FFormatInfo&  fmt     = info.destination->FormatInfo();
+    const FFormat&  fmt     = info.destination->FormatInfo();
     uint8*              dst     = iDst;
 
     FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );

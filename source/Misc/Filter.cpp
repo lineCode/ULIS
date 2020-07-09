@@ -57,7 +57,7 @@ void Filter( FThreadPool*           iThreadPool
     ULIS3_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
-    const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
+    const FFormat& srcFormatInfo( iSource->FormatInfo() );
 
     // Bake Params and call
     const uint8*    src     = iSource->DataPtr();
@@ -84,7 +84,7 @@ void FilterInPlace( FThreadPool*            iThreadPool
     ULIS3_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
-    const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
+    const FFormat& srcFormatInfo( iSource->FormatInfo() );
 
     // Bake Params and call
     uint8*      src     = iSource->DataPtr();
@@ -118,8 +118,8 @@ void FilterInto( FThreadPool*              iThreadPool
     ULIS3_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
-    const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
-    const FFormatInfo& dstFormatInfo( iDestination->FormatInfo() );
+    const FFormat& srcFormatInfo( iSource->FormatInfo() );
+    const FFormat& dstFormatInfo( iDestination->FormatInfo() );
 
     // Bake Params and call
     const uint8*    src     = iSource->DataPtr();

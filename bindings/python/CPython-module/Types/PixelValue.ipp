@@ -54,7 +54,7 @@ _PyULIS3Object_PixelValue_init( _PyULIS3Object_PixelValue* self, PyObject* args,
         return -1;
     }
 
-    self->super._mPixel = new ::ul3::FPixelValue( fmt );
+    self->super._mPixel = new ::ul3::FColor( fmt );
     return 0;
 }
 
@@ -68,9 +68,9 @@ static PyMethodDef _PyULIS3Object_PixelValue_methods[] = {
 
 /////////////////////////////////////////////////////
 /// Meta Types
-static PyTypeObject FPixelValue = {
+static PyTypeObject FColor = {
 PyVarObject_HEAD_INIT(NULL, 0)
-    "PyULIS3.FPixelValue", /* tp_name */
+    "PyULIS3.FColor", /* tp_name */
     sizeof( _PyULIS3Object_PixelValue ), /* tp_basicsize */
     0, /* tp_itemsize */
     (destructor)_PyULIS3Object_PixelValue_dealloc, /* tp_dealloc */

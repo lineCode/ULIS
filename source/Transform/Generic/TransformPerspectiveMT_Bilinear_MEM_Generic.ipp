@@ -24,7 +24,7 @@ ULIS3_NAMESPACE_BEGIN
 template< typename T > void
 InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormatInfo&      fmt     = info.destination->FormatInfo();
+    const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
 
     FVec2F pointInDst( static_cast< float >( info.dst_roi.x ), static_cast< float >( info.dst_roi.y + iLine ) );
