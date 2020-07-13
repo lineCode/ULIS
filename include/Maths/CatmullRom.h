@@ -25,11 +25,6 @@ static constexpr float sCatmullRomKnotParametricConstant_Uniform        = 0.0f;
 static constexpr float sCatmullRomKnotParametricConstant_Centripetal    = 0.5f;
 static constexpr float sCatmullRomKnotParametricConstant_Chordal        = 1.f;
 
-struct FCatmullRomLUTElement {
-    FVec2F  position;
-    float   length;
-};
-
 template< class T >
 float NextKnot(float t, const T& p0, const T& p1, float alpha ) {
     float a = pow((p1.x-p0.x), 2.0f) + pow((p1.y-p0.y), 2.0f);

@@ -19,23 +19,23 @@
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      IHasChannels
-/// @brief      The IHasChannels class is an abstract interface allowing to
+/// @class      ISample
+/// @brief      The ISample class is an abstract interface allowing to
 ///             store and manipulate pixels or colors in various formats.
-/// @details    IHasChannels is a pure virtual class that provides a common
+/// @details    ISample is a pure virtual class that provides a common
 ///             interface for the FPixel and FColor classes.
 ///
-///             The IHasChannels has a format which specifies the type, memory
+///             The ISample has a format which specifies the type, memory
 ///             layout, color model, and other informations about the pixel
 ///             data. The underlying pixel data is always a regular contiguous
 ///             buffer storage that lives on RAM with no alignment requirement.
 ///             It is usually very small, ranging from 1 byte to 40 bytes,
 ///             depending on the format.
 ///
-///             The IHasChannels interface provides a way to access individualy
+///             The ISample interface provides a way to access individualy
 ///             named samples or channels components. If accessing a channel
 ///             from a named component that is not compatible with the initial
-///             format of the IHasChannels, the returned value could make
+///             format of the ISample, the returned value could make
 ///             little sense to the caller, but it is properly defined and is
 ///             safe to call unless accessing a named component that is out of
 ///             range and from another color model with a greater number of
@@ -52,22 +52,22 @@ ULIS3_NAMESPACE_BEGIN
 ///
 ///             \sa FColor
 ///             \sa FPixel
-class ULIS3_API IHasChannels
+class ULIS3_API ISample
     : public IHasFormat
     , public IHasColorSpace
 {
 public:
     /*! Virtual destructor in order to allow polymorphic manipulation of subtypes. */
-    virtual ~IHasChannels() = 0;
+    virtual ~ISample() = 0;
 
-    /*! Construct a IHasChannels interface in a derived class */
-    IHasChannels( uint32 iFormat, FColorSpace* iColorSpace = nullptr );
+    /*! Construct a ISample interface in a derived class */
+    ISample( uint32 iFormat, FColorSpace* iColorSpace = nullptr );
 
     /*! Comparison strict equal operator */
-    bool operator==( const IHasChannels& iOther ) const;
+    bool operator==( const ISample& iOther ) const;
 
     /*! Comparison strict not equal operator */
-    bool operator!=( const IHasChannels& iOther ) const;
+    bool operator!=( const ISample& iOther ) const;
 
     /*!
     Obtain a pointer to the raw data at the base element of the underlying
@@ -486,7 +486,7 @@ protected:
 /// @class      FColor
 /// @brief      The FColor class provides a mean of storing and manipulating pixels value in various formats.
 /// @details    A pixel value allocates its own storage space and is responsible for its memory.
-class ULIS3_API FColor : public IHasChannels
+class ULIS3_API FColor : public ISample
 {
 public:
     // Construction / Destruction
@@ -568,7 +568,7 @@ public:
 /// @class      FPixel
 /// @brief      The FPixel class provides a mean of storing and manipulating pixels value in various formats.
 /// @details    A pixel proxy is a view to a block memory space and is not responsible for this memory.
-class ULIS3_API FPixel : public IHasChannels
+class ULIS3_API FPixel : public ISample
 {
 public:
     // Construction / Destruction

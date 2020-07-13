@@ -17,58 +17,61 @@
 #include <list>
 
 ULIS3_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-/// @class FFontStyleEntry
-/// @brief The FFontStyleEntry class provides a mean of storing and manipulating font files entries along with their family, style and path.
-class ULIS3_API FFontStyleEntry
-{
-public:
-    // Construction / Destruction
-    ~FFontStyleEntry();
-    FFontStyleEntry( const std::string& iFamily, const std::string& iStyle, const std::string& iFont );
-
-public:
-    // Public API
-    const std::string& Family() const;
-    const std::string& Style() const;
-    const std::string& Path() const;
-
-private:
-    // Private Data Members
-    std::string mFamily;
-    std::string mStyle;
-    std::string mPath;
-};
-
-/////////////////////////////////////////////////////
-/// @class FFontFamilyEntry
-/// @brief The FFontFamilyEntry class provides a mean of storing and manipulating font family entries.
-class ULIS3_API FFontFamilyEntry
-{
-public:
-    // Construction / Destruction
-    ~FFontFamilyEntry();
-    FFontFamilyEntry( const std::string& iName );
-
-public:
-    // Public API
-    void AddFontStyleKey( const std::string& iStyle, const FFontStyleEntry& iFontStyleKey );
-    int StyleCount() const;
-    const std::map< std::string, FFontStyleEntry >& Styles() const;
-    const std::string& Family() const;
-    const FFontStyleEntry* FuzzyFindFontStyleKey( const std::string& iStyle ) const;
-
-private:
-    // Private Data Members
-    std::string mFamily;
-    std::map< std::string, FFontStyleEntry > mStyles;
-};
 
 /////////////////////////////////////////////////////
 /// @class      FFontRegistry
 /// @brief      The FFontRegistry class provides a mean of storing and manipulating all discoverable font entries and their file paths.
 class ULIS3_API FFontRegistry
 {
+
+    /////////////////////////////////////////////////////
+    /// @class FFontFamilyEntry
+    /// @brief The FFontFamilyEntry class provides a mean of storing and manipulating font family entries.
+    class ULIS3_API FFontFamilyEntry
+    {
+        /////////////////////////////////////////////////////
+        /// @class FFontStyleEntry
+        /// @brief The FFontStyleEntry class provides a mean of storing and manipulating font files entries along with their family, style and path.
+        class ULIS3_API FFontStyleEntry
+        {
+        public:
+            // Construction / Destruction
+            ~FFontStyleEntry();
+            FFontStyleEntry( const std::string& iFamily, const std::string& iStyle, const std::string& iFont );
+
+        public:
+            // Public API
+            const std::string& Family() const;
+            const std::string& Style() const;
+            const std::string& Path() const;
+
+        private:
+            // Private Data Members
+            std::string mFamily;
+            std::string mStyle;
+            std::string mPath;
+        };
+
+    public:
+        // Construction / Destruction
+        ~FFontFamilyEntry();
+        FFontFamilyEntry( const std::string& iName );
+
+    public:
+        // Public API
+        void AddFontStyleKey( const std::string& iStyle, const FFontStyleEntry& iFontStyleKey );
+        int StyleCount() const;
+        const std::map< std::string, FFontStyleEntry >& Styles() const;
+        const std::string& Family() const;
+        const FFontStyleEntry* FuzzyFindFontStyleKey( const std::string& iStyle ) const;
+
+    private:
+        // Private Data Members
+        std::string mFamily;
+        std::map< std::string, FFontStyleEntry > mStyles;
+    };
+
+
 public:
     // Construction / Destruction
     ~FFontRegistry();
