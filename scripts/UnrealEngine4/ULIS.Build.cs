@@ -22,9 +22,13 @@ public class ULIS : ModuleRules
             Directory.CreateDirectory( FullBinariesDir );
         }
 
-        string FullExistingPath = Path.Combine( FullBinariesDir, Filename );
+        string FullFilePath = Path.Combine( FullBinariesDir, Filename );
+
+        if( File.Exists( FullFilePath ) )
+            return FullFilePath;
+
         File.Copy( Filepath, Path.Combine( FullBinariesDir, Filename ), true);
-        return FullExistingPath;
+        return FullFilePath;
     }
 
     public ULIS( ReadOnlyTargetRules Target ) : base( Target )
