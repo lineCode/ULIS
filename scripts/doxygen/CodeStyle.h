@@ -292,3 +292,70 @@ int main() {
     return  0;
 }
 
+//////////////////////////////////////////////////////
+// Easy In Order MonoThread Scheduling
+#include <ULIS3.h>
+
+int main() {
+    using namespace ::ulis3; // pas du tout fan de cette syntaxe, mais bon, pour l'exemple ...
+
+    cVector2i size( 1024, 1024 );
+    // je sais que si je dois chercher une classe image, ben je commencerai forcement par cImage... et ensuite touver la specification 2D/Raster/...
+    // ca fait moins 'elegant' à l'oreille, mais j'ai toujours trouvé que c'etait beaucoup plus facile à ecrire/trouver/... dans ce sens là
+    // m'enfin bon...
+    cImage2DRaster drawing( size ); // ici, ca me choque pas qu'il faille passer le format des pixel dans tous les cas, parce que je suppose que par defaut, ici, ce sera rgba8, non ?
+    cImage2DRaster overlay( size );
+    cTexture2DGPU texture( size );
+
+    cPainter painter;
+
+    // par contre, une question ici, on est bien d'accord que le fill se fera en multithread ?
+    painter.Fill( drawing, cColor::FromHex( 0xF00 ) );
+    painter.Fill( overlay, cColor::FromHex( 0xBA2 ) );
+    painter.AlphaBlendAA( overlay, drawing, overlay.Rect(), cVector2f( 0, 0 ), eBlendingMode::kNormal /* ENUM */, 1.f );
+    painter.UploadToGPU( drawing, texture );
+
+    return  0;
+}
+
+//////////////////////////////////////////////////////
+// Advanced Out Of Order Multithreaded Scheduling
+#include <ULIS3.h>
+
+int main() {
+    using namespace ::ulis3;
+
+    cThreadPool pool( cThreadPool::MaxWorkers() - 1 );
+    cCommandQueue queue( pool );
+    eFormat documentFormat = eFormat::kRGBA8; /* ENUM */
+    // oui, c'est un peu long, mais c'est pas le genre de truc qu'on ecrit 20 fois ...
+    cPainterContext ctx( documentFormat, queue, cPainterContext::eDispatch::kPrefetchDispatch /* ENUM */, cPainterContext::ePerformance::kSSE /* ENUM */ );
+
+    cHostDeviceInfo info = cHostDeviceInfo::Detect();
+
+    /* ENUM */
+    cSchedulerPolicy cacheEfficientPolicy( cSchedulerPolicy::eRun::kMulti, cSchedulerPolicy::eSchedule::kChunks, eItemSize::kChunkLength, info.CacheLineSize_L1 );
+    cSchedulerPolicy scanLinePolicy( cSchedulerPolicy::eRun::kMulti, cSchedulerPolicy::eSchedule::kScanlines )
+    cSchedulerPolicy monoPolicy( cSchedulerPolicy::eRun::kMono );
+
+    cVector2ui16 size( 1024, 1024 );
+    cImage2DRaster drawing( documentFormat, size );
+    cImage2DRaster overlay( documentFormat, size );
+    cTexture2DGPU texture( documentFormat, size );
+
+    cPainter painter( ctx );
+    
+    //bon, apres, je pourrais pas trop me prononcer sur la partie qui suit ... les trucs potentiellement asynchrones, j'ai horreur de les utiliser ...
+    
+    cTaskEvent evt_fill_drawing = painter.Fill( drawing, cColor::FromHex( 0xF00 ), cacheEfficientPolicy );
+    cTaskEvent evt_fill_overlay = painter.Fill( overlay, cColor::FromHex( 0xBA2 ), cacheEfficientPolicy, &evt_fill_drawing );
+    evt_fill_overlay.Poll();
+
+    cTaskEvent evt_blend = painter.AlphaBlendAA( overlay, drawing, overlay.Rect(), FVec2f( 0, 0 ), eBlendingMode::kNormal /* ENUM */, 1.f, scanLinePolicy );
+    painter.Fence();
+
+    painter.UploadToGPU( drawing, texture, monoPolicy, &evt_blend );
+    painter.Flush();
+
+    return  0;
+}

@@ -17,10 +17,9 @@
 /////////////////////////////////////////////////////
 // Format Magic Number, Memory Layout and Properties
 //
-//          [ DYNAMIC    ] [ STATIC                   ]
 //        32|        |  20|  16|            8|   4|   0
 //          1098 7654 3210 9876     5432 1098 7654 3210
-//          XXXX XXLP CCCC BBBB     ASRF MMMM NNNN TTTT
+//          XXXX XILP CCCC BBBB     ASRF MMMM NNNN TTTT
 //
 //    Example: RGBA8
 //                            1     1000 0010 0011 0000
@@ -34,10 +33,10 @@
 //          M: Model                A: Alpha
 //          F: Floating             B: Bytes per sample ( Depth )
 //
-//          DYNAMIC
 //          C: Default Profile
 //          P: Premultiplied
 //          L: Linear ( Gamma Uncompressed )
+//          I: Interleaved ( 0: Interleaved, 1: Planar )
 //
 //          X: Free space for dynamic extra info
 //
@@ -49,8 +48,8 @@
 #define ULIS3_FORMAT_MASK_LAYOUT    0b11111111111111111001111111111111
 
 /////////////////////////////////////////////////////
-// Static Properties Format Macro Operators
-// Static Format Properties: Write
+// Properties Format Macro Operators
+// Format Properties: Write
 #define ULIS3_W_TYPE( i )           ( i & 0xF )
 #define ULIS3_W_CHANNELS( i )       ( ( i & 0xF ) << 4 )
 #define ULIS3_W_MODEL( i )          ( ( i & 0xF ) << 8 )
@@ -59,7 +58,11 @@
 #define ULIS3_W_SWAP( i )           ( ( i & 1 ) << 14 )
 #define ULIS3_W_ALPHA( i )          ( ( i & 1 ) << 15 )
 #define ULIS3_W_DEPTH( i )          ( ( i & 0xF ) << 16 )
-// Static Format Properties: Erase
+#define ULIS3_W_PROFILE( i )        ( ( i & 0xF ) << 20 )
+#define ULIS3_W_PREMULT( i )        ( ( i & 1 ) << 24 )
+#define ULIS3_W_LINEAR( i )         ( ( i & 1 ) << 25 )
+#define ULIS3_W_PLANAR( i )         ( ( i & 1 ) << 26 )
+// Format Properties: Erase
 #define ULIS3_E_TYPE                ( ~0xF )
 #define ULIS3_E_CHANNELS            ( ~( 0xF << 4 ) )
 #define ULIS3_E_MODEL               ( ~( 0xF << 8 ) )
@@ -68,7 +71,11 @@
 #define ULIS3_E_SWAP                ( ~( 0x1 << 14 ) )
 #define ULIS3_E_ALPHA               ( ~( 0x1 << 15 ) )
 #define ULIS3_E_DEPTH               ( ~( 0xF << 16 )
-// Static Format Properties: Read
+#define ULIS3_E_PROFILE             ( ~( 0xF << 20 ) )
+#define ULIS3_E_PREMULT             ( ~( 0x1 << 24 ) )
+#define ULIS3_E_LINEAR              ( ~( 0x1 << 25 ) )
+#define ULIS3_E_PLANAR              ( ~( 0x1 << 26 ) )
+// Format Properties: Read
 #define ULIS3_R_TYPE( i )           ( i & 0xF )
 #define ULIS3_R_CHANNELS( i )       ( ( i >> 4 ) & 0xF )
 #define ULIS3_R_MODEL( i )          ( ( i >> 8 ) & 0xF )
@@ -79,21 +86,10 @@
 #define ULIS3_R_DEPTH( i )          ( ( i >> 16 ) & 0xF )
 #define ULIS3_R_RS( i )             ( ( i >> 13 ) & 0x3 )
 #define ULIS3_R_EXTRA( i )          ( ( i >> 20 ) & 0xFFF )
-
-/////////////////////////////////////////////////////
-// Dynamic Properties Format Macro Operators
-// Dynamic Format Properties: Write
-#define ULIS3_W_PROFILE( i )        ( ( i & 0xF ) << 20 )
-#define ULIS3_W_PREMULT( i )        ( ( i & 1 ) << 24 )
-#define ULIS3_W_LINEAR( i )         ( ( i & 1 ) << 25 )
-// Dynamic Format Properties: Erase
-#define ULIS3_E_PROFILE             ( ~( 0xF << 20 ) )
-#define ULIS3_E_PREMULT             ( ~( 0x1 << 24 ) )
-#define ULIS3_E_LINEAR              ( ~( 0x1 << 25 ) )
-// Dynamic Format Properties: Read
 #define ULIS3_R_PROFILE( i )        ( ( i >> 20 ) & 0xF )
 #define ULIS3_R_PREMULT( i )        ( ( i >> 24 ) & 0x1 )
 #define ULIS3_R_LINEAR( i )         ( ( i >> 25 ) & 0x1 )
+#define ULIS3_R_PLANAR( i )         ( ( i >> 26 ) & 0x1 )
 
 /////////////////////////////////////////////////////
 // All ~680 formats.
