@@ -14,7 +14,10 @@
 #include "Data/Sample.h"
 
 ULIS3_NAMESPACE_BEGIN
-ISample::ISample( uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace = nullptr )
+ISample::~ISample()
+{}
+
+ISample::ISample( uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
     , mSignal( iData )

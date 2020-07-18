@@ -19,7 +19,7 @@ ULIS3_NAMESPACE_BEGIN
 namespace detail {
 
 template< typename T >
-class TColorInitializer {
+struct TColorInitializer {
     template< typename U >
     static
     ULIS3_FORCEINLINE
@@ -30,7 +30,7 @@ class TColorInitializer {
 };
 
 template<>
-class TColorInitializer< uint8 > {
+struct TColorInitializer< uint8 > {
     template< typename U >
     static
     ULIS3_FORCEINLINE
@@ -43,7 +43,7 @@ class TColorInitializer< uint8 > {
 };
 
 template<>
-class TColorInitializer< uint16 > {
+struct TColorInitializer< uint16 > {
     template< typename U >
     static
     ULIS3_FORCEINLINE
@@ -56,7 +56,7 @@ class TColorInitializer< uint16 > {
 };
 
 template<>
-class TColorInitializer< uint32 > {
+struct TColorInitializer< uint32 > {
     template< typename U >
     static
     ULIS3_FORCEINLINE
@@ -69,7 +69,7 @@ class TColorInitializer< uint32 > {
 };
 
 template<>
-class TColorInitializer< ufloat > {
+struct TColorInitializer< ufloat > {
     template< typename U >
     static
     ULIS3_FORCEINLINE
@@ -82,7 +82,7 @@ class TColorInitializer< ufloat > {
 };
 
 template<>
-class TColorInitializer< udouble > {
+struct TColorInitializer< udouble > {
     template< typename U >
     static
     ULIS3_FORCEINLINE
@@ -158,7 +158,7 @@ FColor::FColor( tFormat iFormat, std::initializer_list< T > iValues, const FColo
     : ISample( new uint8[ Depth() ], iFormat, iColorSpace )
 {
     #define TMP_CALL( iTypeID, iType, iE2, iE3 ) detail::TColorInitializer< iType >::Run< T >( this, iValues ); break;
-    ULIS3_SWITCH_FOR_ALL_DO( iFormatInfo.TP, ULIS3_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+    ULIS3_SWITCH_FOR_ALL_DO( Type(), ULIS3_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
     #undef TMP_CALL
 }
 

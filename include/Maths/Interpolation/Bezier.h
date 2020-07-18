@@ -14,19 +14,12 @@
 #pragma once
 #include "Core/Core.h"
 #include "Maths/Geometry.h"
+#include "Maths/Interpolation/Spline.h"
 #include "Maths/Maths.h"
 #include <vector>
 
 ULIS3_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// Bezier Functions
-struct FSplineSample {
-    FVec2F point;
-    float length;
-    float param;
-};
-
-struct FBezierCubicSpline {
+struct FBezierCubicControlPoint {
     FVec2F point;
     FVec2F ctrlCW;
     FVec2F ctrlCCW;
@@ -83,7 +76,6 @@ template< class T > inline void CubicBezierInverseSplitAtParameter( T* ioP0, T* 
     *ioP2 = C;
 }
 
-
 template< class T > inline FRect QuadraticBezierConvexHullRect( const T& iP0, const T& iP1, const T& iP2 ) {
     int xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.x, iP1.x, iP2.x ) ) );
     int ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.y, iP1.y, iP2.y ) ) );
@@ -100,7 +92,7 @@ template< class T > inline FRect CubicBezierConvexHullRect( const T& iP0, const 
     return  FRect::FromMinMax( xmin, ymin, xmax, ymax );
 }
 
-ULIS3_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FBezierLUTElement >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThresholdSquared, float iLengthOffset = 0.f, float iParamOffset = 0.f, float iParamDepth = 1.f ) {
+ULIS3_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FParametricSplineSample >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThresholdSquared, float iLengthOffset = 0.f, float iParamOffset = 0.f, float iParamDepth = 1.f ) {
     FVec2F mid = CubicBezierPointAtParameter( iP0, iP1, iP2, iP3, 0.5f );
     float lengthSquaredSegmentA = ( iP0 - mid ).DistanceSquared();
     float lengthSquaredSegmentB = ( mid - iP3 ).DistanceSquared();
@@ -128,38 +120,13 @@ ULIS3_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FBezierLU
     return ( lengthSquaredSegmentA + lengthSquaredSegmentB );
 }
 
-
-ULIS3_API float inline CubicBezierGenerateLinearLUT( std::vector< FBezierLUTElement >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThreshold ) {
+ULIS3_API float inline CubicBezierGenerateLinearLUT( std::vector< FParametricSplineSample >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThreshold ) {
     oArray->clear();
     oArray->push_back( { iP0, 0.f } );
     float length = CubicBezierGenerateLinearLUT_imp( oArray, iP0, iP1, iP2, iP3, iThreshold*iThreshold );
     oArray->push_back( { iP3, length, 1.f } );
     return  length;
 }
-
-/*
-void inline CubicBezierRelinearizeLUT( const std::vector< FBezierLUTElement >& iArray, std::vector< FBezierLUTElement >* oArray, float iThreshold ) {
-    oArray->clear();
-    oArray->reserve( static_cast< size_t >( iArray.size() * iThreshold ) );
-    for( int i = 1; i < iArray.size(); ++i ) {
-        const FBezierLUTElement& prev = iArray[i-1];
-        const FBezierLUTElement& curr = iArray[i];
-        const FVec2F& prevP = prev.point;
-        const FVec2F& currP = curr.point;
-        FVec2F delta = currP - prevP;
-        const float scale = FMaths::Max( delta.x, delta.y ); // Scale so that bigger dim steps 1
-        const int scalei = static_cast< int >( scale );
-        delta /= scale;
-        float dtdist = ( curr.length - prev.length ) / scale;
-        FVec2F pt = prevP;
-        for( int i = 0; i < scalei; ++i ) {
-            pt += delta;
-            oArray->push_back( { pt, prev.length + dtdist * i } );
-        }
-    }
-    oArray->push_back( iArray.back() );
-}
-*/
 
 ULIS3_NAMESPACE_END
 

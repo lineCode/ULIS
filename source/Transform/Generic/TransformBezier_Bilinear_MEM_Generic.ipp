@@ -24,8 +24,8 @@ InvokeTransformBezierMTProcessScanline_Bilinear_MEM_Generic( uint8* iDst, int32 
     const FTransformArgs&   info    = *iInfo;
     const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
-    const float*            field   = reinterpret_cast< const float* >( iField->ScanlinePtr( iLine ) );
-    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlinePtr( iLine ) );
+    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
+    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( iLine ) );
     const int rangex = info.src_roi.w - 1;
     const int rangey = info.src_roi.h - 1;
 
@@ -52,7 +52,7 @@ InvokeTransformBezierMTProcessScanline_Bilinear_MEM_Generic( uint8* iDst, int32 
             const float ty      = srcyf - top;
             const float uy      = 1.f - ty;
 
-            #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); } else { memset( _C, 255, fmt.BPP ); }
+            #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 255, fmt.BPP ); }
             TEMP( c00, left, top );
             TEMP( c10, right, top );
             TEMP( c11, right, bot );

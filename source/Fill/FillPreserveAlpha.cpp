@@ -27,10 +27,10 @@ void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormat& iFmt, std::
     const uint8* src = iColor->Bits();
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
-        const T alpha = dst[ iFmt->AID ];
-        memcpy( dst, src, iFmt->BPP );
-        dst[ iFmt->AID ] = alpha;
-        dst += iFmt->SPP;
+        const T alpha = dst[ iFmt.AID ];
+        memcpy( dst, src, iFmt.BPP );
+        dst[ iFmt.AID ] = alpha;
+        dst += iFmt.SPP;
     }
 }
 
@@ -90,7 +90,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
     // Call
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, &iDestination->FormatInfo(), color )
+                                   , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, iDestination->FormatInfo(), color )
 
     // Invalid
     iDestination->Dirty( roi, iCallCB );

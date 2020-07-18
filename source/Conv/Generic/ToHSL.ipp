@@ -15,8 +15,11 @@
 #include "Core/Core.h"
 #include "Conv/ConvBuffer.h"
 #include "Conv/ConvHelpers.h"
+#include "Data/Color.h"
 #include "Data/Format.h"
 #include "Data/Pixel.h"
+#include "Data/Sample.h"
+#include "Maths/Maths.h"
 #include <cmath>
 
 ULIS3_NAMESPACE_BEGIN
@@ -24,23 +27,31 @@ ULIS3_NAMESPACE_BEGIN
 // To HSL
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- From Grey
-template< typename T1, typename T2 > void ConvBufferGreyToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
+template< typename T, typename U >
+void
+ConvBufferGreyToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
     FColor temp( ULIS3_FORMAT_RGBAF );
-    while( iLen-- ) {
-        ConvBufferGreyToRGB< T1, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
-        ConvBufferRGBToHSL< ufloat, T2 >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+    while( iLen-- )
+    {
+        ConvBufferGreyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
+        ConvBufferRGBToHSL< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From RGB
-template< typename T1, typename T2 > void ConvBufferRGBToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
-    while( iLen-- ) {
-        ufloat r = ConvType< T1, ufloat >( U2_DREF_SRC( 0 ) );
-        ufloat g = ConvType< T1, ufloat >( U2_DREF_SRC( 1 ) );
-        ufloat b = ConvType< T1, ufloat >( U2_DREF_SRC( 2 ) );
+template< typename T, typename U >
+void
+ConvBufferRGBToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
+    while( iLen-- )
+    {
+        ufloat r = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
+        ufloat g = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
+        ufloat b = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
         float cmin = FMaths::Min3( r, g, b );
         float cmax = FMaths::Max3( r, g, b );
         float delta = cmax - cmin;
@@ -64,109 +75,141 @@ template< typename T1, typename T2 > void ConvBufferRGBToHSL( const FFormat& iSr
             if( h > 1.0 ) h -= 1.0;
         }
 
-        U2_DREF_DST( 0 ) = ConvType< ufloat, T2 >( h );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, T2 >( s );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, T2 >( l );
+        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( h );
+        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( s );
+        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( l );
         U2_FWD_ALPHA;
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From HSV
-template< typename T1, typename T2 > void ConvBufferHSVToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
+template< typename T, typename U >
+void
+ConvBufferHSVToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
     FColor temp( ULIS3_FORMAT_RGBAF );
-    while( iLen-- ) {
-        ConvBufferHSVToRGB< T1, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
-        ConvBufferRGBToHSL< ufloat, T2 >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+    while( iLen-- )
+    {
+        ConvBufferHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
+        ConvBufferRGBToHSL< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From HSL
-template< typename T1, typename T2 > void ConvBufferHSLToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
-    while( iLen-- ) {
-        U2_DREF_DST( 0 ) = ConvType< T1, T2 >( U2_DREF_SRC( 0 ) );
-        U2_DREF_DST( 1 ) = ConvType< T1, T2 >( U2_DREF_SRC( 1 ) );
-        U2_DREF_DST( 2 ) = ConvType< T1, T2 >( U2_DREF_SRC( 2 ) );
+template< typename T, typename U >
+void
+ConvBufferHSLToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
+    while( iLen-- )
+    {
+        U2_DREF_DST( 0 ) = ConvType< T, U >( U2_DREF_SRC( 0 ) );
+        U2_DREF_DST( 1 ) = ConvType< T, U >( U2_DREF_SRC( 1 ) );
+        U2_DREF_DST( 2 ) = ConvType< T, U >( U2_DREF_SRC( 2 ) );
         U2_FWD_ALPHA;
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From CMY
-template< typename T1, typename T2 > void ConvBufferCMYToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
+template< typename T, typename U >
+void
+ConvBufferCMYToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
     FColor temp( ULIS3_FORMAT_RGBAF );
-    while( iLen-- ) {
-        ConvBufferCMYToRGB< T1, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
-        ConvBufferRGBToHSL< ufloat, T2 >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+    while( iLen-- )
+    {
+        ConvBufferCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
+        ConvBufferRGBToHSL< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- From CMYK
-template< typename T1, typename T2 > void ConvBufferCMYKToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
+template< typename T, typename U >
+void
+ConvBufferCMYKToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
     FColor temp( ULIS3_FORMAT_RGBAF );
-    while( iLen-- ) {
-        ConvBufferCMYKToRGB< T1, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
-        ConvBufferRGBToHSL< ufloat, T2 >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+    while( iLen-- )
+    {
+        ConvBufferCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
+        ConvBufferRGBToHSL< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From YUV
-template< typename T1, typename T2 > void ConvBufferYUVToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
+template< typename T, typename U >
+void
+ConvBufferYUVToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
     FColor temp( ULIS3_FORMAT_RGBAF );
-    while( iLen-- ) {
-        ConvBufferYUVToRGB< T1, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
-        ConvBufferRGBToHSL< ufloat, T2 >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+    while( iLen-- )
+    {
+        ConvBufferYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
+        ConvBufferRGBToHSL< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From Lab
-template< typename T1, typename T2 > void ConvBufferLabToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
+template< typename T, typename U >
+void
+ConvBufferLabToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
     FColor temp( ULIS3_FORMAT_RGBAF );
-    while( iLen-- ) {
-        ConvBufferLabToRGB< T1, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
-        ConvBufferRGBToHSL< ufloat, T2 >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+    while( iLen-- )
+    {
+        ConvBufferLabToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
+        ConvBufferRGBToHSL< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From XYZ
-template< typename T1, typename T2 > void ConvBufferXYZToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
+template< typename T, typename U >
+void
+ConvBufferXYZToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
     FColor temp( ULIS3_FORMAT_RGBAF );
-    while( iLen-- ) {
-        ConvBufferXYZToRGB< T1, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
-        ConvBufferRGBToHSL< ufloat, T2 >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+    while( iLen-- )
+    {
+        ConvBufferXYZToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
+        ConvBufferRGBToHSL< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- From Yxy
-template< typename T1, typename T2 > void ConvBufferYxyToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen ) {
+template< typename T, typename U >
+void
+ConvBufferYxyToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
+{
     FColor temp( ULIS3_FORMAT_RGBAF );
-    while( iLen-- ) {
-        ConvBufferYxyToRGB< T1, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
-        ConvBufferRGBToHSL< ufloat, T2 >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+    while( iLen-- )
+    {
+        ConvBufferYxyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
+        ConvBufferRGBToHSL< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 

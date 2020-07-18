@@ -63,7 +63,7 @@ InvokeTransformAffineTiledMTProcessScanline_Bicubic_MEM_Generic( uint8* iDst, in
         const int yp0 = FMaths::PyModulo( src_y    , info.src_roi.h );
         const int yp1 = FMaths::PyModulo( src_y + 1, info.src_roi.h );
         const int yp2 = FMaths::PyModulo( src_y + 2, info.src_roi.h );
-        #define GETPIXEL( _C, _X, _Y ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); }
+        #define GETPIXEL( _C, _X, _Y ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); }
         GETPIXEL( p00, xm1,     ym1 );  GETPIXEL( p01, xm1,     yp0 );  GETPIXEL( p02, xm1,     yp1 );  GETPIXEL( p03, xm1,     yp2 );
         GETPIXEL( p10, xp0,     ym1 );  GETPIXEL( p11, xp0,     yp0 );  GETPIXEL( p12, xp0,     yp1 );  GETPIXEL( p13, xp0,     yp2 );
         GETPIXEL( p20, xp1,     ym1 );  GETPIXEL( p21, xp1,     yp0 );  GETPIXEL( p22, xp1,     yp1 );  GETPIXEL( p23, xp1,     yp2 );

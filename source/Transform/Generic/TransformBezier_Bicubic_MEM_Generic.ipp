@@ -25,8 +25,8 @@ InvokeTransformBezierMTProcessScanline_Bicubic_MEM_Generic( uint8* iDst, int32 i
     const FTransformArgs&   info    = *iInfo;
     const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
-    const float*            field   = reinterpret_cast< const float* >( iField->ScanlinePtr( iLine ) );
-    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlinePtr( iLine ) );
+    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
+    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( iLine ) );
     const int rangex = info.src_roi.w - 1;
     const int rangey = info.src_roi.h - 1;
 
@@ -55,7 +55,7 @@ InvokeTransformBezierMTProcessScanline_Bicubic_MEM_Generic( uint8* iDst, int32 i
             const float tx      = srcxf - src_x;
             const float ty      = srcyf - src_y;
 
-            #define GETPIXEL( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
+            #define GETPIXEL( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
             GETPIXEL( p00, src_x - 1, src_y - 1 );  GETPIXEL( p01, src_x - 1, src_y + 0 );  GETPIXEL( p02, src_x - 1, src_y + 1 );  GETPIXEL( p03, src_x - 1, src_y + 2 );
             GETPIXEL( p10, src_x + 0, src_y - 1 );  GETPIXEL( p11, src_x + 0, src_y + 0 );  GETPIXEL( p12, src_x + 0, src_y + 1 );  GETPIXEL( p13, src_x + 0, src_y + 2 );
             GETPIXEL( p20, src_x + 1, src_y - 1 );  GETPIXEL( p21, src_x + 1, src_y + 0 );  GETPIXEL( p22, src_x + 1, src_y + 1 );  GETPIXEL( p23, src_x + 1, src_y + 2 );

@@ -99,22 +99,22 @@ FKernel::Set( std::initializer_list< float > iNums ) {
 
 float
 FKernel::At( int iX, int iY ) const {
-    return  *reinterpret_cast< const float* >( PixelPtr( iX, iY ) );
+    return  *reinterpret_cast< const float* >( PixelBits( iX, iY ) );
 }
 
 float
 FKernel::At( FVec2I iPoint ) const {
-    return  *reinterpret_cast< const float* >( PixelPtr( iPoint.x, iPoint.y ) );
+    return  *reinterpret_cast< const float* >( PixelBits( iPoint.x, iPoint.y ) );
 }
 
 void
 FKernel::SetAt( int iX, int iY, float iValue ) {
-    *reinterpret_cast< float* >( PixelPtr( iX, iY ) ) = iValue;
+    *reinterpret_cast< float* >( PixelBits( iX, iY ) ) = iValue;
 }
 
 void
 FKernel::SetAt( FVec2I iPoint, float iValue ) {
-    *reinterpret_cast< float* >( PixelPtr( iPoint.x, iPoint.y ) ) = iValue;
+    *reinterpret_cast< float* >( PixelBits( iPoint.x, iPoint.y ) ) = iValue;
 }
 
 void

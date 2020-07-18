@@ -16,7 +16,7 @@
 #include "Transform/TransformDispatch.ipp"
 #include "Clear/Clear.h"
 #include "Data/Block.h"
-#include "Maths/Bezier.h"
+#include "Maths/Interpolation/Bezier.h"
 #include "Maths/Geometry.h"
 #include "Maths/Maths.h"
 #include "Maths/Transform2D_Private.h"
@@ -227,8 +227,8 @@ void TransformBezier( FThreadPool*                                      iThreadP
     tempPoints.reserve( 4 );
     for( auto i : iControlPoints )
         tempPoints.push_back( { i.point - shift, i.ctrlCW - shift, i.ctrlCCW - shift } );
-    std::vector< FBezierLUTElement > LUTV0;
-    std::vector< FBezierLUTElement > LUTV1;
+    std::vector< FParametricSplineSample > LUTV0;
+    std::vector< FParametricSplineSample > LUTV1;
     CubicBezierGenerateLinearLUT( &LUTV0, tempPoints[0].point, tempPoints[0].ctrlCCW, tempPoints[3].ctrlCW, tempPoints[3].point, iThreshold );
     CubicBezierGenerateLinearLUT( &LUTV1, tempPoints[1].point, tempPoints[1].ctrlCW, tempPoints[2].ctrlCCW, tempPoints[2].point, iThreshold );
     const int max = static_cast< int >( FMaths::Max( LUTV0.size(), LUTV1.size() ) );
@@ -242,7 +242,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
         FVec2F _v0 = V0 + ( tempPoints[0].ctrlCW  - tempPoints[0].point ) * ( 1.f - v ) + ( tempPoints[3].ctrlCCW - tempPoints[3].point ) * v;
         FVec2F _v1 = V1 + ( tempPoints[1].ctrlCCW - tempPoints[1].point ) * ( 1.f - v ) + ( tempPoints[2].ctrlCW  - tempPoints[2].point ) * v;
         float parametricDistortedV = ( LUTV0[index_v0].param + LUTV1[index_v0].param ) / 2.f;
-        std::vector< FBezierLUTElement > lutTemp;
+        std::vector< FParametricSplineSample > lutTemp;
         CubicBezierGenerateLinearLUT( &lutTemp, V0, _v0, _v1, V1, iThreshold );
         for( int i = 0; i < lutTemp.size(); ++i ) {
             float parametricDistortedU = lutTemp[i].param;
@@ -252,8 +252,8 @@ void TransformBezier( FThreadPool*                                      iThreadP
 
             for( int i = 0; i < plotsize; ++i ) {
                 for( int j = 0; j < plotsize; ++j ) {
-                    uint8* maskptr = reinterpret_cast< uint8* >( mask->PixelPtr( x + i, y + j ) );
-                    float* fieldptr = reinterpret_cast< float* >( field->PixelPtr( x + i, y + j ) );
+                    uint8* maskptr = reinterpret_cast< uint8* >( mask->PixelBits( x + i, y + j ) );
+                    float* fieldptr = reinterpret_cast< float* >( field->PixelBits( x + i, y + j ) );
                     *maskptr = 0xFF;
                     fieldptr[0] = parametricDistortedU;
                     fieldptr[1] = parametricDistortedV;

@@ -14,9 +14,11 @@
 #pragma once
 // Data
 #include "Data/Block.h"
+#include "Data/Color.h"
+#include "Data/ColorSpace.h"
+#include "Data/Format.h"
 #include "Data/Pixel.h"
-#include "Data/Kernel.h"
-#include "Data/StructuringElement.h"
+#include "Data/Sample.h"
 // Base
 #include "Base/HostDeviceInfo.h"
 #include "Base/FilePathRegistry.h"
@@ -24,10 +26,10 @@
 #include "Thread/ThreadInterface.h"
 // Maths
 #include "Maths/Geometry.h"
+#include "Maths/Interpolation/Bezier.h"
+#include "Maths/Interpolation/CatmullRom.h"
 #include "Maths/Maths.h"
 #include "Maths/Transform2D.h"
-#include "Maths/Bezier.h"
-#include "Maths/CatmullRom.h"
 // Interface
 #include "Conv/Conv.h"
 #include "Misc/Extract.h"

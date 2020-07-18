@@ -40,7 +40,7 @@ InvokeTransformAffineTiledMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLi
     for( int x = 0; x < info.dst_roi.w; ++x ) {
         int src_x = FMaths::PyModulo( static_cast< int >( point_in_src.x ), info.src_roi.w );
         int src_y = FMaths::PyModulo( static_cast< int >( point_in_src.y ), info.src_roi.h );
-        memcpy( dst, info.source->PixelPtr( src_x, src_y ), fmt.BPP );
+        memcpy( dst, info.source->PixelBits( src_x, src_y ), fmt.BPP );
 
         dst += fmt.BPP;
         point_in_src += src_dx;

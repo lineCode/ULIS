@@ -53,7 +53,7 @@ InvokeTransformAffineMTProcessScanline_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLi
         #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
         #define GETPIXEL( _C, _X, _Y )                                                                                                                      \
             if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
-                const uint8* pptr = info.source->PixelPtr( _X, _Y );                                                                                        \
+                const uint8* pptr = info.source->PixelBits( _X, _Y );                                                                                        \
                 Vec4f _ch = LOAD( pptr );                                                                                                                   \
                 Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
                 _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \

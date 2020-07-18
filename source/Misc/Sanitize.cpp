@@ -24,12 +24,12 @@ void InvokeSanitize( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     const T zero = MinType< T >();
     for( int i = 0; i < iW; ++i ) {
-        const T alpha = iFmt->HEA ? *( dst + iFmt->AID ) : MaxType< T >();
-        for( int j = 0; j < iFmt->NCC; ++j ) {
-            uint8 r = iFmt->IDT[j];
+        const T alpha = iFmt.HEA ? *( dst + iFmt.AID ) : MaxType< T >();
+        for( int j = 0; j < iFmt.NCC; ++j ) {
+            uint8 r = iFmt.IDT[j];
             *( dst + r ) = alpha == zero ? zero : *( dst + r );
         }
-        dst += iFmt->SPP;
+        dst += iFmt.SPP;
     }
 }
 
@@ -69,7 +69,7 @@ SanitizeZeroAlpha( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No dispatch invocation found." );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
+                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
     iDestination->Dirty( iCallCB );
 }
 

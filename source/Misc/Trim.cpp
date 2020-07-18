@@ -25,13 +25,13 @@ template< typename T >
 void InvokeDetectTrimAlphaEdge( int32 iLine, size_t iW, const uint8* iSrc, const FFormat& iFmt, std::atomic_int* iLeft, std::atomic_int* iTop, std::atomic_int* iRight, std::atomic_int* iBot ) {
     const T* src = reinterpret_cast< const T* >( iSrc );
     for( int i = 0; i < iW; ++i ) {
-        if( *( src + iFmt->AID ) > MinType< T >() ) {
+        if( *( src + iFmt.AID ) > MinType< T >() ) {
             if( iLine < iTop->load() )    iTop->store( iLine );
             if( i < iLeft->load() )       iLeft->store( i );
             if( iLine > iBot->load() )    iBot->store( iLine );
             if( i > iRight->load() )      iRight->store( i );
         }
-        src += iFmt->SPP;
+        src += iFmt.SPP;
     }
 }
 
@@ -77,7 +77,7 @@ FRect GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS3_BLOCKING
                                    , max
-                                   , fptr, pLINE, len, src, &fmt, &left, &top, &right, &bot );
+                                   , fptr, pLINE, len, src, fmt, &left, &top, &right, &bot );
     iSource->Dirty( iCallCB );
     return  FRect( left, top, ( right - left ) + 1, ( bot - top ) + 1 );
 }

@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Conv/ConvBuffer.h"
+#include "Conv/ConvHelpers.h"
 #include "Data/Color.h"
 #include "Data/Format.h"
 #include "Data/Pixel.h"
@@ -33,8 +34,8 @@ ConvBufferGreyToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat
     {
         ConvBufferGreyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
         ConvBufferRGBToCMY< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -51,8 +52,8 @@ ConvBufferRGBToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
         U2_DREF_DST( 1 ) = max - ConvType< T, U >( U2_DREF_SRC( 1 ) );
         U2_DREF_DST( 2 ) = max - ConvType< T, U >( U2_DREF_SRC( 2 ) );
         U2_FWD_ALPHA;
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -67,8 +68,8 @@ ConvBufferHSVToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     {
         ConvBufferHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
         ConvBufferRGBToCMY< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -83,8 +84,8 @@ ConvBufferHSLToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     {
         ConvBufferHSLToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
         ConvBufferRGBToCMY< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -100,8 +101,8 @@ ConvBufferCMYToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
         U2_DREF_DST( 1 ) = ConvType< T, U >( U2_DREF_SRC( 1 ) );
         U2_DREF_DST( 2 ) = ConvType< T, U >( U2_DREF_SRC( 2 ) );
         U2_FWD_ALPHA;
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -116,8 +117,8 @@ ConvBufferCMYKToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat
     {
         ConvBufferCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
         ConvBufferRGBToCMY< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -132,8 +133,8 @@ ConvBufferYUVToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     {
         ConvBufferYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
         ConvBufferRGBToCMY< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -148,8 +149,8 @@ ConvBufferLabToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     {
         ConvBufferLabToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
         ConvBufferRGBToCMY< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -164,8 +165,8 @@ ConvBufferXYZToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     {
         ConvBufferXYZToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
         ConvBufferRGBToCMY< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 
@@ -180,8 +181,8 @@ ConvBufferYxyToCMY( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     {
         ConvBufferYxyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
         ConvBufferRGBToCMY< ufloat, U >( temp.FormatInfo(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat->BPP;
-        iDst += iDstFormat->BPP;
+        iSrc += iSrcFormat.BPP;
+        iDst += iDstFormat.BPP;
     }
 }
 

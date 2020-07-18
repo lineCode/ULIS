@@ -23,12 +23,12 @@ template< typename T >
 void InvokesPremult( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
-        T alpha = iFmt->HEA ? *( dst + iFmt->AID ) : MaxType< T >();
-        for( int j = 0; j < iFmt->NCC; ++j ) {
-            uint8 r = iFmt->IDT[j];
+        T alpha = iFmt.HEA ? *( dst + iFmt.AID ) : MaxType< T >();
+        for( int j = 0; j < iFmt.NCC; ++j ) {
+            uint8 r = iFmt.IDT[j];
             *( dst + r ) = ( *( dst + r ) * alpha ) / MaxType< T >();
         }
-        dst += iFmt->SPP;
+        dst += iFmt.SPP;
     }
 }
 
@@ -36,12 +36,12 @@ template< typename T >
 void InvokesUnpremult( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
-        T alpha = iFmt->HEA ? *( dst + iFmt->AID ) : MaxType< T >();
-        for( int j = 0; j < iFmt->NCC; ++j ) {
-            uint8 r = iFmt->IDT[j];
+        T alpha = iFmt.HEA ? *( dst + iFmt.AID ) : MaxType< T >();
+        for( int j = 0; j < iFmt.NCC; ++j ) {
+            uint8 r = iFmt.IDT[j];
             *( dst + r ) = ( *( dst + r ) * MaxType< T >() ) / alpha;
         }
-        dst += iFmt->SPP;
+        dst += iFmt.SPP;
     }
 }
 
@@ -93,7 +93,7 @@ Premultiply( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No dispatch invocation found." );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
+                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
     iDestination->Dirty( iCallCB );
 }
 
@@ -122,7 +122,7 @@ Unpremultiply( FThreadPool*             iThreadPool
     ULIS3_ASSERT( fptr, "No dispatch invocation found." );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
+                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
     iDestination->Dirty( iCallCB );
 }
 

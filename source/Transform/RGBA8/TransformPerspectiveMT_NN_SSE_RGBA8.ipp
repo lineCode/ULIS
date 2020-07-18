@@ -39,7 +39,7 @@ InvokeTransformPerspectiveMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLi
         int src_x = static_cast< int >( pointInSrc.x );
         int src_y = static_cast< int >( pointInSrc.y );
         if( src_x >= minx && src_y >= miny && src_x < maxx && src_y < maxy )
-            memcpy( dst, info.source->PixelPtr( src_x, src_y ), fmt.BPP );
+            memcpy( dst, info.source->PixelBits( src_x, src_y ), fmt.BPP );
 
         dst += fmt.BPP;
         pointInDst.x += 1;

@@ -26,15 +26,15 @@ InvokeTransformBezierMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLine, s
     const FTransformArgs&   info    = *iInfo;
     const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
-    const float*            field   = reinterpret_cast< const float* >( iField->ScanlinePtr( iLine ) );
-    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlinePtr( iLine ) );
+    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
+    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( iLine ) );
     const int rangex = info.src_roi.w - 1;
     const int rangey = info.src_roi.h - 1;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
         if( *mask & 0xFF ) {
             int src_x = static_cast< int >( field[0] * rangex );
             int src_y = static_cast< int >( field[1] * rangey );
-            memcpy( dst, info.source->PixelPtr( src_x, src_y ), fmt.BPP );
+            memcpy( dst, info.source->PixelBits( src_x, src_y ), fmt.BPP );
         }
 
         dst += fmt.BPP;

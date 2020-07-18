@@ -17,10 +17,10 @@
 /////////////////////////////////////////////////////
 // Macro Helpers for Redundant Conversion Operations
 // Macro utils for implementations
-#define U2_DREF_RED_CHAN( T, iPtr, iFmt, iChan )    ( *( ( T* )( iPtr ) + iFmt->IDT[ iChan ] ) )
+#define U2_DREF_RED_CHAN( T, iPtr, iFmt, iChan )    ( *( ( T* )( iPtr ) + iFmt.IDT[ iChan ] ) )
 #define U2_DREF_CHAN( T, iPtr, iChan )              ( *( ( T* )( iPtr ) + iChan ) )
-#define U2_FWD_ALPHA                                if( iDstFormat->HEA ) { U2_DREF_CHAN( T2, iDst, iDstFormat->AID ) = iSrcFormat->HEA? ConvType< T1, T2 >( U2_DREF_CHAN( T1, iSrc, iSrcFormat->AID ) ) : MaxType< T2 >(); }
+#define U2_FWD_ALPHA                                if( iDstFormat.HEA ) { U2_DREF_CHAN( U, iDst, iDstFormat.AID ) = iSrcFormat.HEA? ConvType< T, U >( U2_DREF_CHAN( T, iSrc, iSrcFormat.AID ) ) : MaxType< U >(); }
 
-#define U2_DREF_SRC( iChan )                        U2_DREF_RED_CHAN( T1, iSrc, iSrcFormat, iChan )
-#define U2_DREF_DST( iChan )                        U2_DREF_RED_CHAN( T2, iDst, iDstFormat, iChan )
+#define U2_DREF_SRC( iChan )                        U2_DREF_RED_CHAN( T, iSrc, iSrcFormat, iChan )
+#define U2_DREF_DST( iChan )                        U2_DREF_RED_CHAN( U, iDst, iDstFormat, iChan )
 #define U2_DREF_TEMP( iChan )                       U2_DREF_RED_CHAN( ufloat, temp.Bits(), temp.FormatInfo(), iChan )

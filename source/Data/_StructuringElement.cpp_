@@ -96,22 +96,22 @@ FStructuringElement::Set( std::initializer_list< eMorphologicalElementValue > iN
 
 eMorphologicalElementValue
 FStructuringElement::At( int iX, int iY ) const {
-    return  static_cast< eMorphologicalElementValue >( *PixelPtr( iX, iY ) );
+    return  static_cast< eMorphologicalElementValue >( *PixelBits( iX, iY ) );
 }
 
 eMorphologicalElementValue
 FStructuringElement::At( FVec2I iPoint ) const {
-    return  static_cast< eMorphologicalElementValue >( *PixelPtr( iPoint.x, iPoint.y ) );
+    return  static_cast< eMorphologicalElementValue >( *PixelBits( iPoint.x, iPoint.y ) );
 }
 
 void
 FStructuringElement::SetAt( int iX, int iY, eMorphologicalElementValue iValue ) {
-    *PixelPtr( iX, iY ) = static_cast< uint8 >( iValue );
+    *PixelBits( iX, iY ) = static_cast< uint8 >( iValue );
 }
 
 void
 FStructuringElement::SetAt( FVec2I iPoint, eMorphologicalElementValue iValue ) {
-    *PixelPtr( iPoint.x, iPoint.y ) = static_cast< uint8 >( iValue );
+    *PixelBits( iPoint.x, iPoint.y ) = static_cast< uint8 >( iValue );
 }
 
 void

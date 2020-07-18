@@ -53,9 +53,9 @@ FBlock::FBlock(
     , uint16 iWidth
     , uint16 iHeight
     , tFormat iFormat
-    , const FColorSpace* iColorSpace = nullptr
-    , const FOnInvalid& iOnInvalid = FOnInvalid()
-    , const FOnCleanup& iOnCleanup = FOnCleanup()
+    , const FColorSpace* iColorSpace
+    , const FOnInvalid& iOnInvalid
+    , const FOnCleanup& iOnCleanup
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
@@ -79,9 +79,9 @@ FBlock::XMake(
       uint16 iWidth
     , uint16 iHeight
     , tFormat iFormat
-    , FColorSpace* iColorSpace = nullptr
-    , const FOnInvalid& iOnInvalid = FOnInvalid()
-    , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory )
+    , FColorSpace* iColorSpace
+    , const FOnInvalid& iOnInvalid
+    , const FOnCleanup& iOnCleanup
 )
 {
     return  new FBlock(
@@ -100,9 +100,9 @@ FBlock* XMake(
     , uint16 iWidth
     , uint16 iHeight
     , tFormat iFormat
-    , FColorSpace* iColorSpace = nullptr
-    , const FOnInvalid& iOnInvalid = FOnInvalid()
-    , const FOnCleanup& iOnCleanup = FOnCleanup()
+    , FColorSpace* iColorSpace
+    , const FOnInvalid& iOnInvalid
+    , const FOnCleanup& iOnCleanup
 )
 {
     return  new FBlock(
@@ -272,9 +272,9 @@ FBlock::ReloadFromData(
     , uint16 iWidth
     , uint16 iHeight
     , tFormat iFormat
-    , const FColorSpace* iColorSpace = nullptr
-    , const FOnInvalid& iOnInvalid = FOnInvalid()
-    , const FOnCleanup& iOnCleanup = FOnCleanup()
+    , const FColorSpace* iColorSpace
+    , const FOnInvalid& iOnInvalid
+    , const FOnCleanup& iOnCleanup
     )
 {
     ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );

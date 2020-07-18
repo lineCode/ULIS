@@ -50,7 +50,7 @@ InvokeResizeMTProcessScanline_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, st
         const float ty      = point_in_src.y - top;
         const float uy      = 1.f - ty;
 
-        #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
+        #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
         TEMP( c00, left, top );
         TEMP( c10, right, top );
         TEMP( c11, right, bot );

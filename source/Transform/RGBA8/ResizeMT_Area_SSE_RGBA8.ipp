@@ -62,7 +62,7 @@ InvokeResizeMTProcessScanline_Area_SSE_RGBA8( uint8* iDst, int32 iLine, std::sha
         #define LOAD( X )   _mm_loadu_ps( reinterpret_cast< const float* >( X ) )
         #define SUBSAMPLE_CORNER_IMP( _C, _X, _Y )                                                                                                          \
             if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
-                const uint8* pptr = info.optionalSAT->PixelPtr( _X, _Y );                                                                                   \
+                const uint8* pptr = info.optionalSAT->PixelBits( _X, _Y );                                                                                   \
                 _C = LOAD( pptr );                                                                                                                          \
             } else {                                                                                                                                        \
                 _C = _mm_setzero_ps();                                                                                                                      \

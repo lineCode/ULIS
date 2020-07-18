@@ -26,9 +26,9 @@
 ULIS3_NAMESPACE_BEGIN
 template< uint8 _MICRO, uint8 _MACRO > class TTilePool;
 
-static const FColor default_wireframe_debug_color  = FColor::FromRGBA8( 40, 80, 220 );
-static const FColor dirty_wireframe_debug_color    = FColor::FromRGBA8( 255, 0, 0 );
-static const FColor correct_wireframe_debug_color  = FColor::FromRGBA8( 0, 255, 0 );
+static const FColor default_wireframe_debug_color  = FColor::RGBA8( 40, 80, 220 );
+static const FColor dirty_wireframe_debug_color    = FColor::RGBA8( 255, 0, 0 );
+static const FColor correct_wireframe_debug_color  = FColor::RGBA8( 0, 255, 0 );
 static const FHostDeviceInfo debug_host = FHostDeviceInfo::Detect();
 /////////////////////////////////////////////////////
 // Enums

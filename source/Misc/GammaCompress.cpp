@@ -24,11 +24,11 @@ template< typename T >
 void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
-        for( int j = 0; j < iFmt->NCC; ++j ) {
-            uint8 r = iFmt->IDT[j];
+        for( int j = 0; j < iFmt.NCC; ++j ) {
+            uint8 r = iFmt.IDT[j];
             *( dst + r ) = sel_srgb2linearT< T >( *( dst + r ) );
         }
-        dst += iFmt->SPP;
+        dst += iFmt.SPP;
     }
 }
 
@@ -36,11 +36,11 @@ template< typename T >
 void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
-        for( int j = 0; j < iFmt->NCC; ++j ) {
-            uint8 r = iFmt->IDT[j];
+        for( int j = 0; j < iFmt.NCC; ++j ) {
+            uint8 r = iFmt.IDT[j];
             *( dst + r ) = sel_linear2srgbT< T >( *( dst + r ) );
         }
-        dst += iFmt->SPP;
+        dst += iFmt.SPP;
     }
 }
 
@@ -92,7 +92,7 @@ ApplysRGB2Linear( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No dispatch invocation found." );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
+                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
     iDestination->Dirty( iCallCB );
 }
 
@@ -121,7 +121,7 @@ ApplyLinear2sRGB( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No dispatch invocation found." );
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
+                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
     iDestination->Dirty( iCallCB );
 }
 

@@ -92,7 +92,6 @@ public:
     */
     const uint8* Bits() const;
 
-protected:
     /*!
     Obtain the value at the redirected channel index as uint8. It is undefined
     behaviour to call this if the format is not of type uint8.
@@ -193,7 +192,6 @@ protected:
         reinterpret_cast< udouble* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
 
-public:
     ULIS3_FORCEINLINE uint8     Alpha8()    const { return  HasAlpha() ? Channel8( AlphaIndex() )   : MaxType< uint8 >();   }
     ULIS3_FORCEINLINE uint16    Alpha16()   const { return  HasAlpha() ? Channel16( AlphaIndex() )  : MaxType< uint16 >();  }
     ULIS3_FORCEINLINE uint32    Alpha32()   const { return  HasAlpha() ? Channel32( AlphaIndex() )  : MaxType< uint32 >();  }

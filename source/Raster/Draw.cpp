@@ -22,9 +22,9 @@ void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
     if( !iDst->Rect().HitTest( iPos ) )
         return;
 
-    uint8* ptr = iDst->PixelPtr( iPos.x, iPos.y );
+    uint8* ptr = iDst->PixelBits( iPos.x, iPos.y );
     fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iColor.Format(), iDst->Format() );
-    fptr( &iColor.FormatInfo(), iColor.Bits(), &iDst->FormatInfo(), ptr, 1 );
+    fptr( iColor.FormatInfo(), iColor.Bits(), iDst->FormatInfo(), ptr, 1 );
 }
 
 void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor, int iX1, int iX2, int iY ) {
@@ -37,7 +37,7 @@ void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColo
     int xa = FMaths::Min( x1, x2 );
     int xb = FMaths::Max( x1, x2 );
 
-    uint8* ptr = iDst->PixelPtr( xa, iY );
+    uint8* ptr = iDst->PixelBits( xa, iY );
     uint32 bpp = iDst->BytesPerPixel();
     for( int i = xa; i <= xb; ++i ) {
         memcpy( ptr, iCorrectColor, bpp );
@@ -62,7 +62,7 @@ void DrawVerticalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor,
     int ya = FMaths::Min( y1, y2 );
     int yb = FMaths::Max( y1, y2 );
 
-    uint8* ptr = iDst->PixelPtr( iX, ya );
+    uint8* ptr = iDst->PixelBits( iX, ya );
     uint32 bpp = iDst->BytesPerPixel();
     uint32 bps = iDst->BytesPerScanLine();
     for( int i = ya; i <= yb; ++i ) {
@@ -85,8 +85,8 @@ void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect
     uint8* src = color.Bits();
     DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iRect.x, iRect.x + iRect.w, iRect.y );
     DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iRect.x, iRect.x + iRect.w, iRect.y + iRect.h );
-    DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, iRect.x );
-    DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, iRect.x + iRect.w );
+    DrawVerticalLineNoAA_UnsafeColor( iDst, src, iRect.y, iRect.y + iRect.h, iRect.x );
+    DrawVerticalLineNoAA_UnsafeColor( iDst, src, iRect.y, iRect.y + iRect.h, iRect.x + iRect.w );
 }
 
 void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect, int iNumSubdiv ) {
@@ -96,7 +96,7 @@ void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect
     int stepX = iRect.w / iNumSubdiv;
     int stepY = iRect.h / iNumSubdiv;
     for( int x = iRect.x; x <= iRect.x + iRect.w; x += stepX )
-        DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, x );
+        DrawVerticalLineNoAA_UnsafeColor( iDst, src, iRect.y, iRect.y + iRect.h, x );
 
     for( int y = iRect.y; y <= iRect.y + iRect.h; y += stepY )
         DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iRect.x, iRect.x + iRect.w, y );

@@ -54,7 +54,7 @@ InvokeTransformAffineTiledMTProcessScanline_Bilinear_MEM_Generic( uint8* iDst, i
         const float ty      = mody - top;
         const float uy      = 1.f - ty;
 
-        #define TEMP( _C, _X, _Y ) { memcpy( _C, info.source->PixelPtr( _X, _Y ), fmt.BPP ); }
+        #define TEMP( _C, _X, _Y ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); }
         TEMP( c00, left, top );
         TEMP( c10, right, top );
         TEMP( c11, right, bot );

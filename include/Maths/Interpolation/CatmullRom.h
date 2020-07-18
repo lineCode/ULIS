@@ -14,13 +14,12 @@
 #pragma once
 #include "Core/Core.h"
 #include "Maths/Geometry.h"
+#include "Maths/Interpolation/Spline.h"
 #include "Maths/Maths.h"
 #include <cmath>
 #include <vector>
 
 ULIS3_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// CatmullRom Functions
 static constexpr float sCatmullRomKnotParametricConstant_Uniform        = 0.0f;
 static constexpr float sCatmullRomKnotParametricConstant_Centripetal    = 0.5f;
 static constexpr float sCatmullRomKnotParametricConstant_Chordal        = 1.f;
@@ -117,7 +116,7 @@ public:
         return  C;
     }
 
-    void GenerateLinearLUT( std::vector< FCatmullRomLUTElement >* oArray, float iStep ) {
+    void GenerateLinearLUT( std::vector< FLinearSplineSample >* oArray, float iStep ) {
         oArray->clear();
         oArray->push_back( { P1, 0.f } );
         float length = GenerateLinearLUTAndGetLength_imp( oArray, iStep, P1, P2 );
@@ -125,7 +124,7 @@ public:
     }
 
 private:
-    float GenerateLinearLUTAndGetLength_imp( std::vector< FCatmullRomLUTElement >* oArray
+    float GenerateLinearLUTAndGetLength_imp( std::vector< FLinearSplineSample >* oArray
                                            , float iStep
                                            , const FVec2F& iLeft
                                            , const FVec2F& iRight
