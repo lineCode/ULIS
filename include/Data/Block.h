@@ -17,6 +17,7 @@
 #include "Data/ColorSpace.h"
 #include "Data/Format.h"
 #include "Data/Pixel.h"
+#include "Data/Color.h"
 #include "Maths/Geometry.h"
 
 ULIS3_NAMESPACE_BEGIN
@@ -61,13 +62,13 @@ ULIS3_NAMESPACE_BEGIN
 ///             It is also sometimes handy to use the CRT safe version if
 ///             using the \a X functions in your application with dynamic link:
 ///             \snippet data/block.h FBlock X Version
-class ULIS3_API FBlock
+class ULIS3_API FBlock final
     : public IHasFormat
     , public IHasColorSpace
 {
 public:
     /*! Destroy the block and invoke the cleanup callback. */
-    virtual ~FBlock();
+    ~FBlock();
 
     /*!
     Construct a block with input size and format.
@@ -102,8 +103,8 @@ public:
     data can be shared with other representations but it must remain valid at
     least as long as the block lifetime.
 
-    \warning The \a iWidth and \a iHeight parameters should be greater than zero.
-    A block doesn't own nor manage lifetime of its color-space.
+    \warning The \a iWidth and \a iHeight parameters should be greater than
+    zero. A block doesn't own nor manage lifetime of its color-space.
     */
     FBlock(
           uint8* iData
@@ -142,9 +143,9 @@ public:
 
     Construct a block with input size and format.
 
-    In case of dynamic linking,
-    allocate the storage for the block instance in the ULIS heap. Use this for
-    convenience when playing around dynamic library boundaries or CRT issues.
+    In case of dynamic linking, llocate the storage for the block instance in
+    the ULIS heap. Use this for convenience when playing around dynamic library
+    boundaries or CRT issues.
 
     Functions or methods marked with a X indicate that an object is allocated
     and that the caller is responsible for deleting it with the appropriate
@@ -192,12 +193,13 @@ public:
     data can be shared with other representations but it must remain valid at
     least as long as the block lifetime.
 
-    \warning Functions or methods marked with a X indicate that an object is allocated
-    and that the caller is responsible for deleting it with the appropriate
-    deleter function, also marked with a X. In this case, XDelete().
+    \warning Functions or methods marked with a X indicate that an object is
+    allocated and that the caller is responsible for deleting it with the
+    appropriate deleter function, also marked with a X. In this case,
+    XDelete().
 
-    \warning The \a iWidth and \a iHeight parameters should be greater than zero.
-    A block doesn't own nor manage lifetime of its color-space.
+    \warning The \a iWidth and \a iHeight parameters should be greater than
+    zero. A block doesn't own nor manage lifetime of its color-space.
 
     \warning Never delete a block with free or with the delete operator unless
     if it was created with XMake()
@@ -219,9 +221,9 @@ public:
     Static deleter for the FBlock class
 
     Delete a block that has been previously created using XMake()
-    In case of dynamic linking, deallocate the storage for the block instance in
-    the ULIS heap. Use this for convenience when playing around dynamic library
-    boundaries or CRT issues.
+    In case of dynamic linking, deallocate the storage for the block instance
+    in the ULIS heap. Use this for convenience when playing around dynamic
+    library boundaries or CRT issues.
 
     \warning Never delete a block with XDelete() unless it was created with
     XMake()
@@ -239,10 +241,10 @@ public:
     the buffer boundaries, or trigger race conditions when applying
     multithreaded operations on the same data.
 
-    \sa ScanlineData()
-    \sa PixelData()
+    \sa ScanlineBits()
+    \sa PixelBits()
     */
-    uint8* Data();
+    uint8* Bits();
 
     /*!
     Obtain a pointer to the raw data at the specified scanline row element of
@@ -258,10 +260,10 @@ public:
     it will fail silently and access the buffer out of bounds in release builds
     , leading to potential memory corruption or crashes further down the line.
 
-    \sa Data()
-    \sa PixelData()
+    \sa Bits()
+    \sa PixelBits()
     */
-    uint8* ScanlineData( uint16 iRow );
+    uint8* ScanlineBits( uint16 iRow );
 
     /*!
     Obtain a pointer to the raw data at the specified pixel location of
@@ -278,31 +280,31 @@ public:
     access the buffer out of bounds in release builds, leading to potential
     memory corruption or crashes further down the line.
 
-    \sa Data()
-    \sa ScanlineData()
+    \sa Bits()
+    \sa ScanlineBits()
     */
-    uint8* PixelData( uint16 iX, uint16 iY );
+    uint8* PixelBits( uint16 iX, uint16 iY );
 
     /*!
     Obtain a pointer to the raw data at the base element of the underlying
     image buffer.
 
-    This data is the same as the one used by the block. It is const so it cannot
-    be modified, but it can be read freely, as long as you don't dereference
-    elements outside of the buffer boundaries.
+    This data is the same as the one used by the block. It is const so it
+    cannot be modified, but it can be read freely, as long as you don't
+    dereference elements outside of the buffer boundaries.
 
-    \sa ScanlineData()
-    \sa PixelData()
+    \sa ScanlineBits()
+    \sa PixelBits()
     */
-    const uint8* Data() const;
+    const uint8* Bits() const;
 
     /*!
     Obtain a pointer to the raw data at the specified scanline row element of
     the underlying image buffer.
 
-    This data is the same as the one used by the block. It is const so it cannot
-    be modified, but it can be read freely, as long as you don't dereference
-    elements outside of the buffer boundaries.
+    This data is the same as the one used by the block. It is const so it
+    cannot be modified, but it can be read freely, as long as you don't
+    dereference elements outside of the buffer boundaries.
 
     \warning If you specify a row that is negative or bigger than the block
     height, the function will trigger an assert and crash in debug builds, but
@@ -310,18 +312,18 @@ public:
     builds, leading to potential memory corruption or crashes further down the
     line.
 
-    \sa Data()
-    \sa PixelData()
+    \sa Bits()
+    \sa PixelBits()
     */
-    const uint8* ScanlineData( uint16 iRow ) const;
+    const uint8* ScanlineBits( uint16 iRow ) const;
 
     /*!
     Obtain a pointer to the raw data at the specified pixel location of
     the underlying image buffer.
 
-    This data is the same as the one used by the block. It is const so it cannot
-    be modified, but it can be read freely, as long as you don't dereference
-    elements outside of the buffer boundaries.
+    This data is the same as the one used by the block. It is const so it
+    cannot be modified, but it can be read freely, as long as you don't
+    dereference elements outside of the buffer boundaries.
 
     \warning If you specify X and Y coordinates that are either negative or
     bigger than the block width and height respectively, the function will
@@ -329,10 +331,10 @@ public:
     access the buffer out of bounds in release builds, leading to potential
     memory corruption or crashes further down the line.
 
-    \sa Data()
-    \sa ScanlineData()
+    \sa Bits()
+    \sa ScanlineBits()
     */
-    const uint8* PixelData( uint16 iX, uint16 iY ) const;
+    const uint8* PixelBits( uint16 iX, uint16 iY ) const;
 
     /*!
     Return the width of the block.
@@ -413,8 +415,8 @@ public:
     /*!
     Return the color of the pixel at the given coordinates.
 
-    The FColor is a copy of the pixel data, safe to and use without altering the
-    block contents.
+    The FColor is a copy of the pixel data, safe to read and write without
+    altering the block contents.
 
     \warning If you specify X and Y coordinates that are either negative or
     bigger than the block width and height respectively, the function will
@@ -423,7 +425,7 @@ public:
     memory corruption or crashes further down the line.
 
     \sa Pixel()
-    \sa PixelData()
+    \sa PixelBits()
     \sa FColor
     */
     FColor Color( uint16 iX, uint16 iY ) const;
@@ -433,7 +435,7 @@ public:
 
     The FPixel is an implicitely shared representation of the block data at the
     input pixel location, if you modify it you will alter the contents of the
-    block. It is sometimes more convenient than PixelData() in order to read
+    block. It is sometimes more convenient than PixelBits() in order to read
     or modify the values, and does not perform a copy.
 
     \warning If you specify X and Y coordinates that are either negative or
@@ -443,7 +445,7 @@ public:
     memory corruption or crashes further down the line.
 
     \sa Color()
-    \sa PixelData()
+    \sa PixelBits()
     \sa FPixel
     */
     FPixel Pixel( uint16 iX, uint16 iY );
@@ -452,7 +454,7 @@ public:
     Return the const pixel at the given coordinates.
 
     The FPixel is an implicitely shared representation of the block data at the
-    input pixel location It is sometimes more convenient than PixelData() in
+    input pixel location It is sometimes more convenient than PixelBits() in
     order to read the values, and does not perform a copy.
 
     \warning If you specify X and Y coordinates that are either negative or
@@ -462,7 +464,7 @@ public:
     memory corruption or crashes further down the line.
 
     \sa Color()
-    \sa PixelData()
+    \sa PixelBits()
     \sa FPixel
     */
     const FPixel Pixel( uint16 iX, uint16 iY ) const;
@@ -498,7 +500,7 @@ public:
     );
 
 private:
-    uint8* mData; ///< The main contiguous memory storage buffer for the block.
+    uint8* mBitmap; ///< Contiguous memory storage buffer for the block.
     uint16 mWidth; ///< The width of the block.
     uint16 mHeight; ///< Height of the block.
     uint32 mBytesPerScanline; ///< Cached number of bytes per scanline.

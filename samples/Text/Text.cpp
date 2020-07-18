@@ -97,7 +97,7 @@ main( int argc, char *argv[] ) {
     // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS3_FORMAT_RGBA8
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( blockCanvas->DataPtr()
+    QImage*         image   = new QImage( blockCanvas->Bits()
                                         , blockCanvas->Width()
                                         , blockCanvas->Height()
                                         , blockCanvas->BytesPerScanLine()

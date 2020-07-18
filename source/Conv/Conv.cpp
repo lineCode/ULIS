@@ -22,22 +22,22 @@
 #include "lcms2.h"
 
 ULIS3_NAMESPACE_BEGIN
-void Conv( const IPixel& iSrc, IPixel& iDst ) {
+void Conv( const ISample& iSrc, ISample& iDst ) {
     if( iSrc.Format() == iDst.Format() ) {
-        memcpy( iDst.Data(), iSrc.Data(), iDst.Depth() );
+        memcpy( iDst.Bits(), iSrc.Bits(), iDst.Depth() );
     } else {
         fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst.Format() );
-        fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &iDst.FormatInfo(), iDst.Ptr(), 1 );
+        fptr( iSrc.FormatInfo(), iSrc.Bits(), iDst.FormatInfo(), iDst.Bits(), 1 );
     }
 }
 
-FColor Conv( const IPixel& iSrc, tFormat iDst ) {
+FColor Conv( const ISample& iSrc, tFormat iDst ) {
     FColor dst( iDst );
     if( iSrc.Format() == iDst ) {
-        memcpy( iDst.Data(), iSrc.Data(), iDst.Depth() );
+        memcpy( dst.Bits(), iSrc.Bits(), dst.Depth() );
     } else {
         fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst );
-        fptr( &iSrc.FormatInfo(), iSrc.Ptr(), &dst.FormatInfo(), dst.Ptr(), 1 );
+        fptr( iSrc.FormatInfo(), iSrc.Bits(), dst.FormatInfo(), dst.Bits(), 1 );
     }
     return  dst;
 }
@@ -73,14 +73,14 @@ void Conv( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params and call
-    const uint8*    src = iSource->DataPtr();
-    uint8*          dst = iDestination->DataPtr();
+    const uint8*    src = iSource->Bits();
+    uint8*          dst = iDestination->Bits();
     uint32           src_bps = iSource->BytesPerScanLine();
     uint32           dst_bps = iDestination->BytesPerScanLine();
     const int   max = iSource->Height();
     const uint32 len = iSource->Width();
-    const FFormat* srcnfo = &iSource->FormatInfo();
-    const FFormat* dstnfo = &iDestination->FormatInfo();
+    const FFormat& srcnfo = iSource->FormatInfo();
+    const FFormat& dstnfo = iDestination->FormatInfo();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr
@@ -91,7 +91,7 @@ void Conv( FThreadPool*           iThreadPool
                                    , len );
 
     // Invalid
-    iDestination->Invalidate( iDestination->Rect(), iCallCB );
+    iDestination->Dirty( iDestination->Rect(), iCallCB );
 }
 
 FBlock* XConv( FThreadPool*           iThreadPool

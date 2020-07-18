@@ -21,7 +21,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T >
-void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormat* iFmt ) {
+void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         for( int j = 0; j < iFmt->NCC; ++j ) {
@@ -33,7 +33,7 @@ void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormat* iFmt ) {
 }
 
 template< typename T >
-void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormat* iFmt ) {
+void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         for( int j = 0; j < iFmt->NCC; ++j ) {
@@ -44,7 +44,7 @@ void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormat* iFmt ) {
     }
 }
 
-typedef void (*fpDispatchedGammaCompressInvoke)( size_t iW, uint8* iDst, const FFormat* iFmt );
+typedef void (*fpDispatchedGammaCompressInvoke)( size_t iW, uint8* iDst, const FFormat& iFmt );
 fpDispatchedGammaCompressInvoke QueryDispatchedsRGB2LinearInvokeForParameters( eType iType ) {
     switch( iType ) {
         case TYPE_UINT8     : return  InvokesRGB2Linear< uint8 >;
@@ -85,7 +85,7 @@ ApplysRGB2Linear( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
-    uint8*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->Bits();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
@@ -93,7 +93,7 @@ ApplysRGB2Linear( FThreadPool*           iThreadPool
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
-    iDestination->Invalidate( iCallCB );
+    iDestination->Dirty( iCallCB );
 }
 
 
@@ -114,7 +114,7 @@ ApplyLinear2sRGB( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
-    uint8*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->Bits();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
@@ -122,7 +122,7 @@ ApplyLinear2sRGB( FThreadPool*           iThreadPool
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
-    iDestination->Invalidate( iCallCB );
+    iDestination->Dirty( iCallCB );
 }
 
 

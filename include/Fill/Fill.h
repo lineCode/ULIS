@@ -23,7 +23,7 @@ ULIS3_API void Fill( FThreadPool* iThreadPool
                    , const FHostDeviceInfo& iHostDeviceInfo
                    , bool iCallCB
                    , FBlock* iDestination
-                   , const IPixel& iColor
+                   , const ISample& iColor
                    , const FRect& iArea );
 
 ULIS3_NAMESPACE_END

@@ -20,7 +20,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T >
-void InvokeSanitize( size_t iW, uint8* iDst, const FFormat* iFmt ) {
+void InvokeSanitize( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     const T zero = MinType< T >();
     for( int i = 0; i < iW; ++i ) {
@@ -33,7 +33,7 @@ void InvokeSanitize( size_t iW, uint8* iDst, const FFormat* iFmt ) {
     }
 }
 
-typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormat* iFmt );
+typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormat& iFmt );
 fpDispatchedAlphamulInvoke QueryDispatchedSanitizeForParameters( eType iType ) {
         switch( iType ) {
         case TYPE_UINT8     : return  InvokeSanitize< uint8 >;
@@ -62,7 +62,7 @@ SanitizeZeroAlpha( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
-    uint8*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->Bits();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
@@ -70,7 +70,7 @@ SanitizeZeroAlpha( FThreadPool*           iThreadPool
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
-    iDestination->Invalidate( iCallCB );
+    iDestination->Dirty( iCallCB );
 }
 
 ULIS3_NAMESPACE_END

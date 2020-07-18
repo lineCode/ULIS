@@ -70,7 +70,7 @@ void Clear_imp( FThreadPool*            iThreadPool
     const uint32         w       = iDestination->Width();
     const uint32         bps     = iDestination->BytesPerScanLine();
     const uint32         dsh     = iArea.x * bpp;
-    uint8*              dsb     = iDestination->DataPtr() + dsh;
+    uint8*              dsb     = iDestination->Bits() + dsh;
     const uint32         count   = iArea.w * bpp;
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
@@ -122,15 +122,15 @@ void Clear_imp( FThreadPool*            iThreadPool
     Clear_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iDestination, iArea );
 
     // Invalid
-    iDestination->Invalidate( roi, iCallCB );
+    iDestination->Dirty( roi, iCallCB );
 }
 
 /////////////////////////////////////////////////////
 // ClearRaw
 void ClearRaw( FBlock* iDst, bool iCallCB ) {
     ULIS3_ASSERT( iDst, "Bad destination" );
-    memset( iDst->DataPtr(), 0, iDst->BytesTotal() );
-    iDst->Invalidate( iCallCB );
+    memset( iDst->Bits(), 0, iDst->BytesTotal() );
+    iDst->Dirty( iCallCB );
 }
 
 ULIS3_NAMESPACE_END

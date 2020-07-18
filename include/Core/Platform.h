@@ -120,19 +120,15 @@
     #ifdef ULIS3_BUILD_SHARED
         #define ULIS3_SHARED
         #define ULIS3_API __declspec( dllexport )
-        #define ULIS3_API_TEMPLATE template ULIS3_API
     #elif defined ULIS3_DYNAMIC_LIBRARY
         #define ULIS3_SHARED
         #define ULIS3_API __declspec( dllimport )
-        #define ULIS3_API_TEMPLATE extern template ULIS3_API
     #else
         #define ULIS3_STATIC
         #define ULIS3_API
-        #define ULIS3_API_TEMPLATE template
     #endif
 #else
     #define ULIS3_API
-    #define ULIS3_API_TEMPLATE template
 #endif
 
 /////////////////////////////////////////////////////

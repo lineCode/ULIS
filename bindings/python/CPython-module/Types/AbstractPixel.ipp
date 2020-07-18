@@ -20,7 +20,7 @@
 /// Object Structure
 typedef struct {
     PyObject_HEAD
-    ::ul3::IPixel* _mPixel;
+    ::ul3::ISample* _mPixel;
 } _PyULIS3Object_AbstractPixel;
 
 /////////////////////////////////////////////////////
@@ -899,9 +899,9 @@ static PyMethodDef _PyULIS3Object_AbstractPixel_methods[] = {
 
 /////////////////////////////////////////////////////
 /// Meta Types
-static PyTypeObject IPixel = {
+static PyTypeObject ISample = {
 PyVarObject_HEAD_INIT(NULL, 0)
-    "PyULIS3.IPixel", /* tp_name */
+    "PyULIS3.ISample", /* tp_name */
     sizeof( _PyULIS3Object_AbstractPixel ), /* tp_basicsize */
     0, /* tp_itemsize */
     (destructor)_PyULIS3Object_AbstractPixel_dealloc, /* tp_dealloc */

@@ -137,8 +137,8 @@ Extract( FThreadPool*           iThreadPool
     // Bake Params
     uint8           src_spp = iSource->SamplesPerPixel();
     uint8           dst_spp = iDestination->SamplesPerPixel();
-    const uint8*    srb = iSource->DataPtr();
-    uint8*          dsb = iDestination->DataPtr();
+    const uint8*    srb = iSource->Bits();
+    uint8*          dsb = iDestination->Bits();
     size_t          src_bps = iSource->BytesPerScanLine();
     size_t          dst_bps = iDestination->BytesPerScanLine();
     #define SRC srb + ( pLINE * src_bps )
@@ -151,7 +151,7 @@ Extract( FThreadPool*           iThreadPool
                                    , max
                                    , fptr, len, SRC, DST, sourceStrides, destinationStrides, src_spp, dst_spp )
 
-    iDestination->Invalidate( iCallCB );
+    iDestination->Dirty( iCallCB );
 }
 
 

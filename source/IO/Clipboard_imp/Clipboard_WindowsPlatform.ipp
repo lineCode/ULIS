@@ -74,12 +74,12 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     uint32           dst_bps     = ret->BytesPerScanLine();
     const int       numLines    = h;
     const uint32     len         = w;
-    const uint8*    srb         = tmp.DataPtr() + src_bps * ( numLines - 1 );
-    uint8*          dsb         = ret->DataPtr();
+    const uint8*    srb         = tmp.Bits() + src_bps * ( numLines - 1 );
+    uint8*          dsb         = ret->Bits();
     #define SRC srb - ( pLINE * src_bps )
     #define DST dsb + ( pLINE * dst_bps )
-    const FFormat* srcnfo = &tmp.FormatInfo();
-    const FFormat* dstnfo = &ret->FormatInfo();
+    const FFormat& srcnfo = &tmp.FormatInfo();
+    const FFormat& dstnfo = &ret->FormatInfo();
 
     // Call
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS3_BLOCKING
@@ -117,7 +117,7 @@ void SaveToClipboard( FThreadPool*              iThreadPool
     spec.blue_shift = 0;
     spec.alpha_shift = 24;
 
-  clip::image img( tmpConv->DataPtr(), spec );
+  clip::image img( tmpConv->Bits(), spec );
   clip::set_image(img);
 }
 

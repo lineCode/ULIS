@@ -25,15 +25,17 @@ class ULIS3_API FColorSpace
 /// @class  IHasColorSpace
 class ULIS3_API IHasColorSpace
 {
-public:
+protected:
     /*! Destructor, the colorspace lifetime is not managed */
-    virtual ~IHasColorSpace() = 0;
+    ~IHasColorSpace()
+    {}
 
     /*! Construct a IHasColorSpace interface in a derived class */
     IHasColorSpace( const FColorSpace* iColorSpace = nullptr )
         : mColorSpace( iColorSpace )
     {}
 
+public:
     /*!
     Assign a new optional color-space.
 
@@ -72,7 +74,7 @@ public:
     }
 
 private:
-    const FColorSpace* mColorSpace;
+    const FColorSpace* mColorSpace; ///< The colorspace, lifetime is not managed.
 };
 
 ULIS3_NAMESPACE_END

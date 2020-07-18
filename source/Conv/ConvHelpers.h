@@ -23,4 +23,4 @@
 
 #define U2_DREF_SRC( iChan )                        U2_DREF_RED_CHAN( T1, iSrc, iSrcFormat, iChan )
 #define U2_DREF_DST( iChan )                        U2_DREF_RED_CHAN( T2, iDst, iDstFormat, iChan )
-#define U2_DREF_TEMP( iChan )                       U2_DREF_RED_CHAN( ufloat, temp.Ptr(), &temp.FormatInfo(), iChan )
+#define U2_DREF_TEMP( iChan )                       U2_DREF_RED_CHAN( ufloat, temp.Bits(), temp.FormatInfo(), iChan )

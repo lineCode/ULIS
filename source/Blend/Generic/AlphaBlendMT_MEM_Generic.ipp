@@ -71,8 +71,8 @@ template< typename T >
 void
 AlphaBlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->DataPtr();
-    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint8*        src         = info.source->Bits();
+    uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();
     const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
@@ -117,8 +117,8 @@ template< typename T >
 void
 AlphaBlendMT_Separable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->DataPtr();
-    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint8*        src         = info.source->Bits();
+    uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();
     const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;

@@ -7,7 +7,7 @@
 *
 * @file         Mix.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the Conv entry point functions.
+* @brief        This file provides the declaration for the Mix entry point functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -15,9 +15,7 @@
 #include "Core/Core.h"
 
 ULIS3_NAMESPACE_BEGIN
-ULIS3_API FColor MixNative( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS3_API FColor MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS3_API FColor MixRGB( ufloat iT, IPixel* iA, IPixel* iB );
-ULIS3_API FColor MixLab( ufloat iT, IPixel* iA, IPixel* iB );
+ULIS3_API FColor MixRGB( ufloat iT, const ISample& iA, const ISample& iB );
+ULIS3_API FColor MixLab( ufloat iT, const ISample& iA, const ISample& iB );
 ULIS3_NAMESPACE_END
 

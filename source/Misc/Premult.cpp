@@ -20,7 +20,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 template< typename T >
-void InvokesPremult( size_t iW, uint8* iDst, const FFormat* iFmt ) {
+void InvokesPremult( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         T alpha = iFmt->HEA ? *( dst + iFmt->AID ) : MaxType< T >();
@@ -33,7 +33,7 @@ void InvokesPremult( size_t iW, uint8* iDst, const FFormat* iFmt ) {
 }
 
 template< typename T >
-void InvokesUnpremult( size_t iW, uint8* iDst, const FFormat* iFmt ) {
+void InvokesUnpremult( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         T alpha = iFmt->HEA ? *( dst + iFmt->AID ) : MaxType< T >();
@@ -45,7 +45,7 @@ void InvokesUnpremult( size_t iW, uint8* iDst, const FFormat* iFmt ) {
     }
 }
 
-typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormat* iFmt );
+typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormat& iFmt );
 fpDispatchedAlphamulInvoke QueryDispatchedPremultInvokeForParameters( eType iType ) {
     switch( iType ) {
         case TYPE_UINT8     : return  InvokesPremult< uint8 >;
@@ -86,7 +86,7 @@ Premultiply( FThreadPool*           iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
-    uint8*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->Bits();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
@@ -94,7 +94,7 @@ Premultiply( FThreadPool*           iThreadPool
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
-    iDestination->Invalidate( iCallCB );
+    iDestination->Dirty( iCallCB );
 }
 
 
@@ -115,7 +115,7 @@ Unpremultiply( FThreadPool*             iThreadPool
     ULIS3_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
-    uint8*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->Bits();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
@@ -123,7 +123,7 @@ Unpremultiply( FThreadPool*             iThreadPool
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), &iDestination->FormatInfo() )
-    iDestination->Invalidate( iCallCB );
+    iDestination->Dirty( iCallCB );
 }
 
 

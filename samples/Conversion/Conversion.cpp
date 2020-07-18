@@ -64,7 +64,7 @@ main( int argc, char *argv[] ) {
         double b = lerp * labGreen.bD() + ( 1.0 - lerp ) * labRed.bD();
         for( int y = 0; y < h; ++y ) {
             // We won't explain proxies here, see the Pixel sample for more info.
-            FPixel prox = blockLAB->PixelProxy( x, y );
+            FPixel prox = blockLAB->Pixel( x, y );
             prox.SetLD( L );
             prox.SetaD( a );
             prox.SetbD( b );
@@ -109,7 +109,7 @@ main( int argc, char *argv[] ) {
     // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS3_FORMAT_RGBA8
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( blockRGB->DataPtr()
+    QImage*         image   = new QImage( blockRGB->Bits()
                                         , blockRGB->Width()
                                         , blockRGB->Height()
                                         , blockRGB->BytesPerScanLine()

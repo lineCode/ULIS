@@ -49,7 +49,7 @@ SWindow::SWindow()
     mParticle = new FBlock( 3, 3, ULIS3_FORMAT_RGBA8 );
     ClearRaw( mParticle, ULIS3_NOCB );
     mParticles.reserve( 1000 );
-    mImage = new QImage( mCanvas->DataPtr(), mCanvas->Width(), mCanvas->Height(), mCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    mImage = new QImage( mCanvas->Bits(), mCanvas->Width(), mCanvas->Height(), mCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel = new QLabel( this );
     mLabel->setPixmap( *mPixmap );
@@ -69,7 +69,7 @@ SWindow::SWindow()
             float dx = midx - i;
             float dy = midy - j;
             float dist2 = dx * dx + dy * dy;
-            FPixel prox = mParticle->PixelProxy( i, j );
+            FPixel prox = mParticle->Pixel( i, j );
             float alpha = 1.f - FMaths::Min( dist2 / ray2, 1.f );
             prox.SetAlphaF( alpha );
         }

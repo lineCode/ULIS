@@ -99,7 +99,7 @@ PyVarObject_HEAD_INIT(NULL, 0)
     _PyULIS3Object_PixelValue_methods, /* tp_methods */
     0, /* tp_members */
     0, /* tp_getset */
-    &IPixel, /* tp_base */
+    &ISample, /* tp_base */
     0, /* tp_dict */
     0, /* tp_descr_get */
     0, /* tp_descr_set */

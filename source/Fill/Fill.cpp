@@ -27,7 +27,7 @@ ULIS3_NAMESPACE_BEGIN
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void ULIS3_VECTORCALL
 InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FBlock > iBuf, const uint32 iCount, const uint32 iStride ) {
-    __m256i src = _mm256_lddqu_si256( (const __m256i*)iBuf->DataPtr() );
+    __m256i src = _mm256_lddqu_si256( (const __m256i*)iBuf->Bits() );
 
     uint32 index = 0;
     for( index = 0; index < ( iCount - 32 ); index += iStride ) {
@@ -36,7 +36,7 @@ InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FBlock > iB
     }
 
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memcpy instead
-    memcpy( iDst, iBuf->DataPtr(), iCount - index );
+    memcpy( iDst, iBuf->Bits(), iCount - index );
 }
 #endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
@@ -45,7 +45,7 @@ InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FBlock > iB
 #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void ULIS3_VECTORCALL
 InvokeFillMTProcessScanline_SSE( uint8* iDst, std::shared_ptr< const FBlock > iBuf, const uint32 iCount, const uint32 iStride ) {
-    __m128i src = _mm_lddqu_si128( (const __m128i*)iBuf->DataPtr() );
+    __m128i src = _mm_lddqu_si128( (const __m128i*)iBuf->Bits() );
 
     uint32 index;
     for( index = 0; index < ( iCount - 16 ); index += iStride ) {
@@ -53,7 +53,7 @@ InvokeFillMTProcessScanline_SSE( uint8* iDst, std::shared_ptr< const FBlock > iB
         iDst += iStride;
     }
     // Remaining unaligned scanline end: avoid concurrent write on 128 bit with SSE and perform a memcpy instead
-    memcpy( iDst, iBuf->DataPtr(), iCount - index );
+    memcpy( iDst, iBuf->Bits(), iCount - index );
 }
 #endif // __SE4_2__
 
@@ -61,7 +61,7 @@ InvokeFillMTProcessScanline_SSE( uint8* iDst, std::shared_ptr< const FBlock > iB
 //---------------------------------------------------------------------------------- MEM
 void
 InvokeFillMTProcessScanline_MEM( uint8* iDst, std::shared_ptr< const FColor > iSrc, uint32 iCount, uint32 iStride ) {
-    const uint8* src = iSrc->Ptr();
+    const uint8* src = iSrc->Bits();
     for( uint32 i = 0; i < iCount; ++i ) {
         memcpy( iDst, src, iStride );
         iDst += iStride;
@@ -84,7 +84,7 @@ Fill_imp( FThreadPool*                          iThreadPool
     const uint32 bpp     = iDestination->BytesPerPixel();
     const uint32 bps     = iDestination->BytesPerScanLine();
     const uint32 dsh     = iDstROI.x * bpp;
-    uint8*      dsb     = iDestination->DataPtr() + dsh;
+    uint8*      dsb     = iDestination->Bits() + dsh;
     #define DST dsb + ( ( iDstROI.y + pLINE ) * bps )
 
 #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
@@ -92,10 +92,10 @@ Fill_imp( FThreadPool*                          iThreadPool
         uint32   count   = iDstROI.w * bpp;
         uint32   stride  = 32 - ( 32 % bpp );
         std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 32, 1, ULIS3_FORMAT_G8 );
-        uint8* srcb = buf->DataPtr();
+        uint8* srcb = buf->Bits();
 
         for( uint32 i = 0; i < stride; i+= bpp )
-            memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
+            memcpy( (void*)( ( srcb ) + i ), iColor->Bits(), bpp );
 
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
@@ -107,10 +107,10 @@ Fill_imp( FThreadPool*                          iThreadPool
         uint32   count   = iDstROI.w * bpp;
         uint32   stride  = 16 - ( 16 % bpp );
         std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 16, 1, ULIS3_FORMAT_G8 );
-        uint8* srcb = buf->DataPtr();
+        uint8* srcb = buf->Bits();
 
         for( uint32 i = 0; i < stride; i+= bpp )
-            memcpy( (void*)( ( srcb ) + i ), iColor->Ptr(), bpp );
+            memcpy( (void*)( ( srcb ) + i ), iColor->Bits(), bpp );
 
         ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
@@ -133,7 +133,7 @@ Fill( FThreadPool*              iThreadPool
     , const FHostDeviceInfo&    iHostDeviceInfo
     , bool                      iCallCB
     , FBlock*                   iDestination
-    , const IPixel&             iColor
+    , const ISample&             iColor
     , const FRect&              iArea )
 {
     // Assertions
@@ -156,7 +156,7 @@ Fill( FThreadPool*              iThreadPool
     Fill_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iDestination, color, roi );
 
     // Invalid
-    iDestination->Invalidate( roi, iCallCB );
+    iDestination->Dirty( roi, iCallCB );
 }
 
 ULIS3_NAMESPACE_END

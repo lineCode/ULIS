@@ -73,8 +73,8 @@ Copy_imp( FThreadPool*              iThreadPool
     const uint32 dst_bps = iDestination->BytesPerScanLine();
     const uint32 srh = ( iShift.x + iSrcROI.x ) * bpp;
     const uint32 dsh = iDstROI.x * bpp;
-    const uint8*src = iSource->DataPtr() + srh;
-    uint8*      dst = iDestination->DataPtr() + dsh;
+    const uint8*src = iSource->Bits() + srh;
+    uint8*      dst = iDestination->Bits() + dsh;
     const auto basesrcy = iShift.y + iSrcROI.y;
     const auto basedsty = iDstROI.y;
     #define SRC src + ( ( basesrcy + pLINE ) * src_bps )
@@ -140,7 +140,7 @@ void Copy( FThreadPool*             iThreadPool
     Copy_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iDestination, src_roi, dst_fit, shift );
 
     // Invalidate
-    iDestination->Invalidate( dst_fit, iCallCB );
+    iDestination->Dirty( dst_fit, iCallCB );
 }
 
 FBlock* XCopy( FThreadPool*           iThreadPool
@@ -172,10 +172,10 @@ CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB ) {
     ULIS3_ASSERT( iSrc->Format() == iDst->Format(), "Formats do not matchs"                     );
 
     // One call, supposedly more efficient for small block.
-    memcpy( iDst->DataPtr(), iSrc->DataPtr(), iSrc->BytesTotal() );
+    memcpy( iDst->Bits(), iSrc->Bits(), iSrc->BytesTotal() );
 
     // Invalid
-    iDst->Invalidate( iCallCB );
+    iDst->Dirty( iCallCB );
 }
 
 FBlock*
@@ -183,7 +183,7 @@ XCopyRaw( const FBlock* iSrc, bool iCallCB ) {
     // Assertions
     ULIS3_ASSERT( iSrc, "Bad source" );
     FBlock* ret = new FBlock( iSrc->Width(), iSrc->Height(), iSrc->Format() );
-    memcpy( ret->DataPtr(), iSrc->DataPtr(), iSrc->BytesTotal() );
+    memcpy( ret->Bits(), iSrc->Bits(), iSrc->BytesTotal() );
     return  ret;
 }
 

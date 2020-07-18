@@ -16,7 +16,7 @@
 ULIS3_NAMESPACE_BEGIN
 FBlock::~FBlock()
 {
-    mOnCleanup.ExecuteIfBound( mData );
+    mOnCleanup.ExecuteIfBound( mBitmap );
 }
 
 FBlock::FBlock(
@@ -29,7 +29,7 @@ FBlock::FBlock(
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
-    , mData( nullptr )
+    , mBitmap( nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
     , mBytesPerScanline( 0 )
@@ -43,9 +43,9 @@ FBlock::FBlock(
     mBytesTotal = mHeight * mBytesPerScanline;
 
     uint32 num = mWidth * mHeight * FormatInfo().SPP;
-    ULIS3_ASSERT( num != 0, "Cannot allocate a buffer of size 0" )
+    ULIS3_ASSERT( num != 0, "Cannot allocate a buffer of size 0" );
 
-    mData = new uint8[ mBytesTotal ];
+    mBitmap = new uint8[ mBytesTotal ];
 }
 
 FBlock::FBlock(
@@ -59,7 +59,7 @@ FBlock::FBlock(
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
-    , mData( iData )
+    , mBitmap( iData )
     , mWidth( iWidth )
     , mHeight( iHeight )
     , mBytesPerScanline( 0 )
@@ -84,7 +84,14 @@ FBlock::XMake(
     , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory )
 )
 {
-    return  new FBlock( iWidth, iHeight, iFormat, iColorSpace, iOnInvalid, iOnCleanup );
+    return  new FBlock(
+          iWidth
+        , iHeight
+        , iFormat
+        , iColorSpace
+        , iOnInvalid
+        , iOnCleanup
+    );
 }
 
 //static
@@ -98,7 +105,15 @@ FBlock* XMake(
     , const FOnCleanup& iOnCleanup = FOnCleanup()
 )
 {
-    return  new FBlock( iData, iWidth, iHeight, iFormat, iColorSpace, iOnInvalid, iOnCleanup );
+    return  new FBlock(
+          iData
+        , iWidth
+        , iHeight
+        , iFormat
+        , iColorSpace
+        , iOnInvalid
+        , iOnCleanup
+    );
 }
 
 //static
@@ -109,46 +124,46 @@ FBlock::XDelete( FBlock* iBlock )
 }
 
 uint8*
-FBlock::Data()
+FBlock::Bits()
 {
-    return  mData;
+    return  mBitmap;
 }
 
 uint8*
-FBlock::ScanlineData( uint16 iRow )
+FBlock::ScanlineBits( uint16 iRow )
 {
     ULIS3_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
-    return  mData + ( iRow * mBytesPerScanline );
+    return  mBitmap + ( iRow * mBytesPerScanline );
 }
 
 
 uint8*
-FBlock::PixelData( uint16 iX, uint16 iY )
+FBlock::PixelBits( uint16 iX, uint16 iY )
 {
     ULIS3_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
     ULIS3_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
-    return  mData + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
+    return  mBitmap + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
 }
 
 const uint8*
-FBlock::Data() const
+FBlock::Bits() const
 {
-    return  mData;
+    return  mBitmap;
 }
 
 const uint8*
-FBlock::ScanlineData( uint16 iRow ) const
+FBlock::ScanlineBits( uint16 iRow ) const
 {
     ULIS3_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
-    return  mData + ( iRow * mBytesPerScanline );
+    return  mBitmap + ( iRow * mBytesPerScanline );
 }
 
 const uint8*
-FBlock::PixelData( uint16 iX, uint16 iY ) const
+FBlock::PixelBits( uint16 iX, uint16 iY ) const
 {
     ULIS3_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
     ULIS3_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
-    return  mData + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
+    return  mBitmap + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
 }
 
 uint16
@@ -209,34 +224,34 @@ FBlock::Dirty( const FRect& iRect, bool iCall ) const
     int y1 = iRect.y;
     int x2 = iRect.x + iRect.w;
     int y2 = iRect.y + iRect.h;
-#endif
     ULIS3_ASSERT( iRect.w >= 0, "Bad dirty geometry out of range" );
     ULIS3_ASSERT( iRect.h >= 0, "Bad dirty geometry out of range" );
     ULIS3_ASSERT( x1 >= 0 && x1 < w, "Bad dirty geometry out of range" );
     ULIS3_ASSERT( y1 >= 0 && y1 < h, "Bad dirty geometry out of range" );
     ULIS3_ASSERT( x2 >= 0 && x2 < w, "Bad dirty geometry out of range" );
     ULIS3_ASSERT( y2 >= 0 && y2 < h, "Bad dirty geometry out of range" );
+#endif
 
     mOnInvalid.ExecuteIfBound( this, iRect );
 }
 
 FColor
-FBlock::Color( int iX, int iY ) const
+FBlock::Color( uint16 iX, uint16 iY ) const
 {
-    return  FColor( PixelData( iX, iY ), Format(), ColorSpace() );
+    return  FColor( PixelBits( iX, iY ), Format(), ColorSpace() );
 }
 
 FPixel
-FBlock::Pixel( int iX, int iY )
+FBlock::Pixel( uint16 iX, uint16 iY )
 {
-    return  FPixel( PixelData( iX, iY ), Format(), ColorSpace() );
+    return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace() );
 }
 
 
 const FPixel
-FBlock::Pixel( int iX, int iY ) const
+FBlock::Pixel( uint16 iX, uint16 iY ) const
 {
-    return  FPixel( PixelData( iX, iY ), Format(), ColorSpace() );
+    return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace() );
 }
 
 void
@@ -265,12 +280,12 @@ FBlock::ReloadFromData(
     ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
 
-    mOnCleanup.ExecuteIfBound( mData );
+    mOnCleanup.ExecuteIfBound( mBitmap );
 
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
 
-    mData = iData;
+    mBitmap = iData;
     mWidth = iWidth;
     mHeight = iHeight;
     mOnInvalid = iOnInvalid;

@@ -58,12 +58,23 @@ template< typename T > constexpr ULIS3_FORCEINLINE void _FloatToType( uint8* iSr
 #define FLOAT2TYPE( iSrc, iIndex, iValue )  _FloatToType< T >( iSrc, iIndex, iValue )
 
 // MinType MaxType
-template< typename T > T constexpr ULIS3_FORCEINLINE MinType() { return T(0); }
-template< typename T > T constexpr ULIS3_FORCEINLINE MaxType() { return T(1); }
+template< typename T > T constexpr ULIS3_FORCEINLINE MinType() { return static_cast< T >(0); }
+template< typename T > T constexpr ULIS3_FORCEINLINE MidType() { return static_cast< T >(0); }
+template< typename T > T constexpr ULIS3_FORCEINLINE MaxType() { return static_cast< T >(1); }
+template<> uint8    constexpr ULIS3_FORCEINLINE MinType< uint8   >() { return 0;            }
+template<> uint16   constexpr ULIS3_FORCEINLINE MinType< uint16  >() { return 0;            }
+template<> uint32   constexpr ULIS3_FORCEINLINE MinType< uint32  >() { return 0;            }
+template<> ufloat   constexpr ULIS3_FORCEINLINE MinType< ufloat  >() { return 0.0f;         }
+template<> udouble  constexpr ULIS3_FORCEINLINE MinType< udouble >() { return 0.0;          }
+template<> uint8    constexpr ULIS3_FORCEINLINE MidType< uint8   >() { return 128;          }
+template<> uint16   constexpr ULIS3_FORCEINLINE MidType< uint16  >() { return 32768;        }
+template<> uint32   constexpr ULIS3_FORCEINLINE MidType< uint32  >() { return 2147483648;   }
+template<> ufloat   constexpr ULIS3_FORCEINLINE MidType< ufloat  >() { return 0.5f;         }
+template<> udouble  constexpr ULIS3_FORCEINLINE MidType< udouble >() { return 0.5;          }
 template<> uint8    constexpr ULIS3_FORCEINLINE MaxType< uint8   >() { return UINT8_MAX;    }
 template<> uint16   constexpr ULIS3_FORCEINLINE MaxType< uint16  >() { return UINT16_MAX;   }
 template<> uint32   constexpr ULIS3_FORCEINLINE MaxType< uint32  >() { return UINT32_MAX;   }
-template<> ufloat   constexpr ULIS3_FORCEINLINE MaxType< ufloat  >() { return 1.f;          }
+template<> ufloat   constexpr ULIS3_FORCEINLINE MaxType< ufloat  >() { return 1.0f;         }
 template<> udouble  constexpr ULIS3_FORCEINLINE MaxType< udouble >() { return 1.0;          }
 
 // Macro for switch enumerators

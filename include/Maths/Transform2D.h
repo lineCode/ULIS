@@ -34,7 +34,7 @@ public:
 public:
     // Public API
     const FTransform2D_imp& GetImp() const;
-    const uint8* Ptr() const;
+    const uint8* Bits() const;
     FTransform2D Inverse() const;
 
 private:

@@ -40,7 +40,7 @@ main( int argc, char *argv[] ) {
             FVec2I delta = pos - mid;
             int dist = delta.Distance();
             if( abs( dist - rad ) < 2 ) {
-                FPixel prox = blockSRC->PixelProxy( x, y );
+                FPixel prox = blockSRC->Pixel( x, y );
                 prox.SetAlpha8( 128 );
             }
         }
@@ -50,7 +50,7 @@ main( int argc, char *argv[] ) {
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( blockDST->DataPtr()
+    QImage*         image   = new QImage( blockDST->Bits()
                                         , blockDST->Width()
                                         , blockDST->Height()
                                         , blockDST->BytesPerScanLine()

@@ -56,14 +56,14 @@ Swap( FThreadPool*              iThreadPool
     const uint32 bpp = dst->BytesPerPixel();
     const uint32 w   = dst->Width();
     const int64 bps = dst->BytesPerScanLine();
-    uint8*      dsb = dst->DataPtr();
+    uint8*      dsb = dst->Bits();
     #define DST dsb + ( pLINE * bps )
     const int max = dst->Height();
     ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , InvokeSwapMTProcessScanline_MEM, DST, w, iChannel1, iChannel2, bpc, bpp )
 
-    dst->Invalidate( iCallCB );
+    dst->Dirty( iCallCB );
 }
 
 ULIS3_NAMESPACE_END

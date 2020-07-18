@@ -23,8 +23,8 @@ ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Invocation Implementation
 template< typename T >
-void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormat* iFmt, std::shared_ptr< FColor > iColor ) {
-    const uint8* src = iColor->Ptr();
+void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormat& iFmt, std::shared_ptr< FColor > iColor ) {
+    const uint8* src = iColor->Bits();
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         const T alpha = dst[ iFmt->AID ];
@@ -36,7 +36,7 @@ void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormat* iFmt, std::
 
 /////////////////////////////////////////////////////
 // Dispatch
-typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, uint8* iDst, const FFormat* iFmt, std::shared_ptr< FColor > iColor );
+typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, uint8* iDst, const FFormat& iFmt, std::shared_ptr< FColor > iColor );
 fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForParameters( eType iType ) {
     switch( iType ) {
         case TYPE_UINT8     : return  InvokeFillPreserveAlpha< uint8 >;
@@ -57,7 +57,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
                  , const FHostDeviceInfo&   iHostDeviceInfo
                  , bool                     iCallCB
                  , FBlock*                  iDestination
-                 , const IPixel&            iColor
+                 , const ISample&            iColor
                  , const FRect&             iArea )
 {
     // Assertions
@@ -82,7 +82,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
     // Bake color param, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
     std::shared_ptr< FColor > color = std::make_shared< FColor >( iDestination->Format() );
     Conv( iColor, *color );
-    uint8*          dst = iDestination->DataPtr();
+    uint8*          dst = iDestination->Bits();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = roi.h;
     const size_t    len = roi.w;
@@ -93,7 +93,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
                                    , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, &iDestination->FormatInfo(), color )
 
     // Invalid
-    iDestination->Invalidate( roi, iCallCB );
+    iDestination->Dirty( roi, iCallCB );
 }
 
 ULIS3_NAMESPACE_END

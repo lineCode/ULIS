@@ -69,8 +69,8 @@ void ComputePremultipliedSummedAreaTable_MEM_Generic( FThreadPool*              
                                                     , const FBlock*             iSource
                                                     , FBlock*                   iSAT )
 {
-    const uint8*    src     = iSource->DataPtr();
-    uint8*          bdp     = iSAT->DataPtr();
+    const uint8*    src     = iSource->Bits();
+    uint8*          bdp     = iSAT->Bits();
     const uint32     src_bps = iSource->BytesPerScanLine();
     const uint32     bdp_bps = iSAT->BytesPerScanLine();
     const uint32     src_bpp = iSource->BytesPerPixel();
@@ -154,8 +154,8 @@ void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FThreadPool*              
                                                     , const FBlock*             iSource
                                                     , FBlock*                   iSAT )
 {
-    const uint8*    src     = iSource->DataPtr();
-    uint8*          bdp     = iSAT->DataPtr();
+    const uint8*    src     = iSource->Bits();
+    uint8*          bdp     = iSAT->Bits();
     const uint32     src_bps = iSource->BytesPerScanLine();
     const uint32     bdp_bps = iSAT->BytesPerScanLine();
     const uint32     src_bpp = iSource->BytesPerPixel();

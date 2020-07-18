@@ -48,7 +48,7 @@ InvokeResizeMTProcessScanline_NN_MEM_Generic( uint8* iDst, int32 iLine, std::sha
 template< typename T > void
 ResizeMT_NN_MEM_Generic( std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info        = *iInfo;
-    uint8*              dst         = info.destination->DataPtr();
+    uint8*              dst         = info.destination->Bits();
     const uint32         dst_bps     = info.destination->BytesPerScanLine();
     const uint32         dst_decal_y = info.dst_roi.y;
     const uint32         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();

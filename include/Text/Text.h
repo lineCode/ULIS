@@ -26,7 +26,7 @@ ULIS3_API void RenderText( FThreadPool*             iThreadPool
                          , const std::wstring       iText
                          , const FFont&             iFont
                          , int                      iSize
-                         , const IPixel&            iColor
+                         , const ISample&            iColor
                          , const FTransform2D&      iTransform
                          , bool                     iAntialiasing );
 

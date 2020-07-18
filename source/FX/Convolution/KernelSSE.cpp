@@ -58,7 +58,7 @@ FKernelSSE::FKernelSSE( const FKernel& iOther )
     , mPivot( iOther.Pivot() )
 {
     mData = new Vec4f[ Area() ];
-    const float* data = reinterpret_cast< const float* >( iOther.DataPtr() );
+    const float* data = reinterpret_cast< const float* >( iOther.Bits() );
     for( int i = 0; i < Area(); ++i )
         mData[ i ] = data[i];
 }

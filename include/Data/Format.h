@@ -47,13 +47,15 @@ struct ULIS3_API FFormat
 /// @class  IHasFormat
 class ULIS3_API IHasFormat
 {
-public:
-    virtual ~IHasFormat() = 0;
+protected:
+    ~IHasFormat()
+    {}
 
     IHasFormat( tFormat iFormat )
         : mFormatInfo( iFormat )
     {}
 
+public:
     ULIS3_FORCEINLINE const FFormat& FormatInfo() const { return  mFormatInfo; }
     ULIS3_FORCEINLINE const uint8* IndexTable() const { return  mFormatInfo.IDT; }
     ULIS3_FORCEINLINE tFormat Format() const { return  mFormatInfo.FMT; }
@@ -82,7 +84,7 @@ protected:
     }
 
 private:
-    FFormat mFormatInfo;
+    FFormat mFormatInfo; ///< The FormatInfo.
 };
 
 ULIS3_NAMESPACE_END

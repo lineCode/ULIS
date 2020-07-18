@@ -15,8 +15,8 @@
 #include "Core/Core.h"
 
 ULIS3_NAMESPACE_BEGIN
-ULIS3_API void Conv( const IPixel& iSrc, IPixel& iDst );
-ULIS3_API FColor Conv( const IPixel& iSrc, tFormat iDst );
+ULIS3_API void Conv( const ISample& iSrc, ISample& iDst );
+ULIS3_API FColor Conv( const ISample& iSrc, tFormat iDst );
 
 ULIS3_API void Conv( FThreadPool*           iThreadPool
                    , bool                   iBlocking

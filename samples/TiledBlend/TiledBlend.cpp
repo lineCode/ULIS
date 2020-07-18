@@ -63,7 +63,7 @@ main( int argc, char *argv[] ) {
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( blockCanvas->DataPtr()
+    QImage*         image   = new QImage( blockCanvas->Bits()
                                         , blockCanvas->Width()
                                         , blockCanvas->Height()
                                         , blockCanvas->BytesPerScanLine()

@@ -48,7 +48,7 @@ Convolution( FThreadPool*            iThreadPool
         return;
 
     // Invalid
-    iDestination->Invalidate( roi, iCallCB );
+    iDestination->Dirty( roi, iCallCB );
 }
 
 ULIS3_NAMESPACE_END

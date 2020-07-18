@@ -89,7 +89,7 @@ void Blend( FThreadPool*            iThreadPool
     dispatchedInvocation( commandArgs );
 
     // Invalid
-    iBackdrop->Invalidate( dst_fit, iCallCB );
+    iBackdrop->Dirty( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -160,7 +160,7 @@ void AlphaBlend( FThreadPool*           iThreadPool
     dispatchedInvocation( commandArgs );
 
     // Invalid
-    iBackdrop->Invalidate( dst_fit, iCallCB );
+    iBackdrop->Dirty( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -230,7 +230,7 @@ void BlendTiled( FThreadPool*               iThreadPool
     dispatchedInvocation( commandArgs );
 
     // Invalid
-    iBackdrop->Invalidate( dst_roi, iCallCB );
+    iBackdrop->Dirty( dst_roi, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -252,7 +252,7 @@ void BlendColor( FThreadPool*           iThreadPool
 
     FColor color( iBackdrop->Format() );
     Conv( iColor, color );
-    FBlock block( color.Ptr(), 1, 1, iBackdrop->Format() );
+    FBlock block( color.Bits(), 1, 1, iBackdrop->Format() );
     BlendTiled( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRect( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );
 }
 

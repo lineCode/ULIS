@@ -97,7 +97,7 @@ InvokeTransformAffineTiledMTProcessScanline_Bicubic_SSE_RGBA8( uint8* iDst, int3
 void
 TransformAffineTiledMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info        = *iInfo;
-    uint8*                  dst         = info.destination->DataPtr();
+    uint8*                  dst         = info.destination->Bits();
     const uint32             dst_bps     = info.destination->BytesPerScanLine();
     const uint32             dst_decal_y = info.dst_roi.y;
     const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();

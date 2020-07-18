@@ -31,7 +31,7 @@ main( int argc, char *argv[] ) {
 
     ::ul3::Clear( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, blockA->Rect() );
     FColor color = FColor::FromRGBA8( 255, 0, 0, 255 );
-    FBlock col( color.Ptr(), 1, 1, ULIS3_FORMAT_RGBA8 );
+    FBlock col( color.Bits(), 1, 1, ULIS3_FORMAT_RGBA8 );
 
     FVec2F P0( 474.984253, 551.79988 );
     FVec2F P1( 474.984253, 551.79988 );
@@ -60,7 +60,7 @@ main( int argc, char *argv[] ) {
     // Qt Window
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( blockA->DataPtr(), blockA->Width(), blockA->Height(), blockA->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    QImage*         image   = new QImage( blockA->Bits(), blockA->Width(), blockA->Height(), blockA->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
     QLabel*         label   = new QLabel( widget );
     label->setPixmap( pixmap );

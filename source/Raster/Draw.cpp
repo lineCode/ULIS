@@ -24,7 +24,7 @@ void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
 
     uint8* ptr = iDst->PixelPtr( iPos.x, iPos.y );
     fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iColor.Format(), iDst->Format() );
-    fptr( &iColor.FormatInfo(), iColor.Ptr(), &iDst->FormatInfo(), ptr, 1 );
+    fptr( &iColor.FormatInfo(), iColor.Bits(), &iDst->FormatInfo(), ptr, 1 );
 }
 
 void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor, int iX1, int iX2, int iY ) {
@@ -48,7 +48,7 @@ void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColo
 void DrawHorizontalLineNoAA( FBlock* iDst, const FColor& iColor, int iX1, int iX2, int iY ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
-    uint8* src = color.Ptr();
+    uint8* src = color.Bits();
     DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iX1, iX2, iY );
 }
 
@@ -74,7 +74,7 @@ void DrawVerticalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor,
 void DrawVerticalLineNoAA( FBlock* iDst, const FColor& iColor, int iY1, int iY2, int iX ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
-    uint8* src = color.Ptr();
+    uint8* src = color.Bits();
     DrawVerticalLineNoAA_UnsafeColor( iDst, src, iY1, iY2, iX );
 }
 
@@ -82,7 +82,7 @@ void DrawVerticalLineNoAA( FBlock* iDst, const FColor& iColor, int iY1, int iY2,
 void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
-    uint8* src = color.Ptr();
+    uint8* src = color.Bits();
     DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iRect.x, iRect.x + iRect.w, iRect.y );
     DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iRect.x, iRect.x + iRect.w, iRect.y + iRect.h );
     DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, iRect.x );
@@ -92,7 +92,7 @@ void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect
 void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect, int iNumSubdiv ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
-    uint8* src = color.Ptr();
+    uint8* src = color.Bits();
     int stepX = iRect.w / iNumSubdiv;
     int stepY = iRect.h / iNumSubdiv;
     for( int x = iRect.x; x <= iRect.x + iRect.w; x += stepX )

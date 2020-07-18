@@ -50,7 +50,7 @@ SWindow::SWindow()
     mSRC = XLoadFromFile( mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, path, ULIS3_FORMAT_RGBA8 );
     mDST = new  FBlock( 1024, 512, ULIS3_FORMAT_RGBA8 );
     Clear( mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
-    mImage = new QImage( mDST->DataPtr(), mDST->Width(), mDST->Height(), mDST->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    mImage = new QImage( mDST->Bits(), mDST->Width(), mDST->Height(), mDST->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel = new QLabel( this );
     mLabel->setPixmap( *mPixmap );

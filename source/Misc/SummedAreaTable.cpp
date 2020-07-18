@@ -45,7 +45,7 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 
-    sat->Invalidate( iCallCB );
+    sat->Dirty( iCallCB );
 
     return  sat;
 }
@@ -73,7 +73,7 @@ FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
     ULIS3_ASSERT( fptr, "No dispatch function found." );
     fptr( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 
-    sat->Invalidate( iCallCB );
+    sat->Dirty( iCallCB );
 
     return  sat;
 }

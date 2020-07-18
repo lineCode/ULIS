@@ -53,8 +53,8 @@ FTransform2D::GetImp() const {
 }
 
 const uint8*
-FTransform2D::Ptr() const {
-    return  mImp->Ptr();
+FTransform2D::Bits() const {
+    return  mImp->Bits();
 }
 
 FTransform2D

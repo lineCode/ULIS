@@ -65,8 +65,8 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const uint8* iSrc, uin
 void
 TiledBlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->DataPtr();
-    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint8*        src         = info.source->Bits();
+    uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();
     const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;

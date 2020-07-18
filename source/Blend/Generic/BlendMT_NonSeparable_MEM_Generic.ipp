@@ -74,15 +74,15 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSr
             uint8 r = fmt.IDT[j];
             float s11, s01, s10, s00, v1, v2, srcvf;
             SampleSubpixelChannel( srcvf, r );
-            FLOAT2TYPE( src_sample.Ptr(), r, srcvf );
+            FLOAT2TYPE( src_sample.Bits(), r, srcvf );
         }
 
-        conv_forward_fptr( &fmt, src_sample.Ptr(), &rgbfFormatInfo, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
-        conv_forward_fptr( &fmt, bdp, &rgbfFormatInfo, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
+        conv_forward_fptr( fmt, src_sample.Bits(), rgbfFormatInfo, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
+        conv_forward_fptr( fmt, bdp, rgbfFormatInfo, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( &rgbfFormatInfo, reinterpret_cast< const uint8* >( &res_conv.m[0] ), &fmt, result, 1 );
+        conv_backward_fptr( rgbfFormatInfo, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
@@ -101,8 +101,8 @@ template< typename T >
 void
 BlendMT_NonSeparable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->DataPtr();
-    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint8*        src         = info.source->Bits();
+    uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();
     const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
@@ -144,12 +144,12 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8*
         float alpha_result;
         ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        conv_forward_fptr( &fmt, src, &rgbfFormatInfo, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
-        conv_forward_fptr( &fmt, bdp, &rgbfFormatInfo, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
+        conv_forward_fptr( fmt, src, rgbfFormatInfo, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
+        conv_forward_fptr( fmt, bdp, rgbfFormatInfo, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( &rgbfFormatInfo, reinterpret_cast< const uint8* >( &res_conv.m[0] ), &fmt, result, 1 );
+        conv_backward_fptr( rgbfFormatInfo, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
@@ -168,8 +168,8 @@ template< typename T >
 void
 BlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->DataPtr();
-    uint8*              bdp         = info.backdrop->DataPtr();
+    const uint8*        src         = info.source->Bits();
+    uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();
     const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;

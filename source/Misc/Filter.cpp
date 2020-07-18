@@ -60,7 +60,7 @@ void Filter( FThreadPool*           iThreadPool
     const FFormat& srcFormatInfo( iSource->FormatInfo() );
 
     // Bake Params and call
-    const uint8*    src     = iSource->DataPtr();
+    const uint8*    src     = iSource->Bits();
     uint32           src_bps = iSource->BytesPerScanLine();
     const int       max     = iSource->Height();
     const uint32     len     = iSource->Width();
@@ -87,7 +87,7 @@ void FilterInPlace( FThreadPool*            iThreadPool
     const FFormat& srcFormatInfo( iSource->FormatInfo() );
 
     // Bake Params and call
-    uint8*      src     = iSource->DataPtr();
+    uint8*      src     = iSource->Bits();
     uint32       src_bps = iSource->BytesPerScanLine();
     const int   max     = iSource->Height();
     const uint32 len     = iSource->Width();
@@ -96,7 +96,7 @@ void FilterInPlace( FThreadPool*            iThreadPool
                                    , InvokeFilterInPlace
                                    , len, iSource, src + ( pLINE * src_bps ), srcFormatInfo.BPP, iFunc );
 
-    iSource->Invalidate( iCallCB );
+    iSource->Dirty( iCallCB );
 }
 
 void FilterInto( FThreadPool*              iThreadPool
@@ -122,9 +122,9 @@ void FilterInto( FThreadPool*              iThreadPool
     const FFormat& dstFormatInfo( iDestination->FormatInfo() );
 
     // Bake Params and call
-    const uint8*    src     = iSource->DataPtr();
+    const uint8*    src     = iSource->Bits();
     uint32           src_bps = iSource->BytesPerScanLine();
-    uint8*          dst     = iDestination->DataPtr();
+    uint8*          dst     = iDestination->Bits();
     uint32           dst_bps = iDestination->BytesPerScanLine();
     const int       max     = iSource->Height();
     const uint32     len     = iSource->Width();
@@ -139,7 +139,7 @@ void FilterInto( FThreadPool*              iThreadPool
                                    , dst + ( pLINE * dst_bps )
                                    , dstFormatInfo.BPP
                                    , iFunc );
-    iDestination->Invalidate( iCallCB );
+    iDestination->Dirty( iCallCB );
 }
 
 ULIS3_NAMESPACE_END

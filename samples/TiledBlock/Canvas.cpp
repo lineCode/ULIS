@@ -58,7 +58,7 @@ SCanvas::SCanvas()
 
     Clear( mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, mCanvas, mCanvas->Rect() );
 
-    mImage  = new QImage( mCanvas->DataPtr(), mCanvas->Width(), mCanvas->Height(), mCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    mImage  = new QImage( mCanvas->Bits(), mCanvas->Width(), mCanvas->Height(), mCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel  = new QLabel( this );
     mLabel->setPixmap( *mPixmap );
@@ -172,7 +172,7 @@ SCanvas::tickEvent() {
     float tramu = cramu / maxramu;
     int iramu = FMaths::Min( HH, int( tramu * HH ) );
     for( int i = 0; i < iramu; ++i ) {
-        FPixel prox = mRAMUSAGESWAPBUFFER->PixelProxy( WW, HH - i );
+        FPixel prox = mRAMUSAGESWAPBUFFER->Pixel( WW, HH - i );
         prox.SetR8( 20 );
         prox.SetG8( 80 );
         prox.SetB8( 200 );

@@ -136,7 +136,7 @@ void SaveToFile( FThreadPool*           iThreadPool
     int w = iSource->Width();
     int h = iSource->Height();
     int c = iSource->SamplesPerPixel();
-    const uint8* dat = iSource->DataPtr();
+    const uint8* dat = iSource->Bits();
     FBlock* conv = nullptr;
     if( !( layout_valid && model_valid && type_valid ) ) {
         tFormat dstformat = 0;
@@ -144,7 +144,7 @@ void SaveToFile( FThreadPool*           iThreadPool
         else if( model == CM_GREY )     dstformat = ULIS3_FORMAT_G8   | ULIS3_W_ALPHA( iSource->HasAlpha() );
         else                            dstformat = ULIS3_FORMAT_RGB8 | ULIS3_W_ALPHA( iSource->HasAlpha() );
         conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
-        dat = conv->DataPtr();
+        dat = conv->Bits();
     }
 
     switch( iImageFormat ) {

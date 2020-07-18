@@ -16,7 +16,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include "Types/PixelValue.ipp"
-#include "Types/PixelProxy.ipp"
+#include "Types/Pixel.ipp"
 
 /////////////////////////////////////////////////////
 /// Object Structure
@@ -79,7 +79,7 @@ _PyULIS3Object_Block_init( _PyULIS3Object_Block* self, PyObject* args, PyObject*
 #define _PyULIS3Object_Block_CheckError_SelfNULL if( self->_mBlock == nullptr ) { PyErr_SetString( PyExc_AttributeError, "Bad Access to uninitialized _PyULIS3Object_Block object" ); return NULL; }
 
 // Width
-_PyULIS3Object_Block_GetterMethod_Begin( Bytes              )   return  PyMemoryView_FromMemory( (char*)self->_mBlock->DataPtr(), self->_mBlock->BytesTotal(), PyBUF_READ | PyBUF_WRITE );  _PyULIS3Object_Block_GetterMethod_End
+_PyULIS3Object_Block_GetterMethod_Begin( Bytes              )   return  PyMemoryView_FromMemory( (char*)self->_mBlock->Bits(), self->_mBlock->BytesTotal(), PyBUF_READ | PyBUF_WRITE );  _PyULIS3Object_Block_GetterMethod_End
 _PyULIS3Object_Block_GetterMethod_Begin( Width              )   return  PyLong_FromLong( self->_mBlock->Width() );                                                                          _PyULIS3Object_Block_GetterMethod_End
 _PyULIS3Object_Block_GetterMethod_Begin( Height             )   return  PyLong_FromLong( self->_mBlock->Height() );                                                                         _PyULIS3Object_Block_GetterMethod_End
 _PyULIS3Object_Block_GetterMethod_Begin( Format             )   return  PyLong_FromLong( self->_mBlock->Format() );                                                                         _PyULIS3Object_Block_GetterMethod_End
@@ -102,7 +102,7 @@ _PyULIS3Object_Block_GetterMethod_Begin( MD5                )   return  PyUnicod
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Getters
 static PyObject*
-_PyULIS3Object_Block_PixelProxy( _PyULIS3Object_Block* self, PyObject* args ) {
+_PyULIS3Object_Block_Pixel( _PyULIS3Object_Block* self, PyObject* args ) {
     _PyULIS3Object_Block_CheckError_SelfNULL
     int x, y;
     if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return  NULL;
@@ -110,9 +110,9 @@ _PyULIS3Object_Block_PixelProxy( _PyULIS3Object_Block* self, PyObject* args ) {
     assert( x >= 0 && x < self->_mBlock->Width() );
     assert( y >= 0 && x < self->_mBlock->Height() );
 
-    PyObject* inst = _PyULIS3Object_PixelProxy_new( &FPixel, nullptr, nullptr );
-    _PyULIS3Object_PixelProxy* O = (_PyULIS3Object_PixelProxy*)inst;
-    O->super._mPixel = new ::ul3::FPixel( self->_mBlock->PixelProxy( x, y ) );
+    PyObject* inst = _PyULIS3Object_Pixel_new( &FPixel, nullptr, nullptr );
+    _PyULIS3Object_Pixel* O = (_PyULIS3Object_Pixel*)inst;
+    O->super._mPixel = new ::ul3::FPixel( self->_mBlock->Pixel( x, y ) );
     return  inst;
 }
 
@@ -127,7 +127,7 @@ _PyULIS3Object_Block_PixelValue( _PyULIS3Object_Block* self, PyObject* args ) {
 
     PyObject* inst = _PyULIS3Object_PixelValue_new( &FColor, nullptr, nullptr );
     _PyULIS3Object_PixelValue* O = (_PyULIS3Object_PixelValue*)inst;
-    O->super._mPixel = new ::ul3::FColor( self->_mBlock->PixelProxy( x, y ) );
+    O->super._mPixel = new ::ul3::FColor( self->_mBlock->Pixel( x, y ) );
     return  inst;
 }
 
@@ -153,7 +153,7 @@ static PyMethodDef _PyULIS3Object_Block_methods[] = {
     { "CRC32"               , (PyCFunction)_PyULIS3Object_Block_CRC32               , METH_NOARGS, "CRC32"              },
     { "MD5"                 , (PyCFunction)_PyULIS3Object_Block_MD5                 , METH_NOARGS, "MD5"                },
     //{ "UUID"                , (PyCFunction)_PyULIS3Object_Block_UUID                , METH_NOARGS, "UUID"               },
-    { "PixelProxy"          , (PyCFunction)_PyULIS3Object_Block_PixelProxy          , METH_VARARGS, "PixelProxy"        },
+    { "Pixel"          , (PyCFunction)_PyULIS3Object_Block_Pixel          , METH_VARARGS, "Pixel"        },
     { "PixelValue"          , (PyCFunction)_PyULIS3Object_Block_PixelValue          , METH_VARARGS, "PixelValue"        },
     { NULL } // Sentinel
 };

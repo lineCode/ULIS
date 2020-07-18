@@ -17,7 +17,7 @@
 #include "macros.h"
 #include "Types/Block.ipp"
 #include "Types/AbstractPixel.ipp"
-#include "Types/PixelProxy.ipp"
+#include "Types/Pixel.ipp"
 #include "Types/PixelValue.ipp"
 
 PyObject*

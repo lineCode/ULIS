@@ -74,7 +74,7 @@ void TransformAffine( FThreadPool*              iThreadPool
     dispatchedInvocation( commandArgs );
 
     // Invalid
-    iDestination->Invalidate( dst_fit, iCallCB );
+    iDestination->Dirty( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
 
 
     // Invalid
-    iDestination->Invalidate( dst_fit, iCallCB );
+    iDestination->Dirty( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -180,7 +180,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
     dispatchedInvocation( commandArgs );
 
     // Invalid
-    iDestination->Invalidate( dst_fit, iCallCB );
+    iDestination->Dirty( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -281,7 +281,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
 
 
     // Invalid
-    iDestination->Invalidate( dst_fit, iCallCB );
+    iDestination->Dirty( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////
@@ -355,7 +355,7 @@ void Resize( FThreadPool*             iThreadPool
     dispatchedInvocation( commandArgs );
 
     // Invalid
-    iDestination->Invalidate( dst_fit, iCallCB );
+    iDestination->Dirty( dst_fit, iCallCB );
 }
 
 /////////////////////////////////////////////////////

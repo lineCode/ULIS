@@ -5,7 +5,7 @@
 *   PyULIS3
 *__________________
 *
-* @file         _PyULIS3_PixelProxy.ipp
+* @file         _PyULIS3_Pixel.ipp
 * @author       Clement Berthaud
 * @brief        Python3 module for ULIS3.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -21,22 +21,22 @@
 /// Object Structure
 typedef struct {
     _PyULIS3Object_AbstractPixel super;
-} _PyULIS3Object_PixelProxy;
+} _PyULIS3Object_Pixel;
 
 /////////////////////////////////////////////////////
 /// Dealloc
 static void
-_PyULIS3Object_PixelProxy_dealloc( _PyULIS3Object_PixelProxy* self ) {
+_PyULIS3Object_Pixel_dealloc( _PyULIS3Object_Pixel* self ) {
     delete self->super._mPixel;
     Py_TYPE( self )->tp_free( ( PyObject * ) self );
 }
 
 /////////////////////////////////////////////////////
 /// Alloc
-static PyObject* _PyULIS3Object_PixelProxy_new( PyTypeObject* type, PyObject* args, PyObject* kwds )
+static PyObject* _PyULIS3Object_Pixel_new( PyTypeObject* type, PyObject* args, PyObject* kwds )
 {
-    _PyULIS3Object_PixelProxy *self;
-    self = (_PyULIS3Object_PixelProxy*)type->tp_alloc( type, 0 );
+    _PyULIS3Object_Pixel *self;
+    self = (_PyULIS3Object_Pixel*)type->tp_alloc( type, 0 );
     if (self != NULL) self->super._mPixel = nullptr;
     return (PyObject *) self;
 }
@@ -44,7 +44,7 @@ static PyObject* _PyULIS3Object_PixelProxy_new( PyTypeObject* type, PyObject* ar
 /////////////////////////////////////////////////////
 /// Init
 static int
-_PyULIS3Object_PixelProxy_init( _PyULIS3Object_PixelProxy* self, PyObject* args, PyObject* kwds )
+_PyULIS3Object_Pixel_init( _PyULIS3Object_Pixel* self, PyObject* args, PyObject* kwds )
 {
     static char *kwlist[] = { "format", NULL };
     ::ul3::tFormat fmt = 0;
@@ -62,7 +62,7 @@ _PyULIS3Object_PixelProxy_init( _PyULIS3Object_PixelProxy* self, PyObject* args,
 // Methods
 /////////////////////////////////////////////////////
 /// Meta Methods
-static PyMethodDef _PyULIS3Object_PixelProxy_methods[] = {
+static PyMethodDef _PyULIS3Object_Pixel_methods[] = {
     { NULL } // Sentinel
 };
 
@@ -71,9 +71,9 @@ static PyMethodDef _PyULIS3Object_PixelProxy_methods[] = {
 static PyTypeObject FPixel = {
 PyVarObject_HEAD_INIT(NULL, 0)
     "PyULIS3.FPixel", /* tp_name */
-    sizeof( _PyULIS3Object_PixelProxy ), /* tp_basicsize */
+    sizeof( _PyULIS3Object_Pixel ), /* tp_basicsize */
     0, /* tp_itemsize */
-    (destructor)_PyULIS3Object_PixelProxy_dealloc, /* tp_dealloc */
+    (destructor)_PyULIS3Object_Pixel_dealloc, /* tp_dealloc */
     0, /* tp_print */
     0, /* tp_getattr */
     0, /* tp_setattr */
@@ -96,17 +96,17 @@ PyVarObject_HEAD_INIT(NULL, 0)
     0, /* tp_weaklistoffset */
     0, /* tp_iter */
     0, /* tp_iternext */
-    _PyULIS3Object_PixelProxy_methods, /* tp_methods */
+    _PyULIS3Object_Pixel_methods, /* tp_methods */
     0, /* tp_members */
     0, /* tp_getset */
-    &IPixel, /* tp_base */
+    &ISample, /* tp_base */
     0, /* tp_dict */
     0, /* tp_descr_get */
     0, /* tp_descr_set */
     0, /* tp_dictoffset */
-    (initproc)_PyULIS3Object_PixelProxy_init, /* tp_init */
+    (initproc)_PyULIS3Object_Pixel_init, /* tp_init */
     0, /* tp_alloc */
-    _PyULIS3Object_PixelProxy_new, /* tp_new */
+    _PyULIS3Object_Pixel_new, /* tp_new */
     0, /* tp_free */
     0, /* tp_is_gc */
     0, /* tp_bases */

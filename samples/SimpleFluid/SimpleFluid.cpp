@@ -58,7 +58,7 @@ SWindow::SWindow()
     mWetCanvas = new FBlock( 1280, 900, ULIS3_FORMAT_RGBA8 );
     mDryCanvas = new FBlock( 1280, 900, ULIS3_FORMAT_RGBA8 );
     mParticles.reserve( 10000 );
-    mImage = new QImage( mWetCanvas->DataPtr(), mWetCanvas->Width(), mWetCanvas->Height(), mWetCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    mImage = new QImage( mWetCanvas->Bits(), mWetCanvas->Width(), mWetCanvas->Height(), mWetCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel = new QLabel( this );
     mLabel->setPixmap( *mPixmap );
@@ -193,7 +193,7 @@ SWindow::RedrawParticle() {
                 float dx = midx - i;
                 float dy = midy - j;
                 float dist2 = dx * dx + dy * dy;
-                FPixel prox = mParticle->PixelProxy( i, j );
+                FPixel prox = mParticle->Pixel( i, j );
                 float alpha = 1.f - FMaths::Min( dist2 / ray2, 1.f );
                 prox.SetAlphaF( alpha );
             }

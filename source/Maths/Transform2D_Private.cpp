@@ -75,7 +75,7 @@ FTransform2D::FTransform2D_imp::Decompose( float* iTx, float* iTy, float* iRotat
 
 
 const uint8*
-FTransform2D::FTransform2D_imp::Ptr() const {
+FTransform2D::FTransform2D_imp::Bits() const {
     return  reinterpret_cast< const uint8* >( glm::value_ptr( mMatrix ) );
 }
 

@@ -18,7 +18,7 @@
 // FDecl Typedefs and enums
 ULIS3_NAMESPACE_BEGIN
 class   FBlock;
-class   IPixel;
+class   ISample;
 class   FColor;
 class   FPixel;
 class   FProfileRegistry;
