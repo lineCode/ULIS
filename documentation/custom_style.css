@@ -507,3 +507,11 @@ div.directory {
     vertical-align: top;
     display: inline-block;
 }
+
+span.comment {
+    color: #008000;
+}
+
+span.keyword {
+    color: #0066ff;
+}
