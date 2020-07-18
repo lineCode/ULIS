@@ -66,7 +66,6 @@ public:
     ULIS3_FORCEINLINE bool HasAlpha() const { return  mFormatInfo.HEA; }
     ULIS3_FORCEINLINE uint8 SamplesPerPixel() const { return  mFormatInfo.SPP; }
     ULIS3_FORCEINLINE uint8 BytesPerPixel() const { return  mFormatInfo.BPP; }
-    ULIS3_FORCEINLINE uint8 Depth() const { return  BytesPerPixel(); }
     ULIS3_FORCEINLINE uint8 AlphaIndex() const { return  mFormatInfo.AID; }
     ULIS3_FORCEINLINE bool Reversed() const { return  mFormatInfo.REV; }
     ULIS3_FORCEINLINE bool Swapped() const { return  mFormatInfo.SWA; }

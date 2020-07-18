@@ -68,7 +68,7 @@ _PyULIS3Object_AbstractPixel_init( _PyULIS3Object_AbstractPixel* self, PyObject*
 #define _PyULIS3Object_AbstractPixel_SetterMethod_End }
 
 _PyULIS3Object_AbstractPixel_GetterMethod_Begin( BytesPerSample     )   return  PyLong_FromLong( self->_mPixel->BytesPerSample() );    _PyULIS3Object_AbstractPixel_GetterMethod_End
-_PyULIS3Object_AbstractPixel_GetterMethod_Begin( Depth              )   return  PyLong_FromLong( self->_mPixel->Depth() );             _PyULIS3Object_AbstractPixel_GetterMethod_End
+_PyULIS3Object_AbstractPixel_GetterMethod_Begin( BytesPerPixel              )   return  PyLong_FromLong( self->_mPixel->BytesPerPixel() );             _PyULIS3Object_AbstractPixel_GetterMethod_End
 _PyULIS3Object_AbstractPixel_GetterMethod_Begin( Format             )   return  PyLong_FromLong( self->_mPixel->Format() );            _PyULIS3Object_AbstractPixel_GetterMethod_End
 _PyULIS3Object_AbstractPixel_GetterMethod_Begin( Model              )   return  PyLong_FromLong( self->_mPixel->Model() );             _PyULIS3Object_AbstractPixel_GetterMethod_End
 _PyULIS3Object_AbstractPixel_GetterMethod_Begin( Type               )   return  PyLong_FromLong( self->_mPixel->Type() );              _PyULIS3Object_AbstractPixel_GetterMethod_End
@@ -574,7 +574,7 @@ _PyULIS3Object_AbstractPixel_SetterMethod_Begin( SetyD          ) double d; if( 
 /// Meta Methods
 static PyMethodDef _PyULIS3Object_AbstractPixel_methods[] = {
     { "BytesPerSample"      , (PyCFunction)_PyULIS3Object_AbstractPixel_BytesPerSample      , METH_NOARGS, "BytesPerSample"         },
-    { "Depth"               , (PyCFunction)_PyULIS3Object_AbstractPixel_Depth               , METH_NOARGS, "Depth"                  },
+    { "BytesPerPixel"               , (PyCFunction)_PyULIS3Object_AbstractPixel_Depth               , METH_NOARGS, "BytesPerPixel"                  },
     { "Format"              , (PyCFunction)_PyULIS3Object_AbstractPixel_Format              , METH_NOARGS, "Format"                 },
     { "Model"               , (PyCFunction)_PyULIS3Object_AbstractPixel_Model               , METH_NOARGS, "Model"                  },
     { "Type"                , (PyCFunction)_PyULIS3Object_AbstractPixel_Type                , METH_NOARGS, "Type"                   },

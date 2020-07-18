@@ -24,7 +24,7 @@
 ULIS3_NAMESPACE_BEGIN
 void Conv( const ISample& iSrc, ISample& iDst ) {
     if( iSrc.Format() == iDst.Format() ) {
-        memcpy( iDst.Bits(), iSrc.Bits(), iDst.Depth() );
+        memcpy( iDst.Bits(), iSrc.Bits(), iDst.BytesPerPixel() );
     } else {
         fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst.Format() );
         fptr( iSrc.FormatInfo(), iSrc.Bits(), iDst.FormatInfo(), iDst.Bits(), 1 );
@@ -34,7 +34,7 @@ void Conv( const ISample& iSrc, ISample& iDst ) {
 FColor Conv( const ISample& iSrc, tFormat iDst ) {
     FColor dst( iDst );
     if( iSrc.Format() == iDst ) {
-        memcpy( dst.Bits(), iSrc.Bits(), dst.Depth() );
+        memcpy( dst.Bits(), iSrc.Bits(), dst.BytesPerPixel() );
     } else {
         fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst );
         fptr( iSrc.FormatInfo(), iSrc.Bits(), dst.FormatInfo(), dst.Bits(), 1 );

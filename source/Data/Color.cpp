@@ -103,33 +103,33 @@ FColor::~FColor()
 }
 
 FColor::FColor()
-    : ISample( new uint8[ Depth() ], ULIS3_FORMAT_RGBA8 )
+    : ISample( new uint8[ BytesPerPixel() ], ULIS3_FORMAT_RGBA8 )
 {
-    memset( mSignal, 0, Depth() );
+    memset( mSignal, 0, BytesPerPixel() );
 }
 
 FColor::FColor( tFormat iFormat, const FColorSpace* iColorSpace )
-    : ISample( new uint8[ Depth() ], iFormat, iColorSpace )
+    : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
 {
-    memset( mSignal, 0, Depth() );
+    memset( mSignal, 0, BytesPerPixel() );
 }
 
 FColor::FColor( const uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace )
-    : ISample( new uint8[ Depth() ], iFormat, iColorSpace )
+    : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
 {
-    memcpy( mSignal, iData, Depth() );
+    memcpy( mSignal, iData, BytesPerPixel() );
 }
 
 FColor::FColor( const FPixel& iPixel )
-    : ISample( new uint8[ Depth() ], iPixel.Format(), iPixel.ColorSpace() )
+    : ISample( new uint8[ BytesPerPixel() ], iPixel.Format(), iPixel.ColorSpace() )
 {
-    memcpy( mSignal, iPixel.Bits(), Depth() );
+    memcpy( mSignal, iPixel.Bits(), BytesPerPixel() );
 }
 
 FColor::FColor( const FColor& iValue )
-    : ISample( new uint8[ Depth() ], iValue.Format(), iValue.ColorSpace() )
+    : ISample( new uint8[ BytesPerPixel() ], iValue.Format(), iValue.ColorSpace() )
 {
-    memcpy( mSignal, iValue.Bits(), Depth() );
+    memcpy( mSignal, iValue.Bits(), BytesPerPixel() );
 }
 
 
@@ -146,8 +146,8 @@ FColor::operator=( const FColor& iOther ) {
 
     ReinterpretFormat( iOther.Format() );
     AssignColorSpace( iOther.ColorSpace() );
-    mSignal = new uint8[ Depth() ];
-    memcpy( mSignal, iOther.Bits(), Depth() );
+    mSignal = new uint8[ BytesPerPixel() ];
+    memcpy( mSignal, iOther.Bits(), BytesPerPixel() );
 
     return  *this;
 }
@@ -155,7 +155,7 @@ FColor::operator=( const FColor& iOther ) {
 
 template< typename T >
 FColor::FColor( tFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace )
-    : ISample( new uint8[ Depth() ], iFormat, iColorSpace )
+    : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
 {
     #define TMP_CALL( iTypeID, iType, iE2, iE3 ) detail::TColorInitializer< iType >::Run< T >( this, iValues ); break;
     ULIS3_SWITCH_FOR_ALL_DO( Type(), ULIS3_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
