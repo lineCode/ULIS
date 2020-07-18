@@ -5,16 +5,21 @@ body {
     font-family: 'Segoe UI Light';
 }
 
+#top {
+    background-color: rgb( 245, 245, 245 );
+}
+
 #titlearea {
-    padding: 10px;
-    display:block;
+    padding: 0px;
+    display:inline-block;
     box-sizing: border-box;
     margin: 0px;
     width: initial;
     color: #0366d6;
-    background-color: #FFFFFF;
+    background-color: #transparent;
     border: 0px;
     background: rgb( 245, 245, 245 );
+    padding-top: 10px;
 }
 
 #titlearea table tbody tr {
@@ -357,9 +362,11 @@ tr.heading {
 }
 
 #main-nav {
-    display: block;
-    width:100%;
+    display: inline-block;
+    /*width:100%;*/
     background: rgb( 245, 245, 245 );
+    vertical-align: top;
+    padding-top: 12px;
 }
 
 #main-menu li a {

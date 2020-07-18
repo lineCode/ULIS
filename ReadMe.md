@@ -71,7 +71,3 @@ ULIS officialy maintains a few bindings of the library. They are listed under th
         cmake -G "YourGenerator" ../ULIS
 
 Sample scripts are also available in the repository to help with the build process.
-
-## Documentation
-You can build ULIS documentation if you have doxygen installed on you computer. On Windows, simply run the build_documentation.bat script in the documentation folder.  
-Alternatively, the documentation is provided here too: https://praxinos.coop/ULIS/documentation/

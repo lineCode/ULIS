@@ -59,13 +59,14 @@ class ULIS3_API ISample
     : public IHasFormat
     , public IHasColorSpace
 {
-public:
+protected:
     /*! Virtual destructor in order to allow polymorphic manipulation of subtypes. */
-    virtual ~ISample() = 0;
+    ~ISample();
 
     /*! Construct a ISample interface in a derived class */
     ISample( uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace = nullptr );
 
+public:
     /*! Comparison strict equal operator */
     bool operator==( const ISample& iOther ) const;
 
