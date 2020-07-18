@@ -2,14 +2,13 @@
 The following documents provides the **Coding Rules** for this project.
 
 #### Classes
-|Type                   |Prefix                 |
-|-----------------------|-----------------------|
-|Model / Utility class  |**F**Class             |
-|Model / Utility struct |**F**Struct            |
-|GUI class              |**S**Class             |
-|Abstract class         |**I**Class             |
-|Template class         |**T**Class             |
-|Template Abstract class|**TAbstract**Class     |
+|Type                       |Prefix                 |
+|---------------------------|-----------------------|
+|Model / Utility class      |**F**Class             |
+|Model / Utility struct     |**F**Struct            |
+|GUI class                  |**S**Class             |
+|Abstract / Interface class |**I**Class             |
+|Template class             |**T**Class             |
 
 #### Namespaces
 |Type           |Prefix                                 |
@@ -74,9 +73,6 @@ The following documents provides the **Coding Rules** for this project.
 
 ### nullptr
 - Prefere `nullptr` to `NULL` or `0`
-    ```
-    return  nullptr;
-    ```
 
 ### delete / new
 - You should leave two space after a `delete` or `new` statement:
@@ -91,12 +87,12 @@ The following documents provides the **Coding Rules** for this project.
 - Avoid clustering too much with ternary conditional operators ( 1 level max ):
     ```
     int var1 = condition_A ? 0 : 1;                     // Yes !
-    int var2 = condition_A ? condition_B ? 0 : 1 : 2;   // No !
+    int var2 = condition_A ? condition_B ? 0 : 1 : 2;   // Clumsy !
     ```
 
 ### Spacing
-- Two spaces beetween a variable type and the variable name:
-- Two spaces beetween a function type and the function name:
+- One space beetween a variable type and the variable name:
+- One space beetween a function type and the function name:
     ```
     int  var;
     void  Foo();
@@ -104,19 +100,23 @@ The following documents provides the **Coding Rules** for this project.
 - Avoid trailing spaces.
 
 ### Templates
-- As powerfull as it can be, use templates sparingly as it can lead to unmanageable code quickly.
+- As powerfull as it can be, use templates sparingly as it can lead to unmanageable code or template bloating very quickly.
 
 ### License Header
-- Doxygen style comments:
+- Comment headers:
 ```
-/**
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
-* @file     ULIS.Interface.Example.h
-* @author   Author
-* @brief    This file provides the declarations for the FExample class.
+* @file         Example.hpp
+* @author       Clement Berthaud
+* @brief        This file provides an example.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
 ```
 
@@ -128,7 +128,7 @@ Make sure heaps don't get mixed up, when allocating memory in an implementation 
 Don't allocate from an inline function in a header and delete in a destructor implemented in a source either.
 Avoid using threads and std members as part of the public API.
 Use the private implementation idiom if needed.
-Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+Not respecting this guideline might lead to bugs that are hard to spot, so keep that in mind.
 
 ### SIMD Optimization
 - If you wish to implement an optimized version of an algorithm, always make sure that a generic non optimized version is available first.
