@@ -109,7 +109,7 @@ The following documents provides the **Coding Rules** for this project.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /*
 *
-*   ULIS3
+*   ULIS
 *__________________
 *
 * @file         Example.hpp

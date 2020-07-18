@@ -6,7 +6,7 @@
 ULIS is a graphics library written in C++. It is aimed at software rasterization and digital image processing.  
 
 ## Links
-Official repository: https://github.com/Praxinos/ULIS3  
+Official repository: https://github.com/Praxinos/ULIS  
 Official home pages: https://praxinos.coop/ulis  
 Official docs pages: https://praxinos.coop/ULIS/documentation/  
 Official wasm demos: https://praxinos.coop/ULIS/demo/blend/  
@@ -19,10 +19,10 @@ Praxinos website: https://praxinos.coop/
 ![](samples/BezierDeform.png) | ![](samples/TiledBlock.png) | ![](samples/Benchmark.png)
 
 ## License
-Check LICENSE.md, ULIS3 is NOT available for free.
+Check LICENSE.md, ULIS is NOT available for free.
 |Name               |Link                                                           |License            |
 |-------------------|---------------------------------------------------------------|-------------------|
-|ULIS3              |https://github.com/Praxinos/ULIS3                              |Commercial         |
+|ULIS               |https://github.com/Praxinos/ULIS                               |Commercial         |
 
 ## Software Requirements
 
@@ -49,13 +49,13 @@ Dependencies are redistributed directly within the repository under the 3rdparty
 |stb_image_write    |https://github.com/nothings/stb                                |MIT                |Keep for now                                       |
 |VCL                |https://github.com/vectorclass/version1                        |Apache 2.0         |Remove and implement raw SIMD calls                |
 
-Additionaly, these libraries can be used with ULIS3 to test samples programs or build the python binding:
+Additionaly, these libraries can be used with ULIS to test samples programs or build the python binding:
 
         Qt5.x
         Python3.x
 
 ## Bindings
-ULIS3 officialy maintains a few bindings of the library. They are listed under the bindings/ directory. These bindings often have different build process than the library. Refer to the readme sections of the bindings for more details.
+ULIS officialy maintains a few bindings of the library. They are listed under the bindings/ directory. These bindings often have different build process than the library. Refer to the readme sections of the bindings for more details.
 
 |Target                             |Name               |
 |-----------------------------------|-------------------|
@@ -65,13 +65,13 @@ ULIS3 officialy maintains a few bindings of the library. They are listed under t
 
 ## Getting Started
 
-        git clone https://github.com/Praxinos/ULIS3
+        git clone https://github.com/Praxinos/ULIS
         mkdir ULIS3_Build
         cd ULIS3_Build
-        cmake -G "YourGenerator" ../ULIS3
+        cmake -G "YourGenerator" ../ULIS
 
 Sample scripts are also available in the repository to help with the build process.
 
 ## Documentation
-You can build ULIS3 documentation if you have doxygen installed on you computer. On Windows, simply run the build_documentation.bat script in the documentation folder.  
+You can build ULIS documentation if you have doxygen installed on you computer. On Windows, simply run the build_documentation.bat script in the documentation folder.  
 Alternatively, the documentation is provided here too: https://praxinos.coop/ULIS/documentation/
