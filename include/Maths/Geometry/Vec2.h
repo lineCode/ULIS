@@ -21,7 +21,9 @@ ULIS3_NAMESPACE_BEGIN
 template< typename T >
 struct TVec2
 {
+    /** The x component of the 2D vector */
     T x;
+    /** The y component of the 2D vector */
     T y;
 
     TVec2()

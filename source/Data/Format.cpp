@@ -34,6 +34,10 @@ FFormat::FFormat( eFormat iFMT )
     , AID( 0 )
     , REV( ULIS3_R_REVERSE( FMT ) )
     , SWA( ULIS3_R_SWAP( FMT ) )
+    , PRE( ULIS3_R_PREMULT( FMT ) )
+    , LIN( ULIS3_R_LINEAR( FMT ) )
+    , PRO( ULIS3_R_PROFILE( FMT ) )
+    , PLA( ULIS3_R_PLANAR( FMT ) )
 {
     IDT = new uint8[ SPP ];
     uint8 msp = SPP - 1;
@@ -59,6 +63,10 @@ FFormat::FFormat( const FFormat& iOther )
     , AID( iOther.AID )
     , REV( iOther.REV )
     , SWA( iOther.SWA )
+    , PRE( iOther.PRE )
+    , LIN( iOther.LIN )
+    , PRO( iOther.PRO )
+    , PLA( iOther.PLA )
 {
     IDT = new uint8[ SPP ];
     memcpy( IDT, iOther.IDT, SPP );
@@ -80,6 +88,10 @@ FFormat::operator=( const FFormat& iOther )
     AID = iOther.AID;
     REV = iOther.REV;
     SWA = iOther.SWA;
+    PRE = iOther.PRE;
+    LIN = iOther.LIN;
+    PRO = iOther.PRO;
+    PLA = iOther.PLA;
 
     IDT = new uint8[ SPP ];
     memcpy( IDT, iOther.IDT, SPP );
@@ -100,6 +112,10 @@ FFormat::FFormat( FFormat&& iOther )
     , AID( iOther.AID )
     , REV( iOther.REV )
     , SWA( iOther.SWA )
+    , PRE( iOther.PRE )
+    , LIN( iOther.LIN )
+    , PRO( iOther.PRO )
+    , PLA( iOther.PLA )
 {
     iOther.IDT = nullptr;
 }
