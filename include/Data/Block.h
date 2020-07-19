@@ -73,8 +73,8 @@ public:
     /*!
     Construct a block with input size and format.
 
-    The buffer data will be allocated with enough storage space as required by
-    the size and format depth. The data is left uninitialized.
+    The underlying bitmap data will be allocated with enough storage space as
+    required by the size and format depth. The data is left uninitialized.
 
     \warning The \a iWidth and \a iHeight parameters should be greater than
     zero. A block doesn't own nor manage lifetime of its color-space.

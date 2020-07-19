@@ -23,15 +23,12 @@
 //
 //    Example: RGBA8
 //                            1     1000 0010 0011 0000
-//          1111 1111 1111 1111     1001 1111 1111 1111 // Layout Mask
-//          0000 0000 0000 1111     1111 1111 1111 1111 // Lo Mask
-//          1111 1111 1111 0000     0000 0000 0000 0000 // Hi Mask
 //
-//          STATIC:
+//          Captions:
 //          T: Type                 R: Reverse
 //          N: Num Channels         S: Swap
 //          M: Model                A: Alpha
-//          F: Floating             B: Bytes per sample ( BytesPerPixel )
+//          F: Floating             B: Bytes per sample
 //
 //          C: Default Profile
 //          P: Premultiplied
@@ -92,7 +89,7 @@
 #define ULIS3_R_PLANAR( i )         ( ( i >> 26 ) & 0x1 )
 
 ULIS3_NAMESPACE_BEGIN
-enum eFormat {
+enum eFormat : tFormat {
       Format_G8                             = ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )    |                                                                                           ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )
     , Format_GA8                            = ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )    | ULIS3_W_ALPHA( 1 ) |                                                                      ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )
     , Format_AG8                            = ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )    | ULIS3_W_ALPHA( 1 ) |                          ULIS3_W_SWAP( 1 ) |                         ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )
@@ -388,51 +385,51 @@ enum eFormat {
     , Format_AyxYD                          = ( ULIS3_W_TYPE( ULIS3_TYPE_UDOUBLE  ) | ULIS3_W_CHANNELS( 3 ) | ULIS3_W_MODEL( ULIS3_CM_Yxy )     | ULIS3_W_ALPHA( 1 ) |  ULIS3_W_REVERSE( 1 ) |                      ULIS3_W_FLOATING( 1 ) | ULIS3_W_DEPTH( 8 ) | ULIS3_W_PROFILE( ULIS3_Yxy ) )
     , Format_AYxyD                          = ( ULIS3_W_TYPE( ULIS3_TYPE_UDOUBLE  ) | ULIS3_W_CHANNELS( 3 ) | ULIS3_W_MODEL( ULIS3_CM_Yxy )     | ULIS3_W_ALPHA( 1 ) |                          ULIS3_W_SWAP( 1 ) | ULIS3_W_FLOATING( 1 ) | ULIS3_W_DEPTH( 8 ) | ULIS3_W_PROFILE( ULIS3_Yxy ) )
     , Format_yxYAD                          = ( ULIS3_W_TYPE( ULIS3_TYPE_UDOUBLE  ) | ULIS3_W_CHANNELS( 3 ) | ULIS3_W_MODEL( ULIS3_CM_Yxy )     | ULIS3_W_ALPHA( 1 ) |  ULIS3_W_REVERSE( 1 ) |  ULIS3_W_SWAP( 1 ) | ULIS3_W_FLOATING( 1 ) | ULIS3_W_DEPTH( 8 ) | ULIS3_W_PROFILE( ULIS3_Yxy ) )
-    , Format_Linear_G8                      = ( Format_G8       | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_GA8                     = ( Format_GA8      | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_AG8                     = ( Format_AG8      | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_G16                     = ( Format_G16      | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_GA16                    = ( Format_GA16     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_AG16                    = ( Format_AG16     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_G32                     = ( Format_G32      | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_GA32                    = ( Format_GA32     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_AG32                    = ( Format_AG32     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_GF                      = ( Format_GF       | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_GAF                     = ( Format_GAF      | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_AGF                     = ( Format_AGF      | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_GD                      = ( Format_GD       | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_GAD                     = ( Format_GAD      | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_AGD                     = ( Format_AGD      | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
-    , Format_Linear_RGB8                    = ( Format_RGB8     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGR8                    = ( Format_BGR8     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGBA8                   = ( Format_RGBA8    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ABGR8                   = ( Format_ABGR8    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ARGB8                   = ( Format_ARGB8    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGRA8                   = ( Format_BGRA8    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGB16                   = ( Format_RGB16    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGR16                   = ( Format_BGR16    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGBA16                  = ( Format_RGBA16   | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ABGR16                  = ( Format_ABGR16   | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ARGB16                  = ( Format_ARGB16   | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGRA16                  = ( Format_BGRA16   | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGB32                   = ( Format_RGB32    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGR32                   = ( Format_BGR32    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGBA32                  = ( Format_RGBA32   | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ABGR32                  = ( Format_ABGR32   | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ARGB32                  = ( Format_ARGB32   | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGRA32                  = ( Format_BGRA32   | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGBF                    = ( Format_RGBF     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGRF                    = ( Format_BGRF     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGBAF                   = ( Format_RGBAF    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ABGRF                   = ( Format_ABGRF    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ARGBF                   = ( Format_ARGBF    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGRAF                   = ( Format_BGRAF    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGBD                    = ( Format_RGBD     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGRD                    = ( Format_BGRD     | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_RGBAD                   = ( Format_RGBAD    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ABGRD                   = ( Format_ABGRD    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_ARGBD                   = ( Format_ARGBD    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
-    , Format_Linear_BGRAD                   = ( Format_BGRAD    | ULIS3_W_LINEAR( 1 ) & ULIS3_E_PROFILE | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_G8                      = ( ( Format_G8     & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_GA8                     = ( ( Format_GA8    & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_AG8                     = ( ( Format_AG8    & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_G16                     = ( ( Format_G16    & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_GA16                    = ( ( Format_GA16   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_AG16                    = ( ( Format_AG16   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_G32                     = ( ( Format_G32    & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_GA32                    = ( ( Format_GA32   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_AG32                    = ( ( Format_AG32   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_GF                      = ( ( Format_GF     & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_GAF                     = ( ( Format_GAF    & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_AGF                     = ( ( Format_AGF    & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_GD                      = ( ( Format_GD     & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_GAD                     = ( ( Format_GAD    & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_AGD                     = ( ( Format_AGD    & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearGrey ) )
+    , Format_Linear_RGB8                    = ( ( Format_RGB8   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGR8                    = ( ( Format_BGR8   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGBA8                   = ( ( Format_RGBA8  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ABGR8                   = ( ( Format_ABGR8  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ARGB8                   = ( ( Format_ARGB8  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGRA8                   = ( ( Format_BGRA8  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGB16                   = ( ( Format_RGB16  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGR16                   = ( ( Format_BGR16  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGBA16                  = ( ( Format_RGBA16 & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ABGR16                  = ( ( Format_ABGR16 & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ARGB16                  = ( ( Format_ARGB16 & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGRA16                  = ( ( Format_BGRA16 & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGB32                   = ( ( Format_RGB32  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGR32                   = ( ( Format_BGR32  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGBA32                  = ( ( Format_RGBA32 & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ABGR32                  = ( ( Format_ABGR32 & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ARGB32                  = ( ( Format_ARGB32 & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGRA32                  = ( ( Format_BGRA32 & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGBF                    = ( ( Format_RGBF   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGRF                    = ( ( Format_BGRF   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGBAF                   = ( ( Format_RGBAF  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ABGRF                   = ( ( Format_ABGRF  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ARGBF                   = ( ( Format_ARGBF  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGRAF                   = ( ( Format_BGRAF  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGBD                    = ( ( Format_RGBD   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGRD                    = ( ( Format_BGRD   & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_RGBAD                   = ( ( Format_RGBAD  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ABGRD                   = ( ( Format_ABGRD  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_ARGBD                   = ( ( Format_ARGBD  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
+    , Format_Linear_BGRAD                   = ( ( Format_BGRAD  & ULIS3_E_PROFILE ) | ULIS3_W_LINEAR( 1 ) | ULIS3_W_PROFILE( ULIS3_LinearRGB ) )
     , Format_G8_Premultiplied               = ( Format_G8               | ULIS3_W_PREMULT( 1 ) )
     , Format_GA8_Premultiplied              = ( Format_GA8              | ULIS3_W_PREMULT( 1 ) )
     , Format_AG8_Premultiplied              = ( Format_AG8              | ULIS3_W_PREMULT( 1 ) )
@@ -773,6 +770,7 @@ enum eFormat {
     , Format_Linear_ABGRD_Premultiplied     = ( Format_Linear_ABGRD     | ULIS3_W_PREMULT( 1 ) )
     , Format_Linear_ARGBD_Premultiplied     = ( Format_Linear_ARGBD     | ULIS3_W_PREMULT( 1 ) )
     , Format_Linear_BGRAD_Premultiplied     = ( Format_Linear_BGRAD     | ULIS3_W_PREMULT( 1 ) )
-}
+};
+
 ULIS3_NAMESPACE_END
 

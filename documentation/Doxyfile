@@ -829,10 +829,9 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  =    ./ReadMe.md             \
-                            ./CodingRules.md        \
-                            ./License.md            \
-                            ./documentation/pages   \
+INPUT                  =    ./ReadMe.md     \
+                            ./License.md    \
+                            ./manual        \
                             ./include
 
 # This tag can be used to specify the character encoding of the source files

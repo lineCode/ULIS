@@ -39,11 +39,16 @@ struct  FTileElement;
 class   ITiledBlock;
 class   ITilePool;
 
-template< typename T > struct   TVec2;
-typedef TVec2< int >            FVec2I;
-typedef TVec2< float >          FVec2F;
-typedef TVec2< int64 >          FVec2I64;
-typedef TVec2< int32 >          FVec2I32;
+template< typename T > struct TVec2;
+typedef TVec2< int >    FVec2I;
+typedef TVec2< float >  FVec2F;
+typedef TVec2< double > FVec2D;
+typedef TVec2< uint8 >  FVec2UI8;
+typedef TVec2< uint16 > FVec2UI16;
+typedef TVec2< uint32 > FVec2UI32;
+typedef TVec2< uint64 > FVec2UI64;
+typedef TVec2< int32 >  FVec2I32;
+typedef TVec2< int64 >  FVec2I64;
 
 ULIS3_NAMESPACE_END
 
