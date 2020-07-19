@@ -42,7 +42,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
              , const FHostDeviceInfo&   iHostDeviceInfo
              , bool                     iCallCB
              , const std::string&       iPath
-             , tFormat                  iDesiredFormat )
+             , eFormat                  iDesiredFormat )
 {
     // Assertions
     ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
@@ -97,7 +97,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
     }
     channels = channels - hea;
 
-    tFormat fmt = ULIS3_W_TYPE( type ) | ULIS3_W_CHANNELS( channels ) | ULIS3_W_MODEL( model ) | ULIS3_W_ALPHA( hea ) | ULIS3_W_DEPTH( depth ) | ULIS3_W_FLOATING( floating );
+    eFormat fmt = ULIS3_W_TYPE( type ) | ULIS3_W_CHANNELS( channels ) | ULIS3_W_MODEL( model ) | ULIS3_W_ALPHA( hea ) | ULIS3_W_DEPTH( depth ) | ULIS3_W_FLOATING( floating );
     FBlock* ret = new FBlock( data, width, height, fmt, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
 
     if( iDesiredFormat != 0 && iDesiredFormat != fmt ) {
@@ -125,7 +125,7 @@ void SaveToFile( FThreadPool*           iThreadPool
 
     //cppfs::FilePath     path( iPath );
     //std::string         ext = path.extension();
-    tFormat     format  = iSource->Format();
+    eFormat     format  = iSource->Format();
     eColorModel model   = iSource->Model();
     eType       type    = iSource->Type();
 
@@ -139,7 +139,7 @@ void SaveToFile( FThreadPool*           iThreadPool
     const uint8* dat = iSource->Bits();
     FBlock* conv = nullptr;
     if( !( layout_valid && model_valid && type_valid ) ) {
-        tFormat dstformat = 0;
+        eFormat dstformat = 0;
         if( iImageFormat == IM_HDR )    dstformat = eFormat::Format_RGBF;
         else if( model == CM_GREY )     dstformat = eFormat::Format_G8   | ULIS3_W_ALPHA( iSource->HasAlpha() );
         else                            dstformat = eFormat::Format_RGB8 | ULIS3_W_ALPHA( iSource->HasAlpha() );

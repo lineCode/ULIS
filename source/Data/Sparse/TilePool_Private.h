@@ -40,7 +40,7 @@ class TTilePool : public ITilePool
 public:
     // Construction / Destruction
     virtual ~TTilePool();
-    TTilePool( tFormat          iFormat
+    TTilePool( eFormat          iFormat
              , FColorSpace*   iProfile );
 
 public:
@@ -48,7 +48,7 @@ public:
     const FVec2I&                               TileSize()                              const;
     uint32                                      EmptyCRC32Hash()                        const;
     const FBlock*                               EmptyTile()                             const;
-    tFormat                                     TileFormat()                            const;
+    eFormat                                     TileFormat()                            const;
     const FFormat&                          TileFormatInfo()                        const;
     const FColorSpace*                        TileColorProfile()                      const;
     uint64                                      CurrentRAMUsage()                       const;
@@ -96,7 +96,7 @@ private:
 
     // Runtime Tile Info
     const FVec2I                                                    mTileSize;
-    const tFormat                                                   mTileFormat;
+    const eFormat                                                   mTileFormat;
     FColorSpace         * const                                   mTileColorProfile;
 
     // Empty Tile Ref

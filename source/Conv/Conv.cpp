@@ -31,7 +31,7 @@ void Conv( const ISample& iSrc, ISample& iDst ) {
     }
 }
 
-FColor Conv( const ISample& iSrc, tFormat iDst ) {
+FColor Conv( const ISample& iSrc, eFormat iDst ) {
     FColor dst( iDst );
     if( iSrc.Format() == iDst ) {
         memcpy( dst.Bits(), iSrc.Bits(), dst.BytesPerPixel() );
@@ -100,7 +100,7 @@ FBlock* XConv( FThreadPool*           iThreadPool
              , const FHostDeviceInfo& iHostDeviceInfo
              , bool                   iCallCB
              , const FBlock*          iSource
-             , tFormat                iDestinationFormat )
+             , eFormat                iDestinationFormat )
 {
     // Assertions
     ULIS3_ASSERT( iSource,                                       "Bad source."                                          );

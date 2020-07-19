@@ -164,7 +164,7 @@ FBlock* XExtract( FThreadPool*              iThreadPool
                 , const FBlock*             iSource
                 , bool                      iSourceRawIndicesFlag
                 , uint8                     iSourceExtractMask
-                , tFormat                   iDestinationFormat
+                , eFormat                   iDestinationFormat
                 , bool                      iDestinationRawIndicesFlag
                 , uint8                     iDestinationExtractMask )
 {

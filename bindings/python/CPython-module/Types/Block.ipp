@@ -51,7 +51,7 @@ _PyULIS3Object_Block_init( _PyULIS3Object_Block* self, PyObject* args, PyObject*
     static char *kwlist[] = { "width", "height", "format", NULL };
     int w, h;
     w = h = 0;
-    ::ul3::tFormat fmt = 0;
+    ::ul3::eFormat fmt = 0;
 
     if( !PyArg_ParseTupleAndKeywords( args, kwds, "iik", kwlist, &w, &h, &fmt ) ) {
         PyErr_SetString( PyExc_TypeError, "Bad input argmuents in init" );

@@ -31,7 +31,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
                           , bool                    iCallCB
-                          , tFormat                 iDesiredFormat )
+                          , eFormat                 iDesiredFormat )
 {
     ULIS3_ASSERT( iThreadPool, "Bad pool." );
 
@@ -53,12 +53,12 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     if( bits_per_pixel != 24 && bits_per_pixel != 32 )  return  nullptr;
     if( bi->bmiHeader.biCompression != BI_RGB && bi->bmiHeader.biCompression != BI_BITFIELDS )  return  nullptr;
 
-    tFormat srcFormat = 0;
+    eFormat srcFormat = 0;
     if( bits_per_pixel == 24 ) srcFormat = eFormat::Format_BGR8;
     if( bits_per_pixel == 32 ) srcFormat = eFormat::Format_BGRA8;
 
     uint8* src = ( ((uint8*)bi) + bi->bmiHeader.biSize );
-    tFormat dstFormat = iDesiredFormat;
+    eFormat dstFormat = iDesiredFormat;
     if( dstFormat <= 0 ) dstFormat = srcFormat;
 
     FBlock tmp( src, w, h, srcFormat );

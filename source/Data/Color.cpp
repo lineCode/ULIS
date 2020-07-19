@@ -108,13 +108,13 @@ FColor::FColor()
     memset( mSignal, 0, BytesPerPixel() );
 }
 
-FColor::FColor( tFormat iFormat, const FColorSpace* iColorSpace )
+FColor::FColor( eFormat iFormat, const FColorSpace* iColorSpace )
     : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
 {
     memset( mSignal, 0, BytesPerPixel() );
 }
 
-FColor::FColor( const uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace )
+FColor::FColor( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
     : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
 {
     memcpy( mSignal, iData, BytesPerPixel() );
@@ -154,7 +154,7 @@ FColor::operator=( const FColor& iOther ) {
 
 
 template< typename T >
-FColor::FColor( tFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace )
+FColor::FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace )
     : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
 {
     #define TMP_CALL( iTypeID, iType, iE2, iE3 ) detail::TColorInitializer< iType >::Run< T >( this, iValues ); break;

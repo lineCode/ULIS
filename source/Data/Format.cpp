@@ -20,7 +20,7 @@ FFormat::~FFormat() {
     if( IDT ) delete [] IDT;
 }
 
-FFormat::FFormat( tFormat iFMT )
+FFormat::FFormat( eFormat iFMT )
     : IDT( nullptr )
     , FMT( iFMT )
     , TP( static_cast< eType >( ULIS3_R_TYPE( FMT ) ) )

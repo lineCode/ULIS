@@ -18,13 +18,13 @@ FPixel::~FPixel()
 {
 }
 
-FPixel::FPixel( uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace )
+FPixel::FPixel( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
     : ISample( iData, iFormat, iColorSpace )
 {
     ULIS3_ASSERT( iData, "Bad data provided." );
 }
 
-FPixel::FPixel( const uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace )
+FPixel::FPixel( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
     : ISample( const_cast< uint8* >( iData ), iFormat, iColorSpace )
 {
     ULIS3_ASSERT( iData, "Bad data provided." );

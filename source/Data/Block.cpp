@@ -22,7 +22,7 @@ FBlock::~FBlock()
 FBlock::FBlock(
       uint16 iWidth
     , uint16 iHeight
-    , tFormat iFormat
+    , eFormat iFormat
     , const FColorSpace* iColorSpace
     , const FOnInvalid& iOnInvalid
     , const FOnCleanup& iOnCleanup
@@ -52,7 +52,7 @@ FBlock::FBlock(
       uint8* iData
     , uint16 iWidth
     , uint16 iHeight
-    , tFormat iFormat
+    , eFormat iFormat
     , const FColorSpace* iColorSpace
     , const FOnInvalid& iOnInvalid
     , const FOnCleanup& iOnCleanup
@@ -78,7 +78,7 @@ FBlock*
 FBlock::XMake(
       uint16 iWidth
     , uint16 iHeight
-    , tFormat iFormat
+    , eFormat iFormat
     , FColorSpace* iColorSpace
     , const FOnInvalid& iOnInvalid
     , const FOnCleanup& iOnCleanup
@@ -99,7 +99,7 @@ FBlock* XMake(
       uint8* iData
     , uint16 iWidth
     , uint16 iHeight
-    , tFormat iFormat
+    , eFormat iFormat
     , FColorSpace* iColorSpace
     , const FOnInvalid& iOnInvalid
     , const FOnCleanup& iOnCleanup
@@ -271,7 +271,7 @@ FBlock::ReloadFromData(
       uint8* iData
     , uint16 iWidth
     , uint16 iHeight
-    , tFormat iFormat
+    , eFormat iFormat
     , const FColorSpace* iColorSpace
     , const FOnInvalid& iOnInvalid
     , const FOnCleanup& iOnCleanup

@@ -33,10 +33,10 @@ public:
     ~FPixel();
 
     /*! Constructor, from external data, format and optional colorspace. */
-    FPixel( uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace = nullptr );
+    FPixel( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace = nullptr );
 
     /*! Constructor, from const external data, format and optional colorspace. */
-    FPixel( const uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace = nullptr );
+    FPixel( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace = nullptr );
 
     /*! Copy Constructor */
     FPixel( const FPixel& iValue );

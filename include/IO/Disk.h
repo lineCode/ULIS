@@ -38,7 +38,7 @@ ULIS3_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
                                , const FHostDeviceInfo& iHostDeviceInfo
                                , bool                   iCallCB
                                , const std::string&     iPath
-                               , tFormat                iDesiredFormat );
+                               , eFormat                iDesiredFormat );
 
 ULIS3_API void SaveToFile( FThreadPool*             iThreadPool
                          , bool                     iBlocking

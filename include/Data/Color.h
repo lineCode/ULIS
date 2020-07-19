@@ -36,10 +36,10 @@ public:
     FColor();
 
     /*! Constructor, from format and optional colorspace. */
-    FColor( tFormat iFormat, const FColorSpace* iColorSpace = nullptr );
+    FColor( eFormat iFormat, const FColorSpace* iColorSpace = nullptr );
 
     /*! Constructor, from external data, format and optional colorspace. */
-    FColor( const uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace = nullptr );
+    FColor( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace = nullptr );
 
     /*! Constructor, from pixel. */
     FColor( const FPixel& iPixel );
@@ -55,7 +55,7 @@ public:
 
     /*! Initializer list constructor */
     template< typename T >
-    FColor( tFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace = nullptr );
+    FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace = nullptr );
 
     static FColor RGB( uint8 iR, uint8 iG, uint8 iB, uint8  iA = UINT8_MAX  );
     static FColor GreyA8(   uint8  iGrey,   uint8  iA = UINT8_MAX  );
@@ -110,12 +110,12 @@ public:
     static FColor YxyAD(    double iY,  double ix,  double iy,  double iA = 1.0        );
 };
 
-extern template FColor::FColor( tFormat, std::initializer_list< int >, const FColorSpace* );
-extern template FColor::FColor( tFormat, std::initializer_list< uint8 >, const FColorSpace* );
-extern template FColor::FColor( tFormat, std::initializer_list< uint16 >, const FColorSpace* );
-extern template FColor::FColor( tFormat, std::initializer_list< uint32 >, const FColorSpace* );
-extern template FColor::FColor( tFormat, std::initializer_list< ufloat >, const FColorSpace* );
-extern template FColor::FColor( tFormat, std::initializer_list< udouble >, const FColorSpace* );
+extern template FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );
+extern template FColor::FColor( eFormat, std::initializer_list< uint8 >, const FColorSpace* );
+extern template FColor::FColor( eFormat, std::initializer_list< uint16 >, const FColorSpace* );
+extern template FColor::FColor( eFormat, std::initializer_list< uint32 >, const FColorSpace* );
+extern template FColor::FColor( eFormat, std::initializer_list< ufloat >, const FColorSpace* );
+extern template FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
 
 ULIS3_NAMESPACE_END
 

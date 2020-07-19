@@ -83,7 +83,7 @@ public:
     FBlock(
           uint16 iWidth
         , uint16 iHeight
-        , tFormat iFormat
+        , eFormat iFormat
         , const FColorSpace* iColorSpace = nullptr
         , const FOnInvalid& iOnInvalid = FOnInvalid()
         , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory )
@@ -111,7 +111,7 @@ public:
           uint8* iData
         , uint16 iWidth
         , uint16 iHeight
-        , tFormat iFormat
+        , eFormat iFormat
         , const FColorSpace* iColorSpace = nullptr
         , const FOnInvalid& iOnInvalid = FOnInvalid()
         , const FOnCleanup& iOnCleanup = FOnCleanup()
@@ -167,7 +167,7 @@ public:
     FBlock* XMake(
           uint16 iWidth
         , uint16 iHeight
-        , tFormat iFormat
+        , eFormat iFormat
         , FColorSpace* iColorSpace = nullptr
         , const FOnInvalid& iOnInvalid = FOnInvalid()
         , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory )
@@ -212,7 +212,7 @@ public:
           uint8* iData
         , uint16 iWidth
         , uint16 iHeight
-        , tFormat iFormat
+        , eFormat iFormat
         , FColorSpace* iColorSpace = nullptr
         , const FOnInvalid& iOnInvalid = FOnInvalid()
         , const FOnCleanup& iOnCleanup = FOnCleanup()
@@ -494,7 +494,7 @@ public:
           uint8* iData
         , uint16 iWidth
         , uint16 iHeight
-        , tFormat iFormat
+        , eFormat iFormat
         , const FColorSpace* iColorSpace = nullptr
         , const FOnInvalid& iOnInvalid = FOnInvalid()
         , const FOnCleanup& iOnCleanup = FOnCleanup()

@@ -89,7 +89,7 @@
 #define ULIS3_R_PLANAR( i )         ( ( i >> 26 ) & 0x1 )
 
 ULIS3_NAMESPACE_BEGIN
-enum eFormat : tFormat {
+enum eFormat : uint32 {
       Format_G8                             = ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )    |                                                                                           ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )
     , Format_GA8                            = ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )    | ULIS3_W_ALPHA( 1 ) |                                                                      ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )
     , Format_AG8                            = ( ULIS3_W_TYPE( ULIS3_TYPE_UINT8    ) | ULIS3_W_CHANNELS( 1 ) | ULIS3_W_MODEL( ULIS3_CM_GREY )    | ULIS3_W_ALPHA( 1 ) |                          ULIS3_W_SWAP( 1 ) |                         ULIS3_W_DEPTH( 1 ) | ULIS3_W_PROFILE( ULIS3_sGrey ) )

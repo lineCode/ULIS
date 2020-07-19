@@ -30,9 +30,6 @@ typedef  int64_t    int64;      ///< Used for signed 64bit images domain range v
 typedef  float      ufloat;     ///< Used for float images domain range values, indicates normalized range [0;1]
 typedef  double     udouble;    ///< Used for double images domain range values, indicates normalized range [0;1]
 
-// Semantic Typedefs
-typedef  uint32_t   tFormat;    ///< Used for formats magic numbers, it might get changed to 64bit in the future.
-
 // Perf codes
 #define ULIS3_PERF_MT           0x1
 #define ULIS3_PERF_SSE42        0x2

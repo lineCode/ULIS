@@ -64,7 +64,7 @@ protected:
     ~ISample();
 
     /*! Construct a ISample interface in a derived class */
-    ISample( uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace = nullptr );
+    ISample( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace = nullptr );
 
 public:
     /*! Comparison strict equal operator */

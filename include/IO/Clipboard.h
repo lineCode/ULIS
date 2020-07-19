@@ -21,7 +21,7 @@ ULIS3_API FBlock* XLoadFromClipboard( FThreadPool*              iThreadPool
                                     , uint32                    iPerfIntent
                                     , const FHostDeviceInfo&    iHostDeviceInfo
                                     , bool                      iCallCB
-                                    , tFormat                   iDesiredFormat );
+                                    , eFormat                   iDesiredFormat );
 
 ULIS3_API void SaveToClipboard( FThreadPool*            iThreadPool
                               , bool                    iBlocking

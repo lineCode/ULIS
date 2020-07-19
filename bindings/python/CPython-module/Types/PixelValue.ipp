@@ -47,7 +47,7 @@ static int
 _PyULIS3Object_PixelValue_init( _PyULIS3Object_PixelValue* self, PyObject* args, PyObject* kwds )
 {
     static char *kwlist[] = { "format", NULL };
-    ::ul3::tFormat fmt = 0;
+    ::ul3::eFormat fmt = 0;
 
     if( !PyArg_ParseTupleAndKeywords( args, kwds, "k", kwlist, &fmt ) ) {
         PyErr_SetString( PyExc_TypeError, "Bad input argmuents in init" );

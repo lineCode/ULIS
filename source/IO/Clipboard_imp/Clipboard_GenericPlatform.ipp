@@ -19,7 +19,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
                           , bool                    iCallCB
-                          , tFormat                 iDesiredFormat )
+                          , eFormat                 iDesiredFormat )
 {
     return  nullptr;
 }

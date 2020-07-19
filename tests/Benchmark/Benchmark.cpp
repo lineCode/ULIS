@@ -31,7 +31,7 @@ int clear( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 7 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
@@ -58,7 +58,7 @@ int fill( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 7 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
@@ -86,7 +86,7 @@ int copy( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 7 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
@@ -115,7 +115,7 @@ int blend( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 10 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
@@ -148,12 +148,12 @@ int conv( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 8 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
     std::string opt = std::string( argv[6] );
-    tFormat dstFormat = std::stoul( std::string( argv[7] ).c_str() );
+    eFormat dstFormat = std::stoul( std::string( argv[7] ).c_str() );
     uint32 optBit = 0;
     if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
@@ -178,7 +178,7 @@ int clearRaw( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 6 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
@@ -198,7 +198,7 @@ int copyRaw( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 6 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
@@ -220,7 +220,7 @@ int transform( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 17 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
@@ -261,7 +261,7 @@ int text( int argc, char *argv[] ) {
     // 0 - ignored  // 2 - Format   // 4 - Repeat   // 6 - Optimizations
     // 1 - clear    // 3 - Threads  // 5 - Size     // 7 - Extra
     if( argc != 12 ) { return error( "Bad args, abort." ); }
-    tFormat format  = std::stoul( std::string( argv[2] ).c_str() );
+    eFormat format  = std::stoul( std::string( argv[2] ).c_str() );
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );

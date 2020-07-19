@@ -17,7 +17,7 @@ ULIS3_NAMESPACE_BEGIN
 ISample::~ISample()
 {}
 
-ISample::ISample( uint8* iData, tFormat iFormat, const FColorSpace* iColorSpace )
+ISample::ISample( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
     , mSignal( iData )

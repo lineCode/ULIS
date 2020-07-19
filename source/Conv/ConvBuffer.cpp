@@ -17,7 +17,7 @@
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Conversion Dispatcher
-fpConversionInvocation QueryDispatchedConversionInvocation( tFormat iSrcFormat, tFormat iDstFormat )
+fpConversionInvocation QueryDispatchedConversionInvocation( eFormat iSrcFormat, eFormat iDstFormat )
 {
         switch( static_cast< eType >( ULIS3_R_TYPE( iSrcFormat ) ) ) {
         case TYPE_UINT8: switch( static_cast< eType >( ULIS3_R_TYPE( iDstFormat ) ) ) {

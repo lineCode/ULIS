@@ -20,13 +20,13 @@ ULIS3_NAMESPACE_BEGIN
 struct ULIS3_API FFormat
 {
     ~FFormat();
-    FFormat( tFormat iFMT );
+    FFormat( eFormat iFMT );
     FFormat( const FFormat& iOther );
     FFormat( FFormat&& iOther );
     FFormat& operator=( const FFormat& iOther );
 
     uint8*      IDT; ///< Cached Index Table
-    tFormat     FMT; ///< Cached Format
+    eFormat     FMT; ///< Cached Format
     eType       TP;  ///< Cached Type
     eColorModel CM;  ///< Cached Color Model
     uint8       BPC; ///< Cached Bytes Per Channel
@@ -51,14 +51,14 @@ protected:
     ~IHasFormat()
     {}
 
-    IHasFormat( tFormat iFormat )
+    IHasFormat( eFormat iFormat )
         : mFormatInfo( iFormat )
     {}
 
 public:
     ULIS3_FORCEINLINE const FFormat& FormatInfo() const { return  mFormatInfo; }
     ULIS3_FORCEINLINE const uint8* IndexTable() const { return  mFormatInfo.IDT; }
-    ULIS3_FORCEINLINE tFormat Format() const { return  mFormatInfo.FMT; }
+    ULIS3_FORCEINLINE eFormat Format() const { return  mFormatInfo.FMT; }
     ULIS3_FORCEINLINE eType Type() const { return  mFormatInfo.TP; }
     ULIS3_FORCEINLINE eColorModel Model() const { return  mFormatInfo.CM; }
     ULIS3_FORCEINLINE uint8 BytesPerSample() const { return  mFormatInfo.BPC; }
@@ -78,7 +78,7 @@ public:
     }
 
 protected:
-    ULIS3_FORCEINLINE void ReinterpretFormat( tFormat iFormat ) {
+    ULIS3_FORCEINLINE void ReinterpretFormat( eFormat iFormat ) {
         mFormatInfo = FFormat( iFormat );
     }
 

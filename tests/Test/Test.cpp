@@ -21,7 +21,7 @@ main() {
     FFormat ll( 0 );
     FFormat* LL = &ll;
     uint8*      * IDT   = &ll.IDT;
-    tFormat     * FMT   = &ll.FMT;
+    eFormat     * FMT   = &ll.FMT;
     eType       * TP    = &ll.TP ;
     eColorModel * CM    = &ll.CM ;
     uint8       * BPC   = &ll.BPC;

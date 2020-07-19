@@ -18,7 +18,7 @@ ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Typedefs
 typedef void (*fpConversionInvocation)( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen );
-ULIS3_API fpConversionInvocation QueryDispatchedConversionInvocation( tFormat iSrcFormat, tFormat iDstFormat );
+ULIS3_API fpConversionInvocation QueryDispatchedConversionInvocation( eFormat iSrcFormat, eFormat iDstFormat );
 
 /////////////////////////////////////////////////////
 // Explicit Conv Entry Points
