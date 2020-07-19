@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Maths/Geometry/Vec2.h"
 #include <cmath>
 
 ULIS3_NAMESPACE_BEGIN
@@ -48,11 +49,17 @@ struct TVec3
     {}
 
     /*! Construct the vector from input values. */
-    TVec3( T iX, T iY, T iZ )
+    TVec3( T iX, T iY = 0, T iZ = 0 )
         : x( iX )
         , y( iY )
         , z( iZ )
     {}
+
+    /*! Construct the vector from TVec2. */
+    TVec3( const TVec2< T >& iVec, T iZ = 0 );
+
+    /*! Construct the vector from TVec4. */
+    TVec3( const TVec4< T >& iVec );
 
     /*! Construct the vector from input vector of any convertible type. */
     template< typename U >
@@ -249,7 +256,7 @@ struct TVec3
     }
 
     /*! Normalize this vector. */
-    ULIS3_FORCEINLINE const TVec2& Normalize() {
+    ULIS3_FORCEINLINE const TVec3& Normalize() {
         T dist = Distance();
         ULIS3_ASSERT( dist != static_cast< T >( 0 ), "Division by zero" );
         x /= dist;
@@ -276,7 +283,6 @@ struct TVec3
     ULIS3_FORCEINLINE T operator^( const TVec3& iOther ) const {
         return  CrossProduct( iOther );
     }
-
 };
 
 ULIS3_NAMESPACE_END

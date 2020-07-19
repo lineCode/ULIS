@@ -49,6 +49,12 @@ struct TVec2
         , y( iY )
     {}
 
+    /*! Construct the vector from TVec3. */
+    TVec2( const TVec3< T >& iVec );
+
+    /*! Construct the vector from TVec4. */
+    TVec2( const TVec4< T >& iVec );
+
     /*! Construct the vector from input vector of any convertible type. */
     template< typename U >
     TVec2( const TVec2< U >& iOther )

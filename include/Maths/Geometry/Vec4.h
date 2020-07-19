@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Maths/Geometry/Vec3.h"
 #include <cmath>
 
 ULIS3_NAMESPACE_BEGIN
@@ -52,12 +53,18 @@ struct TVec4
     {}
 
     /*! Construct the vector from input values. */
-    TVec4( T iX, T iY, T iZ, T iW )
+    TVec4( T iX, T iY = 0, T iZ = 0, T iW = 0 )
         : x( iX )
         , y( iY )
         , z( iZ )
         , w( iW )
     {}
+
+    /*! Construct the vector from TVec2. */
+    TVec4( const TVec2< T >& iVec, T iZ = 0, T iW = 0 );
+
+    /*! Construct the vector from TVec3. */
+    TVec4( const TVec3< T >& iVec, T iW = 0 );
 
     /*! Construct the vector from input vector of any convertible type. */
     template< typename U >

@@ -185,10 +185,10 @@ FBlock::Area() const
     return  mWidth * mHeight;
 }
 
-FRect
+FRectI
 FBlock::Rect() const
 {
-    return  FRect( 0, 0, mWidth, mHeight );
+    return  FRectI( 0, 0, mWidth, mHeight );
 }
 
 uint32
@@ -212,7 +212,7 @@ FBlock::Dirty( bool iCall ) const
 
 
 void
-FBlock::Dirty( const FRect& iRect, bool iCall ) const
+FBlock::Dirty( const FRectI& iRect, bool iCall ) const
 {
     if( !iCall )
         return;

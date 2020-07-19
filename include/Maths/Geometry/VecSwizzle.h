@@ -1,0 +1,269 @@
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+/*
+*
+*   ULIS3
+*__________________
+*
+* @file         VecSwizzle.h
+* @author       Clement Berthaud
+* @brief        This file provides the macros for the Vec swizzle functions.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
+#pragma once
+
+// Vec2
+#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )                    \
+    /*! Swizzle E0 ## E1 */                                                     \
+    ULIS3_FORCEINLINE TVec2< T > E0 ## E1 () const;
+
+#define ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )                     \
+    template< typename T >                                                      \
+    ULIS3_FORCEINLINE CLASS < T >::TVec2< T > E0 ## E1 () const {               \
+        return  TVec2< T >( E0, E1 );                                           \
+    }
+
+// Vec3
+#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )                \
+    /*! Swizzle E0 ## E1 ## E2 */                                               \
+    ULIS3_FORCEINLINE TVec3< T > E0 ## E1 ## E2 () const;
+
+#define ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )                 \
+    template< typename T >                                                      \
+    ULIS3_FORCEINLINE CLASS < T >::TVec3< T > E0 ## E1 ## E2 () const {         \
+        return  TVec3< T >( E0, E1, E2 );                                       \
+    }
+
+// Vec4
+#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( CLASS, E0, E1, E2, E3 )            \
+    /*! Swizzle E0 ## E1 ## E2 ## E3 */                                         \
+    ULIS3_FORCEINLINE TVec4< T > E0 ## E1 ## E2 ## E3 () const;
+
+#define ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTION( CLASS, E0, E1, E2, E3 )             \
+    template< typename T >                                                      \
+    ULIS3_FORCEINLINE CLASS < T >::TVec4< T > E0 ## E1 ## E2 ## E3 () const {   \
+        return  TVec4< T >( E0, E1, E2, E3 );                                   \
+    }
+
+// Vec2
+#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2    \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( x, x )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( x, y )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( y, x )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( y, y )
+
+#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3    \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2        \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( x, z )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( y, z )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( z, x )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( z, y )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( z, z )
+
+#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4    \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3        \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( x, w )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( y, w )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( z, w )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( w, x )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( w, y )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( w, z )         \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( w, w )
+
+// Vec3
+#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2    \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, x, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, x, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, y, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, y, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, x, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, x, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, y, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, y, y )
+
+#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3    \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2        \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, x, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, y, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, z, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, z, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, z, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, x, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, y, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, z, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, z, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, z, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, x, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, x, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, x, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, y, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, y, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, y, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, z, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, z, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, z, z )      \
+
+#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4    \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3        \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, x, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, y, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, z, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, w, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, w, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, w, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, w, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, x, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, y, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, z, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, w, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, w, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, w, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, w, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, x, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, y, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, z, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, w, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, w, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, w, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, w, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, w )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, x )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, y )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, z )      \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, w )
+
+// Vec2
+#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2    \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, y, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, y, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, y, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, y, y )
+
+#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3    \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2        \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, z, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, z, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, y, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, z, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, z, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, z, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, y, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, z, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, y, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, z, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, y, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, z, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, x, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, x, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, x, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, y, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, y, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, y, z )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, z, x )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, z, y )   \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, z, z )
+
+//#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4    \
+
+// Guard
+

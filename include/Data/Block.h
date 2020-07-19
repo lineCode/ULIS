@@ -373,7 +373,7 @@ public:
     \sa Height()
     \sa Area()
     */
-    FRect Rect() const;
+    FRectI Rect() const;
 
     /*!
     Return the numbers of bytes per scanline
@@ -411,7 +411,7 @@ public:
     geometries, it can be more efficient to just disable them first and call it
     only once later with the union of all invalid rects.
     */
-    void Dirty( const FRect& iRect, bool iCallOnInvalid = true ) const;
+    void Dirty( const FRectI& iRect, bool iCallOnInvalid = true ) const;
 
     /*!
     Return the color of the pixel at the given coordinates.
