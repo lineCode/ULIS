@@ -14,8 +14,6 @@
 #include "Data/Format.h"
 
 ULIS3_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// FFormat
 FFormat::~FFormat() {
     if( IDT ) delete [] IDT;
 }

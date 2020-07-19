@@ -19,6 +19,11 @@ ULIS3_NAMESPACE_BEGIN
 /// @class      FFormat
 /// @brief      The FFormat class provides a way to store cached information
 ///             extrapolated from the eFormat bitfield.
+/// @details    The FFormat class is meant to be used when cached format info
+///             is needed for organization of documents or in various
+///             algorithms.
+///
+///             \sa IHasFormat
 struct ULIS3_API FFormat
 {
     /*! Destructor. */
@@ -36,39 +41,39 @@ struct ULIS3_API FFormat
     /*! Copy assignment operator. */
     FFormat& operator=( const FFormat& iOther );
 
-    /** Cached Index Table */
+    /*! Cached Index Table */
     uint8*      IDT;
-    /** Cached Format */
+    /*! Cached Format */
     eFormat     FMT;
-    /** Cached Type */
+    /*! Cached Type */
     eType       TP;
-    /** Cached Color Model */
+    /*! Cached Color Model */
     eColorModel CM;
-    /** Cached Bytes Per Channel */
+    /*! Cached Bytes Per Channel */
     uint8       BPC;
-    /** Cached Num Color Channels */
+    /*! Cached Num Color Channels */
     uint8       NCC;
-    /** Cached Has Extra Alpha */
+    /*! Cached Has Extra Alpha */
     uint8       HEA;
-    /** Cached ReverseSwapped Code */
+    /*! Cached ReverseSwapped Code */
     uint8       RSC;
-    /** Cached Samples Per Pixel */
+    /*! Cached Samples Per Pixel */
     uint8       SPP;
-    /** Cached Bytes Per Pixel */
+    /*! Cached Bytes Per Pixel */
     uint8       BPP;
-    /** Cached Alpha Index */
+    /*! Cached Alpha Index */
     uint8       AID;
-    /** Cached Reversed */
+    /*! Cached Reversed */
     uint8       REV;
-    /** Cached Swapped */
+    /*! Cached Swapped */
     uint8       SWA;
-    /** Cached Premultiplied */
+    /*! Cached Premultiplied */
     uint8       PRE;
-    /** Cached Linear */
+    /*! Cached Linear */
     uint8       LIN;
-    /** Cached Default Profile Code */
+    /*! Cached Default Profile Code */
     uint8       PRO;
-    /** Cached Planar */
+    /*! Cached Planar */
     uint8       PLA;
 };
 
@@ -76,6 +81,10 @@ struct ULIS3_API FFormat
 /// @class      IHasFormat
 /// @brief      The IHasFormat class provides an interface for accessing format
 ///             informations for image related classes that have a format.
+/// @details    The IHasFormat class provides acces to a FFormat and interfaces
+///             for easy access to format information.
+///
+///             \sa FFormat
 class ULIS3_API IHasFormat
 {
 protected:
