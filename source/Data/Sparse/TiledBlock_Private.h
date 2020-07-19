@@ -16,7 +16,8 @@
 #include "Data/Sparse/Tile.h"
 #include "Data/Sparse/TiledBlock.h"
 #include "Data/Sparse/Chunk_Private.h"
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 #include <vector>
 #include <unordered_map>
 #include <mutex>

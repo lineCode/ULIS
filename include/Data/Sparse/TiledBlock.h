@@ -14,7 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Sparse/Tile.h"
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 
 ULIS3_NAMESPACE_BEGIN
 //----------------------------------------------------------------------------------------------

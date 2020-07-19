@@ -30,7 +30,7 @@ class ULIS3_API FColor final
 {
 public:
     /*! Override destructor from pure virtual parent, manages lifetime of internal buffer. */
-    ~FColor() override;
+    ~FColor();
 
     /*! Default constructor, with default Format eFormat::Format_RGBA8 */
     FColor();

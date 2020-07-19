@@ -24,9 +24,9 @@ FColor
 MixRGB( ufloat iT, const ISample& iA, const ISample& iB )
 {
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FColor rgbA( ULIS3_FORMAT_RGBAF );
-    FColor rgbB( ULIS3_FORMAT_RGBAF );
-    FColor rgbResult( ULIS3_FORMAT_RGBAF );
+    FColor rgbA( eFormat::Format_RGBAF );
+    FColor rgbB( eFormat::Format_RGBAF );
+    FColor rgbResult( eFormat::Format_RGBAF );
     Conv( iA, rgbA );
     Conv( iB, rgbB );
     rgbResult.SetRF( ( 1.f - t ) * rgbA.RF() + t * rgbB.RF() );
@@ -40,9 +40,9 @@ FColor
 MixLab( ufloat iT, const ISample& iA, const ISample& iB )
 {
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FColor LabA( ULIS3_FORMAT_LabAF );
-    FColor LabB( ULIS3_FORMAT_LabAF );
-    FColor LabResult( ULIS3_FORMAT_LabAF );
+    FColor LabA( eFormat::Format_LabAF );
+    FColor LabB( eFormat::Format_LabAF );
+    FColor LabResult( eFormat::Format_LabAF );
     Conv( iA, LabA );
     Conv( iB, LabB );
     LabResult.SetLF( ( 1.f - t ) * LabA.LF() + t * LabB.LF() );

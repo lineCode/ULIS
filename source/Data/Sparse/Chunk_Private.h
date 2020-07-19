@@ -14,7 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 #include "Copy/Copy.h"
 #include "Base/HostDeviceInfo.h"
 #include "Raster/Draw.h"

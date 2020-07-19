@@ -54,8 +54,8 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     if( bi->bmiHeader.biCompression != BI_RGB && bi->bmiHeader.biCompression != BI_BITFIELDS )  return  nullptr;
 
     tFormat srcFormat = 0;
-    if( bits_per_pixel == 24 ) srcFormat = ULIS3_FORMAT_BGR8;
-    if( bits_per_pixel == 32 ) srcFormat = ULIS3_FORMAT_BGRA8;
+    if( bits_per_pixel == 24 ) srcFormat = eFormat::Format_BGR8;
+    if( bits_per_pixel == 32 ) srcFormat = eFormat::Format_BGRA8;
 
     uint8* src = ( ((uint8*)bi) + bi->bmiHeader.biSize );
     tFormat dstFormat = iDesiredFormat;
@@ -101,7 +101,7 @@ void SaveToClipboard( FThreadPool*              iThreadPool
     ULIS3_ASSERT( iSource,                  "Bad source."                                           );
     ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
 
-    FBlock* tmpConv = XConv( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ULIS3_FORMAT_BGRA8 );
+    FBlock* tmpConv = XConv( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, eFormat::Format_BGRA8 );
 
     clip::image_spec spec;
     spec.width = tmpConv->Width();

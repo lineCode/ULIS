@@ -20,11 +20,11 @@ ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Dispatch Tests
 static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) {
-    return  ( iFormatInfo.FMT & ULIS3_FORMAT_MASK_LAYOUT ) == ULIS3_FORMAT_RGBA8;
+    return  ( iFormatInfo.FMT & ULIS3_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBA8;
 }
 
 static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) {
-    return  ( iFormatInfo.FMT & ULIS3_FORMAT_MASK_LAYOUT ) == ULIS3_FORMAT_RGBAF;
+    return  ( iFormatInfo.FMT & ULIS3_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBAF;
 }
 
 /////////////////////////////////////////////////////

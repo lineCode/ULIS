@@ -16,7 +16,8 @@
 #include "Conv/Conv.h"
 #include "Data/Block.h"
 #include "Data/Pixel.h"
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
@@ -91,7 +92,7 @@ Fill_imp( FThreadPool*                          iThreadPool
     if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
         uint32   count   = iDstROI.w * bpp;
         uint32   stride  = 32 - ( 32 % bpp );
-        std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 32, 1, ULIS3_FORMAT_G8 );
+        std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 32, 1, eFormat::Format_G8 );
         uint8* srcb = buf->Bits();
 
         for( uint32 i = 0; i < stride; i+= bpp )
@@ -106,7 +107,7 @@ Fill_imp( FThreadPool*                          iThreadPool
     if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
         uint32   count   = iDstROI.w * bpp;
         uint32   stride  = 16 - ( 16 % bpp );
-        std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 16, 1, ULIS3_FORMAT_G8 );
+        std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 16, 1, eFormat::Format_G8 );
         uint8* srcb = buf->Bits();
 
         for( uint32 i = 0; i < stride; i+= bpp )

@@ -16,7 +16,8 @@
 #include "Blend/BlendDispatch.ipp"
 #include "Conv/Conv.h"
 #include "Data/Block.h"
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 #include "Maths/Maths.h"
 
 ULIS3_NAMESPACE_BEGIN

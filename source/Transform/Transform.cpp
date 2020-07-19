@@ -17,9 +17,10 @@
 #include "Clear/Clear.h"
 #include "Data/Block.h"
 #include "Maths/Interpolation/Bezier.h"
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 #include "Maths/Maths.h"
-#include "Maths/Transform2D_Private.h"
+#include "Maths/Geometry/Transform2D_Private.h"
 #include "Misc/SummedAreaTable.h"
 #include <glm/matrix.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -220,8 +221,8 @@ void TransformBezier( FThreadPool*                                      iThreadP
         return;
 
     FVec2F shift( static_cast< float >( trans.x ), static_cast< float >( trans.y ) );
-    std::shared_ptr< FBlock > field   = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, ULIS3_FORMAT_GAF );
-    std::shared_ptr< FBlock > mask    = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, ULIS3_FORMAT_G8 );
+    std::shared_ptr< FBlock > field   = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, eFormat::Format_GAF );
+    std::shared_ptr< FBlock > mask    = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, eFormat::Format_G8 );
     ClearRaw( mask.get(), ULIS3_NOCB );
     std::vector< FBezierCubicControlPoint > tempPoints;
     tempPoints.reserve( 4 );

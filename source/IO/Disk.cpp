@@ -140,9 +140,9 @@ void SaveToFile( FThreadPool*           iThreadPool
     FBlock* conv = nullptr;
     if( !( layout_valid && model_valid && type_valid ) ) {
         tFormat dstformat = 0;
-        if( iImageFormat == IM_HDR )    dstformat = ULIS3_FORMAT_RGBF;
-        else if( model == CM_GREY )     dstformat = ULIS3_FORMAT_G8   | ULIS3_W_ALPHA( iSource->HasAlpha() );
-        else                            dstformat = ULIS3_FORMAT_RGB8 | ULIS3_W_ALPHA( iSource->HasAlpha() );
+        if( iImageFormat == IM_HDR )    dstformat = eFormat::Format_RGBF;
+        else if( model == CM_GREY )     dstformat = eFormat::Format_G8   | ULIS3_W_ALPHA( iSource->HasAlpha() );
+        else                            dstformat = eFormat::Format_RGB8 | ULIS3_W_ALPHA( iSource->HasAlpha() );
         conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
         dat = conv->Bits();
     }

@@ -15,7 +15,8 @@
 #include "Base/HostDeviceInfo.h"
 #include "Misc/Filter.h"
 #include "Data/Block.h"
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 #include "Maths/Maths.h"
 #include "Thread/ThreadPool.h"
 #include "Misc/Dispatch/Dispatch_SAT.ipp"
@@ -37,7 +38,7 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
     ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     tFormat satFormat = ( ( ( iSource->Format() & ULIS3_E_TYPE ) & ULIS3_E_DEPTH ) ) | ULIS3_W_TYPE( ULIS3_TYPE_UFLOAT ) | ULIS3_W_FLOATING( 1 ) | ULIS3_W_DEPTH( 4 ) );
-    tFormat test = ULIS3_FORMAT_RGBAF;
+    tFormat test = eFormat::Format_RGBAF;
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method
@@ -65,7 +66,7 @@ FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
     ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     tFormat satFormat = ( ( ( iSource->Format() & ULIS3_E_TYPE ) & ULIS3_E_DEPTH ) ) | ULIS3_W_TYPE( ULIS3_TYPE_UFLOAT ) | ULIS3_W_FLOATING( 1 ) | ULIS3_W_DEPTH( 4 ) );
-    tFormat test = ULIS3_FORMAT_RGBAF;
+    tFormat test = eFormat::Format_RGBAF;
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method

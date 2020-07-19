@@ -29,7 +29,7 @@ template< typename T, typename U >
 void
 ConvBufferGreyToYxy( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
 {
-    FColor temp( ULIS3_FORMAT_RGBAF );
+    FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
         ConvBufferGreyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
@@ -71,7 +71,7 @@ template< typename T, typename U >
 void
 ConvBufferHSVToYxy( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
 {
-    FColor temp( ULIS3_FORMAT_RGBAF );
+    FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
         ConvBufferHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
@@ -87,7 +87,7 @@ template< typename T, typename U >
 void
 ConvBufferHSLToYxy( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
 {
-    FColor temp( ULIS3_FORMAT_RGBAF );
+    FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
         ConvBufferHSLToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
@@ -103,7 +103,7 @@ template< typename T, typename U >
 void
 ConvBufferCMYToYxy( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
 {
-    FColor temp( ULIS3_FORMAT_RGBAF );
+    FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
         ConvBufferCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
@@ -119,7 +119,7 @@ template< typename T, typename U >
 void
 ConvBufferCMYKToYxy( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
 {
-    FColor temp( ULIS3_FORMAT_RGBAF );
+    FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
         ConvBufferCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );
@@ -135,7 +135,7 @@ template< typename T, typename U >
 void
 ConvBufferYUVToYxy( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen )
 {
-    FColor temp( ULIS3_FORMAT_RGBAF );
+    FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
         ConvBufferYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatInfo(), temp.Bits(), 1 );

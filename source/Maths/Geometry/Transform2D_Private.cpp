@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Maths/Transform2D_Private.h"
+#include "Maths/Geometry/Transform2D_Private.h"
 #include "Data/Block.h"
 #include "Maths/Maths.h"
 

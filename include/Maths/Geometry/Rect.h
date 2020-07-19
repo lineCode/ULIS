@@ -5,9 +5,9 @@
 *   ULIS3
 *__________________
 *
-* @file         Geometry.h
+* @file         Rect.h
 * @author       Clement Berthaud
-* @brief        This file provides geometry class declarations.
+* @brief        This file provides the definition for the TRect class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

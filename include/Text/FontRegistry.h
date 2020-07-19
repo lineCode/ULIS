@@ -18,7 +18,6 @@
 
 ULIS3_NAMESPACE_BEGIN
 
-
 /////////////////////////////////////////////////////
 /// @class FFontStyleEntry
 /// @brief The FFontStyleEntry class provides a mean of storing and manipulating font files entries along with their family, style and path.

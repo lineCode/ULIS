@@ -24,7 +24,7 @@ FStructuringElement::~FStructuringElement()
 }
 
 FStructuringElement::FStructuringElement( const FVec2I& iSize, eMorphologicalElementValue iValue )
-    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_G8 )
+    : tSuperClass( iSize.x, iSize.y, eFormat::Format_G8 )
     , mPivot( iSize / 2 )
 {
     for( uint32 i = 0; i < Length(); ++i )
@@ -33,7 +33,7 @@ FStructuringElement::FStructuringElement( const FVec2I& iSize, eMorphologicalEle
 }
 
 FStructuringElement::FStructuringElement( const FVec2I& iSize, std::initializer_list< eMorphologicalElementValue > iNums )
-    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_G8 )
+    : tSuperClass( iSize.x, iSize.y, eFormat::Format_G8 )
     , mPivot( iSize / 2 )
 {
     ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for Kernel" );
@@ -42,14 +42,14 @@ FStructuringElement::FStructuringElement( const FVec2I& iSize, std::initializer_
 }
 
 FStructuringElement::FStructuringElement( const FStructuringElement& iOther )
-    : tSuperClass( iOther.Width(), iOther.Height(), ULIS3_FORMAT_G8 )
+    : tSuperClass( iOther.Width(), iOther.Height(), eFormat::Format_G8 )
     , mPivot( iOther.Size() / 2 )
 {
     memcpy( mData, iOther.mData, BytesTotal() );
 }
 
 FStructuringElement::FStructuringElement( FStructuringElement&& iOther )
-    : tSuperClass( iOther.mData, iOther.Width(), iOther.Height(), ULIS3_FORMAT_G8 )
+    : tSuperClass( iOther.mData, iOther.Width(), iOther.Height(), eFormat::Format_G8 )
     , mPivot( iOther.Size() / 2 )
 {
     iOther.ReleaseOwnership();

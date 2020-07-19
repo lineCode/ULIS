@@ -11,10 +11,11 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 #include "Maths/Maths.h"
-#include "Maths/Transform2D.h"
-#include "Maths/Transform2D_Private.h"
+#include "Maths/Geometry/Transform2D.h"
+#include "Maths/Geometry/Transform2D_Private.h"
 #include <glm/vec3.hpp>
 #include <glm/mat3x3.hpp>
 #include <vector>

@@ -20,7 +20,8 @@
 #include "Blend/Func/NonSeparableBlendFuncF.ipp"
 #include "Conv/ConvBuffer.h"
 #include "Data/Block.h"
-#include "Maths/Geometry.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
 ULIS3_NAMESPACE_BEGIN
@@ -45,9 +46,9 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSr
     uint8* result = new uint8[ fmt.SPP ];
 
     // Query dispatched method
-    FFormat rgbfFormatInfo( ULIS3_FORMAT_RGBF );
-    fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, ULIS3_FORMAT_RGBF );
-    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( ULIS3_FORMAT_RGBF, fmt.FMT );
+    FFormat rgbfFormatInfo( eFormat::Format_RGBF );
+    fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
+    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
     ULIS3_ASSERT( conv_forward_fptr, "No Conversion invocation found" );
     ULIS3_ASSERT( conv_backward_fptr, "No Conversion invocation found" );
 
@@ -130,9 +131,9 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8*
     uint8* result = new uint8[ fmt.SPP ];
 
     // Query dispatched method
-    FFormat rgbfFormatInfo( ULIS3_FORMAT_RGBF );
-    fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, ULIS3_FORMAT_RGBF );
-    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( ULIS3_FORMAT_RGBF, fmt.FMT );
+    FFormat rgbfFormatInfo( eFormat::Format_RGBF );
+    fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
+    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
     ULIS3_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
     ULIS3_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 

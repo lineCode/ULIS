@@ -50,8 +50,8 @@ main( int argc, char *argv[] ) {
     // Passing ULIS3_NONBLOCKING avoids stalling beetween the two functions.
     // ( Note: the 'X' prefix before a function name always means the function allocates a block and returns the pointer,
     // the caller is now responsible for the FBlock* lifetime, and should delete it ).
-    FBlock* blockBase = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockBase = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathBase, Format_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathOver, Format_RGBA8 );
 
     // Fence the pool here,
     // After the two calls to XLoadFromFile, the functions returned immediately even though the data isn't loaded yet
@@ -74,7 +74,7 @@ main( int argc, char *argv[] ) {
     // Allocate a new block
     // The caller is responsible for destructing the blockCanvas object here too.
     // The block has the same format ULIS3_FORMAT_RGBA8 as requested for the two blocks before.
-    FBlock* blockCanvas = new  FBlock( w, h, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockCanvas = new  FBlock( w, h, Format_RGBA8 );
 
     // Start processing the blocks
     // We will first tile the base block layout on a regular grid in the blockCanvas block

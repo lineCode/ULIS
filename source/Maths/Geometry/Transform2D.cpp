@@ -11,8 +11,8 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Maths/Transform2D.h"
-#include "Maths/Transform2D_Private.h"
+#include "Maths/Geometry/Transform2D.h"
+#include "Maths/Geometry/Transform2D_Private.h"
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransform2D

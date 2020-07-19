@@ -13,8 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry.h"
-#include "Maths/Transform2D.h"
+#include "Maths/Geometry/Rect.h"
+#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Transform2D.h"
 
 ULIS3_NAMESPACE_BEGIN
 ULIS3_API void RenderText( FThreadPool*             iThreadPool

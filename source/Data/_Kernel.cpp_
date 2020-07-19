@@ -24,7 +24,7 @@ FKernel::~FKernel()
 }
 
 FKernel::FKernel( const FVec2I& iSize, float iValue )
-    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_GF )
+    : tSuperClass( iSize.x, iSize.y, eFormat::Format_GF )
     , mPivot( iSize / 2 )
 {
     float* data = reinterpret_cast< float* >( mData );
@@ -34,7 +34,7 @@ FKernel::FKernel( const FVec2I& iSize, float iValue )
 }
 
 FKernel::FKernel( const FVec2I& iSize, std::initializer_list< float > iNums )
-    : tSuperClass( iSize.x, iSize.y, ULIS3_FORMAT_GF )
+    : tSuperClass( iSize.x, iSize.y, eFormat::Format_GF )
     , mPivot( iSize / 2 )
 {
     ULIS3_ASSERT( Length() == iNums.size(), "Bad input initialized list for Kernel" );
@@ -44,14 +44,14 @@ FKernel::FKernel( const FVec2I& iSize, std::initializer_list< float > iNums )
 }
 
 FKernel::FKernel( const FKernel& iOther )
-    : tSuperClass( iOther.Width(), iOther.Height(), ULIS3_FORMAT_GF )
+    : tSuperClass( iOther.Width(), iOther.Height(), eFormat::Format_GF )
     , mPivot( iOther.Size() / 2 )
 {
     memcpy( mData, iOther.mData, BytesTotal() );
 }
 
 FKernel::FKernel( FKernel&& iOther )
-    : tSuperClass( iOther.mData, iOther.Width(), iOther.Height(), ULIS3_FORMAT_GF )
+    : tSuperClass( iOther.mData, iOther.Width(), iOther.Height(), eFormat::Format_GF )
     , mPivot( iOther.Size() / 2 )
 {
     iOther.ReleaseOwnership();
