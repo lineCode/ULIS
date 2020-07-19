@@ -18,10 +18,7 @@ ULIS is a graphics library written in C++. It is aimed at software rasterization
 - [Praxinos Website](https://praxinos.coop/)  
 
 ## License
-Check LICENSE.md, ULIS is NOT available for free.
-|Name               |Link                                                           |License            |
-|-------------------|---------------------------------------------------------------|-------------------|
-|ULIS               |https://github.com/Praxinos/ULIS                               |Commercial         |
+Check LICENSE.md, ULIS is licensed under a commercial license and is NOT available for free.
 
 ## Build
 Check the [documentation](https://praxinos.coop/ULIS/documentation/) for details on the build process.  

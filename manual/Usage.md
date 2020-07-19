@@ -11,9 +11,9 @@ int main() {
     using namespace ::ul3;
     FContext ctx;
 
-    FVec2i size( 1024, 1024 );
-    FRasterImage2D drawing( size );
-    FRasterImage2D overlay( size );
+    FVec2I size( 1024, 1024 );
+    FBlock drawing( size );
+    FBlock overlay( size );
     FGPUTexture2D texture( size );
 
     ctx.Fill( drawing, FColor::RGB( 255, 0, 0 ) );
@@ -45,15 +45,15 @@ int main() {
     FSchedulerPolicy scanLinePolicy( Run_Multi, Schedule_Scanlines )
     FSchedulerPolicy monoPolicy( Run_Mono );
 
-    FVec2ui16 size( 1024, 1024 );
-    FRasterImage2D drawing( documentFormat, size );
-    FRasterImage2D overlay( documentFormat, size );
+    FVec2UI16 size( 1024, 1024 );
+    FBlock drawing( documentFormat, size );
+    FBlock overlay( documentFormat, size );
     FGPUTexture2D texture( documentFormat, size );
 
-    FTaskEvent evt_fill_drawing = ctx.Fill( drawing, FColor::FromHex( 0xF00 ), cacheEfficientPolicy );
-    FTaskEvent evt_fill_overlay = ctx.Fill( overlay, FColor::FromHex( 0xBA2 ), cacheEfficientPolicy, &evt_fill_drawing );
+    FTaskEvent evt_fill_drawing = ctx.Fill( drawing, FColor::Hex( 0xF00 ), cacheEfficientPolicy );
+    FTaskEvent evt_fill_overlay = ctx.Fill( overlay, FColor::Hex( 0xBA2 ), cacheEfficientPolicy, &evt_fill_drawing );
 
-    FTaskEvent evt_blend = ctx.AlphaBlendAA( overlay, drawing, overlay.Rect(), FVec2f( 0, 0 ), Blend_Normal, 1.f, scanLinePolicy );
+    FTaskEvent evt_blend = ctx.AlphaBlendAA( overlay, drawing, overlay.Rect(), FVec2F( 0, 0 ), Blend_Normal, 1.f, scanLinePolicy );
     ctx.Fence();
 
     ctx.UploadToGPU( drawing, texture, monoPolicy, &evt_blend );
