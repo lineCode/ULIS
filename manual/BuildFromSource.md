@@ -18,7 +18,7 @@ It is possible to setup your own custom build process, but this is not covered h
     + [Xcode - Clang/LLVM](@ref xcode)
 - [Linux](@ref linux)
     + [Sublime Text2 - Unix Makefiles - GCC](@ref sublime)
-- [Additional Build Options](@additional)
+- [Additional Build Options](@ref additional)
 # Requirements {#requirements}
 ULIS is meant to be used with desktop software applications on modern architectures, for processors supporting x86-64, and with 64-bit operating systems.  
 There is no guaranty that ULIS is able to compile and run for other platforms such as Android or embedded systems.
