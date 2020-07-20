@@ -67,7 +67,7 @@ main( int argc, char *argv[] ) {
     // We will reuse its value many times.
     // We don't need to seek a subrect in Base / Over as we want to blend the full tile.
     // We also assume Base and Over share the same size here for nicer results.
-    FRect sourceRect = blockBase->Rect();
+    FRectI sourceRect = blockBase->Rect();
     int w = sourceRect.w * 8;
     int h = sourceRect.h * 5;
 

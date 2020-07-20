@@ -1,25 +1,20 @@
 cmake_minimum_required(VERSION 3.11.0)
 
-option( ULIS3_BUILD_SHARED                  "Build the library shared or statically"    OFF )
-option( ULIS3_BUILD_PYTHON_MODULE           "Build the library python module"           OFF )
-option( ULIS3_BUILD_TESTS                   "Build the library test modules"            OFF )
-option( ULIS3_BUILD_SAMPLES                 "Build the library sample modules"          OFF )
-option( ULIS3_FORCE_ASSERTS                 "Build the with forced assert in release"   OFF )
-SET( ULIS3_QT_CMAKE_PATH            "default" CACHE STRING "Indicates the path to Qt cmake package" )
-SET( ULIS3_PYTHON_REL_LIB           "default" CACHE STRING "Indicates the path to python release static library" )
-SET( ULIS3_PYTHON_DEB_LIB           "default" CACHE STRING "Indicates the path to python debug static library" )
-SET( ULIS3_PYTHON_INCLUDE_PATH1     "default" CACHE STRING "Indicates the path to python include path" )
-SET( ULIS3_PYTHON_INCLUDE_PATH2     "default" CACHE STRING "Indicates the path to python include path" )
-
-set( ULIS3_USE_QT OFF )
-if( NOT "${ULIS3_QT_CMAKE_PATH}" STREQUAL "default")
-    set( ULIS3_USE_QT ON )
-endif()
+option( ULIS3_BUILD_SHARED          "Build the library shared or statically"    OFF )
+option( ULIS3_BUILD_PYTHON_MODULE   "Build the library python module"           OFF )
+option( ULIS3_BUILD_TESTS           "Build the library test modules"            OFF )
+option( ULIS3_BUILD_SAMPLES         "Build the library sample modules"          OFF )
+option( ULIS3_FORCE_ASSERTS         "Build the with forced assert in release"   OFF )
+SET( ULIS3_QT_CMAKE_PATH        "" CACHE STRING "Indicates the path to Qt cmake package" )
+SET( ULIS3_PYTHON_REL_LIB       "" CACHE STRING "Indicates the path to python release static library" )
+SET( ULIS3_PYTHON_DEB_LIB       "" CACHE STRING "Indicates the path to python debug static library" )
+SET( ULIS3_PYTHON_INCLUDE_PATH1 "" CACHE STRING "Indicates the path to python include path" )
+SET( ULIS3_PYTHON_INCLUDE_PATH2 "" CACHE STRING "Indicates the path to python include path" )
 
 # Display host & compiler
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
 
-# Set OSX version target
+# Set OSX minimum deployment target
 set( CMAKE_OSX_DEPLOYMENT_TARGET "10.13" )
 
 # Generate only Debug and Release configurations
@@ -146,7 +141,10 @@ endforeach()
 
 ####################################
 # Load Qt
-if( ${ULIS3_USE_QT} )
+# Set simple boolean for testing qt availability
+set( ULIS3_USE_QT OFF )
+if( NOT "${ULIS3_QT_CMAKE_PATH}" STREQUAL "" )
+    set( ULIS3_USE_QT ON )
     set( CMAKE_PREFIX_PATH ${ULIS3_QT_CMAKE_PATH} )
     find_package(
         Qt5
