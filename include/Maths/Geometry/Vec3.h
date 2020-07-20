@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/VecSwizzle.h"
 #include <cmath>
 
 ULIS3_NAMESPACE_BEGIN
@@ -244,13 +245,13 @@ struct TVec3
     }
 
     /*! Access component x or y by index, return a reference to the component. */
-    ULIS3_FORCEINLINE T& operator[](int32 iIndex ) {
+    ULIS3_FORCEINLINE T& operator[]( int iIndex ) {
         ULIS3_ASSERT( iIndex >= 0 && iIndex < 3, "Bad Index" );
         return  ( &x )[ iIndex ];
     }
 
     /*! Access component x or y by index, return a const reference to the component. */
-    ULIS3_FORCEINLINE const T& operator[]( int32 iIndex) const {
+    ULIS3_FORCEINLINE const T& operator[]( int iIndex ) const {
         ULIS3_ASSERT( iIndex >= 0 && iIndex < 3, "Bad Index" );
         return  ( &x )[ iIndex ];
     }
@@ -283,6 +284,8 @@ struct TVec3
     ULIS3_FORCEINLINE T operator^( const TVec3& iOther ) const {
         return  CrossProduct( iOther );
     }
+
+    ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC3
 };
 
 ULIS3_NAMESPACE_END

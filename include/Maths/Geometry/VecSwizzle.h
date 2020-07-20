@@ -20,7 +20,7 @@
 
 #define ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )                     \
     template< typename T >                                                      \
-    ULIS3_FORCEINLINE CLASS < T >::TVec2< T > E0 ## E1 () const {               \
+    ULIS3_FORCEINLINE TVec2< T > CLASS < T >:: E0 ## E1 () const {              \
         return  TVec2< T >( E0, E1 );                                           \
     }
 
@@ -31,7 +31,7 @@
 
 #define ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )                 \
     template< typename T >                                                      \
-    ULIS3_FORCEINLINE CLASS < T >::TVec3< T > E0 ## E1 ## E2 () const {         \
+    ULIS3_FORCEINLINE TVec3< T > CLASS < T >:: E0 ## E1 ## E2 () const {        \
         return  TVec3< T >( E0, E1, E2 );                                       \
     }
 
@@ -42,404 +42,468 @@
 
 #define ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTION( CLASS, E0, E1, E2, E3 )             \
     template< typename T >                                                      \
-    ULIS3_FORCEINLINE CLASS < T >::TVec4< T > E0 ## E1 ## E2 ## E3 () const {   \
+    ULIS3_FORCEINLINE TVec4< T > CLASS < T >:: E0 ## E1 ## E2 ## E3 () const {  \
         return  TVec4< T >( E0, E1, E2, E3 );                                   \
     }
 
 // Vec2
-#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2    \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( x, x )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( x, y )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( y, x )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( y, y )
+#define ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ACTION )           \
+    ACTION ( CLASS, x, x )                                                      \
+    ACTION ( CLASS, x, y )                                                      \
+    ACTION ( CLASS, y, x )                                                      \
+    ACTION ( CLASS, y, y )
 
-#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3    \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2        \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( x, z )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( y, z )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( z, x )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( z, y )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( z, z )
+#define ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ACTION )           \
+    ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ACTION )               \
+    ACTION ( CLASS, x, z )                                                      \
+    ACTION ( CLASS, y, z )                                                      \
+    ACTION ( CLASS, z, x )                                                      \
+    ACTION ( CLASS, z, y )                                                      \
+    ACTION ( CLASS, z, z )
 
-#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4    \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3        \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( x, w )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( y, w )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( z, w )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( w, x )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( w, y )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( w, z )         \
-    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( w, w )
+#define ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, ACTION )           \
+    ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ACTION )               \
+    ACTION ( CLASS, x, w )                                                      \
+    ACTION ( CLASS, y, w )                                                      \
+    ACTION ( CLASS, z, w )                                                      \
+    ACTION ( CLASS, w, x )                                                      \
+    ACTION ( CLASS, w, y )                                                      \
+    ACTION ( CLASS, w, z )                                                      \
+    ACTION ( CLASS, w, w )
 
 // Vec3
-#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2    \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, x, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, x, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, y, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, y, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, x, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, x, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, y, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, y, y )
+#define ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ACTION )           \
+    ACTION ( CLASS, x, x, x )                                                   \
+    ACTION ( CLASS, x, x, y )                                                   \
+    ACTION ( CLASS, x, y, x )                                                   \
+    ACTION ( CLASS, x, y, y )                                                   \
+    ACTION ( CLASS, y, x, x )                                                   \
+    ACTION ( CLASS, y, x, y )                                                   \
+    ACTION ( CLASS, y, y, x )                                                   \
+    ACTION ( CLASS, y, y, y )
 
-#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3    \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2        \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, x, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, y, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, z, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, z, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, z, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, x, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, y, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, z, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, z, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, z, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, x, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, x, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, x, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, y, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, y, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, y, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, z, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, z, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, z, z )      \
+#define ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ACTION )           \
+    ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ACTION )               \
+    ACTION ( CLASS, x, x, z )                                                   \
+    ACTION ( CLASS, x, y, z )                                                   \
+    ACTION ( CLASS, x, z, x )                                                   \
+    ACTION ( CLASS, x, z, y )                                                   \
+    ACTION ( CLASS, x, z, z )                                                   \
+    ACTION ( CLASS, y, x, z )                                                   \
+    ACTION ( CLASS, y, y, z )                                                   \
+    ACTION ( CLASS, y, z, x )                                                   \
+    ACTION ( CLASS, y, z, y )                                                   \
+    ACTION ( CLASS, y, z, z )                                                   \
+    ACTION ( CLASS, z, x, x )                                                   \
+    ACTION ( CLASS, z, x, y )                                                   \
+    ACTION ( CLASS, z, x, z )                                                   \
+    ACTION ( CLASS, z, y, x )                                                   \
+    ACTION ( CLASS, z, y, y )                                                   \
+    ACTION ( CLASS, z, y, z )                                                   \
+    ACTION ( CLASS, z, z, x )                                                   \
+    ACTION ( CLASS, z, z, y )                                                   \
+    ACTION ( CLASS, z, z, z )                                                   \
 
-#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4    \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3        \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, x, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, y, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, z, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, w, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, w, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, w, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( x, w, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, x, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, y, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, z, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, w, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, w, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, w, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( y, w, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, x, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, y, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, z, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, w, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, w, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, w, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( z, w, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, x, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, y, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, z, w )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, x )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, y )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, z )      \
-    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( w, w, w )
+#define ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, ACTION )           \
+    ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ACTION )               \
+    ACTION ( CLASS, x, x, w )                                                   \
+    ACTION ( CLASS, x, y, w )                                                   \
+    ACTION ( CLASS, x, z, w )                                                   \
+    ACTION ( CLASS, x, w, x )                                                   \
+    ACTION ( CLASS, x, w, y )                                                   \
+    ACTION ( CLASS, x, w, z )                                                   \
+    ACTION ( CLASS, x, w, w )                                                   \
+    ACTION ( CLASS, y, x, w )                                                   \
+    ACTION ( CLASS, y, y, w )                                                   \
+    ACTION ( CLASS, y, z, w )                                                   \
+    ACTION ( CLASS, y, w, x )                                                   \
+    ACTION ( CLASS, y, w, y )                                                   \
+    ACTION ( CLASS, y, w, z )                                                   \
+    ACTION ( CLASS, y, w, w )                                                   \
+    ACTION ( CLASS, z, x, w )                                                   \
+    ACTION ( CLASS, z, y, w )                                                   \
+    ACTION ( CLASS, z, z, w )                                                   \
+    ACTION ( CLASS, z, w, x )                                                   \
+    ACTION ( CLASS, z, w, y )                                                   \
+    ACTION ( CLASS, z, w, z )                                                   \
+    ACTION ( CLASS, z, w, w )                                                   \
+    ACTION ( CLASS, w, x, x )                                                   \
+    ACTION ( CLASS, w, x, y )                                                   \
+    ACTION ( CLASS, w, x, z )                                                   \
+    ACTION ( CLASS, w, x, w )                                                   \
+    ACTION ( CLASS, w, y, x )                                                   \
+    ACTION ( CLASS, w, y, y )                                                   \
+    ACTION ( CLASS, w, y, z )                                                   \
+    ACTION ( CLASS, w, y, w )                                                   \
+    ACTION ( CLASS, w, z, x )                                                   \
+    ACTION ( CLASS, w, z, y )                                                   \
+    ACTION ( CLASS, w, z, z )                                                   \
+    ACTION ( CLASS, w, z, w )                                                   \
+    ACTION ( CLASS, w, w, x )                                                   \
+    ACTION ( CLASS, w, w, y )                                                   \
+    ACTION ( CLASS, w, w, z )                                                   \
+    ACTION ( CLASS, w, w, w )                                                   \
+    ACTION ( CLASS, w, x, x )                                                   \
+    ACTION ( CLASS, w, x, y )                                                   \
+    ACTION ( CLASS, w, x, z )                                                   \
+    ACTION ( CLASS, w, x, w )                                                   \
+    ACTION ( CLASS, w, y, x )                                                   \
+    ACTION ( CLASS, w, y, y )                                                   \
+    ACTION ( CLASS, w, y, z )                                                   \
+    ACTION ( CLASS, w, y, w )                                                   \
+    ACTION ( CLASS, w, z, x )                                                   \
+    ACTION ( CLASS, w, z, y )                                                   \
+    ACTION ( CLASS, w, z, z )                                                   \
+    ACTION ( CLASS, w, z, w )                                                   \
+    ACTION ( CLASS, w, w, x )                                                   \
+    ACTION ( CLASS, w, w, y )                                                   \
+    ACTION ( CLASS, w, w, z )                                                   \
+    ACTION ( CLASS, w, w, w )                                                   \
+    ACTION ( CLASS, w, x, x )                                                   \
+    ACTION ( CLASS, w, x, y )                                                   \
+    ACTION ( CLASS, w, x, z )                                                   \
+    ACTION ( CLASS, w, x, w )                                                   \
+    ACTION ( CLASS, w, y, x )                                                   \
+    ACTION ( CLASS, w, y, y )                                                   \
+    ACTION ( CLASS, w, y, z )                                                   \
+    ACTION ( CLASS, w, y, w )                                                   \
+    ACTION ( CLASS, w, z, x )                                                   \
+    ACTION ( CLASS, w, z, y )                                                   \
+    ACTION ( CLASS, w, z, z )                                                   \
+    ACTION ( CLASS, w, z, w )                                                   \
+    ACTION ( CLASS, w, w, x )                                                   \
+    ACTION ( CLASS, w, w, y )                                                   \
+    ACTION ( CLASS, w, w, z )                                                   \
+    ACTION ( CLASS, w, w, w )
 
-// Vec
-#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2    \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, y, y )
+// Vec4
+#define ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ACTION )           \
+    ACTION ( CLASS, x, x, x, x )                                                \
+    ACTION ( CLASS, x, x, x, y )                                                \
+    ACTION ( CLASS, x, x, y, x )                                                \
+    ACTION ( CLASS, x, x, y, y )                                                \
+    ACTION ( CLASS, x, y, x, x )                                                \
+    ACTION ( CLASS, x, y, x, y )                                                \
+    ACTION ( CLASS, x, y, y, x )                                                \
+    ACTION ( CLASS, x, y, y, y )                                                \
+    ACTION ( CLASS, y, x, x, x )                                                \
+    ACTION ( CLASS, y, x, x, y )                                                \
+    ACTION ( CLASS, y, x, y, x )                                                \
+    ACTION ( CLASS, y, x, y, y )                                                \
+    ACTION ( CLASS, y, y, x, x )                                                \
+    ACTION ( CLASS, y, y, x, y )                                                \
+    ACTION ( CLASS, y, y, y, x )                                                \
+    ACTION ( CLASS, y, y, y, y )
 
-#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3    \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2        \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, z, z )
+#define ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ACTION )           \
+    ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ACTION )               \
+    ACTION ( CLASS, x, x, x, z )                                                \
+    ACTION ( CLASS, x, x, y, z )                                                \
+    ACTION ( CLASS, x, x, z, x )                                                \
+    ACTION ( CLASS, x, x, z, y )                                                \
+    ACTION ( CLASS, x, x, z, z )                                                \
+    ACTION ( CLASS, x, y, x, z )                                                \
+    ACTION ( CLASS, x, y, y, z )                                                \
+    ACTION ( CLASS, x, y, z, x )                                                \
+    ACTION ( CLASS, x, y, z, y )                                                \
+    ACTION ( CLASS, x, y, z, z )                                                \
+    ACTION ( CLASS, x, z, x, x )                                                \
+    ACTION ( CLASS, x, z, x, y )                                                \
+    ACTION ( CLASS, x, z, x, z )                                                \
+    ACTION ( CLASS, x, z, y, x )                                                \
+    ACTION ( CLASS, x, z, y, y )                                                \
+    ACTION ( CLASS, x, z, y, z )                                                \
+    ACTION ( CLASS, x, z, z, x )                                                \
+    ACTION ( CLASS, x, z, z, y )                                                \
+    ACTION ( CLASS, x, z, z, z )                                                \
+    ACTION ( CLASS, y, x, x, z )                                                \
+    ACTION ( CLASS, y, x, y, z )                                                \
+    ACTION ( CLASS, y, x, z, x )                                                \
+    ACTION ( CLASS, y, x, z, y )                                                \
+    ACTION ( CLASS, y, x, z, z )                                                \
+    ACTION ( CLASS, y, y, x, z )                                                \
+    ACTION ( CLASS, y, y, y, z )                                                \
+    ACTION ( CLASS, y, y, z, x )                                                \
+    ACTION ( CLASS, y, y, z, y )                                                \
+    ACTION ( CLASS, y, y, z, z )                                                \
+    ACTION ( CLASS, y, z, x, x )                                                \
+    ACTION ( CLASS, y, z, x, y )                                                \
+    ACTION ( CLASS, y, z, x, z )                                                \
+    ACTION ( CLASS, y, z, y, x )                                                \
+    ACTION ( CLASS, y, z, y, y )                                                \
+    ACTION ( CLASS, y, z, y, z )                                                \
+    ACTION ( CLASS, y, z, z, x )                                                \
+    ACTION ( CLASS, y, z, z, y )                                                \
+    ACTION ( CLASS, y, z, z, z )                                                \
+    ACTION ( CLASS, z, x, x, x )                                                \
+    ACTION ( CLASS, z, x, x, y )                                                \
+    ACTION ( CLASS, z, x, x, z )                                                \
+    ACTION ( CLASS, z, x, y, x )                                                \
+    ACTION ( CLASS, z, x, y, y )                                                \
+    ACTION ( CLASS, z, x, y, z )                                                \
+    ACTION ( CLASS, z, x, z, x )                                                \
+    ACTION ( CLASS, z, x, z, y )                                                \
+    ACTION ( CLASS, z, x, z, z )                                                \
+    ACTION ( CLASS, z, y, x, x )                                                \
+    ACTION ( CLASS, z, y, x, y )                                                \
+    ACTION ( CLASS, z, y, x, z )                                                \
+    ACTION ( CLASS, z, y, y, x )                                                \
+    ACTION ( CLASS, z, y, y, y )                                                \
+    ACTION ( CLASS, z, y, y, z )                                                \
+    ACTION ( CLASS, z, y, z, x )                                                \
+    ACTION ( CLASS, z, y, z, y )                                                \
+    ACTION ( CLASS, z, y, z, z )                                                \
+    ACTION ( CLASS, z, z, x, x )                                                \
+    ACTION ( CLASS, z, z, x, y )                                                \
+    ACTION ( CLASS, z, z, x, z )                                                \
+    ACTION ( CLASS, z, z, y, x )                                                \
+    ACTION ( CLASS, z, z, y, y )                                                \
+    ACTION ( CLASS, z, z, y, z )                                                \
+    ACTION ( CLASS, z, z, z, x )                                                \
+    ACTION ( CLASS, z, z, z, y )                                                \
+    ACTION ( CLASS, z, z, z, z )
 
-#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4    \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3        \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, x, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, y, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, z, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( x, w, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, x, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, y, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, z, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( y, w, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, x, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, y, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, z, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( z, w, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, x, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, y, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, z, w, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, x, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, x, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, x, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, x, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, y, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, y, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, y, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, y, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, z, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, z, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, z, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, z, w )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, w, x )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, w, y )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, w, z )   \
-    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( w, w, w, w )
+#define ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, ACTION )           \
+    ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ACTION )               \
+    ACTION ( CLASS, x, x, x, w )                                                \
+    ACTION ( CLASS, x, x, y, w )                                                \
+    ACTION ( CLASS, x, x, z, w )                                                \
+    ACTION ( CLASS, x, x, w, x )                                                \
+    ACTION ( CLASS, x, x, w, y )                                                \
+    ACTION ( CLASS, x, x, w, z )                                                \
+    ACTION ( CLASS, x, x, w, w )                                                \
+    ACTION ( CLASS, x, y, x, w )                                                \
+    ACTION ( CLASS, x, y, y, w )                                                \
+    ACTION ( CLASS, x, y, z, w )                                                \
+    ACTION ( CLASS, x, y, w, x )                                                \
+    ACTION ( CLASS, x, y, w, y )                                                \
+    ACTION ( CLASS, x, y, w, z )                                                \
+    ACTION ( CLASS, x, y, w, w )                                                \
+    ACTION ( CLASS, x, z, x, w )                                                \
+    ACTION ( CLASS, x, z, y, w )                                                \
+    ACTION ( CLASS, x, z, z, w )                                                \
+    ACTION ( CLASS, x, z, w, x )                                                \
+    ACTION ( CLASS, x, z, w, y )                                                \
+    ACTION ( CLASS, x, z, w, z )                                                \
+    ACTION ( CLASS, x, z, w, w )                                                \
+    ACTION ( CLASS, x, w, x, x )                                                \
+    ACTION ( CLASS, x, w, x, y )                                                \
+    ACTION ( CLASS, x, w, x, z )                                                \
+    ACTION ( CLASS, x, w, x, w )                                                \
+    ACTION ( CLASS, x, w, y, x )                                                \
+    ACTION ( CLASS, x, w, y, y )                                                \
+    ACTION ( CLASS, x, w, y, z )                                                \
+    ACTION ( CLASS, x, w, y, w )                                                \
+    ACTION ( CLASS, x, w, z, x )                                                \
+    ACTION ( CLASS, x, w, z, y )                                                \
+    ACTION ( CLASS, x, w, z, z )                                                \
+    ACTION ( CLASS, x, w, z, w )                                                \
+    ACTION ( CLASS, x, w, w, x )                                                \
+    ACTION ( CLASS, x, w, w, y )                                                \
+    ACTION ( CLASS, x, w, w, z )                                                \
+    ACTION ( CLASS, x, w, w, w )                                                \
+    ACTION ( CLASS, y, x, x, w )                                                \
+    ACTION ( CLASS, y, x, y, w )                                                \
+    ACTION ( CLASS, y, x, z, w )                                                \
+    ACTION ( CLASS, y, x, w, x )                                                \
+    ACTION ( CLASS, y, x, w, y )                                                \
+    ACTION ( CLASS, y, x, w, z )                                                \
+    ACTION ( CLASS, y, x, w, w )                                                \
+    ACTION ( CLASS, y, y, x, w )                                                \
+    ACTION ( CLASS, y, y, y, w )                                                \
+    ACTION ( CLASS, y, y, z, w )                                                \
+    ACTION ( CLASS, y, y, w, x )                                                \
+    ACTION ( CLASS, y, y, w, y )                                                \
+    ACTION ( CLASS, y, y, w, z )                                                \
+    ACTION ( CLASS, y, y, w, w )                                                \
+    ACTION ( CLASS, y, z, x, w )                                                \
+    ACTION ( CLASS, y, z, y, w )                                                \
+    ACTION ( CLASS, y, z, z, w )                                                \
+    ACTION ( CLASS, y, z, w, x )                                                \
+    ACTION ( CLASS, y, z, w, y )                                                \
+    ACTION ( CLASS, y, z, w, z )                                                \
+    ACTION ( CLASS, y, z, w, w )                                                \
+    ACTION ( CLASS, y, w, x, x )                                                \
+    ACTION ( CLASS, y, w, x, y )                                                \
+    ACTION ( CLASS, y, w, x, z )                                                \
+    ACTION ( CLASS, y, w, x, w )                                                \
+    ACTION ( CLASS, y, w, y, x )                                                \
+    ACTION ( CLASS, y, w, y, y )                                                \
+    ACTION ( CLASS, y, w, y, z )                                                \
+    ACTION ( CLASS, y, w, y, w )                                                \
+    ACTION ( CLASS, y, w, z, x )                                                \
+    ACTION ( CLASS, y, w, z, y )                                                \
+    ACTION ( CLASS, y, w, z, z )                                                \
+    ACTION ( CLASS, y, w, z, w )                                                \
+    ACTION ( CLASS, y, w, w, x )                                                \
+    ACTION ( CLASS, y, w, w, y )                                                \
+    ACTION ( CLASS, y, w, w, z )                                                \
+    ACTION ( CLASS, y, w, w, w )                                                \
+    ACTION ( CLASS, z, x, x, w )                                                \
+    ACTION ( CLASS, z, x, y, w )                                                \
+    ACTION ( CLASS, z, x, z, w )                                                \
+    ACTION ( CLASS, z, x, w, x )                                                \
+    ACTION ( CLASS, z, x, w, y )                                                \
+    ACTION ( CLASS, z, x, w, z )                                                \
+    ACTION ( CLASS, z, x, w, w )                                                \
+    ACTION ( CLASS, z, y, x, w )                                                \
+    ACTION ( CLASS, z, y, y, w )                                                \
+    ACTION ( CLASS, z, y, z, w )                                                \
+    ACTION ( CLASS, z, y, w, x )                                                \
+    ACTION ( CLASS, z, y, w, y )                                                \
+    ACTION ( CLASS, z, y, w, z )                                                \
+    ACTION ( CLASS, z, y, w, w )                                                \
+    ACTION ( CLASS, z, z, x, w )                                                \
+    ACTION ( CLASS, z, z, y, w )                                                \
+    ACTION ( CLASS, z, z, z, w )                                                \
+    ACTION ( CLASS, z, z, w, x )                                                \
+    ACTION ( CLASS, z, z, w, y )                                                \
+    ACTION ( CLASS, z, z, w, z )                                                \
+    ACTION ( CLASS, z, z, w, w )                                                \
+    ACTION ( CLASS, z, w, x, x )                                                \
+    ACTION ( CLASS, z, w, x, y )                                                \
+    ACTION ( CLASS, z, w, x, z )                                                \
+    ACTION ( CLASS, z, w, x, w )                                                \
+    ACTION ( CLASS, z, w, y, x )                                                \
+    ACTION ( CLASS, z, w, y, y )                                                \
+    ACTION ( CLASS, z, w, y, z )                                                \
+    ACTION ( CLASS, z, w, y, w )                                                \
+    ACTION ( CLASS, z, w, z, x )                                                \
+    ACTION ( CLASS, z, w, z, y )                                                \
+    ACTION ( CLASS, z, w, z, z )                                                \
+    ACTION ( CLASS, z, w, z, w )                                                \
+    ACTION ( CLASS, z, w, w, x )                                                \
+    ACTION ( CLASS, z, w, w, y )                                                \
+    ACTION ( CLASS, z, w, w, z )                                                \
+    ACTION ( CLASS, z, w, w, w )                                                \
+    ACTION ( CLASS, w, x, x, x )                                                \
+    ACTION ( CLASS, w, x, x, y )                                                \
+    ACTION ( CLASS, w, x, x, z )                                                \
+    ACTION ( CLASS, w, x, x, w )                                                \
+    ACTION ( CLASS, w, x, y, x )                                                \
+    ACTION ( CLASS, w, x, y, y )                                                \
+    ACTION ( CLASS, w, x, y, z )                                                \
+    ACTION ( CLASS, w, x, y, w )                                                \
+    ACTION ( CLASS, w, x, z, x )                                                \
+    ACTION ( CLASS, w, x, z, y )                                                \
+    ACTION ( CLASS, w, x, z, z )                                                \
+    ACTION ( CLASS, w, x, z, w )                                                \
+    ACTION ( CLASS, w, x, w, x )                                                \
+    ACTION ( CLASS, w, x, w, y )                                                \
+    ACTION ( CLASS, w, x, w, z )                                                \
+    ACTION ( CLASS, w, x, w, w )                                                \
+    ACTION ( CLASS, w, y, x, x )                                                \
+    ACTION ( CLASS, w, y, x, y )                                                \
+    ACTION ( CLASS, w, y, x, z )                                                \
+    ACTION ( CLASS, w, y, x, w )                                                \
+    ACTION ( CLASS, w, y, y, x )                                                \
+    ACTION ( CLASS, w, y, y, y )                                                \
+    ACTION ( CLASS, w, y, y, z )                                                \
+    ACTION ( CLASS, w, y, y, w )                                                \
+    ACTION ( CLASS, w, y, z, x )                                                \
+    ACTION ( CLASS, w, y, z, y )                                                \
+    ACTION ( CLASS, w, y, z, z )                                                \
+    ACTION ( CLASS, w, y, z, w )                                                \
+    ACTION ( CLASS, w, y, w, x )                                                \
+    ACTION ( CLASS, w, y, w, y )                                                \
+    ACTION ( CLASS, w, y, w, z )                                                \
+    ACTION ( CLASS, w, y, w, w )                                                \
+    ACTION ( CLASS, w, z, x, x )                                                \
+    ACTION ( CLASS, w, z, x, y )                                                \
+    ACTION ( CLASS, w, z, x, z )                                                \
+    ACTION ( CLASS, w, z, x, w )                                                \
+    ACTION ( CLASS, w, z, y, x )                                                \
+    ACTION ( CLASS, w, z, y, y )                                                \
+    ACTION ( CLASS, w, z, y, z )                                                \
+    ACTION ( CLASS, w, z, y, w )                                                \
+    ACTION ( CLASS, w, z, z, x )                                                \
+    ACTION ( CLASS, w, z, z, y )                                                \
+    ACTION ( CLASS, w, z, z, z )                                                \
+    ACTION ( CLASS, w, z, z, w )                                                \
+    ACTION ( CLASS, w, z, w, x )                                                \
+    ACTION ( CLASS, w, z, w, y )                                                \
+    ACTION ( CLASS, w, z, w, z )                                                \
+    ACTION ( CLASS, w, z, w, w )                                                \
+    ACTION ( CLASS, w, w, x, x )                                                \
+    ACTION ( CLASS, w, w, x, y )                                                \
+    ACTION ( CLASS, w, w, x, z )                                                \
+    ACTION ( CLASS, w, w, x, w )                                                \
+    ACTION ( CLASS, w, w, y, x )                                                \
+    ACTION ( CLASS, w, w, y, y )                                                \
+    ACTION ( CLASS, w, w, y, z )                                                \
+    ACTION ( CLASS, w, w, y, w )                                                \
+    ACTION ( CLASS, w, w, z, x )                                                \
+    ACTION ( CLASS, w, w, z, y )                                                \
+    ACTION ( CLASS, w, w, z, z )                                                \
+    ACTION ( CLASS, w, w, z, w )                                                \
+    ACTION ( CLASS, w, w, w, x )                                                \
+    ACTION ( CLASS, w, w, w, y )                                                \
+    ACTION ( CLASS, w, w, w, z )                                                \
+    ACTION ( CLASS, w, w, w, w )
+
+#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2    ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( , ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION )
+#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3    ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( , ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION )
+#define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4    ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( , ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION )
+
+#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2    ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( , ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION )
+#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3    ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( , ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION )
+#define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4    ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( , ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION )
+
+#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2    ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( , ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION )
+#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3    ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( , ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION )
+#define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4    ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( , ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION )
+
+#define ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )    ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTION )
+#define ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )    ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTION )
+#define ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )    ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTION )
+#define ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )    ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTION )
+#define ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )    ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTION )
+#define ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )    ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTION )
+#define ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )    ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTION )
+#define ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )    ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTION )
+#define ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )    ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTION )
+
+#define ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC2    \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2    \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2    \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2
+
+#define ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC3    \
+    ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC2        \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3    \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3    \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3
+
+#define ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC4    \
+    ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC3        \
+    ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4    \
+    ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4    \
+    ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4
+
+
+#define ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2                                 \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVec2 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVec2 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVec2 )
+
+#define ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3                                 \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVec3 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVec3 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVec3 )                        \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( TVec3 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( TVec3 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( TVec3 )
+
+#define ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4                                 \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVec4 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVec4 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVec4 )                        \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( TVec4 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( TVec4 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( TVec4 )                        \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( TVec4 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( TVec4 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( TVec4 )
 
 // Guard
 
