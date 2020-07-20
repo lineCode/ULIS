@@ -5,7 +5,7 @@ For the API reference, we advise to start browsing the [Class Index](classes.htm
 Have fun using **ULIS**.
 
 ## Build
-There is [this tutorial](md_documentation_manual__build_from_source.html) to help you build **ULIS**.
+Follow [this tutorial](md_documentation_manual__build_from_source.html) to help you build **ULIS**.
 
 ## Links
 - [Official Repository](https://github.com/Praxinos/ULIS)  
