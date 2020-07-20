@@ -17,13 +17,13 @@
 #include "Maths/Geometry/Vec2.h"
 
 ULIS3_NAMESPACE_BEGIN
-struct FParametricSplineSample {
+struct FSplineParametricSample {
     FVec2F point;
     float length;
     float param;
 };
 
-struct FLinearSplineSample {
+struct FSplineLinearSample {
     FVec2F point;
     float length;
     float param;

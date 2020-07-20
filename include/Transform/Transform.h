@@ -68,7 +68,7 @@ ULIS3_API void TransformBezier( FThreadPool*                                    
                               , const FBlock*                                   iSource
                               , FBlock*                                         iDestination
                               , const FRect&                                    iSourceRect
-                              , const std::vector< FBezierCubicControlPoint >&  iControlPoints
+                              , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                               , float                                           iThreshold
                               , int                                             iPlotSize
                               , eResamplingMethod                               iMethod );
@@ -163,7 +163,7 @@ ULIS3_API FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
 /////////////////////////////////////////////////////
 // TransformBezierMetrics
 ULIS3_API FRect TransformBezierMetrics( const FRect&                                    iSourceRect
-                                      , const std::vector< FBezierCubicControlPoint >&  iControlPoints
+                                      , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                                       , eResamplingMethod                               iMethod );
 
 ULIS3_NAMESPACE_END

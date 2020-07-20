@@ -20,7 +20,7 @@
 #include <vector>
 
 ULIS3_NAMESPACE_BEGIN
-struct FBezierCubicControlPoint {
+struct FCubicBezierControlPoint {
     FVec2F point;
     FVec2F ctrlCW;
     FVec2F ctrlCCW;
@@ -93,7 +93,7 @@ template< class T > inline FRect CubicBezierConvexHullRect( const T& iP0, const 
     return  FRect::FromMinMax( xmin, ymin, xmax, ymax );
 }
 
-ULIS3_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FParametricSplineSample >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThresholdSquared, float iLengthOffset = 0.f, float iParamOffset = 0.f, float iParamDepth = 1.f ) {
+ULIS3_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FSplineParametricSample >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThresholdSquared, float iLengthOffset = 0.f, float iParamOffset = 0.f, float iParamDepth = 1.f ) {
     FVec2F mid = CubicBezierPointAtParameter( iP0, iP1, iP2, iP3, 0.5f );
     float lengthSquaredSegmentA = ( iP0 - mid ).DistanceSquared();
     float lengthSquaredSegmentB = ( mid - iP3 ).DistanceSquared();
@@ -121,7 +121,7 @@ ULIS3_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FParametr
     return ( lengthSquaredSegmentA + lengthSquaredSegmentB );
 }
 
-ULIS3_API float inline CubicBezierGenerateLinearLUT( std::vector< FParametricSplineSample >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThreshold ) {
+ULIS3_API float inline CubicBezierGenerateLinearLUT( std::vector< FSplineParametricSample >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThreshold ) {
     oArray->clear();
     oArray->push_back( { iP0, 0.f } );
     float length = CubicBezierGenerateLinearLUT_imp( oArray, iP0, iP1, iP2, iP3, iThreshold*iThreshold );

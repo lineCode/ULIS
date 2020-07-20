@@ -47,7 +47,7 @@ private:
     FThreadPool*                mPool;
     FBlock*                     mSRC;
     FBlock*                     mDST;
-    std::vector< FBezierCubicControlPoint > mCtrlPts;
+    std::vector< FCubicBezierControlPoint > mCtrlPts;
     float                       mEvolutiveAngle;
 
     QImage*                     mImage;

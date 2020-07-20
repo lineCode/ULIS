@@ -194,7 +194,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
                     , const FBlock*                                     iSource
                     , FBlock*                                           iDestination
                     , const FRect&                                      iSourceRect
-                    , const std::vector< FBezierCubicControlPoint >&    iControlPoints
+                    , const std::vector< FCubicBezierControlPoint >&    iControlPoints
                     , float                                             iThreshold
                     , int                                               iPlotSize
                     , eResamplingMethod                                 iMethod )
@@ -224,12 +224,12 @@ void TransformBezier( FThreadPool*                                      iThreadP
     std::shared_ptr< FBlock > field   = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, eFormat::Format_GAF );
     std::shared_ptr< FBlock > mask    = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, eFormat::Format_G8 );
     ClearRaw( mask.get(), ULIS3_NOCB );
-    std::vector< FBezierCubicControlPoint > tempPoints;
+    std::vector< FCubicBezierControlPoint > tempPoints;
     tempPoints.reserve( 4 );
     for( auto i : iControlPoints )
         tempPoints.push_back( { i.point - shift, i.ctrlCW - shift, i.ctrlCCW - shift } );
-    std::vector< FParametricSplineSample > LUTV0;
-    std::vector< FParametricSplineSample > LUTV1;
+    std::vector< FSplineParametricSample > LUTV0;
+    std::vector< FSplineParametricSample > LUTV1;
     CubicBezierGenerateLinearLUT( &LUTV0, tempPoints[0].point, tempPoints[0].ctrlCCW, tempPoints[3].ctrlCW, tempPoints[3].point, iThreshold );
     CubicBezierGenerateLinearLUT( &LUTV1, tempPoints[1].point, tempPoints[1].ctrlCW, tempPoints[2].ctrlCCW, tempPoints[2].point, iThreshold );
     const int max = static_cast< int >( FMaths::Max( LUTV0.size(), LUTV1.size() ) );
@@ -243,7 +243,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
         FVec2F _v0 = V0 + ( tempPoints[0].ctrlCW  - tempPoints[0].point ) * ( 1.f - v ) + ( tempPoints[3].ctrlCCW - tempPoints[3].point ) * v;
         FVec2F _v1 = V1 + ( tempPoints[1].ctrlCCW - tempPoints[1].point ) * ( 1.f - v ) + ( tempPoints[2].ctrlCW  - tempPoints[2].point ) * v;
         float parametricDistortedV = ( LUTV0[index_v0].param + LUTV1[index_v0].param ) / 2.f;
-        std::vector< FParametricSplineSample > lutTemp;
+        std::vector< FSplineParametricSample > lutTemp;
         CubicBezierGenerateLinearLUT( &lutTemp, V0, _v0, _v1, V1, iThreshold );
         for( int i = 0; i < lutTemp.size(); ++i ) {
             float parametricDistortedU = lutTemp[i].param;
@@ -560,7 +560,7 @@ FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
 /////////////////////////////////////////////////////
 // TransformBezierMetrics
 FRect TransformBezierMetrics( const FRect&                                    iSourceRect
-                            , const std::vector< FBezierCubicControlPoint >&  iControlPoints
+                            , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                             , eResamplingMethod                               iMethod )
 {
     ULIS3_ASSERT( iControlPoints.size() == 4, "Bad control points size" );

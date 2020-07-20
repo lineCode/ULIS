@@ -117,7 +117,7 @@ public:
         return  C;
     }
 
-    void GenerateLinearLUT( std::vector< FLinearSplineSample >* oArray, float iStep ) {
+    void GenerateLinearLUT( std::vector< FSplineLinearSample >* oArray, float iStep ) {
         oArray->clear();
         oArray->push_back( { P1, 0.f } );
         float length = GenerateLinearLUTAndGetLength_imp( oArray, iStep, P1, P2 );
@@ -125,7 +125,7 @@ public:
     }
 
 private:
-    float GenerateLinearLUTAndGetLength_imp( std::vector< FLinearSplineSample >* oArray
+    float GenerateLinearLUTAndGetLength_imp( std::vector< FSplineLinearSample >* oArray
                                            , float iStep
                                            , const FVec2F& iLeft
                                            , const FVec2F& iRight

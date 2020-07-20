@@ -52,7 +52,8 @@ public class ULIS : ModuleRules
             string pluginDLLPath = Path.Combine( BinBase, ULIS_DLLName );
             string binariesPath = CopyToBinaries( pluginDLLPath, Target );
             System.Console.WriteLine( "Using " + ULIS_Name +" DLL: " + binariesPath );
-            RuntimeDependencies.Add( binariesPath );
+
+            RuntimeDependencies.Add( "$(BinaryOutputDir)/ULIS3.dll", "$(ModuleDir)/redist/bin/ULIS3.dll" );
         }
         else if ( Target.Platform == UnrealTargetPlatform.Mac )
         {
@@ -69,7 +70,8 @@ public class ULIS : ModuleRules
 
             string binariesPath = CopyToBinaries( pluginDylibPath, Target );
             System.Console.WriteLine( "Using " + ULIS_Name +" DYLIB: " + binariesPath );
-            RuntimeDependencies.Add( binariesPath );
+
+            RuntimeDependencies.Add( "$(BinaryOutputDir)/ULIS3.dylib", "$(ModuleDir)/redist/bin/ULIS3.dylib" );
         }
     }
 }
