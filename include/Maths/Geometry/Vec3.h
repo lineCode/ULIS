@@ -50,7 +50,7 @@ struct TVec3
     {}
 
     /*! Construct the vector from input values. */
-    TVec3( T iX, T iY = 0, T iZ = 0 )
+    TVec3( T iX, T iY, T iZ = 0 )
         : x( iX )
         , y( iY )
         , z( iZ )

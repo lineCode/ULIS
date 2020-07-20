@@ -54,7 +54,7 @@ struct TVec4
     {}
 
     /*! Construct the vector from input values. */
-    TVec4( T iX, T iY = 0, T iZ = 0, T iW = 0 )
+    TVec4( T iX, T iY, T iZ = 0, T iW = 0 )
         : x( iX )
         , y( iY )
         , z( iZ )
