@@ -27,14 +27,18 @@ ULIS3_NAMESPACE_BEGIN
 template< typename T >
 struct TMat2
 {
+public:
+    typedef TVec2< T > tRow;
+    typedef TVec2< T > tColumn;
+
 private:
-    TVec2< T > mRows[2];
+    tRow mRows[2];
 
 public:
     TMat2();
     TMat2( T iValue );
     TMat2( T iM00, T iM10, T iM01, T iM11 );
-    TMat2( const TVec2< T >& iRow0, const TVec2& iRow1 );
+    TMat2( const tRow& iRow0, const tRow& iRow1 );
     TMat2( const TMat2& iOther );
 
     template< typename U >
@@ -49,8 +53,8 @@ public:
     ULIS3_FORCEINLINE int Height() const;
     ULIS3_FORCEINLINE int Length() const;
 
-    ULIS3_FORCEINLINE TVec2< T >& operator[]( int iIndex );
-    ULIS3_FORCEINLINE const TVec2< T >& operator[]( int iIndex ) const;
+    ULIS3_FORCEINLINE tRow& operator[]( int iIndex );
+    ULIS3_FORCEINLINE const tRow& operator[]( int iIndex ) const;
 
     ULIS3_FORCEINLINE TMat2& operator=( const TMat2& iOther );
     ULIS3_FORCEINLINE TMat2& operator+=( const TMat2& iOther );
@@ -75,9 +79,6 @@ public:
     ULIS3_FORCEINLINE TMat2 operator*( T iValue );
     ULIS3_FORCEINLINE TMat2 operator/( T iValue );
 
-    ULIS3_FORCEINLINE TVec2< T > operator*( const TVec2< T >& iVec );
-    ULIS3_FORCEINLINE TVec2< T > operator/( const TVec2< T >& iVec );
-
     ULIS3_FORCEINLINE bool operator==( const TMat2& iOther );
     ULIS3_FORCEINLINE bool operator!=( const TMat2& iOther );
 
@@ -86,6 +87,12 @@ public:
     ULIS3_FORCEINLINE TMat2 Adjoint();
     ULIS3_FORCEINLINE T Determinant();
 };
+
+template< typename T >
+ULIS3_FORCEINLINE TMat2< T >::tColumn operator*( const TMat2< T >& iMat, const TMat2< T >::tRow& iRow );
+
+template< typename T >
+ULIS3_FORCEINLINE TMat2< T >::tRow operator*( const TMat2< T >::tColumn& iColum, const TMat2< T >& iMat );
 
 ULIS3_NAMESPACE_END
 
