@@ -24,7 +24,7 @@ ULIS3_API void Convolution( FThreadPool*            iThreadPool
                           , bool                    iCallCB
                           , FBlock*                 iDestination
                           , const FKernel&          iKernel
-                          , const FRect&            iArea
+                          , const FRectI&            iArea
                           , eExtrapolationMethod    iEdgeMode );
 
 ULIS3_NAMESPACE_END

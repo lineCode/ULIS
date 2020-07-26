@@ -23,7 +23,7 @@ ULIS3_API void Copy( FThreadPool*           iThreadPool
                    , bool                   iCallCB
                    , const FBlock*          iSource
                    , FBlock*                iDestination
-                   , const FRect&           iArea
+                   , const FRectI&           iArea
                    , const FVec2I&          iPos );
 
 ULIS3_API FBlock* XCopy( FThreadPool*           iThreadPool
@@ -32,7 +32,7 @@ ULIS3_API FBlock* XCopy( FThreadPool*           iThreadPool
                        , const FHostDeviceInfo& iHostDeviceInfo
                        , bool                   iCallCB
                        , const FBlock*          iSource
-                       , const FRect&           iArea );
+                       , const FRectI&           iArea );
 
 ULIS3_API void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB );
 ULIS3_API FBlock* XCopyRaw( const FBlock* iSrc, bool iCallCB );

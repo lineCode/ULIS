@@ -79,7 +79,7 @@ Fill_imp( FThreadPool*                          iThreadPool
         , bool                                  iCallCB
         , FBlock*                               iDestination
         , std::shared_ptr< const FColor >  iColor
-        , const FRect&                          iDstROI )
+        , const FRectI&                          iDstROI )
 {
     // Bake Params
     const uint32 bpp     = iDestination->BytesPerPixel();
@@ -135,7 +135,7 @@ Fill( FThreadPool*              iThreadPool
     , bool                      iCallCB
     , FBlock*                   iDestination
     , const ISample&             iColor
-    , const FRect&              iArea )
+    , const FRectI&              iArea )
 {
     // Assertions
     ULIS3_ASSERT( iDestination,             "Bad source."                                           );
@@ -143,7 +143,7 @@ Fill( FThreadPool*              iThreadPool
     ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     // Fit region of interest
-    FRect roi = iArea & iDestination->Rect();
+    FRectI roi = iArea & iDestination->Rect();
 
     // Check no-op
     if( roi.Area() <= 0 )

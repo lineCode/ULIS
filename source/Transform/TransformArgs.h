@@ -28,8 +28,8 @@ struct FTransformArgs {
     uint32                  perfIntent;
     const FBlock*           source;
     FBlock*                 destination;
-    FRect                   src_roi;
-    FRect                   dst_roi;
+    FRectI                   src_roi;
+    FRectI                   dst_roi;
     eResamplingMethod       method;
     glm::mat3               inverseTransform;
 };
@@ -43,8 +43,8 @@ struct FResizeArgs {
     uint32                              perfIntent;
     const FBlock*                       source;
     FBlock*                             destination;
-    FRect                               src_roi;
-    FRect                               dst_roi;
+    FRectI                               src_roi;
+    FRectI                               dst_roi;
     eResamplingMethod                   method;
     FVec2F                              inverseScale;
     FVec2F                              shift;

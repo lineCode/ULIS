@@ -25,7 +25,7 @@ ULIS3_API void Blend( FThreadPool*              iThreadPool
                     , bool                      iCallCB
                     , const FBlock*             iSource
                     , FBlock*                   iBackdrop
-                    , const FRect&              iSourceRect
+                    , const FRectI&              iSourceRect
                     , const FVec2F&             iPosition
                     , bool                      iSubpixelFlag
                     , eBlendingMode             iBlendingMode
@@ -41,7 +41,7 @@ ULIS3_API void AlphaBlend( FThreadPool*             iThreadPool
                          , bool                     iCallCB
                          , const FBlock*            iSource
                          , FBlock*                  iBackdrop
-                         , const FRect&             iSourceRect
+                         , const FRectI&             iSourceRect
                          , const FVec2F&            iPosition
                          , bool                     iSubpixelFlag
                          , float                    iOpacityValue );
@@ -55,8 +55,8 @@ ULIS3_API void BlendTiled( FThreadPool*             iThreadPool
                          , bool                     iCallCB
                          , const FBlock*            iSource
                          , FBlock*                  iBackdrop
-                         , const FRect&             iSourceRect
-                         , const FRect&             iDestRect
+                         , const FRectI&             iSourceRect
+                         , const FRectI&             iDestRect
                          , const FVec2I&            iShift
                          , eBlendingMode            iBlendingMode
                          , eAlphaMode               iAlphaMode
@@ -70,7 +70,7 @@ ULIS3_API void BlendColor( FThreadPool*             iThreadPool
                          , bool                     iCallCB
                          , const FColor&       iColor
                          , FBlock*                  iBackdrop
-                         , const FRect&             iDestRect
+                         , const FRectI&             iDestRect
                          , eBlendingMode            iBlendingMode
                          , eAlphaMode               iAlphaMode
                          , float                    iOpacityValue );

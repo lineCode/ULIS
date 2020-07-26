@@ -8,8 +8,6 @@ Have fun using **ULIS**.
 Follow [this tutorial](md_documentation_manual__build_from_source.html) to build **ULIS**.
 
 ## Links
-- [Official Repository](https://github.com/Praxinos/ULIS)  
-- [Official Home Page](https://praxinos.coop/ulis)  
-- [WASM Demo](https://praxinos.coop/ULIS/demo/blend/)  
+- [Official Github Repository](https://github.com/Praxinos/ULIS)  
 - [Author Webpage](http://clementberthaud.com/)  
 - [Praxinos Website](https://praxinos.coop/)  

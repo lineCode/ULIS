@@ -38,7 +38,7 @@ main( int argc, char *argv[] ) {
     int canvasWidth = entryWidth * gridx;
     int canvasHeight = entryHeight * gridy;
 
-    FRect globalRect( 0, 0, canvasWidth, canvasHeight );
+    FRectI globalRect( 0, 0, canvasWidth, canvasHeight );
     FBlock* blockCanvas = new  FBlock( globalRect.w, globalRect.h, ULIS3_FORMAT_RGBA8 );
     FColor black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
     FColor white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );

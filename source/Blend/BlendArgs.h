@@ -27,7 +27,7 @@ struct FBlendArgs {
     uint32                  perfIntent;
     const FBlock*           source;
     FBlock*                 backdrop;
-    FRect                   sourceRect;
+    FRectI                   sourceRect;
     FVec2F                  subpixelComponent;
     FVec2F                  buspixelComponent;
     bool                    subpixelFlag;
@@ -36,7 +36,7 @@ struct FBlendArgs {
     ufloat                  opacityValue;
     FVec2I                  shift;
     FVec2I                  backdropCoverage;
-    FRect                   backdropWorkingRect;
+    FRectI                   backdropWorkingRect;
 };
 
 ULIS3_NAMESPACE_END

@@ -243,7 +243,7 @@ int transform( int argc, char *argv[] ) {
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
-    FRect dstmetrics = TransformAffineMetrics( src->Rect(), mat, method );
+    FRectI dstmetrics = TransformAffineMetrics( src->Rect(), mat, method );
     FBlock* dst = new FBlock( dstmetrics.w, dstmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
@@ -284,7 +284,7 @@ int text( int argc, char *argv[] ) {
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );
     FFont font( fontRegistry, fam, style );
-    FRect textmetrics = TextMetrics( wtxt, font, fontSize, FTransform2D() );
+    FRectI textmetrics = TextMetrics( wtxt, font, fontSize, FTransform2D() );
     FColor color( format );
     FBlock* dst = new FBlock( textmetrics.w, textmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();

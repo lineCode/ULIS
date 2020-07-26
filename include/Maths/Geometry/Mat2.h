@@ -89,16 +89,26 @@ public:
     }
 
     /*! Assignment operator from matrix. */
-    ULIS3_FORCEINLINE TMat2& operator=( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMat2& operator=( const TMat2& iOther ) {
+        mRows[0] = iOther.mRows[0];
+        mRows[1] = iOther.mRows[1];
+    }
 
     /*! Unary addition operator with matrix. */
-    ULIS3_FORCEINLINE TMat2& operator+=( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMat2& operator+=( const TMat2& iOther ) {
+        mRows[0] += iOther.mRows[0];
+        mRows[1] += iOther.mRows[1];
+    }
 
     /*! Unary substraction operator with matrix. */
-    ULIS3_FORCEINLINE TMat2& operator-=( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMat2& operator-=( const TMat2& iOther ) {
+        mRows[0] -= iOther.mRows[0];
+        mRows[1] -= iOther.mRows[1];
+    }
 
     /*! Unary multiplication operator with matrix. */
-    ULIS3_FORCEINLINE TMat2& operator*=( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMat2& operator*=( const TMat2& iOther ) {
+    }
 
     /*! Unary division operator with matrix. */
     ULIS3_FORCEINLINE TMat2& operator/=( const TMat2& iOther );

@@ -38,10 +38,10 @@ main( int argc, char *argv[] ) {
     FVec2F P2( 561.006348, 549.796814 );
     FVec2F P3( 687.998413, 551.799988 );
 
-    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P0, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
-    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P1, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
-    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P2, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
-    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), P3, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P0, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P1, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P2, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P3, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
     //std::vector< FVec2F > points;
     //uint32 count = 2;
     //CatmullRomPoints( P0, P1, P2, P3, count, &points, 0.5f );
@@ -49,11 +49,11 @@ main( int argc, char *argv[] ) {
     std::vector< FCatmullRomLUTElement > points;
     spline.GenerateLinearLUT( &points, 10.f );
     for( int i = 0; i < points.size(); ++i ) {
-        Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRect( 0, 0, 1, 1 ), points[i].position, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+        Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), points[i].position, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
         /*
         int x = points[i].position.x;
         int y = points[i].position.y;
-        Fill( threadPool, 1, 2, host, 0, blockA, color, FRect( x, y, 5, 5 ) );
+        Fill( threadPool, 1, 2, host, 0, blockA, color, FRectI( x, y, 5, 5 ) );
         */
     }
 

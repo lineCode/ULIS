@@ -72,7 +72,7 @@ public:
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
     virtual  void SanitizeNow( tTilePool* iPool ) = 0;
-    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const = 0;
+    virtual  FRectI GetRoughLeafGeometry( const FVec2I64& iPos ) const = 0;
 protected:
     // Protected Data Members
     static constexpr uint8  micro_threshold                     = _MICRO;
@@ -107,7 +107,7 @@ public:
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
     virtual  void SanitizeNow( tTilePool* iPool ) = 0;
-    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const = 0;
+    virtual  FRectI GetRoughLeafGeometry( const FVec2I64& iPos ) const = 0;
 
 protected:
     // Protected Data Members
@@ -184,7 +184,7 @@ public:
 
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
         auto size = round( tSuperClass::local_chunk_size_as_pixels * iScale );
-        DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRect( static_cast< int >( iPos.x )
+        DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRectI( static_cast< int >( iPos.x )
                                                                        , static_cast< int >( iPos.y )
                                                                        , static_cast< int >( size )
                                                                        , static_cast< int >( size ) ) );
@@ -227,11 +227,11 @@ public:
         }
     }
 
-    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
+    virtual  FRectI GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
         if( mChild )
             return  mChild->GetRoughLeafGeometry( iPos );
         else
-            return  FRect();
+            return  FRectI();
     }
 
     const tChild* Child() const {
@@ -294,9 +294,9 @@ public:
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
         auto size = static_cast< int >( round( tSuperClass::local_chunk_size_as_pixels * iScale ) );
         if( mPtr->mDirty )
-            DrawRectOutlineNoAA( iDst, dirty_wireframe_debug_color, FRect( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
+            DrawRectOutlineNoAA( iDst, dirty_wireframe_debug_color, FRectI( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
         else
-            DrawRectOutlineNoAA( iDst, correct_wireframe_debug_color, FRect( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
+            DrawRectOutlineNoAA( iDst, correct_wireframe_debug_color, FRectI( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
     }
 
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
@@ -312,14 +312,14 @@ public:
             mPtr = iPool->PerformRedundantHashMergeReturnCorrect( mPtr );
     }
 
-    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
+    virtual  FRectI GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
         if( mPtr )
-            return  FRect( static_cast< int >( iPos.x )
+            return  FRectI( static_cast< int >( iPos.x )
                          , static_cast< int >( iPos.y )
                          , static_cast< int >( tSuperClass::local_chunk_size_as_pixels )
                          , static_cast< int >( tSuperClass::local_chunk_size_as_pixels ) );
         else
-            return  FRect();
+            return  FRectI();
     }
 
     FTileElement* PointedData() {
@@ -416,7 +416,7 @@ public:
     virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
         auto size  = static_cast< int >( round( tSuperClass::local_chunk_size_as_pixels * iScale ) );
         auto hsize = static_cast< int >( round( tSuperClass::local_chunk_halfsize_as_pixels * iScale ) );
-        DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRect( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
+        DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRectI( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
         for( int i = 0; i < 4; ++i )
             if( mQuad[i] )
                 mQuad[i]->DrawDebugWireframe( iDst, iPos + SubChunkCoordinatesFromIndex( i ) * hsize, iScale );
@@ -463,8 +463,8 @@ public:
         }
     }
 
-    virtual  FRect GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
-        FRect ret;
+    virtual  FRectI GetRoughLeafGeometry( const FVec2I64& iPos ) const override {
+        FRectI ret;
         for( int i = 0; i < 4; ++i )
             if( mQuad[i] )
                 ret = ret.UnionLeaveEmpty( mQuad[i]->GetRoughLeafGeometry( iPos + SubChunkCoordinatesFromIndex( i ) * tSuperClass::local_chunk_halfsize_as_pixels ) );

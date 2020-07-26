@@ -28,7 +28,7 @@ void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
 }
 
 void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor, int iX1, int iX2, int iY ) {
-    FRect rect = iDst->Rect();
+    FRectI rect = iDst->Rect();
     if( !rect.InVerticalRange( iY ) )
         return;
 
@@ -53,7 +53,7 @@ void DrawHorizontalLineNoAA( FBlock* iDst, const FColor& iColor, int iX1, int iX
 }
 
 void DrawVerticalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor, int iY1, int iY2, int iX ) {
-    FRect rect = iDst->Rect();
+    FRectI rect = iDst->Rect();
     if( !rect.InHorizontalRange( iX ) )
         return;
 
@@ -79,7 +79,7 @@ void DrawVerticalLineNoAA( FBlock* iDst, const FColor& iColor, int iY1, int iY2,
 }
 
 
-void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect ) {
+void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRectI& iRect ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Bits();
@@ -89,7 +89,7 @@ void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect
     DrawVerticalLineNoAA_UnsafeColor( iDst, src, iRect.y, iRect.y + iRect.h, iRect.x + iRect.w );
 }
 
-void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect& iRect, int iNumSubdiv ) {
+void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRectI& iRect, int iNumSubdiv ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Bits();

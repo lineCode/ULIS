@@ -157,7 +157,7 @@ SWindow::tickEvent() {
     //Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mWetCanvas, mWetCanvas->Rect() );
     Copy( mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mDryCanvas, mWetCanvas, mDryCanvas->Rect(), FVec2I() );
 
-    FRect sourceRect = mParticle->Rect();
+    FRectI sourceRect = mParticle->Rect();
     for( size_t i = 0; i < mParticles.size(); ++i ) {
         mParticles[i].p.x += mParticles[i].v.x = mParticles[i].v.x * 0.9f;
         mParticles[i].p.y += mParticles[i].v.y = mParticles[i].v.y * 0.9f;

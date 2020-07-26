@@ -31,7 +31,7 @@ ULIS3_API void RenderText( FThreadPool*             iThreadPool
                          , const FTransform2D&      iTransform
                          , bool                     iAntialiasing );
 
-ULIS3_API FRect TextMetrics( std::wstring           iText
+ULIS3_API FRectI TextMetrics( std::wstring           iText
                            , const FFont&           iFont
                            , int                    iSize
                            , const FTransform2D&    iTransform );

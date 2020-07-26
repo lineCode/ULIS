@@ -64,7 +64,7 @@ void Clear_imp( FThreadPool*            iThreadPool
               , const FHostDeviceInfo&  iHostDeviceInfo
               , bool                    iCallCB
               , FBlock*                 iDestination
-              , const FRect&            iArea )
+              , const FRectI&            iArea )
 {
     const FFormat&  fmt     = iDestination->FormatInfo();
     const uint32         bpp     = fmt.BPP;
@@ -106,14 +106,14 @@ void Clear_imp( FThreadPool*            iThreadPool
            , const FHostDeviceInfo&    iHostDeviceInfo
            , bool                      iCallCB
            , FBlock*                   iDestination
-           , const FRect&              iArea )
+           , const FRectI&              iArea )
 {
     // Assertions
     ULIS3_ASSERT( iDestination,             "Bad source."                                           );
     ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
     ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
     // Fit region of interest
-    FRect roi = iArea & iDestination->Rect();
+    FRectI roi = iArea & iDestination->Rect();
 
     // Check no-op
     if( roi.Area() <= 0 )

@@ -57,9 +57,9 @@ main( int argc, char *argv[] ) {
     FTransform2D identityTransform = FTransform2D();
 
     int fontSize = 64;
-    FRect rect1 = TextMetrics( str1, fontEU, fontSize, identityTransform );
-    FRect rect2 = TextMetrics( str2, fontJA, fontSize, identityTransform );
-    FRect rect3 = TextMetrics( str3, fontJA, fontSize, identityTransform );
+    FRectI rect1 = TextMetrics( str1, fontEU, fontSize, identityTransform );
+    FRectI rect2 = TextMetrics( str2, fontJA, fontSize, identityTransform );
+    FRectI rect3 = TextMetrics( str3, fontJA, fontSize, identityTransform );
     rect1.x = ( w - rect1.w ) / 2;
     rect2.x = ( w - rect2.w ) / 2;
     rect3.x = ( w - rect3.w ) / 2;

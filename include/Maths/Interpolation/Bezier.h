@@ -77,20 +77,20 @@ template< class T > inline void CubicBezierInverseSplitAtParameter( T* ioP0, T* 
     *ioP2 = C;
 }
 
-template< class T > inline FRect QuadraticBezierConvexHullRect( const T& iP0, const T& iP1, const T& iP2 ) {
+template< class T > inline FRectI QuadraticBezierConvexHullRect( const T& iP0, const T& iP1, const T& iP2 ) {
     int xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.x, iP1.x, iP2.x ) ) );
     int ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.y, iP1.y, iP2.y ) ) );
     int xmax = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( iP0.x, iP1.x, iP2.x ) ) );
     int ymax = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( iP0.y, iP1.y, iP2.y ) ) );
-    return  FRect::FromMinMax( xmin, ymin, xmax, ymax );
+    return  FRectI::FromMinMax( xmin, ymin, xmax, ymax );
 }
 
-template< class T > inline FRect CubicBezierConvexHullRect( const T& iP0, const T& iP1, const T& iP2, const T& iP3 ) {
+template< class T > inline FRectI CubicBezierConvexHullRect( const T& iP0, const T& iP1, const T& iP2, const T& iP3 ) {
     int xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.x, iP1.x, iP2.x, iP3.x ) ) );
     int ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.y, iP1.y, iP2.y, iP3.y ) ) );
     int xmax = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( iP0.x, iP1.x, iP2.x, iP3.x ) ) );
     int ymax = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( iP0.y, iP1.y, iP2.y, iP3.y ) ) );
-    return  FRect::FromMinMax( xmin, ymin, xmax, ymax );
+    return  FRectI::FromMinMax( xmin, ymin, xmax, ymax );
 }
 
 ULIS3_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FSplineParametricSample >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThresholdSquared, float iLengthOffset = 0.f, float iParamOffset = 0.f, float iParamDepth = 1.f ) {

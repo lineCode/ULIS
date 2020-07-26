@@ -24,7 +24,7 @@ ULIS3_API void FillPreserveAlpha( FThreadPool* iThreadPool
                                 , bool iCallCB
                                 , FBlock* iDestination
                                 , const ISample& iColor
-                                , const FRect& iArea );
+                                , const FRectI& iArea );
 
 ULIS3_NAMESPACE_END
 

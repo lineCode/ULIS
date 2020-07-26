@@ -521,12 +521,12 @@ FColor::YxyAD( double iY, double ix, double iy, double iA )
     return  FColor( eFormat::Format_YxyAD, { iY, ix, iy, iA } );
 }
 
-template ULIS3_API FColor::FColor( uint32, std::initializer_list< int >, const FColorSpace* );
-template ULIS3_API FColor::FColor( uint32, std::initializer_list< uint8 >, const FColorSpace* );
-template ULIS3_API FColor::FColor( uint32, std::initializer_list< uint16 >, const FColorSpace* );
-template ULIS3_API FColor::FColor( uint32, std::initializer_list< uint32 >, const FColorSpace* );
-template ULIS3_API FColor::FColor( uint32, std::initializer_list< ufloat >, const FColorSpace* );
-template ULIS3_API FColor::FColor( uint32, std::initializer_list< udouble >, const FColorSpace* );
+template ULIS3_API FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );
+template ULIS3_API FColor::FColor( eFormat, std::initializer_list< uint8 >, const FColorSpace* );
+template ULIS3_API FColor::FColor( eFormat, std::initializer_list< uint16 >, const FColorSpace* );
+template ULIS3_API FColor::FColor( eFormat, std::initializer_list< uint32 >, const FColorSpace* );
+template ULIS3_API FColor::FColor( eFormat, std::initializer_list< ufloat >, const FColorSpace* );
+template ULIS3_API FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
 
 ULIS3_NAMESPACE_END
 

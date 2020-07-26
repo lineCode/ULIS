@@ -54,9 +54,9 @@ public:
 
 public:
     // Block API
-    virtual const FRect&    GetOperativeGeometry() const override;
-    virtual void            ExtendOperativeGeometryAfterMutableChange( const FRect& iRect ) override;
-    virtual void            SubstractOperativeGeometryAfterMutableChange( const FRect& iRect ) override;
+    virtual const FRectI&    GetOperativeGeometry() const override;
+    virtual void            ExtendOperativeGeometryAfterMutableChange( const FRectI& iRect ) override;
+    virtual void            SubstractOperativeGeometryAfterMutableChange( const FRectI& iRect ) override;
     virtual void            RecomputeRoughRootGeometry() override;
     virtual void            RecomputeRoughLeafGeometry() override;
 
@@ -81,9 +81,9 @@ private:
     // Private Data Members
     tMap        mSparseMap;
     tTilePool*  mTilePool; // Non-Owning
-    FRect       mOperativeGeometry;
-    FRect       mRoughRootGeometry;
-    FRect       mRoughLeafGeometry;
+    FRectI       mOperativeGeometry;
+    FRectI       mRoughRootGeometry;
+    FRectI       mRoughLeafGeometry;
 
     static constexpr uint8  micro_threshold                     = _MICRO;
     static constexpr uint8  macro_threshold                     = _MACRO;

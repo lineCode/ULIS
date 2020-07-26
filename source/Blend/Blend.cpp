@@ -30,7 +30,7 @@ void Blend( FThreadPool*            iThreadPool
           , bool                    iCallCB
           , const FBlock*           iSource
           , FBlock*                 iBackdrop
-          , const FRect&            iSourceRect
+          , const FRectI&            iSourceRect
           , const FVec2F&           iPosition
           , bool                    iSubpixelFlag
           , eBlendingMode           iBlendingMode
@@ -46,13 +46,13 @@ void Blend( FThreadPool*            iThreadPool
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
-    FRect src_roi = iSourceRect & iSource->Rect();
+    FRectI src_roi = iSourceRect & iSource->Rect();
     int target_xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.x ) );
     int target_ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.y ) );
     int target_xmax = iSubpixelFlag ? static_cast< int >( FMaths::RoundToPositiveInfinity( iPosition.x + src_roi.w ) ) : static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.x + src_roi.w ) );
     int target_ymax = iSubpixelFlag ? static_cast< int >( FMaths::RoundToPositiveInfinity( iPosition.y + src_roi.h ) ) : static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.y + src_roi.h ) );
-    FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
-    FRect dst_fit    = dst_target & iBackdrop->Rect();
+    FRectI dst_target = FRectI::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
+    FRectI dst_fit    = dst_target & iBackdrop->Rect();
 
     // Check no-op
     if( dst_fit.Area() <= 0 )
@@ -102,7 +102,7 @@ void AlphaBlend( FThreadPool*           iThreadPool
                , bool                   iCallCB
                , const FBlock*          iSource
                , FBlock*                iBackdrop
-               , const FRect&           iSourceRect
+               , const FRectI&           iSourceRect
                , const FVec2F&          iPosition
                , bool                   iSubpixelFlag
                , float                  iOpacityValue )
@@ -117,13 +117,13 @@ void AlphaBlend( FThreadPool*           iThreadPool
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
-    FRect src_roi = iSourceRect & iSource->Rect();
+    FRectI src_roi = iSourceRect & iSource->Rect();
     int target_xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.x ) );
     int target_ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.y ) );
     int target_xmax = iSubpixelFlag ? static_cast< int >( FMaths::RoundToPositiveInfinity( iPosition.x + src_roi.w ) ) : static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.x + src_roi.w ) );
     int target_ymax = iSubpixelFlag ? static_cast< int >( FMaths::RoundToPositiveInfinity( iPosition.y + src_roi.h ) ) : static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.y + src_roi.h ) );
-    FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
-    FRect dst_fit    = dst_target & iBackdrop->Rect();
+    FRectI dst_target = FRectI::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
+    FRectI dst_fit    = dst_target & iBackdrop->Rect();
 
     // Check no-op
     if( dst_fit.Area() <= 0 )
@@ -173,8 +173,8 @@ void BlendTiled( FThreadPool*               iThreadPool
                , bool                       iCallCB
                , const FBlock*              iSource
                , FBlock*                    iBackdrop
-               , const FRect&               iSourceRect
-               , const FRect&               iDestRect
+               , const FRectI&               iSourceRect
+               , const FRectI&               iDestRect
                , const FVec2I&              iShift
                , eBlendingMode              iBlendingMode
                , eAlphaMode                 iAlphaMode
@@ -189,8 +189,8 @@ void BlendTiled( FThreadPool*               iThreadPool
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
-    FRect src_roi = iSourceRect & iSource->Rect();
-    FRect dst_roi = iDestRect   & iBackdrop->Rect();
+    FRectI src_roi = iSourceRect & iSource->Rect();
+    FRectI dst_roi = iDestRect   & iBackdrop->Rect();
 
     // Check no-op
     if( dst_roi.Area() <= 0 || src_roi.Area() <= 0 )
@@ -242,7 +242,7 @@ void BlendColor( FThreadPool*           iThreadPool
                , bool                   iCallCB
                , const FColor&     iColor
                , FBlock*                iBackdrop
-               , const FRect&           iDestRect
+               , const FRectI&           iDestRect
                , eBlendingMode          iBlendingMode
                , eAlphaMode             iAlphaMode
                , float                  iOpacityValue )
@@ -254,7 +254,7 @@ void BlendColor( FThreadPool*           iThreadPool
     FColor color( iBackdrop->Format() );
     Conv( iColor, color );
     FBlock block( color.Bits(), 1, 1, iBackdrop->Format() );
-    BlendTiled( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRect( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );
+    BlendTiled( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRectI( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );
 }
 
 /////////////////////////////////////////////////////

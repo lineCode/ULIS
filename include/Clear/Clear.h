@@ -23,7 +23,7 @@ ULIS3_API void Clear( FThreadPool*              iThreadPool
                     , const FHostDeviceInfo&    iHostDeviceInfo
                     , bool                      iCallCB
                     , FBlock*                   iDestination
-                    , const FRect&              iArea );
+                    , const FRectI&              iArea );
 
 /////////////////////////////////////////////////////
 // ClearRaw

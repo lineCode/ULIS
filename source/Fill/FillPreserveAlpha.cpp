@@ -59,7 +59,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
                  , bool                     iCallCB
                  , FBlock*                  iDestination
                  , const ISample&            iColor
-                 , const FRect&             iArea )
+                 , const FRectI&             iArea )
 {
     // Assertions
     ULIS3_ASSERT( iDestination,             "Bad source."                                           );
@@ -70,7 +70,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
         return;
 
     // Fit region of interest
-    FRect roi = iArea & iDestination->Rect();
+    FRectI roi = iArea & iDestination->Rect();
 
     // Check no-op
     if( roi.Area() <= 0 )

@@ -84,7 +84,7 @@ RenderText( FThreadPool*            iThreadPool
 }
 
 
-FRect
+FRectI
 TextMetrics( std::wstring           iText
            , const FFont&           iFont
            , int                    iSize
@@ -98,7 +98,7 @@ TextMetrics( std::wstring           iText
     int dx = static_cast< int >( _mat[2].x );
     int dy = static_cast< int >( _mat[2].y );
 
-    FRect result;
+    FRectI result;
     result.x = static_cast< int >( dx );
     result.y = static_cast< int >( dy );
     result.w = 1;
@@ -125,7 +125,7 @@ TextMetrics( std::wstring           iText
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_BITMAP_METRICS_ONLY );
         ULIS3_ASSERT( !error, "Error loading glyph" );
 
-        FRect box = FRect::FromXYWH( dx + slot->bitmap_left, dy + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
+        FRectI box = FRectI::FromXYWH( dx + slot->bitmap_left, dy + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
         result = result | box;
 
         pen.x += slot->advance.x;

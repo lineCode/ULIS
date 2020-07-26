@@ -86,6 +86,5 @@ typedef TRect< uint32 >         FRectUI32;
 typedef TRect< uint64 >         FRectUI64;
 typedef TRect< int32 >          FRectI32;
 typedef TRect< int64 >          FRectI64;
-
 ULIS3_NAMESPACE_END
 

@@ -40,7 +40,7 @@ main( int argc, char *argv[] ) {
     FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
     Fence( *threadPool );
 
-    FRect sourceRect = blockBase->Rect();
+    FRectI sourceRect = blockBase->Rect();
     int w = sourceRect.w * 8;
     int h = sourceRect.h * 5;
 
@@ -48,7 +48,7 @@ main( int argc, char *argv[] ) {
     int shadeH = 20;
     FBlock* blockCanvas = new  FBlock( w, h, ULIS3_FORMAT_RGBA8 );
     FBlock* blockShade = new  FBlock( shadeW, shadeH, ULIS3_FORMAT_RGBA8 );
-    FRect shadeRect = blockBase->Rect();
+    FRectI shadeRect = blockBase->Rect();
     FColor black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
     FColor white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
     Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockShade, black, shadeRect );

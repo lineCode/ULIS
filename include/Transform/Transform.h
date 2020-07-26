@@ -27,7 +27,7 @@ ULIS3_API void TransformAffine( FThreadPool*              iThreadPool
                               , bool                      iCallCB
                               , const FBlock*             iSource
                               , FBlock*                   iDestination
-                              , const FRect&              iSourceRect
+                              , const FRectI&              iSourceRect
                               , const FTransform2D&       iTransform
                               , eResamplingMethod         iMethod );
 
@@ -40,8 +40,8 @@ ULIS3_API void TransformAffineTiled( FThreadPool*              iThreadPool
                                    , bool                      iCallCB
                                    , const FBlock*             iSource
                                    , FBlock*                   iDestination
-                                   , const FRect&              iSourceRect
-                                   , const FRect&              iDestRect
+                                   , const FRectI&              iSourceRect
+                                   , const FRectI&              iDestRect
                                    , const FTransform2D&       iTransform
                                    , eResamplingMethod         iMethod );
 
@@ -54,7 +54,7 @@ ULIS3_API void TransformPerspective( FThreadPool*              iThreadPool
                                    , bool                      iCallCB
                                    , const FBlock*             iSource
                                    , FBlock*                   iDestination
-                                   , const FRect&              iSourceRect
+                                   , const FRectI&              iSourceRect
                                    , const FTransform2D&       iTransform
                                    , eResamplingMethod         iMethod );
 
@@ -67,7 +67,7 @@ ULIS3_API void TransformBezier( FThreadPool*                                    
                               , bool                                            iCallCB
                               , const FBlock*                                   iSource
                               , FBlock*                                         iDestination
-                              , const FRect&                                    iSourceRect
+                              , const FRectI&                                    iSourceRect
                               , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                               , float                                           iThreshold
                               , int                                             iPlotSize
@@ -82,7 +82,7 @@ ULIS3_API void Resize( FThreadPool*             iThreadPool
                      , bool                     iCallCB
                      , const FBlock*            iSource
                      , FBlock*                  iDestination
-                     , const FRect&             iSourceRect
+                     , const FRectI&             iSourceRect
                      , const FVec2F&            iSize
                      , const FVec2F&            iPos
                      , eResamplingMethod        iMethod );
@@ -95,7 +95,7 @@ ULIS3_API FBlock* XResize( FThreadPool*             iThreadPool
                          , const FHostDeviceInfo&   iHostDeviceInfo
                          , bool                     iCallCB
                          , const FBlock*            iSource
-                         , const FRect&             iSourceRect
+                         , const FRectI&             iSourceRect
                          , const FVec2F&            iSize
                          , eResamplingMethod        iMethod );
 
@@ -107,7 +107,7 @@ ULIS3_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
                                   , const FHostDeviceInfo&  iHostDeviceInfo
                                   , bool                    iCallCB
                                   , const FBlock*           iSource
-                                  , const FRect&            iSourceRect
+                                  , const FRectI&            iSourceRect
                                   , const FTransform2D&     iTransform
                                   , eResamplingMethod       iMethod );
 
@@ -119,8 +119,8 @@ ULIS3_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                                        , const FHostDeviceInfo&    iHostDeviceInfo
                                        , bool                      iCallCB
                                        , const FBlock*             iSource
-                                       , const FRect&              iSourceRect
-                                       , const FRect&              iDestRect
+                                       , const FRectI&              iSourceRect
+                                       , const FRectI&              iDestRect
                                        , const FTransform2D&       iTransform
                                        , eResamplingMethod         iMethod );
 
@@ -132,7 +132,7 @@ ULIS3_API FBlock* XMakeTileableTransformedPattern( FThreadPool*              iTh
                                                  , const FHostDeviceInfo&    iHostDeviceInfo
                                                  , bool                      iCallCB
                                                  , const FBlock*             iSource
-                                                 , const FRect&              iSourceRect
+                                                 , const FRectI&              iSourceRect
                                                  , const FTransform2D&       iTransform
                                                  , eResamplingMethod         iMethod );
 
@@ -144,25 +144,25 @@ ULIS3_API FBlock* XTransformPerspective( FThreadPool*                   iThreadP
                                        , const FHostDeviceInfo&         iHostDeviceInfo
                                        , bool                           iCallCB
                                        , const FBlock*                  iSource
-                                       , const FRect&                   iSourceRect
+                                       , const FRectI&                   iSourceRect
                                        , const std::vector< FVec2F >&   iDestinationPoints
                                        , eResamplingMethod              iMethod );
 
 /////////////////////////////////////////////////////
 // TransformAffineMetrics
-ULIS3_API FRect TransformAffineMetrics( const FRect&          iSourceRect
+ULIS3_API FRectI TransformAffineMetrics( const FRectI&          iSourceRect
                                       , const FTransform2D&   iTransform
                                       , eResamplingMethod     iMethod );
 
 /////////////////////////////////////////////////////
 // TransformPerspectiveMetrics
-ULIS3_API FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
+ULIS3_API FRectI TransformPerspectiveMetrics( const FRectI&          iSourceRect
                                            , const FTransform2D&   iTransform
                                            , eResamplingMethod     iMethod );
 
 /////////////////////////////////////////////////////
 // TransformBezierMetrics
-ULIS3_API FRect TransformBezierMetrics( const FRect&                                    iSourceRect
+ULIS3_API FRectI TransformBezierMetrics( const FRectI&                                    iSourceRect
                                       , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                                       , eResamplingMethod                               iMethod );
 

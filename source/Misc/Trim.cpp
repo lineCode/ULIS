@@ -48,7 +48,7 @@ fpDispatchedDetectTrimAlphaEdgeInvoke QueryDispatchedDetectTrimAlphaEdgeInvokeFo
     return  nullptr;
 }
 
-FRect GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
+FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                 , bool                    iBlocking
                                 , uint32                  iPerfIntent
                                 , const FHostDeviceInfo&  iHostDeviceInfo
@@ -80,7 +80,7 @@ FRect GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                    , max
                                    , fptr, pLINE, len, src, fmt, &left, &top, &right, &bot );
     iSource->Dirty( iCallCB );
-    return  FRect( left, top, ( right - left ) + 1, ( bot - top ) + 1 );
+    return  FRectI( left, top, ( right - left ) + 1, ( bot - top ) + 1 );
 }
 
 ULIS3_NAMESPACE_END

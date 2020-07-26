@@ -32,7 +32,7 @@ Convolution( FThreadPool*            iThreadPool
            , bool                    iCallCB
            , FBlock*                 iDestination
            , const FKernel&          iKernel
-           , const FRect&            iArea
+           , const FRectI&            iArea
            , eExtrapolationMethod    iEdgeMode )
 {
     // Assertions
@@ -41,7 +41,7 @@ Convolution( FThreadPool*            iThreadPool
     ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     // Fit region of interest
-    FRect roi = iArea & iDestination->Rect();
+    FRectI roi = iArea & iDestination->Rect();
 
     // Check no-op
     if( roi.Area() <= 0 )

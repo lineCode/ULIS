@@ -27,7 +27,7 @@ InvokeResizeMTProcessScanline_Area_SSE_RGBA8( uint8* iDst, int32 iLine, std::sha
     const FResizeArgs&  info    = *iInfo;
     const FFormat&  fmt     = info.destination->FormatInfo();
     const FFormat&  sat_fmt = info.optionalSAT->FormatInfo();
-    uint8*              dst     = iDst;
+    uint8*          dst     = iDst;
 
     FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
     FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );

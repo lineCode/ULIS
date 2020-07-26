@@ -101,8 +101,8 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
         int y = FMaths::Clamp( int( pos.y -ref.y - size ), 0, 256 );
         int x2 = FMaths::Clamp( x + size * 2, 0, 256 );
         int y2 = FMaths::Clamp( y + size * 2, 0, 256 );
-        FRect rect = FRect::FromMinMax( x, y, x2, y2 );
-        mTiledBlock->ExtendOperativeGeometryAfterMutableChange( FRect::FromMinMax( x, y, x2, y2 ) );
+        FRectI rect = FRectI::FromMinMax( x, y, x2, y2 );
+        mTiledBlock->ExtendOperativeGeometryAfterMutableChange( FRectI::FromMinMax( x, y, x2, y2 ) );
     }
 
     if( event->buttons() & Qt::RightButton ) {
@@ -121,7 +121,7 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
                 }
             }
         }
-        mTiledBlock->SubstractOperativeGeometryAfterMutableChange( FRect( pos.x -ref.x - size, pos.y -ref.y - size, size * 2, size * 2 ) );
+        mTiledBlock->SubstractOperativeGeometryAfterMutableChange( FRectI( pos.x -ref.x - size, pos.y -ref.y - size, size * 2, size * 2 ) );
     }
 }
 
@@ -195,14 +195,14 @@ SCanvas::tickEvent() {
     Copy( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, oldram, newram, oldram->Rect(), FVec2I( -1, 0 ) );
     mRAMUSAGESWAPBUFFER = newram;
 
-    Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mCanvas, FRect( 10, 80+HH+10, 256, 256 ) );
+    Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mCanvas, FRectI( 10, 80+HH+10, 256, 256 ) );
 
     mTiledBlock->DrawDebugTileContent(  mCanvas, FVec2I64( 10, 80+HH+10 ) );
     mTiledBlock->DrawDebugWireframe(    mCanvas, FVec2I64( 10, 80+HH+10 ), 1.f );
 
     FBlock* shade = new FBlock( 256, 256, ULIS3_FORMAT_RGBA8 );
     Fill( mPool, ULIS3_BLOCKING,  ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, FColor( ULIS3_FORMAT_G8, { 0 } ), shade->Rect() );
-    FRect outline = mTiledBlock->GetOperativeGeometry();
+    FRectI outline = mTiledBlock->GetOperativeGeometry();
     Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, outline );
     Blend( mPool, ULIS3_BLOCKING,  ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, shade, mCanvas, shade->Rect(), FVec2F( 10, 80+HH+10 ), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
     delete shade;

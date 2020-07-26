@@ -134,6 +134,12 @@ hr {
     border: none;
 }
 
+.contents hr {
+    height: 1px;
+    border: none;
+    background: #ccc;
+}
+
 .icon {
     font-family: Arial, Helvetica;
     font-weight: bold;

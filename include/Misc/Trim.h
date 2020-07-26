@@ -16,7 +16,7 @@
 
 ULIS3_NAMESPACE_BEGIN
 
-ULIS3_API FRect GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
+ULIS3_API FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                           , bool                    iBlocking
                                           , uint32                  iPerfIntent
                                           , const FHostDeviceInfo&  iHostDeviceInfo

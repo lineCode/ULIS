@@ -55,9 +55,9 @@ public:
 
 public:
     // Block API
-    virtual const FRect&    GetOperativeGeometry() const = 0;
-    virtual void            ExtendOperativeGeometryAfterMutableChange( const FRect& iRect ) = 0;
-    virtual void            SubstractOperativeGeometryAfterMutableChange( const FRect& iRect ) = 0;
+    virtual const FRectI&    GetOperativeGeometry() const = 0;
+    virtual void            ExtendOperativeGeometryAfterMutableChange( const FRectI& iRect ) = 0;
+    virtual void            SubstractOperativeGeometryAfterMutableChange( const FRectI& iRect ) = 0;
     virtual void            RecomputeRoughRootGeometry() = 0;
     virtual void            RecomputeRoughLeafGeometry() = 0;
 

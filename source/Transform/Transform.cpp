@@ -36,7 +36,7 @@ void TransformAffine( FThreadPool*              iThreadPool
                     , bool                      iCallCB
                     , const FBlock*             iSource
                     , FBlock*                   iDestination
-                    , const FRect&              iSourceRect
+                    , const FRectI&              iSourceRect
                     , const FTransform2D&       iTransform
                     , eResamplingMethod         iMethod )
 {
@@ -50,9 +50,9 @@ void TransformAffine( FThreadPool*              iThreadPool
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    FRect src_fit = iSourceRect & iSource->Rect();
-    FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
-    FRect dst_fit = trans & iDestination->Rect();
+    FRectI src_fit = iSourceRect & iSource->Rect();
+    FRectI trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
+    FRectI dst_fit = trans & iDestination->Rect();
 
     if( !dst_fit.Area() )
         return;
@@ -87,8 +87,8 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
                          , bool                      iCallCB
                          , const FBlock*             iSource
                          , FBlock*                   iDestination
-                         , const FRect&              iSourceRect
-                         , const FRect&              iDestRect
+                         , const FRectI&              iSourceRect
+                         , const FRectI&              iDestRect
                          , const FTransform2D&       iTransform
                          , eResamplingMethod         iMethod )
 {
@@ -102,8 +102,8 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    FRect src_fit = iSourceRect & iSource->Rect();
-    FRect dst_fit = iDestRect & iDestination->Rect();
+    FRectI src_fit = iSourceRect & iSource->Rect();
+    FRectI dst_fit = iDestRect & iDestination->Rect();
 
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return;
@@ -139,7 +139,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
                     , bool                      iCallCB
                     , const FBlock*             iSource
                     , FBlock*                   iDestination
-                    , const FRect&              iSourceRect
+                    , const FRectI&              iSourceRect
                     , const FTransform2D&       iTransform
                     , eResamplingMethod         iMethod )
 {
@@ -156,9 +156,9 @@ void TransformPerspective( FThreadPool*         iThreadPool
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    FRect src_fit = iSourceRect & iSource->Rect();
-    FRect trans = TransformPerspectiveMetrics( src_fit, iTransform, iMethod );
-    FRect dst_fit = trans & iDestination->Rect();
+    FRectI src_fit = iSourceRect & iSource->Rect();
+    FRectI trans = TransformPerspectiveMetrics( src_fit, iTransform, iMethod );
+    FRectI dst_fit = trans & iDestination->Rect();
 
     if( !dst_fit.Area() )
         return;
@@ -193,7 +193,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
                     , bool                                              iCallCB
                     , const FBlock*                                     iSource
                     , FBlock*                                           iDestination
-                    , const FRect&                                      iSourceRect
+                    , const FRectI&                                      iSourceRect
                     , const std::vector< FCubicBezierControlPoint >&    iControlPoints
                     , float                                             iThreshold
                     , int                                               iPlotSize
@@ -210,12 +210,12 @@ void TransformBezier( FThreadPool*                                      iThreadP
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    FRect src_fit = iSourceRect & iSource->Rect();
-    FRect trans = TransformBezierMetrics( src_fit, iControlPoints, iMethod );
+    FRectI src_fit = iSourceRect & iSource->Rect();
+    FRectI trans = TransformBezierMetrics( src_fit, iControlPoints, iMethod );
     int plotsize = FMaths::Clamp( iPlotSize, 1, 8 );
     trans.w += plotsize;
     trans.h += plotsize;
-    FRect dst_fit = trans & iDestination->Rect();
+    FRectI dst_fit = trans & iDestination->Rect();
 
     if( !dst_fit.Area() )
         return;
@@ -294,7 +294,7 @@ void Resize( FThreadPool*             iThreadPool
            , bool                     iCallCB
            , const FBlock*            iSource
            , FBlock*                  iDestination
-           , const FRect&             iSourceRect
+           , const FRectI&             iSourceRect
            , const FVec2F&            iSize
            , const FVec2F&            iPos
            , eResamplingMethod        iMethod ) {
@@ -306,7 +306,7 @@ void Resize( FThreadPool*             iThreadPool
     ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS3_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
 
-    FRect src_fit = iSourceRect & iSource->Rect();
+    FRectI src_fit = iSourceRect & iSource->Rect();
     bool bNeedFix = ( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC );
     float src_w = static_cast< float >( src_fit.w );
     float src_h = static_cast< float >( src_fit.h );
@@ -321,7 +321,7 @@ void Resize( FThreadPool*             iThreadPool
     FVec2F inverseScale = FVec2F( 1.f / fixed_scalex, 1.f / fixed_scaley );
     FVec2F shift = FVec2F( bNeedFix && scale_x > 1.f ? iPos.x + fixed_scalex : iPos.x, bNeedFix && scale_y > 1.f ? iPos.y + fixed_scaley : iPos.y );
 
-    FRect dst_fit = FRect( static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.x ) )
+    FRectI dst_fit = FRectI( static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.x ) )
                          , static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.y ) )
                          , static_cast< int >( FMaths::RoundToPositiveInfinity( dst_w ) )
                          , static_cast< int >( FMaths::RoundToPositiveInfinity( dst_h ) ) )
@@ -367,7 +367,7 @@ FBlock* XResize( FThreadPool*           iThreadPool
                , const FHostDeviceInfo& iHostDeviceInfo
                , bool                   iCallCB
                , const FBlock*          iSource
-               , const FRect&           iSourceRect
+               , const FRectI&           iSourceRect
                , const FVec2F&          iSize
                , eResamplingMethod      iMethod ) {
     // Assertions
@@ -393,7 +393,7 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
                         , const FHostDeviceInfo&    iHostDeviceInfo
                         , bool                      iCallCB
                         , const FBlock*             iSource
-                        , const FRect&              iSourceRect
+                        , const FRectI&              iSourceRect
                         , const FTransform2D&       iTransform
                         , eResamplingMethod         iMethod ) {
     // Assertions
@@ -404,8 +404,8 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    FRect src_fit = iSourceRect & iSource->Rect();
-    FRect trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
+    FRectI src_fit = iSourceRect & iSource->Rect();
+    FRectI trans = TransformAffineMetrics( src_fit, iTransform, iMethod );
     if( !trans.Area() )
         return  nullptr;
 
@@ -423,8 +423,8 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                              , const FHostDeviceInfo&    iHostDeviceInfo
                              , bool                      iCallCB
                              , const FBlock*             iSource
-                             , const FRect&              iSourceRect
-                             , const FRect&              iDestRect
+                             , const FRectI&              iSourceRect
+                             , const FRectI&              iDestRect
                              , const FTransform2D&       iTransform
                              , eResamplingMethod         iMethod ) {
     // Assertions
@@ -435,8 +435,8 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    FRect src_fit = iSourceRect & iSource->Rect();
-    FRect dst_fit = iDestRect;
+    FRectI src_fit = iSourceRect & iSource->Rect();
+    FRectI dst_fit = iDestRect;
 
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return nullptr;
@@ -454,7 +454,7 @@ FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
                                        , const FHostDeviceInfo&    iHostDeviceInfo
                                        , bool                      iCallCB
                                        , const FBlock*             iSource
-                                       , const FRect&              iSourceRect
+                                       , const FRectI&              iSourceRect
                                        , const FTransform2D&       iTransform
                                        , eResamplingMethod         iMethod ) {
         // Assertions
@@ -465,8 +465,8 @@ FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    FRect src_fit = iSourceRect & iSource->Rect();
-    FRect dst_fit = TransformAffineMetrics( src_fit, iTransform, INTERP_NN );;
+    FRectI src_fit = iSourceRect & iSource->Rect();
+    FRectI dst_fit = TransformAffineMetrics( src_fit, iTransform, INTERP_NN );;
 
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return nullptr;
@@ -484,7 +484,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
                              , const FHostDeviceInfo&       iHostDeviceInfo
                              , bool                         iCallCB
                              , const FBlock*                iSource
-                             , const FRect&                 iSourceRect
+                             , const FRectI&                 iSourceRect
                              , const std::vector< FVec2F >& iDestinationPoints
                              , eResamplingMethod            iMethod ) {
     // Assertions
@@ -496,7 +496,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
 
-    FRect src_fit = iSourceRect & iSource->Rect();
+    FRectI src_fit = iSourceRect & iSource->Rect();
     std::vector< FVec2F > sourcePoints = { FVec2F( 0, 0 ), FVec2F( src_fit.w, 0 ), FVec2F( src_fit.w, src_fit.h ), FVec2F( 0, src_fit.h ) };
     int minx = INT_MAX;
     int miny = INT_MAX;
@@ -509,7 +509,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
         fixedDestinationPoints.push_back( FVec2F( it.x - minx, it.y - miny ) );
 
     FTransform2D persp( FTransform2D::GetPerspectiveTransform( sourcePoints.data(), fixedDestinationPoints.data() ) );
-    FRect trans = TransformPerspectiveMetrics( src_fit, persp, iMethod );
+    FRectI trans = TransformPerspectiveMetrics( src_fit, persp, iMethod );
     if( !trans.Area() )
         return  nullptr;
 
@@ -520,11 +520,11 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformAffineMetrics
-FRect TransformAffineMetrics( const FRect&          iSourceRect
+FRectI TransformAffineMetrics( const FRectI&          iSourceRect
                             , const FTransform2D&   iTransform
                             , eResamplingMethod     iMethod )
 {
-    FRect trans = iSourceRect.TransformedAffine( iTransform );
+    FRectI trans = iSourceRect.TransformedAffine( iTransform );
     if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
@@ -541,11 +541,11 @@ FRect TransformAffineMetrics( const FRect&          iSourceRect
 
 /////////////////////////////////////////////////////
 // TransformPerspectiveMetrics
-FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
+FRectI TransformPerspectiveMetrics( const FRectI&          iSourceRect
                                  , const FTransform2D&   iTransform
                                  , eResamplingMethod     iMethod )
 {
-    FRect trans = iSourceRect.TransformedPerspective( iTransform );
+    FRectI trans = iSourceRect.TransformedPerspective( iTransform );
     if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA  ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
@@ -559,12 +559,12 @@ FRect TransformPerspectiveMetrics( const FRect&          iSourceRect
 
 /////////////////////////////////////////////////////
 // TransformBezierMetrics
-FRect TransformBezierMetrics( const FRect&                                    iSourceRect
+FRectI TransformBezierMetrics( const FRectI&                                    iSourceRect
                             , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                             , eResamplingMethod                               iMethod )
 {
     ULIS3_ASSERT( iControlPoints.size() == 4, "Bad control points size" );
-    return  FRect::FromMinMax( static_cast< int >( FMaths::VMin( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
+    return  FRectI::FromMinMax( static_cast< int >( FMaths::VMin( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
                                                                , iControlPoints[1].point.x, iControlPoints[1].ctrlCW.x, iControlPoints[1].ctrlCCW.x
                                                                , iControlPoints[2].point.x, iControlPoints[2].ctrlCW.x, iControlPoints[2].ctrlCCW.x
                                                                , iControlPoints[3].point.x, iControlPoints[3].ctrlCW.x, iControlPoints[3].ctrlCCW.x ) )

@@ -65,8 +65,8 @@ Copy_imp( FThreadPool*              iThreadPool
         , bool                      iCallCB
         , const FBlock*             iSource
         , FBlock*                   iDestination
-        , const FRect&              iSrcROI
-        , const FRect&              iDstROI
+        , const FRectI&              iSrcROI
+        , const FRectI&              iDstROI
         , const FVec2I&             iShift )
 {
     const uint32 bpp = iDestination->BytesPerPixel();
@@ -110,7 +110,7 @@ void Copy( FThreadPool*             iThreadPool
          , bool                     iCallCB
          , const FBlock*            iSource
          , FBlock*                  iDestination
-         , const FRect&             iArea
+         , const FRectI&             iArea
          , const FVec2I&            iPos )
 {
     // Assertions
@@ -121,15 +121,15 @@ void Copy( FThreadPool*             iThreadPool
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
-    FRect src_roi = iArea & iSource->Rect();
+    FRectI src_roi = iArea & iSource->Rect();
     int target_xmin = iPos.x;
     int target_ymin = iPos.y;
     int target_xmax = target_xmin + src_roi.w;
     int target_ymax = target_ymin + src_roi.h;
-    FRect dst_target = FRect::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
+    FRectI dst_target = FRectI::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
 
     // Ensure the selected target actually fits in destination
-    FRect dst_fit = dst_target & iDestination->Rect();
+    FRectI dst_fit = dst_target & iDestination->Rect();
     if( dst_fit.Area() <= 0 ) return;
 
     // Forward arguments baking
@@ -150,11 +150,11 @@ FBlock* XCopy( FThreadPool*           iThreadPool
              , const FHostDeviceInfo& iHostDeviceInfo
              , bool                   iCallCB
              , const FBlock*          iSource
-             , const FRect&           iArea )
+             , const FRectI&           iArea )
 {
     ULIS3_ASSERT( iSource, "Bad source." );
 
-    FRect src_roi = iArea & iSource->Rect();
+    FRectI src_roi = iArea & iSource->Rect();
 
     if( src_roi.Area() <= 0 )
         return  nullptr;
