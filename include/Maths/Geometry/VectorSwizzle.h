@@ -12,38 +12,40 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+#include "Core/Core.h"
+#include "Maths/Geometry/VectorFunc.h"
 
 // Vec2
 #define ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )                    \
     /*! Swizzle E0 ## E1 */                                                     \
-    ULIS3_FORCEINLINE TVec2< T > E0 ## E1 () const;
+    ULIS3_VECTOR_FUNC TVector2< T > E0 ## E1 () const;
 
 #define ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )                     \
     template< typename T >                                                      \
-    ULIS3_FORCEINLINE TVec2< T > CLASS < T >:: E0 ## E1 () const {              \
-        return  TVec2< T >( E0, E1 );                                           \
+    ULIS3_VECTOR_FUNC TVector2< T > CLASS < T >:: E0 ## E1 () const {              \
+        return  TVector2< T >( E0, E1 );                                           \
     }
 
 // Vec3
 #define ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )                \
     /*! Swizzle E0 ## E1 ## E2 */                                               \
-    ULIS3_FORCEINLINE TVec3< T > E0 ## E1 ## E2 () const;
+    ULIS3_VECTOR_FUNC TVector3< T > E0 ## E1 ## E2 () const;
 
 #define ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )                 \
     template< typename T >                                                      \
-    ULIS3_FORCEINLINE TVec3< T > CLASS < T >:: E0 ## E1 ## E2 () const {        \
-        return  TVec3< T >( E0, E1, E2 );                                       \
+    ULIS3_VECTOR_FUNC TVector3< T > CLASS < T >:: E0 ## E1 ## E2 () const {        \
+        return  TVector3< T >( E0, E1, E2 );                                       \
     }
 
 // Vec4
 #define ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION( CLASS, E0, E1, E2, E3 )            \
     /*! Swizzle E0 ## E1 ## E2 ## E3 */                                         \
-    ULIS3_FORCEINLINE TVec4< T > E0 ## E1 ## E2 ## E3 () const;
+    ULIS3_VECTOR_FUNC TVector4< T > E0 ## E1 ## E2 ## E3 () const;
 
 #define ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTION( CLASS, E0, E1, E2, E3 )             \
     template< typename T >                                                      \
-    ULIS3_FORCEINLINE TVec4< T > CLASS < T >:: E0 ## E1 ## E2 ## E3 () const {  \
-        return  TVec4< T >( E0, E1, E2, E3 );                                   \
+    ULIS3_VECTOR_FUNC TVector4< T > CLASS < T >:: E0 ## E1 ## E2 ## E3 () const {  \
+        return  TVector4< T >( E0, E1, E2, E3 );                                   \
     }
 
 // Vec2
@@ -480,28 +482,26 @@
 
 
 #define ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2                                 \
-    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVec2 )                        \
-    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVec2 )                        \
-    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVec2 )
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVector2 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVector2 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVector2 )
 
 #define ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3                                 \
-    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVec3 )                        \
-    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVec3 )                        \
-    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVec3 )                        \
-    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( TVec3 )                        \
-    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( TVec3 )                        \
-    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( TVec3 )
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVector3 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVector3 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVector3 )                        \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( TVector3 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( TVector3 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( TVector3 )
 
 #define ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4                                 \
-    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVec4 )                        \
-    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVec4 )                        \
-    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVec4 )                        \
-    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( TVec4 )                        \
-    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( TVec4 )                        \
-    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( TVec4 )                        \
-    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( TVec4 )                        \
-    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( TVec4 )                        \
-    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( TVec4 )
-
-// Guard
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( TVector4 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( TVector4 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( TVector4 )                        \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( TVector4 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( TVector4 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( TVector4 )                        \
+    ULIS3_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( TVector4 )                        \
+    ULIS3_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( TVector4 )                        \
+    ULIS3_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( TVector4 )
 

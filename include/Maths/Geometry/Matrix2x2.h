@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Vector2.h"
 #include <cmath>
 
 ULIS3_NAMESPACE_BEGIN
@@ -28,11 +28,8 @@ template< typename T >
 class TMat2
 {
 public:
-    /*! The row type. */
-    typedef TVec2< T > tRow;
-
-    /*! The column type. */
-    typedef TVec2< T > tColumn;
+    typedef TVector2< T > tRow;
+    typedef TVector2< T > tColumn;
 
 private:
     /*! The rows of the matrix. */
@@ -40,47 +37,26 @@ private:
 
 public:
     /*! Default constructor ( identity matrix ). */
-    TMat2()
-        : mRows { tRow( 1, 0 )
-                , tRow( 0, 1 ) }
-    {}
+    TMat2();
 
     /*! Constructor from input diagonal value. */
-    TMat2( T iValue )
-        : mRows { tRow( iValue, 0 )
-                , tRow( 0, iValue ) }
-    {}
+    TMat2( T iValue );
 
     /*! Constructor from input cells values. */
-    TMat2( T iM00, T iM10, T iM01, T iM11 )
-        : mRows { tRow( iM00, iM10 )
-                , tRow( iM01, iM11 ) }
-    {}
+    TMat2( T iM00, T iM10, T iM01, T iM11 );
 
     /*! Constructor from row vector values. */
-    TMat2( const tRow& iRow0, const tRow& iRow1 )
-        : mRows { iRow0
-                , iRow1 }
-    {}
+    TMat2( const tRow& iRow0, const tRow& iRow1 );
 
     /*! Copy constructor. */
-    TMat2( const TMat2& iOther )
-        : mRows { iOther.mRows[0]
-                , iOther.mRows[1] }
-    {}
+    TMat2( const TMat2& iOther );
 
     /*! Conversion constructor from other matrix type. */
     template< typename U >
-    TMat2( const TMat2< U >& iOther )
-        : mRows { iOther.mRows[0]
-                , iOther.mRows[1] }
-    {}
+    TMat2( const TMat2< U >& iOther );
 
     /*! Subscript accessor for matrix rows. */
-    ULIS3_FORCEINLINE tRow& operator[]( int iIndex ) {
-        ULIS3_ASSERT( iIndex >= 0 && iIndex < 2, "Bad Index" );
-        return  mRows[ iIndex ];
-    }
+    ULIS3_FORCEINLINE tRow& operator[]( int iIndex );
 
     /*! Subscript accessor for const matrix rows. */
     ULIS3_FORCEINLINE const tRow& operator[]( int iIndex ) const {

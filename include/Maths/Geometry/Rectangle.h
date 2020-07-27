@@ -66,8 +66,8 @@ struct TRect
         return  TRect( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
     }
 
-    /*! Collision test with TVec2. */
-    bool HitTest( const TVec2< T >& iV ) {
+    /*! Collision test with TVector2. */
+    bool HitTest( const TVector2< T >& iV ) {
         return  iV.x >= x
             &&  iV.y >= y
             &&  iV.x <  (x + h )
@@ -212,27 +212,27 @@ struct TRect
 
     /*! Return the affine transformed version of this rect ( AABB ). */
     TRect TransformedAffine( const FTransform2D& iTransform ) const {
-        T Rect ret = *this;
-        ret.TransformAffine( iTransform );
+        T Rect result = *this;
+        result.TransformAffine( iTransform );
         return  ret;
     }
 
     /*! Return the perspective transformed version of this rect ( AABB ). */
     TRect TransformedPerspective( const FTransform2D& iTransform ) const {
-        T Rect ret = *this;
-        ret.TransformPerspective( iTransform );
+        T Rect result = *this;
+        result.TransformPerspective( iTransform );
         return  ret;
     }
 
     /*! Shift x and y coordinates by input vector. */
-    void Shift( const TVec2< T >& iVec ) {
+    void Shift( const TVector2< T >& iVec ) {
         x += iVec.x;
         y += iVec.y;
     }
 
     /*! Get x and y coordinates as vector. */
-    TVec2< T > GetShift() const {
-        return  TVec2< T >( x, y );
+    TVector2< T > GetShift() const {
+        return  TVector2< T >( x, y );
     }
 };
 

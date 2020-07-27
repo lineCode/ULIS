@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Rect.h"
-#include "Maths/Geometry/Vec2.h"
 #include <cmath>
+
+#define ULIS3_MATHS_FUNC ULIS3_FORCEINLINE constexpr
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -70,11 +70,6 @@ struct ULIS3_API FMaths
     }
 
     template< typename T >
-    static ULIS3_FORCEINLINE TVec2< T > Max( const TVec2< T >& iValue, T iMax ) {
-        return  TVec2< T >( Max< T >( iValue.x, iMax ), Max< T >( iValue.y, iMax ) );
-    }
-
-    template< typename T >
     static ULIS3_FORCEINLINE T Min3( T iA, T iB, T iC ) {
         return  Min( iA, Min( iB, iC ) );
     }
@@ -124,13 +119,13 @@ struct ULIS3_API FMaths
     }
 
     template< typename T >
-    static ULIS3_FORCEINLINE T Abs( T iA ) {
+    static ULIS3_MATHS_FUNC T Abs( T iA ) {
         return ( iA < 0 ? -iA : iA );
     }
 
     template< typename T >
     static ULIS3_FORCEINLINE T Sign( T iValue ) {
-        return  iValue < T(0) ? T(-1) : T(1);
+        return  iValue < 0 ? -1 : 1;
     }
 
     template< typename T >
@@ -140,11 +135,6 @@ struct ULIS3_API FMaths
 
     static ULIS3_FORCEINLINE float PyFModulo( float iValue, float iMod ) {
         return  fmod( iMod + fmod( iValue, iMod ), iMod );
-    }
-
-    template< typename T >
-    static ULIS3_FORCEINLINE TVec2< T > PyModulo( const TVec2< T >& iValue, const TVec2< T >& iMod ) {
-        return  TVec2< T >( PyModulo( iValue.x, iMod.x ), PyModulo( iValue.y, iMod.y ) );
     }
 
     static ULIS3_FORCEINLINE double RadToDeg( double iRad )
@@ -173,14 +163,6 @@ struct ULIS3_API FMaths
             return iNumber - IntegerPartOfNumber( iNumber );
         else
             return - ( iNumber - IntegerPartOfNumber( iNumber ) );
-    }
-
-    static ULIS3_FORCEINLINE FVec2F FloatingPart( const FVec2F& iVec ) {
-        return  FVec2F( FloatingPartOfNumber( iVec.x ), FloatingPartOfNumber( iVec.y ) );
-    }
-
-    static ULIS3_FORCEINLINE FVec2F Abs( const FVec2F& iVec ) {
-        return  FVec2F( Abs( iVec.x ), Abs( iVec.y ) );
     }
 
     static ULIS3_FORCEINLINE int Round( float iNumber )
@@ -215,6 +197,24 @@ struct ULIS3_API FMaths
     static ULIS3_FORCEINLINE bool EpsilonComp( float iA, float iB )
     {
         return  Abs( iA - iB ) <= kEpsilonf;
+    }
+
+    template< typename T >
+    static ULIS3_MATHS_FUNC T Sqrt( T iValue )
+    {
+        return  static_cast< T >( sqrt( iValue ) );
+    }
+
+    template<>
+    static ULIS3_MATHS_FUNC double Sqrt< double >( double iValue )
+    {
+        return  sqrt( iValue );
+    }
+
+    template<>
+    static ULIS3_MATHS_FUNC float Sqrt< float >( float iValue )
+    {
+        return  sqrtf( iValue );
     }
 
 }; // struct FMaths

@@ -7,7 +7,7 @@
 *
 * @file         Vec2.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TVec2 class.
+* @brief        This file provides the definition for the TVector2 class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

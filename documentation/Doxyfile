@@ -2201,6 +2201,8 @@ PREDEFINED             = __declspec(x)=                                 \
                          ULIS3_NAMESPACE_END                            \
                          ULIS3_FORCEINLINE                              \
                          ULIS3_VECTORCALL                               \
+                         ULIS3_VECTOR_FUNC                              \
+                         ULIS3_MATHS_FUNC                               \
                          ULIS3_NAMESPACE_NAME                           \
                          ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC4       \
                          ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC3       \
