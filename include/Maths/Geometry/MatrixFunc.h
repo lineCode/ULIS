@@ -14,5 +14,5 @@
 #pragma once
 #include "Core/Core.h"
 
-#define ULIS3_VECTOR_FUNC constexpr
+#define ULIS3_MATRIX_FUNC constexpr
 

@@ -157,13 +157,13 @@ if( NOT "${ULIS3_QT_CMAKE_PATH}" STREQUAL "" )
 endif()
 ####################################
 # Add Python Project
-include(${CMAKE_CURRENT_SOURCE_DIR}/bindings/python/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/binding/Python/CMakeLists.txt)
 ####################################
 # Add Test Projects
 if( ${ULIS3_BUILD_TESTS} )
-include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt)
 endif()
 if( ${ULIS3_BUILD_SAMPLES} )
-include(${CMAKE_CURRENT_SOURCE_DIR}/samples/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/sample/CMakeLists.txt)
 endif()
 

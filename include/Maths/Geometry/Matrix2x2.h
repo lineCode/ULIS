@@ -5,27 +5,28 @@
 *   ULIS3
 *__________________
 *
-* @file         Mat2.h
+* @file         Matrix2x2.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TMat2 class.
+* @brief        This file provides the definition for the TMatrix2x2 class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
+#include "Maths/Geometry/MatrixFunc.h"
 #include "Maths/Geometry/Vector2.h"
-#include <cmath>
+#include "Maths/Maths.h"
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      TMat2
-/// @brief      The TMat2 class provides a simple 2x2 square matrix class for
+/// @class      TMatrix2x2
+/// @brief      The TMatrix2x2 class provides a simple 2x2 square matrix class for
 ///             geometry applications.
-/// @details    The TMat2 class is a template class that provides basic matrix
+/// @details    The TMatrix2x2 class is a template class that provides basic matrix
 ///             functionnalities, it can be used with any numeric types,
 ///             ranging from integer values to floating point values.
 template< typename T >
-class TMat2
+class TMatrix2x2
 {
 public:
     typedef TVector2< T > tRow;
@@ -36,121 +37,126 @@ private:
     tRow mRows[2];
 
 public:
+    // Constructors
     /*! Default constructor ( identity matrix ). */
-    TMat2();
+    ULIS3_MATRIX_FUNC TMatrix2x2();
 
     /*! Constructor from input diagonal value. */
-    TMat2( T iValue );
+    ULIS3_MATRIX_FUNC TMatrix2x2( T iValue );
 
     /*! Constructor from input cells values. */
-    TMat2( T iM00, T iM10, T iM01, T iM11 );
+    ULIS3_MATRIX_FUNC TMatrix2x2( T iM00, T iM10, T iM01, T iM11 );
 
     /*! Constructor from row vector values. */
-    TMat2( const tRow& iRow0, const tRow& iRow1 );
+    ULIS3_MATRIX_FUNC TMatrix2x2( const tRow& iRow0, const tRow& iRow1 );
 
     /*! Copy constructor. */
-    TMat2( const TMat2& iOther );
-
-    /*! Conversion constructor from other matrix type. */
-    template< typename U >
-    TMat2( const TMat2< U >& iOther );
-
-    /*! Subscript accessor for matrix rows. */
-    ULIS3_FORCEINLINE tRow& operator[]( int iIndex );
-
-    /*! Subscript accessor for const matrix rows. */
-    ULIS3_FORCEINLINE const tRow& operator[]( int iIndex ) const {
-        ULIS3_ASSERT( iIndex >= 0 && iIndex < 2, "Bad Index" );
-        return  mRows[ iIndex ];
-    }
+    ULIS3_MATRIX_FUNC TMatrix2x2( const TMatrix2x2& iOther );
 
     /*! Assignment operator from matrix. */
-    ULIS3_FORCEINLINE TMat2& operator=( const TMat2& iOther ) {
-        mRows[0] = iOther.mRows[0];
-        mRows[1] = iOther.mRows[1];
-    }
+    ULIS3_MATRIX_FUNC ULIS3_FORCEINLINE TMatrix2x2& operator=( const TMatrix2x2& iOther );
+
+
+
+    // Conversion
+    /*! Conversion constructor from other matrix type. */
+    template< typename U >
+    ULIS3_MATRIX_FUNC TMatrix2x2( const TMatrix2x2< U >& iOther );
+
+
+
+    // Other Operators
+    /*! Subscript accessor for matrix rows. */
+    ULIS3_MATRIX_FUNC ULIS3_FORCEINLINE tRow& operator[]( int iIndex );
+
+    /*! Subscript accessor for const matrix rows. */
+    ULIS3_MATRIX_FUNC ULIS3_FORCEINLINE const tRow& operator[]( int iIndex ) const;
+
+
+
+    // Named Functions
+    /*! Obtain the inverse of the matrix. */
+    ULIS3_FORCEINLINE TMatrix2x2 Inverse();
+
+    /*! Obtain the transpose of the matrix. */
+    ULIS3_FORCEINLINE TMatrix2x2 Transpose();
+
+    /*! Obtain the determinant of the matrix. */
+    ULIS3_FORCEINLINE T Determinant();
+
 
     /*! Unary addition operator with matrix. */
-    ULIS3_FORCEINLINE TMat2& operator+=( const TMat2& iOther ) {
+    ULIS3_FORCEINLINE TMatrix2x2& operator+=( const TMatrix2x2& iOther ) {
         mRows[0] += iOther.mRows[0];
         mRows[1] += iOther.mRows[1];
     }
 
     /*! Unary substraction operator with matrix. */
-    ULIS3_FORCEINLINE TMat2& operator-=( const TMat2& iOther ) {
+    ULIS3_FORCEINLINE TMatrix2x2& operator-=( const TMatrix2x2& iOther ) {
         mRows[0] -= iOther.mRows[0];
         mRows[1] -= iOther.mRows[1];
     }
 
     /*! Unary multiplication operator with matrix. */
-    ULIS3_FORCEINLINE TMat2& operator*=( const TMat2& iOther ) {
+    ULIS3_FORCEINLINE TMatrix2x2& operator*=( const TMatrix2x2& iOther ) {
     }
 
     /*! Unary division operator with matrix. */
-    ULIS3_FORCEINLINE TMat2& operator/=( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMatrix2x2& operator/=( const TMatrix2x2& iOther );
 
     /*! Unary division operator with value. */
-    ULIS3_FORCEINLINE TMat2& operator+=( T iValue );
+    ULIS3_FORCEINLINE TMatrix2x2& operator+=( T iValue );
 
     /*! Unary substraction operator with value. */
-    ULIS3_FORCEINLINE TMat2& operator-=( T iValue );
+    ULIS3_FORCEINLINE TMatrix2x2& operator-=( T iValue );
 
     /*! Unary multiplication operator with value. */
-    ULIS3_FORCEINLINE TMat2& operator*=( T iValue );
+    ULIS3_FORCEINLINE TMatrix2x2& operator*=( T iValue );
 
     /*! Unary division operator with value. */
-    ULIS3_FORCEINLINE TMat2& operator/=( T iValue );
+    ULIS3_FORCEINLINE TMatrix2x2& operator/=( T iValue );
 
     /*! Unary negative operator. */
-    ULIS3_FORCEINLINE TMat2 operator-() const;
+    ULIS3_FORCEINLINE TMatrix2x2 operator-() const;
 
     /*! Addition operator with matrix. */
-    ULIS3_FORCEINLINE TMat2 operator+( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMatrix2x2 operator+( const TMatrix2x2& iOther );
 
     /*! Substraction operator with matrix. */
-    ULIS3_FORCEINLINE TMat2 operator-( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMatrix2x2 operator-( const TMatrix2x2& iOther );
 
     /*! Multiplication operator with matrix. */
-    ULIS3_FORCEINLINE TMat2 operator*( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMatrix2x2 operator*( const TMatrix2x2& iOther );
 
     /*! Division operator with matrix. */
-    ULIS3_FORCEINLINE TMat2 operator/( const TMat2& iOther );
+    ULIS3_FORCEINLINE TMatrix2x2 operator/( const TMatrix2x2& iOther );
 
     /*! Addition operator with value. */
-    ULIS3_FORCEINLINE TMat2 operator+( T iValue );
+    ULIS3_FORCEINLINE TMatrix2x2 operator+( T iValue );
 
     /*! Substraction operator with value. */
-    ULIS3_FORCEINLINE TMat2 operator-( T iValue );
+    ULIS3_FORCEINLINE TMatrix2x2 operator-( T iValue );
 
     /*! Multiplication operator with value. */
-    ULIS3_FORCEINLINE TMat2 operator*( T iValue );
+    ULIS3_FORCEINLINE TMatrix2x2 operator*( T iValue );
 
     /*! Division operator with value. */
-    ULIS3_FORCEINLINE TMat2 operator/( T iValue );
+    ULIS3_FORCEINLINE TMatrix2x2 operator/( T iValue );
 
     /*! Equality operator. */
-    ULIS3_FORCEINLINE bool operator==( const TMat2& iOther );
+    ULIS3_FORCEINLINE bool operator==( const TMatrix2x2& iOther );
 
     /*! Inequality operator. */
-    ULIS3_FORCEINLINE bool operator!=( const TMat2& iOther );
-
-    /*! Obtain the inverse of the matrix. */
-    ULIS3_FORCEINLINE TMat2 Inverse();
-
-    /*! Obtain the transpose of the matrix. */
-    ULIS3_FORCEINLINE TMat2 Transpose();
-
-    /*! Obtain the determinant of the matrix. */
-    ULIS3_FORCEINLINE T Determinant();
+    ULIS3_FORCEINLINE bool operator!=( const TMatrix2x2& iOther );
 };
 
 /*! Binary matrix by row multiplication operator. */
 template< typename T >
-ULIS3_FORCEINLINE TMat2< T >::tColumn operator*( const TMat2< T >& iMat, const TMat2< T >::tRow& iRow );
+ULIS3_FORCEINLINE TMatrix2x2< T >::tColumn operator*( const TMatrix2x2< T >& iMat, const TMatrix2x2< T >::tRow& iRow );
 
 /*! Binary column by matrix multiplication operator. */
 template< typename T >
-ULIS3_FORCEINLINE TMat2< T >::tRow operator*( const TMat2< T >::tColumn& iColum, const TMat2< T >& iMat );
+ULIS3_FORCEINLINE TMatrix2x2< T >::tRow operator*( const TMatrix2x2< T >::tColumn& iColum, const TMatrix2x2< T >& iMat );
 
 ULIS3_NAMESPACE_END
 

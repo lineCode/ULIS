@@ -1,14 +1,14 @@
 <p align="center">
-    <img src="samples/Splash.png">
+    <img src="meta/img/logo/github.png">
 </p>
 
 ## Overview
-ULIS is a graphics library written in C++. It is aimed at software rasterization and digital image processing, with scalable multiprocessor parallel programming, high performance with SIMD extensions, and hardware awareness in mind.  
+ULIS is a graphics library written in C++. It is aimed at software rasterization and digital image processing, with scalable multiprocessor parallel programming, high performance with SIMD extensions, and hardware awareness in mind.
 
 ## Samples
-![](samples/BlendNormals.png) | ![](samples/RasterText.png) | ![](samples/Transforms.png)
+![](meta/image/sample/BlendNormals.png) | ![](meta/image/sample/RasterText.png) | ![](meta/image/sample/Transforms.png)
 ---- | ---- | ----
-![](samples/BezierDeform.png) | ![](samples/TiledBlock.png) | ![](samples/Benchmark.png)
+![](meta/image/sample/BezierDeform.png) | ![](meta/image/sample/TiledBlock.png) | ![](meta/image/sample/Benchmark.png)
 
 ## Links
 - [Official Github Repository](https://github.com/Praxinos/ULIS)  
@@ -19,5 +19,5 @@ ULIS is a graphics library written in C++. It is aimed at software rasterization
 Check LICENSE.md, ULIS is licensed under a commercial license and is NOT available for free.
 
 ## Documentation
-Check the [documentation](https://praxinos.coop/Documentation/ULIS/Developer/html/) for the API reference and details on the build process.  
+Check the [documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/) for the API reference and details on the build process.  
 

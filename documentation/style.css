@@ -310,7 +310,7 @@ a:hover {
 }
 
 .image > img {
-    max-width:200px;
+    max-width: 100%;
 }
 
 th.markdownTableHeadLeft, th.markdownTableHeadRight, th.markdownTableHeadCenter, th.markdownTableHeadNone {
