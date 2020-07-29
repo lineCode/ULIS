@@ -102,6 +102,7 @@ struct TVector2
 
 
     // Unary Negative Operator
+    /*! Unary Negative Operator */
     ULIS3_VECTOR_FUNC TVector2 operator-() const;
 
 
