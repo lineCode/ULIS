@@ -318,6 +318,10 @@ th.markdownTableHeadLeft, th.markdownTableHeadRight, th.markdownTableHeadCenter,
     color:#000000;
 }
 
+table.markdownTable td, table.markdownTable th {
+    border: 1px solid #eee;
+}
+
 table, table td, table th {
     border: 0px solid #eee;
     margin:0;
