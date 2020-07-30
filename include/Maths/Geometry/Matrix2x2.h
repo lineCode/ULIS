@@ -199,8 +199,8 @@ ULIS3_MATRIX_FUNC TMatrix2x2< T > TMatrix2x2< T >::Inverse() {
     T inv_det = static_cast< T >( 1 ) / Determinant();
     return  TMatrix2x2< T >(
           + (*this)[1][1] * inv_det
-        , - (*this)[0][1] * inv_det
         , - (*this)[1][0] * inv_det
+        , - (*this)[0][1] * inv_det
         , + (*this)[0][0] * inv_det
     );
 }
@@ -209,8 +209,8 @@ template< typename T >
 ULIS3_MATRIX_FUNC TMatrix2x2< T > TMatrix2x2< T >::Transpose() {
     return  TMatrix2x2< T >(
           (*this)[0][0]
-        , (*this)[0][1]
         , (*this)[1][0]
+        , (*this)[0][1]
         , (*this)[1][1]
     );
 }
@@ -393,7 +393,7 @@ template< typename T >
 ULIS3_MATRIX_FUNC TMatrix2x2< T > operator-( const TMatrix2x2< T >& iMat, const TMatrix2x2< T >& iOther ) {
     return  TMatrix2x2< T >(
           iMat[0] - iOther[0]
-        , iMat[1] - iOther[0]
+        , iMat[1] - iOther[1]
     );
 }
 
@@ -401,8 +401,8 @@ template< typename T >
 ULIS3_MATRIX_FUNC TMatrix2x2< T > operator*( const TMatrix2x2< T >& iMat, const TMatrix2x2< T >& iOther ) {
     return  TMatrix2x2< T >(
           iMat[0][0] * & iOther[0][0] + iMat[1][0] * & iOther[0][1]
-        , iMat[0][1] * & iOther[0][0] + iMat[1][1] * & iOther[0][1]
         , iMat[0][0] * & iOther[1][0] + iMat[1][0] * & iOther[1][1]
+        , iMat[0][1] * & iOther[0][0] + iMat[1][1] * & iOther[0][1]
         , iMat[0][1] * & iOther[1][0] + iMat[1][1] * & iOther[1][1]
     );
 }
