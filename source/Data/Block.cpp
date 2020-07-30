@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Data/Block.h"
+#include <new>
 
 ULIS3_NAMESPACE_BEGIN
 FBlock::~FBlock()
@@ -45,7 +46,8 @@ FBlock::FBlock(
     uint32 num = mWidth * mHeight * FormatInfo().SPP;
     ULIS3_ASSERT( num != 0, "Cannot allocate a buffer of size 0" );
 
-    mBitmap = new uint8[ mBytesTotal ];
+    mBitmap = new  ( std::nothrow )  uint8[ mBytesTotal ];
+    ULIS3_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );
 }
 
 FBlock::FBlock(

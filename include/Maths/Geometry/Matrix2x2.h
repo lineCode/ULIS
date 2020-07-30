@@ -425,7 +425,7 @@ ULIS3_MATRIX_FUNC TMatrix2x2< T >::tColumn operator*( const TMatrix2x2< T >& iMa
 
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix2x2< T >::tRow operator*( const TMatrix2x2< T >::tColumn& iColum, const TMatrix2x2< T >& iMat ) {
-    return vec<2, T, Q>(
+    return  TVector2< T >(
           iColum.x * iMat[0][0] + iColum.y * iMat[0][1]
         , iColum.x * iMat[1][0] + iColum.y * iMat[1][1]
     );
