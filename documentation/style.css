@@ -445,7 +445,7 @@ body, table, div, p, dl {
     padding-right: 43px;
     font-family: "Segoe UI Light";
     font-size: 13px;
-    font-weight: bold;
+    font-weight: normal;
     line-height: 36px;
     text-decoration: none;
     text-shadow: 0 1px 1px rgba(255,255,255,0.9);

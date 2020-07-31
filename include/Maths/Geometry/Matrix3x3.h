@@ -29,8 +29,8 @@ template< typename T >
 class TMatrix3x3
 {
 public:
-    typedef TVector2< T > tRow;
-    typedef TVector2< T > tColumn;
+    typedef TVector3< T > tRow;
+    typedef TVector3< T > tColumn;
 
 private:
     /*! The columns of the matrix. */
@@ -46,9 +46,9 @@ public:
 
     /*! Constructor from input cells values. */
     ULIS3_MATRIX_FUNC TMatrix3x3(
-          T iM00, T iM10, T iM20
-        , T iM01, T iM11, T iM21
-        , T iM02, T iM12, T iM22
+          T iM00, T iM01, T iM02
+        , T iM10, T iM11, T iM12
+        , T iM20, T iM21, T iM22
     );
 
     /*! Constructor from row vector values. */
@@ -161,9 +161,9 @@ ULIS3_MATRIX_FUNC TMatrix3x3< T >::TMatrix3x3( T iValue )
 
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix3x3< T >::TMatrix3x3(
-      T iM00, T iM10, T iM20
-    , T iM01, T iM11, T iM21
-    , T iM02, T iM12, T iM22
+      T iM00, T iM01, T iM02
+    , T iM10, T iM11, T iM12
+    , T iM20, T iM21, T iM22
     )
     : mCols {
           tColumn( iM00, iM01, iM02 )
@@ -198,7 +198,7 @@ template< typename T >
 ULIS3_MATRIX_FUNC TMatrix3x3< T >& TMatrix3x3< T >::operator=( const TMatrix3x3< T >& iOther ) {
     mCols[0] = iOther.mCols[0];
     mCols[1] = iOther.mCols[1];
-    mCols[1] = iOther.mCols[2];
+    mCols[2] = iOther.mCols[2];
 }
 
 
@@ -222,38 +222,38 @@ ULIS3_MATRIX_FUNC TMatrix3x3< T > TMatrix3x3< T >::Inverse() {
     T inv_det = static_cast< T >( 1 ) / Determinant();
 
     return  TMatrix3x3< T >(
-          + ( (*this)[1][1] * (*this)[2][2] - (*this)[2][1] * (*this)[1][2] ) * inv_det
-        , - ( (*this)[1][0] * (*this)[2][2] - (*this)[2][0] * (*this)[1][2] ) * inv_det
-        , + ( (*this)[1][0] * (*this)[2][1] - (*this)[2][0] * (*this)[1][1] ) * inv_det
-        , - ( (*this)[0][1] * (*this)[2][2] - (*this)[2][1] * (*this)[0][2] ) * inv_det
-        , + ( (*this)[0][0] * (*this)[2][2] - (*this)[2][0] * (*this)[0][2] ) * inv_det
-        , - ( (*this)[0][0] * (*this)[2][1] - (*this)[2][0] * (*this)[0][1] ) * inv_det
-        , + ( (*this)[0][1] * (*this)[1][2] - (*this)[1][1] * (*this)[0][2] ) * inv_det
-        , - ( (*this)[0][0] * (*this)[1][2] - (*this)[1][0] * (*this)[0][2] ) * inv_det
-        , + ( (*this)[0][0] * (*this)[1][1] - (*this)[1][0] * (*this)[0][1] ) * inv_det
+          + ( mCols[1][1] * mCols[2][2] - mCols[2][1] * mCols[1][2] ) * inv_det
+        , - ( mCols[0][1] * mCols[2][2] - mCols[2][1] * mCols[0][2] ) * inv_det
+        , + ( mCols[0][1] * mCols[1][2] - mCols[1][1] * mCols[0][2] ) * inv_det
+        , - ( mCols[1][0] * mCols[2][2] - mCols[2][0] * mCols[1][2] ) * inv_det
+        , + ( mCols[0][0] * mCols[2][2] - mCols[2][0] * mCols[0][2] ) * inv_det
+        , - ( mCols[0][0] * mCols[1][2] - mCols[1][0] * mCols[0][2] ) * inv_det
+        , + ( mCols[1][0] * mCols[2][1] - mCols[2][0] * mCols[1][1] ) * inv_det
+        , - ( mCols[0][0] * mCols[2][1] - mCols[2][0] * mCols[0][1] ) * inv_det
+        , + ( mCols[0][0] * mCols[1][1] - mCols[1][0] * mCols[0][1] ) * inv_det
     );
 }
 
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix3x3< T > TMatrix3x3< T >::Transpose() {
     return  TMatrix3x3< T >(
-          (*this)[0][0]
-        , (*this)[0][1]
-        , (*this)[0][2]
-        , (*this)[1][0]
-        , (*this)[1][1]
-        , (*this)[1][2]
-        , (*this)[2][0]
-        , (*this)[2][1]
-        , (*this)[2][2]
+          mCols[0][0]
+        , mCols[1][0]
+        , mCols[2][0]
+        , mCols[0][1]
+        , mCols[1][1]
+        , mCols[2][1]
+        , mCols[0][2]
+        , mCols[1][2]
+        , mCols[2][2]
     );
 }
 
 template< typename T >
 ULIS3_MATRIX_FUNC T TMatrix3x3< T >::Determinant() {
-    return  + (*this)[0][0] * ( (*this)[1][1] * (*this)[2][2] - (*this)[2][1] * (*this)[1][2] )
-            - (*this)[1][0] * ( (*this)[0][1] * (*this)[2][2] - (*this)[2][1] * (*this)[0][2] )
-            + (*this)[2][0] * ( (*this)[0][1] * (*this)[1][2] - (*this)[1][1] * (*this)[0][2] );
+    return  + mCols[0][0] * ( mCols[1][1] * mCols[2][2] - mCols[2][1] * mCols[1][2] )
+            - mCols[1][0] * ( mCols[0][1] * mCols[2][2] - mCols[2][1] * mCols[0][2] )
+            + mCols[2][0] * ( mCols[0][1] * mCols[1][2] - mCols[1][1] * mCols[0][2] );
 }
 
 
@@ -262,7 +262,7 @@ ULIS3_MATRIX_FUNC T TMatrix3x3< T >::Determinant() {
 template< typename T >
 ULIS3_MATRIX_FUNC bool TMatrix3x3< T >::operator==( const TMatrix3x3< T >& iOther ) {
     return  mCols[0] == iOther.mCols[0]
-        &&  mCols[1] == iOther.mCols[1];
+        &&  mCols[1] == iOther.mCols[1]
         &&  mCols[2] == iOther.mCols[2];
 }
 
@@ -454,15 +454,15 @@ ULIS3_MATRIX_FUNC TMatrix3x3< T > operator-( const TMatrix3x3< T >& iMat, const 
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix3x3< T > operator*( const TMatrix3x3< T >& iMat, const TMatrix3x3< T >& iOther ) {
     return  TMatrix3x3< T >(
-        iMat[0][0] * iOther[0][0] + iMat[1][0] * iOther[0][1] + iMat[2][0] * iOther[0][2];
-        iMat[0][0] * iOther[1][0] + iMat[1][0] * iOther[1][1] + iMat[2][0] * iOther[1][2];
-        iMat[0][0] * iOther[2][0] + iMat[1][0] * iOther[2][1] + iMat[2][0] * iOther[2][2];
-        iMat[0][1] * iOther[0][0] + iMat[1][1] * iOther[0][1] + iMat[2][1] * iOther[0][2];
-        iMat[0][1] * iOther[1][0] + iMat[1][1] * iOther[1][1] + iMat[2][1] * iOther[1][2];
-        iMat[0][1] * iOther[2][0] + iMat[1][1] * iOther[2][1] + iMat[2][1] * iOther[2][2];
-        iMat[0][2] * iOther[0][0] + iMat[1][2] * iOther[0][1] + iMat[2][2] * iOther[0][2];
-        iMat[0][2] * iOther[1][0] + iMat[1][2] * iOther[1][1] + iMat[2][2] * iOther[1][2];
-        iMat[0][2] * iOther[2][0] + iMat[1][2] * iOther[2][1] + iMat[2][2] * iOther[2][2];
+          iMat[0][0] * iOther[0][0] + iMat[1][0] * iOther[0][1] + iMat[2][0] * iOther[0][2]
+        , iMat[0][0] * iOther[1][0] + iMat[1][0] * iOther[1][1] + iMat[2][0] * iOther[1][2]
+        , iMat[0][0] * iOther[2][0] + iMat[1][0] * iOther[2][1] + iMat[2][0] * iOther[2][2]
+        , iMat[0][1] * iOther[0][0] + iMat[1][1] * iOther[0][1] + iMat[2][1] * iOther[0][2]
+        , iMat[0][1] * iOther[1][0] + iMat[1][1] * iOther[1][1] + iMat[2][1] * iOther[1][2]
+        , iMat[0][1] * iOther[2][0] + iMat[1][1] * iOther[2][1] + iMat[2][1] * iOther[2][2]
+        , iMat[0][2] * iOther[0][0] + iMat[1][2] * iOther[0][1] + iMat[2][2] * iOther[0][2]
+        , iMat[0][2] * iOther[1][0] + iMat[1][2] * iOther[1][1] + iMat[2][2] * iOther[1][2]
+        , iMat[0][2] * iOther[2][0] + iMat[1][2] * iOther[2][1] + iMat[2][2] * iOther[2][2]
     );
 }
 
@@ -476,7 +476,7 @@ ULIS3_MATRIX_FUNC TMatrix3x3< T > operator/( const TMatrix3x3< T >& iMat, const 
 // Binary matrix vector multiplication operators.
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix3x3< T >::tColumn operator*( const TMatrix3x3< T >& iMat, const TMatrix3x3< T >::tRow& iRow ) {
-    return  TVector2< T >(
+    return  TVector3< T >(
           iMat[0][0] * iRow.x + iMat[1][0] * iRow.y + iMat[2][0] * iRow.z
         , iMat[0][1] * iRow.x + iMat[1][1] * iRow.y + iMat[2][1] * iRow.z
         , iMat[0][2] * iRow.x + iMat[1][2] * iRow.y + iMat[2][2] * iRow.z
@@ -484,11 +484,11 @@ ULIS3_MATRIX_FUNC TMatrix3x3< T >::tColumn operator*( const TMatrix3x3< T >& iMa
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix3x3< T >::tRow operator*( const TMatrix3x3< T >::tColumn& iColum, const TMatrix3x3< T >& iMat ) {
-    return  TVector2< T >(
-          iMat[0][0] * iColum.x + iMat[0][1] * iColum.y + iMat[0][2] * iColum.z
-        , iMat[1][0] * iColum.x + iMat[1][1] * iColum.y + iMat[1][2] * iColum.z
-        , iMat[2][0] * iColum.x + iMat[2][1] * iColum.y + iMat[2][2] * iColum.z
+ULIS3_MATRIX_FUNC TMatrix3x3< T >::tRow operator*( const TMatrix3x3< T >::tColumn& iColumn, const TMatrix3x3< T >& iMat ) {
+    return  TVector3< T >(
+          iMat[0][0] * iColumn.x + iMat[0][1] * iColumn.y + iMat[0][2] * iColumn.z
+        , iMat[1][0] * iColumn.x + iMat[1][1] * iColumn.y + iMat[1][2] * iColumn.z
+        , iMat[2][0] * iColumn.x + iMat[2][1] * iColumn.y + iMat[2][2] * iColumn.z
     );
 }
 

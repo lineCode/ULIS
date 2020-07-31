@@ -45,7 +45,7 @@ public:
     ULIS3_MATRIX_FUNC TMatrix2x2( T iValue );
 
     /*! Constructor from input cells values. */
-    ULIS3_MATRIX_FUNC TMatrix2x2( T iM00, T iM10, T iM01, T iM11 );
+    ULIS3_MATRIX_FUNC TMatrix2x2( T iM00, T iM01, T iM10, T iM11 );
 
     /*! Constructor from row vector values. */
     ULIS3_MATRIX_FUNC TMatrix2x2( const tColumn& iCol0, const tColumn& iCol1 );
@@ -150,7 +150,7 @@ ULIS3_MATRIX_FUNC TMatrix2x2< T >::TMatrix2x2( T iValue )
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix2x2< T >::TMatrix2x2( T iM00, T iM10, T iM01, T iM11 )
+ULIS3_MATRIX_FUNC TMatrix2x2< T >::TMatrix2x2( T iM00, T iM01, T iM10, T iM11 )
     : mCols {
           tColumn( iM00, iM01 )
         , tColumn( iM10, iM11 )
@@ -180,7 +180,6 @@ ULIS3_MATRIX_FUNC TMatrix2x2< T >& TMatrix2x2< T >::operator=( const TMatrix2x2<
 }
 
 
-
 // Conversion
 template< typename T >
 template< typename U >
@@ -198,26 +197,26 @@ template< typename T >
 ULIS3_MATRIX_FUNC TMatrix2x2< T > TMatrix2x2< T >::Inverse() {
     T inv_det = static_cast< T >( 1 ) / Determinant();
     return  TMatrix2x2< T >(
-          + (*this)[1][1] * inv_det
-        , - (*this)[1][0] * inv_det
-        , - (*this)[0][1] * inv_det
-        , + (*this)[0][0] * inv_det
+          + mCols[1][1] * inv_det
+        , - mCols[0][1] * inv_det
+        , - mCols[1][0] * inv_det
+        , + mCols[0][0] * inv_det
     );
 }
 
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix2x2< T > TMatrix2x2< T >::Transpose() {
     return  TMatrix2x2< T >(
-          (*this)[0][0]
-        , (*this)[1][0]
-        , (*this)[0][1]
-        , (*this)[1][1]
+          mCols[0][0]
+        , mCols[0][1]
+        , mCols[1][0]
+        , mCols[1][1]
     );
 }
 
 template< typename T >
 ULIS3_MATRIX_FUNC T TMatrix2x2< T >::Determinant() {
-    return  (*this)[0][0] * (*this)[1][1] - (*this)[1][0] * (*this)[0][1];
+    return  mCols[0][0] * mCols[1][1] - mCols[1][0] * mCols[0][1];
 }
 
 
@@ -401,8 +400,8 @@ template< typename T >
 ULIS3_MATRIX_FUNC TMatrix2x2< T > operator*( const TMatrix2x2< T >& iMat, const TMatrix2x2< T >& iOther ) {
     return  TMatrix2x2< T >(
           iMat[0][0] * & iOther[0][0] + iMat[1][0] * & iOther[0][1]
-        , iMat[0][0] * & iOther[1][0] + iMat[1][0] * & iOther[1][1]
         , iMat[0][1] * & iOther[0][0] + iMat[1][1] * & iOther[0][1]
+        , iMat[0][0] * & iOther[1][0] + iMat[1][0] * & iOther[1][1]
         , iMat[0][1] * & iOther[1][0] + iMat[1][1] * & iOther[1][1]
     );
 }
@@ -424,10 +423,10 @@ ULIS3_MATRIX_FUNC TMatrix2x2< T >::tColumn operator*( const TMatrix2x2< T >& iMa
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix2x2< T >::tRow operator*( const TMatrix2x2< T >::tColumn& iColum, const TMatrix2x2< T >& iMat ) {
+ULIS3_MATRIX_FUNC TMatrix2x2< T >::tRow operator*( const TMatrix2x2< T >::tColumn& iColumn, const TMatrix2x2< T >& iMat ) {
     return  TVector2< T >(
-          iColum.x * iMat[0][0] + iColum.y * iMat[0][1]
-        , iColum.x * iMat[1][0] + iColum.y * iMat[1][1]
+          iColumn.x * iMat[0][0] + iColumn.y * iMat[0][1]
+        , iColumn.x * iMat[1][0] + iColumn.y * iMat[1][1]
     );
 }
 
