@@ -5,7 +5,7 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "tests/OpenCLInterop/OpenCLInterop.cpp"
+    "test/OpenCLInterop/OpenCLInterop.cpp"
 )
 
 add_executable( OpenCLInterop ${source_list} )

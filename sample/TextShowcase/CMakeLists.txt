@@ -6,7 +6,7 @@ if( ${ULIS3_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "samples/TextShowcase/TextShowcase.cpp"
+        "sample/TextShowcase/TextShowcase.cpp"
     )
 
     add_executable( TextShowcase ${source_list} )

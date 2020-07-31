@@ -154,20 +154,28 @@ public:
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8()
     : mCols {
-          tColumn( 1, 0, 0, 0 )
-        , tColumn( 0, 1, 0, 0 )
-        , tColumn( 0, 0, 1, 0 )
-        , tColumn( 0, 0, 0, 1 )
+          tColumn( 1, 0, 0, 0, 0, 0, 0, 0 )
+        , tColumn( 0, 1, 0, 0, 0, 0, 0, 0 )
+        , tColumn( 0, 0, 1, 0, 0, 0, 0, 0 )
+        , tColumn( 0, 0, 0, 1, 0, 0, 0, 0 )
+        , tColumn( 0, 0, 0, 0, 1, 0, 0, 0 )
+        , tColumn( 0, 0, 0, 0, 0, 1, 0, 0 )
+        , tColumn( 0, 0, 0, 0, 0, 0, 1, 0 )
+        , tColumn( 0, 0, 0, 0, 0, 0, 0, 1 )
     }
 {}
 
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( T iValue )
     : mCols {
-          tColumn( iValue, 0, 0, 0 )
-        , tColumn( 0, iValue, 0, 0 )
-        , tColumn( 0, 0, iValue, 0 )
-        , tColumn( 0, 0, 0, iValue )
+          tColumn( iValue, 0, 0, 0, 0, 0, 0, 0 )
+        , tColumn( 0, iValue, 0, 0, 0, 0, 0, 0 )
+        , tColumn( 0, 0, iValue, 0, 0, 0, 0, 0 )
+        , tColumn( 0, 0, 0, iValue, 0, 0, 0, 0 )
+        , tColumn( 0, 0, 0, 0, iValue, 0, 0, 0 )
+        , tColumn( 0, 0, 0, 0, 0, iValue, 0, 0 )
+        , tColumn( 0, 0, 0, 0, 0, 0, iValue, 0 )
+        , tColumn( 0, 0, 0, 0, 0, 0, 0, iValue )
     }
 {}
 

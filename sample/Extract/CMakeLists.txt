@@ -6,7 +6,7 @@ if( ${ULIS3_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "samples/Extract/Extract.cpp"
+        "sample/Extract/Extract.cpp"
     )
 
     add_executable( Extract ${source_list} )

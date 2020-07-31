@@ -5,7 +5,7 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "tests/Benchmark/Benchmark.cpp"
+    "test/Benchmark/Benchmark.cpp"
 )
 
 add_executable( Benchmark ${source_list} )

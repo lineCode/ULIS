@@ -5,7 +5,7 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "tests/Formats/Formats.cpp"
+    "test/Formats/Formats.cpp"
 )
 
 add_executable( Formats ${source_list} )

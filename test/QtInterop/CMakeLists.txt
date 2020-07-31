@@ -6,7 +6,7 @@ if( ${ULIS3_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "tests/QtInterop/QtInterop.cpp"
+        "test/QtInterop/QtInterop.cpp"
     )
 
     add_executable( QtInterop ${source_list} )

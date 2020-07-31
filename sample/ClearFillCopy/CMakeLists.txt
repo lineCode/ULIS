@@ -6,7 +6,7 @@ if( ${ULIS3_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "samples/ClearFillCopy/ClearFillCopy.cpp"
+        "sample/ClearFillCopy/ClearFillCopy.cpp"
     )
 
     add_executable( ClearFillCopy ${source_list} )

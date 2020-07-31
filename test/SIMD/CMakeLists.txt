@@ -5,7 +5,7 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "tests/SIMD/SIMD.cpp"
+    "test/SIMD/SIMD.cpp"
 )
 
 add_executable( SIMD ${source_list} )

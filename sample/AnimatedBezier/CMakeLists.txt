@@ -6,9 +6,9 @@ if( ${ULIS3_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "samples/AnimatedBezier/main.cpp"
-        "samples/AnimatedBezier/AnimatedBezier.cpp"
-        "samples/AnimatedBezier/AnimatedBezier.h"
+        "sample/AnimatedBezier/main.cpp"
+        "sample/AnimatedBezier/AnimatedBezier.cpp"
+        "sample/AnimatedBezier/AnimatedBezier.h"
     )
 
     add_executable( AnimatedBezier ${source_list} )

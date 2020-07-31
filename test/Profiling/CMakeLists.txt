@@ -5,7 +5,7 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "tests/Profiling/Profiling.cpp"
+    "test/Profiling/Profiling.cpp"
 )
 
 add_executable( Profiling ${source_list} )

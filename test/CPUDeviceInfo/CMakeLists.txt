@@ -5,7 +5,7 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "tests/CPUDeviceInfo/CPUDeviceInfo.cpp"
+    "test/CPUDeviceInfo/CPUDeviceInfo.cpp"
 )
 
 add_executable( CPUDeviceInfo ${source_list} )

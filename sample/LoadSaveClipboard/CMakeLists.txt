@@ -6,7 +6,7 @@ if( ${ULIS3_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "samples/LoadSaveClipboard/LoadSaveClipboard.cpp"
+        "sample/LoadSaveClipboard/LoadSaveClipboard.cpp"
     )
 
     add_executable( LoadSaveClipboard ${source_list} )
