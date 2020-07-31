@@ -540,14 +540,14 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator-( const TMatrix4x4< T >& iMat, const 
 
 template< typename T >
 ULIS3_MATRIX_FUNC TMatrix4x4< T > operator*( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
-    const TVec4< T > colA0 = m1[0];
-    const TVec4< T > colA1 = m1[1];
-    const TVec4< T > colA2 = m1[2];
-    const TVec4< T > colA3 = m1[3];
-    const TVec4< T > colB0 = m2[0];
-    const TVec4< T > colB1 = m2[1];
-    const TVec4< T > colB2 = m2[2];
-    const TVec4< T > colB3 = m2[3];
+    const TVec4< T > colA0 = iMat[0];
+    const TVec4< T > colA1 = iMat[1];
+    const TVec4< T > colA2 = iMat[2];
+    const TVec4< T > colA3 = iMat[3];
+    const TVec4< T > colB0 = iOther[0];
+    const TVec4< T > colB1 = iOther[1];
+    const TVec4< T > colB2 = iOther[2];
+    const TVec4< T > colB3 = iOther[3];
 
     return  TMatrix4x4< T >(
           colA0 * colB0[0] + colA1 * colB0[1] + colA2 * colB0[2] + colA3 * colB0[3]
