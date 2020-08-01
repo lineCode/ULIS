@@ -27,6 +27,9 @@ ULIS3_NAMESPACE_BEGIN
 template< typename T, typename P, uint8 N >
 class TVectorN
 {
+    // Typedefs
+    typedef P tComputation;
+
     // Members
     /*! The components of the ND vector. */
     T m[N];
@@ -53,23 +56,23 @@ public:
 
     // Named Functions
     /*! Return the euclidean distance of the vector. */
-    ULIS3_VECTOR_FUNC P Distance() const;
+    ULIS3_VECTOR_FUNC tComputation Distance() const;
 
     /*!
     Return the squared euclidean distance of the vector.
     This can be useful for testing against another squared distance, thus
     saving a square root calculation.
     */
-    ULIS3_VECTOR_FUNC P DistanceSquared() const;
+    ULIS3_VECTOR_FUNC tComputation DistanceSquared() const;
 
     /*! Return the manhattan distance of the vector. */
-    ULIS3_VECTOR_FUNC P ManhattanDistance() const;
+    ULIS3_VECTOR_FUNC tComputation ManhattanDistance() const;
 
     /*! Dot Product */
-    ULIS3_VECTOR_FUNC P DotProduct( const TVectorN< T, P, N >& iOther ) const;
+    ULIS3_VECTOR_FUNC tComputation DotProduct( const TVectorN< T, P, N >& iOther ) const;
 
     /*! Normalize this vector. */
-    ULIS3_VECTOR_FUNC const TVectorN< T, P, N >& Normalize();
+    ULIS3_VECTOR_FUNC TVectorN< T, P, N >& Normalize();
 
     /*! Return the normalized version of this vector. */
     ULIS3_VECTOR_FUNC TVectorN< T, P, N > Normalized() const;
@@ -155,8 +158,11 @@ ULIS3_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( T iValue )
 template< typename T, typename P, uint8 N >
 ULIS3_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( std::initializer_list< T > iValues )
 {
-    for( uint8 i = 0; i < N; ++i )
+    for( uint8 i = 0; i < iValues.size(); ++i )
         m[i] = *( iValues.begin() + i );
+
+    for( uint8 i = iValues.size(); i < N; ++i )
+        m[i] = static_cast< T >( 0 );
 }
 
 
@@ -180,51 +186,57 @@ ULIS3_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( const TVectorN< U, Q, M >& iOth
 
 // Named Functions
 template< typename T, typename P, uint8 N >
-ULIS3_VECTOR_FUNC P TVectorN< T, P, N >:: Distance() const {
+ULIS3_VECTOR_FUNC
+TVectorN< T, P, N >::tComputation
+TVectorN< T, P, N >:: Distance() const {
     return  FMaths::Sqrt( DistanceSquared() );
 }
 
 template< typename T, typename P, uint8 N >
-ULIS3_VECTOR_FUNC P TVectorN< T, P, N >::DistanceSquared() const {
-    P res = 0;
+ULIS3_VECTOR_FUNC
+TVectorN< T, P, N >::tComputation
+TVectorN< T, P, N >::DistanceSquared() const {
+    tComputation res = 0;
 
     for( uint8 i = 0; i < N; ++i )
-        res += static_cast< P >(
-              static_cast< P >( m[i] )
-            * static_cast< P >( m[i] )
+        res += static_cast< tComputation >(
+               static_cast< tComputation >( m[i] )
+             * static_cast< tComputation >( m[i] )
             );
 
     return  res;
 }
 
 template< typename T, typename P, uint8 N >
-ULIS3_VECTOR_FUNC P TVectorN< T, P, N >::ManhattanDistance() const {
-    P res = 0;
+ULIS3_VECTOR_FUNC
+TVectorN< T, P, N >::tComputation
+TVectorN< T, P, N >::ManhattanDistance() const {
+    tComputation res = 0;
 
     for( uint8 i = 0; i < N; ++i )
-        res += FMaths::Abs( static_cast< P >( m[i] ) );
+        res += FMaths::Abs( static_cast< tComputation >( m[i] ) );
 
     return  res;
 }
 
 template< typename T, typename P, uint8 N >
-ULIS3_VECTOR_FUNC P TVectorN< T, P, N >::DotProduct( const TVectorN& iOther ) const {
-    P res = 0;
+ULIS3_VECTOR_FUNC
+TVectorN< T, P, N >::tComputation
+TVectorN< T, P, N >::DotProduct( const TVectorN& iOther ) const {
+    tComputation res = 0;
 
     for( uint8 i = 0; i < N; ++i )
-        res += static_cast< P >(
-              static_cast< P >( m[i] )
-            * static_cast< P >( iOther.m[i] )
+        res += static_cast< tComputation >(
+               static_cast< tComputation >( m[i] )
+             * static_cast< tComputation >( iOther.m[i] )
             );
 
     return  res;
 }
 
 template< typename T, typename P, uint8 N >
-ULIS3_VECTOR_FUNC const TVectorN< T, P, N >& TVectorN< T, P, N >::Normalize() {
-    P inv_distance = FMaths::InvSqrt( DistanceSquared() );
-
-    ULIS3_ASSERT( distance != 0, "Division by zero" );
+ULIS3_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::Normalize() {
+    tComputation inv_distance = FMaths::InvSqrt( DistanceSquared() );
 
     for( uint8 i = 0; i < N; ++i )
         m[i] = static_cast< T >( m[i] * inv_distance );
@@ -300,7 +312,7 @@ ULIS3_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator*=( T iValue
 
 template< typename T, typename P, uint8 N >
 ULIS3_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator/=( T iValue ) {
-    ULIS3_ASSERT( iValue != static_cast< P >( 0 ), "Division by zero" );
+    ULIS3_ASSERT( iValue != static_cast< T >( 0 ), "Division by zero" );
 
     for( int i = 0; i < N; ++i )
         m[i] /= iValue;
@@ -310,10 +322,10 @@ ULIS3_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator/=( T iValue
 
 template< typename T, typename P, uint8 N >
 ULIS3_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator%=( T iValue ) {
-    ULIS3_ASSERT( iValue != static_cast< P >( 0 ), "Division by zero" );
+    ULIS3_ASSERT( iValue != static_cast< T >( 0 ), "Division by zero" );
 
     for( int i = 0; i < N; ++i )
-        m[i] %= iValue;
+        m[i] = FMaths::Mod( m[i], iValue );
 
     return  *this;
 }
@@ -366,7 +378,7 @@ ULIS3_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator%=(const TVe
 #endif // ULIS3_ASSERT_ENABLED
 
     for( int i = 0; i < N; ++i )
-        m[i] %= iOther.m[i];
+        m[i] = FMaths::Mod( m[i], iOther.m[i] );
 
     return  *this;
 }
@@ -446,7 +458,7 @@ ULIS3_VECTOR_FUNC T operator%( T iValue, const TVectorN< T, P, N >& iVector ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
-        result.m[i] = iValue % iVector.m[i];
+        result.m[i] = FMaths::Mod( iValue, iVector.m[i] );
 
     return  result;
 }
@@ -501,7 +513,7 @@ ULIS3_VECTOR_FUNC T operator%( const TVectorN< T, P, N >& iVector, T iValue ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
-        result.m[i] = iVector.m[i] % iValue;
+        result.m[i] = FMaths::Mod( iVector.m[i], iValue );
 
     return  result;
 }
@@ -564,7 +576,7 @@ ULIS3_VECTOR_FUNC T operator%( const TVectorN< T, P, N >& iVector, const TVector
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
-        result.m[i] = iVector.m[i] % iOther.m[i];
+        result.m[i] = FMaths::Mod( iVector.m[i], iOther.m[i] );
 
     return  result;
 }

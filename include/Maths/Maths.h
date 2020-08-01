@@ -137,6 +137,21 @@ struct ULIS3_API FMaths
         return  fmod( iMod + fmod( iValue, iMod ), iMod );
     }
 
+    template< typename T >
+    static ULIS3_MATHS_FUNC T Mod( T iA, T iB ) {
+        return  iA % iB;
+    }
+
+    template<>
+    static ULIS3_MATHS_FUNC double Mod( double iA, double iB ) {
+        return  fmod( iA, iB );
+    }
+
+    template<>
+    static ULIS3_MATHS_FUNC float Mod( float iA, float iB ) {
+        return  fmodf( iA, iB );
+    }
+
     static ULIS3_FORCEINLINE double RadToDeg( double iRad )
     {
         return ( iRad * 180 / FMaths::kPId );
