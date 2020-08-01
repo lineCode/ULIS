@@ -202,7 +202,7 @@ struct ULIS3_API FMaths
     template< typename T >
     static ULIS3_MATHS_FUNC T Sqrt( T iValue )
     {
-        return  static_cast< T >( sqrt( iValue ) );
+        return  sqrt( iValue );
     }
 
     template<>
@@ -215,6 +215,24 @@ struct ULIS3_API FMaths
     static ULIS3_MATHS_FUNC float Sqrt< float >( float iValue )
     {
         return  sqrtf( iValue );
+    }
+
+    template< typename T >
+    static ULIS3_MATHS_FUNC T InvSqrt( T iValue ) {
+        return  static_cast< T >( 1.0 / Sqrt( iValue ) );
+    }
+
+    template<>
+    static ULIS3_MATHS_FUNC float InvSqrt( float iValue ) {
+        float x2 = iValue * 0.5f;
+        const float threehalfs = 1.5f;
+        float  convf = iValue;
+        uint32 convi = 0;
+        memcpy( &convi, &convf, sizeof( float ) );
+        convi = 0x5f3759df - ( convi >> 1 );
+        memcpy( &convf, &convi, sizeof( float ) );
+        convf = convf * ( threehalfs - ( x2 * convf * convf ) );
+        return convf;
     }
 
 }; // struct FMaths

@@ -5,9 +5,9 @@
 *   ULIS3
 *__________________
 *
-* @file         Matrix8x8.h
+* @file         MatrixN.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TMatrix8x8 class.
+* @brief        This file provides the definition for the TMatrixNxN class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -19,22 +19,18 @@
 
 ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      TMatrix8x8
-/// @brief      The TMatrix8x8 class provides a simple 8x8 square matrix class for
+/// @class      TMatrixN
+/// @brief      The TMatrixN class provides a simple NxN square matrix class for
 ///             geometry applications.
-/// @details    The TMatrix8x8 class is a template class that provides basic matrix
+/// @details    The TMatrixN class is a template class that provides basic matrix
 ///             functionnalities, it can be used with any numeric types,
 ///             ranging from integer values to floating point values.
-template< typename T >
-class TMatrix8x8
+template< typename T, uint8 N >
+class TMatrixN
 {
-public:
-    typedef TVector8< T > tRow;
-    typedef TVector8< T > tColumn;
-
 private:
     /*! The columns of the matrix. */
-    tColumn mCols[8];
+    float m[N][N];
 
 public:
     // Constructors
