@@ -19,7 +19,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 struct _FPrivateTextInfo {
     FThreadPool*            pool;
     bool                    blocking;
@@ -34,5 +34,5 @@ struct _FPrivateTextInfo {
     FVec2I                  position;
     bool                    antialiasing;
 };
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

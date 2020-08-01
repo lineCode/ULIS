@@ -16,7 +16,7 @@
 #include "Maths/Geometry/Transform2D.h"
 #include <glm/mat3x3.hpp>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 class FTransform2D::FTransform2D_imp
 {
@@ -57,5 +57,5 @@ void DecomposeMatrix( const glm::mat3& iMat, float* oTx, float* oTy, float* oRot
 glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] );
 FVec2F HomographyTransform( const FVec2F& iPoint, const glm::mat3& iMat );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

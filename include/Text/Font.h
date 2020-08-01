@@ -14,11 +14,11 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFont
 /// @brief      The FFont class provides a thin wrapper around the freetype face type.
-class ULIS3_API FFont
+class ULIS_API FFont
 {
 public:
     // Construction / Destruction
@@ -37,5 +37,5 @@ private:
     const FFontEngine& mFontEngine;
     const FFontRegistry& mFontRegistry;
 };
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

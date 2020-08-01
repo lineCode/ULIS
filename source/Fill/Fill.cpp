@@ -20,13 +20,13 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Invocations
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
-#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-void ULIS3_VECTORCALL
+#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+void ULIS_VECTORCALL
 InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FBlock > iBuf, const uint32 iCount, const uint32 iStride ) {
     __m256i src = _mm256_lddqu_si256( (const __m256i*)iBuf->Bits() );
 
@@ -39,12 +39,12 @@ InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FBlock > iB
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memcpy instead
     memcpy( iDst, iBuf->Bits(), iCount - index );
 }
-#endif // ULIS3_COMPILETIME_AVX2_SUPPORT
+#endif // ULIS_COMPILETIME_AVX2_SUPPORT
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- SSE
-#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-void ULIS3_VECTORCALL
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+void ULIS_VECTORCALL
 InvokeFillMTProcessScanline_SSE( uint8* iDst, std::shared_ptr< const FBlock > iBuf, const uint32 iCount, const uint32 iStride ) {
     __m128i src = _mm_lddqu_si128( (const __m128i*)iBuf->Bits() );
 
@@ -88,8 +88,8 @@ Fill_imp( FThreadPool*                          iThreadPool
     uint8*      dsb     = iDestination->Bits() + dsh;
     #define DST dsb + ( ( iDstROI.y + pLINE ) * bps )
 
-#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-    if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
+#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+    if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
         uint32   count   = iDstROI.w * bpp;
         uint32   stride  = 32 - ( 32 % bpp );
         std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 32, 1, eFormat::Format_G8 );
@@ -98,13 +98,13 @@ Fill_imp( FThreadPool*                          iThreadPool
         for( uint32 i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Bits(), bpp );
 
-        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeFillMTProcessScanline_AX2, DST, buf, count, stride )
     } else
 #endif
-#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-    if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+    if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
         uint32   count   = iDstROI.w * bpp;
         uint32   stride  = 16 - ( 16 % bpp );
         std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 16, 1, eFormat::Format_G8 );
@@ -113,13 +113,13 @@ Fill_imp( FThreadPool*                          iThreadPool
         for( uint32 i = 0; i < stride; i+= bpp )
             memcpy( (void*)( ( srcb ) + i ), iColor->Bits(), bpp );
 
-        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeFillMTProcessScanline_SSE, DST, buf, count, stride )
     } else
 #endif
     {
-        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeFillMTProcessScanline_MEM, DST, iColor, iDstROI.w, bpp )
     }
@@ -138,9 +138,9 @@ Fill( FThreadPool*              iThreadPool
     , const FRectI&              iArea )
 {
     // Assertions
-    ULIS3_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     // Fit region of interest
     FRectI roi = iArea & iDestination->Rect();
@@ -160,5 +160,5 @@ Fill( FThreadPool*              iThreadPool
     iDestination->Dirty( roi, iCallCB );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

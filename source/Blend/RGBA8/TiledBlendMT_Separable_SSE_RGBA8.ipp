@@ -25,7 +25,7 @@
 #include "Thread/ThreadPool.h"
 #include <vectorclass.h>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 void
 InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
@@ -39,13 +39,13 @@ InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8( const uint8* iSrc, uint8*
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
         ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
-        ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
         Vec4f src_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) ) ) ) / 255.f;
         Vec4f bdp_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( bdp ) ) ) ) ) / 255.f;
         Vec4f res_chan;
 
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = SeparableCompOpSSEF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         auto _pack = _mm_cvtps_epi32( res_chan );
@@ -71,7 +71,7 @@ TiledBlendMT_Separable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8
                                 , src + ( ( info.sourceRect.y + ( ( info.shift.y + pLINE ) % info.sourceRect.h ) ) * src_bps ) + src_decal_x
@@ -79,5 +79,5 @@ TiledBlendMT_Separable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
                                 , pLINE , iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

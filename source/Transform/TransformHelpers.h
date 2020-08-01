@@ -15,16 +15,16 @@
 #include "Core/Core.h"
 #include "Data/Format.h"
 
-#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 #include <vectorclass.h>
 #endif
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Helpers functions for Redundant Transform Operations
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- SampleBilinear
-template< typename T > ULIS3_FORCEINLINE void
+template< typename T > ULIS_FORCEINLINE void
 SampleBilinear( uint8* iDst, const uint8* iCA, const uint8* iCB, const FFormat& iFMT, const float iT, const float iU ) {
     float alphaA, alphaB, alphaC;
     alphaA = alphaB = alphaC = 1.f;
@@ -42,7 +42,7 @@ SampleBilinear( uint8* iDst, const uint8* iCA, const uint8* iCB, const FFormat& 
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------- SampleBilinearSAT
-template< typename T > ULIS3_FORCEINLINE void
+template< typename T > ULIS_FORCEINLINE void
 SampleBilinearSAT( uint8* iDst, const uint8* iCA, const uint8* iCB, const FFormat& iFMT, const float iT, const float iU ) {
     for( int i = 0; i < iFMT.SPP; ++i ) {
         uint8 r = iFMT.IDT[i];
@@ -63,7 +63,7 @@ float InterpCubic( float iA, float iB, float iC, float iD, float iT ) {
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- SampleBicubicH
-template< typename T > ULIS3_FORCEINLINE void
+template< typename T > ULIS_FORCEINLINE void
 SampleBicubicH( float* iDst, const uint8* iA, const uint8* iB, const uint8* iC, const uint8* iD, const FFormat& iFMT, const float iT ) {
     float alphaA, alphaB, alphaC, alphaD, alphaR;
     alphaA = alphaB = alphaC = alphaD = alphaR = 1.f;
@@ -88,7 +88,7 @@ SampleBicubicH( float* iDst, const uint8* iA, const uint8* iB, const uint8* iC, 
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- SampleBicubicV
-template< typename T > ULIS3_FORCEINLINE void
+template< typename T > ULIS_FORCEINLINE void
 SampleBicubicV( uint8* iDst, const float* iA, const float* iB, const float* iC, const float* iD, const FFormat& iFMT, const float iT ) {
     float alphaA, alphaB, alphaC, alphaD, alphaR;
     alphaA = alphaB = alphaC = alphaD = alphaR = 1.f;
@@ -109,10 +109,10 @@ SampleBicubicV( uint8* iDst, const float* iA, const float* iB, const float* iC, 
 
 /////////////////////////////////////////////////////
 // SSE Helpers functions for specialized Transform Operations
-#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- InterpCubic
-ULIS3_FORCEINLINE Vec4f InterpCubic( Vec4f iA, Vec4f iB, Vec4f iC, Vec4f iD, Vec4f iT ) {
+ULIS_FORCEINLINE Vec4f InterpCubic( Vec4f iA, Vec4f iB, Vec4f iC, Vec4f iD, Vec4f iT ) {
     Vec4f a = -iA / 2.0f + (3.0f*iB) / 2.0f - (3.0f*iC) / 2.0f + iD / 2.0f;
     Vec4f b = iA - (5.0f*iB) / 2.0f + 2.0f*iC - iD / 2.0f;
     Vec4f c = -iA / 2.0f + iC / 2.0f;
@@ -121,5 +121,5 @@ ULIS3_FORCEINLINE Vec4f InterpCubic( Vec4f iA, Vec4f iB, Vec4f iC, Vec4f iD, Vec
 }
 #endif
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

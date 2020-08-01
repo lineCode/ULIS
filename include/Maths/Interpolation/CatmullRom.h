@@ -20,7 +20,7 @@
 #include <cmath>
 #include <vector>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 static constexpr float sCatmullRomKnotParametricConstant_Uniform        = 0.0f;
 static constexpr float sCatmullRomKnotParametricConstant_Centripetal    = 0.5f;
 static constexpr float sCatmullRomKnotParametricConstant_Chordal        = 1.f;
@@ -166,5 +166,5 @@ private:
     float alpha;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

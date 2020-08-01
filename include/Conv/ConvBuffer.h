@@ -14,11 +14,11 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Typedefs
 typedef void (*fpConversionInvocation)( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen );
-ULIS3_API fpConversionInvocation QueryDispatchedConversionInvocation( eFormat iSrcFormat, eFormat iDstFormat );
+ULIS_API fpConversionInvocation QueryDispatchedConversionInvocation( eFormat iSrcFormat, eFormat iDstFormat );
 
 /////////////////////////////////////////////////////
 // Explicit Conv Entry Points
@@ -152,5 +152,5 @@ template< typename T1, typename T2 > void ConvBufferLabToYxy( const FFormat& iSr
 template< typename T1, typename T2 > void ConvBufferXYZToYxy( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToYxy( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat& iDstFormat, uint8* iDst, uint32 iLen );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

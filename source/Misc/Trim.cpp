@@ -20,7 +20,7 @@
 #include "Thread/ThreadPool.h"
 #include <atomic>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 template< typename T >
 void InvokeDetectTrimAlphaEdge( int32 iLine, size_t iW, const uint8* iSrc, const FFormat& iFmt, std::atomic_int* iLeft, std::atomic_int* iTop, std::atomic_int* iRight, std::atomic_int* iBot ) {
@@ -56,9 +56,9 @@ FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                 , const FBlock*           iSource )
 {
     // Assertions
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Format info
     const FFormat& fmt( iSource->FormatInfo() );
@@ -75,13 +75,13 @@ FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
     std::atomic_int bot( 0 );
 
     fpDispatchedDetectTrimAlphaEdgeInvoke fptr = QueryDispatchedDetectTrimAlphaEdgeInvokeForParameters( iSource->Type() );
-    ULIS3_ASSERT( fptr, "No invocation found." );
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS3_BLOCKING
+    ULIS_ASSERT( fptr, "No invocation found." );
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS_BLOCKING
                                    , max
                                    , fptr, pLINE, len, src, fmt, &left, &top, &right, &bot );
     iSource->Dirty( iCallCB );
     return  FRectI( left, top, ( right - left ) + 1, ( bot - top ) + 1 );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

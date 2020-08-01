@@ -14,9 +14,9 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_API void Extract( FThreadPool*            iThreadPool
+ULIS_API void Extract( FThreadPool*            iThreadPool
                       , bool                    iBlocking
                       , uint32                  iPerfIntent
                       , const FHostDeviceInfo&  iHostDeviceInfo
@@ -28,7 +28,7 @@ ULIS3_API void Extract( FThreadPool*            iThreadPool
                       , bool                    iDestinationRawIndicesFlag
                       , uint8                   iDestinationExtractMask );
 
-ULIS3_API FBlock* XExtract( FThreadPool*            iThreadPool
+ULIS_API FBlock* XExtract( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
@@ -40,5 +40,5 @@ ULIS3_API FBlock* XExtract( FThreadPool*            iThreadPool
                           , bool                    iDestinationRawIndicesFlag
                           , uint8                   iDestinationExtractMask );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

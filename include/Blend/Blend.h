@@ -15,10 +15,10 @@
 #include "Core/Core.h"
 #include "Blend/Modes.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Blend
-ULIS3_API void Blend( FThreadPool*              iThreadPool
+ULIS_API void Blend( FThreadPool*              iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -34,7 +34,7 @@ ULIS3_API void Blend( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // AlphaBlend
-ULIS3_API void AlphaBlend( FThreadPool*             iThreadPool
+ULIS_API void AlphaBlend( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
@@ -48,7 +48,7 @@ ULIS3_API void AlphaBlend( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // BlendTiled
-ULIS3_API void BlendTiled( FThreadPool*             iThreadPool
+ULIS_API void BlendTiled( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
@@ -64,7 +64,7 @@ ULIS3_API void BlendTiled( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // BlendColor
-ULIS3_API void BlendColor( FThreadPool*             iThreadPool
+ULIS_API void BlendColor( FThreadPool*             iThreadPool
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
                          , bool                     iCallCB
@@ -77,10 +77,10 @@ ULIS3_API void BlendColor( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // Blend PRNG for pseudo random modes like Dissolve
-ULIS3_API void ResetBlendPRNGSeed();
-ULIS3_API void SetBlendPRNGSeed( uint32 iVal );
-ULIS3_API uint32 GetBlendPRNGSeed();
-ULIS3_API uint32 GenerateBlendPRNG();
+ULIS_API void ResetBlendPRNGSeed();
+ULIS_API void SetBlendPRNGSeed( uint32 iVal );
+ULIS_API uint32 GetBlendPRNGSeed();
+ULIS_API uint32 GenerateBlendPRNG();
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

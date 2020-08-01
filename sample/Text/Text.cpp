@@ -34,18 +34,18 @@ main( int argc, char *argv[] ) {
     // ( Note 2: often, SSE42 and AVX2 optimisations are available only if Type Specializations are enabled too. )
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
     FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_SSE42;
+    uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     // Start processing the block
     // Create one RGBA8 block to host the operations
-    // Specify ULIS3_FORMAT_RGBA8 as desired format for display
+    // Specify ULIS_FORMAT_RGBA8 as desired format for display
     // We will first fill the block background
     // Next we will then draw some text onto it.
     // Let's define everything:
     int w = 900;
     int h = 600;
-    FBlock* blockCanvas = new FBlock( w, h, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockCanvas = new FBlock( w, h, ULIS_FORMAT_RGBA8 );
     FColor color = FColor::FromRGBA8( 255, 0, 0 );
     std::wstring str1 = L"ULIS";
     std::wstring str2 = L"ユリッス";
@@ -77,10 +77,10 @@ main( int argc, char *argv[] ) {
     FColor fontColor       = FColor::FromRGBA8( 255, 255, 255, 255 );
 
     // Let's process the block:
-    Fill( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, backgroundColor, blockCanvas->Rect() );
-    RenderText( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str1, fontEU, fontSize, fontColor, transform1, ULIS3_AA );
-    RenderText( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform2, ULIS3_AA );
-    RenderText( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform3, ULIS3_AA );
+    Fill( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, backgroundColor, blockCanvas->Rect() );
+    RenderText( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, str1, fontEU, fontSize, fontColor, transform1, ULIS_AA );
+    RenderText( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform2, ULIS_AA );
+    RenderText( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform3, ULIS_AA );
 
     // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS3 operations.
     // We are not interested in the time it took Qt to create the window.
@@ -94,7 +94,7 @@ main( int argc, char *argv[] ) {
 
     // Create a Qt application and a simple window to display the result block we computed.
     // We create a QImage from the blockCanvas data, QImage does not own the data, so it still lives in blockCanvas, so we don't delete it right now.
-    // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS3_FORMAT_RGBA8
+    // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS_FORMAT_RGBA8
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
     QImage*         image   = new QImage( blockCanvas->Bits()

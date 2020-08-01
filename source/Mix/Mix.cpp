@@ -19,7 +19,7 @@
 #include "Maths/Maths.h"
 #include "Conv/srgb2linear.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 FColor
 MixRGB( ufloat iT, const ISample& iA, const ISample& iB )
 {
@@ -52,5 +52,5 @@ MixLab( ufloat iT, const ISample& iA, const ISample& iB )
     return  LabResult;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

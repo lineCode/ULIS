@@ -22,7 +22,7 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
 InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
@@ -43,7 +43,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iB
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -62,7 +62,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iB
                 const float bayerEl     = gBayer8x8Matrix[ ( info.backdropWorkingRect.y + iLine ) % 8 ][ ( info.backdropWorkingRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -87,7 +87,7 @@ TiledBlendMT_Misc_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic< T >
                                    , src + ( ( info.sourceRect.y + ( ( info.shift.y + pLINE ) % info.sourceRect.h ) ) * src_bps ) + src_decal_x
@@ -95,5 +95,5 @@ TiledBlendMT_Misc_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
                                    , pLINE , iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

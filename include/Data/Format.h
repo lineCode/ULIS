@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFormat
 /// @brief      The FFormat class provides a way to store cached information
@@ -24,7 +24,7 @@ ULIS3_NAMESPACE_BEGIN
 ///             algorithms.
 ///
 ///             \sa IHasFormat
-struct ULIS3_API FFormat
+struct ULIS_API FFormat
 {
     /*! Destructor. */
     ~FFormat();
@@ -85,7 +85,7 @@ struct ULIS3_API FFormat
 ///             for easy access to format information.
 ///
 ///             \sa FFormat
-class ULIS3_API IHasFormat
+class ULIS_API IHasFormat
 {
 protected:
     /*! Destructor. */
@@ -99,7 +99,7 @@ protected:
 
 public:
     /*! Return the underlying FFormat struct. */
-    ULIS3_FORCEINLINE const FFormat& FormatInfo() const {
+    ULIS_FORCEINLINE const FFormat& FormatInfo() const {
         return  mFormatInfo;
     }
 
@@ -116,77 +116,77 @@ public:
 
     For eFormat::Format_BGRA8, the index table might look like this: [2,1,0,3]
     */
-    ULIS3_FORCEINLINE const uint8* IndexTable() const {
+    ULIS_FORCEINLINE const uint8* IndexTable() const {
         return  mFormatInfo.IDT;
     }
 
     /*! Return the underlying eFormat value. */
-    ULIS3_FORCEINLINE eFormat Format() const {
+    ULIS_FORCEINLINE eFormat Format() const {
         return  mFormatInfo.FMT;
     }
 
     /*! Return the extrapolated eType type. */
-    ULIS3_FORCEINLINE eType Type() const {
+    ULIS_FORCEINLINE eType Type() const {
         return  mFormatInfo.TP;
     }
 
     /*! Return the extrapolated eColorModel model. */
-    ULIS3_FORCEINLINE eColorModel Model() const {
+    ULIS_FORCEINLINE eColorModel Model() const {
         return  mFormatInfo.CM;
     }
 
     /*! Return the number of bytes per sample ( per channel ). For eFormat::Format_RGBA8, this value is 1. */
-    ULIS3_FORCEINLINE uint8 BytesPerSample() const {
+    ULIS_FORCEINLINE uint8 BytesPerSample() const {
         return  mFormatInfo.BPC;
     }
 
     /*! Return the number of color channels, alpha is not part of the color channels. For RGB, this value is 3. */
-    ULIS3_FORCEINLINE uint8 NumColorChannels() const {
+    ULIS_FORCEINLINE uint8 NumColorChannels() const {
         return  mFormatInfo.NCC;
     }
 
     /*! Return wether the format has an extra alpha channel. */
-    ULIS3_FORCEINLINE bool HasAlpha() const {
+    ULIS_FORCEINLINE bool HasAlpha() const {
         return  mFormatInfo.HEA;
     }
 
     /*! Return the number of samples or channels, alpha is taken into account. For eFormat::Format_RGBA8, this value is 4. */
-    ULIS3_FORCEINLINE uint8 SamplesPerPixel() const {
+    ULIS_FORCEINLINE uint8 SamplesPerPixel() const {
         return  mFormatInfo.SPP;
     }
 
     /*! Return the number of bytes per pixel. For eFormat::Format_RGBA8, this value is 4. */
-    ULIS3_FORCEINLINE uint8 BytesPerPixel() const {
+    ULIS_FORCEINLINE uint8 BytesPerPixel() const {
         return  mFormatInfo.BPP;
     }
 
     /*! Return the redirected index of the alpha channel. */
-    ULIS3_FORCEINLINE uint8 AlphaIndex() const {
+    ULIS_FORCEINLINE uint8 AlphaIndex() const {
         return  mFormatInfo.AID;
     }
 
     /*! Return wether the layout is reversed or not. */
-    ULIS3_FORCEINLINE bool Reversed() const {
+    ULIS_FORCEINLINE bool Reversed() const {
         return  mFormatInfo.REV;
     }
 
     /*! Return wether the layout is swapped or not. */
-    ULIS3_FORCEINLINE bool Swapped() const {
+    ULIS_FORCEINLINE bool Swapped() const {
         return  mFormatInfo.SWA;
     }
 
     /*! Return wether the format is premultiplied or not. */
-    ULIS3_FORCEINLINE bool Premultiplied() const {
+    ULIS_FORCEINLINE bool Premultiplied() const {
         return  mFormatInfo.PRE;
     }
 
     /*! Return wether the format is linear or not. */
-    ULIS3_FORCEINLINE bool Linear() const {
+    ULIS_FORCEINLINE bool Linear() const {
         return  mFormatInfo.LIN;
     }
 
     /*! Return wether the format default profile identifier. */
-    ULIS3_FORCEINLINE uint8 DefaultProfileCode() const {
+    ULIS_FORCEINLINE uint8 DefaultProfileCode() const {
         return  mFormatInfo.PRO;
     }
 
@@ -195,8 +195,8 @@ public:
 
     \sa IndexTable()
     */
-    ULIS3_FORCEINLINE uint8 RedirectedIndex( uint8 iIndex ) const {
-        ULIS3_ASSERT( iIndex >= 0 && iIndex < mFormatInfo.SPP, "Bad Index" );
+    ULIS_FORCEINLINE uint8 RedirectedIndex( uint8 iIndex ) const {
+        ULIS_ASSERT( iIndex >= 0 && iIndex < mFormatInfo.SPP, "Bad Index" );
         return  mFormatInfo.IDT[ iIndex ];
     }
 
@@ -209,7 +209,7 @@ protected:
     constraints and circumstances under which and format reinterpretation is
     allowed. These circumstances are defined by the child classes.
     */
-    ULIS3_FORCEINLINE void ReinterpretFormat( eFormat iFormat ) {
+    ULIS_FORCEINLINE void ReinterpretFormat( eFormat iFormat ) {
         mFormatInfo = FFormat( iFormat );
     }
 
@@ -217,5 +217,5 @@ private:
     FFormat mFormatInfo; ///< The FormatInfo.
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -17,10 +17,10 @@
 #include "Maths/Interpolation/Bezier.h"
 #include <vector>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // TransformAffine
-ULIS3_API void TransformAffine( FThreadPool*              iThreadPool
+ULIS_API void TransformAffine( FThreadPool*              iThreadPool
                               , bool                      iBlocking
                               , uint32                    iPerfIntent
                               , const FHostDeviceInfo&    iHostDeviceInfo
@@ -33,7 +33,7 @@ ULIS3_API void TransformAffine( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformAffineTiled
-ULIS3_API void TransformAffineTiled( FThreadPool*              iThreadPool
+ULIS_API void TransformAffineTiled( FThreadPool*              iThreadPool
                                    , bool                      iBlocking
                                    , uint32                    iPerfIntent
                                    , const FHostDeviceInfo&    iHostDeviceInfo
@@ -47,7 +47,7 @@ ULIS3_API void TransformAffineTiled( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformPerspective
-ULIS3_API void TransformPerspective( FThreadPool*              iThreadPool
+ULIS_API void TransformPerspective( FThreadPool*              iThreadPool
                                    , bool                      iBlocking
                                    , uint32                    iPerfIntent
                                    , const FHostDeviceInfo&    iHostDeviceInfo
@@ -60,7 +60,7 @@ ULIS3_API void TransformPerspective( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformBezier
-ULIS3_API void TransformBezier( FThreadPool*                                    iThreadPool
+ULIS_API void TransformBezier( FThreadPool*                                    iThreadPool
                               , bool                                            iBlocking
                               , uint32                                          iPerfIntent
                               , const FHostDeviceInfo&                          iHostDeviceInfo
@@ -75,7 +75,7 @@ ULIS3_API void TransformBezier( FThreadPool*                                    
 
 /////////////////////////////////////////////////////
 // Resize
-ULIS3_API void Resize( FThreadPool*             iThreadPool
+ULIS_API void Resize( FThreadPool*             iThreadPool
                      , bool                     iBlocking
                      , uint32                   iPerfIntent
                      , const FHostDeviceInfo&   iHostDeviceInfo
@@ -89,7 +89,7 @@ ULIS3_API void Resize( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // XResize
-ULIS3_API FBlock* XResize( FThreadPool*             iThreadPool
+ULIS_API FBlock* XResize( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
@@ -101,7 +101,7 @@ ULIS3_API FBlock* XResize( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // XTransformAffine
-ULIS3_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
+ULIS_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
                                   , bool                    iBlocking
                                   , uint32                  iPerfIntent
                                   , const FHostDeviceInfo&  iHostDeviceInfo
@@ -113,7 +113,7 @@ ULIS3_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
 
 /////////////////////////////////////////////////////
 // XTransformAffineTiled
-ULIS3_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
+ULIS_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                                        , bool                      iBlocking
                                        , uint32                    iPerfIntent
                                        , const FHostDeviceInfo&    iHostDeviceInfo
@@ -126,7 +126,7 @@ ULIS3_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // XMakeTileableTransformedPattern
-ULIS3_API FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
+ULIS_API FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
                                                  , bool                      iBlocking
                                                  , uint32                    iPerfIntent
                                                  , const FHostDeviceInfo&    iHostDeviceInfo
@@ -138,7 +138,7 @@ ULIS3_API FBlock* XMakeTileableTransformedPattern( FThreadPool*              iTh
 
 /////////////////////////////////////////////////////
 // XTransformPerspective
-ULIS3_API FBlock* XTransformPerspective( FThreadPool*                   iThreadPool
+ULIS_API FBlock* XTransformPerspective( FThreadPool*                   iThreadPool
                                        , bool                           iBlocking
                                        , uint32                         iPerfIntent
                                        , const FHostDeviceInfo&         iHostDeviceInfo
@@ -150,21 +150,21 @@ ULIS3_API FBlock* XTransformPerspective( FThreadPool*                   iThreadP
 
 /////////////////////////////////////////////////////
 // TransformAffineMetrics
-ULIS3_API FRectI TransformAffineMetrics( const FRectI&          iSourceRect
+ULIS_API FRectI TransformAffineMetrics( const FRectI&          iSourceRect
                                       , const FTransform2D&   iTransform
                                       , eResamplingMethod     iMethod );
 
 /////////////////////////////////////////////////////
 // TransformPerspectiveMetrics
-ULIS3_API FRectI TransformPerspectiveMetrics( const FRectI&          iSourceRect
+ULIS_API FRectI TransformPerspectiveMetrics( const FRectI&          iSourceRect
                                            , const FTransform2D&   iTransform
                                            , eResamplingMethod     iMethod );
 
 /////////////////////////////////////////////////////
 // TransformBezierMetrics
-ULIS3_API FRectI TransformBezierMetrics( const FRectI&                                    iSourceRect
+ULIS_API FRectI TransformBezierMetrics( const FRectI&                                    iSourceRect
                                       , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                                       , eResamplingMethod                               iMethod );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -14,10 +14,10 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FillPreserveAlpha
-ULIS3_API void FillPreserveAlpha( FThreadPool* iThreadPool
+ULIS_API void FillPreserveAlpha( FThreadPool* iThreadPool
                                 , bool iBlocking
                                 , uint32 iPerfIntent
                                 , const FHostDeviceInfo& iHostDeviceInfo
@@ -26,5 +26,5 @@ ULIS3_API void FillPreserveAlpha( FThreadPool* iThreadPool
                                 , const ISample& iColor
                                 , const FRectI& iArea );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

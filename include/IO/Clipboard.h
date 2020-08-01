@@ -14,23 +14,23 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_API FBlock* XLoadFromClipboard( FThreadPool*              iThreadPool
+ULIS_API FBlock* XLoadFromClipboard( FThreadPool*              iThreadPool
                                     , bool                      iBlocking
                                     , uint32                    iPerfIntent
                                     , const FHostDeviceInfo&    iHostDeviceInfo
                                     , bool                      iCallCB
                                     , eFormat                   iDesiredFormat );
 
-ULIS3_API void SaveToClipboard( FThreadPool*            iThreadPool
+ULIS_API void SaveToClipboard( FThreadPool*            iThreadPool
                               , bool                    iBlocking
                               , uint32                  iPerfIntent
                               , const FHostDeviceInfo&  iHostDeviceInfo
                               , bool                    iCallCB
                               , const FBlock*           iSource );
 
-ULIS3_API bool ClipboardHasImageData();
+ULIS_API bool ClipboardHasImageData();
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

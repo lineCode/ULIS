@@ -20,7 +20,7 @@
 #include "Maths/Maths.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 template< typename T >
 void 
@@ -101,21 +101,21 @@ void ComputePremultipliedSummedAreaTable_MEM_Generic( FThreadPool*              
         }
     }
 
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , h
                                    , InvokeComputePremultipliedSummedAreaTable_XPass_MEM_Generic< T >
                                    , w, iSAT
                                    , src + pLINE * src_bps
                                    , bdp + pLINE * bdp_bps );
     iThreadPool->WaitForCompletion();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , w
                                    , InvokeComputePremultipliedSummedAreaTable_YPass_MEM_Generic< T >
                                    , h, iSAT
                                    , bdp + pLINE * bdp_bpp );
 }
 
-#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 void 
 InvokeComputePremultipliedSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const uint8* iSrc, uint8* iDst, uint8 iAID ) {
     const uint8* src = reinterpret_cast< const uint8* >( iSrc ) + 4;
@@ -178,21 +178,21 @@ void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FThreadPool*              
         }
     }
 
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , h
                                    , InvokeComputePremultipliedSummedAreaTable_XPass_SSE42_RGBA8
                                    , w
                                    , src + pLINE * src_bps
                                    , bdp + pLINE * bdp_bps, fmt.AID );
     iThreadPool->WaitForCompletion();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , w
                                    , InvokeComputePremultipliedSummedAreaTable_YPass_SSE42_RGBA8
                                    , h, iSource, iSAT
                                    , src + pLINE * src_bpp
                                    , bdp + pLINE * bdp_bpp );
 }
-#endif // ULIS3_COMPILETIME_SSE42_SUPPORT
+#endif // ULIS_COMPILETIME_SSE42_SUPPORT
 
 
 typedef void (*fpDispatchedSATFunc)( FThreadPool*             iThreadPool
@@ -210,7 +210,7 @@ QueryDispatchedPremultipliedSATFunctionForParameters_Generic( uint32 iPerfIntent
 
 fpDispatchedSATFunc
 QueryDispatchedPremultipliedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
-    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
         if( iHostDeviceInfo.HW_SSE42 )
             return  ComputePremultipliedSummedAreaTable_SSE42_RGBA8;
         else
@@ -232,7 +232,7 @@ QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint8 >( uint32 iPerfI
     if( iFormatInfo.HEA
      && iFormatInfo.NCC == 3
      && iFormatInfo.CM  == CM_RGB
-     && ( iPerfIntent & ULIS3_PERF_SSE42 || iPerfIntent & ULIS3_PERF_AVX2 )
+     && ( iPerfIntent & ULIS_PERF_SSE42 || iPerfIntent & ULIS_PERF_AVX2 )
      && ( iHostDeviceInfo.HW_SSE42 || iHostDeviceInfo.HW_AVX2 ) ) {
         return  QueryDispatchedPremultipliedSATFunctionForParameters_RGBA8( iPerfIntent, iHostDeviceInfo, iFormatInfo );
     }
@@ -252,5 +252,5 @@ QueryDispatchedPremultipliedSATFunctionForParameters( uint32 iPerfIntent, const 
     return  nullptr;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

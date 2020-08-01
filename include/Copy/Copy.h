@@ -14,9 +14,9 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_API void Copy( FThreadPool*           iThreadPool
+ULIS_API void Copy( FThreadPool*           iThreadPool
                    , bool                   iBlocking
                    , uint32                 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo
@@ -26,7 +26,7 @@ ULIS3_API void Copy( FThreadPool*           iThreadPool
                    , const FRectI&           iArea
                    , const FVec2I&          iPos );
 
-ULIS3_API FBlock* XCopy( FThreadPool*           iThreadPool
+ULIS_API FBlock* XCopy( FThreadPool*           iThreadPool
                        , bool                   iBlocking
                        , uint32                 iPerfIntent
                        , const FHostDeviceInfo& iHostDeviceInfo
@@ -34,8 +34,8 @@ ULIS3_API FBlock* XCopy( FThreadPool*           iThreadPool
                        , const FBlock*          iSource
                        , const FRectI&           iArea );
 
-ULIS3_API void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB );
-ULIS3_API FBlock* XCopyRaw( const FBlock* iSrc, bool iCallCB );
+ULIS_API void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB );
+ULIS_API FBlock* XCopyRaw( const FBlock* iSrc, bool iCallCB );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

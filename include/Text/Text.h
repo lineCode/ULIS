@@ -17,8 +17,8 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Maths/Geometry/Transform2D.h"
 
-ULIS3_NAMESPACE_BEGIN
-ULIS3_API void RenderText( FThreadPool*             iThreadPool
+ULIS_NAMESPACE_BEGIN
+ULIS_API void RenderText( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
@@ -31,9 +31,9 @@ ULIS3_API void RenderText( FThreadPool*             iThreadPool
                          , const FTransform2D&      iTransform
                          , bool                     iAntialiasing );
 
-ULIS3_API FRectI TextMetrics( std::wstring           iText
+ULIS_API FRectI TextMetrics( std::wstring           iText
                            , const FFont&           iFont
                            , int                    iSize
                            , const FTransform2D&    iTransform );
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

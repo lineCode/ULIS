@@ -17,7 +17,7 @@
 #include "Maths/Geometry/VectorSwizzle.h"
 #include "Maths/Maths.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TVector4
 /// @brief      The TVector4 class provides a simple 4D vector class for vector
@@ -49,20 +49,20 @@ struct TVector4
     // Constructors
     // Constructors
     /*! Default constructor for the vector, with default zero values. */
-    ULIS3_VECTOR_FUNC TVector4();
+    ULIS_VECTOR_FUNC TVector4();
 
     /*! Construct the vector from input value ( both x and y will have value iValue ) */
-    ULIS3_VECTOR_FUNC TVector4( T iValue );
+    ULIS_VECTOR_FUNC TVector4( T iValue );
 
     /*! Construct the vector from input values. */
-    ULIS3_VECTOR_FUNC TVector4( T iX, T iY, T iZ = 0, T iW = 0 );
+    ULIS_VECTOR_FUNC TVector4( T iX, T iY, T iZ = 0, T iW = 0 );
 
     // Conversion
     /*! Construct the vector from TVector2. */
-    ULIS3_VECTOR_FUNC TVector4( const TVector2< T >& iVec, T iZ = 0, T iW = 0 );
+    ULIS_VECTOR_FUNC TVector4( const TVector2< T >& iVec, T iZ = 0, T iW = 0 );
 
     /*! Construct the vector from TVector4. */
-    ULIS3_VECTOR_FUNC TVector4( const TVector3< T >& iVec, T iW = 0 );
+    ULIS_VECTOR_FUNC TVector4( const TVector3< T >& iVec, T iW = 0 );
 
     /*! Construct the vector from input vector of any convertible type. */
     template< typename U >
@@ -70,93 +70,93 @@ struct TVector4
 
     // Named Functions
     /*! Return the euclidean distance of the vector. */
-    ULIS3_VECTOR_FUNC T Distance() const;
+    ULIS_VECTOR_FUNC T Distance() const;
 
     /*!
     Return the squared euclidean distance of the vector.
     This can be useful for testing against another squared distance, thus
     saving a square root calculation.
     */
-    ULIS3_VECTOR_FUNC T DistanceSquared() const;
+    ULIS_VECTOR_FUNC T DistanceSquared() const;
 
     /*! Return the manhattan distance of the vector. ( abs( x ) + abs( y ) ) */
-    ULIS3_VECTOR_FUNC T ManhattanDistance() const;
+    ULIS_VECTOR_FUNC T ManhattanDistance() const;
 
     /*! Return the dot product of the vector */
-    ULIS3_VECTOR_FUNC T DotProduct( const TVector4& iOther ) const;
+    ULIS_VECTOR_FUNC T DotProduct( const TVector4& iOther ) const;
 
     /*! Normalize this vector. */
-    ULIS3_VECTOR_FUNC const TVector4& Normalize();
+    ULIS_VECTOR_FUNC const TVector4& Normalize();
 
     /*! Return the normalized version of this vector. */
-    ULIS3_VECTOR_FUNC TVector4 Normalized() const;
+    ULIS_VECTOR_FUNC TVector4 Normalized() const;
 
     // Comparison operators
     /*! Compare this vector to the other vector for strict equality. */
-    ULIS3_VECTOR_FUNC bool operator==( const TVector4& iOther ) const;
+    ULIS_VECTOR_FUNC bool operator==( const TVector4& iOther ) const;
 
     /*! Compare this vector to the other vector for strict inequality. */
-    ULIS3_VECTOR_FUNC bool operator!=( const TVector4& iOther ) const;
+    ULIS_VECTOR_FUNC bool operator!=( const TVector4& iOther ) const;
 
 
 
     // Unary Negative Operator
-    ULIS3_VECTOR_FUNC TVector4 operator-() const;
+    ULIS_VECTOR_FUNC TVector4 operator-() const;
 
 
 
     // Unary Operators with scalar
     /*! Add the input value to this vector and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator+=( T iValue );
+    ULIS_VECTOR_FUNC TVector4& operator+=( T iValue );
 
     /*! Substract the input value to this vector and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator-=( T iValue );
+    ULIS_VECTOR_FUNC TVector4& operator-=( T iValue );
 
     /*! Multiply this vector by the input value and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator*=( T iValue );
+    ULIS_VECTOR_FUNC TVector4& operator*=( T iValue );
 
     /*! Divide this vector by the input value and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator/=( T iValue );
+    ULIS_VECTOR_FUNC TVector4& operator/=( T iValue );
 
     /*! Compute modulo of this vector by the input value and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator%=( T iValue );
+    ULIS_VECTOR_FUNC TVector4& operator%=( T iValue );
 
 
 
     // Unary Operators with vector
     /*! Add the input to this vector and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator+=(const TVector4& iOther );
+    ULIS_VECTOR_FUNC TVector4& operator+=(const TVector4& iOther );
 
     /*! Substract the input to this vector and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator-=(const TVector4& iOther );
+    ULIS_VECTOR_FUNC TVector4& operator-=(const TVector4& iOther );
 
     /*! Multiply this vector by the input vector and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator*=(const TVector4& iOther );
+    ULIS_VECTOR_FUNC TVector4& operator*=(const TVector4& iOther );
 
     /*! Divide this vector by the input vector and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator/=(const TVector4& iOther );
+    ULIS_VECTOR_FUNC TVector4& operator/=(const TVector4& iOther );
 
     /*! Compute modulo of this vector by the input vector and return a reference to this vector. */
-    ULIS3_VECTOR_FUNC TVector4& operator%=(const TVector4& iOther );
+    ULIS_VECTOR_FUNC TVector4& operator%=(const TVector4& iOther );
 
 
 
     // Other Operators
     /*! Access component x or y by index, return a reference to the component. */
-    ULIS3_VECTOR_FUNC T& operator[]( int iIndex );
+    ULIS_VECTOR_FUNC T& operator[]( int iIndex );
 
     /*! Access component x or y by index, return a const reference to the component. */
-    ULIS3_VECTOR_FUNC const T& operator[]( int iIndex ) const;
+    ULIS_VECTOR_FUNC const T& operator[]( int iIndex ) const;
 
     // Swizzle declaration
-    ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC4
+    ULIS_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC4
 };
 
 
 
 // Constructors
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >::TVector4()
+ULIS_VECTOR_FUNC TVector4< T >::TVector4()
     : x( 0 )
     , y( 0 )
     , z( 0 )
@@ -164,7 +164,7 @@ ULIS3_VECTOR_FUNC TVector4< T >::TVector4()
 {}
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >::TVector4( T iValue )
+ULIS_VECTOR_FUNC TVector4< T >::TVector4( T iValue )
     : x( iValue )
     , y( iValue )
     , z( iValue )
@@ -172,7 +172,7 @@ ULIS3_VECTOR_FUNC TVector4< T >::TVector4( T iValue )
 {}
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >::TVector4( T iX, T iY, T iZ, T iW )
+ULIS_VECTOR_FUNC TVector4< T >::TVector4( T iX, T iY, T iZ, T iW )
     : x( iX )
     , y( iY )
     , z( iZ )
@@ -184,7 +184,7 @@ ULIS3_VECTOR_FUNC TVector4< T >::TVector4( T iX, T iY, T iZ, T iW )
 // Conversion
 template< typename T >
 template< typename U >
-ULIS3_VECTOR_FUNC TVector4< T >:: TVector4( const TVector4< U >& iOther )
+ULIS_VECTOR_FUNC TVector4< T >:: TVector4( const TVector4< U >& iOther )
     : x( static_cast< T >( iOther.x ) )
     , y( static_cast< T >( iOther.y ) )
     , z( static_cast< T >( iOther.z ) )
@@ -195,29 +195,29 @@ ULIS3_VECTOR_FUNC TVector4< T >:: TVector4( const TVector4< U >& iOther )
 
 // Named Functions
 template< typename T >
-ULIS3_VECTOR_FUNC T TVector4< T >:: Distance() const {
+ULIS_VECTOR_FUNC T TVector4< T >:: Distance() const {
     return  FMaths::Sqrt( x * x + y *y + z * z + w * w );
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T TVector4< T >::DistanceSquared() const {
+ULIS_VECTOR_FUNC T TVector4< T >::DistanceSquared() const {
     return  x * x + y * y + z *z + w * w;
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T TVector4< T >::ManhattanDistance() const {
+ULIS_VECTOR_FUNC T TVector4< T >::ManhattanDistance() const {
     return  FMaths::Abs( x ) + FMaths::Abs( y ) + FMaths::Abs( z ) + FMaths::Abs( w );
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T TVector4< T >::DotProduct( const TVector4& iOther ) const {
+ULIS_VECTOR_FUNC T TVector4< T >::DotProduct( const TVector4& iOther ) const {
     return  x * iOther.x + y * iOther.y + z * iOther.z + w * iOther.w;
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC const TVector4< T >& TVector4< T >::Normalize() {
+ULIS_VECTOR_FUNC const TVector4< T >& TVector4< T >::Normalize() {
     T distance = Distance();
-    ULIS3_ASSERT( distance != 0, "Division by zero" );
+    ULIS_ASSERT( distance != 0, "Division by zero" );
     x /= distance;
     y /= distance;
     z /= distance;
@@ -226,7 +226,7 @@ ULIS3_VECTOR_FUNC const TVector4< T >& TVector4< T >::Normalize() {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T > TVector4< T >::Normalized() const {
+ULIS_VECTOR_FUNC TVector4< T > TVector4< T >::Normalized() const {
     TVector4< T > result = *this;
     return  result.Normalize();
 }
@@ -235,12 +235,12 @@ ULIS3_VECTOR_FUNC TVector4< T > TVector4< T >::Normalized() const {
 
 // Comparison operators
 template< typename T >
-ULIS3_VECTOR_FUNC bool TVector4< T >::operator==( const TVector4< T >& iOther ) const {
+ULIS_VECTOR_FUNC bool TVector4< T >::operator==( const TVector4< T >& iOther ) const {
     return  x == iOther.x && y == iOther.y && z == iOther.z && w == iOther.w;
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC bool TVector4< T >::operator!=(const TVector4< T >& iOther ) const {
+ULIS_VECTOR_FUNC bool TVector4< T >::operator!=(const TVector4< T >& iOther ) const {
     return  !( *this == iOther );
 }
 
@@ -248,7 +248,7 @@ ULIS3_VECTOR_FUNC bool TVector4< T >::operator!=(const TVector4< T >& iOther ) c
 
 // Unary negative operator
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T > TVector4< T >::operator-() const {
+ULIS_VECTOR_FUNC TVector4< T > TVector4< T >::operator-() const {
     return  TVector4< T >( -x, -y, -z, -w );
 }
 
@@ -256,7 +256,7 @@ ULIS3_VECTOR_FUNC TVector4< T > TVector4< T >::operator-() const {
 
 // Unary Operators with scalar
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator+=( T iValue ) {
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator+=( T iValue ) {
     x += iValue;
     y += iValue;
     z += iValue;
@@ -265,7 +265,7 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator+=( T iValue ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator-=( T iValue ) {
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator-=( T iValue ) {
     x -= iValue;
     y -= iValue;
     z -= iValue;
@@ -274,7 +274,7 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator-=( T iValue ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator*=( T iValue ) {
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator*=( T iValue ) {
     x *= iValue;
     y *= iValue;
     z *= iValue;
@@ -283,8 +283,8 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator*=( T iValue ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator/=( T iValue ) {
-    ULIS3_ASSERT( iValue != 0, "Division by zero" );
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator/=( T iValue ) {
+    ULIS_ASSERT( iValue != 0, "Division by zero" );
     x /= iValue;
     y /= iValue;
     z /= iValue;
@@ -293,8 +293,8 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator/=( T iValue ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator%=( T iValue ) {
-    ULIS3_ASSERT( iValue != 0, "Division by zero" );
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator%=( T iValue ) {
+    ULIS_ASSERT( iValue != 0, "Division by zero" );
     x %= iValue;
     y %= iValue;
     z %= iValue;
@@ -306,7 +306,7 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator%=( T iValue ) {
 
 // Unary Operators with vectors
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator+=(const TVector4< T >& iOther ) {
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator+=(const TVector4< T >& iOther ) {
     x += iOther.x;
     y += iOther.y;
     z += iOther.z;
@@ -315,7 +315,7 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator+=(const TVector4< T >& 
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator-=(const TVector4< T >& iOther ) {
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator-=(const TVector4< T >& iOther ) {
     x -= iOther.x;
     y -= iOther.y;
     z -= iOther.z;
@@ -324,7 +324,7 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator-=(const TVector4< T >& 
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator*=(const TVector4< T >& iOther ) { 
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator*=(const TVector4< T >& iOther ) { 
     x *= iOther.x;
     y *= iOther.y;
     z *= iOther.z;
@@ -333,11 +333,11 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator*=(const TVector4< T >& 
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator/=(const TVector4& iOther ) {
-    ULIS3_ASSERT( iOther.x != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.y != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.z != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.w != 0, "Division by zero" );
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator/=(const TVector4& iOther ) {
+    ULIS_ASSERT( iOther.x != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.y != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.z != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.w != 0, "Division by zero" );
     x /= iOther.x;
     y /= iOther.y;
     z /= iOther.z;
@@ -346,10 +346,10 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator/=(const TVector4& iOthe
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator%=(const TVector4& iOther ) {
-    ULIS3_ASSERT( iOther.x != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.y != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.z != 0, "Division by zero" );
+ULIS_VECTOR_FUNC TVector4< T >& TVector4< T >::operator%=(const TVector4& iOther ) {
+    ULIS_ASSERT( iOther.x != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.y != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.z != 0, "Division by zero" );
     x %= iOther.x;
     y %= iOther.y;
     z %= iOther.z;
@@ -361,14 +361,14 @@ ULIS3_VECTOR_FUNC TVector4< T >& TVector4< T >::operator%=(const TVector4& iOthe
 
 // Other Operators
 template< typename T >
-ULIS3_VECTOR_FUNC T& TVector4< T >::operator[]( int iIndex ) {
-    ULIS3_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
+ULIS_VECTOR_FUNC T& TVector4< T >::operator[]( int iIndex ) {
+    ULIS_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
     return  ( &x )[ iIndex ];
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC const T& TVector4< T >::operator[]( int iIndex ) const {
-    ULIS3_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
+ULIS_VECTOR_FUNC const T& TVector4< T >::operator[]( int iIndex ) const {
+    ULIS_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
     return  ( &x )[ iIndex ];
 }
 
@@ -378,7 +378,7 @@ ULIS3_VECTOR_FUNC const T& TVector4< T >::operator[]( int iIndex ) const {
 
 // Binary Operators with scalar on left hand side
 template< typename T >
-ULIS3_VECTOR_FUNC T operator+( T iValue, const TVector4< T >& iVector ) {
+ULIS_VECTOR_FUNC T operator+( T iValue, const TVector4< T >& iVector ) {
     return  TVector4< T >(
           iValue + iVector.x
         , iValue + iVector.y
@@ -388,7 +388,7 @@ ULIS3_VECTOR_FUNC T operator+( T iValue, const TVector4< T >& iVector ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator-( T iValue, const TVector4< T >& iVector ) {
+ULIS_VECTOR_FUNC T operator-( T iValue, const TVector4< T >& iVector ) {
     return  TVector4< T >(
           iValue - iVector.x
         , iValue - iVector.y
@@ -398,7 +398,7 @@ ULIS3_VECTOR_FUNC T operator-( T iValue, const TVector4< T >& iVector ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator*( T iValue, const TVector4< T >& iVector ) {
+ULIS_VECTOR_FUNC T operator*( T iValue, const TVector4< T >& iVector ) {
     return  TVector4< T >(
           iValue * iVector.x
         , iValue * iVector.y
@@ -408,11 +408,11 @@ ULIS3_VECTOR_FUNC T operator*( T iValue, const TVector4< T >& iVector ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator/( T iValue, const TVector4< T >& iVector ) {
-    ULIS3_ASSERT( iVector.x != 0, "Division by zero" );
-    ULIS3_ASSERT( iVector.y != 0, "Division by zero" );
-    ULIS3_ASSERT( iVector.z != 0, "Division by zero" );
-    ULIS3_ASSERT( iVector.w != 0, "Division by zero" );
+ULIS_VECTOR_FUNC T operator/( T iValue, const TVector4< T >& iVector ) {
+    ULIS_ASSERT( iVector.x != 0, "Division by zero" );
+    ULIS_ASSERT( iVector.y != 0, "Division by zero" );
+    ULIS_ASSERT( iVector.z != 0, "Division by zero" );
+    ULIS_ASSERT( iVector.w != 0, "Division by zero" );
     return  TVector4< T >(
           iValue / iVector.x
         , iValue / iVector.y
@@ -422,11 +422,11 @@ ULIS3_VECTOR_FUNC T operator/( T iValue, const TVector4< T >& iVector ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator%( T iValue, const TVector4< T >& iVector ) {
-    ULIS3_ASSERT( iVector.x != 0, "Division by zero" );
-    ULIS3_ASSERT( iVector.y != 0, "Division by zero" );
-    ULIS3_ASSERT( iVector.z != 0, "Division by zero" );
-    ULIS3_ASSERT( iVector.w != 0, "Division by zero" );
+ULIS_VECTOR_FUNC T operator%( T iValue, const TVector4< T >& iVector ) {
+    ULIS_ASSERT( iVector.x != 0, "Division by zero" );
+    ULIS_ASSERT( iVector.y != 0, "Division by zero" );
+    ULIS_ASSERT( iVector.z != 0, "Division by zero" );
+    ULIS_ASSERT( iVector.w != 0, "Division by zero" );
     return  TVector4< T >(
           iValue % iVector.x
         , iValue % iVector.y
@@ -439,7 +439,7 @@ ULIS3_VECTOR_FUNC T operator%( T iValue, const TVector4< T >& iVector ) {
 
 // Binary Operators with scalar on right hand side
 template< typename T >
-ULIS3_VECTOR_FUNC T operator+( const TVector4< T >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC T operator+( const TVector4< T >& iVector, T iValue ) {
     return  TVector4< T >(
           iVector.x + iValue
         , iVector.y + iValue
@@ -449,7 +449,7 @@ ULIS3_VECTOR_FUNC T operator+( const TVector4< T >& iVector, T iValue ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator-( const TVector4< T >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC T operator-( const TVector4< T >& iVector, T iValue ) {
     return  TVector4< T >(
           iVector.x - iValue
         , iVector.y - iValue
@@ -459,7 +459,7 @@ ULIS3_VECTOR_FUNC T operator-( const TVector4< T >& iVector, T iValue ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator*( const TVector4< T >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC T operator*( const TVector4< T >& iVector, T iValue ) {
     return  TVector4< T >(
           iVector.x * iValue
         , iVector.y * iValue
@@ -469,8 +469,8 @@ ULIS3_VECTOR_FUNC T operator*( const TVector4< T >& iVector, T iValue ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator/( const TVector4< T >& iVector, T iValue ) {
-    ULIS3_ASSERT( iValue != 0, "Division by zero" );
+ULIS_VECTOR_FUNC T operator/( const TVector4< T >& iVector, T iValue ) {
+    ULIS_ASSERT( iValue != 0, "Division by zero" );
     return  TVector4< T >(
           iVector.x / iValue
         , iVector.y / iValue
@@ -480,8 +480,8 @@ ULIS3_VECTOR_FUNC T operator/( const TVector4< T >& iVector, T iValue ) {
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator%( const TVector4< T >& iVector, T iValue ) {
-    ULIS3_ASSERT( iValue != 0, "Division by zero" );
+ULIS_VECTOR_FUNC T operator%( const TVector4< T >& iVector, T iValue ) {
+    ULIS_ASSERT( iValue != 0, "Division by zero" );
     return  TVector4< T >(
           iVector.x % iValue
         , iVector.y % iValue
@@ -493,7 +493,7 @@ ULIS3_VECTOR_FUNC T operator%( const TVector4< T >& iVector, T iValue ) {
 
 // Binary Operators with vector
 template< typename T >
-ULIS3_VECTOR_FUNC T operator+( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
+ULIS_VECTOR_FUNC T operator+( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
     return  TVector4< T >(
           iVector.x + iOther.x
         , iVector.y + iOther.y
@@ -503,7 +503,7 @@ ULIS3_VECTOR_FUNC T operator+( const TVector4< T >& iVector, const TVector4< T >
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator-( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
+ULIS_VECTOR_FUNC T operator-( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
     return  TVector4< T >(
           iVector.x - iOther.x
         , iVector.y - iOther.y
@@ -513,7 +513,7 @@ ULIS3_VECTOR_FUNC T operator-( const TVector4< T >& iVector, const TVector4< T >
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator*( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
+ULIS_VECTOR_FUNC T operator*( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
     return  TVector4< T >(
           iVector.x * iOther.x
         , iVector.y * iOther.y
@@ -523,11 +523,11 @@ ULIS3_VECTOR_FUNC T operator*( const TVector4< T >& iVector, const TVector4< T >
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator/( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
-    ULIS3_ASSERT( iOther.x != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.y != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.z != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.w != 0, "Division by zero" );
+ULIS_VECTOR_FUNC T operator/( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
+    ULIS_ASSERT( iOther.x != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.y != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.z != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.w != 0, "Division by zero" );
     return  TVector4< T >(
           iVector.x / iOther.x
         , iVector.y / iOther.y
@@ -537,11 +537,11 @@ ULIS3_VECTOR_FUNC T operator/( const TVector4< T >& iVector, const TVector4< T >
 }
 
 template< typename T >
-ULIS3_VECTOR_FUNC T operator%( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
-    ULIS3_ASSERT( iOther.x != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.y != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.z != 0, "Division by zero" );
-    ULIS3_ASSERT( iOther.w != 0, "Division by zero" );
+ULIS_VECTOR_FUNC T operator%( const TVector4< T >& iVector, const TVector4< T >& iOther ) {
+    ULIS_ASSERT( iOther.x != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.y != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.z != 0, "Division by zero" );
+    ULIS_ASSERT( iOther.w != 0, "Division by zero" );
     return  TVector4< T >(
           iVector.x % iOther.x
         , iVector.y % iOther.y
@@ -550,5 +550,5 @@ ULIS3_VECTOR_FUNC T operator%( const TVector4< T >& iVector, const TVector4< T >
     );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

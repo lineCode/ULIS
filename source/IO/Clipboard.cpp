@@ -13,11 +13,11 @@
 */
 #include "IO/Clipboard.h"
 
-#if defined(ULIS3_WIN)
+#if defined(ULIS_WIN)
 #include "IO/Clipboard_imp/Clipboard_WindowsPlatform.ipp"
-#elif defined(ULIS3_MACOS)
+#elif defined(ULIS_MACOS)
 #include "IO/Clipboard_imp/Clipboard_MacOSPlatform.ipp"
-#elif defined(ULIS3_LINUX)
+#elif defined(ULIS_LINUX)
 #include "IO/Clipboard_imp/Clipboard_LinuxPlatform.ipp"
 #else
 #include "IO/Clipboard_imp/Clipboard_GenericPlatform.ipp"

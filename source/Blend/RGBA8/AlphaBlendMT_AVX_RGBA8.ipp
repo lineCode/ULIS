@@ -24,7 +24,7 @@
 #include "Thread/ThreadPool.h"
 #include <vectorclass.h>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 void
 InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info    = *iInfo;
@@ -146,7 +146,7 @@ AlphaBlendMT_Separable_AVX_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > i
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -216,7 +216,7 @@ AlphaBlendMT_Separable_AVX_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8
                                 , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -224,5 +224,5 @@ AlphaBlendMT_Separable_AVX_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
                                 , pLINE , iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

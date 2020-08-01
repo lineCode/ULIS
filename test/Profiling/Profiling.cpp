@@ -22,17 +22,17 @@ int main( int argc, char *argv[] ) {
 
     FThreadPool* pool = XCreateThreadPool();
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS3_PERF_SSE42;
+    uint32 perfIntent = ULIS_PERF_SSE42;
     int size = 128;
-    uint32 format = ULIS3_FORMAT_BGRA8;
+    uint32 format = ULIS_FORMAT_BGRA8;
     uint32 repeat = 500;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
-        Blend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+        Blend( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, src, dst, src->Rect(), FVec2F(), ULIS_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
 
-    //AlphaBlend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), ULIS3_NOAA, 0.5f );
+    //AlphaBlend( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, src, dst, src->Rect(), FVec2F(), ULIS_NOAA, 0.5f );
 
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = static_cast< double >( std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count() ) / static_cast< double >( repeat );

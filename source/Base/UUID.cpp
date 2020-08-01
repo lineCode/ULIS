@@ -16,7 +16,7 @@
 #include <sstream>
 #include <random>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Weak UUID
 //--------------------------------------------------------------------------------------
@@ -47,5 +47,5 @@ std::string GenerateWeakUUID( uint8 len )
 }
 
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

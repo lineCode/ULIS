@@ -15,15 +15,15 @@
 #include "Core/Core.h"
 #include <thread>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_API FThreadPool* XCreateThreadPool( uint32 iCount = std::thread::hardware_concurrency() );
-ULIS3_API void XDeleteThreadPool( FThreadPool* iThreadPool );
-ULIS3_API void Fence( FThreadPool& iPool );
-ULIS3_API void SetNumWorkers( FThreadPool& iPool, uint32 iValue );
-ULIS3_API uint32 GetProcessed( FThreadPool& iPool );
-ULIS3_API uint32 GetNumWorkers( FThreadPool& iPool );
-ULIS3_API uint32 MaxWorkers();
+ULIS_API FThreadPool* XCreateThreadPool( uint32 iCount = std::thread::hardware_concurrency() );
+ULIS_API void XDeleteThreadPool( FThreadPool* iThreadPool );
+ULIS_API void Fence( FThreadPool& iPool );
+ULIS_API void SetNumWorkers( FThreadPool& iPool, uint32 iValue );
+ULIS_API uint32 GetProcessed( FThreadPool& iPool );
+ULIS_API uint32 GetNumWorkers( FThreadPool& iPool );
+ULIS_API uint32 MaxWorkers();
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

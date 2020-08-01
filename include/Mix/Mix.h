@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
-ULIS3_API FColor MixRGB( ufloat iT, const ISample& iA, const ISample& iB );
-ULIS3_API FColor MixLab( ufloat iT, const ISample& iA, const ISample& iB );
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_BEGIN
+ULIS_API FColor MixRGB( ufloat iT, const ISample& iA, const ISample& iB );
+ULIS_API FColor MixLab( ufloat iT, const ISample& iA, const ISample& iB );
+ULIS_NAMESPACE_END
 

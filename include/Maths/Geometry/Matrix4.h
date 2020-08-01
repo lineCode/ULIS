@@ -17,7 +17,7 @@
 #include "Maths/Geometry/Vector3.h"
 #include "Maths/Maths.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TMatrix4x4
 /// @brief      The TMatrix4x4 class provides a simple 4x4 square matrix class for
@@ -39,13 +39,13 @@ private:
 public:
     // Constructors
     /*! Default constructor ( identity matrix ). */
-    ULIS3_MATRIX_FUNC TMatrix4x4();
+    ULIS_MATRIX_FUNC TMatrix4x4();
 
     /*! Constructor from input diagonal value. */
-    ULIS3_MATRIX_FUNC TMatrix4x4( T iValue );
+    ULIS_MATRIX_FUNC TMatrix4x4( T iValue );
 
     /*! Constructor from input cells values. */
-    ULIS3_MATRIX_FUNC TMatrix4x4(
+    ULIS_MATRIX_FUNC TMatrix4x4(
           T iM00, T iM01, T iM02, T iM03
         , T iM10, T iM11, T iM12, T iM13
         , T iM20, T iM21, T iM22, T iM23
@@ -53,7 +53,7 @@ public:
     );
 
     /*! Constructor from row vector values. */
-    ULIS3_MATRIX_FUNC TMatrix4x4(
+    ULIS_MATRIX_FUNC TMatrix4x4(
           const tColumn& iCol0
         , const tColumn& iCol1
         , const tColumn& iCol2
@@ -61,90 +61,90 @@ public:
     );
 
     /*! Copy constructor. */
-    ULIS3_MATRIX_FUNC TMatrix4x4( const TMatrix4x4& iOther );
+    ULIS_MATRIX_FUNC TMatrix4x4( const TMatrix4x4& iOther );
 
     /*! Assignment operator from matrix. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator=( const TMatrix4x4& iOther );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator=( const TMatrix4x4& iOther );
 
 
 
     // Conversion
     /*! Conversion constructor from other matrix type. */
     template< typename U >
-    ULIS3_MATRIX_FUNC TMatrix4x4( const TMatrix4x4< U >& iOther );
+    ULIS_MATRIX_FUNC TMatrix4x4( const TMatrix4x4< U >& iOther );
 
 
 
     // Named Functions
     /*! Obtain the inverse of the matrix. */
-    ULIS3_MATRIX_FUNC TMatrix4x4 Inverse();
+    ULIS_MATRIX_FUNC TMatrix4x4 Inverse();
 
     /*! Obtain the transpose of the matrix. */
-    ULIS3_MATRIX_FUNC TMatrix4x4 Transpose();
+    ULIS_MATRIX_FUNC TMatrix4x4 Transpose();
 
     /*! Obtain the determinant of the matrix. */
-    ULIS3_MATRIX_FUNC T Determinant();
+    ULIS_MATRIX_FUNC T Determinant();
 
 
 
     // Boolean operators
     /*! Equality operator. */
-    ULIS3_MATRIX_FUNC bool operator==( const TMatrix4x4& iOther );
+    ULIS_MATRIX_FUNC bool operator==( const TMatrix4x4& iOther );
 
     /*! Inequality operator. */
-    ULIS3_MATRIX_FUNC bool operator!=( const TMatrix4x4& iOther );
+    ULIS_MATRIX_FUNC bool operator!=( const TMatrix4x4& iOther );
 
 
 
     // Unary Negative Operator
     /*! Unary negative operator. */
-    ULIS3_MATRIX_FUNC TMatrix4x4 operator-() const;
+    ULIS_MATRIX_FUNC TMatrix4x4 operator-() const;
 
 
 
     // Unary arithmetic operator with scalar
     /*! Unary addition operator with value. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator+=( T iValue );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator+=( T iValue );
 
     /*! Unary substraction operator with value. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator-=( T iValue );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator-=( T iValue );
 
     /*! Unary multiplication operator with value. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator*=( T iValue );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator*=( T iValue );
 
     /*! Unary division operator with value. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator/=( T iValue );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator/=( T iValue );
 
 
 
     // Unary arithmetic operator with matrix
     /*! Unary addition operator with matrix. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator+=( const TMatrix4x4& iOther );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator+=( const TMatrix4x4& iOther );
 
     /*! Unary substraction operator with matrix. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator-=( const TMatrix4x4& iOther );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator-=( const TMatrix4x4& iOther );
 
     /*! Unary multiplication operator with matrix. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator*=( const TMatrix4x4& iOther );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator*=( const TMatrix4x4& iOther );
 
     /*! Unary division operator with matrix. */
-    ULIS3_MATRIX_FUNC TMatrix4x4& operator/=( const TMatrix4x4& iOther );
+    ULIS_MATRIX_FUNC TMatrix4x4& operator/=( const TMatrix4x4& iOther );
 
 
 
     // Other Operators
     /*! Subscript accessor for matrix columns. */
-    ULIS3_MATRIX_FUNC tColumn& operator[]( int iIndex );
+    ULIS_MATRIX_FUNC tColumn& operator[]( int iIndex );
 
     /*! Subscript accessor for const matrix columns. */
-    ULIS3_MATRIX_FUNC const tColumn& operator[]( int iIndex ) const;
+    ULIS_MATRIX_FUNC const tColumn& operator[]( int iIndex ) const;
 };
 
 
 
 // Constructors
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4()
+ULIS_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4()
     : mCols {
           tColumn( 1, 0, 0, 0 )
         , tColumn( 0, 1, 0, 0 )
@@ -154,7 +154,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4()
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( T iValue )
+ULIS_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( T iValue )
     : mCols {
           tColumn( iValue, 0, 0, 0 )
         , tColumn( 0, iValue, 0, 0 )
@@ -164,7 +164,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( T iValue )
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4(
+ULIS_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4(
       T iM00, T iM01, T iM02, T iM03
     , T iM10, T iM11, T iM12, T iM13
     , T iM20, T iM21, T iM22, T iM23
@@ -179,7 +179,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4(
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4(
+ULIS_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4(
       const tColumn& iCol0
     , const tColumn& iCol1
     , const tColumn& iCol2
@@ -194,7 +194,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4(
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( const TMatrix4x4< T >& iOther )
+ULIS_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( const TMatrix4x4< T >& iOther )
     : mCols {
           iOther.mCols[0]
         , iOther.mCols[1]
@@ -204,7 +204,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( const TMatrix4x4< T >& iOther )
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator=( const TMatrix4x4< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator=( const TMatrix4x4< T >& iOther ) {
     mCols[0] = iOther.mCols[0];
     mCols[1] = iOther.mCols[1];
     mCols[2] = iOther.mCols[2];
@@ -216,7 +216,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator=( const TMatrix4x4<
 // Conversion
 template< typename T >
 template< typename U >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( const TMatrix4x4< U >& iOther )
+ULIS_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( const TMatrix4x4< U >& iOther )
     : mCols {
           tColumn( iOther.mCols[0] )
         , tColumn( iOther.mCols[1] )
@@ -229,7 +229,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >::TMatrix4x4( const TMatrix4x4< U >& iOther )
 
 // Named Functions
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::Inverse() {
+ULIS_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::Inverse() {
     T coefficient_00 = mCols[2][2] * mCols[3][3] - mCols[3][2] * mCols[2][3];
     T coefficient_02 = mCols[1][2] * mCols[3][3] - mCols[3][2] * mCols[1][3];
     T coefficient_03 = mCols[1][2] * mCols[2][3] - mCols[2][2] * mCols[1][3];
@@ -285,7 +285,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::Inverse() {
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::Transpose() {
+ULIS_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::Transpose() {
     return  TMatrix4x4< T >(
           mCols[0][0]
         , mCols[1][0]
@@ -307,7 +307,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::Transpose() {
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC T TMatrix4x4< T >::Determinant() {
+ULIS_MATRIX_FUNC T TMatrix4x4< T >::Determinant() {
     const T sub_determinant_00 = (*this)[2][2] * (*this)[3][3] - (*this)[3][2] * (*this)[2][3];
     const T sub_determinant_01 = (*this)[2][1] * (*this)[3][3] - (*this)[3][1] * (*this)[2][3];
     const T sub_determinant_02 = (*this)[2][1] * (*this)[3][2] - (*this)[3][1] * (*this)[2][2];
@@ -330,7 +330,7 @@ ULIS3_MATRIX_FUNC T TMatrix4x4< T >::Determinant() {
 
 // Boolean operators
 template< typename T >
-ULIS3_MATRIX_FUNC bool TMatrix4x4< T >::operator==( const TMatrix4x4< T >& iOther ) {
+ULIS_MATRIX_FUNC bool TMatrix4x4< T >::operator==( const TMatrix4x4< T >& iOther ) {
     return  mCols[0] == iOther.mCols[0]
         &&  mCols[1] == iOther.mCols[1]
         &&  mCols[2] == iOther.mCols[2]
@@ -338,7 +338,7 @@ ULIS3_MATRIX_FUNC bool TMatrix4x4< T >::operator==( const TMatrix4x4< T >& iOthe
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC bool TMatrix4x4< T >::operator!=( const TMatrix4x4< T >& iOther ) {
+ULIS_MATRIX_FUNC bool TMatrix4x4< T >::operator!=( const TMatrix4x4< T >& iOther ) {
     return  !( *this == iOther );
 }
 
@@ -346,7 +346,7 @@ ULIS3_MATRIX_FUNC bool TMatrix4x4< T >::operator!=( const TMatrix4x4< T >& iOthe
 
 // Unary Negative Operator
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::operator-() const {
+ULIS_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::operator-() const {
     return  TMatrix4x4< T >( -mCols[0], -mCols[1], -mCols[2], -mCols[3] );
 }
 
@@ -354,7 +354,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > TMatrix4x4< T >::operator-() const {
 
 // Unary arithmetic operator with scalar
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator+=( T iValue ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator+=( T iValue ) {
     mCols[0] += iValue;
     mCols[1] += iValue;
     mCols[2] += iValue;
@@ -362,7 +362,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator+=( T iValue ) {
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator-=( T iValue ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator-=( T iValue ) {
     mCols[0] -= iValue;
     mCols[1] -= iValue;
     mCols[2] -= iValue;
@@ -370,7 +370,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator-=( T iValue ) {
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator*=( T iValue ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator*=( T iValue ) {
     mCols[0] *= iValue;
     mCols[1] *= iValue;
     mCols[2] *= iValue;
@@ -378,7 +378,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator*=( T iValue ) {
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator/=( T iValue ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator/=( T iValue ) {
     mCols[0] /= iValue;
     mCols[1] /= iValue;
     mCols[2] /= iValue;
@@ -389,7 +389,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator/=( T iValue ) {
 
 // Unary arithmetic operator with matrix
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator+=( const TMatrix4x4& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator+=( const TMatrix4x4& iOther ) {
     mCols[0] += iOther.mCols[0];
     mCols[1] += iOther.mCols[1];
     mCols[2] += iOther.mCols[2];
@@ -397,7 +397,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator+=( const TMatrix4x4
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator-=( const TMatrix4x4& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator-=( const TMatrix4x4& iOther ) {
     mCols[0] -= iOther.mCols[0];
     mCols[1] -= iOther.mCols[1];
     mCols[2] -= iOther.mCols[2];
@@ -405,12 +405,12 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator-=( const TMatrix4x4
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator*=( const TMatrix4x4& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator*=( const TMatrix4x4& iOther ) {
     return  ( *this = *this * iOther );
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator/=( const TMatrix4x4& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator/=( const TMatrix4x4& iOther ) {
     return  ( *this *= iOther.Inverse() );
 }
 
@@ -418,14 +418,14 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator/=( const TMatrix4x4
 
 // Other Operators
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( int iIndex ) {
-    ULIS3_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
+ULIS_MATRIX_FUNC TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( int iIndex ) {
+    ULIS_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
     return  mCols[ iIndex ];
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC const TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( int iIndex ) const {
-    ULIS3_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
+ULIS_MATRIX_FUNC const TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( int iIndex ) const {
+    ULIS_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
     return  mCols[ iIndex ];
 }
 
@@ -433,7 +433,7 @@ ULIS3_MATRIX_FUNC const TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( i
 
 // Binary arithmetic operator with scalar on left hand side
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator+( T iValue, const TMatrix4x4< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator+( T iValue, const TMatrix4x4< T >& iMat ) {
     return  TMatrix4x4< T >(
           iValue + iMat[0]
         , iValue + iMat[1]
@@ -443,7 +443,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator+( T iValue, const TMatrix4x4< T >& iM
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator-( T iValue, const TMatrix4x4< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator-( T iValue, const TMatrix4x4< T >& iMat ) {
     return  TMatrix4x4< T >(
           iValue - iMat[0]
         , iValue - iMat[1]
@@ -453,7 +453,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator-( T iValue, const TMatrix4x4< T >& iM
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator*( T iValue, const TMatrix4x4< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator*( T iValue, const TMatrix4x4< T >& iMat ) {
     return  TMatrix4x4< T >(
           iValue * iMat[0]
         , iValue * iMat[1]
@@ -463,7 +463,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator*( T iValue, const TMatrix4x4< T >& iM
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator/( T iValue, const TMatrix4x4< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator/( T iValue, const TMatrix4x4< T >& iMat ) {
     return  TMatrix4x4< T >(
           iValue / iMat[0]
         , iValue / iMat[1]
@@ -476,7 +476,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator/( T iValue, const TMatrix4x4< T >& iM
 
 // Binary arithmetic operator with scalar on right hand side
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator+( const TMatrix4x4< T >& iMat, T iValue ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator+( const TMatrix4x4< T >& iMat, T iValue ) {
     return  TMatrix4x4< T >(
           iMat[0] + iValue
         , iMat[1] + iValue
@@ -486,7 +486,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator+( const TMatrix4x4< T >& iMat, T iVal
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator-( const TMatrix4x4< T >& iMat, T iValue ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator-( const TMatrix4x4< T >& iMat, T iValue ) {
     return  TMatrix4x4< T >(
           iMat[0] - iValue
         , iMat[1] - iValue
@@ -496,7 +496,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator-( const TMatrix4x4< T >& iMat, T iVal
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator*( const TMatrix4x4< T >& iMat, T iValue ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator*( const TMatrix4x4< T >& iMat, T iValue ) {
     return  TMatrix4x4< T >(
           iMat[0] * iValue
         , iMat[1] * iValue
@@ -506,7 +506,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator*( const TMatrix4x4< T >& iMat, T iVal
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator/( const TMatrix4x4< T >& iMat, T iValue ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator/( const TMatrix4x4< T >& iMat, T iValue ) {
     return  TMatrix4x4< T >(
           iMat[0] / iValue
         , iMat[1] / iValue
@@ -519,7 +519,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator/( const TMatrix4x4< T >& iMat, T iVal
 
 // Binary arithmetic operator with other matrix
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator+( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator+( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
     return  TMatrix4x4< T >(
           iMat[0] + iOther[0]
         , iMat[1] + iOther[1]
@@ -529,7 +529,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator+( const TMatrix4x4< T >& iMat, const 
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator-( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator-( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
     return  TMatrix4x4< T >(
           iMat[0] - iOther[0]
         , iMat[1] - iOther[1]
@@ -539,7 +539,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator-( const TMatrix4x4< T >& iMat, const 
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator*( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator*( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
     const TVec4< T > colA0 = iMat[0];
     const TVec4< T > colA1 = iMat[1];
     const TVec4< T > colA2 = iMat[2];
@@ -558,7 +558,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator*( const TMatrix4x4< T >& iMat, const 
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T > operator/( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T > operator/( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >& iOther ) {
     return  iMat * iOther.Inverse();
 }
 
@@ -566,7 +566,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T > operator/( const TMatrix4x4< T >& iMat, const 
 
 // Binary matrix vector multiplication operators.
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::tColumn operator*( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >::tRow& iRow ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >::tColumn operator*( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >::tRow& iRow ) {
     return  TVector4< T >(
           iMat[0][0] * iRow[0] + iMat[1][0] * iRow[1] + iMat[2][0] * iRow[2] + iMat[3][0] * iRow[3]
         , iMat[0][1] * iRow[0] + iMat[1][1] * iRow[1] + iMat[2][1] * iRow[2] + iMat[3][1] * iRow[3]
@@ -576,7 +576,7 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >::tColumn operator*( const TMatrix4x4< T >& iMa
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix4x4< T >::tRow operator*( const TMatrix4x4< T >::tColumn& iColumn, const TMatrix4x4< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix4x4< T >::tRow operator*( const TMatrix4x4< T >::tColumn& iColumn, const TMatrix4x4< T >& iMat ) {
     return  TVector4< T >(
           iMat[0][0] * iColumn[0] + iMat[0][1] * iColumn[1] + iMat[0][2] * iColumn[2] + iMat[0][3] * iColumn[3]
         , iMat[1][0] * iColumn[0] + iMat[1][1] * iColumn[1] + iMat[1][2] * iColumn[2] + iMat[1][3] * iColumn[3]
@@ -585,5 +585,5 @@ ULIS3_MATRIX_FUNC TMatrix4x4< T >::tRow operator*( const TMatrix4x4< T >::tColum
     );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

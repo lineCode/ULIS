@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Weak UUID
 /// @fn         GenerateWeakUUID()
@@ -22,5 +22,5 @@ ULIS3_NAMESPACE_BEGIN
 /// @details    Weak UUID is an UUID that is pseudo random but with no guarantee to be unique at all. This it can be suitable for light uses.
 std::string GenerateWeakUUID( uint8 iLen );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

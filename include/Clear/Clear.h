@@ -14,10 +14,10 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Clear
-ULIS3_API void Clear( FThreadPool*              iThreadPool
+ULIS_API void Clear( FThreadPool*              iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -27,7 +27,7 @@ ULIS3_API void Clear( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // ClearRaw
-ULIS3_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
+ULIS_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

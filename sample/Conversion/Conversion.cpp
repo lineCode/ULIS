@@ -34,7 +34,7 @@ main( int argc, char *argv[] ) {
     // ( Note 2: often, SSE42 and AVX2 optimisations are available only if Type Specializations are enabled too. )
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
     FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     // Create two blocks: one in LAB, one in RGB for hosting the result conversion and display.
@@ -42,16 +42,16 @@ main( int argc, char *argv[] ) {
     // Second block is RGBA8 meaning layout in memory RGBARGBARGBA... with channel type uint8. With alpha, no problem for conversion compatibility.
     int w = 800;
     int h = 600;
-    FBlock* blockLAB = new  FBlock( w, h, ULIS3_FORMAT_LabD );
-    FBlock* blockRGB = new  FBlock( w, h, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockLAB = new  FBlock( w, h, ULIS_FORMAT_LabD );
+    FBlock* blockRGB = new  FBlock( w, h, ULIS_FORMAT_RGBA8 );
 
     // To illustrate the conversion operation, we will first perform a gradient in the Lab block, taking avantage of the nice color interpolation in LAB
     // We will then convert the Lab gradient to RGB to see the result, and observe the interpolation goes through a more appropriate chromatic path
     // We first bake our colors here, we specify pure red and green in RGB, then we convert this to Lab in order to be able to interpolate Lab values directly.
-    FColor rgbGreen(   ULIS3_FORMAT_RGB8, {   0, 255,   0 } );
-    FColor rgbRed(     ULIS3_FORMAT_RGB8, { 255,   0,   0 } );
-    FColor labGreen = Conv( rgbGreen,  ULIS3_FORMAT_LabD );
-    FColor labRed   = Conv( rgbRed,    ULIS3_FORMAT_LabD );
+    FColor rgbGreen(   ULIS_FORMAT_RGB8, {   0, 255,   0 } );
+    FColor rgbRed(     ULIS_FORMAT_RGB8, { 255,   0,   0 } );
+    FColor labGreen = Conv( rgbGreen,  ULIS_FORMAT_LabD );
+    FColor labRed   = Conv( rgbRed,    ULIS_FORMAT_LabD );
 
     // Now we perform a gradient manually in the lab block here to illustrate the interpolation occured in LAB
     // When performing later conversion to RGB, we'll see the nice result of the color blending.
@@ -78,9 +78,9 @@ main( int argc, char *argv[] ) {
     // For the basic conv operations, we always assume an RGB block is using the sRGB colorspace, and that Lab blocks use CIELab with illuminant D60.
     // conversion to XYZ and subsequent linear RGB are done assuming this predicate too.
     // The channel type is different for the two blocks here too, so conv can be used to convert a block depth too ( e.g: RGBA16 to RGBA8 ).
-    // Notice we passed the ULIS3_BLOCKING flag here, that means the Conv function will not return until the conversion is complete.
+    // Notice we passed the ULIS_BLOCKING flag here, that means the Conv function will not return until the conversion is complete.
     // We don't care about stalling here since there are no multihtreaded operations following, yet we need to ensure the blockRGB is valid before we go on.
-    Conv( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockLAB, blockRGB );
+    Conv( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockLAB, blockRGB );
 
     // Get rid of block Lab, we don't need it anymore.
     delete  blockLAB;
@@ -106,7 +106,7 @@ main( int argc, char *argv[] ) {
 
     // Create a Qt application and a simple window to display the result block we computed.
     // We create a QImage from the blockCanvas data, QImage does not own the data, so it still lives in blockCanvas, so we don't delete it right now.
-    // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS3_FORMAT_RGBA8
+    // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS_FORMAT_RGBA8
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
     QImage*         image   = new QImage( blockRGB->Bits()

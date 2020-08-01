@@ -25,8 +25,8 @@
 #include "Thread/ThreadPool.h"
 #include <vectorclass.h>
 
-ULIS3_NAMESPACE_BEGIN
-ULIS3_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
+ULIS_NAMESPACE_BEGIN
+ULIS_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
     switch( iRS ) {
         case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
         case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); break;
@@ -82,14 +82,14 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const uint8* iSrc,
         Vec4f alpha_comp    = AlphaNormalSSEF( alpha_src, alpha_bdp );
         Vec4f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
         Vec4f alpha_result;
-        ULIS3_ASSIGN_ALPHASSEF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS_ASSIGN_ALPHASSEF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
         Vec4f bdp_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f );
         smpch_smp.insert( 3, 0.f );
         bdp_chan.insert( 3, 0.f );
         Vec4f res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = NonSeparableCompOpSSEF< _BM >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         res_chan = lookup4( iIDT, res_chan );
@@ -115,7 +115,7 @@ BlendMT_NonSeparable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iIn
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
     BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -134,7 +134,7 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const uint8* iSrc, uint8* i
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
         ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
-        ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
         Vec4f src_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc ) ) ) ) ) / 255.f );
         Vec4f bdp_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f );
@@ -142,7 +142,7 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const uint8* iSrc, uint8* i
         bdp_chan.insert( 3, 0.f );
         Vec4f res_chan;
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = NonSeparableCompOpSSEF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
         res_chan = lookup4( iIDT, res_chan );
@@ -168,7 +168,7 @@ BlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
     BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8
                                 , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -176,5 +176,5 @@ BlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
                                 , pLINE , iInfo, idt );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

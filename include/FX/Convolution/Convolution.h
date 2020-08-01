@@ -14,10 +14,10 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Convolution
-ULIS3_API void Convolution( FThreadPool*            iThreadPool
+ULIS_API void Convolution( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
@@ -27,5 +27,5 @@ ULIS3_API void Convolution( FThreadPool*            iThreadPool
                           , const FRectI&            iArea
                           , eExtrapolationMethod    iEdgeMode );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

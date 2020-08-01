@@ -34,7 +34,7 @@
 #include <cppfs/FileHandle.h>
 #include <cppfs/FilePath.h>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 FBlock*
 XLoadFromFile( FThreadPool*             iThreadPool
              , bool                     iBlocking
@@ -45,8 +45,8 @@ XLoadFromFile( FThreadPool*             iThreadPool
              , eFormat                  iDesiredFormat )
 {
     // Assertions
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     cppfs::FileHandle   fh = cppfs::fs::open( iPath );
 
@@ -65,10 +65,10 @@ XLoadFromFile( FThreadPool*             iThreadPool
     type = stbi_is_hdr_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )     ? TYPE_UFLOAT : type;
 
     int desiredChannels = STBI_default;
-    eColorModel desiredModel = static_cast< eColorModel >( ULIS3_R_MODEL( iDesiredFormat ) );
+    eColorModel desiredModel = static_cast< eColorModel >( ULIS_R_MODEL( iDesiredFormat ) );
     bool needgrey   = desiredModel == CM_GREY;
     bool needrgb    = desiredModel == CM_RGB;
-    bool needalpha  = ULIS3_R_ALPHA( iDesiredFormat );
+    bool needalpha  = ULIS_R_ALPHA( iDesiredFormat );
     if( needgrey )  desiredChannels = needalpha ? 2 : 1;
     if( needrgb )   desiredChannels = needalpha ? 4 : 3;
 
@@ -82,7 +82,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
         case TYPE_UFLOAT:   data = (uint8*)stbi_loadf(      iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
     }
 
-    ULIS3_ASSERT( data, "Error bad input file" )
+    ULIS_ASSERT( data, "Error bad input file" )
 
     if( desiredChannels != STBI_default )
         channels = desiredChannels;
@@ -97,7 +97,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
     }
     channels = channels - hea;
 
-    eFormat fmt = ULIS3_W_TYPE( type ) | ULIS3_W_CHANNELS( channels ) | ULIS3_W_MODEL( model ) | ULIS3_W_ALPHA( hea ) | ULIS3_W_DEPTH( depth ) | ULIS3_W_FLOATING( floating );
+    eFormat fmt = ULIS_W_TYPE( type ) | ULIS_W_CHANNELS( channels ) | ULIS_W_MODEL( model ) | ULIS_W_ALPHA( hea ) | ULIS_W_DEPTH( depth ) | ULIS_W_FLOATING( floating );
     FBlock* ret = new FBlock( data, width, height, fmt, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
 
     if( iDesiredFormat != 0 && iDesiredFormat != fmt ) {
@@ -119,9 +119,9 @@ void SaveToFile( FThreadPool*           iThreadPool
                , eImageFormat           iImageFormat
                , int                    iQuality )
 {
-    ULIS3_ASSERT( iSource,             "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource,             "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     //cppfs::FilePath     path( iPath );
     //std::string         ext = path.extension();
@@ -129,7 +129,7 @@ void SaveToFile( FThreadPool*           iThreadPool
     eColorModel model   = iSource->Model();
     eType       type    = iSource->Type();
 
-    bool layout_valid   = ULIS3_R_RS( format ) == 0;
+    bool layout_valid   = ULIS_R_RS( format ) == 0;
     bool model_valid    = model == CM_GREY || model == CM_RGB;
     bool type_valid     = ( iImageFormat != IM_HDR && type == TYPE_UINT8 ) || ( iImageFormat == IM_HDR && type == TYPE_UFLOAT && model == CM_RGB );
 
@@ -141,8 +141,8 @@ void SaveToFile( FThreadPool*           iThreadPool
     if( !( layout_valid && model_valid && type_valid ) ) {
         eFormat dstformat = 0;
         if( iImageFormat == IM_HDR )    dstformat = eFormat::Format_RGBF;
-        else if( model == CM_GREY )     dstformat = eFormat::Format_G8   | ULIS3_W_ALPHA( iSource->HasAlpha() );
-        else                            dstformat = eFormat::Format_RGB8 | ULIS3_W_ALPHA( iSource->HasAlpha() );
+        else if( model == CM_GREY )     dstformat = eFormat::Format_G8   | ULIS_W_ALPHA( iSource->HasAlpha() );
+        else                            dstformat = eFormat::Format_RGB8 | ULIS_W_ALPHA( iSource->HasAlpha() );
         conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
         dat = conv->Bits();
     }
@@ -159,5 +159,5 @@ void SaveToFile( FThreadPool*           iThreadPool
         delete  conv;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

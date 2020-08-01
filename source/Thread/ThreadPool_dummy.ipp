@@ -20,7 +20,7 @@
 
 #include "Maths/Maths.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 /////////////////////////////////////////////////////
 // FThreadPool
@@ -46,12 +46,12 @@ public:
     static uint32   MaxWorkers()            { return  0; }
 };
 
-#define ULIS3_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
+#define ULIS_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
     {                                                                                   \
         for( int pLINE = 0; pLINE < _MAX; ++pLINE )                                     \
             _FUNC( __VA_ARGS__ );                                                       \
     }
 
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

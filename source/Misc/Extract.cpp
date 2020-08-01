@@ -20,7 +20,7 @@
 #include "Thread/ThreadPool.h"
 #include <vector>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 template< typename T1, typename T2 >
 void InvokeExtractInto( size_t iW, const uint8* iSrc, uint8* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP ) {
     const T1*   src = reinterpret_cast< const T1* >( iSrc );
@@ -88,15 +88,15 @@ Extract( FThreadPool*           iThreadPool
        , uint8                  iDestinationExtractMask )
 {
     // Assertions
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS3_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS3_ASSERT( iSourceExtractMask,                          "Empty extract mask provided."                           );
-    ULIS3_ASSERT( iDestinationExtractMask,                     "Empty extract mask provided."                           );
-    ULIS3_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
-    ULIS3_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSourceExtractMask,                          "Empty extract mask provided."                           );
+    ULIS_ASSERT( iDestinationExtractMask,                     "Empty extract mask provided."                           );
+    ULIS_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
+    ULIS_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
 
     // Check no-op
     if( !iSourceExtractMask || !iDestinationExtractMask )
@@ -109,7 +109,7 @@ Extract( FThreadPool*           iThreadPool
     // Channels
     std::vector< uint8 > sourceChannelsToExtract;
     std::vector< uint8 > destinationChannelsToExtract;
-    uint8 max_channels_both = FMaths::Min( FMaths::Max( srcFormatInfo.SPP, dstFormatInfo.SPP ), static_cast< uint8 >( ULIS3_MAX_CHANNELS ) );
+    uint8 max_channels_both = FMaths::Min( FMaths::Max( srcFormatInfo.SPP, dstFormatInfo.SPP ), static_cast< uint8 >( ULIS_MAX_CHANNELS ) );
     sourceChannelsToExtract.reserve( max_channels_both );
     destinationChannelsToExtract.reserve( max_channels_both );
     for( int i = 0; i < max_channels_both; ++i ) {
@@ -120,8 +120,8 @@ Extract( FThreadPool*           iThreadPool
             destinationChannelsToExtract.push_back( iDestinationRawIndicesFlag ? i : dstFormatInfo.IDT[i] );
     }
 
-    ULIS3_ASSERT( sourceChannelsToExtract.size() == destinationChannelsToExtract.size(), "Extract masks don't map" );
-    ULIS3_ASSERT( sourceChannelsToExtract.size() && destinationChannelsToExtract.size(), "Bad Extraction parameters" );
+    ULIS_ASSERT( sourceChannelsToExtract.size() == destinationChannelsToExtract.size(), "Extract masks don't map" );
+    ULIS_ASSERT( sourceChannelsToExtract.size() && destinationChannelsToExtract.size(), "Bad Extraction parameters" );
 
     // Strides
     std::vector< uint8 >    sourceStrides;
@@ -147,8 +147,8 @@ Extract( FThreadPool*           iThreadPool
     const int       max = iSource->Height();
     const size_t    len = iSource->Width();
     fpDispatchedExtractInvoke fptr = QueryDispatchedExtractInvokeForParameters( srcFormatInfo.TP, dstFormatInfo.TP );
-    ULIS3_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_ASSERT( fptr, "No dispatch invocation found." );
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, SRC, DST, sourceStrides, destinationStrides, src_spp, dst_spp )
 
@@ -169,11 +169,11 @@ FBlock* XExtract( FThreadPool*              iThreadPool
                 , uint8                     iDestinationExtractMask )
 {
     // Assertions
-    ULIS3_ASSERT( iSource, "Bad source." );
+    ULIS_ASSERT( iSource, "Bad source." );
     FBlock* ret = new  FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
     Extract( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iSourceRawIndicesFlag, iSourceExtractMask, ret, iDestinationRawIndicesFlag, iDestinationExtractMask );
     return  ret;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

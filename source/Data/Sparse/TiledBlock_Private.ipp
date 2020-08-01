@@ -16,10 +16,10 @@
 #include "Maths/Maths.h"
 
 
-#define ULIS3_SPARSE_MASK_X 0x00000000FFFFFFFF
-#define ULIS3_SPARSE_MASK_Y 0xFFFFFFFF00000000
+#define ULIS_SPARSE_MASK_X 0x00000000FFFFFFFF
+#define ULIS_SPARSE_MASK_Y 0xFFFFFFFF00000000
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTiledBlock
 template< uint8 _MICRO, uint8 _MACRO > const FVec2I64 TTiledBlock< _MICRO, _MACRO >::modLeaf = FVec2I64( static_cast< int64 >( micro_chunk_size_as_pixels ) );
@@ -70,7 +70,7 @@ TTiledBlock< _MICRO, _MACRO >::IsValidPixelCoordRange( int64 iValue )  const {
 template< uint8 _MICRO, uint8 _MACRO >
 FVec2I32
 TTiledBlock< _MICRO, _MACRO >::ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const {
-    ULIS3_ASSERT( IsValidPixelCoordRange( iPos.x ) && IsValidPixelCoordRange( iPos.y ), "Bad coordinates" );
+    ULIS_ASSERT( IsValidPixelCoordRange( iPos.x ) && IsValidPixelCoordRange( iPos.y ), "Bad coordinates" );
     int32 X = static_cast< int32 >( FMaths::RoundToNegativeInfinity( iPos.x / static_cast< float >( macro_chunk_size_as_pixels ) ) );
     int32 Y = static_cast< int32 >( FMaths::RoundToNegativeInfinity( iPos.y / static_cast< float >( macro_chunk_size_as_pixels ) ) );
     return  FVec2I32( X, Y );
@@ -104,8 +104,8 @@ TTiledBlock< _MICRO, _MACRO >::KeyFromPixelCoordinates( const FVec2I64& iPos ) c
 template< uint8 _MICRO, uint8 _MACRO >
 FVec2I32
 TTiledBlock< _MICRO, _MACRO >::ChunkCoordinatesFromKey( uint64 iKey ) const {
-    int32 X = int32( iKey & ULIS3_SPARSE_MASK_X );
-    int32 Y = int32( ( iKey & ULIS3_SPARSE_MASK_Y ) >> 32 );
+    int32 X = int32( iKey & ULIS_SPARSE_MASK_X );
+    int32 Y = int32( ( iKey & ULIS_SPARSE_MASK_Y ) >> 32 );
     return  FVec2I32( X, Y );
 }
 
@@ -303,5 +303,5 @@ TTiledBlock< _MICRO, _MACRO >::GetSparseMap() const {
     return  mSparseMap;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

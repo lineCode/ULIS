@@ -14,21 +14,21 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_API void Premultiply( FThreadPool*            iThreadPool
+ULIS_API void Premultiply( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
                           , bool                    iCallCB
                           , FBlock*                 iDestination );
 
-ULIS3_API void Unpremultiply( FThreadPool*              iThreadPool
+ULIS_API void Unpremultiply( FThreadPool*              iThreadPool
                             , bool                      iBlocking
                             , uint32                    iPerfIntent
                             , const FHostDeviceInfo&    iHostDeviceInfo
                             , bool                      iCallCB
                             , FBlock*                   iDestination );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

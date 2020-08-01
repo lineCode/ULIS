@@ -13,7 +13,7 @@
 */
 #include "Data/Pixel.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 FPixel::~FPixel()
 {
 }
@@ -21,13 +21,13 @@ FPixel::~FPixel()
 FPixel::FPixel( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
     : ISample( iData, iFormat, iColorSpace )
 {
-    ULIS3_ASSERT( iData, "Bad data provided." );
+    ULIS_ASSERT( iData, "Bad data provided." );
 }
 
 FPixel::FPixel( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
     : ISample( const_cast< uint8* >( iData ), iFormat, iColorSpace )
 {
-    ULIS3_ASSERT( iData, "Bad data provided." );
+    ULIS_ASSERT( iData, "Bad data provided." );
 }
 
 FPixel::FPixel( const FPixel& iValue )
@@ -54,5 +54,5 @@ FPixel::SetPointer( uint8* iPtr )
     mSignal = iPtr;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

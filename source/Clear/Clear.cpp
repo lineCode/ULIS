@@ -18,12 +18,12 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Invocations
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
-#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
+#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
 void InvokeFillMTProcessScanline_AX2( uint8* iDst, const uint32 iCount, const uint32 iStride ) {
     int64 index;
     for( index = 0; index < int64( iCount ) - 32; index += iStride ) {
@@ -33,11 +33,11 @@ void InvokeFillMTProcessScanline_AX2( uint8* iDst, const uint32 iCount, const ui
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
     memset( iDst, 0, iCount - index );
 }
-#endif // ULIS3_COMPILETIME_AVX2_SUPPORT
+#endif // ULIS_COMPILETIME_AVX2_SUPPORT
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- SSE
-#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 void InvokeFillMTProcessScanline_SSE4_2( uint8* iDst, const uint32 iCount, const uint32 iStride ) {
     int64 index;
     for( index = 0; index < int64( iCount ) - 16; index += iStride ) {
@@ -75,24 +75,24 @@ void Clear_imp( FThreadPool*            iThreadPool
     const uint32         count   = iArea.w * bpp;
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
-    #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-    if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
+    #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+    if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const uint32 stride = 32;
-        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_AX2, DST, count, stride )
     } else
     #endif
-    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-    if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
+    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+    if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const uint32 stride = 16;
-        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
     } else
     #endif
     {
-        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_MEM, DST, count, bpp )
     }
@@ -109,9 +109,9 @@ void Clear_imp( FThreadPool*            iThreadPool
            , const FRectI&              iArea )
 {
     // Assertions
-    ULIS3_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
     // Fit region of interest
     FRectI roi = iArea & iDestination->Rect();
 
@@ -129,10 +129,10 @@ void Clear_imp( FThreadPool*            iThreadPool
 /////////////////////////////////////////////////////
 // ClearRaw
 void ClearRaw( FBlock* iDst, bool iCallCB ) {
-    ULIS3_ASSERT( iDst, "Bad destination" );
+    ULIS_ASSERT( iDst, "Bad destination" );
     memset( iDst->Bits(), 0, iDst->BytesTotal() );
     iDst->Dirty( iCallCB );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

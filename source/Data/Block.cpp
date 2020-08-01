@@ -14,7 +14,7 @@
 #include "Data/Block.h"
 #include <new>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 FBlock::~FBlock()
 {
     mOnCleanup.ExecuteIfBound( mBitmap );
@@ -38,16 +38,16 @@ FBlock::FBlock(
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
 {
-    ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
     mBytesPerScanline = mWidth * FormatInfo().BPP;
     mBytesTotal = mHeight * mBytesPerScanline;
 
     uint32 num = mWidth * mHeight * FormatInfo().SPP;
-    ULIS3_ASSERT( num != 0, "Cannot allocate a buffer of size 0" );
+    ULIS_ASSERT( num != 0, "Cannot allocate a buffer of size 0" );
 
     mBitmap = new  ( std::nothrow )  uint8[ mBytesTotal ];
-    ULIS3_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );
+    ULIS_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );
 }
 
 FBlock::FBlock(
@@ -69,8 +69,8 @@ FBlock::FBlock(
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
 {
-    ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
     mBytesPerScanline = mWidth * FormatInfo().BPP;
     mBytesTotal = mHeight * mBytesPerScanline;
 }
@@ -134,7 +134,7 @@ FBlock::Bits()
 uint8*
 FBlock::ScanlineBits( uint16 iRow )
 {
-    ULIS3_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
+    ULIS_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
     return  mBitmap + ( iRow * mBytesPerScanline );
 }
 
@@ -142,8 +142,8 @@ FBlock::ScanlineBits( uint16 iRow )
 uint8*
 FBlock::PixelBits( uint16 iX, uint16 iY )
 {
-    ULIS3_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
-    ULIS3_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
+    ULIS_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
+    ULIS_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
     return  mBitmap + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
 }
 
@@ -156,15 +156,15 @@ FBlock::Bits() const
 const uint8*
 FBlock::ScanlineBits( uint16 iRow ) const
 {
-    ULIS3_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
+    ULIS_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
     return  mBitmap + ( iRow * mBytesPerScanline );
 }
 
 const uint8*
 FBlock::PixelBits( uint16 iX, uint16 iY ) const
 {
-    ULIS3_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
-    ULIS3_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
+    ULIS_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
+    ULIS_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
     return  mBitmap + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
 }
 
@@ -219,19 +219,19 @@ FBlock::Dirty( const FRectI& iRect, bool iCall ) const
     if( !iCall )
         return;
 
-#ifdef ULIS3_ASSERT_ENABLED
+#ifdef ULIS_ASSERT_ENABLED
     int w = static_cast< int >( mWidth );
     int h = static_cast< int >( mHeight );
     int x1 = iRect.x;
     int y1 = iRect.y;
     int x2 = iRect.x + iRect.w;
     int y2 = iRect.y + iRect.h;
-    ULIS3_ASSERT( iRect.w >= 0, "Bad dirty geometry out of range" );
-    ULIS3_ASSERT( iRect.h >= 0, "Bad dirty geometry out of range" );
-    ULIS3_ASSERT( x1 >= 0 && x1 < w, "Bad dirty geometry out of range" );
-    ULIS3_ASSERT( y1 >= 0 && y1 < h, "Bad dirty geometry out of range" );
-    ULIS3_ASSERT( x2 >= 0 && x2 < w, "Bad dirty geometry out of range" );
-    ULIS3_ASSERT( y2 >= 0 && y2 < h, "Bad dirty geometry out of range" );
+    ULIS_ASSERT( iRect.w >= 0, "Bad dirty geometry out of range" );
+    ULIS_ASSERT( iRect.h >= 0, "Bad dirty geometry out of range" );
+    ULIS_ASSERT( x1 >= 0 && x1 < w, "Bad dirty geometry out of range" );
+    ULIS_ASSERT( y1 >= 0 && y1 < h, "Bad dirty geometry out of range" );
+    ULIS_ASSERT( x2 >= 0 && x2 < w, "Bad dirty geometry out of range" );
+    ULIS_ASSERT( y2 >= 0 && y2 < h, "Bad dirty geometry out of range" );
 #endif
 
     mOnInvalid.ExecuteIfBound( this, iRect );
@@ -279,8 +279,8 @@ FBlock::ReloadFromData(
     , const FOnCleanup& iOnCleanup
     )
 {
-    ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
 
     mOnCleanup.ExecuteIfBound( mBitmap );
 
@@ -297,5 +297,5 @@ FBlock::ReloadFromData(
     mBytesTotal = mHeight * mBytesPerScanline;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

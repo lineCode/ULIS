@@ -14,7 +14,7 @@
 #include "Conv/srgb2linear.h"
 #include <cmath>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 ufloat LUT_sRGBU8_TO_LINEARF[256] = {
     0.f, 0.000303527f, 0.000607054f, 0.000910581f, 0.00121411f, 0.00151763f, 0.00182116f, 0.00212469f, 0.00242822f, 0.00273174f, 0.00303527f,
     0.00334654f, 0.00367651f, 0.00402472f, 0.00439144f, 0.00477695f, 0.00518152f, 0.00560539f, 0.00604883f, 0.00651209f, 0.00699541f, 0.00749903f,
@@ -114,5 +114,5 @@ uint8 fast_srgb2linearU8( uint8 iValue ) { return  LUT_sRGBU8_TO_LINEARU8[ iValu
 uint8 fast_linear2srgbU8( uint8 iValue ) { return  LUT_LINEARU8_TO_sRGB8[ iValue ];     }
 ufloat fast_srgb2linearF( uint8 iValue ) { return  LUT_sRGBU8_TO_LINEARF[ iValue ];     }
 ufloat fast_linear2srgbF( uint8 iValue ) { return  LUT_LINEARU8_TO_sRGBF[ iValue ];     }
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

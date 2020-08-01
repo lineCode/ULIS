@@ -17,10 +17,10 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Data/Sparse/TiledBlock.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTilePool
-class ULIS3_API ITilePool
+class ULIS_API ITilePool
 {
 public:
     // Construction / Destruction
@@ -65,4 +65,4 @@ public:
     virtual FTileElement*                               XPerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem ) = 0;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END

@@ -23,7 +23,7 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
 InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
@@ -53,7 +53,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, 
         const float alpha_comp  = AlphaNormalF( alpha_src, alpha_bdp );
         const float var         = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         float alpha_result;
-        ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
@@ -61,7 +61,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, 
             SampleSubpixelChannel( srcvf, r );
             float bdpvf = TYPE2FLOAT( bdp, r );
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
-            ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+            ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
             #undef TMP_ASSIGN
         }
 
@@ -82,7 +82,7 @@ BlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInf
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T >
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -104,13 +104,13 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iB
         const float alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
         const float var        = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         float alpha_result;
-        ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
             float srcvf = TYPE2FLOAT( src, r );
             float bdpvf = TYPE2FLOAT( bdp, r );
             #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) FLOAT2TYPE( bdp, r, SeparableCompOpF< _BM >( srcvf, bdpvf, alpha_bdp, var ) );
-            ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+            ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_SEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
             #undef TMP_ASSIGN
         }
         if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
@@ -130,7 +130,7 @@ BlendMT_Separable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -138,5 +138,5 @@ BlendMT_Separable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
                                    , pLINE , iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

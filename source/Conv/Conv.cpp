@@ -21,7 +21,7 @@
 #include "Thread/ThreadPool.h"
 #include "lcms2.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 void Conv( const ISample& iSrc, ISample& iDst ) {
     if( iSrc.Format() == iDst.Format() ) {
         memcpy( iDst.Bits(), iSrc.Bits(), iDst.BytesPerPixel() );
@@ -51,12 +51,12 @@ void Conv( FThreadPool*           iThreadPool
          , FBlock*                iDestination )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                          );
-    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                     );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool"                                              );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS3_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
-    ULIS3_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                          );
+    ULIS_ASSERT( iDestination,                                 "Bad destination."                                     );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool"                                              );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
+    ULIS_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
 
     // Check no-op
     if( iSource == iDestination )
@@ -64,13 +64,13 @@ void Conv( FThreadPool*           iThreadPool
 
     // Check same format perform copy ( faster ).
     if( iSource->Format() == iDestination->Format() ) {
-        Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, ULIS3_NOCB, iSource, iDestination, iSource->Rect(), FVec2I() );
+        Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource, iDestination, iSource->Rect(), FVec2I() );
         return;
     }
 
     // Query dispatched method
     fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSource->Format(), iDestination->Format() );
-    ULIS3_ASSERT( fptr, "No Conversion invocation found" );
+    ULIS_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params and call
     const uint8*    src = iSource->Bits();
@@ -81,7 +81,7 @@ void Conv( FThreadPool*           iThreadPool
     const uint32 len = iSource->Width();
     const FFormat& srcnfo = iSource->FormatInfo();
     const FFormat& dstnfo = iDestination->FormatInfo();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr
                                    , srcnfo
@@ -103,9 +103,9 @@ FBlock* XConv( FThreadPool*           iThreadPool
              , eFormat                iDestinationFormat )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                       "Bad source."                                          );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool"                                              );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource,                                       "Bad source."                                          );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool"                                              );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Alloc return buffer in desired format use the same size, then perform conversion
     FBlock* ret = new FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
@@ -113,5 +113,5 @@ FBlock* XConv( FThreadPool*           iThreadPool
     return  ret;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

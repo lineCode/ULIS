@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @fn         CRC32( const uint8* iData, int iLen )
 /// @brief      Simple CRC32 computation for hashing purposes.
@@ -24,5 +24,5 @@ ULIS3_NAMESPACE_BEGIN
 /// @return     An uint32 representing the CRC32 hash.
 uint32 CRC32( const uint8* iData, int iLen );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

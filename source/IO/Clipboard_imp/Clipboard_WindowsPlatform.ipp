@@ -25,7 +25,7 @@
 
 #include <clip.h>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
@@ -33,7 +33,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , bool                    iCallCB
                           , eFormat                 iDesiredFormat )
 {
-    ULIS3_ASSERT( iThreadPool, "Bad pool." );
+    ULIS_ASSERT( iThreadPool, "Bad pool." );
 
     if( !ClipboardHasImageData() )
         return  nullptr;
@@ -66,7 +66,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
 
     // Assertions
     fpConversionInvocation fptr = QueryDispatchedConversionInvocation( srcFormat, dstFormat );
-    ULIS3_ASSERT( fptr, "No Conversion invocation found" );
+    ULIS_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params
     int             dc          = bits_per_pixel == 24 ? 3 & w : 0;
@@ -82,7 +82,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     const FFormat& dstnfo = ret->FormatInfo();
 
     // Call
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS3_BLOCKING
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS_BLOCKING
                                    , numLines
                                    , fptr, srcnfo, SRC, dstnfo, DST, len );
 
@@ -98,10 +98,10 @@ void SaveToClipboard( FThreadPool*              iThreadPool
                     , const FBlock*             iSource )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                  "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iSource,                  "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
 
-    FBlock* tmpConv = XConv( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, eFormat::Format_BGRA8 );
+    FBlock* tmpConv = XConv( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, eFormat::Format_BGRA8 );
 
     clip::image_spec spec;
     spec.width = tmpConv->Width();
@@ -128,5 +128,5 @@ bool ClipboardHasImageData() {
     return  hasImageData;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

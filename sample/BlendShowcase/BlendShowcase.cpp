@@ -31,13 +31,13 @@ main( int argc, char *argv[] ) {
     std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
     std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
 
-    uint32 perfIntentLoad   = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
-    uint32 perfIntentFill   = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
-    uint32 perfIntentCopy   = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
-    uint32 perfIntentBlend  = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntentLoad   = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
+    uint32 perfIntentFill   = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
+    uint32 perfIntentCopy   = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
+    uint32 perfIntentBlend  = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     uint32 perfIntentText   = 0;
-    FBlock* blockBase = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntentLoad, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntentLoad, host, ULIS_NOCB, pathBase, ULIS_FORMAT_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntentLoad, host, ULIS_NOCB, pathOver, ULIS_FORMAT_RGBA8 );
     Fence( *threadPool );
 
     FRectI sourceRect = blockBase->Rect();
@@ -46,12 +46,12 @@ main( int argc, char *argv[] ) {
 
     int shadeW = sourceRect.w;
     int shadeH = 20;
-    FBlock* blockCanvas = new  FBlock( w, h, ULIS3_FORMAT_RGBA8 );
-    FBlock* blockShade = new  FBlock( shadeW, shadeH, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockCanvas = new  FBlock( w, h, ULIS_FORMAT_RGBA8 );
+    FBlock* blockShade = new  FBlock( shadeW, shadeH, ULIS_FORMAT_RGBA8 );
     FRectI shadeRect = blockBase->Rect();
-    FColor black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
-    FColor white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
-    Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockShade, black, shadeRect );
+    FColor black( ULIS_FORMAT_RGBA8, { 0, 0, 0, 255 } );
+    FColor white( ULIS_FORMAT_RGBA8, { 255, 255, 255, 255 } );
+    Fill( threadPool, ULIS_NONBLOCKING, ULIS_PERF_AVX2, host, ULIS_NOCB, blockShade, black, shadeRect );
 
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );
@@ -60,15 +60,15 @@ main( int argc, char *argv[] ) {
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
         int x = ( i % 8 ) * sourceRect.w;
         int y = ( i / 8 ) * sourceRect.h;
-        Copy(   threadPool, ULIS3_BLOCKING, perfIntentCopy, host, ULIS3_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
-        Blend(  threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS3_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
-        Blend(  threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
-        Blend(  threadPool, ULIS3_BLOCKING, perfIntentBlend, host, ULIS3_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS3_NOAA, BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
+        Copy(   threadPool, ULIS_BLOCKING, perfIntentCopy, host, ULIS_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
+        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS_NOAA, BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
         std::string bm = kwBlendingMode[i];
         typedef std::codecvt_utf8<wchar_t> convert_type;
         std::wstring_convert<convert_type, wchar_t> converter;
         std::wstring wbm = converter.from_bytes(bm);
-        RenderText( threadPool, ULIS3_BLOCKING, perfIntentText, host, ULIS3_NOCB, blockCanvas, wbm, font, 16, white, FTransform2D::MakeTranslationTransform( x + 4, 4 + y + sourceRect.h - shadeH ), ULIS3_NOAA );
+        RenderText( threadPool, ULIS_BLOCKING, perfIntentText, host, ULIS_NOCB, blockCanvas, wbm, font, 16, white, FTransform2D::MakeTranslationTransform( x + 4, 4 + y + sourceRect.h - shadeH ), ULIS_NOAA );
     }
 
     Fence( *threadPool );

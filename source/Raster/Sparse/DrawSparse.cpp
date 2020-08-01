@@ -15,7 +15,7 @@
 #include "Data/Block.h"
 #include "Conv/ConvBuffer.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /*
 void DotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
     uint8* ptr = iDst->PixelBits( iPos.x, iPos.y );
@@ -24,5 +24,5 @@ void DotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
 }
 */
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

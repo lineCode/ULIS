@@ -14,14 +14,14 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_API FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
+ULIS_API FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                           , bool                    iBlocking
                                           , uint32                  iPerfIntent
                                           , const FHostDeviceInfo&  iHostDeviceInfo
                                           , bool                    iCallCB
                                           , const FBlock*           iSource );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

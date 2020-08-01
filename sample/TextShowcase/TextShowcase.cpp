@@ -39,10 +39,10 @@ main( int argc, char *argv[] ) {
     int canvasHeight = entryHeight * gridy;
 
     FRectI globalRect( 0, 0, canvasWidth, canvasHeight );
-    FBlock* blockCanvas = new  FBlock( globalRect.w, globalRect.h, ULIS3_FORMAT_RGBA8 );
-    FColor black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
-    FColor white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
-    Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockCanvas, white, globalRect );
+    FBlock* blockCanvas = new  FBlock( globalRect.w, globalRect.h, ULIS_FORMAT_RGBA8 );
+    FColor black( ULIS_FORMAT_RGBA8, { 0, 0, 0, 255 } );
+    FColor white( ULIS_FORMAT_RGBA8, { 255, 255, 255, 255 } );
+    Fill( threadPool, ULIS_NONBLOCKING, ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2, host, ULIS_NOCB, blockCanvas, white, globalRect );
 
     int i = 0;
     for( auto family : fontRegistry.Records() ) {
@@ -58,7 +58,7 @@ main( int argc, char *argv[] ) {
             std::wstring_convert<convert_type, wchar_t> converter;
             std::wstring wtxt = converter.from_bytes(txt);
 
-            RenderText( threadPool, ULIS3_BLOCKING, 0, host, ULIS3_NOCB, blockCanvas, wtxt, font, fontSize, black, FTransform2D::MakeTranslationTransform( x, y ), ULIS3_NOAA );
+            RenderText( threadPool, ULIS_BLOCKING, 0, host, ULIS_NOCB, blockCanvas, wtxt, font, fontSize, black, FTransform2D::MakeTranslationTransform( x, y ), ULIS_NOAA );
             ++i;
         }
     }

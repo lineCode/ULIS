@@ -32,7 +32,7 @@
 #define S43 15
 #define S44 21
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FMD5
 //--------------------------------------------------------------------------------------
@@ -353,5 +353,5 @@ MD5( const uint8* iData, int iLen )
 }
 
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

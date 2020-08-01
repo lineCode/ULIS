@@ -13,7 +13,7 @@
 */
 #include "Data/Format.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 FFormat::~FFormat() {
     if( IDT ) delete [] IDT;
 }
@@ -21,21 +21,21 @@ FFormat::~FFormat() {
 FFormat::FFormat( eFormat iFMT )
     : IDT( nullptr )
     , FMT( iFMT )
-    , TP( static_cast< eType >( ULIS3_R_TYPE( FMT ) ) )
-    , CM( static_cast< eColorModel >( ULIS3_R_MODEL( FMT ) ) )
-    , BPC( ULIS3_R_DEPTH( FMT ) )
-    , NCC( ULIS3_R_CHANNELS( FMT ) )
-    , HEA( ULIS3_R_ALPHA( FMT ) )
-    , RSC( ULIS3_R_RS( FMT ) )
+    , TP( static_cast< eType >( ULIS_R_TYPE( FMT ) ) )
+    , CM( static_cast< eColorModel >( ULIS_R_MODEL( FMT ) ) )
+    , BPC( ULIS_R_DEPTH( FMT ) )
+    , NCC( ULIS_R_CHANNELS( FMT ) )
+    , HEA( ULIS_R_ALPHA( FMT ) )
+    , RSC( ULIS_R_RS( FMT ) )
     , SPP( NCC + HEA )
     , BPP( SPP * BPC )
     , AID( 0 )
-    , REV( ULIS3_R_REVERSE( FMT ) )
-    , SWA( ULIS3_R_SWAP( FMT ) )
-    , PRE( ULIS3_R_PREMULT( FMT ) )
-    , LIN( ULIS3_R_LINEAR( FMT ) )
-    , PRO( ULIS3_R_PROFILE( FMT ) )
-    , PLA( ULIS3_R_PLANAR( FMT ) )
+    , REV( ULIS_R_REVERSE( FMT ) )
+    , SWA( ULIS_R_SWAP( FMT ) )
+    , PRE( ULIS_R_PREMULT( FMT ) )
+    , LIN( ULIS_R_LINEAR( FMT ) )
+    , PRO( ULIS_R_PROFILE( FMT ) )
+    , PLA( ULIS_R_PLANAR( FMT ) )
 {
     IDT = new uint8[ SPP ];
     uint8 msp = SPP - 1;
@@ -118,5 +118,5 @@ FFormat::FFormat( FFormat&& iOther )
     iOther.IDT = nullptr;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -25,23 +25,23 @@ using namespace ::ul3;
 int
 main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    FBlock* blockA = new FBlock( 1024, 1024, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockA = new FBlock( 1024, 1024, ULIS_FORMAT_RGBA8 );
 
-    ::ul3::Clear( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockA, blockA->Rect() );
+    ::ul3::Clear( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockA, blockA->Rect() );
     FColor color = FColor::FromRGBA8( 255, 0, 0, 255 );
-    FBlock col( color.Bits(), 1, 1, ULIS3_FORMAT_RGBA8 );
+    FBlock col( color.Bits(), 1, 1, ULIS_FORMAT_RGBA8 );
 
     FVec2F P0( 474.984253, 551.79988 );
     FVec2F P1( 474.984253, 551.79988 );
     FVec2F P2( 561.006348, 549.796814 );
     FVec2F P3( 687.998413, 551.799988 );
 
-    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P0, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
-    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P1, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
-    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P2, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
-    Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P3, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS_BLOCKING, ULIS_PERF_SSE42, host, ULIS_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P0, ULIS_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS_BLOCKING, ULIS_PERF_SSE42, host, ULIS_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P1, ULIS_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS_BLOCKING, ULIS_PERF_SSE42, host, ULIS_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P2, ULIS_AA, BM_NORMAL, AM_NORMAL, 1.f );
+    Blend( threadPool, ULIS_BLOCKING, ULIS_PERF_SSE42, host, ULIS_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), P3, ULIS_AA, BM_NORMAL, AM_NORMAL, 1.f );
     //std::vector< FVec2F > points;
     //uint32 count = 2;
     //CatmullRomPoints( P0, P1, P2, P3, count, &points, 0.5f );
@@ -49,7 +49,7 @@ main( int argc, char *argv[] ) {
     std::vector< FCatmullRomLUTElement > points;
     spline.GenerateLinearLUT( &points, 10.f );
     for( int i = 0; i < points.size(); ++i ) {
-        Blend( threadPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, host, ULIS3_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), points[i].position, ULIS3_AA, BM_NORMAL, AM_NORMAL, 1.f );
+        Blend( threadPool, ULIS_BLOCKING, ULIS_PERF_SSE42, host, ULIS_NOCB, &col, blockA, FRectI( 0, 0, 1, 1 ), points[i].position, ULIS_AA, BM_NORMAL, AM_NORMAL, 1.f );
         /*
         int x = points[i].position.x;
         int y = points[i].position.y;

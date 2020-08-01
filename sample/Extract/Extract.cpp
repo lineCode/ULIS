@@ -26,12 +26,12 @@ using namespace ::ul3;
 int
 main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = /* ULIS3_PERF_MT | */ ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = /* ULIS_PERF_MT | */ ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     FVec2I size( 800, 600 );
-    FBlock* blockSRC = new FBlock( size.x, size.y, ULIS3_FORMAT_RGBA8 );
-    Clear( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockSRC, blockSRC->Rect() );
+    FBlock* blockSRC = new FBlock( size.x, size.y, ULIS_FORMAT_RGBA8 );
+    Clear( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockSRC, blockSRC->Rect() );
     FVec2I mid = size / 2;
     int rad = 250;
     for( int x = 0; x < size.x; ++x ) {
@@ -46,7 +46,7 @@ main( int argc, char *argv[] ) {
         }
     }
 
-    FBlock* blockDST = XExtract( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockSRC, false, 1 << blockSRC->AlphaIndex(), ULIS3_FORMAT_G8, false, 1 );
+    FBlock* blockDST = XExtract( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockSRC, false, 1 << blockSRC->AlphaIndex(), ULIS_FORMAT_G8, false, 1 );
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();

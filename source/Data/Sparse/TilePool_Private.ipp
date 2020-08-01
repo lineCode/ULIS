@@ -18,7 +18,7 @@
 #include "Data/Sparse/Tile.h"
 #include <algorithm>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTilePool
 //--------------------------------------------------------------------------------------
@@ -109,9 +109,9 @@ template< uint8 _MICRO, uint8 _MACRO > ITiledBlock* TTilePool< _MICRO, _MACRO >:
 template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::RequestTiledBlockDeletion( ITiledBlock* iBlock ) {
     const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
     tTiledBlock* block = dynamic_cast< tTiledBlock* >( iBlock );
-    ULIS3_ASSERT( block, "Bad TiledBlock Deletion Request, this tiledblock is not the right type !" );
+    ULIS_ASSERT( block, "Bad TiledBlock Deletion Request, this tiledblock is not the right type !" );
     auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), block );
-    ULIS3_ASSERT( it != mRegisteredTiledBlocks.end(), "Bad TiledBlock Deletion Request, this tiledblock is not in this pool or has already been deleted !" );
+    ULIS_ASSERT( it != mRegisteredTiledBlocks.end(), "Bad TiledBlock Deletion Request, this tiledblock is not in this pool or has already been deleted !" );
     if( it != mRegisteredTiledBlocks.end() ) {
         mRegisteredTiledBlocks.erase( it );
         delete *it;
@@ -198,7 +198,7 @@ TTilePool< _MICRO, _MACRO >::XQueryFreshTile() {
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement*
 TTilePool< _MICRO, _MACRO >::PerformRedundantHashMergeReturnCorrect( FTileElement* iElem ) {
-    ULIS3_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
+    ULIS_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
 
     // If the hashed tile is empty we return null ptr and decrease refcount
     if( iElem->mHash == mEmptyCRC32Hash ) {
@@ -251,7 +251,7 @@ TTilePool< _MICRO, _MACRO >::PerformRedundantHashMergeReturnCorrect( FTileElemen
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement*
 TTilePool< _MICRO, _MACRO >::XPerformDataCopyForImminentMutableChangeIfNeeded( FTileElement* iElem ) {
-    ULIS3_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
+    ULIS_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
     const std::lock_guard<std::mutex> lock_correct( mMutexCorrectlyHashedTilesCurrentlyInUseLock );
     std::unordered_map< uint32, FTileElement* >::iterator it   = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
     std::unordered_map< uint32, FTileElement* >::iterator end  = mCorrectlyHashedTilesCurrentlyInUse.end();
@@ -451,5 +451,5 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Threade
     }
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

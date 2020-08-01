@@ -17,7 +17,7 @@
 #include "Maths/Geometry/Vector3.h"
 #include "Maths/Maths.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TMatrixN
 /// @brief      The TMatrixN class provides a simple NxN square matrix class for
@@ -35,13 +35,13 @@ private:
 public:
     // Constructors
     /*! Default constructor ( identity matrix ). */
-    ULIS3_MATRIX_FUNC TMatrix8x8();
+    ULIS_MATRIX_FUNC TMatrix8x8();
 
     /*! Constructor from input diagonal value. */
-    ULIS3_MATRIX_FUNC TMatrix8x8( T iValue );
+    ULIS_MATRIX_FUNC TMatrix8x8( T iValue );
 
     /*! Constructor from input cells values. */
-    ULIS3_MATRIX_FUNC TMatrix8x8(
+    ULIS_MATRIX_FUNC TMatrix8x8(
           T iM00, T iM01, T iM02, T iM03, T iM04, T iM05, T iM06, T iM07
         , T iM10, T iM11, T iM12, T iM13, T iM14, T iM15, T iM16, T iM17
         , T iM20, T iM21, T iM22, T iM23, T iM24, T iM25, T iM26, T iM27
@@ -53,7 +53,7 @@ public:
     );
 
     /*! Constructor from row vector values. */
-    ULIS3_MATRIX_FUNC TMatrix8x8(
+    ULIS_MATRIX_FUNC TMatrix8x8(
           const tColumn& iCol0
         , const tColumn& iCol1
         , const tColumn& iCol2
@@ -65,90 +65,90 @@ public:
     );
 
     /*! Copy constructor. */
-    ULIS3_MATRIX_FUNC TMatrix8x8( const TMatrix8x8& iOther );
+    ULIS_MATRIX_FUNC TMatrix8x8( const TMatrix8x8& iOther );
 
     /*! Assignment operator from matrix. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator=( const TMatrix8x8& iOther );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator=( const TMatrix8x8& iOther );
 
 
 
     // Conversion
     /*! Conversion constructor from other matrix type. */
     template< typename U >
-    ULIS3_MATRIX_FUNC TMatrix8x8( const TMatrix8x8< U >& iOther );
+    ULIS_MATRIX_FUNC TMatrix8x8( const TMatrix8x8< U >& iOther );
 
 
 
     // Named Functions
     /*! Obtain the inverse of the matrix. */
-    ULIS3_MATRIX_FUNC TMatrix8x8 Inverse();
+    ULIS_MATRIX_FUNC TMatrix8x8 Inverse();
 
     /*! Obtain the transpose of the matrix. */
-    ULIS3_MATRIX_FUNC TMatrix8x8 Transpose();
+    ULIS_MATRIX_FUNC TMatrix8x8 Transpose();
 
     /*! Obtain the determinant of the matrix. */
-    ULIS3_MATRIX_FUNC T Determinant();
+    ULIS_MATRIX_FUNC T Determinant();
 
 
 
     // Boolean operators
     /*! Equality operator. */
-    ULIS3_MATRIX_FUNC bool operator==( const TMatrix8x8& iOther );
+    ULIS_MATRIX_FUNC bool operator==( const TMatrix8x8& iOther );
 
     /*! Inequality operator. */
-    ULIS3_MATRIX_FUNC bool operator!=( const TMatrix8x8& iOther );
+    ULIS_MATRIX_FUNC bool operator!=( const TMatrix8x8& iOther );
 
 
 
     // Unary Negative Operator
     /*! Unary negative operator. */
-    ULIS3_MATRIX_FUNC TMatrix8x8 operator-() const;
+    ULIS_MATRIX_FUNC TMatrix8x8 operator-() const;
 
 
 
     // Unary arithmetic operator with scalar
     /*! Unary addition operator with value. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator+=( T iValue );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator+=( T iValue );
 
     /*! Unary substraction operator with value. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator-=( T iValue );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator-=( T iValue );
 
     /*! Unary multiplication operator with value. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator*=( T iValue );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator*=( T iValue );
 
     /*! Unary division operator with value. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator/=( T iValue );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator/=( T iValue );
 
 
 
     // Unary arithmetic operator with matrix
     /*! Unary addition operator with matrix. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator+=( const TMatrix8x8& iOther );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator+=( const TMatrix8x8& iOther );
 
     /*! Unary substraction operator with matrix. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator-=( const TMatrix8x8& iOther );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator-=( const TMatrix8x8& iOther );
 
     /*! Unary multiplication operator with matrix. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator*=( const TMatrix8x8& iOther );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator*=( const TMatrix8x8& iOther );
 
     /*! Unary division operator with matrix. */
-    ULIS3_MATRIX_FUNC TMatrix8x8& operator/=( const TMatrix8x8& iOther );
+    ULIS_MATRIX_FUNC TMatrix8x8& operator/=( const TMatrix8x8& iOther );
 
 
 
     // Other Operators
     /*! Subscript accessor for matrix columns. */
-    ULIS3_MATRIX_FUNC tColumn& operator[]( int iIndex );
+    ULIS_MATRIX_FUNC tColumn& operator[]( int iIndex );
 
     /*! Subscript accessor for const matrix columns. */
-    ULIS3_MATRIX_FUNC const tColumn& operator[]( int iIndex ) const;
+    ULIS_MATRIX_FUNC const tColumn& operator[]( int iIndex ) const;
 };
 
 
 
 // Constructors
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8()
+ULIS_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8()
     : mCols {
           tColumn( 1, 0, 0, 0, 0, 0, 0, 0 )
         , tColumn( 0, 1, 0, 0, 0, 0, 0, 0 )
@@ -162,7 +162,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8()
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( T iValue )
+ULIS_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( T iValue )
     : mCols {
           tColumn( iValue, 0, 0, 0, 0, 0, 0, 0 )
         , tColumn( 0, iValue, 0, 0, 0, 0, 0, 0 )
@@ -176,7 +176,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( T iValue )
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8(
+ULIS_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8(
       T iM00, T iM01, T iM02, T iM03, T iM04, T iM05, T iM06, T iM07
     , T iM10, T iM11, T iM12, T iM13, T iM14, T iM15, T iM16, T iM17
     , T iM20, T iM21, T iM22, T iM23, T iM24, T iM25, T iM26, T iM27
@@ -199,7 +199,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8(
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8(
+ULIS_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8(
       const tColumn& iCol0
     , const tColumn& iCol1
     , const tColumn& iCol2
@@ -222,7 +222,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8(
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( const TMatrix8x8< T >& iOther )
+ULIS_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( const TMatrix8x8< T >& iOther )
     : mCols {
           iOther.mCols[0]
         , iOther.mCols[1]
@@ -236,7 +236,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( const TMatrix8x8< T >& iOther )
 {}
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator=( const TMatrix8x8< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator=( const TMatrix8x8< T >& iOther ) {
     for( int i = 0; i < 8; ++i )
         mCols[i] = iOther.mCols[i];
 }
@@ -246,7 +246,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator=( const TMatrix8x8<
 // Conversion
 template< typename T >
 template< typename U >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( const TMatrix8x8< U >& iOther )
+ULIS_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( const TMatrix8x8< U >& iOther )
     : mCols {
           tColumn( iOther.mCols[0] )
         , tColumn( iOther.mCols[1] )
@@ -263,22 +263,22 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >::TMatrix8x8( const TMatrix8x8< U >& iOther )
 
 // Named Functions
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > TMatrix8x8< T >::Inverse() {
+ULIS_MATRIX_FUNC TMatrix8x8< T > TMatrix8x8< T >::Inverse() {
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > TMatrix8x8< T >::Transpose() {
+ULIS_MATRIX_FUNC TMatrix8x8< T > TMatrix8x8< T >::Transpose() {
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC T TMatrix8x8< T >::Determinant() {
+ULIS_MATRIX_FUNC T TMatrix8x8< T >::Determinant() {
 }
 
 
 
 // Boolean operators
 template< typename T >
-ULIS3_MATRIX_FUNC bool TMatrix8x8< T >::operator==( const TMatrix8x8< T >& iOther ) {
+ULIS_MATRIX_FUNC bool TMatrix8x8< T >::operator==( const TMatrix8x8< T >& iOther ) {
     for( int i = 0; i < 8; ++i )
         if( mCols[i] != iOther.mCols[i] )
             return  false;
@@ -287,7 +287,7 @@ ULIS3_MATRIX_FUNC bool TMatrix8x8< T >::operator==( const TMatrix8x8< T >& iOthe
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC bool TMatrix8x8< T >::operator!=( const TMatrix8x8< T >& iOther ) {
+ULIS_MATRIX_FUNC bool TMatrix8x8< T >::operator!=( const TMatrix8x8< T >& iOther ) {
     return  !( *this == iOther );
 }
 
@@ -295,7 +295,7 @@ ULIS3_MATRIX_FUNC bool TMatrix8x8< T >::operator!=( const TMatrix8x8< T >& iOthe
 
 // Unary Negative Operator
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > TMatrix8x8< T >::operator-() const {
+ULIS_MATRIX_FUNC TMatrix8x8< T > TMatrix8x8< T >::operator-() const {
     return  TMatrix8x8< T >(
           -mCols[0]
         , -mCols[1]
@@ -312,25 +312,25 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > TMatrix8x8< T >::operator-() const {
 
 // Unary arithmetic operator with scalar
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator+=( T iValue ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator+=( T iValue ) {
     for( int i = 0; i < 8; ++i )
         mCols[i] += iValue;
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator-=( T iValue ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator-=( T iValue ) {
     for( int i = 0; i < 8; ++i )
         mCols[i] -= iValue;
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator*=( T iValue ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator*=( T iValue ) {
     for( int i = 0; i < 8; ++i )
         mCols[i] *= iValue;
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator/=( T iValue ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator/=( T iValue ) {
     for( int i = 0; i < 8; ++i )
         mCols[i] /= iValue;
 }
@@ -339,24 +339,24 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator/=( T iValue ) {
 
 // Unary arithmetic operator with matrix
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator+=( const TMatrix8x8& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator+=( const TMatrix8x8& iOther ) {
     for( int i = 0; i < 8; ++i )
         mCols[i] += iOther.mCols[i];
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator-=( const TMatrix8x8& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator-=( const TMatrix8x8& iOther ) {
     for( int i = 0; i < 8; ++i )
         mCols[i] -= iOther.mCols[i];
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator*=( const TMatrix8x8& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator*=( const TMatrix8x8& iOther ) {
     return  ( *this = *this * iOther );
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator/=( const TMatrix8x8& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator/=( const TMatrix8x8& iOther ) {
     return  ( *this *= iOther.Inverse() );
 }
 
@@ -364,14 +364,14 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >& TMatrix8x8< T >::operator/=( const TMatrix8x8
 
 // Other Operators
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::tColumn& TMatrix8x8< T >::operator[]( int iIndex ) {
-    ULIS3_ASSERT( iIndex >= 0 && iIndex < 8, "Bad Index" );
+ULIS_MATRIX_FUNC TMatrix8x8< T >::tColumn& TMatrix8x8< T >::operator[]( int iIndex ) {
+    ULIS_ASSERT( iIndex >= 0 && iIndex < 8, "Bad Index" );
     return  mCols[ iIndex ];
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC const TMatrix8x8< T >::tColumn& TMatrix8x8< T >::operator[]( int iIndex ) const {
-    ULIS3_ASSERT( iIndex >= 0 && iIndex < 8, "Bad Index" );
+ULIS_MATRIX_FUNC const TMatrix8x8< T >::tColumn& TMatrix8x8< T >::operator[]( int iIndex ) const {
+    ULIS_ASSERT( iIndex >= 0 && iIndex < 8, "Bad Index" );
     return  mCols[ iIndex ];
 }
 
@@ -379,7 +379,7 @@ ULIS3_MATRIX_FUNC const TMatrix8x8< T >::tColumn& TMatrix8x8< T >::operator[]( i
 
 // Binary arithmetic operator with scalar on left hand side
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator+( T iValue, const TMatrix8x8< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator+( T iValue, const TMatrix8x8< T >& iMat ) {
     return  TMatrix8x8< T >(
           iValue + iMat[0]
         , iValue + iMat[1]
@@ -393,7 +393,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator+( T iValue, const TMatrix8x8< T >& iM
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator-( T iValue, const TMatrix8x8< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator-( T iValue, const TMatrix8x8< T >& iMat ) {
     return  TMatrix8x8< T >(
           iValue - iMat[0]
         , iValue - iMat[1]
@@ -407,7 +407,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator-( T iValue, const TMatrix8x8< T >& iM
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator*( T iValue, const TMatrix8x8< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator*( T iValue, const TMatrix8x8< T >& iMat ) {
     return  TMatrix8x8< T >(
           iValue * iMat[0]
         , iValue * iMat[1]
@@ -421,7 +421,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator*( T iValue, const TMatrix8x8< T >& iM
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator/( T iValue, const TMatrix8x8< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator/( T iValue, const TMatrix8x8< T >& iMat ) {
     return  TMatrix8x8< T >(
           iValue / iMat[0]
         , iValue / iMat[1]
@@ -438,7 +438,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator/( T iValue, const TMatrix8x8< T >& iM
 
 // Binary arithmetic operator with scalar on right hand side
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator+( const TMatrix8x8< T >& iMat, T iValue ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator+( const TMatrix8x8< T >& iMat, T iValue ) {
     return  TMatrix8x8< T >(
           iMat[0] + iValue
         , iMat[1] + iValue
@@ -452,7 +452,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator+( const TMatrix8x8< T >& iMat, T iVal
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator-( const TMatrix8x8< T >& iMat, T iValue ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator-( const TMatrix8x8< T >& iMat, T iValue ) {
     return  TMatrix8x8< T >(
           iMat[0] - iValue
         , iMat[1] - iValue
@@ -466,7 +466,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator-( const TMatrix8x8< T >& iMat, T iVal
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator*( const TMatrix8x8< T >& iMat, T iValue ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator*( const TMatrix8x8< T >& iMat, T iValue ) {
     return  TMatrix8x8< T >(
           iMat[0] * iValue
         , iMat[1] * iValue
@@ -480,7 +480,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator*( const TMatrix8x8< T >& iMat, T iVal
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator/( const TMatrix8x8< T >& iMat, T iValue ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator/( const TMatrix8x8< T >& iMat, T iValue ) {
     return  TMatrix8x8< T >(
           iMat[0] / iValue
         , iMat[1] / iValue
@@ -497,7 +497,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator/( const TMatrix8x8< T >& iMat, T iVal
 
 // Binary arithmetic operator with other matrix
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator+( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator+( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >& iOther ) {
     return  TMatrix8x8< T >(
           iMat[0] + iOther[0]
         , iMat[1] + iOther[1]
@@ -511,7 +511,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator+( const TMatrix8x8< T >& iMat, const 
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator-( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator-( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >& iOther ) {
     return  TMatrix8x8< T >(
           iMat[0] - iOther[0]
         , iMat[1] - iOther[1]
@@ -525,7 +525,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator-( const TMatrix8x8< T >& iMat, const 
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator*( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator*( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >& iOther ) {
     const TVec8< T > colA0 = iMat[0];
     const TVec8< T > colA1 = iMat[1];
     const TVec8< T > colA2 = iMat[2];
@@ -556,7 +556,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator*( const TMatrix8x8< T >& iMat, const 
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T > operator/( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >& iOther ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T > operator/( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >& iOther ) {
     return  iMat * iOther.Inverse();
 }
 
@@ -564,7 +564,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T > operator/( const TMatrix8x8< T >& iMat, const 
 
 // Binary matrix vector multiplication operators.
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::tColumn operator*( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >::tRow& iRow ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >::tColumn operator*( const TMatrix8x8< T >& iMat, const TMatrix8x8< T >::tRow& iRow ) {
     return  TVector8< T >(
           iMat[0][0] * iRow[0] + iMat[1][0] * iRow[1] + iMat[2][0] * iRow[2] + iMat[3][0] * iRow[3] + iMat[4][0] * iRow[4] + iMat[5][0] * iRow[5] + iMat[6][0] * iRow[6] + iMat[7][0] * iRow[7]
         , iMat[0][1] * iRow[0] + iMat[1][1] * iRow[1] + iMat[2][1] * iRow[2] + iMat[3][1] * iRow[3] + iMat[4][1] * iRow[4] + iMat[5][1] * iRow[5] + iMat[6][1] * iRow[6] + iMat[7][1] * iRow[7]
@@ -578,7 +578,7 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >::tColumn operator*( const TMatrix8x8< T >& iMa
 }
 
 template< typename T >
-ULIS3_MATRIX_FUNC TMatrix8x8< T >::tRow operator*( const TMatrix8x8< T >::tColumn& iCol, const TMatrix8x8< T >& iMat ) {
+ULIS_MATRIX_FUNC TMatrix8x8< T >::tRow operator*( const TMatrix8x8< T >::tColumn& iCol, const TMatrix8x8< T >& iMat ) {
     return  TVector8< T >(
           iMat[0][0] * iCol[0] + iMat[0][1] * iCol[1] + iMat[0][2] * iCol[2] + iMat[0][3] * iCol[3] + iMat[0][4] * iCol[4] + iMat[0][5] * iCol[5] + iMat[0][6] * iCol[6] + iMat[0][7] * iCol[7]
         , iMat[1][0] * iCol[0] + iMat[1][1] * iCol[1] + iMat[1][2] * iCol[2] + iMat[1][3] * iCol[3] + iMat[1][4] * iCol[4] + iMat[1][5] * iCol[5] + iMat[1][6] * iCol[6] + iMat[1][7] * iCol[7]
@@ -591,5 +591,5 @@ ULIS3_MATRIX_FUNC TMatrix8x8< T >::tRow operator*( const TMatrix8x8< T >::tColum
     );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

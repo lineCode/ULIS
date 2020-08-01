@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include <cmath>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TArray
 /// @brief      The TArray class provides a simple dynamic array or vector
@@ -28,5 +28,5 @@ class TArray
 {
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

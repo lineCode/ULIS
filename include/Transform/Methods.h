@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // eResamplingMethod
 enum eResamplingMethod
@@ -47,5 +47,5 @@ static const char* kwMipsLayout[] =
     , "MipsOnly"
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

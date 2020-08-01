@@ -13,7 +13,7 @@
 */
 #include "IO/Clipboard.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
@@ -38,5 +38,5 @@ bool ClipboardHasImageData_MacOSPlatform() {
     return  false;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

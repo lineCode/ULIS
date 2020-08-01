@@ -16,7 +16,7 @@
 #include "Text/Dispatch/TextInfo.h"
 #include "Text/Dispatch/Generic/TraceTextMono_Generic.ipp"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedTextFunc)( std::shared_ptr< _FPrivateTextInfo > );
 
@@ -47,5 +47,5 @@ QueryDispatchedTextFunctionForParameters( eType iType ) {
     return  nullptr;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

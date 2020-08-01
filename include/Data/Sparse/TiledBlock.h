@@ -17,7 +17,7 @@
 #include "Maths/Geometry/Rect.h"
 #include "Maths/Geometry/Vec2.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 //----------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------- eScale
 enum eMicro {
@@ -36,7 +36,7 @@ enum eMacro {
 
 /////////////////////////////////////////////////////
 /// ITiledBlock
-class ULIS3_API ITiledBlock
+class ULIS_API ITiledBlock
 {
 public:
     // Construction / Destruction
@@ -71,4 +71,4 @@ public:
     virtual  void SanitizeNow() = 0;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END

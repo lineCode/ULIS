@@ -24,7 +24,7 @@
 
 #include "Maths/Maths.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 /////////////////////////////////////////////////////
 // FThreadPool
@@ -148,8 +148,8 @@ private:
     std::condition_variable             cv_finished;
 };
 
-#define ULIS3_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
-    if( ( _PERF & ULIS3_PERF_MT ) && _POOL->GetNumWorkers() > 1 )                       \
+#define ULIS_MACRO_INLINE_PARALLEL_FOR( _PERF, _POOL, _BLOCKING, _MAX, _FUNC, ... )    \
+    if( ( _PERF & ULIS_PERF_MT ) && _POOL->GetNumWorkers() > 1 )                       \
     {                                                                                   \
         for( int pLINE = 0; pLINE < _MAX; ++pLINE )                                     \
             _POOL->ScheduleJob( _FUNC, __VA_ARGS__ );                                   \
@@ -163,5 +163,5 @@ private:
     }
 
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

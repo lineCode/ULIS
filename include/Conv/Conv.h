@@ -14,11 +14,11 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
-ULIS3_API void Conv( const ISample& iSrc, ISample& iDst );
-ULIS3_API FColor Conv( const ISample& iSrc, eFormat iDst );
+ULIS_NAMESPACE_BEGIN
+ULIS_API void Conv( const ISample& iSrc, ISample& iDst );
+ULIS_API FColor Conv( const ISample& iSrc, eFormat iDst );
 
-ULIS3_API void Conv( FThreadPool*           iThreadPool
+ULIS_API void Conv( FThreadPool*           iThreadPool
                    , bool                   iBlocking
                    , uint32                 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo
@@ -26,7 +26,7 @@ ULIS3_API void Conv( FThreadPool*           iThreadPool
                    , const FBlock*          iSource
                    , FBlock*                iDestination );
 
-ULIS3_API FBlock* XConv( FThreadPool*           iThreadPool
+ULIS_API FBlock* XConv( FThreadPool*           iThreadPool
                        , bool                   iBlocking
                        , uint32                 iPerfIntent
                        , const FHostDeviceInfo& iHostDeviceInfo
@@ -34,5 +34,5 @@ ULIS3_API FBlock* XConv( FThreadPool*           iThreadPool
                        , const FBlock*          iSource
                        , eFormat                iDestinationFormat );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

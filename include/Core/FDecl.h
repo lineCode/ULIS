@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Platform.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 class   FBlock;
 class   ISample;
 class   FColor;
@@ -86,5 +86,5 @@ typedef TRect< uint32 >         FRectUI32;
 typedef TRect< uint64 >         FRectUI64;
 typedef TRect< int32 >          FRectI32;
 typedef TRect< int64 >          FRectI64;
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

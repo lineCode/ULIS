@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
-struct ULIS3_API FHostDeviceInfo
+ULIS_NAMESPACE_BEGIN
+struct ULIS_API FHostDeviceInfo
 {
 private:
     FHostDeviceInfo() = delete;
@@ -101,5 +101,5 @@ public:
     const bool HW_AVX512_VBMI;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -14,21 +14,21 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_API void ApplysRGB2Linear( FThreadPool*           iThreadPool
+ULIS_API void ApplysRGB2Linear( FThreadPool*           iThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
                                , bool                   iCallCB
                                , FBlock*                iDestination );
 
-ULIS3_API void ApplyLinear2sRGB( FThreadPool*           iThreadPool
+ULIS_API void ApplyLinear2sRGB( FThreadPool*           iThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
                                , bool                   iCallCB
                                , FBlock*                iDestination );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

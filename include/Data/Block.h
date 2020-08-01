@@ -21,7 +21,7 @@
 #include "Maths/Geometry/Rectangle.h"
 #include "Maths/Geometry/Vector2.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FBlock
 /// @brief      The FBlock class provides a mean of storing and manipulating
@@ -63,7 +63,7 @@ ULIS3_NAMESPACE_BEGIN
 ///             It is also sometimes handy to use the CRT safe version if
 ///             using the \a X functions in your application with dynamic link:
 ///             \snippet data/block.h FBlock X Version
-class ULIS3_API FBlock final
+class ULIS_API FBlock final
     : public IHasFormat
     , public IHasColorSpace
 {
@@ -510,5 +510,5 @@ private:
     FOnCleanup mOnCleanup; ///< The callback for when the block is dirty.
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

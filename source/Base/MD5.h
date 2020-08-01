@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FMD5
 /// @brief      The FMD5 class provides a mean for computation of MD5 hash.
@@ -123,5 +123,5 @@ std::string  MD5( const std::string iStr );
 /// @return     A std::string representing the MD5 hash.
 std::string  MD5( const uint8* iData, int iLen );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

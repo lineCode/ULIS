@@ -16,15 +16,15 @@
 #include "Base/HostDeviceInfo.h"
 #include "Data/Format.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Dispatch Tests
-static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) {
-    return  ( iFormatInfo.FMT & ULIS3_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBA8;
+static ULIS_FORCEINLINE bool DispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) {
+    return  ( iFormatInfo.FMT & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBA8;
 }
 
-static ULIS3_FORCEINLINE bool DispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) {
-    return  ( iFormatInfo.FMT & ULIS3_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBAF;
+static ULIS_FORCEINLINE bool DispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) {
+    return  ( iFormatInfo.FMT & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBAF;
 }
 
 /////////////////////////////////////////////////////
@@ -36,16 +36,16 @@ typedef bool (*fpCond)( const FFormat& iFormatInfo );
 template< typename _DISPATCHER >
 class TDispatcher {
 public:
-    static ULIS3_FORCEINLINE typename _DISPATCHER::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
+    static ULIS_FORCEINLINE typename _DISPATCHER::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
         for( int i = 0; i < _DISPATCHER::spec_size; ++i ) {
             if( _DISPATCHER::spec_table[i].select_cond( iFormatInfo ) ) {
-                #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-                    if( iPerfIntent & ULIS3_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
+                #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+                    if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                         return  _DISPATCHER::spec_table[i].select_AVX( iExtra );
                     else
                 #endif
-                #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-                    if( iPerfIntent & ULIS3_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
+                #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+                    if( iPerfIntent & ULIS_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
                         return  _DISPATCHER::spec_table[i].select_SSE( iExtra );
                     else
                 #endif
@@ -54,23 +54,23 @@ public:
         }
 
         #define TMP_CALL( _TYPE_ID, _E0, _E2, _E3 ) return  QueryGeneric< _E0 >( iPerfIntent, iHostDeviceInfo, iFormatInfo, iExtra );
-        ULIS3_SWITCH_FOR_ALL_DO( iFormatInfo.TP, ULIS3_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+        ULIS_SWITCH_FOR_ALL_DO( iFormatInfo.TP, ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
         #undef TMP_CALL
 
-        ULIS3_ASSERT( false, "No Dispatch found." );
+        ULIS_ASSERT( false, "No Dispatch found." );
         return  nullptr;
     }
 
 private:
     template< typename T >
-    static ULIS3_FORCEINLINE typename _DISPATCHER::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
-        #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-            if( iPerfIntent & ULIS3_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
+    static ULIS_FORCEINLINE typename _DISPATCHER::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
+        #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+            if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                 return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );
             else
         #endif
-        #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-            if( iPerfIntent & ULIS3_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
+        #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+            if( iPerfIntent & ULIS_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
                 return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_SSE_Generic( iExtra );
             else
         #endif
@@ -80,26 +80,26 @@ private:
 
 /////////////////////////////////////////////////////
 // Macro Helper for Dispatcher definition
-#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-    #define ULIS3_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                    \
+#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+    #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_AVX_Generic = AVX;
 #else
-    #define ULIS3_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                    \
+    #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_AVX_Generic = nullptr;
 #endif
 
-#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-    #define ULIS3_DISPATCH_SELECT_GENSSE( TAG, SSE )                                                                    \
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+    #define ULIS_DISPATCH_SELECT_GENSSE( TAG, SSE )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_SSE_Generic = SSE;
 #else
-    #define ULIS3_DISPATCH_SELECT_GENSSE( TAG, AVX )                                                                    \
+    #define ULIS_DISPATCH_SELECT_GENSSE( TAG, AVX )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_SSE_Generic = nullptr;
 #endif
 
-#define ULIS3_DISPATCH_SELECT_GENMEM( TAG, MEM )                                                                        \
+#define ULIS_DISPATCH_SELECT_GENMEM( TAG, MEM )                                                                        \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_MEM_Generic = MEM;
 
-#define ULIS3_BEGIN_DISPATCHER( TAG, FPT, EXT, GENAVX, GENSSE, GENMEM ) \
+#define ULIS_BEGIN_DISPATCHER( TAG, FPT, EXT, GENAVX, GENSSE, GENMEM ) \
 struct TAG {                                                            \
     typedef FPT fpQuery;                                                \
     typedef EXT tExtra;                                                 \
@@ -119,31 +119,31 @@ struct TAG {                                                            \
         static const fpSelect select_MEM_Generic;                       \
     };                                                                  \
 };                                                                      \
-ULIS3_DISPATCH_SELECT_GENAVX( TAG, GENAVX );                            \
-ULIS3_DISPATCH_SELECT_GENSSE( TAG, GENSSE );                            \
-ULIS3_DISPATCH_SELECT_GENMEM( TAG, GENMEM );                            \
+ULIS_DISPATCH_SELECT_GENAVX( TAG, GENAVX );                            \
+ULIS_DISPATCH_SELECT_GENSSE( TAG, GENSSE );                            \
+ULIS_DISPATCH_SELECT_GENMEM( TAG, GENMEM );                            \
 const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
-#define ULIS3_BEGIN_DISPATCHER_GENERIC( TAG, FPT, EXT, GENMEM )  ULIS3_BEGIN_DISPATCHER( TAG, FPT, EXT, GENMEM, GENMEM, GENMEM )
+#define ULIS_BEGIN_DISPATCHER_GENERIC( TAG, FPT, EXT, GENMEM )  ULIS_BEGIN_DISPATCHER( TAG, FPT, EXT, GENMEM, GENMEM, GENMEM )
 
-#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
-    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-        #define ULIS3_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, _AVX, _SSE, _MEM },
+#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, _AVX, _SSE, _MEM },
     #else
-        #define ULIS3_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
+        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
     #endif
 #else
-    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
-        #define ULIS3_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
+    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
     #else
-        #define ULIS3_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, _MEM },
+        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, _MEM },
     #endif
 #endif
 
-#define ULIS3_END_DISPATCHER( TAG )                                                                             \
+#define ULIS_END_DISPATCHER( TAG )                                                                             \
     { nullptr, nullptr, nullptr, nullptr }                                                                      \
 };                                                                                                              \
 const int TAG::spec_size = sizeof( TAG::spec_table ) / sizeof( TAG::FSpecDispatchGroup ) - 1;
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

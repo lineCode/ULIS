@@ -22,7 +22,7 @@
 #include "Misc/Dispatch/Dispatch_SAT.ipp"
 #include "Misc/Dispatch/Dispatch_PremultipliedSAT.ipp"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // SAT
 FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
@@ -33,17 +33,17 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
                            , const FBlock*            iSource )
 {
     // Assertions
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS3_ASSERT( iSource,                  "Bad source."                                           );
-    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iSource,                  "Bad source."                                           );
+    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
-    eFormat satFormat = ( ( ( iSource->Format() & ULIS3_E_TYPE ) & ULIS3_E_DEPTH ) ) | ULIS3_W_TYPE( ULIS3_TYPE_UFLOAT ) | ULIS3_W_FLOATING( 1 ) | ULIS3_W_DEPTH( 4 ) );
+    eFormat satFormat = ( ( ( iSource->Format() & ULIS_E_TYPE ) & ULIS_E_DEPTH ) ) | ULIS_W_TYPE( ULIS_TYPE_UFLOAT ) | ULIS_W_FLOATING( 1 ) | ULIS_W_DEPTH( 4 ) );
     eFormat test = eFormat::Format_RGBAF;
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method
     fpDispatchedSATFunc fptr = QueryDispatchedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
+    ULIS_ASSERT( fptr, "No dispatch function found." );
     fptr( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 
     sat->Dirty( iCallCB );
@@ -61,17 +61,17 @@ FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
                                         , const FBlock*            iSource )
 {
     // Assertions
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS3_ASSERT( iSource,                  "Bad source."                                           );
-    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iSource,                  "Bad source."                                           );
+    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
-    eFormat satFormat = ( ( ( iSource->Format() & ULIS3_E_TYPE ) & ULIS3_E_DEPTH ) ) | ULIS3_W_TYPE( ULIS3_TYPE_UFLOAT ) | ULIS3_W_FLOATING( 1 ) | ULIS3_W_DEPTH( 4 ) );
+    eFormat satFormat = ( ( ( iSource->Format() & ULIS_E_TYPE ) & ULIS_E_DEPTH ) ) | ULIS_W_TYPE( ULIS_TYPE_UFLOAT ) | ULIS_W_FLOATING( 1 ) | ULIS_W_DEPTH( 4 ) );
     eFormat test = eFormat::Format_RGBAF;
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method
     fpDispatchedSATFunc fptr = QueryDispatchedPremultipliedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );
-    ULIS3_ASSERT( fptr, "No dispatch function found." );
+    ULIS_ASSERT( fptr, "No dispatch function found." );
     fptr( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 
     sat->Dirty( iCallCB );
@@ -79,5 +79,5 @@ FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
     return  sat;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

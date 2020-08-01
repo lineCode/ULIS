@@ -23,7 +23,7 @@
 #include "Maths/Geometry/Rect.h"
 #include "Maths/Geometry/Vec2.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
 InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
@@ -41,8 +41,8 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, u
     FFormat rgbfFormatInfo( eFormat::Format_RGBF );
     fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
-    ULIS3_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
-    ULIS3_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
+    ULIS_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
+    ULIS_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
         const float alpha_src   = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;
@@ -50,12 +50,12 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, u
         const float alpha_comp  = AlphaNormalF( alpha_src, alpha_bdp );
         const float var         = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         float alpha_result;
-        ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
+        ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
         conv_forward_fptr( fmt, src, rgbfFormatInfo, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
         conv_forward_fptr( fmt, bdp, rgbfFormatInfo, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
-        ULIS3_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS3_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
+        ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
         conv_backward_fptr( rgbfFormatInfo, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
 
@@ -86,7 +86,7 @@ TiledBlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic< T >
                                    , src + ( ( info.sourceRect.y + ( ( info.shift.y + pLINE ) % info.sourceRect.h ) ) * src_bps ) + src_decal_x
@@ -94,5 +94,5 @@ TiledBlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo
                                    , pLINE , iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -17,7 +17,7 @@
 #include "Conv/Conv.h"
 #include "Maths/Maths.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
     if( !iDst->Rect().HitTest( iPos ) )
         return;
@@ -103,5 +103,5 @@ void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRect
 
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

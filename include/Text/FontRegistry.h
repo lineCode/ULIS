@@ -16,12 +16,12 @@
 #include <map>
 #include <list>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 /////////////////////////////////////////////////////
 /// @class FFontStyleEntry
 /// @brief The FFontStyleEntry class provides a mean of storing and manipulating font files entries along with their family, style and path.
-class ULIS3_API FFontStyleEntry
+class ULIS_API FFontStyleEntry
 {
 public:
     // Construction / Destruction
@@ -44,7 +44,7 @@ private:
 /////////////////////////////////////////////////////
 /// @class FFontFamilyEntry
 /// @brief The FFontFamilyEntry class provides a mean of storing and manipulating font family entries.
-class ULIS3_API FFontFamilyEntry
+class ULIS_API FFontFamilyEntry
 {
 
 public:
@@ -69,7 +69,7 @@ private:
 /////////////////////////////////////////////////////
 /// @class      FFontRegistry
 /// @brief      The FFontRegistry class provides a mean of storing and manipulating all discoverable font entries and their file paths.
-class ULIS3_API FFontRegistry
+class ULIS_API FFontRegistry
 {
 public:
     // Construction / Destruction
@@ -96,5 +96,5 @@ private:
     const FFontEngine& mFontEngine;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

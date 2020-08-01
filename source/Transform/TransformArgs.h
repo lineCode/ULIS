@@ -18,7 +18,7 @@
 #include "Maths/Geometry/Vec2.h"
 #include <glm/matrix.hpp>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransformArgs
 struct FTransformArgs {
@@ -51,5 +51,5 @@ struct FResizeArgs {
     std::shared_ptr< const FBlock >     optionalSAT;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

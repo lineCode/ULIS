@@ -23,7 +23,7 @@
 #include <lcms2.h>
 #include <cmath>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // To RGB
 //--------------------------------------------------------------------------------------
@@ -290,5 +290,5 @@ ConvBufferYxyToRGB( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     }
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

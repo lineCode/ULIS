@@ -25,9 +25,9 @@
 #include "Thread/ThreadPool.h"
 #include <vectorclass.h>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_FORCEINLINE __m128i Downscale( __m128i iVal ) {
+ULIS_FORCEINLINE __m128i Downscale( __m128i iVal ) {
     return  _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( iVal, _mm_set1_epi16( 1 ) ), _mm_srli_epi16( iVal, 8 ) ), 8 );
 }
 
@@ -103,7 +103,7 @@ AlphaBlendMT_Separable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > i
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -156,7 +156,7 @@ AlphaBlendMT_Separable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8
                                 , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -164,5 +164,5 @@ AlphaBlendMT_Separable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
                                 , pLINE , iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

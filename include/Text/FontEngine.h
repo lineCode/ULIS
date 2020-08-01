@@ -14,11 +14,11 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFontEngine
 /// @brief      The FFontEngine class provides a thin wrapper around the freetype library.
-class ULIS3_API FFontEngine
+class ULIS_API FFontEngine
 {
 public:
     // Construction / Destruction
@@ -34,5 +34,5 @@ private:
     // Private Data Members
     void* mHandle;
 };
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

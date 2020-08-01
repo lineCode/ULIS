@@ -26,7 +26,7 @@
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // TransformAffine
 void TransformAffine( FThreadPool*              iThreadPool
@@ -41,11 +41,11 @@ void TransformAffine( FThreadPool*              iThreadPool
                     , eResamplingMethod         iMethod )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
@@ -93,11 +93,11 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
                          , eResamplingMethod         iMethod )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
@@ -144,11 +144,11 @@ void TransformPerspective( FThreadPool*         iThreadPool
                     , eResamplingMethod         iMethod )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
@@ -200,12 +200,12 @@ void TransformBezier( FThreadPool*                                      iThreadP
                     , eResamplingMethod                                 iMethod )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS3_ASSERT( iControlPoints.size() == 4,                   "Bad control points size" );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iControlPoints.size() == 4,                   "Bad control points size" );
 
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
@@ -223,7 +223,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
     FVec2F shift( static_cast< float >( trans.x ), static_cast< float >( trans.y ) );
     std::shared_ptr< FBlock > field   = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, eFormat::Format_GAF );
     std::shared_ptr< FBlock > mask    = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, eFormat::Format_G8 );
-    ClearRaw( mask.get(), ULIS3_NOCB );
+    ClearRaw( mask.get(), ULIS_NOCB );
     std::vector< FCubicBezierControlPoint > tempPoints;
     tempPoints.reserve( 4 );
     for( auto i : iControlPoints )
@@ -299,12 +299,12 @@ void Resize( FThreadPool*             iThreadPool
            , const FVec2F&            iPos
            , eResamplingMethod        iMethod ) {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS3_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS3_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
 
     FRectI src_fit = iSourceRect & iSource->Rect();
     bool bNeedFix = ( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC );
@@ -345,7 +345,7 @@ void Resize( FThreadPool*             iThreadPool
     commandArgsRef.shift             = shift;
 
     if( iMethod == INTERP_AREA ) {
-        std::shared_ptr< FBlock > sh( XGetPremultipliedSummedAreaTable( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS3_NOCB, iSource ) );
+        std::shared_ptr< FBlock > sh( XGetPremultipliedSummedAreaTable( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource ) );
         commandArgsRef.optionalSAT = sh;
     } else {
         commandArgsRef.optionalSAT = nullptr;
@@ -371,10 +371,10 @@ FBlock* XResize( FThreadPool*           iThreadPool
                , const FVec2F&          iSize
                , eResamplingMethod      iMethod ) {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS3_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
 
     if( iSize.x <= 0.f || iSize.y <= 0.f )
         return  nullptr;
@@ -397,9 +397,9 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
                         , const FTransform2D&       iTransform
                         , eResamplingMethod         iMethod ) {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
@@ -428,9 +428,9 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                              , const FTransform2D&       iTransform
                              , eResamplingMethod         iMethod ) {
     // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
@@ -458,9 +458,9 @@ FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
                                        , const FTransform2D&       iTransform
                                        , eResamplingMethod         iMethod ) {
         // Assertions
-    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
@@ -488,10 +488,10 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
                              , const std::vector< FVec2F >& iDestinationPoints
                              , eResamplingMethod            iMethod ) {
     // Assertions
-    ULIS3_ASSERT( iSource,                          "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,                      "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,            "Callback flag is specified on non-blocking operation." );
-    ULIS3_ASSERT( iDestinationPoints.size() == 4,   "Bad destination points"                                );
+    ULIS_ASSERT( iSource,                          "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,                      "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,            "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iDestinationPoints.size() == 4,   "Bad destination points"                                );
 
     // Fix AREA not available here
     iMethod = iMethod == INTERP_AREA ? INTERP_BILINEAR : iMethod;
@@ -563,7 +563,7 @@ FRectI TransformBezierMetrics( const FRectI&                                    
                             , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                             , eResamplingMethod                               iMethod )
 {
-    ULIS3_ASSERT( iControlPoints.size() == 4, "Bad control points size" );
+    ULIS_ASSERT( iControlPoints.size() == 4, "Bad control points size" );
     return  FRectI::FromMinMax( static_cast< int >( FMaths::VMin( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
                                                                , iControlPoints[1].point.x, iControlPoints[1].ctrlCW.x, iControlPoints[1].ctrlCCW.x
                                                                , iControlPoints[2].point.x, iControlPoints[2].ctrlCW.x, iControlPoints[2].ctrlCCW.x
@@ -582,5 +582,5 @@ FRectI TransformBezierMetrics( const FRectI&                                    
                                                                , iControlPoints[3].point.y, iControlPoints[3].ctrlCW.y, iControlPoints[3].ctrlCCW.y ) ) );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

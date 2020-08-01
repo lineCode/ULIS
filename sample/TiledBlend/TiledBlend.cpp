@@ -26,27 +26,27 @@ using namespace ::ul3;
 int
 main( int argc, char *argv[] ) {
     FThreadPool*    threadPool  = XCreateThreadPool();
-    uint32          perfIntent  = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32          perfIntent  = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     FHostDeviceInfo host        = FHostDeviceInfo::Detect();
 
     std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
     std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
 
-    FBlock* blockBase = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathBase, ULIS3_FORMAT_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathOver, ULIS3_FORMAT_RGBA8 );
+    FBlock* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathBase, ULIS_FORMAT_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathOver, ULIS_FORMAT_RGBA8 );
 
     Fence( *threadPool );
 
-    FBlock* blockCanvas = new  FBlock( 800, 600, ULIS3_FORMAT_RGBA8 );
-    Fill( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockCanvas, FColor::FromRGBAF( 0.5f, 0.5f, 1.f ), blockCanvas->Rect() );
+    FBlock* blockCanvas = new  FBlock( 800, 600, ULIS_FORMAT_RGBA8 );
+    Fill( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, FColor::FromRGBAF( 0.5f, 0.5f, 1.f ), blockCanvas->Rect() );
 
-    BlendTiled(  threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockBase, blockCanvas, FRectI( 40, 40, 80, 80 ), FRectI( -40, 0, 1000, 400 ), FVec2I( -20, -40 ), BM_DISSOLVE, AM_NORMAL, 0.3f );
-    BlendColor(  threadPool, perfIntent, host, ULIS3_NOCB, FColor( ULIS3_FORMAT_BGR8, { 255, 0, 0 } ), blockCanvas, FRectI( 5, 80, 500, 150 ), BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
-    BlendColor(  threadPool, perfIntent, host, ULIS3_NOCB, FColor( ULIS3_FORMAT_BGR8, { 0, 255, 0 } ), blockCanvas, FRectI( 5, 80, 500, 150 ), BM_HUE, AM_NORMAL, 0.5f );
-    Blend(  threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockOver, blockCanvas, blockBase->Rect(), FVec2F(), ULIS3_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+    BlendTiled(  threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockBase, blockCanvas, FRectI( 40, 40, 80, 80 ), FRectI( -40, 0, 1000, 400 ), FVec2I( -20, -40 ), BM_DISSOLVE, AM_NORMAL, 0.3f );
+    BlendColor(  threadPool, perfIntent, host, ULIS_NOCB, FColor( ULIS_FORMAT_BGR8, { 255, 0, 0 } ), blockCanvas, FRectI( 5, 80, 500, 150 ), BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
+    BlendColor(  threadPool, perfIntent, host, ULIS_NOCB, FColor( ULIS_FORMAT_BGR8, { 0, 255, 0 } ), blockCanvas, FRectI( 5, 80, 500, 150 ), BM_HUE, AM_NORMAL, 0.5f );
+    Blend(  threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, blockBase->Rect(), FVec2F(), ULIS_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
 
 
-    #define _P0 threadPool, perfIntent, host, ULIS3_NOCB
+    #define _P0 threadPool, perfIntent, host, ULIS_NOCB
     #define _P1 blockCanvas
     #define _P2 BM_BAYERDITHER8x8, AM_NORMAL
     FColor color = FColor::FromRGBA8( 0, 0, 0, 255 );

@@ -14,7 +14,7 @@
 #include "Thread/ThreadInterface.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 FThreadPool*
 XCreateThreadPool( uint32 iCount ) {
@@ -24,7 +24,7 @@ XCreateThreadPool( uint32 iCount ) {
 
 void
 XDeleteThreadPool( FThreadPool* iThreadPool ) {
-    ULIS3_ASSERT( iThreadPool, "Invalid Input Arg" );
+    ULIS_ASSERT( iThreadPool, "Invalid Input Arg" );
     iThreadPool->WaitForCompletion();
     delete  iThreadPool;
 }
@@ -60,5 +60,5 @@ MaxWorkers() {
 }
 
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

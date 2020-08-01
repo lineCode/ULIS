@@ -14,7 +14,7 @@
 #include "Data/Color.h"
 #include "Data/Pixel.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 namespace detail {
 
@@ -22,10 +22,10 @@ template< typename T >
 struct TColorInitializer {
     template< typename U >
     static
-    ULIS3_FORCEINLINE
+    ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS3_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
     }
 };
 
@@ -33,10 +33,10 @@ template<>
 struct TColorInitializer< uint8 > {
     template< typename U >
     static
-    ULIS3_FORCEINLINE
+    ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS3_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannel8( i, ConvType< U, uint8 >( *( iValues.begin() + i ) ) );
     }
@@ -46,10 +46,10 @@ template<>
 struct TColorInitializer< uint16 > {
     template< typename U >
     static
-    ULIS3_FORCEINLINE
+    ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS3_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannel16( i, ConvType< U, uint16 >( *( iValues.begin() + i ) ) );
     }
@@ -59,10 +59,10 @@ template<>
 struct TColorInitializer< uint32 > {
     template< typename U >
     static
-    ULIS3_FORCEINLINE
+    ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS3_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannel32( i, ConvType< U, uint32 >( *( iValues.begin() + i ) ) );
     }
@@ -72,10 +72,10 @@ template<>
 struct TColorInitializer< ufloat > {
     template< typename U >
     static
-    ULIS3_FORCEINLINE
+    ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS3_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannelF( i, ConvType< U, ufloat >( *( iValues.begin() + i ) ) );
     }
@@ -85,10 +85,10 @@ template<>
 struct TColorInitializer< udouble > {
     template< typename U >
     static
-    ULIS3_FORCEINLINE
+    ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS3_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannelD( i, ConvType< U, udouble >( *( iValues.begin() + i ) ) );
     }
@@ -158,7 +158,7 @@ FColor::FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColo
     : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
 {
     #define TMP_CALL( iTypeID, iType, iE2, iE3 ) detail::TColorInitializer< iType >::Run< T >( this, iValues ); break;
-    ULIS3_SWITCH_FOR_ALL_DO( Type(), ULIS3_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+    ULIS_SWITCH_FOR_ALL_DO( Type(), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
     #undef TMP_CALL
 }
 
@@ -521,12 +521,12 @@ FColor::YxyAD( double iY, double ix, double iy, double iA )
     return  FColor( eFormat::Format_YxyAD, { iY, ix, iy, iA } );
 }
 
-template ULIS3_API FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );
-template ULIS3_API FColor::FColor( eFormat, std::initializer_list< uint8 >, const FColorSpace* );
-template ULIS3_API FColor::FColor( eFormat, std::initializer_list< uint16 >, const FColorSpace* );
-template ULIS3_API FColor::FColor( eFormat, std::initializer_list< uint32 >, const FColorSpace* );
-template ULIS3_API FColor::FColor( eFormat, std::initializer_list< ufloat >, const FColorSpace* );
-template ULIS3_API FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
+template ULIS_API FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );
+template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint8 >, const FColorSpace* );
+template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint16 >, const FColorSpace* );
+template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint32 >, const FColorSpace* );
+template ULIS_API FColor::FColor( eFormat, std::initializer_list< ufloat >, const FColorSpace* );
+template ULIS_API FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

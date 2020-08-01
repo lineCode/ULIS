@@ -23,7 +23,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 void
 InvokeTransformAffineTiledMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
@@ -55,11 +55,11 @@ TransformAffineTiledMT_NN_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iIn
     const uint32             dst_bps     = info.destination->BytesPerScanLine();
     const uint32             dst_decal_y = info.dst_roi.y;
     const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformAffineTiledMTProcessScanline_NN_SSE_RGBA8
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

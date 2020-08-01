@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Data/Sample.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FColor
 /// @brief      The FColor class provides a mean of storing and manipulating
@@ -25,7 +25,7 @@ ULIS3_NAMESPACE_BEGIN
 ///
 ///             \sa ISample
 ///             \sa FPixel
-class ULIS3_API FColor final
+class ULIS_API FColor final
     : public ISample
 {
 public:
@@ -117,5 +117,5 @@ extern template FColor::FColor( eFormat, std::initializer_list< uint32 >, const 
 extern template FColor::FColor( eFormat, std::initializer_list< ufloat >, const FColorSpace* );
 extern template FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

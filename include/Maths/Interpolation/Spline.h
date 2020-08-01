@@ -16,7 +16,7 @@
 #include "Maths/Geometry/Rect.h"
 #include "Maths/Geometry/Vec2.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 struct FSplineParametricSample {
     FVec2F point;
     float length;
@@ -28,5 +28,5 @@ struct FSplineLinearSample {
     float length;
     float param;
 };
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

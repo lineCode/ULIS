@@ -16,7 +16,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFontEngine
 //--------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ FFontEngine::FFontEngine()
     : mHandle( nullptr )
 {
     FT_Error error = FT_Init_FreeType( reinterpret_cast< FT_Library* >( &mHandle ) );
-    ULIS3_ASSERT( !error, "Error initializing freetype2" );
+    ULIS_ASSERT( !error, "Error initializing freetype2" );
 }
 
 
@@ -44,5 +44,5 @@ FFontEngine::Handle() const
 }
 
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

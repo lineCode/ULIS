@@ -13,18 +13,18 @@
 */
 #include "Data/Sparse/TilePool.h"
 
-#ifdef ULIS3_COMPILED_WITH_THREAD_SUPPORT
+#ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
 #include "Data/Sparse/TilePool_Private.h"
 #endif
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTilePool
 //static
 ITilePool*
 ITilePool::XCreateTilePool( eFormat iFormat, FColorSpace* iProfile, eMicro iMicro, eMacro iMacro ) {
     /*
-    #ifdef ULIS3_COMPILED_WITH_THREAD_SUPPORT
+    #ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
         return  new  TTilePool< 1, 5 >( iFormat, iProfile );
     #else
         return  nullptr;
@@ -38,4 +38,4 @@ void
 ITilePool::XDeleteTilePool( ITilePool* iTilePool ) {
     delete  iTilePool;
 }
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END

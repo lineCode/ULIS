@@ -17,7 +17,7 @@
 #include "Maths/Geometry/Rect.h"
 #include "Maths/Geometry/Vec2.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FBlendArgs
 struct FBlendArgs {
@@ -39,5 +39,5 @@ struct FBlendArgs {
     FRectI                   backdropWorkingRect;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

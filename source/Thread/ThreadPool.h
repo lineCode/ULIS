@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-#ifdef ULIS3_COMPILED_WITH_THREAD_SUPPORT
+#ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
 #include "Thread/ThreadPool_imp.ipp"
 #else
 #include "Thread/ThreadPool_dummy.ipp"

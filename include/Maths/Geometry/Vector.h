@@ -19,18 +19,18 @@
 #include "Maths/Geometry/VectorFunc.h"
 #include "Maths/Geometry/VectorSwizzle.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 // Conversion constructors for vectors 2
 template< typename T >
-ULIS3_VECTOR_FUNC
+ULIS_VECTOR_FUNC
 TVector2< T >::TVector2( const TVector3< T >& iVec )
     : x( iVec.x )
     , y( iVec.y )
 {}
 
 template< typename T >
-ULIS3_VECTOR_FUNC
+ULIS_VECTOR_FUNC
 TVector2< T >::TVector2( const TVector4< T >& iVec )
     : x( iVec.x )
     , y( iVec.y )
@@ -38,7 +38,7 @@ TVector2< T >::TVector2( const TVector4< T >& iVec )
 
 // Conversion constructors for vectors 3
 template< typename T >
-ULIS3_VECTOR_FUNC
+ULIS_VECTOR_FUNC
 TVector3< T >::TVector3( const TVector2< T >& iVec, T iZ )
     : x( iVec.x )
     , y( iVec.y )
@@ -46,7 +46,7 @@ TVector3< T >::TVector3( const TVector2< T >& iVec, T iZ )
 {}
 
 template< typename T >
-ULIS3_VECTOR_FUNC
+ULIS_VECTOR_FUNC
 TVector3< T >::TVector3( const TVector4< T >& iVec )
     : x( iVec.x )
     , y( iVec.y )
@@ -55,7 +55,7 @@ TVector3< T >::TVector3( const TVector4< T >& iVec )
 
 // Conversion constructors for vectors 4
 template< typename T >
-ULIS3_VECTOR_FUNC
+ULIS_VECTOR_FUNC
 TVector4< T >::TVector4( const TVector2< T >& iVec, T iZ, T iW )
     : x( iVec.x )
     , y( iVec.y )
@@ -64,7 +64,7 @@ TVector4< T >::TVector4( const TVector2< T >& iVec, T iZ, T iW )
 {}
 
 template< typename T >
-ULIS3_VECTOR_FUNC
+ULIS_VECTOR_FUNC
 TVector4< T >::TVector4( const TVector3< T >& iVec, T iW )
     : x( iVec.x )
     , y( iVec.y )
@@ -73,9 +73,9 @@ TVector4< T >::TVector4( const TVector3< T >& iVec, T iW )
 {}
 
 // Swizzle definitions
-ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2
-ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3
-ULIS3_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4
+ULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2
+ULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3
+ULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

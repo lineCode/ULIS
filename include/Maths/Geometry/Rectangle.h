@@ -18,7 +18,7 @@
 #include "Maths/Maths.h"
 #include <cmath>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TRect
 /// @brief      The TRect class provides a simple 2D rectangle class for box
@@ -236,5 +236,5 @@ struct TRect
     }
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

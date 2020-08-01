@@ -13,7 +13,7 @@
 */
 #include "Base/CRC32.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // CRC32
 uint32
@@ -45,5 +45,5 @@ CRC32( const uint8*iData, int iLen )
     return  ~crc;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

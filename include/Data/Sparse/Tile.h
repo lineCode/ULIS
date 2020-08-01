@@ -15,14 +15,14 @@
 #include "Core/Core.h"
 #include <atomic>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FTileElement
-struct ULIS3_API FTileElement {
+struct ULIS_API FTileElement {
 
     ~FTileElement()
     {
-        ULIS3_ASSERT( mRefCount.load() == 0, "Bad RefCount on Delete Tile" );
+        ULIS_ASSERT( mRefCount.load() == 0, "Bad RefCount on Delete Tile" );
     }
 
     FTileElement()
@@ -48,5 +48,5 @@ struct ULIS3_API FTileElement {
     std::atomic< bool >     mDirty;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

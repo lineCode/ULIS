@@ -28,7 +28,7 @@
 #include <thread>
 #include <unordered_map>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTilePool
 template< uint8 _MICRO
@@ -137,7 +137,7 @@ private:
     std::thread * const                                             mThreadHasherGarbageCollectorBackgroundWorker;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 
 #include "TilePool_Private.ipp"
 

@@ -13,11 +13,11 @@
 */
 #include "Base/Callbacks.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 void OnCleanup_FreeMemory( uint8* iData, void* iInfo )
 {
     delete [] iData;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

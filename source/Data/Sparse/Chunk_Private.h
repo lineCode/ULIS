@@ -24,7 +24,7 @@
 #include "Data/Sparse/TilePool_Private.h"
 #include <static_math/static_math.h>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 template< uint8 _MICRO, uint8 _MACRO > class TTilePool;
 
 static const FColor default_wireframe_debug_color  = FColor::RGBA8( 40, 80, 220 );
@@ -302,7 +302,7 @@ public:
     virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
         for( int i = 0; i < tSuperClass::local_chunk_size_as_pixels; i+= tSuperClass::micro_chunk_size_as_pixels ) {
             for( int j = 0; j < tSuperClass::local_chunk_size_as_pixels; j+= tSuperClass::micro_chunk_size_as_pixels ) {
-                Copy( nullptr, ULIS3_NONBLOCKING, 0, debug_host, ULIS3_NOCB, mPtr->mBlock, iDst, mPtr->mBlock->Rect(), iPos + FVec2I64( i, j ) );
+                Copy( nullptr, ULIS_NONBLOCKING, 0, debug_host, ULIS_NOCB, mPtr->mBlock, iDst, mPtr->mBlock->Rect(), iPos + FVec2I64( i, j ) );
             }
         }
     }
@@ -505,5 +505,5 @@ private:
     tSubAbstractChunk* mQuad[4];
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

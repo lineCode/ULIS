@@ -23,8 +23,8 @@ int
 main() {
 
     {
-        FColor colorA( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 0 } );
-        FColor colorB = Conv( FColor::FromRGBA8( 0, 0, 0, 255 ), ULIS3_FORMAT_HSVA8 );
+        FColor colorA( ULIS_FORMAT_RGBA8, { 0, 0, 0, 0 } );
+        FColor colorB = Conv( FColor::FromRGBA8( 0, 0, 0, 255 ), ULIS_FORMAT_HSVA8 );
         colorA = colorB;
         FColor colorC = GetOneColor();
         auto dummy = 0;

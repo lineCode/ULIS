@@ -19,7 +19,7 @@
 #include "Maths/Maths.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 template< typename T >
 void InvokeSanitize( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
@@ -55,24 +55,24 @@ SanitizeZeroAlpha( FThreadPool*           iThreadPool
                  , FBlock*                iDestination )
 {
     // Assertions
-    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     fpDispatchedAlphamulInvoke fptr = QueryDispatchedSanitizeForParameters( iDestination->Type() );
-    ULIS3_ASSERT( fptr, "No invocation found." );
+    ULIS_ASSERT( fptr, "No invocation found." );
 
     // Bake Params
     uint8*          dst = iDestination->Bits();
     size_t          bps = iDestination->BytesPerScanLine();
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
-    ULIS3_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_ASSERT( fptr, "No dispatch invocation found." );
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
     iDestination->Dirty( iCallCB );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

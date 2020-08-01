@@ -22,7 +22,7 @@
 #include "Maths/Maths.h"
 #include <cmath>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // To HSL
 //--------------------------------------------------------------------------------------
@@ -213,5 +213,5 @@ ConvBufferYxyToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     }
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

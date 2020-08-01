@@ -25,7 +25,7 @@
 
 using namespace cppfs;
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // GatherEntriesRecursive
 void GatherEntriesRecursive( const cppfs::FileHandle& iDir, const std::list< std::string >& iFilters, std::list< std::string >* oList )
@@ -170,5 +170,5 @@ FFilePathRegistry::MakeName( const std::string& iFile ) const
     return  path.baseName();
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

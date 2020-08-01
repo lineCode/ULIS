@@ -20,7 +20,7 @@
 namespace std {   };
 using namespace std;
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 bool replace_imp( std::string& iStr, const std::string& iFrom, const std::string& iTo ) {
     size_t start_pos = iStr.find( iFrom );
     if( start_pos == std::string::npos )
@@ -53,5 +53,5 @@ LevenshteinDistance( const char* iA, size_t iLenA, const char* iB, size_t iLenB 
     return  r;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

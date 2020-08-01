@@ -20,7 +20,7 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Maths/Maths.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Blend
 void Blend( FThreadPool*            iThreadPool
@@ -38,11 +38,11 @@ void Blend( FThreadPool*            iThreadPool
           , float                   iOpacityValue )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                  "Bad source."                                               );
-    ULIS3_ASSERT( iBackdrop,                                "Bad destination."                                          );
-    ULIS3_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
-    ULIS3_ASSERT( iThreadPool,                              "Bad pool."                                                 );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
+    ULIS_ASSERT( iSource,                                  "Bad source."                                               );
+    ULIS_ASSERT( iBackdrop,                                "Bad destination."                                          );
+    ULIS_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
+    ULIS_ASSERT( iThreadPool,                              "Bad pool."                                                 );
+    ULIS_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
@@ -108,12 +108,12 @@ void AlphaBlend( FThreadPool*           iThreadPool
                , float                  iOpacityValue )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                  "Bad source."                                               );
-    ULIS3_ASSERT( iBackdrop,                                "Bad destination."                                          );
-    ULIS3_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
-    ULIS3_ASSERT( iThreadPool,                              "Bad pool."                                                 );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
-    ULIS3_ASSERT( iSource->HasAlpha(),                      "Cannot call AlphaBlend on format without alpha."           );
+    ULIS_ASSERT( iSource,                                  "Bad source."                                               );
+    ULIS_ASSERT( iBackdrop,                                "Bad destination."                                          );
+    ULIS_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
+    ULIS_ASSERT( iThreadPool,                              "Bad pool."                                                 );
+    ULIS_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
+    ULIS_ASSERT( iSource->HasAlpha(),                      "Cannot call AlphaBlend on format without alpha."           );
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
@@ -181,11 +181,11 @@ void BlendTiled( FThreadPool*               iThreadPool
                , float                      iOpacityValue )
 {
     // Assertions
-    ULIS3_ASSERT( iSource,                                  "Bad source."                                               );
-    ULIS3_ASSERT( iBackdrop,                                "Bad destination."                                          );
-    ULIS3_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
-    ULIS3_ASSERT( iThreadPool,                              "Bad pool."                                                 );
-    ULIS3_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
+    ULIS_ASSERT( iSource,                                  "Bad source."                                               );
+    ULIS_ASSERT( iBackdrop,                                "Bad destination."                                          );
+    ULIS_ASSERT( iSource->Format() == iBackdrop->Format(), "Formats do not match."                                     );
+    ULIS_ASSERT( iThreadPool,                              "Bad pool."                                                 );
+    ULIS_ASSERT( !iCallCB || iBlocking,                    "Callback flag is specified on non-blocking operation."     );
 
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
@@ -218,7 +218,7 @@ void BlendTiled( FThreadPool*               iThreadPool
     commandArgsRef.sourceRect           = src_roi;
     commandArgsRef.subpixelComponent    = FVec2F();
     commandArgsRef.buspixelComponent    = FVec2F( 1.f );
-    commandArgsRef.subpixelFlag         = ULIS3_NOAA;
+    commandArgsRef.subpixelFlag         = ULIS_NOAA;
     commandArgsRef.blendingMode         = iBlendingMode;
     commandArgsRef.alphaMode            = iAlphaMode;
     commandArgsRef.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
@@ -248,13 +248,13 @@ void BlendColor( FThreadPool*           iThreadPool
                , float                  iOpacityValue )
 {
     // Assertions
-    ULIS3_ASSERT( iBackdrop,                                "Bad destination."                                          );
-    ULIS3_ASSERT( iThreadPool,                              "Bad pool."                                                 );
+    ULIS_ASSERT( iBackdrop,                                "Bad destination."                                          );
+    ULIS_ASSERT( iThreadPool,                              "Bad pool."                                                 );
 
     FColor color( iBackdrop->Format() );
     Conv( iColor, color );
     FBlock block( color.Bits(), 1, 1, iBackdrop->Format() );
-    BlendTiled( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRectI( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );
+    BlendTiled( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRectI( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );
 }
 
 /////////////////////////////////////////////////////
@@ -278,5 +278,5 @@ uint32 GenerateBlendPRNG() {
     return sBlendPRNGSeed % 65537;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

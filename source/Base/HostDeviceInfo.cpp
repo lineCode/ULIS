@@ -14,7 +14,7 @@
 #include "Base/HostDeviceInfo.h"
 #include "cpu_x86.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FHostDeviceInfo
 FHostDeviceInfo::FHostDeviceInfo( bool iVendor_AMD
@@ -136,5 +136,5 @@ FHostDeviceInfo::Detect() {
                            , tmp.HW_AVX512_VBMI );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

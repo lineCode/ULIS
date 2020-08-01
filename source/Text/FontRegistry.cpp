@@ -23,14 +23,14 @@
 #include <algorithm>
 #include <tuple>
 
-#ifdef ULIS3_WIN
+#ifdef ULIS_WIN
 #include <Windows.h>
 #endif
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFontStyleEntry
 //--------------------------------------------------------------------------------------
@@ -138,21 +138,21 @@ FFontRegistry::~FFontRegistry()
 FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
     : mFontEngine( iFontEngine )
 {
-    #ifdef ULIS3_WIN
+    #ifdef ULIS_WIN
         std::string sysfpath;
         CHAR windir[MAX_PATH];
         auto err = GetWindowsDirectoryA( windir, MAX_PATH );
-        ULIS3_ASSERT( err, "Error loading Windows directory path during font retrieval." );
+        ULIS_ASSERT( err, "Error loading Windows directory path during font retrieval." );
         sysfpath = std::string( windir );
         ReplaceAllOccurences( sysfpath, "\\", "/" );
         sysfpath += "/Fonts/";
         mLookupPaths.push_back( sysfpath );
-    #elif defined ULIS3_MACOS
+    #elif defined ULIS_MACOS
         mLookupPaths.push_back( "/System/Library/Fonts/" );
         mLookupPaths.push_back( "/Library/Fonts/" );
         mLookupPaths.push_back( "~/Library/Fonts/" );
         mLookupPaths.push_back( "/Network/Library/Fonts/" );
-    #elif defined ULIS3_LINUX
+    #elif defined ULIS_LINUX
         mLookupPaths.push_back( "/usr/share/fonts/" );
         mLookupPaths.push_back( "/usr/local/share/fonts/" );
         mLookupPaths.push_back( "~/.fonts/" );
@@ -191,7 +191,7 @@ FFontRegistry::Refresh() {
     for( auto it : reg.Records() ) {
         FT_Face face;
         FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.Handle() ), it.second.c_str(), 0, &face );
-        ULIS3_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
+        ULIS_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );
         std::string style( face->style_name );
@@ -267,5 +267,5 @@ FFontRegistry::FontEngine() const
     return  mFontEngine;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

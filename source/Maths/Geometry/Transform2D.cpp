@@ -13,7 +13,7 @@
 */
 #include "Maths/Geometry/Transform2D.h"
 #include "Maths/Geometry/Transform2D_Private.h"
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransform2D
 //----------------------------------------------------------------------------------------------
@@ -131,5 +131,5 @@ FTransform2D::DoHomographyTransform( const FVec2F& iPoint, const FTransform2D& i
     return  HomographyTransform( iPoint, iTransform.GetImp().Matrix() );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

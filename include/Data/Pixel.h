@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Data/Sample.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FPixel
 /// @brief      The FPixel class provides a mean of storing and manipulating
@@ -25,7 +25,7 @@ ULIS3_NAMESPACE_BEGIN
 ///
 ///             \sa ISample
 ///             \sa FColor
-class ULIS3_API FPixel final
+class ULIS_API FPixel final
     : public ISample
 {
 public:
@@ -56,5 +56,5 @@ public:
     void SetPointer( uint8* iPtr );
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

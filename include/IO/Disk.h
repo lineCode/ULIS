@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
 enum eImageFormat {
       IM_PNG
@@ -32,7 +32,7 @@ static const char* kwImageFormat[] = {
     , "hdr"
 };
 
-ULIS3_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
+ULIS_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
@@ -40,7 +40,7 @@ ULIS3_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
                                , const std::string&     iPath
                                , eFormat                iDesiredFormat );
 
-ULIS3_API void SaveToFile( FThreadPool*             iThreadPool
+ULIS_API void SaveToFile( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
@@ -50,5 +50,5 @@ ULIS3_API void SaveToFile( FThreadPool*             iThreadPool
                          , eImageFormat             iImageFormat
                          , int                      iQuality );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -24,7 +24,7 @@
 #include <atomic>
 #include <thread>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTiledBlock
 template< uint8 _MICRO
@@ -98,7 +98,7 @@ private:
     static const FVec2I64 modRoot;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 
 #include "TiledBlock_Private.ipp"
 

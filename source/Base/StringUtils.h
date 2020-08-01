@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 void ReplaceAllOccurences( std::string& iStr, const std::string& iFrom, const std::string& iTo );
 size_t LevenshteinDistance( const char* iA, size_t iLenA, const char* iB, size_t iLenB );
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

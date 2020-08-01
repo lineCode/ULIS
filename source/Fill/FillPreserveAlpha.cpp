@@ -20,7 +20,7 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Invocation Implementation
 template< typename T >
@@ -62,9 +62,9 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
                  , const FRectI&             iArea )
 {
     // Assertions
-    ULIS3_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     if( !( iDestination->HasAlpha() ) )
         return;
@@ -78,7 +78,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
 
     // Query
     fpDispatchedFillPreserveAlphaInvoke fptr = QueryDispatchedFillPreserveAlphaInvokeForParameters( iDestination->Type() );
-    ULIS3_ASSERT( fptr, "No invocation found." );
+    ULIS_ASSERT( fptr, "No invocation found." );
 
     // Bake color param, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
     std::shared_ptr< FColor > color = std::make_shared< FColor >( iDestination->Format() );
@@ -89,7 +89,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
     const size_t    len = roi.w;
 
     // Call
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, iDestination->FormatInfo(), color )
 
@@ -97,5 +97,5 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
     iDestination->Dirty( roi, iCallCB );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

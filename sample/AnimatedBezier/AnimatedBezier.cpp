@@ -45,11 +45,11 @@ SWindow::SWindow()
     , mLeftButtonDown( false )
     , mEvolutiveAngle( 0.f )
 {
-    uint32 perfIntent = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     std::string path = "C:/Users/PRAXINOS/Documents/work/TEST.png";
-    mSRC = XLoadFromFile( mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, path, ULIS3_FORMAT_RGBA8 );
-    mDST = new  FBlock( 1024, 512, ULIS3_FORMAT_RGBA8 );
-    Clear( mPool, ULIS3_BLOCKING, perfIntent, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
+    mSRC = XLoadFromFile( mPool, ULIS_BLOCKING, perfIntent, mHost, ULIS_NOCB, path, ULIS_FORMAT_RGBA8 );
+    mDST = new  FBlock( 1024, 512, ULIS_FORMAT_RGBA8 );
+    Clear( mPool, ULIS_BLOCKING, perfIntent, mHost, ULIS_NOCB, mDST, mDST->Rect() );
     mImage = new QImage( mDST->Bits(), mDST->Width(), mDST->Height(), mDST->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel = new QLabel( this );
@@ -105,9 +105,9 @@ SWindow::tickEvent() {
     mCtrlPts[3].ctrlCW  = mCtrlPts[3].point + FVec2F( cos( evoAngle3 ), sin( evoAngle3 ) ) * len;
     mCtrlPts[3].ctrlCCW = mCtrlPts[3].point + FVec2F( cos( evoAngle0 ), sin( evoAngle0 ) ) * len;
 
-    Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mDST, mDST->Rect() );
+    Clear( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mDST, mDST->Rect() );
 
-    TransformBezier( mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BILINEAR );
+    TransformBezier( mPool, ULIS_BLOCKING, ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BILINEAR );
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }

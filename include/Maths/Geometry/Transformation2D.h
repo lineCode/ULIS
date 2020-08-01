@@ -16,10 +16,10 @@
 #include "Maths/Geometry/Rect.h"
 #include "Maths/Geometry/Vec2.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransform2D
-class ULIS3_API FTransform2D
+class ULIS_API FTransform2D
 {
 public:
     class FTransform2D_imp;
@@ -60,5 +60,5 @@ private:
     FTransform2D_imp* mImp;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

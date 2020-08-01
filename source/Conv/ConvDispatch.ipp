@@ -25,17 +25,17 @@
 #include "Conv/Generic/ToXYZ.ipp"
 #include "Conv/Generic/ToYxy.ipp"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Per Model Select
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ To Grey
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectGrey( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToGrey < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToGrey  < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToGrey  < T1, T2 >;
@@ -53,11 +53,11 @@ QueryDispatchedConversionInvocation_SelectGrey( eFormat iSrcFormat, eFormat iDst
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- To RGB
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectRGB( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToRGB  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToRGB   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToRGB   < T1, T2 >;
@@ -75,11 +75,11 @@ QueryDispatchedConversionInvocation_SelectRGB( eFormat iSrcFormat, eFormat iDstF
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- To HSV
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectHSV( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToHSV  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToHSV   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToHSV   < T1, T2 >;
@@ -97,11 +97,11 @@ QueryDispatchedConversionInvocation_SelectHSV( eFormat iSrcFormat, eFormat iDstF
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- To HSL
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectHSL( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToHSL  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToHSL   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToHSL   < T1, T2 >;
@@ -119,11 +119,11 @@ QueryDispatchedConversionInvocation_SelectHSL( eFormat iSrcFormat, eFormat iDstF
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- To CMY
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectCMY( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToCMY  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToCMY   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToCMY   < T1, T2 >;
@@ -141,11 +141,11 @@ QueryDispatchedConversionInvocation_SelectCMY( eFormat iSrcFormat, eFormat iDstF
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ To CMYK
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectCMYK( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToCMYK < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToCMYK  < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToCMYK  < T1, T2 >;
@@ -163,11 +163,11 @@ QueryDispatchedConversionInvocation_SelectCMYK( eFormat iSrcFormat, eFormat iDst
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- To YUV
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectYUV( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToYUV  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToYUV   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToYUV   < T1, T2 >;
@@ -185,11 +185,11 @@ QueryDispatchedConversionInvocation_SelectYUV( eFormat iSrcFormat, eFormat iDstF
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- To Lab
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectLab( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToLab  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToLab   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToLab   < T1, T2 >;
@@ -207,11 +207,11 @@ QueryDispatchedConversionInvocation_SelectLab( eFormat iSrcFormat, eFormat iDstF
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- To XYZ
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectXYZ( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToXYZ  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToXYZ   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToXYZ   < T1, T2 >;
@@ -229,11 +229,11 @@ QueryDispatchedConversionInvocation_SelectXYZ( eFormat iSrcFormat, eFormat iDstF
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- To Yxy
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectYxy( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iSrcFormat ) ) ) {
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iSrcFormat ) ) ) {
         case CM_GREY    : return  &ConvBufferGreyToYxy  < T1, T2 >;
         case CM_RGB     : return  &ConvBufferRGBToYxy   < T1, T2 >;
         case CM_HSV     : return  &ConvBufferHSVToYxy   < T1, T2 >;
@@ -251,11 +251,11 @@ QueryDispatchedConversionInvocation_SelectYxy( eFormat iSrcFormat, eFormat iDstF
 /////////////////////////////////////////////////////
 // Select Model
 template< typename T1, typename T2 >
-ULIS3_FORCEINLINE
+ULIS_FORCEINLINE
 fpConversionInvocation
 QueryDispatchedConversionInvocation_SelectModel( eFormat iSrcFormat, eFormat iDstFormat )
 {
-    switch( static_cast< eColorModel >( ULIS3_R_MODEL( iDstFormat ) ) )
+    switch( static_cast< eColorModel >( ULIS_R_MODEL( iDstFormat ) ) )
     {
         case CM_GREY    :   return  QueryDispatchedConversionInvocation_SelectGrey< T1, T2 >( iSrcFormat, iDstFormat );
         case CM_RGB     :   return  QueryDispatchedConversionInvocation_SelectRGB<  T1, T2 >( iSrcFormat, iDstFormat );
@@ -271,5 +271,5 @@ QueryDispatchedConversionInvocation_SelectModel( eFormat iSrcFormat, eFormat iDs
     return  nullptr;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -17,7 +17,7 @@
 #include "Maths/Geometry/Rect.h"
 #include "Maths/Geometry/Vec2.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 float AlphaBlendAlpha( float iAs, float iAb ) {
     return  iAs + iAb * ( 1.f - iAs );
 }
@@ -79,7 +79,7 @@ TraceTextMono_Generic( std::shared_ptr< _FPrivateTextInfo > iTextParams ) {
     FT_Error error = 0;
     FT_Face face = reinterpret_cast< FT_Face >( iTextParams->font->Handle() );
     error = FT_Set_Pixel_Sizes( face, 0, iTextParams->size );
-    ULIS3_ASSERT( !error, "Error setting face size" );
+    ULIS_ASSERT( !error, "Error setting face size" );
 
     slot = face->glyph;
     pen.x = 0;
@@ -90,14 +90,14 @@ TraceTextMono_Generic( std::shared_ptr< _FPrivateTextInfo > iTextParams ) {
         FT_Set_Transform( face, &(iTextParams->matrix), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-        ULIS3_ASSERT( !error, "Error loading glyph" );
+        ULIS_ASSERT( !error, "Error loading glyph" );
         error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-        ULIS3_ASSERT( !error, "Error rendering glyph" );
+        ULIS_ASSERT( !error, "Error rendering glyph" );
         RasterBitmap< T >( iTextParams, &slot->bitmap, iTextParams->position.x + slot->bitmap_left, iTextParams->position.y + ( autobaseline - slot->bitmap_top ) );
         pen.x += slot->advance.x;
         pen.y += slot->advance.y;
     }
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

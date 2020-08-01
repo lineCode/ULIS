@@ -13,7 +13,7 @@
 */
 #include "Data/Sample.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 ISample::~ISample()
 {}
 
@@ -59,5 +59,5 @@ ISample::Bits() const
     return  mSignal;
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -14,16 +14,16 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class  FColorSpace
-class ULIS3_API FColorSpace
+class ULIS_API FColorSpace
 {
 };
 
 /////////////////////////////////////////////////////
 /// @class  IHasColorSpace
-class ULIS3_API IHasColorSpace
+class ULIS_API IHasColorSpace
 {
 protected:
     /*! Destructor, the colorspace lifetime is not managed */
@@ -52,7 +52,7 @@ public:
 
     \sa ColorSpace()
     */
-    ULIS3_FORCEINLINE
+    ULIS_FORCEINLINE
     void AssignColorSpace( const FColorSpace* iColorSpace )
     {
         mColorSpace = iColorSpace;
@@ -67,7 +67,7 @@ public:
 
     \sa AssignColorSpace()
     */
-    ULIS3_FORCEINLINE
+    ULIS_FORCEINLINE
     const FColorSpace* ColorSpace() const
     {
         return  mColorSpace;
@@ -77,5 +77,5 @@ private:
     const FColorSpace* mColorSpace; ///< The colorspace, lifetime is not managed.
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

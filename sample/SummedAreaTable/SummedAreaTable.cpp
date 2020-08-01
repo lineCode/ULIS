@@ -18,13 +18,13 @@ int
 main() {
     FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent1  = 0;
-    uint32 perfIntent2  = ULIS3_PERF_MT;
-    uint32 perfIntent3  = ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
-    uint32 perfIntent4  = ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
+    uint32 perfIntent2  = ULIS_PERF_MT;
+    uint32 perfIntent3  = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
+    uint32 perfIntent4  = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     int size = 9;
-    FBlock* block = new FBlock( size, size, ULIS3_FORMAT_RGBA8 );
+    FBlock* block = new FBlock( size, size, ULIS_FORMAT_RGBA8 );
     for( int y = 0; y < size; ++y ) {
         for( int x = 0; x < size; ++x ) {
             FPixel prox = block->Pixel( x, y );
@@ -38,10 +38,10 @@ main() {
     }
 
     std::cout << "\n==\n" << std::endl;
-    FBlock* sat = XGetSummedAreaTable( threadPool, ULIS3_BLOCKING, perfIntent4, host, ULIS3_NOCB, block );
-    ULIS3_ASSERT( sat, "Error " );
-    ULIS3_ASSERT( sat->Width() == size, "Error " );
-    ULIS3_ASSERT( sat->Height() == size, "Error " );
+    FBlock* sat = XGetSummedAreaTable( threadPool, ULIS_BLOCKING, perfIntent4, host, ULIS_NOCB, block );
+    ULIS_ASSERT( sat, "Error " );
+    ULIS_ASSERT( sat->Width() == size, "Error " );
+    ULIS_ASSERT( sat->Height() == size, "Error " );
 
     for( int y = 0; y < size; ++y ) {
         for( int x = 0; x < size; ++x ) {

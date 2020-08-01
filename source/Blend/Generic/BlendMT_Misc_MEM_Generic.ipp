@@ -22,7 +22,7 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
 InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
@@ -58,7 +58,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const uint8* iSrc, uint8
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -87,7 +87,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const uint8* iSrc, uint8
                 const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -110,7 +110,7 @@ BlendMT_Misc_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel< T >
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -138,7 +138,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, i
                 float toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -155,7 +155,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, i
                 const float bayerEl     = gBayer8x8Matrix[ ( info.backdropWorkingRect.y + iLine ) % 8 ][ ( info.backdropWorkingRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
                     float alpha_result;
-                    ULIS3_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -178,7 +178,7 @@ BlendMT_Misc_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_Misc_MEM_Generic< T >
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
@@ -186,5 +186,5 @@ BlendMT_Misc_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
                                    , pLINE , iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

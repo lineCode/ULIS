@@ -21,7 +21,7 @@
 #include "Maths/Geometry/Vec2.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Convolution
 void
@@ -36,9 +36,9 @@ Convolution( FThreadPool*            iThreadPool
            , eExtrapolationMethod    iEdgeMode )
 {
     // Assertions
-    ULIS3_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     // Fit region of interest
     FRectI roi = iArea & iDestination->Rect();
@@ -51,5 +51,5 @@ Convolution( FThreadPool*            iThreadPool
     iDestination->Dirty( roi, iCallCB );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

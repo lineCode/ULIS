@@ -22,7 +22,7 @@
 #include "Thread/ThreadPool.h"
 #include <vectorclass.h>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 void
 InvokeTransformPerspectiveMTProcessScanline_Bilinear_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, const Vec4i iIDT ) {
     const FTransformArgs&   info    = *iInfo;
@@ -92,11 +92,11 @@ TransformPerspectiveMT_Bilinear_SSE_RGBA8( std::shared_ptr< const FTransformArgs
     const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     Vec4i idt( 0, 1, 2, 3 );
     idt.insert( info.source->FormatInfo().AID, 4 );
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformPerspectiveMTProcessScanline_Bilinear_SSE_RGBA8
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, idt );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

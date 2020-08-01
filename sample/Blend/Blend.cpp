@@ -42,16 +42,16 @@ main( int argc, char *argv[] ) {
     std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
 
     // Load both blocks Base and Over.
-    // Specify ULIS3_FORMAT_RGBA8 as desired format,
+    // Specify ULIS_FORMAT_RGBA8 as desired format,
     // meaning that if the loaded block format is not already RGBA8,
     // a conversion will be performed to obtain the expected format.
-    // Specify ULIS3_NONBLOCKING flag, so that pool will not wait for completion after each function
+    // Specify ULIS_NONBLOCKING flag, so that pool will not wait for completion after each function
     // We can do that because both loading processes are independant and do not interfere with each other
-    // Passing ULIS3_NONBLOCKING avoids stalling beetween the two functions.
+    // Passing ULIS_NONBLOCKING avoids stalling beetween the two functions.
     // ( Note: the 'X' prefix before a function name always means the function allocates a block and returns the pointer,
     // the caller is now responsible for the FBlock* lifetime, and should delete it ).
-    FBlock* blockBase = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathBase, Format_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, pathOver, Format_RGBA8 );
+    FBlock* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathBase, Format_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathOver, Format_RGBA8 );
 
     // Fence the pool here,
     // After the two calls to XLoadFromFile, the functions returned immediately even though the data isn't loaded yet
@@ -73,7 +73,7 @@ main( int argc, char *argv[] ) {
 
     // Allocate a new block
     // The caller is responsible for destructing the blockCanvas object here too.
-    // The block has the same format ULIS3_FORMAT_RGBA8 as requested for the two blocks before.
+    // The block has the same format ULIS_FORMAT_RGBA8 as requested for the two blocks before.
     FBlock* blockCanvas = new  FBlock( w, h, Format_RGBA8 );
 
     // Start processing the blocks
@@ -89,11 +89,11 @@ main( int argc, char *argv[] ) {
         // The first 5 parameters are common to most ULIS3 functions and are used to know how to perform a task.
         // The user provides intent and control over the CPU optimization dispatch method ( MEM, SSE, AVX ) and over the CPU multithreading dispatch too.
         // Notice the BLOCKING here: we don't want Copy and Blend to be concurrent as they work on the same region in a given loop iteration.
-        Copy(   threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
+        Copy(   threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
 
         // Then we perform the blend by iterating over all blending modes ( see i cast to eBlendingMode enum value ).
         // By default we'll use a normal alphaMode for nicer results in this context, and an opacity of 0.5, which is a normalized value that corresponds to 50%, half-fade.
-        Blend(  threadPool, ULIS3_NONBLOCKING, perfIntent, host, ULIS3_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS3_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
     }
     // Fence the pool here to make sure the very last blend is completed.
     // You may have noticed that we did not fence after Blend inside the loop.
@@ -131,7 +131,7 @@ main( int argc, char *argv[] ) {
 
     // Create a Qt application and a simple window to display the result block we computed.
     // We create a QImage from the blockCanvas data, QImage does not own the data, so it still lives in blockCanvas, so we don't delete it right now.
-    // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS3_FORMAT_RGBA8
+    // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS_FORMAT_RGBA8
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
     QImage*         image   = new QImage( blockCanvas->Bits()

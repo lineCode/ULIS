@@ -20,7 +20,7 @@
 #include "Data/Pixel.h"
 #include "Data/Sample.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // To YUV
 //--------------------------------------------------------------------------------------
@@ -190,5 +190,5 @@ ConvBufferYxyToYUV( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
     }
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

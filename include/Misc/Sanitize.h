@@ -14,14 +14,14 @@
 #pragma once
 #include "Core/Core.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 
-ULIS3_API void SanitizeZeroAlpha( FThreadPool*            iThreadPool
+ULIS_API void SanitizeZeroAlpha( FThreadPool*            iThreadPool
                                 , bool                    iBlocking
                                 , uint32                  iPerfIntent
                                 , const FHostDeviceInfo&  iHostDeviceInfo
                                 , bool                    iCallCB
                                 , FBlock*                 iDestination );
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

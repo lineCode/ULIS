@@ -16,11 +16,11 @@
 #include <list>
 #include <unordered_map>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFilePathRegistry
 /// @brief      The FFilePathRegistry class provides a mean of storing and manipulating file paths registries with custom filters.
-class ULIS3_API FFilePathRegistry
+class ULIS_API FFilePathRegistry
 {
     typedef std::string  tName;
     typedef std::string  tPath;
@@ -56,5 +56,5 @@ private:
     tRecords mRecords;
 };
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

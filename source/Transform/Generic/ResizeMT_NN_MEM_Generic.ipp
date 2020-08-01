@@ -20,7 +20,7 @@
 #include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 template< typename T > void
 InvokeResizeMTProcessScanline_NN_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
     const FResizeArgs&  info    = *iInfo;
@@ -53,11 +53,11 @@ ResizeMT_NN_MEM_Generic( std::shared_ptr< const FResizeArgs > iInfo ) {
     const uint32         dst_bps     = info.destination->BytesPerScanLine();
     const uint32         dst_decal_y = info.dst_roi.y;
     const uint32         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
-    ULIS3_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeResizeMTProcessScanline_NN_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -26,7 +26,7 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransform2D_imp
 //----------------------------------------------------------------------------------------------
@@ -248,5 +248,5 @@ FVec2F HomographyTransform( const FVec2F& iPoint, const glm::mat3& iMat ) {
                   , ( iPoint.x * iMat[1][0] + iPoint.y * iMat[1][1] + iMat[1][2] ) / ( iPoint.x * iMat[2][0] + iPoint.y * iMat[2][1] + iMat[2][2] ) );
 }
 
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 
