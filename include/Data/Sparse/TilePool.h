@@ -13,8 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Rect.h"
-#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Rectangle.h"
+#include "Maths/Geometry/Vector.h"
 #include "Data/Sparse/TiledBlock.h"
 
 ULIS_NAMESPACE_BEGIN

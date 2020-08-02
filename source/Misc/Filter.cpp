@@ -14,8 +14,8 @@
 #include "Misc/Filter.h"
 #include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rect.h"
-#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Rectangle.h"
+#include "Maths/Geometry/Vector.h"
 #include "Maths/Maths.h"
 #include "Thread/ThreadPool.h"
 

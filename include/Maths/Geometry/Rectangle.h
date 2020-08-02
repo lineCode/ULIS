@@ -13,8 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Vec2.h"
-#include "Maths/Geometry/Vec3.h"
+#include "Maths/Geometry/Vector.h"
+#include "Maths/Geometry/Vector.h"
 #include "Maths/Maths.h"
 #include <cmath>
 

@@ -143,12 +143,12 @@ struct ULIS_API FMaths
     }
 
     template<>
-    static ULIS_MATHS_FUNC double Mod( double iA, double iB ) {
+    static ULIS_FORCEINLINE double Mod( double iA, double iB ) {
         return  fmod( iA, iB );
     }
 
     template<>
-    static ULIS_MATHS_FUNC float Mod( float iA, float iB ) {
+    static ULIS_FORCEINLINE float Mod( float iA, float iB ) {
         return  fmodf( iA, iB );
     }
 
@@ -221,24 +221,24 @@ struct ULIS_API FMaths
     }
 
     template<>
-    static ULIS_MATHS_FUNC double Sqrt< double >( double iValue )
+    static ULIS_FORCEINLINE double Sqrt< double >( double iValue )
     {
         return  sqrt( iValue );
     }
 
     template<>
-    static ULIS_MATHS_FUNC float Sqrt< float >( float iValue )
+    static ULIS_FORCEINLINE float Sqrt< float >( float iValue )
     {
         return  sqrtf( iValue );
     }
 
     template< typename T >
-    static ULIS_MATHS_FUNC T InvSqrt( T iValue ) {
+    static ULIS_FORCEINLINE T InvSqrt( T iValue ) {
         return  static_cast< T >( 1.0 / Sqrt( iValue ) );
     }
 
     template<>
-    static ULIS_MATHS_FUNC float InvSqrt( float iValue ) {
+    static ULIS_FORCEINLINE float InvSqrt( float iValue ) {
         float x2 = iValue * 0.5f;
         const float threehalfs = 1.5f;
         float  convf = iValue;

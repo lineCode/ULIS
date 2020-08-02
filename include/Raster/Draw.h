@@ -13,8 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Rect.h"
-#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Rectangle.h"
+#include "Maths/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_API void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos );

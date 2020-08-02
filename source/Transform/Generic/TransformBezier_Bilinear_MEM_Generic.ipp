@@ -13,8 +13,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rect.h"
-#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Rectangle.h"
+#include "Maths/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"

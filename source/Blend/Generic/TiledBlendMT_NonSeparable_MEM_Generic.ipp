@@ -20,8 +20,8 @@
 #include "Blend/Func/NonSeparableBlendFuncF.ipp"
 #include "Data/Block.h"
 #include "Conv/ConvBuffer.h"
-#include "Maths/Geometry/Rect.h"
-#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Rectangle.h"
+#include "Maths/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T >

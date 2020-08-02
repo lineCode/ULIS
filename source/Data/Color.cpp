@@ -24,7 +24,7 @@ struct TColorInitializer {
     ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->SamplesPerPixel(), "Bad input values" );
     }
 };
 
@@ -35,7 +35,7 @@ struct TColorInitializer< uint8 > {
     ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->SamplesPerPixel(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannel8( i, ConvType< U, uint8 >( *( iValues.begin() + i ) ) );
     }
@@ -48,7 +48,7 @@ struct TColorInitializer< uint16 > {
     ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->SamplesPerPixel(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannel16( i, ConvType< U, uint16 >( *( iValues.begin() + i ) ) );
     }
@@ -61,7 +61,7 @@ struct TColorInitializer< uint32 > {
     ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->SamplesPerPixel(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannel32( i, ConvType< U, uint32 >( *( iValues.begin() + i ) ) );
     }
@@ -74,7 +74,7 @@ struct TColorInitializer< ufloat > {
     ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->SamplesPerPixel(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannelF( i, ConvType< U, ufloat >( *( iValues.begin() + i ) ) );
     }
@@ -87,7 +87,7 @@ struct TColorInitializer< udouble > {
     ULIS_FORCEINLINE
     void
     Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS_ASSERT( iValues.size() < oColor->NumSamples(), "Bad input values" );
+        ULIS_ASSERT( iValues.size() < oColor->SamplesPerPixel(), "Bad input values" );
         for( int i = 0; i < iValues.size(); ++i )
             oColor->SetChannelD( i, ConvType< U, udouble >( *( iValues.begin() + i ) ) );
     }

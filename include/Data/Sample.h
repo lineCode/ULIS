@@ -98,7 +98,7 @@ public:
     behaviour to call this if the format is not of type uint8.
     */
     ULIS_FORCEINLINE uint8 Channel8( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UINT8, "Bad type" );
         return  reinterpret_cast< uint8* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
@@ -108,7 +108,7 @@ public:
     behaviour to call this if the format is not of type uint16.
     */
     ULIS_FORCEINLINE uint16 Channel16( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UINT16, "Bad type" );
         return  reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
@@ -118,7 +118,7 @@ public:
     behaviour to call this if the format is not of type uint32.
     */
     ULIS_FORCEINLINE uint32 Channel32( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UINT32, "Bad type" );
         return  reinterpret_cast< uint32* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
@@ -128,7 +128,7 @@ public:
     behaviour to call this if the format is not of type ufloat.
     */
     ULIS_FORCEINLINE ufloat ChannelF( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UFLOAT, "Bad type" );
         return  reinterpret_cast< ufloat* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
@@ -138,7 +138,7 @@ public:
     behaviour to call this if the format is not of type udouble.
     */
     ULIS_FORCEINLINE udouble ChannelD( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UDOUBLE, "Bad type" );
         return  reinterpret_cast< udouble* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
@@ -148,7 +148,7 @@ public:
     behaviour to call this if the format is not of type uint8.
     */
     ULIS_FORCEINLINE void SetChannel8( uint8 iIndex, uint8 iValue ) {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UINT8, "Bad type" );
         reinterpret_cast< uint8* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
@@ -158,7 +158,7 @@ public:
     behaviour to call this if the format is not of type uint16.
     */
     ULIS_FORCEINLINE void SetChannel16( uint8 iIndex, uint16 iValue ) {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UINT16, "Bad type" );
         reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
@@ -168,7 +168,7 @@ public:
     behaviour to call this if the format is not of type uint32.
     */
     ULIS_FORCEINLINE void SetChannel32( uint8 iIndex, uint32 iValue ) {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UINT32, "Bad type" );
         reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
@@ -178,7 +178,7 @@ public:
     behaviour to call this if the format is not of type ufloat.
     */
     ULIS_FORCEINLINE void SetChannelF( uint8 iIndex, ufloat iValue ) {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UFLOAT, "Bad type" );
         reinterpret_cast< ufloat* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
@@ -188,7 +188,7 @@ public:
     behaviour to call this if the format is not of type udouble.
     */
     ULIS_FORCEINLINE void SetChannelD( uint8 iIndex, udouble iValue ) {
-        ULIS_ASSERT( iIndex < NumSamples(), "Index out of range" );
+        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
         ULIS_ASSERT( Type() == TYPE_UDOUBLE, "Bad type" );
         reinterpret_cast< udouble* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }

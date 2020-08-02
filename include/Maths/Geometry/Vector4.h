@@ -66,7 +66,7 @@ struct TVector4
 
     /*! Construct the vector from input vector of any convertible type. */
     template< typename U >
-    TVector4( const TVector4< U >& iOther );
+    ULIS_VECTOR_FUNC TVector4( const TVector4< U >& iOther );
 
     // Named Functions
     /*! Return the euclidean distance of the vector. */

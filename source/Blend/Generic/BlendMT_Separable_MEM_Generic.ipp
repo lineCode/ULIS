@@ -19,8 +19,8 @@
 #include "Blend/Func/AlphaFuncF.ipp"
 #include "Blend/Func/SeparableBlendFuncF.ipp"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rect.h"
-#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Rectangle.h"
+#include "Maths/Geometry/Vector.h"
 #include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN

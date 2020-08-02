@@ -63,7 +63,7 @@ struct TVector3
 
     /*! Construct the vector from input vector of any convertible type. */
     template< typename U >
-    TVector3( const TVector3< U >& iOther );
+    ULIS_VECTOR_FUNC TVector3( const TVector3< U >& iOther );
 
     // Named Functions
     /*! Return the euclidean distance of the vector. */

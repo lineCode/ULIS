@@ -116,9 +116,6 @@ public:
     /*! Divide this vector by the input value and return a reference to this vector. */
     ULIS_VECTOR_FUNC TVectorN< T, P, N >& operator/=( T iValue );
 
-    /*! Compute modulo of this vector by the input value and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVectorN< T, P, N >& operator%=( T iValue );
-
 
 
     // Unary Operators with vector
@@ -133,9 +130,6 @@ public:
 
     /*! Divide this vector by the input vector and return a reference to this vector. */
     ULIS_VECTOR_FUNC TVectorN< T, P, N >& operator/=(const TVectorN< T, P, N >& iOther );
-
-    /*! Compute modulo of this vector by the input vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVectorN< T, P, N >& operator%=(const TVectorN< T, P, N >& iOther );
 
 
 
@@ -355,16 +349,6 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator/=( T iValue 
     return  *this;
 }
 
-template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator%=( T iValue ) {
-    ULIS_ASSERT( iValue != static_cast< T >( 0 ), "Division by zero" );
-
-    for( int i = 0; i < N; ++i )
-        m[i] = FMaths::Mod( m[i], iValue );
-
-    return  *this;
-}
-
 
 
 // Unary Operators with vectors
@@ -401,19 +385,6 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator/=(const TVec
 
     for( int i = 0; i < N; ++i )
         m[i] /= iOther.m[i];
-
-    return  *this;
-}
-
-template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::operator%=(const TVectorN& iOther ) {
-#ifdef ULIS_ASSERT_ENABLED
-    for( int i = 0; i < N; ++i )
-        ULIS_ASSERT( iOther.m[i] != static_cast< T >( 0 ), "Division by zero" );
-#endif // ULIS_ASSERT_ENABLED
-
-    for( int i = 0; i < N; ++i )
-        m[i] = FMaths::Mod( m[i], iOther.m[i] );
 
     return  *this;
 }
@@ -483,21 +454,6 @@ ULIS_VECTOR_FUNC T operator/( T iValue, const TVectorN< T, P, N >& iVector ) {
     return  result;
 }
 
-template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator%( T iValue, const TVectorN< T, P, N >& iVector ) {
-#ifdef ULIS_ASSERT_ENABLED
-    for( int i = 0; i < N; ++i )
-        ULIS_ASSERT( iVector.m[i] != static_cast< T >( 0 ), "Division by zero" );
-#endif // ULIS_ASSERT_ENABLED
-
-    TVectorN< T, P, N > result;
-
-    for( int i = 0; i < N; ++i )
-        result.m[i] = FMaths::Mod( iValue, iVector.m[i] );
-
-    return  result;
-}
-
 
 
 // Binary Operators with scalar on right hand side
@@ -538,17 +494,6 @@ ULIS_VECTOR_FUNC T operator/( const TVectorN< T, P, N >& iVector, T iValue ) {
 
     for( int i = 0; i < N; ++i )
         result.m[i] = iVector.m[i] / iValue;
-
-    return  result;
-}
-
-template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator%( const TVectorN< T, P, N >& iVector, T iValue ) {
-    ULIS_ASSERT( iValue != static_cast< T >( 0 ), "Division by zero" );
-    TVectorN< T, P, N > result;
-
-    for( int i = 0; i < N; ++i )
-        result.m[i] = FMaths::Mod( iVector.m[i], iValue );
 
     return  result;
 }
@@ -601,20 +546,6 @@ ULIS_VECTOR_FUNC T operator/( const TVectorN< T, P, N >& iVector, const TVectorN
     return  result;
 }
 
-template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator%( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
-#ifdef ULIS_ASSERT_ENABLED
-    for( int i = 0; i < N; ++i )
-        ULIS_ASSERT( iOther.m[i] != static_cast< T >( 0 ), "Division by zero" );
-#endif // ULIS_ASSERT_ENABLED
-
-    TVectorN< T, P, N > result;
-
-    for( int i = 0; i < N; ++i )
-        result.m[i] = FMaths::Mod( iVector.m[i], iOther.m[i] );
-
-    return  result;
-}
 
 ULIS_NAMESPACE_END
 

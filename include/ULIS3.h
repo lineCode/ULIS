@@ -25,8 +25,8 @@
 // Thread
 #include "Thread/ThreadInterface.h"
 // Maths
-#include "Maths/Geometry/Rect.h"
-#include "Maths/Geometry/Vec2.h"
+#include "Maths/Geometry/Rectangle.h"
+#include "Maths/Geometry/Vector.h"
 #include "Maths/Geometry/Transform2D.h"
 #include "Maths/Interpolation/Bezier.h"
 #include "Maths/Interpolation/CatmullRom.h"
