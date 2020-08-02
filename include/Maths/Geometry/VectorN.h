@@ -178,7 +178,7 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( const TVectorN< U, Q, M >& iOthe
     const uint8 min = FMaths::Min( N, M );
     const uint8 max = FMaths::Max( N, M );
 
-    for( uint8 i = 0; i < len; ++i )
+    for( uint8 i = 0; i < min; ++i )
         m[i] = static_cast< T >( iOther.m[i] );
 
     for( uint8 i = min; i < max; ++i )

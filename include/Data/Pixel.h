@@ -29,7 +29,7 @@ class ULIS_API FPixel final
     : public ISample
 {
 public:
-    /*! Override destructor from pure virtual parent, doesn't lifetime of internal buffer. */
+    /*! Destructor, doesn't manage lifetime of internal buffer. */
     ~FPixel();
 
     /*! Constructor, from external data, format and optional colorspace. */

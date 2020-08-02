@@ -29,7 +29,7 @@ class ULIS_API FColor final
     : public ISample
 {
 public:
-    /*! Override destructor from pure virtual parent, manages lifetime of internal buffer. */
+    /*! Destructor, manages lifetime of internal buffer. */
     ~FColor();
 
     /*! Default constructor, with default Format eFormat::Format_RGBA8 */
@@ -57,57 +57,158 @@ public:
     template< typename T >
     FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace = nullptr );
 
-    static FColor RGB( uint8 iR, uint8 iG, uint8 iB, uint8  iA = UINT8_MAX  );
-    static FColor GreyA8(   uint8  iGrey,   uint8  iA = UINT8_MAX  );
-    static FColor GreyA16(  uint16 iGrey,   uint16 iA = UINT16_MAX );
-    static FColor GreyA32(  uint32 iGrey,   uint32 iA = UINT32_MAX );
-    static FColor GreyAF(   float  iGrey,   float  iA = 1.f        );
-    static FColor GreyAD(   double iGrey,   double iA = 1.0        );
-    static FColor RGBA8(    uint8  iR,  uint8  iG,  uint8  iB,  uint8  iA = UINT8_MAX  );
-    static FColor RGBA16(   uint16 iR,  uint16 iG,  uint16 iB,  uint16 iA = UINT16_MAX );
-    static FColor RGBA32(   uint32 iR,  uint32 iG,  uint32 iB,  uint32 iA = UINT32_MAX );
-    static FColor RGBAF(    float  iR,  float  iG,  float  iB,  float  iA = 1.f        );
-    static FColor RGBAD(    double iR,  double iG,  double iB,  double iA = 1.0        );
-    static FColor HSVA8(    uint8  iH,  uint8  iS,  uint8  iV,  uint8  iA = UINT8_MAX  );
-    static FColor HSVA16(   uint16 iH,  uint16 iS,  uint16 iV,  uint16 iA = UINT16_MAX );
-    static FColor HSVA32(   uint32 iH,  uint32 iS,  uint32 iV,  uint32 iA = UINT32_MAX );
-    static FColor HSVAF(    float  iH,  float  iS,  float  iV,  float  iA = 1.f        );
-    static FColor HSVAD(    double iH,  double iS,  double iV,  double iA = 1.0        );
-    static FColor HSLA8(    uint8  iH,  uint8  iS,  uint8  iL,  uint8  iA = UINT8_MAX  );
-    static FColor HSLA16(   uint16 iH,  uint16 iS,  uint16 iL,  uint16 iA = UINT16_MAX );
-    static FColor HSLA32(   uint32 iH,  uint32 iS,  uint32 iL,  uint32 iA = UINT32_MAX );
-    static FColor HSLAF(    float  iH,  float  iS,  float  iL,  float  iA = 1.f        );
-    static FColor HSLAD(    double iH,  double iS,  double iL,  double iA = 1.0        );
-    static FColor CMYA8(    uint8  iC,  uint8  iM,  uint8  iY,  uint8  iA = UINT8_MAX  );
-    static FColor CMYA16(   uint16 iC,  uint16 iM,  uint16 iY,  uint16 iA = UINT16_MAX );
-    static FColor CMYA32(   uint32 iC,  uint32 iM,  uint32 iY,  uint32 iA = UINT32_MAX );
-    static FColor CMYAF(    float  iC,  float  iM,  float  iY,  float  iA = 1.f        );
-    static FColor CMYAD(    double iC,  double iM,  double iY,  double iA = 1.0        );
-    static FColor CMYKA8(   uint8  iC,  uint8  iM,  uint8  iY,  uint8  iK,  uint8  iA = UINT8_MAX  );
-    static FColor CMYKA16(  uint16 iC,  uint16 iM,  uint16 iY,  uint16 iK,  uint16 iA = UINT16_MAX );
-    static FColor CMYKA32(  uint32 iC,  uint32 iM,  uint32 iY,  uint32 iK,  uint32 iA = UINT32_MAX );
-    static FColor CMYKAF(   float  iC,  float  iM,  float  iY,  float  iK,  float  iA = 1.f        );
-    static FColor CMYKAD(   double iC,  double iM,  double iY,  double iK,  double iA = 1.0        );
-    static FColor YUVA8(    uint8  iY,  uint8  iU,  uint8  iV,  uint8  iA = UINT8_MAX  );
-    static FColor YUVA16(   uint16 iY,  uint16 iU,  uint16 iV,  uint16 iA = UINT16_MAX );
-    static FColor YUVA32(   uint32 iY,  uint32 iU,  uint32 iV,  uint32 iA = UINT32_MAX );
-    static FColor YUVAF(    float  iY,  float  iU,  float  iV,  float  iA = 1.f        );
-    static FColor YUVAD(    double iY,  double iU,  double iV,  double iA = 1.0        );
-    static FColor LabA8(    uint8  iL,  uint8  ia,  uint8  ib,  uint8  iA = UINT8_MAX  );
-    static FColor LabA16(   uint16 iL,  uint16 ia,  uint16 ib,  uint16 iA = UINT16_MAX );
-    static FColor LabA32(   uint32 iL,  uint32 ia,  uint32 ib,  uint32 iA = UINT32_MAX );
-    static FColor LabAF(    float  iL,  float  ia,  float  ib,  float  iA = 1.f        );
-    static FColor LabAD(    double iL,  double ia,  double ib,  double iA = 1.0        );
-    static FColor XYZA8(    uint8  iX,  uint8  iY,  uint8  iZ,  uint8  iA = UINT8_MAX  );
-    static FColor XYZA16(   uint16 iX,  uint16 iY,  uint16 iZ,  uint16 iA = UINT16_MAX );
-    static FColor XYZA32(   uint32 iX,  uint32 iY,  uint32 iZ,  uint32 iA = UINT32_MAX );
-    static FColor XYZAF(    float  iX,  float  iY,  float  iZ,  float  iA = 1.f        );
-    static FColor XYZAD(    double iX,  double iY,  double iZ,  double iA = 1.0        );
-    static FColor YxyA8(    uint8  iY,  uint8  ix,  uint8  iy,  uint8  iA = UINT8_MAX  );
-    static FColor YxyA16(   uint16 iY,  uint16 ix,  uint16 iy,  uint16 iA = UINT16_MAX );
-    static FColor YxyA32(   uint32 iY,  uint32 ix,  uint32 iy,  uint32 iA = UINT32_MAX );
-    static FColor YxyAF(    float  iY,  float  ix,  float  iy,  float  iA = 1.f        );
-    static FColor YxyAD(    double iY,  double ix,  double iy,  double iA = 1.0        );
+    /*! Static maker, build a color from RGBA8 values, the color will have format eFormat::Format_RGBA8 */
+    static FColor RGB( uint8 iR, uint8 iG, uint8 iB, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from GA8 values, the color will have format eFormat::Format_GA8 */
+    static FColor GreyA8( uint8 iGrey, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from GA16 values, the color will have format eFormat::Format_GA16 */
+    static FColor GreyA16( uint16 iGrey, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from GA32 values, the color will have format eFormat::Format_GA32 */
+    static FColor GreyA32( uint32 iGrey, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from GAF values, the color will have format eFormat::Format_GAF */
+    static FColor GreyAF( ufloat iGrey, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from GAD values, the color will have format eFormat::Format_GAD */
+    static FColor GreyAD( udouble iGrey, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from RGBA8 values, the color will have format eFormat::Format_RGBA8 */
+    static FColor RGBA8( uint8 iR, uint8 iG, uint8 iB, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from RGBA16 values, the color will have format eFormat::Format_RGBA16 */
+    static FColor RGBA16( uint16 iR, uint16 iG, uint16 iB, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from RGBA32 values, the color will have format eFormat::Format_RGBA32 */
+    static FColor RGBA32( uint32 iR, uint32 iG, uint32 iB, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from RGBAF values, the color will have format eFormat::Format_RGBAF */
+    static FColor RGBAF( ufloat iR, ufloat iG, ufloat iB, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from RGBAD values, the color will have format eFormat::Format_RGBAD */
+    static FColor RGBAD( udouble iR, udouble iG, udouble iB, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from HSVA8 values, the color will have format eFormat::Format_HSVA8 */
+    static FColor HSVA8( uint8 iH, uint8 iS, uint8 iV, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from HSVA16 values, the color will have format eFormat::Format_HSVA16 */
+    static FColor HSVA16( uint16 iH, uint16 iS, uint16 iV, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from HSVA32 values, the color will have format eFormat::Format_HSVA32 */
+    static FColor HSVA32( uint32 iH, uint32 iS, uint32 iV, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from HSVAF values, the color will have format eFormat::Format_HSVAF */
+    static FColor HSVAF( ufloat iH, ufloat iS, ufloat iV, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from HSVAD values, the color will have format eFormat::Format_HSVAD */
+    static FColor HSVAD( udouble iH, udouble iS, udouble iV, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from HSLA8 values, the color will have format eFormat::Format_HSLA8 */
+    static FColor HSLA8( uint8 iH, uint8 iS, uint8 iL, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from HSLA16 values, the color will have format eFormat::Format_HSLA16 */
+    static FColor HSLA16( uint16 iH, uint16 iS, uint16 iL, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from HSLA32 values, the color will have format eFormat::Format_HSLA32 */
+    static FColor HSLA32( uint32 iH, uint32 iS, uint32 iL, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from HSLAF values, the color will have format eFormat::Format_HSLAF */
+    static FColor HSLAF( ufloat iH, ufloat iS, ufloat iL, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from HSLAD values, the color will have format eFormat::Format_HSLAD */
+    static FColor HSLAD( udouble iH, udouble iS, udouble iL, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from CMYA8 values, the color will have format eFormat::Format_CMYA8 */
+    static FColor CMYA8( uint8 iC, uint8 iM, uint8 iY, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from CMYA16 values, the color will have format eFormat::Format_CMYA16 */
+    static FColor CMYA16( uint16 iC, uint16 iM, uint16 iY, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from CMYA32 values, the color will have format eFormat::Format_CMYA32 */
+    static FColor CMYA32( uint32 iC, uint32 iM, uint32 iY, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from CMYAF values, the color will have format eFormat::Format_CMYAF */
+    static FColor CMYAF( ufloat iC, ufloat iM, ufloat iY, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from CMYAD values, the color will have format eFormat::Format_CMYAD */
+    static FColor CMYAD( udouble iC, udouble iM, udouble iY, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from CMYKA8 values, the color will have format eFormat::Format_CMYKA8 */
+    static FColor CMYKA8( uint8 iC, uint8 iM, uint8 iY, uint8 iK, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from CMYKA16 values, the color will have format eFormat::Format_CMYKA16 */
+    static FColor CMYKA16( uint16 iC, uint16 iM, uint16 iY, uint16 iK, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from CMYKA32 values, the color will have format eFormat::Format_CMYKA32 */
+    static FColor CMYKA32( uint32 iC, uint32 iM, uint32 iY, uint32 iK, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from CMYKAF values, the color will have format eFormat::Format_CMYKAF */
+    static FColor CMYKAF( ufloat iC, ufloat iM, ufloat iY, ufloat iK, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from CMYKAD values, the color will have format eFormat::Format_CMYKAD */
+    static FColor CMYKAD( udouble iC, udouble iM, udouble iY, udouble iK, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from YUVA8 values, the color will have format eFormat::Format_YUVA8 */
+    static FColor YUVA8( uint8 iY, uint8 iU, uint8 iV, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from YUVA16 values, the color will have format eFormat::Format_YUVA16 */
+    static FColor YUVA16( uint16 iY, uint16 iU, uint16 iV, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from YUVA32 values, the color will have format eFormat::Format_YUVA32 */
+    static FColor YUVA32( uint32 iY, uint32 iU, uint32 iV, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from YUVAF values, the color will have format eFormat::Format_YUVAF */
+    static FColor YUVAF( ufloat iY, ufloat iU, ufloat iV, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from YUVAD values, the color will have format eFormat::Format_YUVAD */
+    static FColor YUVAD( udouble iY, udouble iU, udouble iV, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from LabA8 values, the color will have format eFormat::Format_LabA8 */
+    static FColor LabA8( uint8 iL, uint8 ia, uint8 ib, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from LabA16 values, the color will have format eFormat::Format_LabA16 */
+    static FColor LabA16( uint16 iL, uint16 ia, uint16 ib, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from LabA32 values, the color will have format eFormat::Format_LabA32 */
+    static FColor LabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from LabAF values, the color will have format eFormat::Format_LabAF */
+    static FColor LabAF( ufloat iL, ufloat ia, ufloat ib, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from LabAD values, the color will have format eFormat::Format_LabAD */
+    static FColor LabAD( udouble iL, udouble ia, udouble ib, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from XYZA8 values, the color will have format eFormat::Format_XYZA8 */
+    static FColor XYZA8( uint8 iX, uint8 iY, uint8 iZ, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from XYZA16 values, the color will have format eFormat::Format_XYZA16 */
+    static FColor XYZA16( uint16 iX, uint16 iY, uint16 iZ, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from XYZA32 values, the color will have format eFormat::Format_XYZA32 */
+    static FColor XYZA32( uint32 iX, uint32 iY, uint32 iZ, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from XYZAF values, the color will have format eFormat::Format_XYZAF */
+    static FColor XYZAF( ufloat iX, ufloat iY, ufloat iZ, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from XYZAD values, the color will have format eFormat::Format_XYZAD */
+    static FColor XYZAD( udouble iX, udouble iY, udouble iZ, udouble iA = 1.0 );
+
+    /*! Static maker, build a color from YxyA8 values, the color will have format eFormat::Format_YxyA8 */
+    static FColor YxyA8( uint8 iY, uint8 ix, uint8 iy, uint8 iA = UINT8_MAX );
+
+    /*! Static maker, build a color from YxyA16 values, the color will have format eFormat::Format_YxyA16 */
+    static FColor YxyA16( uint16 iY, uint16 ix, uint16 iy, uint16 iA = UINT16_MAX );
+
+    /*! Static maker, build a color from YxyA32 values, the color will have format eFormat::Format_YxyA32 */
+    static FColor YxyA32( uint32 iY, uint32 ix, uint32 iy, uint32 iA = UINT32_MAX );
+
+    /*! Static maker, build a color from YxyAF values, the color will have format eFormat::Format_YxyAF */
+    static FColor YxyAF( ufloat iY, ufloat ix, ufloat iy, ufloat iA = 1.f );
+
+    /*! Static maker, build a color from YxyAD values, the color will have format eFormat::Format_YxyAD */
+    static FColor YxyAD( udouble iY, udouble ix, udouble iy, udouble iA = 1.0 );
 };
 
 extern template FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );

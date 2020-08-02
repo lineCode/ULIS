@@ -60,7 +60,7 @@ class ULIS_API ISample
     , public IHasColorSpace
 {
 protected:
-    /*! Virtual destructor in order to allow polymorphic manipulation of subtypes. */
+    /*! Destructor. */
     ~ISample();
 
     /*! Construct a ISample interface in a derived class */

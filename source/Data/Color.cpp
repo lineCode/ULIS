@@ -15,7 +15,6 @@
 #include "Data/Pixel.h"
 
 ULIS_NAMESPACE_BEGIN
-
 namespace detail {
 
 template< typename T >
@@ -96,6 +95,8 @@ struct TColorInitializer< udouble > {
 
 } // namespace detail
 
+
+
 FColor::~FColor()
 {
     if( mSignal )
@@ -162,8 +163,6 @@ FColor::FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColo
     #undef TMP_CALL
 }
 
-//--------------------------------------------------------------------------------------
-//------------------------------------------------------------ Named static constructors
 //static
 FColor
 FColor::RGB( uint8 iR, uint8 iG, uint8 iB, uint8 iA )
@@ -194,14 +193,14 @@ FColor::GreyA32( uint32 iGrey, uint32 iA )
 
 //static
 FColor
-FColor::GreyAF( float iGrey, float iA )
+FColor::GreyAF( ufloat iGrey, ufloat iA )
 {
     return  FColor( eFormat::Format_GAF, { iGrey, iA } );
 }
 
 //static
 FColor
-FColor::GreyAD( double iGrey, double iA )
+FColor::GreyAD( udouble iGrey, udouble iA )
 {
     return  FColor( eFormat::Format_GAD, { iGrey, iA } );
 }
@@ -229,14 +228,14 @@ FColor::RGBA32( uint32 iR, uint32 iG, uint32 iB, uint32 iA )
 
 //static
 FColor
-FColor::RGBAF( float iR, float iG, float iB, float iA )
+FColor::RGBAF( ufloat iR, ufloat iG, ufloat iB, ufloat iA )
 {
     return  FColor( eFormat::Format_RGBAF, { iR, iG, iB, iA } );
 }
 
 //static
 FColor
-FColor::RGBAD( double iR, double iG, double iB, double iA )
+FColor::RGBAD( udouble iR, udouble iG, udouble iB, udouble iA )
 {
     return  FColor( eFormat::Format_RGBAD, { iR, iG, iB, iA } );
 }
@@ -264,14 +263,14 @@ FColor::HSVA32( uint32 iH, uint32 iS, uint32 iV, uint32 iA )
 
 //static
 FColor
-FColor::HSVAF( float iH, float iS, float iV, float iA )
+FColor::HSVAF( ufloat iH, ufloat iS, ufloat iV, ufloat iA )
 {
     return  FColor( eFormat::Format_HSVAF, { iH, iS, iV, iA } );
 }
 
 //static
 FColor
-FColor::HSVAD( double iH, double iS, double iV, double iA )
+FColor::HSVAD( udouble iH, udouble iS, udouble iV, udouble iA )
 {
     return  FColor( eFormat::Format_HSVAD, { iH, iS, iV, iA } );
 }
@@ -299,14 +298,14 @@ FColor::HSLA32( uint32 iH, uint32 iS, uint32 iL, uint32 iA )
 
 //static
 FColor
-FColor::HSLAF( float iH, float iS, float iL, float iA )
+FColor::HSLAF( ufloat iH, ufloat iS, ufloat iL, ufloat iA )
 {
     return  FColor( eFormat::Format_HSLAF, { iH, iS, iL, iA } );
 }
 
 //static
 FColor
-FColor::HSLAD( double iH, double iS, double iL, double iA )
+FColor::HSLAD( udouble iH, udouble iS, udouble iL, udouble iA )
 {
     return  FColor( eFormat::Format_HSLAD, { iH, iS, iL, iA } );
 }
@@ -334,14 +333,14 @@ FColor::CMYA32( uint32 iC, uint32 iM, uint32 iY, uint32 iA )
 
 //static
 FColor
-FColor::CMYAF( float iC, float iM, float iY, float iA )
+FColor::CMYAF( ufloat iC, ufloat iM, ufloat iY, ufloat iA )
 {
     return  FColor( eFormat::Format_CMYAF, { iC, iM, iY, iA } );
 }
 
 //static
 FColor
-FColor::CMYAD( double iC, double iM, double iY, double iA )
+FColor::CMYAD( udouble iC, udouble iM, udouble iY, udouble iA )
 {
     return  FColor( eFormat::Format_CMYAD, { iC, iM, iY, iA } );
 }
@@ -369,14 +368,14 @@ FColor::CMYKA32( uint32 iC, uint32 iM, uint32 iY, uint32 iK, uint32 iA )
 
 //static
 FColor
-FColor::CMYKAF( float iC, float iM, float iY, float iK, float iA )
+FColor::CMYKAF( ufloat iC, ufloat iM, ufloat iY, ufloat iK, ufloat iA )
 {
     return  FColor( eFormat::Format_CMYKAF, { iC, iM, iY, iK, iA } );
 }
 
 //static
 FColor
-FColor::CMYKAD( double iC, double iM, double iY, double iK, double iA )
+FColor::CMYKAD( udouble iC, udouble iM, udouble iY, udouble iK, udouble iA )
 {
     return  FColor( eFormat::Format_CMYKAD, { iC, iM, iY, iK, iA } );
 }
@@ -404,14 +403,14 @@ FColor::YUVA32( uint32 iY, uint32 iU, uint32 iV, uint32 iA )
 
 //static
 FColor
-FColor::YUVAF( float iY, float iU, float iV, float iA )
+FColor::YUVAF( ufloat iY, ufloat iU, ufloat iV, ufloat iA )
 {
     return  FColor( eFormat::Format_YUVAF, { iY, iU, iV, iA } );
 }
 
 //static
 FColor
-FColor::YUVAD( double iY, double iU, double iV, double iA )
+FColor::YUVAD( udouble iY, udouble iU, udouble iV, udouble iA )
 {
     return  FColor( eFormat::Format_YUVAD, { iY, iU, iV, iA } );
 }
@@ -439,14 +438,14 @@ FColor::LabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA )
 
 //static
 FColor
-FColor::LabAF( float iL, float ia, float ib, float iA )
+FColor::LabAF( ufloat iL, ufloat ia, ufloat ib, ufloat iA )
 {
     return  FColor( eFormat::Format_LabAF, { iL, ia, ib, iA } );
 }
 
 //static
 FColor
-FColor::LabAD( double iL, double ia, double ib, double iA )
+FColor::LabAD( udouble iL, udouble ia, udouble ib, udouble iA )
 {
     return  FColor( eFormat::Format_LabAD, { iL, ia, ib, iA } );
 }
@@ -474,14 +473,14 @@ FColor::XYZA32( uint32 iX, uint32 iY, uint32 iZ, uint32 iA )
 
 //static
 FColor
-FColor::XYZAF( float iX, float iY, float iZ, float iA )
+FColor::XYZAF( ufloat iX, ufloat iY, ufloat iZ, ufloat iA )
 {
     return  FColor( eFormat::Format_XYZAF, { iX, iY, iZ, iA } );
 }
 
 //static
 FColor
-FColor::XYZAD( double iX, double iY, double iZ, double iA )
+FColor::XYZAD( udouble iX, udouble iY, udouble iZ, udouble iA )
 {
     return  FColor( eFormat::Format_XYZAD, { iX, iY, iZ, iA } );
 }
@@ -509,14 +508,14 @@ FColor::YxyA32( uint32 iY, uint32 ix, uint32 iy, uint32 iA )
 
 //static
 FColor
-FColor::YxyAF( float iY, float ix, float iy, float iA )
+FColor::YxyAF( ufloat iY, ufloat ix, ufloat iy, ufloat iA )
 {
     return  FColor( eFormat::Format_YxyAF, { iY, ix, iy, iA } );
 }
 
 //static
 FColor
-FColor::YxyAD( double iY, double ix, double iy, double iA )
+FColor::YxyAD( udouble iY, udouble ix, udouble iy, udouble iA )
 {
     return  FColor( eFormat::Format_YxyAD, { iY, ix, iy, iA } );
 }

@@ -136,6 +136,16 @@ public:
 
 
 
+
+
+// detail
+namespace detail {
+} // namespace detail
+
+
+
+
+
 // Constructors
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC TMatrixN< T, P, N >::TMatrixN()
@@ -200,8 +210,14 @@ template< typename T, typename P, uint8 N >
 template< typename U, typename Q, uint8 M >
 ULIS_MATRIX_FUNC TMatrixN< T, P, N >::TMatrixN( const TMatrixN< U, Q, M >& iOther )
 {
-    for( uint8 i = 0; i < N; ++i )
+    const uint8 min = FMaths::Min( N, M );
+    const uint8 max = FMaths::Max( N, M );
+
+    for( uint8 i = 0; i < min; ++i )
         m[i] = iOther.m[i];
+
+    for( uint8 i = min; i < max; ++i )
+        m[i] = tRow();
 }
 
 
@@ -213,10 +229,24 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N > TMatrixN< T, P, N >::Inverse() {
 
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC TMatrixN< T, P, N > TMatrixN< T, P, N >::Transpose() {
+    TMatrixN< T, P, N > result;
+
+    for( uint8 y = 0; y < N; ++y )
+        for( uint8 x = 0; x < N; ++x )
+            result.m[y][x] = m[ x ][ y ];
+
+    return  result;
 }
 
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC TMatrixN< T, P, N > TMatrixN< T, P, N >::Rotated90CCW() {
+    TMatrixN< T, P, N > result;
+
+    for( uint8 y = 0; y < N; ++y )
+        for( uint8 x = 0; x < N; ++x )
+            result.m[y][x] = m[ x ][ N - y ];
+
+    return  result;
 }
 
 template< typename T, typename P, uint8 N >
