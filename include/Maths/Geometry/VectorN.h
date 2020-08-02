@@ -31,7 +31,7 @@ class TVectorN
     typedef P tComputation;
 
     // Members
-    /*! The components of the ND vector. */
+    /*! The N elements of the N-Dimensional vector. */
     T m[N];
 
 public:
@@ -55,6 +55,9 @@ public:
 
 
     // Named Functions
+    /*! Return the horizontal sum of the vector. */
+    ULIS_VECTOR_FUNC tComputation Sum() const;
+
     /*! Return the euclidean distance of the vector. */
     ULIS_VECTOR_FUNC tComputation Distance() const;
 
@@ -188,7 +191,19 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( const TVectorN< U, Q, M >& iOthe
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
 TVectorN< T, P, N >::tComputation
-TVectorN< T, P, N >:: Distance() const {
+TVectorN< T, P, N >::Sum() const {
+    tComputation res = 0;
+
+    for( uint8 i = 0; i < N; ++i )
+        res += m[i];
+
+    return  res;
+}
+
+template< typename T, typename P, uint8 N >
+ULIS_VECTOR_FUNC
+TVectorN< T, P, N >::tComputation
+TVectorN< T, P, N >::Distance() const {
     return  FMaths::Sqrt( DistanceSquared() );
 }
 
