@@ -97,7 +97,8 @@ FBlock::XMake(
 }
 
 //static
-FBlock* XMake(
+FBlock*
+FBlock::XMake(
       uint8* iData
     , uint16 iWidth
     , uint16 iHeight

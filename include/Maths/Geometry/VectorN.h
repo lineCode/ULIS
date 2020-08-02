@@ -55,6 +55,12 @@ public:
 
 
     // Named Functions
+    /*! Return a pointer to the base storage. */
+    ULIS_VECTOR_FUNC T* Bits();
+
+    /*! Return a pointer to the base storage. */
+    ULIS_VECTOR_FUNC const T* Bits() const;
+
     /*! Return the horizontal sum of the vector. */
     ULIS_VECTOR_FUNC tComputation Sum() const;
 
@@ -188,6 +194,20 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( const TVectorN< U, Q, M >& iOthe
 
 
 // Named Functions
+template< typename T, typename P, uint8 N >
+ULIS_VECTOR_FUNC
+T*
+TVectorN< T, P, N >::Bits() {
+    return  &m[0];
+}
+
+template< typename T, typename P, uint8 N >
+ULIS_VECTOR_FUNC
+const T*
+TVectorN< T, P, N >::Bits() const {
+    return  &m[0];
+}
+
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
 TVectorN< T, P, N >::tComputation

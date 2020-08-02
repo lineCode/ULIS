@@ -67,6 +67,12 @@ public:
 
 
     // Named Functions
+    /*! Return a pointer to the base storage. */
+    ULIS_VECTOR_FUNC T* Bits();
+
+    /*! Return a pointer to the base storage. */
+    ULIS_VECTOR_FUNC const T* Bits() const;
+
     /*! Obtain the inverse of the matrix. */
     ULIS_MATRIX_FUNC TMatrixN< T, P, N > Inverse();
 
@@ -140,6 +146,160 @@ public:
 
 // detail
 namespace detail {
+/*!
+    LUP Decomposition implementation
+    @param ioMat, the matrix of size N to decompose, it is modified to contain L-E and U.
+    @param oPermut, permutation vector of size N+1.
+    @return boolean stating if the decomposition succeeded or not ( degenerate ).
+*/
+template< typename T, typename P, uint8 N >
+bool PartialPivotingLUDecomposition_imp(
+      TMatrixN< T, P, N >& ioMat
+    , TVectorN< int, float, N + 1 >& oPermut
+)
+{
+    int i, j, k, imax;
+    T maxMat, absMat;
+    TVectorN< T, P, N > temp_row;
+
+    for( i = 0; i <= N; ++i )
+        oPermut[i] = i; // Unit permutation matrix, oPermut[N] initialized with N
+
+    for( i = 0; i < N; ++i ) {
+        maxMat = static_cast< T >( 0 );
+        imax = i;
+
+        for( k = i; k < N; ++k ) {
+            absMat = FMaths::Abs( ioMat[k][i] )
+            if( absMat > maxMat) {
+                maxMat = absMat;
+                imax = k;
+            }
+        }
+
+        if( maxMat < FMaths::kEpsilonf )
+            return  false; // error, degenerate
+
+        if( imax != i ) {
+            //pivoting P
+            j = oPermut[i];
+            oPermut[i] = oPermut[imax];
+            oPermut[imax] = j;
+
+            // swapping rows of ioMat
+            temp_row = ioMat[i];
+            ioMat[i] = ioMat[imax];
+            ioMat[imax] = temp_row;
+
+            // counting pivots starting from N (for determinant)
+            oPermut[N]++;
+        }
+
+        for (j = i + 1; j < N; j++) {
+            ioMat[j][i] /= ioMat[i][i];
+
+            for (k = i + 1; k < N; k++)
+                ioMat[j][k] -= ioMat[j][i] * ioMat[i][k];
+        }
+    }
+
+    return  true; // success
+}
+
+/*!
+    LUP Solving implementation
+    @param iMat, filled from PartialPivotingLUDecomposition_imp
+    @param iPermut, filled from PartialPivotingLUDecomposition_imp
+    @param iVec, right hand side vector
+    @return solution vector "x" of ioMat * x = iVec.
+*/
+template< typename T, typename P, uint8 N >
+TVectorN< T, P, N >
+PartialPivotingLUSolve_imp(
+      const TMatrixN< T, P, N >& iMat
+    , const TVectorN< int, float, N + 1 >& iPermut
+    , const TVectorN< T, P, N >& iVec
+)
+{
+    TVectorN< T, P, N > result;
+    for( int i = 0; i < N; ++i ) {
+        result[i] = iVec[ iPermut[i] ];
+
+        for( int k = 0; k < i; ++k )
+            result[i] -= iMat[i][k] * result[k];
+    }
+
+    for( int i = N - 1; i >= 0; --i ) {
+        for( int k = i + 1; k < N; ++k )
+            result[i] -= iMat[i][k] * result[k];
+
+        result[i] = result[i] / iMat[i][i];
+    }
+
+    return  result;
+}
+
+/*!
+    LUP Invert implementation
+    @param iMat, filled from PartialPivotingLUDecomposition_imp
+    @param iPermut, filled from PartialPivotingLUDecomposition_imp
+    @return Inverse of iMat.
+*/
+template< typename T, typename P, uint8 N >
+TMatrixN< T, P, N >
+PartialPivotingLUInvert_imp( 
+      const TMatrixN< T, P, N >& iMat
+    , const TVectorN< int, float, N + 1 >& iPermut
+)
+{
+    TMatrixN< T, P, N > result;
+
+    for( int j = 0; j < N; ++j ) {
+        for( int i = 0; i < N; ++i ) {
+            if( iPermut[i] == j )
+                result[i][j] = static_cast< T >( 1 );
+            else
+                result[i][j] = static_cast< T >( 0 );
+
+            for( int k = 0; k < i; ++k )
+                result[i][j] -= iMat[i][k] * result[k][j];
+        }
+
+        for( int i = N - 1; i >= 0; --i ) {
+            for( int k = i + 1; k < N; ++k )
+                result[i][j] -= iMat[i][k] * result[k][j];
+
+            result[i][j] = result[i][j] / iMat[i][i];
+        }
+    }
+
+    return  result;
+}
+
+/*!
+    LUP Invert implementation
+    @param iMat, filled from PartialPivotingLUDecomposition_imp
+    @param iPermut, filled from PartialPivotingLUDecomposition_imp
+    @return Determinant of iMat.
+*/
+template< typename T, typename P, uint8 N >
+TMatrixN< T, P, N >
+PartialPivotingLUDeterminant_imp( 
+      const TMatrixN< T, P, N >& iMat
+    , const TVectorN< int, float, N + 1 >& iPermut
+)
+{
+    T det = iMat[0][0];
+
+    for( int i = 1; i < N; ++i )
+        det *= iMat[i][i];
+
+    if( ( iPermut[N] - N) % 2 == 0 )
+        return  det;
+    else
+        return  -det;
+}
+
 } // namespace detail
 
 
@@ -224,11 +384,33 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N >::TMatrixN( const TMatrixN< U, Q, M >& iOthe
 
 // Named Functions
 template< typename T, typename P, uint8 N >
-ULIS_MATRIX_FUNC TMatrixN< T, P, N > TMatrixN< T, P, N >::Inverse() {
+ULIS_VECTOR_FUNC
+T*
+TMatrixN< T, P, N >::Bits() {
+    return  &(m[0].m[0])
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_MATRIX_FUNC TMatrixN< T, P, N > TMatrixN< T, P, N >::Transpose() {
+ULIS_VECTOR_FUNC
+const T*
+TMatrixN< T, P, N >::Bits() const {
+    return  &(m[0].m[0])
+}
+
+template< typename T, typename P, uint8 N >
+ULIS_MATRIX_FUNC
+TMatrixN< T, P, N >
+TMatrixN< T, P, N >::Inverse() {
+    TMatrixN< T, P, N > LU = (*this);
+    TVectorN< int, float, N + 1 > permut;
+    detail::PartialPivotingLUDecomposition_imp( LU, permut );
+    return  detail::PartialPivotingLUInvert_imp( LU, permut );
+}
+
+template< typename T, typename P, uint8 N >
+ULIS_MATRIX_FUNC
+TMatrixN< T, P, N >
+TMatrixN< T, P, N >::Transpose() {
     TMatrixN< T, P, N > result;
 
     for( uint8 y = 0; y < N; ++y )
@@ -239,7 +421,9 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N > TMatrixN< T, P, N >::Transpose() {
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_MATRIX_FUNC TMatrixN< T, P, N > TMatrixN< T, P, N >::Rotated90CCW() {
+ULIS_MATRIX_FUNC
+TMatrixN< T, P, N >
+TMatrixN< T, P, N >::Rotated90CCW() {
     TMatrixN< T, P, N > result;
 
     for( uint8 y = 0; y < N; ++y )
@@ -250,7 +434,13 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N > TMatrixN< T, P, N >::Rotated90CCW() {
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_MATRIX_FUNC TMatrixN< T, P, N >::tComputation TMatrixN< T, P, N >::Determinant() {
+ULIS_MATRIX_FUNC
+TMatrixN< T, P, N >::tComputation
+TMatrixN< T, P, N >::Determinant() {
+    TMatrixN< T, P, N > LU = (*this);
+    TVectorN< int, float, N + 1 > permut;
+    detail::PartialPivotingLUDecomposition_imp( LU, permut );
+    return  detail::PartialPivotingLUDeterminant_imp( LU, permut );
 }
 
 
