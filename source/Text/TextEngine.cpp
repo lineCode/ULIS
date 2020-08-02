@@ -5,29 +5,29 @@
 *   ULIS3
 *__________________
 *
-* @file         FontEngine.cpp
+* @file         TextEngine.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FFontEngine class.
+* @brief        This file provides the definition for the FTextEngine class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Text/FontEngine.h"
+#include "Text/TextEngine.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FFontEngine
+// FTextEngine
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FFontEngine::~FFontEngine()
+FTextEngine::~FTextEngine()
 {
     FT_Done_FreeType( reinterpret_cast< FT_Library >( mHandle ) );
 }
 
 
-FFontEngine::FFontEngine()
+FTextEngine::FTextEngine()
     : mHandle( nullptr )
 {
     FT_Error error = FT_Init_FreeType( reinterpret_cast< FT_Library* >( &mHandle ) );
@@ -38,7 +38,7 @@ FFontEngine::FFontEngine()
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 void*
-FFontEngine::Handle() const
+FTextEngine::Handle() const
 {
     return  mHandle;
 }

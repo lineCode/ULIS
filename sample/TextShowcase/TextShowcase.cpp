@@ -28,8 +28,8 @@ main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
-    FFontEngine fontEngine;
-    FFontRegistry fontRegistry( fontEngine );
+    FTextEngine TextEngine;
+    FFontRegistry fontRegistry( TextEngine );
     int fontSize = 12;
     int entryHeight = 16;
     int entryWidth = 256;

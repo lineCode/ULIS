@@ -47,7 +47,7 @@
 #include "Clear/Clear.h"
 #include "Copy/Copy.h"
 #include "Text/FontRegistry.h"
-#include "Text/FontEngine.h"
+#include "Text/TextEngine.h"
 #include "Text/Font.h"
 #include "Text/Text.h"
 #include "IO/Disk.h"

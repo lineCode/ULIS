@@ -14,7 +14,7 @@
 #include "Text/FontRegistry.h"
 #include "Base/FilePathRegistry.h"
 #include "Base/StringUtils.h"
-#include "Text/FontEngine.h"
+#include "Text/TextEngine.h"
 #include "Text/Font.h"
 
 #include <iostream>
@@ -135,8 +135,8 @@ FFontRegistry::~FFontRegistry()
 {
 }
 
-FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
-    : mFontEngine( iFontEngine )
+FFontRegistry::FFontRegistry( const FTextEngine& iTextEngine )
+    : mTextEngine( iTextEngine )
 {
     #ifdef ULIS_WIN
         std::string sysfpath;
@@ -190,7 +190,7 @@ FFontRegistry::Refresh() {
 
     for( auto it : reg.Records() ) {
         FT_Face face;
-        FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.Handle() ), it.second.c_str(), 0, &face );
+        FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mTextEngine.Handle() ), it.second.c_str(), 0, &face );
         ULIS_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );
@@ -261,10 +261,10 @@ FFontRegistry::FuzzyFindFontPath( const std::string& iFamily, const std::string&
     return  stk->Path();
 }
 
-const FFontEngine&
-FFontRegistry::FontEngine() const
+const FTextEngine&
+FFontRegistry::TextEngine() const
 {
-    return  mFontEngine;
+    return  mTextEngine;
 }
 
 ULIS_NAMESPACE_END

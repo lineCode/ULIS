@@ -281,8 +281,8 @@ int text( int argc, char *argv[] ) {
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
-    FFontEngine fontEngine;
-    FFontRegistry fontRegistry( fontEngine );
+    FTextEngine TextEngine;
+    FFontRegistry fontRegistry( TextEngine );
     FFont font( fontRegistry, fam, style );
     FRectI textmetrics = TextMetrics( wtxt, font, fontSize, FTransform2D() );
     FColor color( format );

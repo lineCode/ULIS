@@ -50,8 +50,8 @@ main( int argc, char *argv[] ) {
     std::wstring str1 = L"ULIS";
     std::wstring str2 = L"ユリッス";
     std::wstring str3 = L"ゆりっす";
-    FFontEngine fontEngine;
-    FFontRegistry fontRegistry( fontEngine );
+    FTextEngine TextEngine;
+    FFontRegistry fontRegistry( TextEngine );
     FFont fontEU( fontRegistry, "Arial", "Black" );
     FFont fontJA( fontRegistry, "Yu Gothic", "Bold" );
     FTransform2D identityTransform = FTransform2D();

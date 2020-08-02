@@ -53,8 +53,8 @@ main( int argc, char *argv[] ) {
     FColor white( ULIS_FORMAT_RGBA8, { 255, 255, 255, 255 } );
     Fill( threadPool, ULIS_NONBLOCKING, ULIS_PERF_AVX2, host, ULIS_NOCB, blockShade, black, shadeRect );
 
-    FFontEngine fontEngine;
-    FFontRegistry fontRegistry( fontEngine );
+    FTextEngine TextEngine;
+    FFontRegistry fontRegistry( TextEngine );
     FFont font( fontRegistry, "Segoe UI", "Light" );
 
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {

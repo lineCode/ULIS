@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Text/Font.h"
-#include "Text/FontEngine.h"
+#include "Text/TextEngine.h"
 #include "Text/FontRegistry.h"
 
 #include <ft2build.h>
@@ -32,18 +32,18 @@ FFont::~FFont()
 
 FFont::FFont( const FFontRegistry& iFontRegistry, const std::string& iFamily, const std::string& iStyle )
     : mHandle( nullptr )
-    , mFontEngine( iFontRegistry.FontEngine() )
+    , mTextEngine( iFontRegistry.TextEngine() )
     , mFontRegistry( iFontRegistry )
 {
     std::string fpath = mFontRegistry.FuzzyFindFontPath( iFamily, iStyle );
-    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.Handle() ), fpath.c_str(), 0, reinterpret_cast< FT_Face* >( &mHandle ) );
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mTextEngine.Handle() ), fpath.c_str(), 0, reinterpret_cast< FT_Face* >( &mHandle ) );
     ULIS_ASSERT( !error, "Error initializing font handle" );
 }
 
 
 FFont::FFont( FFont& iOther )
     : mHandle( iOther.Handle() )
-    , mFontEngine( iOther.FontEngine() )
+    , mTextEngine( iOther.TextEngine() )
     , mFontRegistry( iOther.FontRegistry() )
 {
     iOther.mHandle = nullptr;
@@ -58,10 +58,10 @@ FFont::Handle() const
 }
 
 
-const FFontEngine&
-FFont::FontEngine() const
+const FTextEngine&
+FFont::TextEngine() const
 {
-    return  mFontEngine;
+    return  mTextEngine;
 }
 
 

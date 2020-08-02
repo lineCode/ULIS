@@ -23,7 +23,7 @@ class   FProfileRegistry;
 class   FColorSpace;
 class   FThreadPool;
 class   FFontRegistry;
-class   FFontEngine;
+class   FTextEngine;
 class   FFont;
 class   FTransform2D;
 class   ITiledBlock;
