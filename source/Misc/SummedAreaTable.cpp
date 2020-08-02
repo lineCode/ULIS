@@ -37,7 +37,7 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
     ULIS_ASSERT( iSource,                  "Bad source."                                           );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
-    eFormat satFormat = ( ( ( iSource->Format() & ULIS_E_TYPE ) & ULIS_E_DEPTH ) ) | ULIS_W_TYPE( ULIS_TYPE_UFLOAT ) | ULIS_W_FLOATING( 1 ) | ULIS_W_DEPTH( 4 ) );
+    eFormat satFormat = static_cast< eFormat >( ( ( ( iSource->Format() & ULIS_E_TYPE ) & ULIS_E_DEPTH ) ) | ULIS_W_TYPE( ULIS_TYPE_UFLOAT ) | ULIS_W_FLOATING( 1 ) | ULIS_W_DEPTH( 4 ) ) );
     eFormat test = eFormat::Format_RGBAF;
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
@@ -65,7 +65,7 @@ FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
     ULIS_ASSERT( iSource,                  "Bad source."                                           );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
-    eFormat satFormat = ( ( ( iSource->Format() & ULIS_E_TYPE ) & ULIS_E_DEPTH ) ) | ULIS_W_TYPE( ULIS_TYPE_UFLOAT ) | ULIS_W_FLOATING( 1 ) | ULIS_W_DEPTH( 4 ) );
+    eFormat satFormat = static_cast< eFormat >( ( ( ( iSource->Format() & ULIS_E_TYPE ) & ULIS_E_DEPTH ) ) | ULIS_W_TYPE( ULIS_TYPE_UFLOAT ) | ULIS_W_FLOATING( 1 ) | ULIS_W_DEPTH( 4 ) ) );
     eFormat test = eFormat::Format_RGBAF;
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 

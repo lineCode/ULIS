@@ -410,7 +410,7 @@ ULIS_VECTOR_FUNC const T& TVectorN< T, P, N >::operator[]( int iIndex ) const {
 
 // Binary Operators with scalar on left hand side
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator+( T iValue, const TVectorN< T, P, N >& iVector ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator+( T iValue, const TVectorN< T, P, N >& iVector ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -420,7 +420,7 @@ ULIS_VECTOR_FUNC T operator+( T iValue, const TVectorN< T, P, N >& iVector ) {
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator-( T iValue, const TVectorN< T, P, N >& iVector ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator-( T iValue, const TVectorN< T, P, N >& iVector ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -430,7 +430,7 @@ ULIS_VECTOR_FUNC T operator-( T iValue, const TVectorN< T, P, N >& iVector ) {
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator*( T iValue, const TVectorN< T, P, N >& iVector ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator*( T iValue, const TVectorN< T, P, N >& iVector ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -440,7 +440,7 @@ ULIS_VECTOR_FUNC T operator*( T iValue, const TVectorN< T, P, N >& iVector ) {
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator/( T iValue, const TVectorN< T, P, N >& iVector ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator/( T iValue, const TVectorN< T, P, N >& iVector ) {
 #ifdef ULIS_ASSERT_ENABLED
     for( int i = 0; i < N; ++i )
         ULIS_ASSERT( iVector.m[i] != static_cast< T >( 0 ), "Division by zero" );
@@ -458,7 +458,7 @@ ULIS_VECTOR_FUNC T operator/( T iValue, const TVectorN< T, P, N >& iVector ) {
 
 // Binary Operators with scalar on right hand side
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator+( const TVectorN< T, P, N >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator+( const TVectorN< T, P, N >& iVector, T iValue ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -468,7 +468,7 @@ ULIS_VECTOR_FUNC T operator+( const TVectorN< T, P, N >& iVector, T iValue ) {
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator-( const TVectorN< T, P, N >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator-( const TVectorN< T, P, N >& iVector, T iValue ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -478,7 +478,7 @@ ULIS_VECTOR_FUNC T operator-( const TVectorN< T, P, N >& iVector, T iValue ) {
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator*( const TVectorN< T, P, N >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator*( const TVectorN< T, P, N >& iVector, T iValue ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -488,7 +488,7 @@ ULIS_VECTOR_FUNC T operator*( const TVectorN< T, P, N >& iVector, T iValue ) {
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator/( const TVectorN< T, P, N >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator/( const TVectorN< T, P, N >& iVector, T iValue ) {
     ULIS_ASSERT( iValue != static_cast< T >( 0 ), "Division by zero" );
     TVectorN< T, P, N > result;
 
@@ -502,7 +502,7 @@ ULIS_VECTOR_FUNC T operator/( const TVectorN< T, P, N >& iVector, T iValue ) {
 
 // Binary Operators with vector
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator+( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator+( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -512,7 +512,7 @@ ULIS_VECTOR_FUNC T operator+( const TVectorN< T, P, N >& iVector, const TVectorN
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator-( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator-( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -522,7 +522,7 @@ ULIS_VECTOR_FUNC T operator-( const TVectorN< T, P, N >& iVector, const TVectorN
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator*( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator*( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
     TVectorN< T, P, N > result;
 
     for( int i = 0; i < N; ++i )
@@ -532,7 +532,7 @@ ULIS_VECTOR_FUNC T operator*( const TVectorN< T, P, N >& iVector, const TVectorN
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_VECTOR_FUNC T operator/( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
+ULIS_VECTOR_FUNC TVectorN< T, P, N > operator/( const TVectorN< T, P, N >& iVector, const TVectorN< T, P, N >& iOther ) {
 #ifdef ULIS_ASSERT_ENABLED
     for( int i = 0; i < N; ++i )
         ULIS_ASSERT( iOther.m[i] != static_cast< T >( 0 ), "Division by zero" );

@@ -27,7 +27,7 @@
 // Maths
 #include "Maths/Geometry/Rectangle.h"
 #include "Maths/Geometry/Vector.h"
-#include "Maths/Geometry/Transform2D.h"
+#include "Maths/Geometry/Transformation2D.h"
 #include "Maths/Interpolation/Bezier.h"
 #include "Maths/Interpolation/CatmullRom.h"
 #include "Maths/Maths.h"

@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Maths/Geometry/Rectangle.h"
 #include "Maths/Geometry/Vector.h"
-#include "Maths/Geometry/Transform2D.h"
+#include "Maths/Geometry/Transformation2D.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_API void RenderText( FThreadPool*             iThreadPool

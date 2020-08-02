@@ -19,7 +19,7 @@
 #include "Data/Pixel.h"
 #include "Maths/Geometry/Rectangle.h"
 #include "Maths/Geometry/Vector.h"
-#include "Maths/Geometry/Transform2D.h"
+#include "Maths/Geometry/Transformation2D.h"
 #include "Maths/Geometry/Transform2D_Private.h"
 #include "Text/Font.h"
 #include "Text/Dispatch/TextInfo.h"

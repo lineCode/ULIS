@@ -53,7 +53,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     if( bits_per_pixel != 24 && bits_per_pixel != 32 )  return  nullptr;
     if( bi->bmiHeader.biCompression != BI_RGB && bi->bmiHeader.biCompression != BI_BITFIELDS )  return  nullptr;
 
-    eFormat srcFormat = 0;
+    eFormat srcFormat = static_cast< eFormat >( 0 );
     if( bits_per_pixel == 24 ) srcFormat = eFormat::Format_BGR8;
     if( bits_per_pixel == 32 ) srcFormat = eFormat::Format_BGRA8;
 

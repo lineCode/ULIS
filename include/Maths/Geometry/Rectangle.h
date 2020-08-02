@@ -7,7 +7,7 @@
 *
 * @file         Rect.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TRect class.
+* @brief        This file provides the definition for the TRectangle class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -20,16 +20,16 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      TRect
-/// @brief      The TRect class provides a simple 2D rectangle class for box
+/// @class      TRectangle
+/// @brief      The TRectangle class provides a simple 2D rectangle class for box
 ///             geometry applications.
-/// @details    The TRect class is a template class that provides basic 2D
+/// @details    The TRectangle class is a template class that provides basic 2D
 ///             rectangle functionnalities, it can be used with any numeric
 ///             types, ranging from integer values to floating point values.
 ///
 ///             The rectangle representation is stored as x, y, w, h.
 template< typename T >
-struct TRect
+struct TRectangle
 {
     /*! The x coordinate of the rectangle. */
     T x;
@@ -41,7 +41,7 @@ struct TRect
     T h;
 
     /*! Default constructor, initializes values to zero. */
-    TRect()
+    TRectangle()
         : x( 0 )
         , y( 0 )
         , w( 0 )
@@ -49,7 +49,7 @@ struct TRect
     {}
 
     /*! Constructor, from input values. */
-    TRect( T iX, T iY, T iW, T iH )
+    TRectangle( T iX, T iY, T iW, T iH )
         : x( iX )
         , y( iY )
         , w( iW )
@@ -57,13 +57,13 @@ struct TRect
     {}
 
     /*! Static named maker from input values. */
-    static TRect FromXYWH( T iX, T iY, T iW, T iH ) {
-        return  TRect( iX, iY, iW, iH );
+    static TRectangle FromXYWH( T iX, T iY, T iW, T iH ) {
+        return  TRectangle( iX, iY, iW, iH );
     }
 
     /*! Static named maker from min max input values. */
-    static TRect FromMinMax( T iXMin, T iYMin, T iXMax, T iYMax ) {
-        return  TRect( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
+    static TRectangle FromMinMax( T iXMin, T iYMin, T iXMax, T iYMax ) {
+        return  TRectangle( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
     }
 
     /*! Collision test with TVector2. */
@@ -89,7 +89,7 @@ struct TRect
     }
 
     /*! Compute intersection of this Rect with input Rect and return result Rect. */
-    TRect operator&( const TRect& iOther ) const {
+    TRectangle operator&( const TRectangle& iOther ) const {
         T x1 = FMaths::Max( x, iOther.x );
         T y1 = FMaths::Max( y, iOther.y );
         T x2 = FMaths::Min( x + w, iOther.x + iOther.w );
@@ -98,7 +98,7 @@ struct TRect
     }
 
     /*! Compute union of this Rect with input Rect and return result Rect. */
-    TRect operator|( const TRect& iOther ) const {
+    TRectangle operator|( const TRectangle& iOther ) const {
         T x1 = FMaths::Min( x, iOther.x );
         T y1 = FMaths::Min( y, iOther.y );
         T x2 = FMaths::Max( x + w, iOther.x + iOther.w );
@@ -107,13 +107,13 @@ struct TRect
     }
 
     /*! Compute exclude of this Rect with input Rect and return result Rect. */
-    TRect operator-( const TRect& iOther ) const {
-        TRect inter = *this & iOther;
+    TRectangle operator-( const TRectangle& iOther ) const {
+        TRectangle inter = *this & iOther;
         if( inter.Area() == 0 )
             return  *this;
 
         if( inter == *this )
-            return  TRect();
+            return  TRectangle();
 
         T x1  = x;
         T y1  = y;
@@ -124,17 +124,17 @@ struct TRect
         T ux2 = inter.x + inter.w;
         T uy2 = inter.y + inter.h;
 
-        TRect sides[4] = { FromMinMax( ux1, y1, ux2, uy1 )      // top
+        TRectangle sides[4] = { FromMinMax( ux1, y1, ux2, uy1 )      // top
                          , FromMinMax( x1, uy1, ux1, uy2 )      // left
                          , FromMinMax( ux2, uy1, x2, uy2 )      // right
                          , FromMinMax( ux1, uy2, ux2, y2 ) };   // bot
 
-        std::vector< TRect* > vec;
+        std::vector< TRectangle* > vec;
         for( int i = 0; i < 4; ++i )
             if( sides[i].Area() )
                 vec.push_back( &sides[i] );
 
-        TRect res = *vec[0];
+        TRectangle res = *vec[0];
         for( int i = 1; i < vec.size(); ++i )
             res = res | *vec[i];
 
@@ -142,7 +142,7 @@ struct TRect
     }
 
     /*! Compute union of this Rect with input Rect and return result Rect, with safeguards for empty rects */
-    TRect UnionLeaveEmpty( const TRect& iOther ) const {
+    TRectangle UnionLeaveEmpty( const TRectangle& iOther ) const {
         if( Area() == 0 )
             return iOther;
 
@@ -153,7 +153,7 @@ struct TRect
     }
 
     /*! Strict equality comparison. */
-    bool operator==( const TRect& iOther ) const {
+    bool operator==( const TRectangle& iOther ) const {
         return  ( x == iOther.x && y == iOther.y && w == iOther.w && h == iOther.h );
     }
 
@@ -172,8 +172,8 @@ struct TRect
     }
 
     /*! Return the sanitized version of this rect. */
-    TRect Sanitized() {
-        T Rect ret = *this;
+    TRectangle Sanitized() {
+        TRectangle ret = *this;
         ret.Sanitize();
         return  ret;
     }
@@ -211,15 +211,15 @@ struct TRect
     }
 
     /*! Return the affine transformed version of this rect ( AABB ). */
-    TRect TransformedAffine( const FTransform2D& iTransform ) const {
-        T Rect result = *this;
+    TRectangle TransformedAffine( const FTransform2D& iTransform ) const {
+        TRectangle result = *this;
         result.TransformAffine( iTransform );
         return  ret;
     }
 
     /*! Return the perspective transformed version of this rect ( AABB ). */
-    TRect TransformedPerspective( const FTransform2D& iTransform ) const {
-        T Rect result = *this;
+    TRectangle TransformedPerspective( const FTransform2D& iTransform ) const {
+        TRectangle result = *this;
         result.TransformPerspective( iTransform );
         return  ret;
     }

@@ -97,7 +97,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
     }
     channels = channels - hea;
 
-    eFormat fmt = ULIS_W_TYPE( type ) | ULIS_W_CHANNELS( channels ) | ULIS_W_MODEL( model ) | ULIS_W_ALPHA( hea ) | ULIS_W_DEPTH( depth ) | ULIS_W_FLOATING( floating );
+    eFormat fmt = static_cast< eFormat >( ULIS_W_TYPE( type ) | ULIS_W_CHANNELS( channels ) | ULIS_W_MODEL( model ) | ULIS_W_ALPHA( hea ) | ULIS_W_DEPTH( depth ) | ULIS_W_FLOATING( floating ) );
     FBlock* ret = new FBlock( data, width, height, fmt, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
 
     if( iDesiredFormat != 0 && iDesiredFormat != fmt ) {
@@ -139,10 +139,10 @@ void SaveToFile( FThreadPool*           iThreadPool
     const uint8* dat = iSource->Bits();
     FBlock* conv = nullptr;
     if( !( layout_valid && model_valid && type_valid ) ) {
-        eFormat dstformat = 0;
+        eFormat dstformat = static_cast< eFormat >( 0 );
         if( iImageFormat == IM_HDR )    dstformat = eFormat::Format_RGBF;
-        else if( model == CM_GREY )     dstformat = eFormat::Format_G8   | ULIS_W_ALPHA( iSource->HasAlpha() );
-        else                            dstformat = eFormat::Format_RGB8 | ULIS_W_ALPHA( iSource->HasAlpha() );
+        else if( model == CM_GREY )     dstformat = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( iSource->HasAlpha() ) );
+        else                            dstformat = static_cast< eFormat >( eFormat::Format_RGB8 | ULIS_W_ALPHA( iSource->HasAlpha() ) );
         conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
         dat = conv->Bits();
     }

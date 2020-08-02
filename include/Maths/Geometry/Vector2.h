@@ -347,7 +347,7 @@ ULIS_VECTOR_FUNC const T& TVector2< T >::operator[]( int iIndex ) const {
 
 // Binary Operators with scalar on left hand side
 template< typename T >
-ULIS_VECTOR_FUNC T operator+( T iValue, const TVector2< T >& iVector ) {
+ULIS_VECTOR_FUNC TVector2< T > operator+( T iValue, const TVector2< T >& iVector ) {
     return  TVector2< T >(
           iValue + iVector.x
         , iValue + iVector.y
@@ -355,7 +355,7 @@ ULIS_VECTOR_FUNC T operator+( T iValue, const TVector2< T >& iVector ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator-( T iValue, const TVector2< T >& iVector ) {
+ULIS_VECTOR_FUNC TVector2< T > operator-( T iValue, const TVector2< T >& iVector ) {
     return  TVector2< T >(
           iValue - iVector.x
         , iValue - iVector.y
@@ -363,7 +363,7 @@ ULIS_VECTOR_FUNC T operator-( T iValue, const TVector2< T >& iVector ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator*( T iValue, const TVector2< T >& iVector ) {
+ULIS_VECTOR_FUNC TVector2< T > operator*( T iValue, const TVector2< T >& iVector ) {
     return  TVector2< T >(
           iValue * iVector.x
         , iValue * iVector.y
@@ -371,7 +371,7 @@ ULIS_VECTOR_FUNC T operator*( T iValue, const TVector2< T >& iVector ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator/( T iValue, const TVector2< T >& iVector ) {
+ULIS_VECTOR_FUNC TVector2< T > operator/( T iValue, const TVector2< T >& iVector ) {
     ULIS_ASSERT( iVector.x != 0, "Division by zero" );
     ULIS_ASSERT( iVector.y != 0, "Division by zero" );
     return  TVector2< T >(
@@ -381,7 +381,7 @@ ULIS_VECTOR_FUNC T operator/( T iValue, const TVector2< T >& iVector ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator%( T iValue, const TVector2< T >& iVector ) {
+ULIS_VECTOR_FUNC TVector2< T > operator%( T iValue, const TVector2< T >& iVector ) {
     ULIS_ASSERT( iVector.x != 0, "Division by zero" );
     ULIS_ASSERT( iVector.y != 0, "Division by zero" );
     return  TVector2< T >(
@@ -394,7 +394,7 @@ ULIS_VECTOR_FUNC T operator%( T iValue, const TVector2< T >& iVector ) {
 
 // Binary Operators with scalar on right hand side
 template< typename T >
-ULIS_VECTOR_FUNC T operator+( const TVector2< T >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVector2< T > operator+( const TVector2< T >& iVector, T iValue ) {
     return  TVector2< T >(
           iVector.x + iValue
         , iVector.y + iValue
@@ -402,7 +402,7 @@ ULIS_VECTOR_FUNC T operator+( const TVector2< T >& iVector, T iValue ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator-( const TVector2< T >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVector2< T > operator-( const TVector2< T >& iVector, T iValue ) {
     return  TVector2< T >(
           iVector.x - iValue
         , iVector.y - iValue
@@ -410,7 +410,7 @@ ULIS_VECTOR_FUNC T operator-( const TVector2< T >& iVector, T iValue ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator*( const TVector2< T >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVector2< T > operator*( const TVector2< T >& iVector, T iValue ) {
     return  TVector2< T >(
           iVector.x * iValue
         , iVector.y * iValue
@@ -418,7 +418,7 @@ ULIS_VECTOR_FUNC T operator*( const TVector2< T >& iVector, T iValue ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator/( const TVector2< T >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVector2< T > operator/( const TVector2< T >& iVector, T iValue ) {
     ULIS_ASSERT( iValue != 0, "Division by zero" );
     return  TVector2< T >(
           iVector.x / iValue
@@ -427,7 +427,7 @@ ULIS_VECTOR_FUNC T operator/( const TVector2< T >& iVector, T iValue ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator%( const TVector2< T >& iVector, T iValue ) {
+ULIS_VECTOR_FUNC TVector2< T > operator%( const TVector2< T >& iVector, T iValue ) {
     ULIS_ASSERT( iValue != 0, "Division by zero" );
     return  TVector2< T >(
           iVector.x % iValue
@@ -438,7 +438,7 @@ ULIS_VECTOR_FUNC T operator%( const TVector2< T >& iVector, T iValue ) {
 
 // Binary Operators with vector
 template< typename T >
-ULIS_VECTOR_FUNC T operator+( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
+ULIS_VECTOR_FUNC TVector2< T > operator+( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
     return  TVector2< T >(
           iVector.x + iOther.x
         , iVector.y + iOther.y
@@ -446,7 +446,7 @@ ULIS_VECTOR_FUNC T operator+( const TVector2< T >& iVector, const TVector2< T >&
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator-( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
+ULIS_VECTOR_FUNC TVector2< T > operator-( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
     return  TVector2< T >(
           iVector.x - iOther.x
         , iVector.y - iOther.y
@@ -454,7 +454,7 @@ ULIS_VECTOR_FUNC T operator-( const TVector2< T >& iVector, const TVector2< T >&
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator*( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
+ULIS_VECTOR_FUNC TVector2< T > operator*( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
     return  TVector2< T >(
           iVector.x * iOther.x
         , iVector.y * iOther.y
@@ -462,7 +462,7 @@ ULIS_VECTOR_FUNC T operator*( const TVector2< T >& iVector, const TVector2< T >&
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator/( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
+ULIS_VECTOR_FUNC TVector2< T > operator/( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
     ULIS_ASSERT( iOther.x != 0, "Division by zero" );
     ULIS_ASSERT( iOther.y != 0, "Division by zero" );
     return  TVector2< T >(
@@ -472,7 +472,7 @@ ULIS_VECTOR_FUNC T operator/( const TVector2< T >& iVector, const TVector2< T >&
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T operator%( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
+ULIS_VECTOR_FUNC TVector2< T > operator%( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
     ULIS_ASSERT( iOther.x != 0, "Division by zero" );
     ULIS_ASSERT( iOther.y != 0, "Division by zero" );
     return  TVector2< T >(
