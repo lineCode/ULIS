@@ -5,9 +5,9 @@
 *   ULIS3
 *__________________
 *
-* @file         Maths.h
+* @file         Math.h
 * @author       Clement Berthaud
-* @brief        This file provides the FMaths class declaration.
+* @brief        This file provides the FMath class declaration.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -19,8 +19,8 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FMaths
-struct ULIS_API FMaths
+// FMath
+struct ULIS_API FMath
 {
     // Do not change this value !
     static constexpr float  kEpsilonf = .000001f;
@@ -154,17 +154,17 @@ struct ULIS_API FMaths
 
     static ULIS_FORCEINLINE double RadToDeg( double iRad )
     {
-        return ( iRad * 180 / FMaths::kPId );
+        return ( iRad * 180 / FMath::kPId );
     }
 
     static ULIS_FORCEINLINE double DegToRad( double iDeg )
     {
-        return ( iDeg * FMaths::kPId / 180 );
+        return ( iDeg * FMath::kPId / 180 );
     }
 
     static ULIS_FORCEINLINE float DegToRadF( float iDeg )
     {
-        return ( iDeg * FMaths::kPIf / 180.f );
+        return ( iDeg * FMath::kPIf / 180.f );
     }
 
     static ULIS_FORCEINLINE int IntegerPartOfNumber( float iNumber )
@@ -250,7 +250,7 @@ struct ULIS_API FMaths
         return convf;
     }
 
-}; // struct FMaths
+}; // struct FMath
 
 ULIS_NAMESPACE_END
 

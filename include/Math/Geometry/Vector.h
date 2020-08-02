@@ -13,11 +13,11 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Vector2.h"
-#include "Maths/Geometry/Vector3.h"
-#include "Maths/Geometry/Vector4.h"
-#include "Maths/Geometry/VectorFunc.h"
-#include "Maths/Geometry/VectorSwizzle.h"
+#include "Math/Geometry/Vector2.h"
+#include "Math/Geometry/Vector3.h"
+#include "Math/Geometry/Vector4.h"
+#include "Math/Geometry/VectorFunc.h"
+#include "Math/Geometry/VectorSwizzle.h"
 
 ULIS_NAMESPACE_BEGIN
 

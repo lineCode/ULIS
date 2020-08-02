@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 #define GLM_FORCE_SWIZZLE
 #include <glm/glm.hpp>
@@ -44,8 +44,8 @@ static ULIS_FORCEINLINE ufloat LumF( const FRGBF& iC ) {
 //--------------------------------------------------------------------------- ClipColorF
 static ULIS_FORCEINLINE FRGBF ClipColorF( FRGBF iC ) {
     ufloat l = LumF( iC );
-    ufloat n = FMaths::Min3( iC.m[0], iC.m[1], iC.m[2] );
-    ufloat x = FMaths::Max3( iC.m[0], iC.m[1], iC.m[2] );
+    ufloat n = FMath::Min3( iC.m[0], iC.m[1], iC.m[2] );
+    ufloat x = FMath::Max3( iC.m[0], iC.m[1], iC.m[2] );
     if( n < 0.0f )
     {
         ufloat ln = l - n;
@@ -80,7 +80,7 @@ static ULIS_FORCEINLINE FRGBF SetLumF( const FRGBF& iC, ufloat iL ) {
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------- SatF
 static ULIS_FORCEINLINE ufloat SatF( const FRGBF& iC ) {
-    return  FMaths::Max3( iC.m[0], iC.m[1], iC.m[2] ) - FMaths::Min3( iC.m[0], iC.m[1], iC.m[2] );
+    return  FMath::Max3( iC.m[0], iC.m[1], iC.m[2] ) - FMath::Min3( iC.m[0], iC.m[1], iC.m[2] );
 }
 
 //--------------------------------------------------------------------------------------

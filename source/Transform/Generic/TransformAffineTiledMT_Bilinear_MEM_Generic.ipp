@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"
@@ -44,8 +44,8 @@ InvokeTransformAffineTiledMTProcessScanline_Bilinear_MEM_Generic( uint8* iDst, i
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        const float modx = FMaths::PyFModulo( point_in_src.x, static_cast< float >( info.src_roi.w ) );
-        const float mody = FMaths::PyFModulo( point_in_src.y, static_cast< float >( info.src_roi.h ) );
+        const float modx = FMath::PyFModulo( point_in_src.x, static_cast< float >( info.src_roi.w ) );
+        const float mody = FMath::PyFModulo( point_in_src.y, static_cast< float >( info.src_roi.h ) );
         const int   left    = static_cast< int >( modx );
         const int   top     = static_cast< int >( mody );
         const int   right   = ( left + 1 ) % info.src_roi.w;

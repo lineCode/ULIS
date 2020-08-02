@@ -17,7 +17,7 @@
 #include "Copy/Copy.h"
 #include "Data/Block.h"
 #include "Data/Pixel.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 #include "Thread/ThreadPool.h"
 #include "lcms2.h"
 

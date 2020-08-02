@@ -98,12 +98,12 @@ SampleBicubicV( uint8* iDst, const float* iA, const float* iB, const float* iC, 
         alphaC = iC[iFMT.AID];
         alphaD = iD[iFMT.AID];
         alphaR = InterpCubic( alphaA, alphaB, alphaC, alphaD, iT );
-        FLOAT2TYPE( iDst, iFMT.AID, FMaths::Clamp( alphaR, 0.f, 1.f ) );
+        FLOAT2TYPE( iDst, iFMT.AID, FMath::Clamp( alphaR, 0.f, 1.f ) );
         alphaR = alphaR == 0.f ? 0.f : 1.f / alphaR;
     }
     for( int i = 0; i < iFMT.NCC; ++i ) {
         uint8 r = iFMT.IDT[i];
-        FLOAT2TYPE( iDst, r, FMaths::Clamp( InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR, 0.f, 1.f ) );
+        FLOAT2TYPE( iDst, r, FMath::Clamp( InterpCubic( iA[r] * alphaA, iB[r] * alphaB, iC[r] * alphaC, iD[r] * alphaD, iT ) * alphaR, 0.f, 1.f ) );
     }
 }
 

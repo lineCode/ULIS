@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"
@@ -56,14 +56,14 @@ InvokeTransformAffineTiledMTProcessScanline_Bicubic_MEM_Generic( uint8* iDst, in
         const float tx      = point_in_src.x - src_x;
         const float ty      = point_in_src.y - src_y;
 
-        const int xm1 = FMaths::PyModulo( src_x - 1, info.src_roi.w );
-        const int xp0 = FMaths::PyModulo( src_x    , info.src_roi.w );
-        const int xp1 = FMaths::PyModulo( src_x + 1, info.src_roi.w );
-        const int xp2 = FMaths::PyModulo( src_x + 2, info.src_roi.w );
-        const int ym1 = FMaths::PyModulo( src_y - 1, info.src_roi.h );
-        const int yp0 = FMaths::PyModulo( src_y    , info.src_roi.h );
-        const int yp1 = FMaths::PyModulo( src_y + 1, info.src_roi.h );
-        const int yp2 = FMaths::PyModulo( src_y + 2, info.src_roi.h );
+        const int xm1 = FMath::PyModulo( src_x - 1, info.src_roi.w );
+        const int xp0 = FMath::PyModulo( src_x    , info.src_roi.w );
+        const int xp1 = FMath::PyModulo( src_x + 1, info.src_roi.w );
+        const int xp2 = FMath::PyModulo( src_x + 2, info.src_roi.w );
+        const int ym1 = FMath::PyModulo( src_y - 1, info.src_roi.h );
+        const int yp0 = FMath::PyModulo( src_y    , info.src_roi.h );
+        const int yp1 = FMath::PyModulo( src_y + 1, info.src_roi.h );
+        const int yp2 = FMath::PyModulo( src_y + 2, info.src_roi.h );
         #define GETPIXEL( _C, _X, _Y ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); }
         GETPIXEL( p00, xm1,     ym1 );  GETPIXEL( p01, xm1,     yp0 );  GETPIXEL( p02, xm1,     yp1 );  GETPIXEL( p03, xm1,     yp2 );
         GETPIXEL( p10, xp0,     ym1 );  GETPIXEL( p11, xp0,     yp0 );  GETPIXEL( p12, xp0,     yp1 );  GETPIXEL( p13, xp0,     yp2 );

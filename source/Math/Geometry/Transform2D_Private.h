@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Transformation2D.h"
+#include "Math/Geometry/Transformation2D.h"
 #include <glm/mat3x3.hpp>
 
 ULIS_NAMESPACE_BEGIN

@@ -16,14 +16,14 @@
 #include "Data/Pixel.h"
 #include "Data/Color.h"
 #include "Data/Sample.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 #include "Conv/srgb2linear.h"
 
 ULIS_NAMESPACE_BEGIN
 FColor
 MixRGB( ufloat iT, const ISample& iA, const ISample& iB )
 {
-    ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
+    ufloat t = FMath::Clamp( iT, 0.f, 1.f );
     FColor rgbA( eFormat::Format_RGBAF );
     FColor rgbB( eFormat::Format_RGBAF );
     FColor rgbResult( eFormat::Format_RGBAF );
@@ -39,7 +39,7 @@ MixRGB( ufloat iT, const ISample& iA, const ISample& iB )
 FColor
 MixLab( ufloat iT, const ISample& iA, const ISample& iB )
 {
-    ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
+    ufloat t = FMath::Clamp( iT, 0.f, 1.f );
     FColor LabA( eFormat::Format_LabAF );
     FColor LabB( eFormat::Format_LabAF );
     FColor LabResult( eFormat::Format_LabAF );

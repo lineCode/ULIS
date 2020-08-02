@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 
 #define ULIS_SPARSE_MASK_X 0x00000000FFFFFFFF
@@ -71,8 +71,8 @@ template< uint8 _MICRO, uint8 _MACRO >
 FVec2I32
 TTiledBlock< _MICRO, _MACRO >::ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const {
     ULIS_ASSERT( IsValidPixelCoordRange( iPos.x ) && IsValidPixelCoordRange( iPos.y ), "Bad coordinates" );
-    int32 X = static_cast< int32 >( FMaths::RoundToNegativeInfinity( iPos.x / static_cast< float >( macro_chunk_size_as_pixels ) ) );
-    int32 Y = static_cast< int32 >( FMaths::RoundToNegativeInfinity( iPos.y / static_cast< float >( macro_chunk_size_as_pixels ) ) );
+    int32 X = static_cast< int32 >( FMath::RoundToNegativeInfinity( iPos.x / static_cast< float >( macro_chunk_size_as_pixels ) ) );
+    int32 Y = static_cast< int32 >( FMath::RoundToNegativeInfinity( iPos.y / static_cast< float >( macro_chunk_size_as_pixels ) ) );
     return  FVec2I32( X, Y );
 }
 
@@ -236,8 +236,8 @@ const FBlock*
 TTiledBlock< _MICRO, _MACRO >::QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const {
     static FVec2I64 modLeaf( static_cast< int64 >( micro_chunk_size_as_pixels ) );
     static FVec2I64 modRoot( static_cast< int64 >( macro_chunk_size_as_pixels ) );
-    *oLocalCoords = FMaths::PyModulo( iPos, modLeaf );
-    FVec2I64 pixelCoordsInRoot = FMaths::PyModulo( iPos, modRoot );
+    *oLocalCoords = FMath::PyModulo( iPos, modLeaf );
+    FVec2I64 pixelCoordsInRoot = FMath::PyModulo( iPos, modRoot );
     tRootChunk* root = QueryRootEntryAtPixelSector( iPos );
     return  root ? mTilePool->EmptyTile() : root->QueryConstBlockAtPixelCoordinates( mTilePool, pixelCoordsInRoot );
 }
@@ -246,8 +246,8 @@ TTiledBlock< _MICRO, _MACRO >::QueryConstBlockAtPixelCoordinates( FVec2I64 iPos,
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement**
 TTiledBlock< _MICRO, _MACRO >::QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords  ) {
-    *oLocalCoords = FMaths::PyModulo( iPos, modLeaf );
-    return  CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( iPos )->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( mTilePool, FMaths::PyModulo( iPos, modRoot ) );
+    *oLocalCoords = FMath::PyModulo( iPos, modLeaf );
+    return  CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( iPos )->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( mTilePool, FMath::PyModulo( iPos, modRoot ) );
 }
 
 template< uint8 _MICRO, uint8 _MACRO >

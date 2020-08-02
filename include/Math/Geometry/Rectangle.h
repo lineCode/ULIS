@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Math.h"
 #include <cmath>
 
 ULIS_NAMESPACE_BEGIN
@@ -41,7 +41,7 @@ struct TRectangle
     T h;
 
     /*! Default constructor, initializes values to zero. */
-    TRectangle()
+    TRectangle< T >()
         : x( 0 )
         , y( 0 )
         , w( 0 )
@@ -49,7 +49,7 @@ struct TRectangle
     {}
 
     /*! Constructor, from input values. */
-    TRectangle( T iX, T iY, T iW, T iH )
+    TRectangle< T >( T iX, T iY, T iW, T iH )
         : x( iX )
         , y( iY )
         , w( iW )
@@ -57,13 +57,13 @@ struct TRectangle
     {}
 
     /*! Static named maker from input values. */
-    static TRectangle FromXYWH( T iX, T iY, T iW, T iH ) {
-        return  TRectangle( iX, iY, iW, iH );
+    static TRectangle< T > FromXYWH( T iX, T iY, T iW, T iH ) {
+        return  TRectangle< T >( iX, iY, iW, iH );
     }
 
     /*! Static named maker from min max input values. */
-    static TRectangle FromMinMax( T iXMin, T iYMin, T iXMax, T iYMax ) {
-        return  TRectangle( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
+    static TRectangle< T > FromMinMax( T iXMin, T iYMin, T iXMax, T iYMax ) {
+        return  TRectangle< T >( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
     }
 
     /*! Collision test with TVector2. */
@@ -89,31 +89,31 @@ struct TRectangle
     }
 
     /*! Compute intersection of this Rect with input Rect and return result Rect. */
-    TRectangle operator&( const TRectangle& iOther ) const {
-        T x1 = FMaths::Max( x, iOther.x );
-        T y1 = FMaths::Max( y, iOther.y );
-        T x2 = FMaths::Min( x + w, iOther.x + iOther.w );
-        T y2 = FMaths::Min( y + h, iOther.y + iOther.h );
+    TRectangle< T > operator&( const TRectangle< T >& iOther ) const {
+        T x1 = FMath::Max( x, iOther.x );
+        T y1 = FMath::Max( y, iOther.y );
+        T x2 = FMath::Min( x + w, iOther.x + iOther.w );
+        T y2 = FMath::Min( y + h, iOther.y + iOther.h );
         return  FromMinMax( x1, y1, x2, y2 );
     }
 
     /*! Compute union of this Rect with input Rect and return result Rect. */
-    TRectangle operator|( const TRectangle& iOther ) const {
-        T x1 = FMaths::Min( x, iOther.x );
-        T y1 = FMaths::Min( y, iOther.y );
-        T x2 = FMaths::Max( x + w, iOther.x + iOther.w );
-        T y2 = FMaths::Max( y + h, iOther.y + iOther.h );
+    TRectangle< T > operator|( const TRectangle< T >& iOther ) const {
+        T x1 = FMath::Min( x, iOther.x );
+        T y1 = FMath::Min( y, iOther.y );
+        T x2 = FMath::Max( x + w, iOther.x + iOther.w );
+        T y2 = FMath::Max( y + h, iOther.y + iOther.h );
         return  FromMinMax( x1, y1, x2, y2 );
     }
 
     /*! Compute exclude of this Rect with input Rect and return result Rect. */
-    TRectangle operator-( const TRectangle& iOther ) const {
-        TRectangle inter = *this & iOther;
+    TRectangle< T > operator-( const TRectangle< T >& iOther ) const {
+        TRectangle< T > inter = *this & iOther;
         if( inter.Area() == 0 )
             return  *this;
 
         if( inter == *this )
-            return  TRectangle();
+            return  TRectangle< T >();
 
         T x1  = x;
         T y1  = y;
@@ -124,17 +124,17 @@ struct TRectangle
         T ux2 = inter.x + inter.w;
         T uy2 = inter.y + inter.h;
 
-        TRectangle sides[4] = { FromMinMax( ux1, y1, ux2, uy1 )      // top
+        TRectangle< T > sides[4] = { FromMinMax( ux1, y1, ux2, uy1 )      // top
                          , FromMinMax( x1, uy1, ux1, uy2 )      // left
                          , FromMinMax( ux2, uy1, x2, uy2 )      // right
                          , FromMinMax( ux1, uy2, ux2, y2 ) };   // bot
 
-        std::vector< TRectangle* > vec;
+        std::vector< TRectangle< T >* > vec;
         for( int i = 0; i < 4; ++i )
             if( sides[i].Area() )
                 vec.push_back( &sides[i] );
 
-        TRectangle res = *vec[0];
+        TRectangle< T > res = *vec[0];
         for( int i = 1; i < vec.size(); ++i )
             res = res | *vec[i];
 
@@ -142,7 +142,7 @@ struct TRectangle
     }
 
     /*! Compute union of this Rect with input Rect and return result Rect, with safeguards for empty rects */
-    TRectangle UnionLeaveEmpty( const TRectangle& iOther ) const {
+    TRectangle< T > UnionLeaveEmpty( const TRectangle< T >& iOther ) const {
         if( Area() == 0 )
             return iOther;
 
@@ -153,7 +153,7 @@ struct TRectangle
     }
 
     /*! Strict equality comparison. */
-    bool operator==( const TRectangle& iOther ) const {
+    bool operator==( const TRectangle< T >& iOther ) const {
         return  ( x == iOther.x && y == iOther.y && w == iOther.w && h == iOther.h );
     }
 
@@ -172,8 +172,8 @@ struct TRectangle
     }
 
     /*! Return the sanitized version of this rect. */
-    TRectangle Sanitized() {
-        TRectangle ret = *this;
+    TRectangle< T > Sanitized() {
+        TRectangle< T > ret = *this;
         ret.Sanitize();
         return  ret;
     }
@@ -187,10 +187,10 @@ struct TRectangle
         FVec3F m10 = mat * FVec3F( src_x2, y, 1 );
         FVec3F m11 = mat * FVec3F( src_x2, src_y2, 1 );
         FVec3F m01 = mat * FVec3F( x, src_y2, 1 );
-        x = static_cast< T >( FMaths::RoundToNegativeInfinity( FMaths::Min4( m00.x, m10.x, m11.x, m01.x ) ) );
-        y = static_cast< T >( FMaths::RoundToNegativeInfinity( FMaths::Min4( m00.y, m10.y, m11.y, m01.y ) ) );
-        w = static_cast< T >( FMaths::RoundToPositiveInfinity( FMaths::Max4( m00.x, m10.x, m11.x, m01.x ) ) ) - x;
-        h = static_cast< T >( FMaths::RoundToPositiveInfinity( FMaths::Max4( m00.y, m10.y, m11.y, m01.y ) ) ) - y;
+        x = static_cast< T >( FMath::RoundToNegativeInfinity( FMath::Min4( m00.x, m10.x, m11.x, m01.x ) ) );
+        y = static_cast< T >( FMath::RoundToNegativeInfinity( FMath::Min4( m00.y, m10.y, m11.y, m01.y ) ) );
+        w = static_cast< T >( FMath::RoundToPositiveInfinity( FMath::Max4( m00.x, m10.x, m11.x, m01.x ) ) ) - x;
+        h = static_cast< T >( FMath::RoundToPositiveInfinity( FMath::Max4( m00.y, m10.y, m11.y, m01.y ) ) ) - y;
     }
 
     /*! Perspective transform this rect by input transform ( AABB ). */
@@ -204,24 +204,24 @@ struct TRectangle
         FVec2F B = HomographyTransform( FVec2F( x2, y1 ), mat );
         FVec2F C = HomographyTransform( FVec2F( x2, y2 ), mat );
         FVec2F D = HomographyTransform( FVec2F( x1, y2 ), mat );
-        x = static_cast< T >( FMaths::RoundToNegativeInfinity( FMaths::Min4( A.x, B.x, C.x, D.x ) ) );
-        y = static_cast< T >( FMaths::RoundToNegativeInfinity( FMaths::Min4( A.y, B.y, C.y, D.y ) ) );
-        w = static_cast< T >( FMaths::RoundToPositiveInfinity( FMaths::Max4( A.x, B.x, C.x, D.x ) ) ) - x;
-        h = static_cast< T >( FMaths::RoundToPositiveInfinity( FMaths::Max4( A.y, B.y, C.y, D.y ) ) ) - y;
+        x = static_cast< T >( FMath::RoundToNegativeInfinity( FMath::Min4( A.x, B.x, C.x, D.x ) ) );
+        y = static_cast< T >( FMath::RoundToNegativeInfinity( FMath::Min4( A.y, B.y, C.y, D.y ) ) );
+        w = static_cast< T >( FMath::RoundToPositiveInfinity( FMath::Max4( A.x, B.x, C.x, D.x ) ) ) - x;
+        h = static_cast< T >( FMath::RoundToPositiveInfinity( FMath::Max4( A.y, B.y, C.y, D.y ) ) ) - y;
     }
 
     /*! Return the affine transformed version of this rect ( AABB ). */
-    TRectangle TransformedAffine( const FTransform2D& iTransform ) const {
-        TRectangle result = *this;
+    TRectangle< T > TransformedAffine( const FTransform2D& iTransform ) const {
+        TRectangle< T > result = *this;
         result.TransformAffine( iTransform );
-        return  ret;
+        return  result;
     }
 
     /*! Return the perspective transformed version of this rect ( AABB ). */
-    TRectangle TransformedPerspective( const FTransform2D& iTransform ) const {
-        TRectangle result = *this;
+    TRectangle< T > TransformedPerspective( const FTransform2D& iTransform ) const {
+        TRectangle< T > result = *this;
         result.TransformPerspective( iTransform );
-        return  ret;
+        return  result;
     }
 
     /*! Shift x and y coordinates by input vector. */

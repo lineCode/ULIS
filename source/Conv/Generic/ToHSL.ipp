@@ -19,7 +19,7 @@
 #include "Data/Format.h"
 #include "Data/Pixel.h"
 #include "Data/Sample.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 #include <cmath>
 
 ULIS_NAMESPACE_BEGIN
@@ -52,24 +52,24 @@ ConvBufferRGBToHSL( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat&
         ufloat r = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
         ufloat g = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
         ufloat b = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
-        float cmin = FMaths::Min3( r, g, b );
-        float cmax = FMaths::Max3( r, g, b );
+        float cmin = FMath::Min3( r, g, b );
+        float cmax = FMath::Max3( r, g, b );
         float delta = cmax - cmin;
         float deltaAdd = cmax + cmin;
         float h = 0.f;
         float s = 0.f;
         float l = 0.f;
         l = ( deltaAdd ) / 2.0f;
-        if ( delta < FMaths::kEpsilonf ){
+        if ( delta < FMath::kEpsilonf ){
             h = s = 0.f;
         } else {
             s = ( l < 0.5f ) ? delta / deltaAdd : delta / ( 2.0f - deltaAdd );
             float deltaR = ( ( ( cmax - r ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
             float deltaG = ( ( ( cmax - g ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
             float deltaB = ( ( ( cmax - b ) / 6.0f ) + ( delta / 2.0f ) ) / delta;
-                 if( fabs( r - cmax ) < FMaths::kEpsilonf )   h = deltaB - deltaG;
-            else if( fabs( g - cmax ) < FMaths::kEpsilonf )   h = ( 1.0f / 3.0f ) + deltaR - deltaB;
-            else if( fabs( b - cmax ) < FMaths::kEpsilonf )   h = ( 2.0f / 3.0f ) + deltaG - deltaR;
+                 if( fabs( r - cmax ) < FMath::kEpsilonf )   h = deltaB - deltaG;
+            else if( fabs( g - cmax ) < FMath::kEpsilonf )   h = ( 1.0f / 3.0f ) + deltaR - deltaB;
+            else if( fabs( b - cmax ) < FMath::kEpsilonf )   h = ( 2.0f / 3.0f ) + deltaG - deltaR;
 
             if( h < 0.0 ) h += 1.0;
             if( h > 1.0 ) h -= 1.0;

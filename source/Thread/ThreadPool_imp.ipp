@@ -22,7 +22,7 @@
 #include <random>
 #include <atomic>
 
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -38,7 +38,7 @@ public:
         , stop( false )
         , processed( 0 )
     {
-        unsigned int max = FMaths::Min( iCount, std::thread::hardware_concurrency() );
+        unsigned int max = FMath::Min( iCount, std::thread::hardware_concurrency() );
         for( unsigned int i = 0; i < max; ++i )
             workers.emplace_back( std::bind( &FThreadPool::ThreadProcess, this ) );
     }

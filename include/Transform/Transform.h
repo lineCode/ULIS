@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Transform/Methods.h"
-#include "Maths/Interpolation/Bezier.h"
+#include "Math/Interpolation/Bezier.h"
 #include <vector>
 
 ULIS_NAMESPACE_BEGIN

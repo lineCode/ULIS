@@ -70,7 +70,7 @@ SWindow::SWindow()
             float dy = midy - j;
             float dist2 = dx * dx + dy * dy;
             FPixel prox = mParticle->Pixel( i, j );
-            float alpha = 1.f - FMaths::Min( dist2 / ray2, 1.f );
+            float alpha = 1.f - FMath::Min( dist2 / ray2, 1.f );
             prox.SetAlphaF( alpha );
         }
     }

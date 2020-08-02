@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/MatrixFunc.h"
-#include "Maths/Geometry/VectorN.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/MatrixFunc.h"
+#include "Math/Geometry/VectorN.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -170,14 +170,14 @@ bool PartialPivotingLUDecomposition_imp(
         imax = i;
 
         for( k = i; k < N; ++k ) {
-            absMat = FMaths::Abs( ioMat[k][i] )
+            absMat = FMath::Abs( ioMat[k][i] )
             if( absMat > maxMat) {
                 maxMat = absMat;
                 imax = k;
             }
         }
 
-        if( maxMat < FMaths::kEpsilonf )
+        if( maxMat < FMath::kEpsilonf )
             return  false; // error, degenerate
 
         if( imax != i ) {
@@ -370,8 +370,8 @@ template< typename T, typename P, uint8 N >
 template< typename U, typename Q, uint8 M >
 ULIS_MATRIX_FUNC TMatrixN< T, P, N >::TMatrixN( const TMatrixN< U, Q, M >& iOther )
 {
-    const uint8 min = FMaths::Min( N, M );
-    const uint8 max = FMaths::Max( N, M );
+    const uint8 min = FMath::Min( N, M );
+    const uint8 max = FMath::Max( N, M );
 
     for( uint8 i = 0; i < min; ++i )
         m[i] = iOther.m[i];

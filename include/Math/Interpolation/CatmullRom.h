@@ -13,10 +13,10 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Interpolation/Spline.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Interpolation/Spline.h"
+#include "Math/Math.h"
 #include <cmath>
 #include <vector>
 

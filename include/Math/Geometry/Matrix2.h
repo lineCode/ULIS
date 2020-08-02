@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/MatrixFunc.h"
-#include "Maths/Geometry/Vector2.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/MatrixFunc.h"
+#include "Math/Geometry/Vector2.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -57,12 +57,12 @@ ULIS_FORCEINLINE ufloat AlphaMulF( ufloat iCs, ufloat iCb ) {
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Min
 ULIS_FORCEINLINE ufloat AlphaMinF( ufloat iCs, ufloat iCb ) {
-    return  FMaths::Min( iCs, iCb );
+    return  FMath::Min( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Max
 ULIS_FORCEINLINE ufloat AlphaMaxF( ufloat iCs, ufloat iCb ) {
-    return  FMaths::Max( iCs, iCb );
+    return  FMath::Max( iCs, iCb );
 }
 
 /////////////////////////////////////////////////////

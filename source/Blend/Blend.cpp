@@ -16,9 +16,9 @@
 #include "Blend/BlendDispatch.ipp"
 #include "Conv/Conv.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -47,10 +47,10 @@ void Blend( FThreadPool*            iThreadPool
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
     FRectI src_roi = iSourceRect & iSource->Rect();
-    int target_xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.x ) );
-    int target_ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.y ) );
-    int target_xmax = iSubpixelFlag ? static_cast< int >( FMaths::RoundToPositiveInfinity( iPosition.x + src_roi.w ) ) : static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.x + src_roi.w ) );
-    int target_ymax = iSubpixelFlag ? static_cast< int >( FMaths::RoundToPositiveInfinity( iPosition.y + src_roi.h ) ) : static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.y + src_roi.h ) );
+    int target_xmin = static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.x ) );
+    int target_ymin = static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.y ) );
+    int target_xmax = iSubpixelFlag ? static_cast< int >( FMath::RoundToPositiveInfinity( iPosition.x + src_roi.w ) ) : static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.x + src_roi.w ) );
+    int target_ymax = iSubpixelFlag ? static_cast< int >( FMath::RoundToPositiveInfinity( iPosition.y + src_roi.h ) ) : static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.y + src_roi.h ) );
     FRectI dst_target = FRectI::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
     FRectI dst_fit    = dst_target & iBackdrop->Rect();
 
@@ -59,7 +59,7 @@ void Blend( FThreadPool*            iThreadPool
         return;
 
     // Forward arguments baking
-    FVec2F      subpixelComponent   = FMaths::FloatingPart( iPosition );
+    FVec2F      subpixelComponent   = FMath::FloatingPart( iPosition );
     const int   translationX        = dst_fit.x - dst_target.x;
     const int   translationY        = dst_fit.y - dst_target.y;
     const int   coverageX           = src_roi.w - ( src_roi.x + translationX ) >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );
@@ -80,7 +80,7 @@ void Blend( FThreadPool*            iThreadPool
     commandArgsRef.subpixelFlag         = iSubpixelFlag;
     commandArgsRef.blendingMode         = iBlendingMode;
     commandArgsRef.alphaMode            = iAlphaMode;
-    commandArgsRef.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
+    commandArgsRef.opacityValue         = FMath::Clamp( iOpacityValue, 0.f, 1.f );
     commandArgsRef.shift                = FVec2I( translationX, translationY );
     commandArgsRef.backdropCoverage     = FVec2I( coverageX, coverageY );
     commandArgsRef.backdropWorkingRect  = dst_fit;
@@ -118,10 +118,10 @@ void AlphaBlend( FThreadPool*           iThreadPool
     // Compute coordinates of target rect in destination, with source rect dimension
     // Ensure the selected target actually fits in destination
     FRectI src_roi = iSourceRect & iSource->Rect();
-    int target_xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.x ) );
-    int target_ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.y ) );
-    int target_xmax = iSubpixelFlag ? static_cast< int >( FMaths::RoundToPositiveInfinity( iPosition.x + src_roi.w ) ) : static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.x + src_roi.w ) );
-    int target_ymax = iSubpixelFlag ? static_cast< int >( FMaths::RoundToPositiveInfinity( iPosition.y + src_roi.h ) ) : static_cast< int >( FMaths::RoundToNegativeInfinity( iPosition.y + src_roi.h ) );
+    int target_xmin = static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.x ) );
+    int target_ymin = static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.y ) );
+    int target_xmax = iSubpixelFlag ? static_cast< int >( FMath::RoundToPositiveInfinity( iPosition.x + src_roi.w ) ) : static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.x + src_roi.w ) );
+    int target_ymax = iSubpixelFlag ? static_cast< int >( FMath::RoundToPositiveInfinity( iPosition.y + src_roi.h ) ) : static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.y + src_roi.h ) );
     FRectI dst_target = FRectI::FromMinMax( target_xmin, target_ymin, target_xmax, target_ymax );
     FRectI dst_fit    = dst_target & iBackdrop->Rect();
 
@@ -130,7 +130,7 @@ void AlphaBlend( FThreadPool*           iThreadPool
         return;
 
     // Forward arguments baking
-    FVec2F      subpixelComponent   = FMaths::FloatingPart( iPosition );
+    FVec2F      subpixelComponent   = FMath::FloatingPart( iPosition );
     const int   translationX        = dst_fit.x - dst_target.x;
     const int   translationY        = dst_fit.y - dst_target.y;
     const int   coverageX           = src_roi.w - ( src_roi.x + translationX ) >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );
@@ -151,7 +151,7 @@ void AlphaBlend( FThreadPool*           iThreadPool
     commandArgsRef.subpixelFlag         = iSubpixelFlag;
     commandArgsRef.blendingMode         = BM_NORMAL;
     commandArgsRef.alphaMode            = AM_NORMAL;
-    commandArgsRef.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
+    commandArgsRef.opacityValue         = FMath::Clamp( iOpacityValue, 0.f, 1.f );
     commandArgsRef.shift                = FVec2I( translationX, translationY );
     commandArgsRef.backdropCoverage     = FVec2I( coverageX, coverageY );
     commandArgsRef.backdropWorkingRect  = dst_fit;
@@ -204,7 +204,7 @@ void BlendTiled( FThreadPool*               iThreadPool
     const int   translationX = dst_roi.x - iDestRect.x;
     const int   translationY = dst_roi.y - iDestRect.y;
     FVec2I translation( translationX, translationY );
-    FVec2I mod_shift = FMaths::PyModulo( - FMaths::PyModulo( iShift - translation, src_size ), src_size );
+    FVec2I mod_shift = FMath::PyModulo( - FMath::PyModulo( iShift - translation, src_size ), src_size );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
     auto commandArgs = std::make_shared< FBlendArgs >();
@@ -221,7 +221,7 @@ void BlendTiled( FThreadPool*               iThreadPool
     commandArgsRef.subpixelFlag         = ULIS_NOAA;
     commandArgsRef.blendingMode         = iBlendingMode;
     commandArgsRef.alphaMode            = iAlphaMode;
-    commandArgsRef.opacityValue         = FMaths::Clamp( iOpacityValue, 0.f, 1.f );
+    commandArgsRef.opacityValue         = FMath::Clamp( iOpacityValue, 0.f, 1.f );
     commandArgsRef.shift                = mod_shift;
     commandArgsRef.backdropCoverage     = FVec2I( coverageX, coverageY );
     commandArgsRef.backdropWorkingRect  = dst_roi;

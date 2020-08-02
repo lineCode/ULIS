@@ -14,9 +14,9 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Geometry/Transform2D_Private.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Geometry/Transform2D_Private.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"

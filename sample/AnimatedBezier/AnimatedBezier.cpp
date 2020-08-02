@@ -93,9 +93,9 @@ SWindow::tickEvent() {
     float len = 150;
     mEvolutiveAngle += 0.08f;
     float evoAngle0 = mEvolutiveAngle;
-    float evoAngle1 = evoAngle0 + FMaths::kPIf / 2;
-    float evoAngle2 = evoAngle1 + FMaths::kPIf / 2;
-    float evoAngle3 = evoAngle2 + FMaths::kPIf / 2;
+    float evoAngle1 = evoAngle0 + FMath::kPIf / 2;
+    float evoAngle2 = evoAngle1 + FMath::kPIf / 2;
+    float evoAngle3 = evoAngle2 + FMath::kPIf / 2;
     mCtrlPts[0].ctrlCW  = mCtrlPts[0].point + FVec2F( cos( evoAngle0 ), sin( evoAngle0 ) ) * len;
     mCtrlPts[0].ctrlCCW = mCtrlPts[0].point + FVec2F( cos( evoAngle1 ), sin( evoAngle1 ) ) * len;
     mCtrlPts[1].ctrlCW  = mCtrlPts[1].point + FVec2F( cos( evoAngle1 ), sin( evoAngle1 ) ) * len;

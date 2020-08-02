@@ -50,7 +50,7 @@ ConvBufferRGBToCMYK( const FFormat& iSrcFormat, const uint8* iSrc, const FFormat
         ufloat r = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
         ufloat g = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
         ufloat b = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
-        float ik = FMaths::Max3( r, g, b );
+        float ik = FMath::Max3( r, g, b );
         float k = 1.f - ik;
         if( ik == 0 ) ik = 1;
         float c = ( ( 1.f - r ) - k ) / ( ik );

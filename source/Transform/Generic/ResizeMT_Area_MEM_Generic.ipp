@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"
@@ -64,7 +64,7 @@ InvokeResizeMTProcessScanline_Area_MEM_Generic( uint8* iDst, int32 iLine, std::s
         fpos[3] = fpos[1]  + coverage.y;
         for( int i = 0; i < 4; ++i ) {
             ipos[i] = static_cast< int >( fpos[i] );
-            t[i]    = FMaths::FloatingPartOfNumber( fpos[i] );
+            t[i]    = FMath::FloatingPartOfNumber( fpos[i] );
             u[i]    = 1.f - t[i];
         }
 
@@ -84,11 +84,11 @@ InvokeResizeMTProcessScanline_Area_MEM_Generic( uint8* iDst, int32 iLine, std::s
         #undef SUBSAMPLE_CORNER_IMP
         #undef SUBSAMPLE_CORNER
 
-        float alpha = FMaths::Clamp( ( ((float*)m11)[sat_fmt.AID] + ((float*)m00)[sat_fmt.AID] - ((float*)m10)[sat_fmt.AID] - ((float*)m01)[sat_fmt.AID] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) );
+        float alpha = FMath::Clamp( ( ((float*)m11)[sat_fmt.AID] + ((float*)m00)[sat_fmt.AID] - ((float*)m10)[sat_fmt.AID] - ((float*)m01)[sat_fmt.AID] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) );
         *( reinterpret_cast< T* >( dst ) + sat_fmt.AID ) = static_cast< T >( alpha );
         for( int i = 0; i < sat_fmt.NCC; ++i ) {
             uint8 r = sat_fmt.IDT[i];
-            *( reinterpret_cast< T* >( dst ) + r ) = static_cast< T >( FMaths::Clamp( ( ((float*)m11)[r] + ((float*)m00)[r] - ((float*)m10)[r] - ((float*)m01)[r] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) ) / alpha * static_cast< float >( MaxType< T >() ) );
+            *( reinterpret_cast< T* >( dst ) + r ) = static_cast< T >( FMath::Clamp( ( ((float*)m11)[r] + ((float*)m00)[r] - ((float*)m10)[r] - ((float*)m01)[r] ) / coverage_area, static_cast< float >( MinType< T >() ), static_cast< float >( MaxType< T >() ) ) / alpha * static_cast< float >( MaxType< T >() ) );
         }
 
         dst += fmt.BPP;

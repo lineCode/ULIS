@@ -18,7 +18,7 @@ int
 main() {
     constexpr auto bb = sizeof( FFormat );
     constexpr auto zz = offsetof( FFormat, SWA );
-    FFormat ll( 0 );
+    FFormat ll( static_cast< eFormat >( 0 ) );
     FFormat* LL = &ll;
     uint8*      * IDT   = &ll.IDT;
     eFormat     * FMT   = &ll.FMT;

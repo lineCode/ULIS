@@ -14,9 +14,9 @@
 #include "Misc/Extract.h"
 #include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Math.h"
 #include "Thread/ThreadPool.h"
 #include <vector>
 
@@ -109,7 +109,7 @@ Extract( FThreadPool*           iThreadPool
     // Channels
     std::vector< uint8 > sourceChannelsToExtract;
     std::vector< uint8 > destinationChannelsToExtract;
-    uint8 max_channels_both = FMaths::Min( FMaths::Max( srcFormatInfo.SPP, dstFormatInfo.SPP ), static_cast< uint8 >( ULIS_MAX_CHANNELS ) );
+    uint8 max_channels_both = FMath::Min( FMath::Max( srcFormatInfo.SPP, dstFormatInfo.SPP ), static_cast< uint8 >( ULIS_MAX_CHANNELS ) );
     sourceChannelsToExtract.reserve( max_channels_both );
     destinationChannelsToExtract.reserve( max_channels_both );
     for( int i = 0; i < max_channels_both; ++i ) {

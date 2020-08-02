@@ -18,7 +18,7 @@
 #include <functional>
 #include <random>
 
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 

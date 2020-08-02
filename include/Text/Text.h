@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Geometry/Transformation2D.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Geometry/Transformation2D.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_API void RenderText( FThreadPool*             iThreadPool

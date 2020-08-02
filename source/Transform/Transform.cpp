@@ -16,11 +16,11 @@
 #include "Transform/TransformDispatch.ipp"
 #include "Clear/Clear.h"
 #include "Data/Block.h"
-#include "Maths/Interpolation/Bezier.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Maths.h"
-#include "Maths/Geometry/Transform2D_Private.h"
+#include "Math/Interpolation/Bezier.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Math.h"
+#include "Math/Geometry/Transform2D_Private.h"
 #include "Misc/SummedAreaTable.h"
 #include <glm/matrix.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -212,7 +212,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
 
     FRectI src_fit = iSourceRect & iSource->Rect();
     FRectI trans = TransformBezierMetrics( src_fit, iControlPoints, iMethod );
-    int plotsize = FMaths::Clamp( iPlotSize, 1, 8 );
+    int plotsize = FMath::Clamp( iPlotSize, 1, 8 );
     trans.w += plotsize;
     trans.h += plotsize;
     FRectI dst_fit = trans & iDestination->Rect();
@@ -232,7 +232,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
     std::vector< FSplineParametricSample > LUTV1;
     CubicBezierGenerateLinearLUT( &LUTV0, tempPoints[0].point, tempPoints[0].ctrlCCW, tempPoints[3].ctrlCW, tempPoints[3].point, iThreshold );
     CubicBezierGenerateLinearLUT( &LUTV1, tempPoints[1].point, tempPoints[1].ctrlCW, tempPoints[2].ctrlCCW, tempPoints[2].point, iThreshold );
-    const int max = static_cast< int >( FMaths::Max( LUTV0.size(), LUTV1.size() ) );
+    const int max = static_cast< int >( FMath::Max( LUTV0.size(), LUTV1.size() ) );
     const float maxf = static_cast< float >( max );
     for( int i = 0; i < max; ++i ) {
         float v = i / maxf;
@@ -310,8 +310,8 @@ void Resize( FThreadPool*             iThreadPool
     bool bNeedFix = ( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC );
     float src_w = static_cast< float >( src_fit.w );
     float src_h = static_cast< float >( src_fit.h );
-    float dst_w = FMaths::Max( FMaths::kEpsilonf, iSize.x );
-    float dst_h = FMaths::Max( FMaths::kEpsilonf, iSize.y );
+    float dst_w = FMath::Max( FMath::kEpsilonf, iSize.x );
+    float dst_h = FMath::Max( FMath::kEpsilonf, iSize.y );
     float scale_x = dst_w / src_w;
     float scale_y = dst_h / src_h;
     float fixed_w = bNeedFix && scale_x > 1.f ? dst_w - scale_x : dst_w;
@@ -321,10 +321,10 @@ void Resize( FThreadPool*             iThreadPool
     FVec2F inverseScale = FVec2F( 1.f / fixed_scalex, 1.f / fixed_scaley );
     FVec2F shift = FVec2F( bNeedFix && scale_x > 1.f ? iPos.x + fixed_scalex : iPos.x, bNeedFix && scale_y > 1.f ? iPos.y + fixed_scaley : iPos.y );
 
-    FRectI dst_fit = FRectI( static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.x ) )
-                         , static_cast< int >( FMaths::RoundToNegativeInfinity( iPos.y ) )
-                         , static_cast< int >( FMaths::RoundToPositiveInfinity( dst_w ) )
-                         , static_cast< int >( FMaths::RoundToPositiveInfinity( dst_h ) ) )
+    FRectI dst_fit = FRectI( static_cast< int >( FMath::RoundToNegativeInfinity( iPos.x ) )
+                         , static_cast< int >( FMath::RoundToNegativeInfinity( iPos.y ) )
+                         , static_cast< int >( FMath::RoundToPositiveInfinity( dst_w ) )
+                         , static_cast< int >( FMath::RoundToPositiveInfinity( dst_h ) ) )
                     & iDestination->Rect();
 
     if( !dst_fit.Area() )
@@ -379,8 +379,8 @@ FBlock* XResize( FThreadPool*           iThreadPool
     if( iSize.x <= 0.f || iSize.y <= 0.f )
         return  nullptr;
 
-    FBlock* dst = new FBlock( static_cast< int >( FMaths::RoundToPositiveInfinity( iSize.x ) )
-                            , static_cast< int >( FMaths::RoundToPositiveInfinity( iSize.y ) ), iSource->Format() );
+    FBlock* dst = new FBlock( static_cast< int >( FMath::RoundToPositiveInfinity( iSize.x ) )
+                            , static_cast< int >( FMath::RoundToPositiveInfinity( iSize.y ) ), iSource->Format() );
     Resize( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, iSourceRect, iSize, FVec2F(), iMethod );
     return  dst;
 }
@@ -528,8 +528,8 @@ FRectI TransformAffineMetrics( const FRectI&          iSourceRect
     if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA ) {
         float tx, ty, r, sx, sy, skx, sky;
         DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
-        float angle = FMaths::Max( abs( cos( r ) ), abs( sin( r ) ) );
-        float scale = FMaths::Max( sx, sy );
+        float angle = FMath::Max( abs( cos( r ) ), abs( sin( r ) ) );
+        float scale = FMath::Max( sx, sy );
         int overflow = static_cast< int >( ceil( angle * scale ) );
         trans.x -= overflow;
         trans.y -= overflow;
@@ -564,19 +564,19 @@ FRectI TransformBezierMetrics( const FRectI&                                    
                             , eResamplingMethod                               iMethod )
 {
     ULIS_ASSERT( iControlPoints.size() == 4, "Bad control points size" );
-    return  FRectI::FromMinMax( static_cast< int >( FMaths::VMin( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
+    return  FRectI::FromMinMax( static_cast< int >( FMath::VMin( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
                                                                , iControlPoints[1].point.x, iControlPoints[1].ctrlCW.x, iControlPoints[1].ctrlCCW.x
                                                                , iControlPoints[2].point.x, iControlPoints[2].ctrlCW.x, iControlPoints[2].ctrlCCW.x
                                                                , iControlPoints[3].point.x, iControlPoints[3].ctrlCW.x, iControlPoints[3].ctrlCCW.x ) )
-                             , static_cast< int >( FMaths::VMin( iControlPoints[0].point.y, iControlPoints[0].ctrlCW.y, iControlPoints[0].ctrlCCW.y
+                             , static_cast< int >( FMath::VMin( iControlPoints[0].point.y, iControlPoints[0].ctrlCW.y, iControlPoints[0].ctrlCCW.y
                                                                , iControlPoints[1].point.y, iControlPoints[1].ctrlCW.y, iControlPoints[1].ctrlCCW.y
                                                                , iControlPoints[2].point.y, iControlPoints[2].ctrlCW.y, iControlPoints[2].ctrlCCW.y
                                                                , iControlPoints[3].point.y, iControlPoints[3].ctrlCW.y, iControlPoints[3].ctrlCCW.y ) )
-                             , static_cast< int >( FMaths::VMax( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
+                             , static_cast< int >( FMath::VMax( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
                                                                , iControlPoints[1].point.x, iControlPoints[1].ctrlCW.x, iControlPoints[1].ctrlCCW.x
                                                                , iControlPoints[2].point.x, iControlPoints[2].ctrlCW.x, iControlPoints[2].ctrlCCW.x
                                                                , iControlPoints[3].point.x, iControlPoints[3].ctrlCW.x, iControlPoints[3].ctrlCCW.x ) ) 
-                             , static_cast< int >( FMaths::VMax( iControlPoints[0].point.y, iControlPoints[0].ctrlCW.y, iControlPoints[0].ctrlCCW.y
+                             , static_cast< int >( FMath::VMax( iControlPoints[0].point.y, iControlPoints[0].ctrlCW.y, iControlPoints[0].ctrlCCW.y
                                                                , iControlPoints[1].point.y, iControlPoints[1].ctrlCW.y, iControlPoints[1].ctrlCCW.y
                                                                , iControlPoints[2].point.y, iControlPoints[2].ctrlCW.y, iControlPoints[2].ctrlCCW.y
                                                                , iControlPoints[3].point.y, iControlPoints[3].ctrlCW.y, iControlPoints[3].ctrlCCW.y ) ) );

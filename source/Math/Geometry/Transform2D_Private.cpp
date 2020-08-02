@@ -11,9 +11,9 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Maths/Geometry/Transform2D_Private.h"
+#include "Math/Geometry/Transform2D_Private.h"
 #include "Data/Block.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/matrix.hpp>
@@ -169,14 +169,14 @@ DecomposeMatrix( const glm::mat3& iMat, float* oTx, float* oTy, float* oRotation
     // Apply the QR-like decomposition.
     if( a != 0.f || b != 0.f ) {
         float r = sqrtf( a * a + b * b );
-        rot = FMaths::Sign( b ) * acosf( a / r );
+        rot = FMath::Sign( b ) * acosf( a / r );
         scx = r;
         scy = delta / r;
         skx = atanf( ( a * c + b * d ) / ( r * r ) );
         sky = 0.f;
     } else if( c != 0.f || d != 0.f ) {
         float s = sqrtf( c * c + d * d );
-        rot = FMaths::kPIf / 2.f - ( d > 0 ? acosf( -c / s) : - acosf( c / s ) );
+        rot = FMath::kPIf / 2.f - ( d > 0 ? acosf( -c / s) : - acosf( c / s ) );
         scx = delta / s;
         scy = s;
         skx = 0.f;

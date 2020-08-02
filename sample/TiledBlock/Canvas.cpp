@@ -97,10 +97,10 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
                 }
             }
         }
-        int x = FMaths::Clamp( int( pos.x -ref.x - size ), 0, 256 );
-        int y = FMaths::Clamp( int( pos.y -ref.y - size ), 0, 256 );
-        int x2 = FMaths::Clamp( x + size * 2, 0, 256 );
-        int y2 = FMaths::Clamp( y + size * 2, 0, 256 );
+        int x = FMath::Clamp( int( pos.x -ref.x - size ), 0, 256 );
+        int y = FMath::Clamp( int( pos.y -ref.y - size ), 0, 256 );
+        int x2 = FMath::Clamp( x + size * 2, 0, 256 );
+        int y2 = FMath::Clamp( y + size * 2, 0, 256 );
         FRectI rect = FRectI::FromMinMax( x, y, x2, y2 );
         mTiledBlock->ExtendOperativeGeometryAfterMutableChange( FRectI::FromMinMax( x, y, x2, y2 ) );
     }
@@ -170,7 +170,7 @@ SCanvas::tickEvent() {
     auto cramu = mTilePool->CurrentRAMUsage();
     float maxramu = Mo2O( 2000 );
     float tramu = cramu / maxramu;
-    int iramu = FMaths::Min( HH, int( tramu * HH ) );
+    int iramu = FMath::Min( HH, int( tramu * HH ) );
     for( int i = 0; i < iramu; ++i ) {
         FPixel prox = mRAMUSAGESWAPBUFFER->Pixel( WW, HH - i );
         prox.SetR8( 20 );

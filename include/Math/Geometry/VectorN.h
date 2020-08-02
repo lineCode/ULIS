@@ -13,8 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/VectorFunc.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/VectorFunc.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -175,8 +175,8 @@ template< typename T, typename P, uint8 N >
 template< typename U, typename Q, uint8 M >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( const TVectorN< U, Q, M >& iOther )
 {
-    const uint8 min = FMaths::Min( N, M );
-    const uint8 max = FMaths::Max( N, M );
+    const uint8 min = FMath::Min( N, M );
+    const uint8 max = FMath::Max( N, M );
 
     for( uint8 i = 0; i < min; ++i )
         m[i] = static_cast< T >( iOther.m[i] );
@@ -218,7 +218,7 @@ template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
 TVectorN< T, P, N >::tComputation
 TVectorN< T, P, N >::Distance() const {
-    return  FMaths::Sqrt( DistanceSquared() );
+    return  FMath::Sqrt( DistanceSquared() );
 }
 
 template< typename T, typename P, uint8 N >
@@ -243,7 +243,7 @@ TVectorN< T, P, N >::ManhattanDistance() const {
     tComputation res = 0;
 
     for( uint8 i = 0; i < N; ++i )
-        res += FMaths::Abs( static_cast< tComputation >( m[i] ) );
+        res += FMath::Abs( static_cast< tComputation >( m[i] ) );
 
     return  res;
 }
@@ -265,7 +265,7 @@ TVectorN< T, P, N >::DotProduct( const TVectorN& iOther ) const {
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::Normalize() {
-    tComputation inv_distance = FMaths::InvSqrt( DistanceSquared() );
+    tComputation inv_distance = FMath::InvSqrt( DistanceSquared() );
 
     for( uint8 i = 0; i < N; ++i )
         m[i] = static_cast< T >( m[i] * inv_distance );

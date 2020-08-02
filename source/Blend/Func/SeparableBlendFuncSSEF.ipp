@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN

@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 #define GLM_FORCE_SWIZZLE
 #include <glm/glm.hpp>

@@ -125,12 +125,12 @@ SWindow::keyPressEvent( QKeyEvent* event ) {
     }
 
     if( event->key() == Qt::Key_Plus ) {
-        mParticleSize = FMaths::Min( 32, mParticleSize + 1 );
+        mParticleSize = FMath::Min( 32, mParticleSize + 1 );
         RedrawParticle();
     }
 
     if( event->key() == Qt::Key_Minus ) {
-        mParticleSize = FMaths::Max( 1, mParticleSize - 1 );
+        mParticleSize = FMath::Max( 1, mParticleSize - 1 );
         RedrawParticle();
     }
 
@@ -139,7 +139,7 @@ SWindow::keyPressEvent( QKeyEvent* event ) {
     }
 
     if( event->key() == Qt::Key_M ) {
-        mMul = FMaths::Max( 0.3f, mMul - 0.1f );
+        mMul = FMath::Max( 0.3f, mMul - 0.1f );
     }
 }
 
@@ -194,7 +194,7 @@ SWindow::RedrawParticle() {
                 float dy = midy - j;
                 float dist2 = dx * dx + dy * dy;
                 FPixel prox = mParticle->Pixel( i, j );
-                float alpha = 1.f - FMaths::Min( dist2 / ray2, 1.f );
+                float alpha = 1.f - FMath::Min( dist2 / ray2, 1.f );
                 prox.SetAlphaF( alpha );
             }
         }

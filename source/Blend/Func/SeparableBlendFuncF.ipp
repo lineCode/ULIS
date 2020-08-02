@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ ULIS_FORCEINLINE ufloat BlendBehindF( ufloat iCs, ufloat iCb ) {
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Darken
 ULIS_FORCEINLINE ufloat BlendDarkenF( ufloat iCs, ufloat iCb ) {
-    return  FMaths::Min( iCb, iCs );
+    return  FMath::Min( iCb, iCs );
 }
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Multiply
@@ -58,12 +58,12 @@ ULIS_FORCEINLINE ufloat BlendMultiplyF( ufloat iCs, ufloat iCb ) {
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- ColorBurn
 ULIS_FORCEINLINE ufloat BlendColorBurnF( ufloat iCs, ufloat iCb ) {
-    return  iCb == 1.f ? 1.f : iCs == 0.f ? 0.f : 1.f - FMaths::Min( 1.f, ( 1.f - iCb ) / iCs );
+    return  iCb == 1.f ? 1.f : iCs == 0.f ? 0.f : 1.f - FMath::Min( 1.f, ( 1.f - iCb ) / iCs );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Lighten
 ULIS_FORCEINLINE ufloat BlendLightenF( ufloat iCs, ufloat iCb ) {
-    return  FMaths::Max( iCb, iCs );
+    return  FMath::Max( iCb, iCs );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Average
@@ -83,12 +83,12 @@ ULIS_FORCEINLINE ufloat BlendScreenF( ufloat iCs, ufloat iCb ) {
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- ColorDodge
 ULIS_FORCEINLINE ufloat BlendColorDodgeF( ufloat iCs, ufloat iCb ) {
-    return  iCb == 0 ? 0.f : iCs == 1.f ? 1.f : FMaths::Min( 1.f, iCb / ( 1.f - iCs ) );
+    return  iCb == 0 ? 0.f : iCs == 1.f ? 1.f : FMath::Min( 1.f, iCb / ( 1.f - iCs ) );
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Add
 ULIS_FORCEINLINE ufloat BlendAddF( ufloat iCs, ufloat iCb ) {
-    return  FMaths::Min( 1.f, iCs + iCb );
+    return  FMath::Min( 1.f, iCs + iCb );
 }
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- LinearDodge
@@ -105,7 +105,7 @@ ULIS_FORCEINLINE ufloat BlendSoftLightF( ufloat iCs, ufloat iCb ) {
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- LinearBurn
 ULIS_FORCEINLINE ufloat BlendLinearBurnF( ufloat iCs, ufloat iCb ) {
-    return  FMaths::Max( 0.f, iCs + iCb - 1.f );
+    return  FMath::Max( 0.f, iCs + iCb - 1.f );
 }
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- HardLight
@@ -125,12 +125,12 @@ ULIS_FORCEINLINE ufloat BlendVividLightF( ufloat iCs, ufloat iCb ) {
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- LinearLight
 ULIS_FORCEINLINE ufloat BlendLinearLightF( ufloat iCs, ufloat iCb ) {
-    return  FMaths::Clamp( iCb + 2.f * iCs - 1.f, 0.f, 1.f );
+    return  FMath::Clamp( iCb + 2.f * iCs - 1.f, 0.f, 1.f );
 }
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- PinLight
 ULIS_FORCEINLINE ufloat BlendPinLightF( ufloat iCs, ufloat iCb ) {
-    return  iCs > 0.f ? FMaths::Max( iCb, 2.f * iCs - 1.f ) : FMaths::Min( iCb, 2.f * iCs );
+    return  iCs > 0.f ? FMath::Max( iCb, 2.f * iCs - 1.f ) : FMath::Min( iCb, 2.f * iCs );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ HardMix
@@ -150,22 +150,22 @@ ULIS_FORCEINLINE ufloat BlendExclusionF( ufloat iCs, ufloat iCb ) {
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------- Substract
 ULIS_FORCEINLINE ufloat BlendSubstractF( ufloat iCs, ufloat iCb ) {
-    return  FMaths::Max( 0.f, iCb - iCs );
+    return  FMath::Max( 0.f, iCb - iCs );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- Divide
 ULIS_FORCEINLINE ufloat BlendDivideF( ufloat iCs, ufloat iCb ) {
-    return  iCs == 0.f && iCb == 0.f ? 0.f : iCs == 0.f && iCb != 0.f ? 1.f : FMaths::Clamp( iCb / iCs, 0.f, 1.f );
+    return  iCs == 0.f && iCb == 0.f ? 0.f : iCs == 0.f && iCb != 0.f ? 1.f : FMath::Clamp( iCb / iCs, 0.f, 1.f );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Phoenix
 ULIS_FORCEINLINE ufloat BlendPhoenixF( ufloat iCs, ufloat iCb ) {
-    return  1.f - FMaths::Max( iCs, iCb ) + FMaths::Min( iCs, iCb );
+    return  1.f - FMath::Max( iCs, iCb ) + FMath::Min( iCs, iCb );
 }
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ Reflect
 ULIS_FORCEINLINE ufloat BlendReflectF( ufloat iCs, ufloat iCb ) {
-    return  iCb == 1.f ? 1.f : FMaths::Min( 1.f, iCs * iCs / ( 1.f - iCb ) );
+    return  iCb == 1.f ? 1.f : FMath::Min( 1.f, iCs * iCs / ( 1.f - iCb ) );
 }
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------- Glow

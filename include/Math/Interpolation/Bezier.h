@@ -13,10 +13,10 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
-#include "Maths/Interpolation/Spline.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Interpolation/Spline.h"
+#include "Math/Math.h"
 #include <vector>
 
 ULIS_NAMESPACE_BEGIN
@@ -78,18 +78,18 @@ template< class T > inline void CubicBezierInverseSplitAtParameter( T* ioP0, T* 
 }
 
 template< class T > inline FRectI QuadraticBezierConvexHullRect( const T& iP0, const T& iP1, const T& iP2 ) {
-    int xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.x, iP1.x, iP2.x ) ) );
-    int ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.y, iP1.y, iP2.y ) ) );
-    int xmax = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( iP0.x, iP1.x, iP2.x ) ) );
-    int ymax = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( iP0.y, iP1.y, iP2.y ) ) );
+    int xmin = static_cast< int >( FMath::RoundToNegativeInfinity( FMath::Min4( iP0.x, iP1.x, iP2.x ) ) );
+    int ymin = static_cast< int >( FMath::RoundToNegativeInfinity( FMath::Min4( iP0.y, iP1.y, iP2.y ) ) );
+    int xmax = static_cast< int >( FMath::RoundToPositiveInfinity( FMath::Max4( iP0.x, iP1.x, iP2.x ) ) );
+    int ymax = static_cast< int >( FMath::RoundToPositiveInfinity( FMath::Max4( iP0.y, iP1.y, iP2.y ) ) );
     return  FRectI::FromMinMax( xmin, ymin, xmax, ymax );
 }
 
 template< class T > inline FRectI CubicBezierConvexHullRect( const T& iP0, const T& iP1, const T& iP2, const T& iP3 ) {
-    int xmin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.x, iP1.x, iP2.x, iP3.x ) ) );
-    int ymin = static_cast< int >( FMaths::RoundToNegativeInfinity( FMaths::Min4( iP0.y, iP1.y, iP2.y, iP3.y ) ) );
-    int xmax = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( iP0.x, iP1.x, iP2.x, iP3.x ) ) );
-    int ymax = static_cast< int >( FMaths::RoundToPositiveInfinity( FMaths::Max4( iP0.y, iP1.y, iP2.y, iP3.y ) ) );
+    int xmin = static_cast< int >( FMath::RoundToNegativeInfinity( FMath::Min4( iP0.x, iP1.x, iP2.x, iP3.x ) ) );
+    int ymin = static_cast< int >( FMath::RoundToNegativeInfinity( FMath::Min4( iP0.y, iP1.y, iP2.y, iP3.y ) ) );
+    int xmax = static_cast< int >( FMath::RoundToPositiveInfinity( FMath::Max4( iP0.x, iP1.x, iP2.x, iP3.x ) ) );
+    int ymax = static_cast< int >( FMath::RoundToPositiveInfinity( FMath::Max4( iP0.y, iP1.y, iP2.y, iP3.y ) ) );
     return  FRectI::FromMinMax( xmin, ymin, xmax, ymax );
 }
 

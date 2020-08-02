@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/VectorFunc.h"
+#include "Math/Geometry/VectorFunc.h"
 
 // Vec2
 #define ULIS_DECLARE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 ) \

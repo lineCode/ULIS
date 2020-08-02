@@ -15,7 +15,7 @@
 #include "Data/Block.h"
 #include "Conv/ConvBuffer.h"
 #include "Conv/Conv.h"
-#include "Maths/Maths.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
@@ -32,10 +32,10 @@ void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColo
     if( !rect.InVerticalRange( iY ) )
         return;
 
-    int x1 = FMaths::Clamp( iX1, rect.x, rect.x + rect.w - 1 );
-    int x2 = FMaths::Clamp( iX2, rect.x, rect.x + rect.w - 1 );
-    int xa = FMaths::Min( x1, x2 );
-    int xb = FMaths::Max( x1, x2 );
+    int x1 = FMath::Clamp( iX1, rect.x, rect.x + rect.w - 1 );
+    int x2 = FMath::Clamp( iX2, rect.x, rect.x + rect.w - 1 );
+    int xa = FMath::Min( x1, x2 );
+    int xb = FMath::Max( x1, x2 );
 
     uint8* ptr = iDst->PixelBits( xa, iY );
     uint32 bpp = iDst->BytesPerPixel();
@@ -57,10 +57,10 @@ void DrawVerticalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor,
     if( !rect.InHorizontalRange( iX ) )
         return;
 
-    int y1 = FMaths::Clamp( iY1, rect.y, rect.y + rect.h - 1 );
-    int y2 = FMaths::Clamp( iY2, rect.y, rect.y + rect.h - 1 );
-    int ya = FMaths::Min( y1, y2 );
-    int yb = FMaths::Max( y1, y2 );
+    int y1 = FMath::Clamp( iY1, rect.y, rect.y + rect.h - 1 );
+    int y2 = FMath::Clamp( iY2, rect.y, rect.y + rect.h - 1 );
+    int ya = FMath::Min( y1, y2 );
+    int yb = FMath::Max( y1, y2 );
 
     uint8* ptr = iDst->PixelBits( iX, ya );
     uint32 bpp = iDst->BytesPerPixel();

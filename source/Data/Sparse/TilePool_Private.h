@@ -13,8 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 #include "Data/Sparse/TilePool.h"
 #include "Data/Sparse/TiledBlock.h"
 #include "Data/Sparse/TiledBlock_Private.h"

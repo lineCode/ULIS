@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Maths/Geometry/VectorFunc.h"
-#include "Maths/Geometry/VectorSwizzle.h"
-#include "Maths/Maths.h"
+#include "Math/Geometry/VectorFunc.h"
+#include "Math/Geometry/VectorSwizzle.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -190,7 +190,7 @@ ULIS_VECTOR_FUNC TVector2< T >:: TVector2( const TVector2< U >& iOther )
 // Named Functions
 template< typename T >
 ULIS_VECTOR_FUNC T TVector2< T >:: Distance() const {
-    return  FMaths::Sqrt( x * x + y * y );
+    return  FMath::Sqrt( x * x + y * y );
 }
 
 template< typename T >
@@ -200,7 +200,7 @@ ULIS_VECTOR_FUNC T TVector2< T >::DistanceSquared() const {
 
 template< typename T >
 ULIS_VECTOR_FUNC T TVector2< T >::ManhattanDistance() const {
-    return  FMaths::Abs( x ) + FMaths::Abs( y );
+    return  FMath::Abs( x ) + FMath::Abs( y );
 }
 
 template< typename T >

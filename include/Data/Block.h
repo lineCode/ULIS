@@ -18,8 +18,8 @@
 #include "Data/Format.h"
 #include "Data/Pixel.h"
 #include "Data/Color.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector2.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector2.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

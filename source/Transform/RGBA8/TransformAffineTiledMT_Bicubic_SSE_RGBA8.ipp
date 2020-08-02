@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"
@@ -51,14 +51,14 @@ InvokeTransformAffineTiledMTProcessScanline_Bicubic_SSE_RGBA8( uint8* iDst, int3
         const Vec4f tx      = point_in_src.x - src_x;
         const Vec4f ty      = point_in_src.y - src_y;
 
-        const int xm1 = FMaths::PyModulo( src_x - 1, info.src_roi.w );
-        const int xp0 = FMaths::PyModulo( src_x    , info.src_roi.w );
-        const int xp1 = FMaths::PyModulo( src_x + 1, info.src_roi.w );
-        const int xp2 = FMaths::PyModulo( src_x + 2, info.src_roi.w );
-        const int ym1 = FMaths::PyModulo( src_y - 1, info.src_roi.h );
-        const int yp0 = FMaths::PyModulo( src_y    , info.src_roi.h );
-        const int yp1 = FMaths::PyModulo( src_y + 1, info.src_roi.h );
-        const int yp2 = FMaths::PyModulo( src_y + 2, info.src_roi.h );
+        const int xm1 = FMath::PyModulo( src_x - 1, info.src_roi.w );
+        const int xp0 = FMath::PyModulo( src_x    , info.src_roi.w );
+        const int xp1 = FMath::PyModulo( src_x + 1, info.src_roi.w );
+        const int xp2 = FMath::PyModulo( src_x + 2, info.src_roi.w );
+        const int ym1 = FMath::PyModulo( src_y - 1, info.src_roi.h );
+        const int yp0 = FMath::PyModulo( src_y    , info.src_roi.h );
+        const int yp1 = FMath::PyModulo( src_y + 1, info.src_roi.h );
+        const int yp2 = FMath::PyModulo( src_y + 2, info.src_roi.h );
         #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
         #define GETPIXEL( _C, _X, _Y )                                                                                                                      \
             if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \

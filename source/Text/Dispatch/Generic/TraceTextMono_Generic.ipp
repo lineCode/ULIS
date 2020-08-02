@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Text/Dispatch/TextInfo.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
 float AlphaBlendAlpha( float iAs, float iAb ) {

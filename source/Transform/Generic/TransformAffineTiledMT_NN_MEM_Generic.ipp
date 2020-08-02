@@ -14,8 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Data/Block.h"
-#include "Maths/Geometry/Rectangle.h"
-#include "Maths/Geometry/Vector.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
 #include "Thread/ThreadPool.h"
@@ -38,8 +38,8 @@ InvokeTransformAffineTiledMTProcessScanline_NN_MEM_Generic( uint8* iDst, int32 i
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        int src_x = FMaths::PyModulo( static_cast< int >( point_in_src.x ), info.src_roi.w );
-        int src_y = FMaths::PyModulo( static_cast< int >( point_in_src.y ), info.src_roi.h );
+        int src_x = FMath::PyModulo( static_cast< int >( point_in_src.x ), info.src_roi.w );
+        int src_y = FMath::PyModulo( static_cast< int >( point_in_src.y ), info.src_roi.h );
         memcpy( dst, info.source->PixelBits( src_x, src_y ), fmt.BPP );
 
         dst += fmt.BPP;
