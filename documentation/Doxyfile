@@ -2198,38 +2198,39 @@ INCLUDE_FILE_PATTERNS  =
 
 PREDEFINED             = __declspec(x)=                                 \
                          __attribute__(x)=                              \
-                         ULIS3_API                                      \
-                         ULIS3_NAMESPACE_BEGIN                          \
-                         ULIS3_NAMESPACE_END                            \
-                         ULIS3_FORCEINLINE                              \
-                         ULIS3_VECTORCALL                               \
-                         ULIS3_VECTOR_FUNC                              \
-                         ULIS3_MATHS_FUNC                               \
-                         ULIS3_NAMESPACE_NAME                           \
-                         ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC4       \
-                         ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC3       \
-                         ULIS3_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC2       \
-                         ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2   \
-                         ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3   \
-                         ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4   \
-                         ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2   \
-                         ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3   \
-                         ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4   \
-                         ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2   \
-                         ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3   \
-                         ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4   \
-                         ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2   \
-                         ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3   \
-                         ULIS3_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4   \
-                         ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2   \
-                         ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3   \
-                         ULIS3_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4   \
-                         ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2   \
-                         ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3   \
-                         ULIS3_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4   \
-                         ULIS3_DECLARE_VEC2_SWIZZLE_FUNCTION            \
-                         ULIS3_DECLARE_VEC3_SWIZZLE_FUNCTION            \
-                         ULIS3_DECLARE_VEC4_SWIZZLE_FUNCTION
+                         ULIS_API                                       \
+                         ULIS_NAMESPACE_BEGIN                           \
+                         ULIS_NAMESPACE_END                             \
+                         ULIS_FORCEINLINE                               \
+                         ULIS_VECTORCALL                                \
+                         ULIS_VECTOR_FUNC                               \
+                         ULIS_MATRIX_FUNC                               \
+                         ULIS_MATHS_FUNC                                \
+                         ULIS_NAMESPACE_NAME                            \
+                         ULIS_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC4        \
+                         ULIS_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC3        \
+                         ULIS_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC2        \
+                         ULIS_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2    \
+                         ULIS_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3    \
+                         ULIS_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4    \
+                         ULIS_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2    \
+                         ULIS_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3    \
+                         ULIS_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4    \
+                         ULIS_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2    \
+                         ULIS_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3    \
+                         ULIS_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4    \
+                         ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2    \
+                         ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3    \
+                         ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4    \
+                         ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2    \
+                         ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3    \
+                         ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4    \
+                         ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2    \
+                         ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3    \
+                         ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4    \
+                         ULIS_DECLARE_VEC2_SWIZZLE_FUNCTION             \
+                         ULIS_DECLARE_VEC3_SWIZZLE_FUNCTION             \
+                         ULIS_DECLARE_VEC4_SWIZZLE_FUNCTION
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
