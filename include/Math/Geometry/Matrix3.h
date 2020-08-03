@@ -88,16 +88,16 @@ public:
 
 
     // Transform Functions
-    /*! Static maker for 2D 2x2 rotation matrix. */
+    /*! Static maker for 2D 3x3 rotation matrix. */
     static ULIS_MATRIX_FUNC TMatrix3 MakeRotationMatrix( T iAngleRad );
 
-    /*! Static maker for 2D 2x2 scale matrix. */
+    /*! Static maker for 2D 3x3 scale matrix. */
     static ULIS_MATRIX_FUNC TMatrix3 MakeScaleMatrix( T iScaleX, T iScaleY );
 
-    /*! Static maker for 2D 2x2 skew matrix. */
+    /*! Static maker for 2D 3x3 skew matrix. */
     static ULIS_MATRIX_FUNC TMatrix3 MakeSkewMatrix( T iSkewX, T iSkewY );
 
-    /*! Static maker for 2D 2x2 translation matrix. */
+    /*! Static maker for 2D 3x3 translation matrix. */
     static ULIS_MATRIX_FUNC TMatrix3 MakeTranslationMatrix( T iX, T iY );
 
 
