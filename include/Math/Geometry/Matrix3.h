@@ -341,13 +341,13 @@ ULIS_MATRIX_FUNC TMatrix3x3< T >& TMatrix3x3< T >::operator/=( const TMatrix3x3&
 
 // Other Operators
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix3x3< T >::tColumn& TMatrix3x3< T >::operator[]( int iIndex ) {
+ULIS_MATRIX_FUNC typename TMatrix3x3< T >::tColumn& TMatrix3x3< T >::operator[]( int iIndex ) {
     ULIS_ASSERT( iIndex >= 0 && iIndex < 3, "Bad Index" );
     return  mCols[ iIndex ];
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC const TMatrix3x3< T >::tColumn& TMatrix3x3< T >::operator[]( int iIndex ) const {
+ULIS_MATRIX_FUNC const typename TMatrix3x3< T >::tColumn& TMatrix3x3< T >::operator[]( int iIndex ) const {
     ULIS_ASSERT( iIndex >= 0 && iIndex < 3, "Bad Index" );
     return  mCols[ iIndex ];
 }
@@ -475,7 +475,7 @@ ULIS_MATRIX_FUNC TMatrix3x3< T > operator/( const TMatrix3x3< T >& iMat, const T
 
 // Binary matrix vector multiplication operators.
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix3x3< T >::tColumn operator*( const TMatrix3x3< T >& iMat, const TMatrix3x3< T >::tRow& iRow ) {
+ULIS_MATRIX_FUNC typename TMatrix3x3< T >::tColumn operator*( const TMatrix3x3< T >& iMat, const typename TMatrix3x3< T >::tRow& iRow ) {
     return  TVector3< T >(
           iMat[0][0] * iRow.x + iMat[1][0] * iRow.y + iMat[2][0] * iRow.z
         , iMat[0][1] * iRow.x + iMat[1][1] * iRow.y + iMat[2][1] * iRow.z
@@ -484,7 +484,7 @@ ULIS_MATRIX_FUNC TMatrix3x3< T >::tColumn operator*( const TMatrix3x3< T >& iMat
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix3x3< T >::tRow operator*( const TMatrix3x3< T >::tColumn& iColumn, const TMatrix3x3< T >& iMat ) {
+ULIS_MATRIX_FUNC typename TMatrix3x3< T >::tRow operator*( const typename TMatrix3x3< T >::tColumn& iColumn, const TMatrix3x3< T >& iMat ) {
     return  TVector3< T >(
           iMat[0][0] * iColumn.x + iMat[0][1] * iColumn.y + iMat[0][2] * iColumn.z
         , iMat[1][0] * iColumn.x + iMat[1][1] * iColumn.y + iMat[1][2] * iColumn.z

@@ -46,6 +46,7 @@ typedef TVector2< uint32 >      FVec2UI32;
 typedef TVector2< uint64 >      FVec2UI64;
 typedef TVector2< int32 >       FVec2I32;
 typedef TVector2< int64 >       FVec2I64;
+
 template< typename T > struct   TVector3;
 typedef TVector3< int >         FVec3I;
 typedef TVector3< float >       FVec3F;
@@ -56,6 +57,7 @@ typedef TVector3< uint32 >      FVec3UI32;
 typedef TVector3< uint64 >      FVec3UI64;
 typedef TVector3< int32 >       FVec3I32;
 typedef TVector3< int64 >       FVec3I64;
+
 template< typename T > struct   TVector4;
 typedef TVector4< int >         FVec4I;
 typedef TVector4< float >       FVec4F;
@@ -66,15 +68,29 @@ typedef TVector4< uint32 >      FVec4UI32;
 typedef TVector4< uint64 >      FVec4UI64;
 typedef TVector4< int32 >       FVec4I32;
 typedef TVector4< int64 >       FVec4I64;
+
 template< typename T > struct   TRectangle;
-typedef TRectangle< int >            FRectI;
-typedef TRectangle< float >          FRectF;
-typedef TRectangle< double >         FRectD;
-typedef TRectangle< uint8 >          FRectUI8;
-typedef TRectangle< uint16 >         FRectUI16;
-typedef TRectangle< uint32 >         FRectUI32;
-typedef TRectangle< uint64 >         FRectUI64;
-typedef TRectangle< int32 >          FRectI32;
-typedef TRectangle< int64 >          FRectI64;
+typedef TRectangle< int >       FRectI;
+typedef TRectangle< float >     FRectF;
+typedef TRectangle< double >    FRectD;
+typedef TRectangle< uint8 >     FRectUI8;
+typedef TRectangle< uint16 >    FRectUI16;
+typedef TRectangle< uint32 >    FRectUI32;
+typedef TRectangle< uint64 >    FRectUI64;
+typedef TRectangle< int32 >     FRectI32;
+typedef TRectangle< int64 >     FRectI64;
+
+template< typename T > class    TMatrix2;
+typedef TMatrix2< float >       FMat2F;
+typedef TMatrix2< double >      FMat2D;
+
+template< typename T > class    TMatrix3;
+typedef TMatrix3< float >       FMat3F;
+typedef TMatrix3< double >      FMat3D;
+
+template< typename T > class    TMatrix4;
+typedef TMatrix4< float >       FMat4F;
+typedef TMatrix4< double >      FMat4D;
+
 ULIS_NAMESPACE_END
 

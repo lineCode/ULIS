@@ -418,13 +418,13 @@ ULIS_MATRIX_FUNC TMatrix4x4< T >& TMatrix4x4< T >::operator/=( const TMatrix4x4&
 
 // Other Operators
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( int iIndex ) {
+ULIS_MATRIX_FUNC typename TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( int iIndex ) {
     ULIS_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
     return  mCols[ iIndex ];
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC const TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( int iIndex ) const {
+ULIS_MATRIX_FUNC typename const TMatrix4x4< T >::tColumn& TMatrix4x4< T >::operator[]( int iIndex ) const {
     ULIS_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
     return  mCols[ iIndex ];
 }
@@ -566,7 +566,7 @@ ULIS_MATRIX_FUNC TMatrix4x4< T > operator/( const TMatrix4x4< T >& iMat, const T
 
 // Binary matrix vector multiplication operators.
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix4x4< T >::tColumn operator*( const TMatrix4x4< T >& iMat, const TMatrix4x4< T >::tRow& iRow ) {
+ULIS_MATRIX_FUNC typename TMatrix4x4< T >::tColumn operator*( const TMatrix4x4< T >& iMat, const typename TMatrix4x4< T >::tRow& iRow ) {
     return  TVector4< T >(
           iMat[0][0] * iRow[0] + iMat[1][0] * iRow[1] + iMat[2][0] * iRow[2] + iMat[3][0] * iRow[3]
         , iMat[0][1] * iRow[0] + iMat[1][1] * iRow[1] + iMat[2][1] * iRow[2] + iMat[3][1] * iRow[3]
@@ -576,7 +576,7 @@ ULIS_MATRIX_FUNC TMatrix4x4< T >::tColumn operator*( const TMatrix4x4< T >& iMat
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix4x4< T >::tRow operator*( const TMatrix4x4< T >::tColumn& iColumn, const TMatrix4x4< T >& iMat ) {
+ULIS_MATRIX_FUNC typename TMatrix4x4< T >::tRow operator*( const typename TMatrix4x4< T >::tColumn& iColumn, const TMatrix4x4< T >& iMat ) {
     return  TVector4< T >(
           iMat[0][0] * iColumn[0] + iMat[0][1] * iColumn[1] + iMat[0][2] * iColumn[2] + iMat[0][3] * iColumn[3]
         , iMat[1][0] * iColumn[0] + iMat[1][1] * iColumn[1] + iMat[1][2] * iColumn[2] + iMat[1][3] * iColumn[3]

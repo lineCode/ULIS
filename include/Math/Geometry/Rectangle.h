@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Math/Geometry/Vector.h"
+#include "Math/Geometry/Matrix.h"
 #include "Math/Math.h"
 #include <cmath>
 
