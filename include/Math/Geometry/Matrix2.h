@@ -79,6 +79,18 @@ public:
 
 
 
+    // Transform Functions
+    /*! Static maker for 2D 2x2 rotation matrix. */
+    static ULIS_MATRIX_FUNC TMatrix2 MakeRotationMatrix( T iAngleRad );
+
+    /*! Static maker for 2D 2x2 scale matrix. */
+    static ULIS_MATRIX_FUNC TMatrix2 MakeScaleMatrix( T iScaleX, T iScaleY );
+
+    /*! Static maker for 2D 2x2 skew matrix. */
+    static ULIS_MATRIX_FUNC TMatrix2 MakeSkewMatrix( T iSkewX, T iSkewY );
+
+
+
     // Boolean operators
     /*! Equality operator. */
     ULIS_MATRIX_FUNC bool operator==( const TMatrix2& iOther );
@@ -219,6 +231,50 @@ ULIS_MATRIX_FUNC TMatrix2< T > TMatrix2< T >::Transpose() {
 template< typename T >
 ULIS_MATRIX_FUNC T TMatrix2< T >::Determinant() {
     return  mCols[0][0] * mCols[1][1] - mCols[1][0] * mCols[0][1];
+}
+
+
+
+// Transform Functions
+template< typename T >
+//static
+ULIS_MATRIX_FUNC
+TMatrix2< T >
+TMatrix2< T >::MakeRotationMatrix( T iAngleRad ) {
+    const T cos_angle = cos( iAngleRad );
+    const T sin_angle = sin( iAngleRad );
+    return  TMatrix2< T >(
+          cos_angle
+        , sin_angle
+        , -sin_angle
+        , cose_angle
+    );
+}
+
+template< typename T >
+//static
+ULIS_MATRIX_FUNC
+TMatrix2< T >
+TMatrix2< T >::MakeScaleMatrix( T iScaleX, T iScaleY ) {
+    return  TMatrix2< T >(
+          iScaleX
+        , 0
+        , 0
+        , iScaleY
+    );
+}
+
+template< typename T >
+//static
+ULIS_MATRIX_FUNC
+TMatrix2< T >
+TMatrix2< T >::MakeSkewMatrix( T iSkewX, T iSkewY ) {
+    return  TMatrix2< T >(
+          1
+        , iSkewY
+        , iSkewX
+        , 1
+    );
 }
 
 

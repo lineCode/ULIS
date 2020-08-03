@@ -87,6 +87,21 @@ public:
 
 
 
+    // Transform Functions
+    /*! Static maker for 2D 2x2 rotation matrix. */
+    static ULIS_MATRIX_FUNC TMatrix3 MakeRotationMatrix( T iAngleRad );
+
+    /*! Static maker for 2D 2x2 scale matrix. */
+    static ULIS_MATRIX_FUNC TMatrix3 MakeScaleMatrix( T iScaleX, T iScaleY );
+
+    /*! Static maker for 2D 2x2 skew matrix. */
+    static ULIS_MATRIX_FUNC TMatrix3 MakeSkewMatrix( T iSkewX, T iSkewY );
+
+    /*! Static maker for 2D 2x2 translation matrix. */
+    static ULIS_MATRIX_FUNC TMatrix3 MakeTranslationMatrix( T iX, T iY );
+
+
+
     // Boolean operators
     /*! Equality operator. */
     ULIS_MATRIX_FUNC bool operator==( const TMatrix3& iOther );
@@ -256,6 +271,59 @@ ULIS_MATRIX_FUNC T TMatrix3< T >::Determinant() {
     return  + mCols[0][0] * ( mCols[1][1] * mCols[2][2] - mCols[2][1] * mCols[1][2] )
             - mCols[1][0] * ( mCols[0][1] * mCols[2][2] - mCols[2][1] * mCols[0][2] )
             + mCols[2][0] * ( mCols[0][1] * mCols[1][2] - mCols[1][1] * mCols[0][2] );
+}
+
+
+
+// Transform Functions
+template< typename T >
+//static
+ULIS_MATRIX_FUNC
+TMatrix3< T >
+TMatrix3< T >::MakeRotationMatrix( T iAngleRad ) {
+    const T cos_angle = cos( iAngleRad );
+    const T sin_angle = sin( iAngleRad );
+    return  TMatrix3< T >(
+          +cos_angle, +sin_angle, 0
+        , -sin_angle, +cose_angle, 0
+        , 0, 0, 1
+    );
+}
+
+template< typename T >
+//static
+ULIS_MATRIX_FUNC
+TMatrix3< T >
+TMatrix3< T >::MakeScaleMatrix( T iScaleX, T iScaleY ) {
+    return  TMatrix3< T >(
+          iScaleX, 0, 0
+        , 0, iScaleY, 0
+        , 0, 0, 1
+    );
+}
+
+template< typename T >
+//static
+ULIS_MATRIX_FUNC
+TMatrix3< T >
+TMatrix3< T >::MakeSkewMatrix( T iSkewX, T iSkewY ) {
+    return  TMatrix3< T >(
+          1, iSkewY, 0
+        , iSkewX, 1, 0
+        , 0, 0, 1
+    );
+}
+
+template< typename T >
+//static
+ULIS_MATRIX_FUNC
+TMatrix3< T >
+TMatrix3< T >::MakeTranslationMatrix( T iX, T iY ) {
+    return  TMatrix3< T >(
+          0, 0, 0
+        , 0, 0, 0
+        , iX, iY, 1
+    );
 }
 
 
