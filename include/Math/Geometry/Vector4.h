@@ -30,7 +30,7 @@ ULIS_NAMESPACE_BEGIN
 ///             can call vec.xxx() or vec.xyyy(), etc.
 ///
 ///             For example:
-///             \snippet data/sample_snippet.h Usage
+///             \snippet math/geometry/vectorswizzle_snippet.h SwizzleSample
 ///
 ///             <a href="md_documentation_manual__operator_overloading.html">Following these guidelines for operator overloading.</a>
 template< typename T >
