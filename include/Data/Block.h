@@ -57,12 +57,12 @@ ULIS_NAMESPACE_BEGIN
 ///             image to a GPU texture when triggered.
 ///
 ///             It is perfectly fine to create FBlock objects on the stack:
-///             \snippet data/block.h FBlock on stack
+///             \snippet data/block_snippet.h FBlock on stack
 ///             But you can also allocate blocks dynamically:
-///             \snippet data/block.h FBlock on heap
+///             \snippet data/block_snippet.h FBlock on heap
 ///             It is also sometimes handy to use the CRT safe version if
 ///             using the \a X functions in your application with dynamic link:
-///             \snippet data/block.h FBlock X Version
+///             \snippet data/block_snippet.h FBlock X Version
 class ULIS_API FBlock final
     : public IHasFormat
     , public IHasColorSpace

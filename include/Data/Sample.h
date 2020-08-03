@@ -51,7 +51,7 @@ ULIS_NAMESPACE_BEGIN
 ///
 ///             Here are some examples of legal and illegal uses of ISample
 ///             through the derived classes:
-///             \snippet data/sample.h Usage
+///             \snippet data/sample_snippet.h Usage
 ///
 ///             \sa FColor
 ///             \sa FPixel
