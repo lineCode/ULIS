@@ -25,6 +25,8 @@ ULIS_NAMESPACE_BEGIN
 /// @details    The TMatrix2 class is a template class that provides basic matrix
 ///             functionnalities, it can be used with any numeric types,
 ///             ranging from integer values to floating point values.
+///
+///             TMatrix2 are column-major ordered.
 template< typename T >
 class TMatrix2
 {

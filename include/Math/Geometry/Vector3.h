@@ -29,6 +29,9 @@ ULIS_NAMESPACE_BEGIN
 ///             Swizzle operators are also available for all vector types, you
 ///             can call vec.xxx() or vec.xyyy(), etc.
 ///
+///             For example:
+///             \snippet data/sample_snippet.h Usage
+///
 ///             <a href="md_documentation_manual__operator_overloading.html">Following these guidelines for operator overloading.</a>
 template< typename T >
 struct TVector3

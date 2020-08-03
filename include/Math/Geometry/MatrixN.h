@@ -25,6 +25,13 @@ ULIS_NAMESPACE_BEGIN
 /// @details    The TMatrixN class is a template class that provides basic matrix
 ///             functionnalities, it can be used with any numeric types,
 ///             ranging from integer values to floating point values.
+///
+///             \warning Unlike TMatrix2, TMatrix3 and TMatrix4, TMatrixN are
+///             row-major ordered.
+///
+///             \sa TMatrix2
+///             \sa TMatrix3
+///             \sa TMatrix4
 template< typename T, typename P, uint8 N >
 class TMatrixN
 {
