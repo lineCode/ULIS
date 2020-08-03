@@ -10,6 +10,11 @@ ULIS is a graphics library written in C++. It is aimed at software rasterization
 ---- | ---- | ----
 ![](meta/image/sample/BezierDeform.png) | ![](meta/image/sample/TiledBlock.png) | ![](meta/image/sample/Benchmark.png)
 
+## Worflow
+<p align="center">
+    <img src="meta/git/workflow.png">
+</p>
+
 ## Links
 - [Official Github Repository](https://github.com/Praxinos/ULIS)  
 - [Author Webpage](http://clementberthaud.com/)  
