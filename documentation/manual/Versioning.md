@@ -63,10 +63,10 @@ Additionaly, more information is available about the compiled library using thes
     CompilerInformationString();
     CompilerNameString();
     CompilerVersionString();
-    CompilerIs64Bit()
-    CompilerHasAVX2();
-    CompilerHasSSE42();
-    CompilerTimeStamp();
+    CompiledFor64Bit()
+    CompiledWithAVX2();
+    CompiledWithSSE42();
+    CompilationTimeStamp();
 
 ## Versioning Checklist
 For each increment in major, minor or patch, the appropriate value should be updated in the CMakeLists.txt at the root of the repository. It should also be updated for the documentation, the documentation should be regenerated and uploaded to the appropriate host.

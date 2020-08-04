@@ -1,5 +1,5 @@
 # Dispatch Guidelines
-> ULIS uses a mechanism for dispatching implementations of image processing algorithms according to various factors.
+ULIS uses multiple mechanisms for dispatching implementations of image processing algorithms according to various factors, we discuss these factors.
 
 ---
 
@@ -22,16 +22,16 @@
 - Is the CPU that compiles the code 64-bit ?
 - Does the CPU that compiles the code support AVX2 or SSE4 ?
 
-> The machine that compiles the ULIS library might have support for AVX2, but it is not guaranteed that the computer that will run the compiled code once deployed and distributed in a software release has support for this particular intrinsic set. Running compiled code for unsupported intrinsic set could raise "illegal instruction" errors.  
-> This is a different problem than what libraries like [simde](https://github.com/simd-everywhere/simde) or [VCL](https://github.com/vectorclass/version1) adress. These libraries typically make it easy to fallback to the appropriate intrinsic set by wrapping the SIMD extension calls, since the fallback occurs at compile-time. They still may compile down to a higher intrinsic set than what the consumer computer is able to support.  
 > ULIS provides tools to detect the supported intrinsic sets at compile time.
 
 ##### Runtime Host Device Features {#runtime-host-device-features}
 - Is the CPU that runs the code 64-bit ?
 - Does the CPU that runs the code support AVX2 or SSE4 ?
 
+> The machine that compiles the ULIS library might have support for AVX2, but it is not guaranteed that the computer that will run the compiled code once deployed and distributed in a software release has support for this particular intrinsic set. Running compiled code for unsupported intrinsic set could raise "illegal instruction" errors.  
 > This goes hand to hand with the previous concern, but it leverages its own mechanics in order to work as expected.  
 > Fortunately, ULIS provides tools to detect the supported intrinsic sets at compile time, with the help of the FDevice class.
+> This is a different problem than what libraries like [simde](https://github.com/simd-everywhere/simde) or [VCL](https://github.com/vectorclass/version1) adress. These libraries typically make it easy to fallback to the appropriate intrinsic set by wrapping the SIMD extension calls, since the fallback occurs at compile-time. They still may compile down to a higher intrinsic set than what the consumer computer is able to support.  
 
 ##### Runtime Performance Intents {#runtime-performance-intents}
 At runtime, we may want to select an implementation using a lower intrinsic set than the maximum supported, for testing purposes.
@@ -51,7 +51,7 @@ Some scheduling strategies need different implementations, a mono-threading impl
 > For the user, the selection is not explicit but is computed from the FSchedulePolicy inputs.  
 
 ##### Implementation Variants {#implementation-variants}
-Some algorithms are very similar and provides a unique entry point, but the actual underlying implementation may differ based on an input enum, for example.
+Some algorithms are very similar and provides a unique entry point, but the actual underlying implementation may differ based on an input enum.
 
 > For example, the Blend entry points provide a common interface for all blending modes, but the implementation is separated according to the blending mode qualifier, wether it's a separable or a non-separable blending mode.
 
@@ -63,4 +63,3 @@ Some algorithms may be dispatched on the CPU or on the GPU depending on the natu
 
 ---
 
-## Details {#details}

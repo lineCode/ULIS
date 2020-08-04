@@ -6,6 +6,7 @@ The architecture of ULIS does not differ fundamentally from other existing tradi
 
 In ["An Image Processing Library in Modern C++"](https://hal.archives-ouvertes.fr/hal-02176414/document), *Michaël Roynard*, *Edwin Carlinet* and *Thierry Géraud* provide insight to achieve simplicity and efficiency with generic programming, in the context of an image processing library in modern C++. While I don't agree with everything stated here, and although this resource was encountered after the architecture of ULIS4+ was designed, I recommend reading it, since it is relevant to the topic, and it describes common pitfalls ULIS encountered in the early stages of its design. Some principles discussed in the paper will also be discussed here.
 
+<!--
 ## Table of Contents
 - [0](@ref 0)
     + [0.0](@ref 0.0)
@@ -16,3 +17,4 @@ In ["An Image Processing Library in Modern C++"](https://hal.archives-ouvertes.f
     + [1.2](@ref 1.2)
     + [1.3](@ref 1.3)
     + [1.4](@ref 1.4)
+-->
