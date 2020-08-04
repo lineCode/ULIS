@@ -179,7 +179,7 @@ struct TRectangle
     }
 
     /*! Affine transform this rect by input transform ( AABB ). */
-    void TransformAffine( const FTransform2D& iTransform ) {
+    void TransformAffine( const Transformation2D& iTransform ) {
         float src_x2 = static_cast< float >( x + w );
         float src_y2 = static_cast< float >( y + h );
         const FMat3F& mat = iTransform.Matrix();
@@ -194,7 +194,7 @@ struct TRectangle
     }
 
     /*! Perspective transform this rect by input transform ( AABB ). */
-    void TransformPerspective( const FTransform2D& iTransform ) {
+    void TransformPerspective( const Transformation2D& iTransform ) {
         float x1 = static_cast< float >( x );
         float y1 = static_cast< float >( y );
         float x2 = static_cast< float >( x + w );
@@ -211,14 +211,14 @@ struct TRectangle
     }
 
     /*! Return the affine transformed version of this rect ( AABB ). */
-    TRectangle< T > TransformedAffine( const FTransform2D& iTransform ) const {
+    TRectangle< T > TransformedAffine( const Transformation2D& iTransform ) const {
         TRectangle< T > result = *this;
         result.TransformAffine( iTransform );
         return  result;
     }
 
     /*! Return the perspective transformed version of this rect ( AABB ). */
-    TRectangle< T > TransformedPerspective( const FTransform2D& iTransform ) const {
+    TRectangle< T > TransformedPerspective( const Transformation2D& iTransform ) const {
         TRectangle< T > result = *this;
         result.TransformPerspective( iTransform );
         return  result;

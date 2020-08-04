@@ -28,12 +28,12 @@ ULIS_API void RenderText( FThreadPool*             iThreadPool
                          , const FFont&             iFont
                          , int                      iSize
                          , const ISample&            iColor
-                         , const FTransform2D&      iTransform
+                         , const Transformation2D&      iTransform
                          , bool                     iAntialiasing );
 
 ULIS_API FRectI TextMetrics( std::wstring           iText
                            , const FFont&           iFont
                            , int                    iSize
-                           , const FTransform2D&    iTransform );
+                           , const Transformation2D&    iTransform );
 ULIS_NAMESPACE_END
 

@@ -15,56 +15,56 @@
 #include "Math/Geometry/Transform2D_Private.h"
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FTransform2D
+// Transformation2D
 //----------------------------------------------------------------------------------------------
 //------------------------------------------------------------------- Construction / Destruction
-FTransform2D::~FTransform2D() {
+Transformation2D::~Transformation2D() {
     if( mImp )
         delete  mImp;
 }
 
-FTransform2D::FTransform2D()
+Transformation2D::Transformation2D()
     : mImp( new FTransform2D_imp() )
 {
 }
 
-FTransform2D::FTransform2D( const FTransform2D& iOther )
+Transformation2D::Transformation2D( const Transformation2D& iOther )
     : mImp( new FTransform2D_imp( *iOther.mImp ) )
 {
 }
 
-FTransform2D::FTransform2D( FTransform2D&& iOther )
+Transformation2D::Transformation2D( Transformation2D&& iOther )
 {
     mImp = iOther.mImp;
     iOther.mImp = nullptr;
 }
 
-FTransform2D&
-FTransform2D::operator=( const FTransform2D& iOther ) {
+Transformation2D&
+Transformation2D::operator=( const Transformation2D& iOther ) {
     *mImp = *iOther.mImp;
     return  *this;
 }
 
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------- Public API
-const FTransform2D::FTransform2D_imp&
-FTransform2D::GetImp() const {
+const Transformation2D::FTransform2D_imp&
+Transformation2D::GetImp() const {
     return  *mImp;
 }
 
 const uint8*
-FTransform2D::Bits() const {
+Transformation2D::Bits() const {
     return  mImp->Bits();
 }
 
-FTransform2D
-FTransform2D::Inverse() const {
-    return  FTransform2D( new FTransform2D_imp( glm::inverse( mImp->Matrix() ) ) );
+Transformation2D
+Transformation2D::Inverse() const {
+    return  Transformation2D( new FTransform2D_imp( glm::inverse( mImp->Matrix() ) ) );
 }
 
 //----------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Private API
-FTransform2D::FTransform2D( FTransform2D_imp* iVal )
+Transformation2D::Transformation2D( FTransform2D_imp* iVal )
     : mImp( iVal )
 {
 }
@@ -72,62 +72,62 @@ FTransform2D::FTransform2D( FTransform2D_imp* iVal )
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------- Static API
 //static
-FTransform2D
-FTransform2D::MakeFromMatrix( float iM00, float iM10, float iM20, float iM01, float iM11, float iM21, float iM02, float iM12, float iM22 ) {
-    return  FTransform2D( new FTransform2D_imp( glm::mat3( iM00, iM10, iM20, iM01, iM11, iM21, iM02, iM12, iM22 ) ) );
+Transformation2D
+Transformation2D::MakeFromMatrix( float iM00, float iM10, float iM20, float iM01, float iM11, float iM21, float iM02, float iM12, float iM22 ) {
+    return  Transformation2D( new FTransform2D_imp( glm::mat3( iM00, iM10, iM20, iM01, iM11, iM21, iM02, iM12, iM22 ) ) );
 }
 
 //static
-FTransform2D
-FTransform2D::MakeIdentityTransform() {
-    return  FTransform2D( new FTransform2D_imp( MakeIdentityMatrix() ) );
+Transformation2D
+Transformation2D::MakeIdentityTransform() {
+    return  Transformation2D( new FTransform2D_imp( MakeIdentityMatrix() ) );
 }
 
 //static
-FTransform2D
-FTransform2D::MakeRotationTransform( float iAngleRag ) {
-    return  FTransform2D( new FTransform2D_imp( MakeRotationMatrix( iAngleRag ) ) );
+Transformation2D
+Transformation2D::MakeRotationTransform( float iAngleRag ) {
+    return  Transformation2D( new FTransform2D_imp( MakeRotationMatrix( iAngleRag ) ) );
 }
 
 //static
-FTransform2D
-FTransform2D::MakeScaleTransform( float iX, float iY ) {
-    return  FTransform2D( new FTransform2D_imp( MakeScaleMatrix( iX, iY ) ) );
+Transformation2D
+Transformation2D::MakeScaleTransform( float iX, float iY ) {
+    return  Transformation2D( new FTransform2D_imp( MakeScaleMatrix( iX, iY ) ) );
 }
 
 //static
-FTransform2D
-FTransform2D::MakeShearTransform( float iX, float iY ) {
-    return  FTransform2D( new FTransform2D_imp( MakeShearMatrix( iX, iY ) ) );
+Transformation2D
+Transformation2D::MakeShearTransform( float iX, float iY ) {
+    return  Transformation2D( new FTransform2D_imp( MakeShearMatrix( iX, iY ) ) );
 }
 
 //static
-FTransform2D
-FTransform2D::MakeTranslationTransform( float iX, float iY ) {
-    return  FTransform2D( new FTransform2D_imp( MakeTranslationMatrix( iX, iY ) ) );
+Transformation2D
+Transformation2D::MakeTranslationTransform( float iX, float iY ) {
+    return  Transformation2D( new FTransform2D_imp( MakeTranslationMatrix( iX, iY ) ) );
 }
 
 //static
-FTransform2D
-FTransform2D::ComposeTransforms( const FTransform2D& iA, const FTransform2D& iB ) {
-    return  FTransform2D( new FTransform2D_imp( ComposeMatrix( iA.GetImp().Matrix(), iB.GetImp().Matrix() ) ) );
+Transformation2D
+Transformation2D::ComposeTransforms( const Transformation2D& iA, const Transformation2D& iB ) {
+    return  Transformation2D( new FTransform2D_imp( ComposeMatrix( iA.GetImp().Matrix(), iB.GetImp().Matrix() ) ) );
 }
 
 //static
 void
-FTransform2D::DecomposeTransform( const FTransform2D& iTransform, float* oTx, float* oTy, float* oRotation, float* oScaleX, float* oScaleY, float* oSkewX, float* oSkewY ) {
+Transformation2D::DecomposeTransform( const Transformation2D& iTransform, float* oTx, float* oTy, float* oRotation, float* oScaleX, float* oScaleY, float* oSkewX, float* oSkewY ) {
     DecomposeMatrix( iTransform.GetImp().Matrix(), oTx, oTy, oRotation, oScaleX, oScaleY, oSkewX, oSkewY );
 }
 
 //static
-FTransform2D
-FTransform2D::GetPerspectiveTransform( const FVec2F iSrc[], const FVec2F iDst[] ) {
-    return  FTransform2D( new FTransform2D_imp( GetPerspectiveMatrix( iSrc, iDst ) ) );
+Transformation2D
+Transformation2D::GetPerspectiveTransform( const FVec2F iSrc[], const FVec2F iDst[] ) {
+    return  Transformation2D( new FTransform2D_imp( GetPerspectiveMatrix( iSrc, iDst ) ) );
 }
 
 //static
 FVec2F
-FTransform2D::DoHomographyTransform( const FVec2F& iPoint, const FTransform2D& iTransform ) {
+Transformation2D::DoHomographyTransform( const FVec2F& iPoint, const Transformation2D& iTransform ) {
     return  HomographyTransform( iPoint, iTransform.GetImp().Matrix() );
 }
 

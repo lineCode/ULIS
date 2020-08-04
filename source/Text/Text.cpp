@@ -39,7 +39,7 @@ RenderText( FThreadPool*            iThreadPool
           , const FFont&            iFont
           , int                     iSize
           , const ISample&           iColor
-          , const FTransform2D&     iTransform
+          , const Transformation2D&     iTransform
           , bool                    iAntialiasing )
 {
     // Assertions
@@ -88,7 +88,7 @@ FRectI
 TextMetrics( std::wstring           iText
            , const FFont&           iFont
            , int                    iSize
-           , const FTransform2D&    iTransform ) {
+           , const Transformation2D&    iTransform ) {
     const glm::mat3& _mat = iTransform.GetImp().Matrix();
     FT_Matrix matrix;
     matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );

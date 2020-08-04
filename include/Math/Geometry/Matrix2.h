@@ -68,6 +68,12 @@ public:
 
 
     // Named Functions
+    /*! Return a pointer to the base storage. */
+    ULIS_VECTOR_FUNC T* Bits();
+
+    /*! Return a pointer to the base storage. */
+    ULIS_VECTOR_FUNC const T* Bits() const;
+
     /*! Obtain the inverse of the matrix. */
     ULIS_MATRIX_FUNC TMatrix2 Inverse();
 
@@ -207,6 +213,20 @@ ULIS_MATRIX_FUNC TMatrix2< T >::TMatrix2( const TMatrix2< U >& iOther )
 
 
 // Named Functions
+template< typename T >
+ULIS_VECTOR_FUNC
+T*
+TMatrix2< T >::Bits() {
+    return  &(mCols[0].m[0])
+}
+
+template< typename T >
+ULIS_VECTOR_FUNC
+const T*
+TMatrix2< T >::Bits() const {
+    return  &(mCols[0].m[0])
+}
+
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T > TMatrix2< T >::Inverse() {
     T inv_det = static_cast< T >( 1 ) / Determinant();

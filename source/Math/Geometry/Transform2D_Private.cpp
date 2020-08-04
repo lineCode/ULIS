@@ -31,7 +31,7 @@ ULIS_NAMESPACE_BEGIN
 // FTransform2D_imp
 //----------------------------------------------------------------------------------------------
 //------------------------------------------------------------------- Construction / Destruction
-FTransform2D::FTransform2D_imp::FTransform2D_imp()
+Transformation2D::FTransform2D_imp::FTransform2D_imp()
     : mMatrix( 1.f )
     , mDirtyID( true )
     , mDirtyInverseMatrix( true )
@@ -39,7 +39,7 @@ FTransform2D::FTransform2D_imp::FTransform2D_imp()
 }
 
 
-FTransform2D::FTransform2D_imp::FTransform2D_imp( const glm::mat3& iMat )
+Transformation2D::FTransform2D_imp::FTransform2D_imp( const glm::mat3& iMat )
     : mMatrix( iMat )
     , mDirtyID( true )
     , mDirtyInverseMatrix( true )
@@ -50,39 +50,39 @@ FTransform2D::FTransform2D_imp::FTransform2D_imp( const glm::mat3& iMat )
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------- Public API
 const std::string&
-FTransform2D::FTransform2D_imp::ID() const {
+Transformation2D::FTransform2D_imp::ID() const {
     UpdateID();
     return  mID;
 }
 
 
 const glm::mat3&
-FTransform2D::FTransform2D_imp::Matrix() const {
+Transformation2D::FTransform2D_imp::Matrix() const {
      return  mMatrix;
 }
 
 
 const glm::mat3&
-FTransform2D::FTransform2D_imp::InverseMatrix() const {
+Transformation2D::FTransform2D_imp::InverseMatrix() const {
     UpdateInverseMatrix();
     return  mInverseMatrix;
 }
 
 void
-FTransform2D::FTransform2D_imp::Decompose( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const {
+Transformation2D::FTransform2D_imp::Decompose( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const {
     DecomposeMatrix( mMatrix, iTx, iTy, iRotation, iScaleX, iScaleY, iSkewX, iSkewY );
 }
 
 
 const uint8*
-FTransform2D::FTransform2D_imp::Bits() const {
+Transformation2D::FTransform2D_imp::Bits() const {
     return  reinterpret_cast< const uint8* >( glm::value_ptr( mMatrix ) );
 }
 
 //----------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- Private API
 void
-FTransform2D::FTransform2D_imp::UpdateID() const {
+Transformation2D::FTransform2D_imp::UpdateID() const {
     if( !mDirtyID )
         return;
 
@@ -97,7 +97,7 @@ FTransform2D::FTransform2D_imp::UpdateID() const {
 
 
 void
-FTransform2D::FTransform2D_imp::UpdateInverseMatrix() const {
+Transformation2D::FTransform2D_imp::UpdateInverseMatrix() const {
     if( !mDirtyInverseMatrix )
         return;
 

@@ -5,9 +5,9 @@
 *   ULIS3
 *__________________
 *
-* @file         Transform2D.h
+* @file         Transformation2D.h
 * @author       Clement Berthaud
-* @brief        This file provides the Transform2D class declaration.
+* @brief        This file provides the Transformation2D class declaration.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -15,49 +15,50 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include "Math/Geometry/Matrix.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FTransform2D
-class ULIS_API FTransform2D
+// Transformation2D
+class ULIS_API Transformation2D
 {
 public:
     class FTransform2D_imp;
 
 public:
     // Construction / Destruction
-    ~FTransform2D();
-    FTransform2D();
-    FTransform2D( const FTransform2D& iOther );
-    FTransform2D( FTransform2D&& iOther );
-    FTransform2D& operator=( const FTransform2D& iOther );
+    ~Transformation2D();
+    Transformation2D();
+    Transformation2D( const Transformation2D& iOther );
+    Transformation2D( Transformation2D&& iOther );
+    Transformation2D& operator=( const Transformation2D& iOther );
 
 public:
     // Public API
     const FTransform2D_imp& GetImp() const;
     const uint8* Bits() const;
-    FTransform2D Inverse() const;
+    Transformation2D Inverse() const;
 
 private:
     // Private API
-    FTransform2D( FTransform2D_imp* iVal );
+    Transformation2D( FTransform2D_imp* iVal );
 
 public:
     // Static API
-    static FTransform2D MakeFromMatrix( float iM00, float iM10, float iM20, float iM01, float iM11, float iM21, float iM02, float iM12, float iM22 );
-    static FTransform2D MakeIdentityTransform();
-    static FTransform2D MakeRotationTransform( float iAngleRag );
-    static FTransform2D MakeScaleTransform( float iX, float iY );
-    static FTransform2D MakeShearTransform( float iX, float iY );
-    static FTransform2D MakeTranslationTransform( float iX, float iY );
-    static FTransform2D ComposeTransforms( const FTransform2D& iA, const FTransform2D& iB );
-    static void DecomposeTransform( const FTransform2D& iTransform, float* oTx, float* oTy, float* oRotation, float* oScaleX, float* oScaleY, float* oSkewX, float* oSkewY );
-    static FTransform2D GetPerspectiveTransform( const FVec2F iSrc[], const FVec2F iDst[] );
-    static FVec2F DoHomographyTransform( const FVec2F& iPoint, const FTransform2D& iTransform );
+    static Transformation2D MakeFromMatrix( float iM00, float iM10, float iM20, float iM01, float iM11, float iM21, float iM02, float iM12, float iM22 );
+    static Transformation2D MakeIdentityTransform();
+    static Transformation2D MakeRotationTransform( float iAngleRag );
+    static Transformation2D MakeScaleTransform( float iX, float iY );
+    static Transformation2D MakeShearTransform( float iX, float iY );
+    static Transformation2D MakeTranslationTransform( float iX, float iY );
+    static Transformation2D ComposeTransforms( const Transformation2D& iA, const Transformation2D& iB );
+    static void DecomposeTransform( const Transformation2D& iTransform, float* oTx, float* oTy, float* oRotation, float* oScaleX, float* oScaleY, float* oSkewX, float* oSkewY );
+    static Transformation2D GetPerspectiveTransform( const FVec2F iSrc[], const FVec2F iDst[] );
+    static FVec2F DoHomographyTransform( const FVec2F& iPoint, const Transformation2D& iTransform );
 
 private:
     // Private Data Members
-    FTransform2D_imp* mImp;
+    FMat3F mMatrix;
 };
 
 ULIS_NAMESPACE_END

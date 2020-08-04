@@ -18,7 +18,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-class FTransform2D::FTransform2D_imp
+class Transformation2D::FTransform2D_imp
 {
 public:
     // Construction / Destruction
