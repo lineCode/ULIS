@@ -25,7 +25,7 @@ class   FThreadPool;
 class   FFontRegistry;
 class   FTextEngine;
 class   FFont;
-class   Transformation2D;
+class   FTransformation2D;
 class   ITiledBlock;
 class   FKernel;
 class   FStructuringElement;

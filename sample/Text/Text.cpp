@@ -54,7 +54,7 @@ main( int argc, char *argv[] ) {
     FFontRegistry fontRegistry( TextEngine );
     FFont fontEU( fontRegistry, "Arial", "Black" );
     FFont fontJA( fontRegistry, "Yu Gothic", "Bold" );
-    Transformation2D identityTransform = Transformation2D();
+    FTransformation2D identityTransform = FTransformation2D();
 
     int fontSize = 64;
     FRectI rect1 = TextMetrics( str1, fontEU, fontSize, identityTransform );
@@ -70,9 +70,9 @@ main( int argc, char *argv[] ) {
     rect1.y = miny;
     rect2.y = miny + rect1.h;
     rect3.y = miny + rect1.h + rect1.h;
-    Transformation2D transform1( Transformation2D::MakeTranslationTransform( rect1.x, rect1.y ) );
-    Transformation2D transform2( Transformation2D::MakeTranslationTransform( rect2.x, rect2.y ) );
-    Transformation2D transform3( Transformation2D::MakeTranslationTransform( rect3.x, rect3.y ) );
+    FTransformation2D transform1( FTransformation2D::MakeTranslationTransform( rect1.x, rect1.y ) );
+    FTransformation2D transform2( FTransformation2D::MakeTranslationTransform( rect2.x, rect2.y ) );
+    FTransformation2D transform3( FTransformation2D::MakeTranslationTransform( rect3.x, rect3.y ) );
     FColor backgroundColor = FColor::FromHSVAF( 0.5f, 0.9f, 0.8f, 1.f );
     FColor fontColor       = FColor::FromRGBA8( 255, 255, 255, 255 );
 

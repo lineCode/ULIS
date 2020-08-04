@@ -28,7 +28,7 @@ ULIS_API void TransformAffine( FThreadPool*              iThreadPool
                               , const FBlock*             iSource
                               , FBlock*                   iDestination
                               , const FRectI&              iSourceRect
-                              , const Transformation2D&       iTransform
+                              , const FTransformation2D&       iTransform
                               , eResamplingMethod         iMethod );
 
 /////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ ULIS_API void TransformAffineTiled( FThreadPool*              iThreadPool
                                    , FBlock*                   iDestination
                                    , const FRectI&              iSourceRect
                                    , const FRectI&              iDestRect
-                                   , const Transformation2D&       iTransform
+                                   , const FTransformation2D&       iTransform
                                    , eResamplingMethod         iMethod );
 
 /////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ ULIS_API void TransformPerspective( FThreadPool*              iThreadPool
                                    , const FBlock*             iSource
                                    , FBlock*                   iDestination
                                    , const FRectI&              iSourceRect
-                                   , const Transformation2D&       iTransform
+                                   , const FTransformation2D&       iTransform
                                    , eResamplingMethod         iMethod );
 
 /////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ ULIS_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
                                   , bool                    iCallCB
                                   , const FBlock*           iSource
                                   , const FRectI&            iSourceRect
-                                  , const Transformation2D&     iTransform
+                                  , const FTransformation2D&     iTransform
                                   , eResamplingMethod       iMethod );
 
 /////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ ULIS_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                                        , const FBlock*             iSource
                                        , const FRectI&              iSourceRect
                                        , const FRectI&              iDestRect
-                                       , const Transformation2D&       iTransform
+                                       , const FTransformation2D&       iTransform
                                        , eResamplingMethod         iMethod );
 
 /////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ ULIS_API FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThr
                                                  , bool                      iCallCB
                                                  , const FBlock*             iSource
                                                  , const FRectI&              iSourceRect
-                                                 , const Transformation2D&       iTransform
+                                                 , const FTransformation2D&       iTransform
                                                  , eResamplingMethod         iMethod );
 
 /////////////////////////////////////////////////////
@@ -151,13 +151,13 @@ ULIS_API FBlock* XTransformPerspective( FThreadPool*                   iThreadPo
 /////////////////////////////////////////////////////
 // TransformAffineMetrics
 ULIS_API FRectI TransformAffineMetrics( const FRectI&          iSourceRect
-                                      , const Transformation2D&   iTransform
+                                      , const FTransformation2D&   iTransform
                                       , eResamplingMethod     iMethod );
 
 /////////////////////////////////////////////////////
 // TransformPerspectiveMetrics
 ULIS_API FRectI TransformPerspectiveMetrics( const FRectI&          iSourceRect
-                                           , const Transformation2D&   iTransform
+                                           , const FTransformation2D&   iTransform
                                            , eResamplingMethod     iMethod );
 
 /////////////////////////////////////////////////////

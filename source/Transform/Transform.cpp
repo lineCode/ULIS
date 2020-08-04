@@ -37,7 +37,7 @@ void TransformAffine( FThreadPool*              iThreadPool
                     , const FBlock*             iSource
                     , FBlock*                   iDestination
                     , const FRectI&              iSourceRect
-                    , const Transformation2D&       iTransform
+                    , const FTransformation2D&       iTransform
                     , eResamplingMethod         iMethod )
 {
     // Assertions
@@ -89,7 +89,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
                          , FBlock*                   iDestination
                          , const FRectI&              iSourceRect
                          , const FRectI&              iDestRect
-                         , const Transformation2D&       iTransform
+                         , const FTransformation2D&       iTransform
                          , eResamplingMethod         iMethod )
 {
     // Assertions
@@ -140,7 +140,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
                     , const FBlock*             iSource
                     , FBlock*                   iDestination
                     , const FRectI&              iSourceRect
-                    , const Transformation2D&       iTransform
+                    , const FTransformation2D&       iTransform
                     , eResamplingMethod         iMethod )
 {
     // Assertions
@@ -394,7 +394,7 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
                         , bool                      iCallCB
                         , const FBlock*             iSource
                         , const FRectI&              iSourceRect
-                        , const Transformation2D&       iTransform
+                        , const FTransformation2D&       iTransform
                         , eResamplingMethod         iMethod ) {
     // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
@@ -410,7 +410,7 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
         return  nullptr;
 
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
-    Transformation2D fixedTransform( Transformation2D::ComposeTransforms( Transformation2D::MakeTranslationTransform( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ), iTransform ) );
+    FTransformation2D fixedTransform( FTransformation2D::ComposeTransforms( FTransformation2D::MakeTranslationTransform( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ), iTransform ) );
     TransformAffine( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, fixedTransform, iMethod );
     return  dst;
 }
@@ -425,7 +425,7 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                              , const FBlock*             iSource
                              , const FRectI&              iSourceRect
                              , const FRectI&              iDestRect
-                             , const Transformation2D&       iTransform
+                             , const FTransformation2D&       iTransform
                              , eResamplingMethod         iMethod ) {
     // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
@@ -455,7 +455,7 @@ FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
                                        , bool                      iCallCB
                                        , const FBlock*             iSource
                                        , const FRectI&              iSourceRect
-                                       , const Transformation2D&       iTransform
+                                       , const FTransformation2D&       iTransform
                                        , eResamplingMethod         iMethod ) {
         // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
@@ -508,7 +508,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
     for( auto& it : iDestinationPoints )
         fixedDestinationPoints.push_back( FVec2F( it.x - minx, it.y - miny ) );
 
-    Transformation2D persp( Transformation2D::GetPerspectiveTransform( sourcePoints.data(), fixedDestinationPoints.data() ) );
+    FTransformation2D persp( FTransformation2D::GetPerspectiveTransform( sourcePoints.data(), fixedDestinationPoints.data() ) );
     FRectI trans = TransformPerspectiveMetrics( src_fit, persp, iMethod );
     if( !trans.Area() )
         return  nullptr;
@@ -521,7 +521,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
 /////////////////////////////////////////////////////
 // TransformAffineMetrics
 FRectI TransformAffineMetrics( const FRectI&          iSourceRect
-                            , const Transformation2D&   iTransform
+                            , const FTransformation2D&   iTransform
                             , eResamplingMethod     iMethod )
 {
     FRectI trans = iSourceRect.TransformedAffine( iTransform );
@@ -542,7 +542,7 @@ FRectI TransformAffineMetrics( const FRectI&          iSourceRect
 /////////////////////////////////////////////////////
 // TransformPerspectiveMetrics
 FRectI TransformPerspectiveMetrics( const FRectI&          iSourceRect
-                                 , const Transformation2D&   iTransform
+                                 , const FTransformation2D&   iTransform
                                  , eResamplingMethod     iMethod )
 {
     FRectI trans = iSourceRect.TransformedPerspective( iTransform );

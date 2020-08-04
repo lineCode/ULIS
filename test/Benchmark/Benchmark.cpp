@@ -235,7 +235,7 @@ int transform( int argc, char *argv[] ) {
     float m02 = static_cast< float >( std::atof( argv[14] ) );
     float m12 = static_cast< float >( std::atof( argv[15] ) );
     float m22 = static_cast< float >( std::atof( argv[16] ) );
-    Transformation2D mat( Transformation2D::MakeFromMatrix( m00, m10, m20, m01, m11, m21, m02, m12, m22 ) );
+    FTransformation2D mat( FTransformation2D::MakeFromMatrix( m00, m10, m20, m01, m11, m21, m02, m12, m22 ) );
     uint32 optBit = 0;
     if( opt == "sse" ) optBit = ULIS_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS_PERF_AVX2;
@@ -284,12 +284,12 @@ int text( int argc, char *argv[] ) {
     FTextEngine TextEngine;
     FFontRegistry fontRegistry( TextEngine );
     FFont font( fontRegistry, fam, style );
-    FRectI textmetrics = TextMetrics( wtxt, font, fontSize, Transformation2D() );
+    FRectI textmetrics = TextMetrics( wtxt, font, fontSize, FTransformation2D() );
     FColor color( format );
     FBlock* dst = new FBlock( textmetrics.w, textmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
-        RenderText( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, dst, wtxt, font, fontSize, color, Transformation2D(), antialiasingFlag );
+        RenderText( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, dst, wtxt, font, fontSize, color, FTransformation2D(), antialiasingFlag );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete dst;

@@ -155,8 +155,8 @@ public:
 namespace detail {
 /*!
     LUP Decomposition implementation
-    @param ioMat, the matrix of size N to decompose, it is modified to contain L-E and U.
-    @param oPermut, permutation vector of size N+1.
+    @param ioMat    the matrix of size N to decompose, it is modified to contain L-E and U.
+    @param oPermut  permutation vector of size N+1.
     @return boolean stating if the decomposition succeeded or not ( degenerate ).
 */
 template< typename T, typename P, uint8 N >
@@ -215,8 +215,8 @@ bool PartialPivotingLUDecomposition_imp(
 
 /*!
     LUP Solving implementation
-    @param iMat, filled from PartialPivotingLUDecomposition_imp
-    @param iPermut, filled from PartialPivotingLUDecomposition_imp
+    @param iMat     filled from PartialPivotingLUDecomposition_imp
+    @param iPermut  filled from PartialPivotingLUDecomposition_imp
     @param iVec, right hand side vector
     @return solution vector "x" of ioMat * x = iVec.
 */
@@ -248,8 +248,8 @@ PartialPivotingLUSolve_imp(
 
 /*!
     LUP Invert implementation
-    @param iMat, filled from PartialPivotingLUDecomposition_imp
-    @param iPermut, filled from PartialPivotingLUDecomposition_imp
+    @param iMat     filled from PartialPivotingLUDecomposition_imp
+    @param iPermut  filled from PartialPivotingLUDecomposition_imp
     @return Inverse of iMat.
 */
 template< typename T, typename P, uint8 N >
@@ -285,8 +285,8 @@ PartialPivotingLUInvert_imp(
 
 /*!
     LUP Invert implementation
-    @param iMat, filled from PartialPivotingLUDecomposition_imp
-    @param iPermut, filled from PartialPivotingLUDecomposition_imp
+    @param iMat     filled from PartialPivotingLUDecomposition_imp
+    @param iPermut  filled from PartialPivotingLUDecomposition_imp
     @return Determinant of iMat.
 */
 template< typename T, typename P, uint8 N >

@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Math/Geometry/MatrixFunc.h"
+#include "Math/Geometry/MatrixN.h"
 #include "Math/Geometry/Vector3.h"
 #include "Math/Math.h"
 
@@ -91,7 +92,11 @@ public:
     /*! Obtain the determinant of the matrix. */
     ULIS_MATRIX_FUNC T Determinant();
 
+    /*! Decompose the matrix if it represents an affine transform */
+    ULIS_MATRIX_FUNC void Decompose( T* oTx, T* oTy, T* oRotation, T* oScaleX, T* oScaleY, T* oSkewX, T* oSkewY );
 
+    /*! Apply the projective perspective transform or homography to the point */
+    ULIS_MATRIX_FUNC TVector2< T > Project( const TVector2< T >& iPoint );
 
     // Transform Functions
     /*! Static maker for 2D 3x3 rotation matrix. */
@@ -105,6 +110,9 @@ public:
 
     /*! Static maker for 2D 3x3 translation matrix. */
     static ULIS_MATRIX_FUNC TMatrix3 MakeTranslationMatrix( T iX, T iY );
+
+    /*! Static maker for homography, 2D perspective transform. */
+    static ULIS_MATRIX_FUNC TMatrix3 MakeHomography( const TVector2< T > iSrc[], const TVector2< T > iDst[] );
 
 
 
@@ -293,6 +301,72 @@ ULIS_MATRIX_FUNC T TMatrix3< T >::Determinant() {
             + mCols[2][0] * ( mCols[0][1] * mCols[1][2] - mCols[1][1] * mCols[0][2] );
 }
 
+template< typename T >
+ULIS_MATRIX_FUNC
+void
+TMatrix3< T >::Decompose(
+      T* oTx
+    , T* oTy
+    , T* oRotation
+    , T* oScaleX
+    , T* oScaleY
+    , T* oSkewX
+    , T* oSkewY
+)
+{
+    T a = m[0][0];
+    T b = m[0][1];
+    T c = m[1][0];
+    T d = m[1][1];
+    T e = m[2][0];
+    T f = m[2][1];
+    T delta = a * d - b * c;
+
+    T tx = e;
+    T ty = f;
+    T rot = 0;
+    T scx = 0;
+    T scy = 0;
+    T skx = 0;
+    T sky = 0;
+    // Apply the QR-like decomposition.
+    if( a != 0.f || b != 0.f ) {
+        T r = FMath::Sqrt( a * a + b * b );
+        rot = FMath::Sign( b ) * acosf( a / r );
+        scx = r;
+        scy = delta / r;
+        skx = atanf( ( a * c + b * d ) / ( r * r ) );
+        sky = 0;
+    } else if( c != 0 || d != 0 ) {
+        float s = sqrtf( c * c + d * d );
+        rot = FMath::kPIf / 2.f - ( d > 0 ? acosf( -c / s) : - acosf( c / s ) );
+        scx = delta / s;
+        scy = s;
+        skx = 0;
+        sky = atanf( ( a * c + b * d ) / ( s * s ) );
+    } else {
+    }
+    *oTx        = tx;
+    *oTy        = ty;
+    *oRotation  = rot;
+    *oScaleX    = scx;
+    *oScaleY    = scy;
+    *oSkewX     = skx;
+    *oSkewY     = sky;
+}
+
+template< typename T >
+ULIS_MATRIX_FUNC
+TVector2< T >
+TMatrix3< T >::Project( const TVector2< T >& iPoint )
+{
+    T inv_div = 1 / ( iPoint.x * m[2][0] + iPoint.y * m[2][1] + m[2][2] );
+    return  TVector2< T >(
+          ( iPoint.x * m[0][0] + iPoint.y * m[0][1] + m[0][2] ) * inv_div
+        , ( iPoint.x * m[1][0] + iPoint.y * m[1][1] + m[1][2] ) * inv_div
+    );
+}
+
 
 
 // Transform Functions
@@ -343,6 +417,66 @@ TMatrix3< T >::MakeTranslationMatrix( T iX, T iY ) {
           0, 0, 0
         , 0, 0, 0
         , iX, iY, 1
+    );
+}
+
+template< typename T >
+//static
+ULIS_MATRIX_FUNC
+TMatrix3< T >
+TMatrix3< T >::MakeHomography( const TVector2< T > iSrc[], const TVector2< T > iDst[] ) {
+    //      c00*xi + c01*yi + c02
+    // ui = ---------------------
+    //      c20*xi + c21*yi + c22
+    //      c10*xi + c11*yi + c12
+    // vi = ---------------------
+    //      c20*xi + c21*yi + c22
+    // Coefficients are calculated by solving linear system:
+    // / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \ /c00\ /u0\
+    // | x1 y1  1  0  0  0 -x1*u1 -y1*u1 | |c01| |u1|
+    // | x2 y2  1  0  0  0 -x2*u2 -y2*u2 | |c02| |u2|
+    // | x3 y3  1  0  0  0 -x3*u3 -y3*u3 |.|c10|=|u3|
+    // |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 | |c20| |v2|
+    // |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 | |c11| |v0|
+    // |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 | |c12| |v1|
+    // \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 / \c21/ \v3/
+
+    // CB: It would be faster if we solve the system by hand, eliminating any redundant calculations, but i don't have time for this right now.
+    // Use inverse matrix approach instead:
+    // /c00\ / x0 y0  1  0  0  0 -x0*u0 -y0*u0 \-1  /u0\
+    // |c01| | x1 y1  1  0  0  0 -x1*u1 -y1*u1 |    |u1|
+    // |c02| | x2 y2  1  0  0  0 -x2*u2 -y2*u2 |    |u2|
+    // |c10|=| x3 y3  1  0  0  0 -x3*u3 -y3*u3 |  * |u3|
+    // |c20| |  0  0  0 x2 y2  1 -x2*v2 -y2*v2 |    |v2|
+    // |c11| |  0  0  0 x0 y0  1 -x0*v0 -y0*v0 |    |v0|
+    // |c12| |  0  0  0 x1 y1  1 -x1*v1 -y1*v1 |    |v1|
+    // \c21/ \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 /    \v3/
+    using Mat8 = TMatrixN< double, double, 8 >;
+    using Vec8 = TVectorN< double, double, 8 >;
+    Mat8 mat(
+        { iSrc[0].x, iSrc[0].y, 1, 0, 0, 0, -iSrc[0].x * iDst[0].x, - iSrc[0].y * iDst[0].x
+        , iSrc[1].x, iSrc[1].y, 1, 0, 0, 0, -iSrc[1].x * iDst[1].x, - iSrc[1].y * iDst[1].x
+        , iSrc[2].x, iSrc[2].y, 1, 0, 0, 0, -iSrc[2].x * iDst[2].x, - iSrc[2].y * iDst[2].x
+        , iSrc[3].x, iSrc[3].y, 1, 0, 0, 0, -iSrc[3].x * iDst[3].x, - iSrc[3].y * iDst[3].x
+        , 0, 0, 0, iSrc[2].x, iSrc[2].y, 1, -iSrc[2].x * iDst[2].y, - iSrc[2].y * iDst[2].y
+        , 0, 0, 0, iSrc[0].x, iSrc[0].y, 1, -iSrc[0].x * iDst[0].y, - iSrc[0].y * iDst[0].y
+        , 0, 0, 0, iSrc[1].x, iSrc[1].y, 1, -iSrc[1].x * iDst[1].y, - iSrc[1].y * iDst[1].y
+        , 0, 0, 0, iSrc[3].x, iSrc[3].y, 1, -iSrc[3].x * iDst[3].y, - iSrc[3].y * iDst[3].y }
+    );
+
+    Vec8 vec( { iDst[0].x, iDst[1].x, iDst[2].x, iDst[3].x, iDst[2].y, iDst[0].y, iDst[1].y, iDst[3].y } );
+    Mat8 inverse = mat.Inverse();
+    Vec8 res = inverse * vec;
+    return  TMatrix3< T >(
+          res[0]
+        , res[1]
+        , res[2]
+        , res[3]
+        , res[4]
+        , res[5]
+        , res[6]
+        , res[7]
+        , 1
     );
 }
 
