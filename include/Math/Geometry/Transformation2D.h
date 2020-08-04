@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         FTransformation2D.h
+* @file         Transformation2D.h
 * @author       Clement Berthaud
 * @brief        This file provides the FTransformation2D class declaration.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -42,13 +42,11 @@ public:
     const FMat3F& Matrix() const;
     const FMat3F& InverseMatrix() const;
 
-    static FTransformation2D GetPerspectiveTransform( const FVec2F iSrc[], const FVec2F iDst[] );
-    static FVec2F DoHomographyTransform( const FVec2F& iPoint, const FTransformation2D& iTransform );
-
 private:
     // Private Data Members
-    FMat3F mMatrix;
-    mutable FMat3F mMatrix;
+    FMat3F          mMatrix;
+    mutable FMat3F  mInverseMatrix;
+    mutable bool    mInvalidMatrix;
 };
 
 ULIS_NAMESPACE_END

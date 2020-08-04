@@ -81,16 +81,16 @@ public:
     ULIS_VECTOR_FUNC const T* Bits() const;
 
     /*! Obtain the inverse of the matrix. */
-    ULIS_MATRIX_FUNC TMatrixN< T, P, N > Inverse();
+    ULIS_MATRIX_FUNC TMatrixN< T, P, N > Inverse() const;
 
     /*! Obtain the transpose of the matrix. */
-    ULIS_MATRIX_FUNC TMatrixN< T, P, N > Transpose();
+    ULIS_MATRIX_FUNC TMatrixN< T, P, N > Transpose() const;
 
     /*! Obtain the transpose of the matrix. */
-    ULIS_MATRIX_FUNC TMatrixN< T, P, N > Rotated90CCW();
+    ULIS_MATRIX_FUNC TMatrixN< T, P, N > Rotated90CCW() const;
 
     /*! Obtain the determinant of the matrix. */
-    ULIS_MATRIX_FUNC tComputation Determinant();
+    ULIS_MATRIX_FUNC tComputation Determinant() const;
 
 
 
@@ -407,7 +407,7 @@ TMatrixN< T, P, N >::Bits() const {
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
 TMatrixN< T, P, N >
-TMatrixN< T, P, N >::Inverse() {
+TMatrixN< T, P, N >::Inverse() const {
     TMatrixN< T, P, N > LU = (*this);
     TVectorN< int, float, N + 1 > permut;
     detail::PartialPivotingLUDecomposition_imp( LU, permut );
@@ -417,7 +417,7 @@ TMatrixN< T, P, N >::Inverse() {
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
 TMatrixN< T, P, N >
-TMatrixN< T, P, N >::Transpose() {
+TMatrixN< T, P, N >::Transpose() const {
     TMatrixN< T, P, N > result;
 
     for( uint8 y = 0; y < N; ++y )
@@ -430,7 +430,7 @@ TMatrixN< T, P, N >::Transpose() {
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
 TMatrixN< T, P, N >
-TMatrixN< T, P, N >::Rotated90CCW() {
+TMatrixN< T, P, N >::Rotated90CCW() const {
     TMatrixN< T, P, N > result;
 
     for( uint8 y = 0; y < N; ++y )
@@ -443,7 +443,7 @@ TMatrixN< T, P, N >::Rotated90CCW() {
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
 TMatrixN< T, P, N >::tComputation
-TMatrixN< T, P, N >::Determinant() {
+TMatrixN< T, P, N >::Determinant() const {
     TMatrixN< T, P, N > LU = (*this);
     TVectorN< int, float, N + 1 > permut;
     detail::PartialPivotingLUDecomposition_imp( LU, permut );

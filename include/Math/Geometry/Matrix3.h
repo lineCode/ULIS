@@ -84,19 +84,19 @@ public:
     ULIS_VECTOR_FUNC const T* Bits() const;
 
     /*! Obtain the inverse of the matrix. */
-    ULIS_MATRIX_FUNC TMatrix3 Inverse();
+    ULIS_MATRIX_FUNC TMatrix3 Inverse() const;
 
     /*! Obtain the transpose of the matrix. */
-    ULIS_MATRIX_FUNC TMatrix3 Transpose();
+    ULIS_MATRIX_FUNC TMatrix3 Transpose() const;
 
     /*! Obtain the determinant of the matrix. */
-    ULIS_MATRIX_FUNC T Determinant();
+    ULIS_MATRIX_FUNC T Determinant() const;
 
     /*! Decompose the matrix if it represents an affine transform */
-    ULIS_MATRIX_FUNC void Decompose( T* oTx, T* oTy, T* oRotation, T* oScaleX, T* oScaleY, T* oSkewX, T* oSkewY );
+    ULIS_MATRIX_FUNC void Decompose( T* oTx, T* oTy, T* oRotation, T* oScaleX, T* oScaleY, T* oSkewX, T* oSkewY ) const;
 
     /*! Apply the projective perspective transform or homography to the point */
-    ULIS_MATRIX_FUNC TVector2< T > Project( const TVector2< T >& iPoint );
+    ULIS_MATRIX_FUNC TVector2< T > Project( const TVector2< T >& iPoint ) const;
 
     // Transform Functions
     /*! Static maker for 2D 3x3 rotation matrix. */
@@ -263,7 +263,7 @@ TMatrix3< T >::Bits() const {
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix3< T > TMatrix3< T >::Inverse() {
+ULIS_MATRIX_FUNC TMatrix3< T > TMatrix3< T >::Inverse() const {
     T inv_det = static_cast< T >( 1 ) / Determinant();
 
     return  TMatrix3< T >(
@@ -280,7 +280,7 @@ ULIS_MATRIX_FUNC TMatrix3< T > TMatrix3< T >::Inverse() {
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix3< T > TMatrix3< T >::Transpose() {
+ULIS_MATRIX_FUNC TMatrix3< T > TMatrix3< T >::Transpose() const {
     return  TMatrix3< T >(
           mCols[0][0]
         , mCols[1][0]
@@ -295,7 +295,7 @@ ULIS_MATRIX_FUNC TMatrix3< T > TMatrix3< T >::Transpose() {
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC T TMatrix3< T >::Determinant() {
+ULIS_MATRIX_FUNC T TMatrix3< T >::Determinant() const {
     return  + mCols[0][0] * ( mCols[1][1] * mCols[2][2] - mCols[2][1] * mCols[1][2] )
             - mCols[1][0] * ( mCols[0][1] * mCols[2][2] - mCols[2][1] * mCols[0][2] )
             + mCols[2][0] * ( mCols[0][1] * mCols[1][2] - mCols[1][1] * mCols[0][2] );
@@ -312,7 +312,7 @@ TMatrix3< T >::Decompose(
     , T* oScaleY
     , T* oSkewX
     , T* oSkewY
-)
+) const
 {
     T a = m[0][0];
     T b = m[0][1];
@@ -358,7 +358,7 @@ TMatrix3< T >::Decompose(
 template< typename T >
 ULIS_MATRIX_FUNC
 TVector2< T >
-TMatrix3< T >::Project( const TVector2< T >& iPoint )
+TMatrix3< T >::Project( const TVector2< T >& iPoint ) const
 {
     T inv_div = 1 / ( iPoint.x * m[2][0] + iPoint.y * m[2][1] + m[2][2] );
     return  TVector2< T >(

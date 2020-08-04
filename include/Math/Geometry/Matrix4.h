@@ -85,13 +85,13 @@ public:
     ULIS_VECTOR_FUNC const T* Bits() const;
 
     /*! Obtain the inverse of the matrix. */
-    ULIS_MATRIX_FUNC TMatrix4 Inverse();
+    ULIS_MATRIX_FUNC TMatrix4 Inverse() const;
 
     /*! Obtain the transpose of the matrix. */
-    ULIS_MATRIX_FUNC TMatrix4 Transpose();
+    ULIS_MATRIX_FUNC TMatrix4 Transpose() const;
 
     /*! Obtain the determinant of the matrix. */
-    ULIS_MATRIX_FUNC T Determinant();
+    ULIS_MATRIX_FUNC T Determinant() const;
 
 
 
@@ -251,7 +251,7 @@ TMatrix4< T >::Bits() const {
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix4< T > TMatrix4< T >::Inverse() {
+ULIS_MATRIX_FUNC TMatrix4< T > TMatrix4< T >::Inverse() const {
     T coefficient_00 = mCols[2][2] * mCols[3][3] - mCols[3][2] * mCols[2][3];
     T coefficient_02 = mCols[1][2] * mCols[3][3] - mCols[3][2] * mCols[1][3];
     T coefficient_03 = mCols[1][2] * mCols[2][3] - mCols[2][2] * mCols[1][3];
@@ -307,7 +307,7 @@ ULIS_MATRIX_FUNC TMatrix4< T > TMatrix4< T >::Inverse() {
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC TMatrix4< T > TMatrix4< T >::Transpose() {
+ULIS_MATRIX_FUNC TMatrix4< T > TMatrix4< T >::Transpose() const {
     return  TMatrix4< T >(
           mCols[0][0]
         , mCols[1][0]
@@ -329,7 +329,7 @@ ULIS_MATRIX_FUNC TMatrix4< T > TMatrix4< T >::Transpose() {
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC T TMatrix4< T >::Determinant() {
+ULIS_MATRIX_FUNC T TMatrix4< T >::Determinant() const {
     const T sub_determinant_00 = (*this)[2][2] * (*this)[3][3] - (*this)[3][2] * (*this)[2][3];
     const T sub_determinant_01 = (*this)[2][1] * (*this)[3][3] - (*this)[3][1] * (*this)[2][3];
     const T sub_determinant_02 = (*this)[2][1] * (*this)[3][2] - (*this)[3][1] * (*this)[2][2];
