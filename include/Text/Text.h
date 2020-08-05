@@ -18,22 +18,26 @@
 #include "Math/Geometry/Transformation2D.h"
 
 ULIS_NAMESPACE_BEGIN
-ULIS_API void RenderText( FThreadPool*             iThreadPool
-                         , bool                     iBlocking
-                         , uint32                   iPerfIntent
-                         , const FHostDeviceInfo&   iHostDeviceInfo
-                         , bool                     iCallCB
-                         , FBlock*                  iDestination
-                         , const std::wstring       iText
-                         , const FFont&             iFont
-                         , int                      iSize
-                         , const ISample&            iColor
-                         , const FTransformation2D&      iTransform
-                         , bool                     iAntialiasing );
+ULIS_API void RenderText(
+      FThreadPool* iThreadPool
+    , bool iBlocking
+    , uint32 iPerfIntent
+    , const FHostDeviceInfo& iHostDeviceInfo
+    , bool iCallCB
+    , FBlock* iDestination
+    , const std::wstring iText
+    , const FFont& iFont
+    , int iSize
+    , const ISample& iColor
+    , const FTransformation2D& iTransform
+    , bool iAntialiasing
+);
 
-ULIS_API FRectI TextMetrics( std::wstring           iText
-                           , const FFont&           iFont
-                           , int                    iSize
-                           , const FTransformation2D&    iTransform );
+ULIS_API FRectI TextMetrics(
+      std::wstring iText
+    , const FFont& iFont
+    , int iSize
+    , const FTransformation2D& iTransform
+);
 ULIS_NAMESPACE_END
 

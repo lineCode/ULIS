@@ -15,8 +15,8 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Geometry/Matrix.h"
+#include "Math/Geometry/Transformation2D.h"
 #include "Math/Math.h"
-#include <cmath>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -124,10 +124,12 @@ struct TRectangle
         T ux2 = inter.x + inter.w;
         T uy2 = inter.y + inter.h;
 
-        TRectangle< T > sides[4] = { FromMinMax( ux1, y1, ux2, uy1 )      // top
-                         , FromMinMax( x1, uy1, ux1, uy2 )      // left
-                         , FromMinMax( ux2, uy1, x2, uy2 )      // right
-                         , FromMinMax( ux1, uy2, ux2, y2 ) };   // bot
+        TRectangle< T > sides[4] = {
+              FromMinMax( ux1, y1, ux2, uy1 ) // top
+            , FromMinMax( x1, uy1, ux1, uy2 ) // left
+            , FromMinMax( ux2, uy1, x2, uy2 ) // right
+            , FromMinMax( ux1, uy2, ux2, y2 ) // bot
+        };
 
         std::vector< TRectangle< T >* > vec;
         for( int i = 0; i < 4; ++i )
@@ -200,10 +202,10 @@ struct TRectangle
         float x2 = static_cast< float >( x + w );
         float y2 = static_cast< float >( y + h );
         const FMat3F& mat = iTransform.Matrix();
-        FVec2F A = HomographyTransform( FVec2F( x1, y1 ), mat );
-        FVec2F B = HomographyTransform( FVec2F( x2, y1 ), mat );
-        FVec2F C = HomographyTransform( FVec2F( x2, y2 ), mat );
-        FVec2F D = HomographyTransform( FVec2F( x1, y2 ), mat );
+        FVec2F A = mat.Project( FVec2F( x1, y1 ) );
+        FVec2F B = mat.Project( FVec2F( x2, y1 ) );
+        FVec2F C = mat.Project( FVec2F( x2, y2 ) );
+        FVec2F D = mat.Project( FVec2F( x1, y2 ) );
         x = static_cast< T >( FMath::RoundToNegativeInfinity( FMath::Min4( A.x, B.x, C.x, D.x ) ) );
         y = static_cast< T >( FMath::RoundToNegativeInfinity( FMath::Min4( A.y, B.y, C.y, D.y ) ) );
         w = static_cast< T >( FMath::RoundToPositiveInfinity( FMath::Max4( A.x, B.x, C.x, D.x ) ) ) - x;

@@ -20,7 +20,6 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-#include "Math/Geometry/Transform2D_Private.h"
 #include "Misc/SummedAreaTable.h"
 #include <glm/matrix.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>

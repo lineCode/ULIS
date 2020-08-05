@@ -20,7 +20,6 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Geometry/Transformation2D.h"
-#include "Math/Geometry/Transform2D_Private.h"
 #include "Text/Font.h"
 #include "Text/Dispatch/TextInfo.h"
 #include "Text/Dispatch/Dispatch.ipp"
@@ -66,12 +65,12 @@ RenderText( FThreadPool*            iThreadPool
     }
 
     { // Mat
-        const glm::mat3& _mat = iTransform.GetImp().Matrix();
-        alias.matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
-        alias.matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
-        alias.matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
-        alias.matrix.yy = (FT_Fixed)( _mat[1].y * 0x10000L );
-        alias.position = FVec2I( static_cast< int >( _mat[2].x ), static_cast< int >( _mat[2].y )  );
+        const FMat3F& mat = iTransform.Matrix();
+        alias.matrix.xx = (FT_Fixed)( mat[0].x * 0x10000L );
+        alias.matrix.xy = (FT_Fixed)( mat[0].y * 0x10000L );
+        alias.matrix.yx = (FT_Fixed)( mat[1].x * 0x10000L );
+        alias.matrix.yy = (FT_Fixed)( mat[1].y * 0x10000L );
+        alias.position = FVec2I( static_cast< int >( mat[2].x ), static_cast< int >( mat[2].y )  );
     }
 
     // Query
@@ -89,14 +88,14 @@ TextMetrics( std::wstring           iText
            , const FFont&           iFont
            , int                    iSize
            , const FTransformation2D&    iTransform ) {
-    const glm::mat3& _mat = iTransform.GetImp().Matrix();
+    const FMat3F& mat = iTransform.Matrix();
     FT_Matrix matrix;
-    matrix.xx = (FT_Fixed)( _mat[0].x * 0x10000L );
-    matrix.xy = (FT_Fixed)( _mat[0].y * 0x10000L );
-    matrix.yx = (FT_Fixed)( _mat[1].x * 0x10000L );
-    matrix.yy = (FT_Fixed)( _mat[1].y * 0x10000L );
-    int dx = static_cast< int >( _mat[2].x );
-    int dy = static_cast< int >( _mat[2].y );
+    matrix.xx = (FT_Fixed)( mat[0].x * 0x10000L );
+    matrix.xy = (FT_Fixed)( mat[0].y * 0x10000L );
+    matrix.yx = (FT_Fixed)( mat[1].x * 0x10000L );
+    matrix.yy = (FT_Fixed)( mat[1].y * 0x10000L );
+    int dx = static_cast< int >( mat[2].x );
+    int dy = static_cast< int >( mat[2].y );
 
     FRectI result;
     result.x = static_cast< int >( dx );

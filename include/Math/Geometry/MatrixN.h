@@ -442,7 +442,7 @@ TMatrixN< T, P, N >::Rotated90CCW() const {
 
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
-TMatrixN< T, P, N >::tComputation
+typename TMatrixN< T, P, N >::tComputation
 TMatrixN< T, P, N >::Determinant() const {
     TMatrixN< T, P, N > LU = (*this);
     TVectorN< int, float, N + 1 > permut;
@@ -536,13 +536,13 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N >& TMatrixN< T, P, N >::operator/=( const TMa
 
 // Other Operators
 template< typename T, typename P, uint8 N >
-ULIS_MATRIX_FUNC TMatrixN< T, P, N >::tColumn& TMatrixN< T, P, N >::operator[]( int iIndex ) {
+ULIS_MATRIX_FUNC typename TMatrixN< T, P, N >::tColumn& TMatrixN< T, P, N >::operator[]( int iIndex ) {
     ULIS_ASSERT( iIndex >= 0 && iIndex < N, "Bad Index" );
     return  m[ iIndex ];
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_MATRIX_FUNC const TMatrixN< T, P, N >::tColumn& TMatrixN< T, P, N >::operator[]( int iIndex ) const {
+ULIS_MATRIX_FUNC const typename TMatrixN< T, P, N >::tColumn& TMatrixN< T, P, N >::operator[]( int iIndex ) const {
     ULIS_ASSERT( iIndex >= 0 && iIndex < N, "Bad Index" );
     return  m[ iIndex ];
 }
@@ -677,7 +677,7 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N > operator/( const TMatrixN< T, P, N >& iMat,
 
 // Binary matrix vector multiplication operators.
 template< typename T, typename P, uint8 N >
-ULIS_MATRIX_FUNC TMatrixN< T, P, N >::tColumn operator*( const TMatrixN< T, P, N >& iMat, const TMatrixN< T, P, N >::tRow& iRow ) {
+ULIS_MATRIX_FUNC typename TMatrixN< T, P, N >::tColumn operator*( const TMatrixN< T, P, N >& iMat, const typename TMatrixN< T, P, N >::tRow& iRow ) {
     tColumn result;
 
     for( uint8 y = 0; y < N; ++y )
@@ -687,7 +687,7 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N >::tColumn operator*( const TMatrixN< T, P, N
 }
 
 template< typename T, typename P, uint8 N >
-ULIS_MATRIX_FUNC TMatrixN< T, P, N >::tRow operator*( const TMatrixN< T, P, N >::tColumn& iCol, const TMatrixN< T, P, N >& iMat ) {
+ULIS_MATRIX_FUNC typename TMatrixN< T, P, N >::tRow operator*( const typename TMatrixN< T, P, N >::tColumn& iCol, const TMatrixN< T, P, N >& iMat ) {
     tRow result;
     TMatrixN< T, P, N > rotated = iMat.Rotated90CCW();
 

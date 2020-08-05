@@ -230,6 +230,7 @@ ULIS_MATRIX_FUNC TMatrix3< T >& TMatrix3< T >::operator=( const TMatrix3< T >& i
     mCols[0] = iOther.mCols[0];
     mCols[1] = iOther.mCols[1];
     mCols[2] = iOther.mCols[2];
+    return  (*this);
 }
 
 

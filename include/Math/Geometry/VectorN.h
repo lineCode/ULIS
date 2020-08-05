@@ -204,7 +204,7 @@ TVectorN< T, P, N >::Bits() const {
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
-TVectorN< T, P, N >::tComputation
+typename TVectorN< T, P, N >::tComputation
 TVectorN< T, P, N >::Sum() const {
     tComputation res = 0;
 
@@ -216,14 +216,14 @@ TVectorN< T, P, N >::Sum() const {
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
-TVectorN< T, P, N >::tComputation
+typename TVectorN< T, P, N >::tComputation
 TVectorN< T, P, N >::Distance() const {
     return  FMath::Sqrt( DistanceSquared() );
 }
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
-TVectorN< T, P, N >::tComputation
+typename TVectorN< T, P, N >::tComputation
 TVectorN< T, P, N >::DistanceSquared() const {
     tComputation res = 0;
 
@@ -238,7 +238,7 @@ TVectorN< T, P, N >::DistanceSquared() const {
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
-TVectorN< T, P, N >::tComputation
+typename TVectorN< T, P, N >::tComputation
 TVectorN< T, P, N >::ManhattanDistance() const {
     tComputation res = 0;
 
@@ -250,7 +250,7 @@ TVectorN< T, P, N >::ManhattanDistance() const {
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
-TVectorN< T, P, N >::tComputation
+typename TVectorN< T, P, N >::tComputation
 TVectorN< T, P, N >::DotProduct( const TVectorN& iOther ) const {
     tComputation res = 0;
 

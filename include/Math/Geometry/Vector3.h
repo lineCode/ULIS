@@ -46,7 +46,8 @@ struct TVector3
     /*! The z component of the 3D vector. */
     T z;
 
-    // Constructors
+
+
     // Constructors
     /*! Default constructor for the vector, with default zero values. */
     ULIS_VECTOR_FUNC TVector3();
@@ -56,6 +57,8 @@ struct TVector3
 
     /*! Construct the vector from input values. */
     ULIS_VECTOR_FUNC TVector3( T iX, T iY, T iZ = 0 );
+
+
 
     // Conversion
     /*! Construct the vector from TVector2. */
@@ -67,6 +70,11 @@ struct TVector3
     /*! Construct the vector from input vector of any convertible type. */
     template< typename U >
     ULIS_VECTOR_FUNC TVector3( const TVector3< U >& iOther );
+
+    /*! Construct the vector from foreign type input values. */
+    template< typename U, typename V, typename W >
+    ULIS_VECTOR_FUNC TVector3( U iX, V iY, W iZ );
+
 
     // Named Functions
     /*! Return the euclidean distance of the vector. */
@@ -184,13 +192,19 @@ ULIS_VECTOR_FUNC TVector3< T >::TVector3( T iX, T iY, T iZ )
 // Conversion
 template< typename T >
 template< typename U >
-ULIS_VECTOR_FUNC TVector3< T >:: TVector3( const TVector3< U >& iOther )
+ULIS_VECTOR_FUNC TVector3< T >::TVector3( const TVector3< U >& iOther )
     : x( static_cast< T >( iOther.x ) )
     , y( static_cast< T >( iOther.y ) )
     , z( static_cast< T >( iOther.z ) )
 {}
 
-
+template< typename T >
+template< typename U, typename V, typename W >
+ULIS_VECTOR_FUNC TVector3< T >::TVector3( U iX, V iY, W iZ )
+    : x( static_cast< T >( iX ) )
+    , y( static_cast< T >( iY ) )
+    , z( static_cast< T >( iZ ) )
+{}
 
 // Named Functions
 template< typename T >

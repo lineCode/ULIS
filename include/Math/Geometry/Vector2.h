@@ -68,6 +68,10 @@ struct TVector2
     template< typename U >
     ULIS_VECTOR_FUNC TVector2( const TVector2< U >& iOther );
 
+    /*! Construct the vector from foreign type input values. */
+    template< typename U, typename V >
+    ULIS_VECTOR_FUNC TVector2( U iX, V iY );
+
 
 
     // Named Functions
@@ -183,9 +187,16 @@ ULIS_VECTOR_FUNC TVector2< T >::TVector2( T iX, T iY )
 // Conversion
 template< typename T >
 template< typename U >
-ULIS_VECTOR_FUNC TVector2< T >:: TVector2( const TVector2< U >& iOther )
+ULIS_VECTOR_FUNC TVector2< T >::TVector2( const TVector2< U >& iOther )
     : x( static_cast< T >( iOther.x ) )
     , y( static_cast< T >( iOther.y ) )
+{}
+
+template< typename T >
+template< typename U, typename V >
+ULIS_VECTOR_FUNC TVector2< T >::TVector2( U iX, V iY )
+    : x( static_cast< T >( iX ) )
+    , y( static_cast< T >( iY ) )
 {}
 
 
