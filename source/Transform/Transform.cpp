@@ -67,7 +67,7 @@ void TransformAffine( FThreadPool*              iThreadPool
     commandArgsRef.src_roi          = src_fit;
     commandArgsRef.dst_roi          = dst_fit;
     commandArgsRef.method           = iMethod;
-    commandArgsRef.inverseTransform = glm::inverse( iTransform.GetImp().Matrix() );
+    commandArgsRef.inverseTransform = iTransform.InverseMatrix();
 
     // Query dispatched method
     fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformAffineInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
@@ -118,7 +118,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     commandArgsRef.src_roi          = src_fit;
     commandArgsRef.dst_roi          = dst_fit;
     commandArgsRef.method           = iMethod;
-    commandArgsRef.inverseTransform = glm::inverse( iTransform.GetImp().Matrix() );
+    commandArgsRef.inverseTransform = iTransform.InverseMatrix();
 
     // Query dispatched method
     fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformAffineTiledInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
@@ -173,7 +173,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
     commandArgsRef.src_roi          = src_fit;
     commandArgsRef.dst_roi          = dst_fit;
     commandArgsRef.method           = iMethod;
-    commandArgsRef.inverseTransform = glm::inverse( iTransform.GetImp().Matrix() );
+    commandArgsRef.inverseTransform = iTransform.InverseMatrix();
 
     // Query dispatched method
     fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformPerspectiveInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
@@ -273,7 +273,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
     commandArgsRef.src_roi          = src_fit;
     commandArgsRef.dst_roi          = dst_fit;
     commandArgsRef.method           = iMethod;
-    commandArgsRef.inverseTransform = glm::mat3( 1.f );
+    commandArgsRef.inverseTransform = FMat3F();
 
     // Query dispatched method
     fpBezierTransformInvocation dispatchedInvocation = TDispatcher< FTransformBezierInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
@@ -409,7 +409,7 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
         return  nullptr;
 
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
-    FTransformation2D fixedTransform( FTransformation2D::ComposeTransforms( FTransformation2D::MakeTranslationTransform( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ), iTransform ) );
+    FTransformation2D fixedTransform( FMat3F::MakeTranslationMatrix( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ) * iTransform.Matrix() );
     TransformAffine( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, fixedTransform, iMethod );
     return  dst;
 }
@@ -507,7 +507,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
     for( auto& it : iDestinationPoints )
         fixedDestinationPoints.push_back( FVec2F( it.x - minx, it.y - miny ) );
 
-    FTransformation2D persp( FTransformation2D::GetPerspectiveTransform( sourcePoints.data(), fixedDestinationPoints.data() ) );
+    FTransformation2D persp( FMat3F::MakeHomography( sourcePoints.data(), fixedDestinationPoints.data() ) );
     FRectI trans = TransformPerspectiveMetrics( src_fit, persp, iMethod );
     if( !trans.Area() )
         return  nullptr;
@@ -526,7 +526,7 @@ FRectI TransformAffineMetrics( const FRectI&          iSourceRect
     FRectI trans = iSourceRect.TransformedAffine( iTransform );
     if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA ) {
         float tx, ty, r, sx, sy, skx, sky;
-        DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
+        iTransform.Matrix().Decompose( &tx, &ty, &r, &sx, &sy, &skx, &sky );
         float angle = FMath::Max( abs( cos( r ) ), abs( sin( r ) ) );
         float scale = FMath::Max( sx, sy );
         int overflow = static_cast< int >( ceil( angle * scale ) );
@@ -547,7 +547,7 @@ FRectI TransformPerspectiveMetrics( const FRectI&          iSourceRect
     FRectI trans = iSourceRect.TransformedPerspective( iTransform );
     if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA  ) {
         float tx, ty, r, sx, sy, skx, sky;
-        DecomposeMatrix( iTransform.GetImp().Matrix(), &tx, &ty, &r, &sx, &sy, &skx, &sky );
+        iTransform.Matrix().Decompose( &tx, &ty, &r, &sx, &sy, &skx, &sky );
         trans.x -= static_cast< int >( ceil( sx ) );
         trans.y -= static_cast< int >( ceil( sy ) );
         trans.w += static_cast< int >( ceil( sx ) );

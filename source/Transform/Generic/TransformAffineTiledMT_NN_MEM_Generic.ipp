@@ -29,9 +29,9 @@ InvokeTransformAffineTiledMTProcessScanline_NN_MEM_Generic( uint8* iDst, int32 i
     const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
 
-    glm::vec3 point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
-    glm::vec2 point_in_src( info.inverseTransform * point_in_dst );
-    glm::vec2 src_dx( info.inverseTransform * glm::vec3( 1.f, 0.f, 0.f ) );
+    FVec3F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
+    FVec2F point_in_src( info.inverseTransform * point_in_dst );
+    FVec2F src_dx( info.inverseTransform * FVec3F( 1.f, 0.f, 0.f ) );
 
     const int minx = info.src_roi.x;
     const int miny = info.src_roi.y;

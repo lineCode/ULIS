@@ -217,14 +217,14 @@ template< typename T >
 ULIS_VECTOR_FUNC
 T*
 TMatrix2< T >::Bits() {
-    return  &(mCols[0].m[0])
+    return  &(mCols[0][0])
 }
 
 template< typename T >
 ULIS_VECTOR_FUNC
 const T*
 TMatrix2< T >::Bits() const {
-    return  &(mCols[0].m[0])
+    return  &(mCols[0][0])
 }
 
 template< typename T >

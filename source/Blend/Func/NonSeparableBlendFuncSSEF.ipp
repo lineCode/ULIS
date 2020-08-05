@@ -14,13 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
+#include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-
-#define GLM_FORCE_SWIZZLE
-#include <glm/glm.hpp>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

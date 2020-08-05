@@ -29,9 +29,9 @@ InvokeTransformAffineTiledMTProcessScanline_Bicubic_MEM_Generic( uint8* iDst, in
     const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
 
-    glm::vec3 point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
-    glm::vec2 point_in_src( info.inverseTransform * point_in_dst );
-    glm::vec2 src_dx( info.inverseTransform * glm::vec3( 1.f, 0.f, 0.f ) );
+    FVec3F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
+    FVec2F point_in_src( info.inverseTransform * point_in_dst );
+    FVec2F src_dx( info.inverseTransform * FVec3F( 1.f, 0.f, 0.f ) );
 
     uint8* p00 = new uint8[ fmt.BPP * 4 ];      uint8* p01 = new uint8[ fmt.BPP * 4 ];
     uint8* p10 = p00 + fmt.BPP;                 uint8* p11 = p01 + fmt.BPP;

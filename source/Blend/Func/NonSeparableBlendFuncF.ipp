@@ -14,13 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
+#include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-
-#define GLM_FORCE_SWIZZLE
-#include <glm/glm.hpp>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -144,31 +139,31 @@ ULIS_FORCEINLINE FRGBF BlendLuminosityF( const FRGBF& iCs, const FRGBF& iCb ) {
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------- Partial Derivative
 ULIS_FORCEINLINE FRGBF BlendPartialDerivativeF( const FRGBF& iCs, const FRGBF& iCb ) {
-    glm::vec3 ns( iCs.m[0], iCs.m[1], iCs.m[2] );
-    glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
+    FVec3F ns( iCs.m[0], iCs.m[1], iCs.m[2] );
+    FVec3F nb( iCb.m[0], iCb.m[1], iCb.m[2] );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy() * nb.z + nb.xy() * ns.z, ns.z * nb.z ) ) * 0.5f + 0.5f;
+    auto res = FVec3F( ns.xy() * nb.z + nb.xy() * ns.z, ns.z * nb.z ).Normalized() * 0.5f + 0.5f;
     return  FRGBF{ res.x, res.y, res.z };
 }
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Whiteout
 ULIS_FORCEINLINE FRGBF BlendWhiteoutF( const FRGBF& iCs, const FRGBF& iCb ) {
-    glm::vec3 ns( iCs.m[0], iCs.m[1], iCs.m[2] );
-    glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
+    FVec3F ns( iCs.m[0], iCs.m[1], iCs.m[2] );
+    FVec3F nb( iCb.m[0], iCb.m[1], iCb.m[2] );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy() + nb.xy(), ns.z * nb.z ) ) * 0.5f + 0.5f;
+    auto res = FVec3F( ns.xy() + nb.xy(), ns.z * nb.z ).Normalized() * 0.5f + 0.5f;
     return  FRGBF{ res.x, res.y, res.z };
 }
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- AngleCorrected
 ULIS_FORCEINLINE FRGBF BlendAngleCorrectedF( const FRGBF& iCs, const FRGBF& iCb ) {
-    glm::vec3 ns( iCs.m[0], iCs.m[1], iCs.m[2] );
-    glm::vec3 nb( iCb.m[0], iCb.m[1], iCb.m[2] );
+    FVec3F ns( iCs.m[0], iCs.m[1], iCs.m[2] );
+    FVec3F nb( iCb.m[0], iCb.m[1], iCb.m[2] );
     ns = ns * 2.f - 1.f;
     nb = nb * 2.f - 1.f;
-    auto res = glm::normalize( glm::vec3( ns.xy() + nb.xy(), ns.z ) ) * 0.5f + 0.5f;
+    auto res = FVec3F( ns.xy() + nb.xy(), ns.z ).Normalized() * 0.5f + 0.5f;
     return  FRGBF{ res.x, res.y, res.z };
 }
 

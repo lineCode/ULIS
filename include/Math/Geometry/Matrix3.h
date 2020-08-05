@@ -315,12 +315,12 @@ TMatrix3< T >::Decompose(
     , T* oSkewY
 ) const
 {
-    T a = m[0][0];
-    T b = m[0][1];
-    T c = m[1][0];
-    T d = m[1][1];
-    T e = m[2][0];
-    T f = m[2][1];
+    T a = mCols[0][0];
+    T b = mCols[0][1];
+    T c = mCols[1][0];
+    T d = mCols[1][1];
+    T e = mCols[2][0];
+    T f = mCols[2][1];
     T delta = a * d - b * c;
 
     T tx = e;
@@ -361,10 +361,10 @@ ULIS_MATRIX_FUNC
 TVector2< T >
 TMatrix3< T >::Project( const TVector2< T >& iPoint ) const
 {
-    T inv_div = 1 / ( iPoint.x * m[2][0] + iPoint.y * m[2][1] + m[2][2] );
+    T inv_div = 1 / ( iPoint.x * mCols[2][0] + iPoint.y * mCols[2][1] + mCols[2][2] );
     return  TVector2< T >(
-          ( iPoint.x * m[0][0] + iPoint.y * m[0][1] + m[0][2] ) * inv_div
-        , ( iPoint.x * m[1][0] + iPoint.y * m[1][1] + m[1][2] ) * inv_div
+          ( iPoint.x * mCols[0][0] + iPoint.y * mCols[0][1] + mCols[0][2] ) * inv_div
+        , ( iPoint.x * mCols[1][0] + iPoint.y * mCols[1][1] + mCols[1][2] ) * inv_div
     );
 }
 
@@ -454,7 +454,7 @@ TMatrix3< T >::MakeHomography( const TVector2< T > iSrc[], const TVector2< T > i
     // \c21/ \  0  0  0 x3 y3  1 -x3*v3 -y3*v3 /    \v3/
     using Mat8 = TMatrixN< double, double, 8 >;
     using Vec8 = TVectorN< double, double, 8 >;
-    Mat8 mat(
+    TMatrixN< double, double, 8 > mat(
         { iSrc[0].x, iSrc[0].y, 1, 0, 0, 0, -iSrc[0].x * iDst[0].x, - iSrc[0].y * iDst[0].x
         , iSrc[1].x, iSrc[1].y, 1, 0, 0, 0, -iSrc[1].x * iDst[1].x, - iSrc[1].y * iDst[1].x
         , iSrc[2].x, iSrc[2].y, 1, 0, 0, 0, -iSrc[2].x * iDst[2].x, - iSrc[2].y * iDst[2].x
@@ -469,15 +469,15 @@ TMatrix3< T >::MakeHomography( const TVector2< T > iSrc[], const TVector2< T > i
     Mat8 inverse = mat.Inverse();
     Vec8 res = inverse * vec;
     return  TMatrix3< T >(
-          res[0]
-        , res[1]
-        , res[2]
-        , res[3]
-        , res[4]
-        , res[5]
-        , res[6]
-        , res[7]
-        , 1
+          static_cast< float >( res[0] )
+        , static_cast< float >( res[1] )
+        , static_cast< float >( res[2] )
+        , static_cast< float >( res[3] )
+        , static_cast< float >( res[4] )
+        , static_cast< float >( res[5] )
+        , static_cast< float >( res[6] )
+        , static_cast< float >( res[7] )
+        , static_cast< float >( 1 )
     );
 }
 

@@ -16,6 +16,7 @@
 #include "Transform/Methods.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include "Math/Geometry/Matrix.h"
 #include <glm/matrix.hpp>
 
 ULIS_NAMESPACE_BEGIN
@@ -31,7 +32,7 @@ struct FTransformArgs {
     FRectI                   src_roi;
     FRectI                   dst_roi;
     eResamplingMethod       method;
-    glm::mat3               inverseTransform;
+    FMat3F                  inverseTransform;
 };
 
 /////////////////////////////////////////////////////
