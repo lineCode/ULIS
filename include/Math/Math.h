@@ -167,12 +167,12 @@ struct ULIS_API FMath
         return ( iDeg * FMath::kPIf / 180.f );
     }
 
-    static ULIS_FORCEINLINE int IntegerPartOfNumber( float iNumber )
+    static ULIS_MATHS_FUNC int IntegerPartOfNumber( float iNumber )
     {
         return (int)iNumber;
     }
 
-    static ULIS_FORCEINLINE float FloatingPartOfNumber( float iNumber )
+    static ULIS_MATHS_FUNC float FloatingPartOfNumber( float iNumber )
     {
         if ( iNumber > 0 )
             return iNumber - IntegerPartOfNumber( iNumber );

@@ -243,7 +243,7 @@ ULIS_VECTOR_FUNC const TVector3< T >& TVector3< T >::Normalize() {
     x /= distance;
     y /= distance;
     z /= distance;
-    return  *this
+    return  *this;
 }
 
 template< typename T >

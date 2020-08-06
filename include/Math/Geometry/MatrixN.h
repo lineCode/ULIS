@@ -35,6 +35,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T, typename P, uint8 N >
 class TMatrixN
 {
+public:
     // Typedefs
     typedef P tComputation;
     typedef TVectorN< T, P, N > tRow;
@@ -44,7 +45,6 @@ class TMatrixN
     /*! The N rows of the N matrix. */
     tRow m[N];
 
-public:
     // Constructors
     /*! Default constructor ( identity matrix ). */
     ULIS_MATRIX_FUNC TMatrixN< T, P, N >();
@@ -678,7 +678,7 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N > operator/( const TMatrixN< T, P, N >& iMat,
 // Binary matrix vector multiplication operators.
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC typename TMatrixN< T, P, N >::tColumn operator*( const TMatrixN< T, P, N >& iMat, const typename TMatrixN< T, P, N >::tRow& iRow ) {
-    tColumn result;
+    typename TMatrixN< T, P, N >::tColumn result;
 
     for( uint8 y = 0; y < N; ++y )
         result.m[y] = ( iMat.m[y] * iRow ).Sum();
@@ -688,7 +688,7 @@ ULIS_MATRIX_FUNC typename TMatrixN< T, P, N >::tColumn operator*( const TMatrixN
 
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC typename TMatrixN< T, P, N >::tRow operator*( const typename TMatrixN< T, P, N >::tColumn& iCol, const TMatrixN< T, P, N >& iMat ) {
-    tRow result;
+    typename TMatrixN< T, P, N >::tRow result;
     TMatrixN< T, P, N > rotated = iMat.Rotated90CCW();
 
     for( uint8 y = 0; y < N; ++y )

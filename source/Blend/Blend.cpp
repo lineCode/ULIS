@@ -59,7 +59,7 @@ void Blend( FThreadPool*            iThreadPool
         return;
 
     // Forward arguments baking
-    FVec2F      subpixelComponent   = FMath::FloatingPart( iPosition );
+    FVec2F      subpixelComponent   = iPosition.DecimalPart();
     const int   translationX        = dst_fit.x - dst_target.x;
     const int   translationY        = dst_fit.y - dst_target.y;
     const int   coverageX           = src_roi.w - ( src_roi.x + translationX ) >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );
@@ -130,7 +130,7 @@ void AlphaBlend( FThreadPool*           iThreadPool
         return;
 
     // Forward arguments baking
-    FVec2F      subpixelComponent   = FMath::FloatingPart( iPosition );
+    FVec2F      subpixelComponent   = iPosition.DecimalPart();
     const int   translationX        = dst_fit.x - dst_target.x;
     const int   translationY        = dst_fit.y - dst_target.y;
     const int   coverageX           = src_roi.w - ( src_roi.x + translationX ) >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );

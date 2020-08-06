@@ -97,6 +97,9 @@ struct TVector2
     /*! Return the normalized version of this vector. */
     ULIS_VECTOR_FUNC TVector2 Normalized() const;
 
+    /*! Return the decimal part version of this vector. */
+    ULIS_VECTOR_FUNC TVector2 DecimalPart() const;
+
 
 
     // Comparison operators
@@ -237,6 +240,13 @@ ULIS_VECTOR_FUNC TVector2< T > TVector2< T >::Normalized() const {
     return  result.Normalize();
 }
 
+template< typename T >
+ULIS_VECTOR_FUNC TVector2< T > TVector2< T >::DecimalPart() const {
+    return  TVector2< T >(
+          FMath::FloatingPartOfNumber( x )
+        , FMath::FloatingPartOfNumber( y )
+    );
+}
 
 
 // Comparison operators
