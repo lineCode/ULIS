@@ -40,7 +40,7 @@ InvokeTransformPerspectiveMTProcessScanline_Bilinear_MEM_Generic( uint8* iDst, i
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        FVec2F pointInSrc = HomographyTransform( pointInDst, info.inverseTransform );
+        FVec2F pointInSrc = info.inverseTransform.Project( pointInDst );
         const int   left    = static_cast< int >( floor( pointInSrc.x ) );
         const int   top     = static_cast< int >( floor( pointInSrc.y ) );
         const int   right   = left + 1;

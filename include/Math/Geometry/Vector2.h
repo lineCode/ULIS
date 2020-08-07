@@ -119,19 +119,24 @@ struct TVector2
 
     // Unary Operators with scalar
     /*! Add the input value to this vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator+=( T iValue );
+    template< typename U >
+    ULIS_VECTOR_FUNC TVector2& operator+=( U iValue );
 
     /*! Substract the input value to this vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator-=( T iValue );
+    template< typename U >
+    ULIS_VECTOR_FUNC TVector2& operator-=( U iValue );
 
     /*! Multiply this vector by the input value and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator*=( T iValue );
+    template< typename U >
+    ULIS_VECTOR_FUNC TVector2& operator*=( U iValue );
 
     /*! Divide this vector by the input value and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator/=( T iValue );
+    template< typename U >
+    ULIS_VECTOR_FUNC TVector2& operator/=( U iValue );
 
     /*! Compute modulo of this vector by the input value and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator%=( T iValue );
+    template< typename U >
+    ULIS_VECTOR_FUNC TVector2& operator%=( U iValue );
 
 
 
@@ -249,6 +254,7 @@ ULIS_VECTOR_FUNC TVector2< T > TVector2< T >::DecimalPart() const {
 }
 
 
+
 // Comparison operators
 template< typename T >
 ULIS_VECTOR_FUNC bool TVector2< T >::operator==( const TVector2< T >& iOther ) const {
@@ -272,28 +278,32 @@ ULIS_VECTOR_FUNC TVector2< T > TVector2< T >::operator-() const {
 
 // Unary Operators with scalar
 template< typename T >
-ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator+=( T iValue ) {
+template< typename U >
+ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator+=( U iValue ) {
     x += iValue;
     y += iValue;
     return  *this;
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator-=( T iValue ) {
+template< typename U >
+ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator-=( U iValue ) {
     x -= iValue;
     y -= iValue;
     return  *this;
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator*=( T iValue ) {
+template< typename U >
+ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator*=( U iValue ) {
     x *= iValue;
     y *= iValue;
     return  *this;
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator/=( T iValue ) {
+template< typename U >
+ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator/=( U iValue ) {
     ULIS_ASSERT( iValue != 0, "Division by zero" );
     x /= iValue;
     y /= iValue;
@@ -301,7 +311,8 @@ ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator/=( T iValue ) {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator%=( T iValue ) {
+template< typename U >
+ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator%=( U iValue ) {
     ULIS_ASSERT( iValue != 0, "Division by zero" );
     x %= iValue;
     y %= iValue;
@@ -370,32 +381,32 @@ ULIS_VECTOR_FUNC const T& TVector2< T >::operator[]( int iIndex ) const {
 
 
 // Binary Operators with scalar on left hand side
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator+( T iValue, const TVector2< T >& iVector ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator+( U iValue, const TVector2< T >& iVector ) {
     return  TVector2< T >(
           iValue + iVector.x
         , iValue + iVector.y
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator-( T iValue, const TVector2< T >& iVector ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator-( U iValue, const TVector2< T >& iVector ) {
     return  TVector2< T >(
           iValue - iVector.x
         , iValue - iVector.y
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator*( T iValue, const TVector2< T >& iVector ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator*( U iValue, const TVector2< T >& iVector ) {
     return  TVector2< T >(
           iValue * iVector.x
         , iValue * iVector.y
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator/( T iValue, const TVector2< T >& iVector ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator/( U iValue, const TVector2< T >& iVector ) {
     ULIS_ASSERT( iVector.x != 0, "Division by zero" );
     ULIS_ASSERT( iVector.y != 0, "Division by zero" );
     return  TVector2< T >(
@@ -404,8 +415,8 @@ ULIS_VECTOR_FUNC TVector2< T > operator/( T iValue, const TVector2< T >& iVector
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator%( T iValue, const TVector2< T >& iVector ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator%( U iValue, const TVector2< T >& iVector ) {
     ULIS_ASSERT( iVector.x != 0, "Division by zero" );
     ULIS_ASSERT( iVector.y != 0, "Division by zero" );
     return  TVector2< T >(
@@ -417,32 +428,32 @@ ULIS_VECTOR_FUNC TVector2< T > operator%( T iValue, const TVector2< T >& iVector
 
 
 // Binary Operators with scalar on right hand side
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator+( const TVector2< T >& iVector, T iValue ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator+( const TVector2< T >& iVector, U iValue ) {
     return  TVector2< T >(
           iVector.x + iValue
         , iVector.y + iValue
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator-( const TVector2< T >& iVector, T iValue ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator-( const TVector2< T >& iVector, U iValue ) {
     return  TVector2< T >(
           iVector.x - iValue
         , iVector.y - iValue
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator*( const TVector2< T >& iVector, T iValue ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator*( const TVector2< T >& iVector, U iValue ) {
     return  TVector2< T >(
           iVector.x * iValue
         , iVector.y * iValue
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator/( const TVector2< T >& iVector, T iValue ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator/( const TVector2< T >& iVector, U iValue ) {
     ULIS_ASSERT( iValue != 0, "Division by zero" );
     return  TVector2< T >(
           iVector.x / iValue
@@ -450,8 +461,8 @@ ULIS_VECTOR_FUNC TVector2< T > operator/( const TVector2< T >& iVector, T iValue
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator%( const TVector2< T >& iVector, T iValue ) {
+template< typename T, typename U >
+ULIS_VECTOR_FUNC TVector2< T > operator%( const TVector2< T >& iVector, U iValue ) {
     ULIS_ASSERT( iValue != 0, "Division by zero" );
     return  TVector2< T >(
           iVector.x % iValue

@@ -177,7 +177,7 @@ bool PartialPivotingLUDecomposition_imp(
         imax = i;
 
         for( k = i; k < N; ++k ) {
-            absMat = FMath::Abs( ioMat[k][i] )
+            absMat = FMath::Abs( ioMat[k][i] );
             if( absMat > maxMat) {
                 maxMat = absMat;
                 imax = k;
@@ -334,15 +334,15 @@ template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC TMatrixN< T, P, N >::TMatrixN( std::initializer_list< T > iValues )
 {
     const uint16 max = N * N;
-    for( uint8 i = 0; i < iValues.size(); ++i ) {
-        uint8 x = i % N;
-        uint8 y = i / N;
+    for( int i = 0; i < static_cast< int >( iValues.size() ); ++i ) {
+        int x = i % N;
+        int y = i / N;
         m[y][x] = *( iValues.begin() + i );
     }
 
-    for( uint8 i = iValues.size(); i < max; ++i ) {
-        uint8 x = i % N;
-        uint8 y = i / N;
+    for( int i = static_cast< int >( iValues.size() ); i < max; ++i ) {
+        int x = i % N;
+        int y = i / N;
         m[y][x] = 0;
     }
 }
@@ -350,10 +350,10 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N >::TMatrixN( std::initializer_list< T > iValu
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC TMatrixN< T, P, N >::TMatrixN( std::initializer_list< tRow > iRows )
 {
-    for( uint8 i = 0; i < iRows.size(); ++i )
+    for( int i = 0; i < static_cast< int >( iRows.size() ); ++i )
         m[i] = *( iRows.begin() + i );
 
-    for( uint8 i = iValues.size(); i < N; ++i )
+    for( int i = static_cast< int >( iRows.size() ); i < N; ++i )
         m[i] = tRow();
 }
 

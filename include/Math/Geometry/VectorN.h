@@ -27,6 +27,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T, typename P, uint8 N >
 class TVectorN
 {
+public:
     // Typedefs
     typedef P tComputation;
 
@@ -34,7 +35,6 @@ class TVectorN
     /*! The N elements of the N-Dimensional vector. */
     T m[N];
 
-public:
     // Constructors
     /*! Default constructor for the vector, with default zero values. */
     ULIS_VECTOR_FUNC TVectorN< T, P, N >();
@@ -161,10 +161,10 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( T iValue )
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( std::initializer_list< T > iValues )
 {
-    for( uint8 i = 0; i < iValues.size(); ++i )
+    for( int i = 0; i < static_cast< int >( iValues.size() ); ++i )
         m[i] = *( iValues.begin() + i );
 
-    for( uint8 i = iValues.size(); i < N; ++i )
+    for( int i = static_cast< int >( iValues.size() ); i < N; ++i )
         m[i] = static_cast< T >( 0 );
 }
 

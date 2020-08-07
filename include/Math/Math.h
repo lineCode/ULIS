@@ -125,7 +125,7 @@ struct ULIS_API FMath
 
     template< typename T >
     static ULIS_FORCEINLINE T Sign( T iValue ) {
-        return  iValue < 0 ? -1 : 1;
+        return  iValue < static_cast< T >( 0 ) ? static_cast< T >( -1 ) : static_cast< T >( 1 );
     }
 
     template< typename T >

@@ -34,7 +34,7 @@ InvokeTransformPerspectiveMTProcessScanline_NN_MEM_Generic( uint8* iDst, int32 i
     const int maxx = minx + info.src_roi.w;
     const int maxy = miny + info.src_roi.h;
     for( int x = 0; x < info.dst_roi.w; ++x ) {
-        FVec2F pointInSrc = HomographyTransform( pointInDst, info.inverseTransform );
+        FVec2F pointInSrc = info.inverseTransform.Project( pointInDst );
         int src_x = static_cast< int >( pointInSrc.x );
         int src_y = static_cast< int >( pointInSrc.y );
         if( src_x >= minx && src_y >= miny && src_x < maxx && src_y < maxy )
