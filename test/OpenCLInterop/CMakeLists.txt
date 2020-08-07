@@ -9,7 +9,7 @@ file(
 )
 
 add_executable( OpenCLInterop ${source_list} )
-target_link_libraries( OpenCLInterop ULIS3 )
+target_link_libraries( OpenCLInterop ULIS )
 
 # For MSVC parse pretty filter names
 foreach(source IN LISTS source_list)

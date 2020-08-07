@@ -9,7 +9,7 @@ file(
 )
 
 add_executable( GPUDeviceInfo ${source_list} )
-target_link_libraries( GPUDeviceInfo ULIS3 )
+target_link_libraries( GPUDeviceInfo ULIS )
 
 # For MSVC parse pretty filter names
 foreach(source IN LISTS source_list)

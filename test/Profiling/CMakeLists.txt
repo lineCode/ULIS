@@ -9,7 +9,7 @@ file(
 )
 
 add_executable( Profiling ${source_list} )
-target_link_libraries( Profiling ULIS3 )
+target_link_libraries( Profiling ULIS )
 
 # For MSVC parse pretty filter names
 foreach(source IN LISTS source_list)

@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.11.0)
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
 
 # Create global solution
-project( wULIS3 )
+project( wULIS )
 
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
@@ -27,18 +27,18 @@ file(
     "../../source/*"
 )
 
-add_library( libwULIS3 STATIC ${source_list} )
-target_compile_definitions( libwULIS3 PUBLIC UNICODE )
+add_library( libwULIS STATIC ${source_list} )
+target_compile_definitions( libwULIS PUBLIC UNICODE )
 
-set_target_properties( libwULIS3 PROPERTIES OUTPUT_NAME "libwULIS3" )
-set_target_properties( libwULIS3 PROPERTIES PREFIX "" )
-target_link_libraries( libwULIS3 PRIVATE clip )
-target_link_libraries( libwULIS3 PRIVATE lcms2 )
-target_link_libraries( libwULIS3 PRIVATE freetype )
-target_link_libraries( libwULIS3 PRIVATE cppfs )
+set_target_properties( libwULIS PROPERTIES OUTPUT_NAME "libwULIS" )
+set_target_properties( libwULIS PROPERTIES PREFIX "" )
+target_link_libraries( libwULIS PRIVATE clip )
+target_link_libraries( libwULIS PRIVATE lcms2 )
+target_link_libraries( libwULIS PRIVATE freetype )
+target_link_libraries( libwULIS PRIVATE cppfs )
 
 target_include_directories(
-    libwULIS3
+    libwULIS
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../include/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/glm/

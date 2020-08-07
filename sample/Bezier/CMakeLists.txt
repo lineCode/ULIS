@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.13.2 )
 
-if( ${ULIS3_USE_QT} )
+if( ${ULIS_USE_QT} )
     file(
         GLOB_RECURSE
         source_list
@@ -12,7 +12,7 @@ if( ${ULIS3_USE_QT} )
     add_executable( Bezier ${source_list} )
     target_link_libraries(
         Bezier
-        ULIS3
+        ULIS
         Qt5::Core
         Qt5::Widgets
         Qt5::Gui

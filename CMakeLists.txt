@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.11.0)
 
-option( ULIS3_BUILD_SHARED          "Build the library shared or statically"    OFF )
-option( ULIS3_BUILD_PYTHON_MODULE   "Build the library python module"           OFF )
-option( ULIS3_BUILD_TESTS           "Build the library test modules"            OFF )
-option( ULIS3_BUILD_SAMPLES         "Build the library sample modules"          OFF )
-option( ULIS3_FORCE_ASSERTS         "Build the with forced assert in release"   OFF )
-SET( ULIS3_QT_CMAKE_PATH        "" CACHE STRING "Indicates the path to Qt cmake package" )
-SET( ULIS3_PYTHON_REL_LIB       "" CACHE STRING "Indicates the path to python release static library" )
-SET( ULIS3_PYTHON_DEB_LIB       "" CACHE STRING "Indicates the path to python debug static library" )
-SET( ULIS3_PYTHON_INCLUDE_PATH1 "" CACHE STRING "Indicates the path to python include path" )
-SET( ULIS3_PYTHON_INCLUDE_PATH2 "" CACHE STRING "Indicates the path to python include path" )
+option( ULIS_BUILD_SHARED          "Build the library shared or statically"    OFF )
+option( ULIS_BUILD_PYTHON_MODULE   "Build the library python module"           OFF )
+option( ULIS_BUILD_TESTS           "Build the library test modules"            OFF )
+option( ULIS_BUILD_SAMPLES         "Build the library sample modules"          OFF )
+option( ULIS_FORCE_ASSERTS         "Build the with forced assert in release"   OFF )
+SET( ULIS_QT_CMAKE_PATH        "" CACHE STRING "Indicates the path to Qt cmake package" )
+SET( ULIS_PYTHON_REL_LIB       "" CACHE STRING "Indicates the path to python release static library" )
+SET( ULIS_PYTHON_DEB_LIB       "" CACHE STRING "Indicates the path to python debug static library" )
+SET( ULIS_PYTHON_INCLUDE_PATH1 "" CACHE STRING "Indicates the path to python include path" )
+SET( ULIS_PYTHON_INCLUDE_PATH2 "" CACHE STRING "Indicates the path to python include path" )
 
 # Display host & compiler
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
@@ -35,7 +35,7 @@ if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STRE
 endif()
 
 # Create global solution
-project( ULIS3 )
+project( ULIS )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -62,16 +62,16 @@ add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip         ${PROJECT_BI
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs      )
-set_target_properties( clip                 PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( lcms2                PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( freetype             PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( cppfs                PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( component_install    PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( check-all            PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( check-cppfs          PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( check-template       PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( pack                 PROPERTIES FOLDER ULIS3/3rdparty )
-set_target_properties( pack-cppfs           PROPERTIES FOLDER ULIS3/3rdparty )
+set_target_properties( clip                 PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( lcms2                PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( freetype             PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( cppfs                PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( component_install    PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( check-all            PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( check-cppfs          PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( check-template       PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( pack                 PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( pack-cppfs           PROPERTIES FOLDER ULIS/3rdparty )
 
 ####################################
 # Add Main Project
@@ -84,37 +84,38 @@ file(
     "source/*"
 )
 
-if( ${ULIS3_BUILD_SHARED} )
-   add_library( ULIS3 SHARED ${source_list} )
-   target_compile_definitions( ULIS3 PRIVATE ULIS3_BUILD_SHARED )
-   target_compile_definitions( ULIS3 PUBLIC ULIS3_DYNAMIC_LIBRARY )
+if( ${ULIS_BUILD_SHARED} )
+   add_library( ULIS SHARED ${source_list} )
+   target_compile_definitions( ULIS PRIVATE ULIS_BUILD_SHARED )
+   target_compile_definitions( ULIS PUBLIC ULIS_DYNAMIC_LIBRARY )
 else()
-   add_library( ULIS3 STATIC ${source_list} )
-   target_compile_definitions( ULIS3 PRIVATE ULIS3_BUILD_STATIC )
+   add_library( ULIS STATIC ${source_list} )
+   target_compile_definitions( ULIS PRIVATE ULIS_BUILD_STATIC )
 endif()
 
-if( ${ULIS3_FORCE_ASSERTS} )
-    target_compile_definitions( ULIS3 PUBLIC ULIS3_FORCE_ASSERT )
+if( ${ULIS_FORCE_ASSERTS} )
+    target_compile_definitions( ULIS PUBLIC ULIS_FORCE_ASSERT )
 endif()
 
-target_compile_definitions( ULIS3 PUBLIC UNICODE )
+target_compile_definitions( ULIS PUBLIC UNICODE )
 
 if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
     set( OpenCL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/include/"                 )
     set( OpenCL_LIBRARY     "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/lib/x86_64/OpenCL.lib"    )
 endif()
 find_package(OpenCL)
-set_target_properties( ULIS3 PROPERTIES OUTPUT_NAME "ULIS3" )
-set_target_properties( ULIS3 PROPERTIES PREFIX "" )
-set_target_properties( ULIS3 PROPERTIES FOLDER ULIS3 )
-target_link_libraries( ULIS3 PRIVATE clip )
-target_link_libraries( ULIS3 PRIVATE lcms2 )
-target_link_libraries( ULIS3 PRIVATE freetype )
-target_link_libraries( ULIS3 PRIVATE cppfs )
-target_link_libraries( ULIS3 PRIVATE ${OpenCL_LIBRARY} )
+
+set_target_properties( ULIS PROPERTIES OUTPUT_NAME "ULIS" )
+set_target_properties( ULIS PROPERTIES PREFIX "" )
+set_target_properties( ULIS PROPERTIES FOLDER ULIS )
+target_link_libraries( ULIS PRIVATE clip )
+target_link_libraries( ULIS PRIVATE lcms2 )
+target_link_libraries( ULIS PRIVATE freetype )
+target_link_libraries( ULIS PRIVATE cppfs )
+target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
 
 target_include_directories(
-    ULIS3
+    ULIS
     PUBLIC
     "include/"
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
@@ -142,10 +143,10 @@ endforeach()
 ####################################
 # Load Qt
 # Set simple boolean for testing qt availability
-set( ULIS3_USE_QT OFF )
-if( NOT "${ULIS3_QT_CMAKE_PATH}" STREQUAL "" )
-    set( ULIS3_USE_QT ON )
-    set( CMAKE_PREFIX_PATH ${ULIS3_QT_CMAKE_PATH} )
+set( ULIS_USE_QT OFF )
+if( NOT "${ULIS_QT_CMAKE_PATH}" STREQUAL "" )
+    set( ULIS_USE_QT ON )
+    set( CMAKE_PREFIX_PATH ${ULIS_QT_CMAKE_PATH} )
     find_package(
         Qt5
         REQUIRED COMPONENTS
@@ -160,10 +161,10 @@ endif()
 include(${CMAKE_CURRENT_SOURCE_DIR}/binding/Python/CMakeLists.txt)
 ####################################
 # Add Test Projects
-if( ${ULIS3_BUILD_TESTS} )
+if( ${ULIS_BUILD_TESTS} )
 include(${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt)
 endif()
-if( ${ULIS3_BUILD_SAMPLES} )
+if( ${ULIS_BUILD_SAMPLES} )
 include(${CMAKE_CURRENT_SOURCE_DIR}/sample/CMakeLists.txt)
 endif()
 

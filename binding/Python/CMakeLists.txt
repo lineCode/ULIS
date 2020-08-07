@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.13.2 )
 
-if( ${ULIS3_BUILD_PYTHON_MODULE} )
+if( ${ULIS_BUILD_PYTHON_MODULE} )
     file(
         GLOB_RECURSE
         source_list
@@ -9,24 +9,24 @@ if( ${ULIS3_BUILD_PYTHON_MODULE} )
         "bindings/python/CPython-module/*"
     )
 
-    add_library( PyULIS3 SHARED ${source_list} )
-    set_target_properties( PyULIS3 PROPERTIES SUFFIX ".pyd" )
-    set_target_properties( PyULIS3 PROPERTIES FOLDER ULIS3 )
-    target_compile_definitions( PyULIS3 PRIVATE PyULIS3_BUILD_SHARED )
+    add_library( PyULIS SHARED ${source_list} )
+    set_target_properties( PyULIS PROPERTIES SUFFIX ".pyd" )
+    set_target_properties( PyULIS PROPERTIES FOLDER ULIS )
+    target_compile_definitions( PyULIS PRIVATE PyULIS_BUILD_SHARED )
 
     target_link_libraries(
-        PyULIS3
-        ULIS3
-        optimized   ${ULIS3_PYTHON_REL_LIB}
-        debug       ${ULIS3_PYTHON_DEB_LIB}
+        PyULIS
+        ULIS
+        optimized   ${ULIS_PYTHON_REL_LIB}
+        debug       ${ULIS_PYTHON_DEB_LIB}
     )
 
     target_include_directories(
-        PyULIS3
+        PyULIS
         PUBLIC
         "python/CPython-module/"
-        ${ULIS3_PYTHON_INCLUDE_PATH1}
-        ${ULIS3_PYTHON_INCLUDE_PATH2}
+        ${ULIS_PYTHON_INCLUDE_PATH1}
+        ${ULIS_PYTHON_INCLUDE_PATH2}
     )
 
     # For MSVC parse pretty filter names
