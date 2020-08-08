@@ -117,18 +117,18 @@
 /////////////////////////////////////////////////////
 // Export utility macros
 #ifdef ULIS_WIN
-    #ifdef ULIS_BUILD_SHARED
-        #define ULIS_SHARED
-        #define ULIS_API __declspec( dllexport )
-    #elif defined ULIS_DYNAMIC_LIBRARY
-        #define ULIS_SHARED
-        #define ULIS_API __declspec( dllimport )
-    #else
-        #define ULIS_STATIC
+    #ifdef ULIS_STATIC_LIBRARY
+        #define ULIS_BUILT_AS_STATIC_LIBRARY
         #define ULIS_API
+    #else
+        #ifdef ULIS_BUILD_SHARED
+            #define ULIS_BUILT_AS_SHARED_LIBRARY
+            #define ULIS_API __declspec( dllexport )
+        #else
+            #define ULIS_BUILT_AS_SHARED_LIBRARY
+            #define ULIS_API __declspec( dllimport )
+        #endif
     #endif
-#else
-    #define ULIS_API
 #endif
 
 /////////////////////////////////////////////////////

@@ -1,29 +1,21 @@
 cmake_minimum_required(VERSION 3.11.0)
 
-option( ULIS_BUILD_SHARED          "Build the library shared or statically"    OFF )
-option( ULIS_BUILD_PYTHON_MODULE   "Build the library python module"           OFF )
-option( ULIS_BUILD_TESTS           "Build the library test modules"            OFF )
-option( ULIS_BUILD_SAMPLES         "Build the library sample modules"          OFF )
-option( ULIS_FORCE_ASSERTS         "Build the with forced assert in release"   OFF )
-SET( ULIS_QT_CMAKE_PATH        "" CACHE STRING "Indicates the path to Qt cmake package" )
-SET( ULIS_PYTHON_REL_LIB       "" CACHE STRING "Indicates the path to python release static library" )
-SET( ULIS_PYTHON_DEB_LIB       "" CACHE STRING "Indicates the path to python debug static library" )
-SET( ULIS_PYTHON_INCLUDE_PATH1 "" CACHE STRING "Indicates the path to python include path" )
-SET( ULIS_PYTHON_INCLUDE_PATH2 "" CACHE STRING "Indicates the path to python include path" )
+option( ULIS_BUILD_SHARED           "Build the library shared or statically"            ON )
+option( ULIS_BUILD_PYTHON_MODULE    "Build the library python module"                   OFF )
+option( ULIS_BUILD_TESTS            "Build the library test modules"                    OFF )
+option( ULIS_BUILD_SAMPLES          "Build the library sample modules"                  OFF )
+option( ULIS_FORCE_ASSERTS          "Build the library with forced assert in release"   OFF )
+SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package" )
+SET( ULIS_PYTHON_REL_LIB            "" CACHE STRING "Indicates the path to python release static library" )
+SET( ULIS_PYTHON_DEB_LIB            "" CACHE STRING "Indicates the path to python debug static library" )
+SET( ULIS_PYTHON_INCLUDE_PATH1      "" CACHE STRING "Indicates the path to python include path" )
+SET( ULIS_PYTHON_INCLUDE_PATH2      "" CACHE STRING "Indicates extra path to python include path" )
 
-# Display host & compiler
+# Setup generation options
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
-
-# Set OSX minimum deployment target
 set( CMAKE_OSX_DEPLOYMENT_TARGET "10.13" )
-
-# Generate only Debug and Release configurations
 set( CMAKE_CONFIGURATION_TYPES RelWithDebInfo Debug Release CACHE STRING INTERNAL FORCE )
-
-# Get rid of cmake's ZERO_CHECK project
 set( CMAKE_SUPPRESS_REGENERATION true )
-
-# Set Debug postfix
 set( CMAKE_DEBUG_POSTFIX d )
 
 # Set C++ standard options
@@ -34,27 +26,36 @@ if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STRE
     set( CMAKE_CXX_FLAGS "-std=c++14" )
 endif()
 
-# Create global solution
+# Create solution
 project( ULIS )
-
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 
 # Flags for Compiler / Platforms
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -mfma")
+    # CLANG
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -mfma" )
+
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
+    # GNU
     if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux" )
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread")
+        # LINUX GNU GCC
+        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread" )
+
     elseif( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W")
+        # WINDOWS MINGW GCC
+        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W" )
+
     endif()
+
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc -D__SSE4_2__ -D__AVX2__")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Z7 -MP -Od -MDd")
+    # MSVC
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc -D__SSE4_2__ -D__AVX2__" )
+    set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Z7 -MP -Od -MDd" )
     # EHsc: Exception stuff
     # Z7:   Produced object files contain full symbolic debugging information.
     # MP:   Parallelize compilation of source files.
     # Od:   Turns off all optimizations in the program and speeds compilation.
+
 endif()
 
 # Add Dependencies
@@ -73,6 +74,12 @@ set_target_properties( check-template       PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( pack                 PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( pack-cppfs           PROPERTIES FOLDER ULIS/3rdparty )
 
+if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
+    set( OpenCL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/include/"                 )
+    set( OpenCL_LIBRARY     "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/lib/x86_64/OpenCL.lib"    )
+endif()
+find_package(OpenCL)
+
 ####################################
 # Add Main Project
 file(
@@ -87,10 +94,9 @@ file(
 if( ${ULIS_BUILD_SHARED} )
    add_library( ULIS SHARED ${source_list} )
    target_compile_definitions( ULIS PRIVATE ULIS_BUILD_SHARED )
-   target_compile_definitions( ULIS PUBLIC ULIS_DYNAMIC_LIBRARY )
 else()
    add_library( ULIS STATIC ${source_list} )
-   target_compile_definitions( ULIS PRIVATE ULIS_BUILD_STATIC )
+   target_compile_definitions( ULIS PRIVATE ULIS_STATIC_LIBRARY )
 endif()
 
 if( ${ULIS_FORCE_ASSERTS} )
@@ -99,11 +105,6 @@ endif()
 
 target_compile_definitions( ULIS PUBLIC UNICODE )
 
-if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
-    set( OpenCL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/include/"                 )
-    set( OpenCL_LIBRARY     "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/lib/x86_64/OpenCL.lib"    )
-endif()
-find_package(OpenCL)
 
 set_target_properties( ULIS PROPERTIES OUTPUT_NAME "ULIS" )
 set_target_properties( ULIS PROPERTIES PREFIX "" )
@@ -118,9 +119,9 @@ target_include_directories(
     ULIS
     PUBLIC
     "include/"
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
-    ${OpenCL_INCLUDE_DIR}
     PRIVATE
+    ${OpenCL_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
@@ -154,16 +155,19 @@ if( NOT "${ULIS_QT_CMAKE_PATH}" STREQUAL "" )
         Widgets
         Gui
     )
-    set(CMAKE_AUTOMOC ON)
+    set( CMAKE_AUTOMOC ON )
 endif()
+
 ####################################
 # Add Python Project
 include(${CMAKE_CURRENT_SOURCE_DIR}/binding/Python/CMakeLists.txt)
+
 ####################################
 # Add Test Projects
 if( ${ULIS_BUILD_TESTS} )
 include(${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt)
 endif()
+
 if( ${ULIS_BUILD_SAMPLES} )
 include(${CMAKE_CURRENT_SOURCE_DIR}/sample/CMakeLists.txt)
 endif()
