@@ -120,7 +120,10 @@ struct ULIS_API FMath
 
     template< typename T >
     static ULIS_MATHS_FUNC T Abs( T iA ) {
+        #pragma warning(push)
+        #pragma warning(disable : 4146) // Shut warning unary negative on unsigned type.
         return ( iA < 0 ? -iA : iA );
+        #pragma warning(pop)
     }
 
     template< typename T >
@@ -133,7 +136,8 @@ struct ULIS_API FMath
         return  ( iMod + ( iValue % iMod ) ) % iMod;
     }
 
-    static ULIS_FORCEINLINE float PyFModulo( float iValue, float iMod ) {
+    template<>
+    static ULIS_FORCEINLINE float PyModulo< float >( float iValue, float iMod ) {
         return  fmod( iMod + fmod( iValue, iMod ), iMod );
     }
 
@@ -217,7 +221,7 @@ struct ULIS_API FMath
     template< typename T >
     static ULIS_MATHS_FUNC T Sqrt( T iValue )
     {
-        return  sqrt( iValue );
+        return  static_cast< T >( sqrt( iValue ) );
     }
 
     template<>

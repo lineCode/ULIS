@@ -19,7 +19,7 @@
 #include "Data/Pixel.h"
 #include "Data/Color.h"
 #include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector2.h"
+#include "Math/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

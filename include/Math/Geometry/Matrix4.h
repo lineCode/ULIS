@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Math/Geometry/MatrixFunc.h"
-#include "Math/Geometry/Vector3.h"
+#include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -217,6 +217,7 @@ ULIS_MATRIX_FUNC TMatrix4< T >& TMatrix4< T >::operator=( const TMatrix4< T >& i
     mCols[1] = iOther.mCols[1];
     mCols[2] = iOther.mCols[2];
     mCols[3] = iOther.mCols[3];
+    return  *this;
 }
 
 
@@ -240,14 +241,14 @@ template< typename T >
 ULIS_VECTOR_FUNC
 T*
 TMatrix4< T >::Bits() {
-    return  &(mCols[0].m[0])
+    return  &(mCols[0][0]);
 }
 
 template< typename T >
 ULIS_VECTOR_FUNC
 const T*
 TMatrix4< T >::Bits() const {
-    return  &(mCols[0].m[0])
+    return  &(mCols[0][0]);
 }
 
 template< typename T >
@@ -381,6 +382,7 @@ ULIS_MATRIX_FUNC TMatrix4< T >& TMatrix4< T >::operator+=( T iValue ) {
     mCols[1] += iValue;
     mCols[2] += iValue;
     mCols[3] += iValue;
+    return  *this;
 }
 
 template< typename T >
@@ -389,6 +391,7 @@ ULIS_MATRIX_FUNC TMatrix4< T >& TMatrix4< T >::operator-=( T iValue ) {
     mCols[1] -= iValue;
     mCols[2] -= iValue;
     mCols[3] -= iValue;
+    return  *this;
 }
 
 template< typename T >
@@ -397,6 +400,7 @@ ULIS_MATRIX_FUNC TMatrix4< T >& TMatrix4< T >::operator*=( T iValue ) {
     mCols[1] *= iValue;
     mCols[2] *= iValue;
     mCols[3] *= iValue;
+    return  *this;
 }
 
 template< typename T >
@@ -405,6 +409,7 @@ ULIS_MATRIX_FUNC TMatrix4< T >& TMatrix4< T >::operator/=( T iValue ) {
     mCols[1] /= iValue;
     mCols[2] /= iValue;
     mCols[3] /= iValue;
+    return  *this;
 }
 
 
@@ -416,6 +421,7 @@ ULIS_MATRIX_FUNC TMatrix4< T >& TMatrix4< T >::operator+=( const TMatrix4& iOthe
     mCols[1] += iOther.mCols[1];
     mCols[2] += iOther.mCols[2];
     mCols[3] += iOther.mCols[3];
+    return  *this;
 }
 
 template< typename T >
@@ -424,6 +430,7 @@ ULIS_MATRIX_FUNC TMatrix4< T >& TMatrix4< T >::operator-=( const TMatrix4& iOthe
     mCols[1] -= iOther.mCols[1];
     mCols[2] -= iOther.mCols[2];
     mCols[3] -= iOther.mCols[3];
+    return  *this;
 }
 
 template< typename T >
@@ -562,14 +569,14 @@ ULIS_MATRIX_FUNC TMatrix4< T > operator-( const TMatrix4< T >& iMat, const TMatr
 
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix4< T > operator*( const TMatrix4< T >& iMat, const TMatrix4< T >& iOther ) {
-    const TVec4< T > colA0 = iMat[0];
-    const TVec4< T > colA1 = iMat[1];
-    const TVec4< T > colA2 = iMat[2];
-    const TVec4< T > colA3 = iMat[3];
-    const TVec4< T > colB0 = iOther[0];
-    const TVec4< T > colB1 = iOther[1];
-    const TVec4< T > colB2 = iOther[2];
-    const TVec4< T > colB3 = iOther[3];
+    const TVector4< T > colA0 = iMat[0];
+    const TVector4< T > colA1 = iMat[1];
+    const TVector4< T > colA2 = iMat[2];
+    const TVector4< T > colA3 = iMat[3];
+    const TVector4< T > colB0 = iOther[0];
+    const TVector4< T > colB1 = iOther[1];
+    const TVector4< T > colB2 = iOther[2];
+    const TVector4< T > colB3 = iOther[3];
 
     return  TMatrix4< T >(
           colA0 * colB0[0] + colA1 * colB0[1] + colA2 * colB0[2] + colA3 * colB0[3]

@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Math/Geometry/MatrixFunc.h"
 #include "Math/Geometry/MatrixN.h"
-#include "Math/Geometry/Vector3.h"
+#include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -253,14 +253,14 @@ template< typename T >
 ULIS_VECTOR_FUNC
 T*
 TMatrix3< T >::Bits() {
-    return  &(mCols[0].m[0])
+    return  &(mCols[0][0]);
 }
 
 template< typename T >
 ULIS_VECTOR_FUNC
 const T*
 TMatrix3< T >::Bits() const {
-    return  &(mCols[0].m[0])
+    return  &(mCols[0][0]);
 }
 
 template< typename T >
@@ -380,7 +380,7 @@ TMatrix3< T >::MakeRotationMatrix( T iAngleRad ) {
     const T sin_angle = sin( iAngleRad );
     return  TMatrix3< T >(
           +cos_angle, +sin_angle, 0
-        , -sin_angle, +cose_angle, 0
+        , -sin_angle, +cos_angle, 0
         , 0, 0, 1
     );
 }
@@ -512,6 +512,7 @@ ULIS_MATRIX_FUNC TMatrix3< T >& TMatrix3< T >::operator+=( T iValue ) {
     mCols[0] += iValue;
     mCols[1] += iValue;
     mCols[2] += iValue;
+    return  *this;
 }
 
 template< typename T >
@@ -519,6 +520,7 @@ ULIS_MATRIX_FUNC TMatrix3< T >& TMatrix3< T >::operator-=( T iValue ) {
     mCols[0] -= iValue;
     mCols[1] -= iValue;
     mCols[2] -= iValue;
+    return  *this;
 }
 
 template< typename T >
@@ -526,6 +528,7 @@ ULIS_MATRIX_FUNC TMatrix3< T >& TMatrix3< T >::operator*=( T iValue ) {
     mCols[0] *= iValue;
     mCols[1] *= iValue;
     mCols[2] *= iValue;
+    return  *this;
 }
 
 template< typename T >
@@ -533,6 +536,7 @@ ULIS_MATRIX_FUNC TMatrix3< T >& TMatrix3< T >::operator/=( T iValue ) {
     mCols[0] /= iValue;
     mCols[1] /= iValue;
     mCols[2] /= iValue;
+    return  *this;
 }
 
 
@@ -543,6 +547,7 @@ ULIS_MATRIX_FUNC TMatrix3< T >& TMatrix3< T >::operator+=( const TMatrix3& iOthe
     mCols[0] += iOther.mCols[0];
     mCols[1] += iOther.mCols[1];
     mCols[2] += iOther.mCols[2];
+    return  *this;
 }
 
 template< typename T >
@@ -550,6 +555,7 @@ ULIS_MATRIX_FUNC TMatrix3< T >& TMatrix3< T >::operator-=( const TMatrix3& iOthe
     mCols[0] -= iOther.mCols[0];
     mCols[1] -= iOther.mCols[1];
     mCols[2] -= iOther.mCols[2];
+    return  *this;
 }
 
 template< typename T >

@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Math/Geometry/MatrixFunc.h"
-#include "Math/Geometry/Vector2.h"
+#include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -197,6 +197,7 @@ template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator=( const TMatrix2< T >& iOther ) {
     mCols[0] = iOther.mCols[0];
     mCols[1] = iOther.mCols[1];
+    return  *this;
 }
 
 
@@ -217,14 +218,14 @@ template< typename T >
 ULIS_VECTOR_FUNC
 T*
 TMatrix2< T >::Bits() {
-    return  &(mCols[0][0])
+    return  &(mCols[0][0]);
 }
 
 template< typename T >
 ULIS_VECTOR_FUNC
 const T*
 TMatrix2< T >::Bits() const {
-    return  &(mCols[0][0])
+    return  &(mCols[0][0]);
 }
 
 template< typename T >
@@ -267,7 +268,7 @@ TMatrix2< T >::MakeRotationMatrix( T iAngleRad ) {
           cos_angle
         , sin_angle
         , -sin_angle
-        , cose_angle
+        , cos_angle
     );
 }
 
@@ -325,24 +326,28 @@ template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator+=( T iValue ) {
     mCols[0] += iValue;
     mCols[1] += iValue;
+    return  *this;
 }
 
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator-=( T iValue ) {
     mCols[0] -= iValue;
     mCols[1] -= iValue;
+    return  *this;
 }
 
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator*=( T iValue ) {
     mCols[0] *= iValue;
     mCols[1] *= iValue;
+    return  *this;
 }
 
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator/=( T iValue ) {
     mCols[0] /= iValue;
     mCols[1] /= iValue;
+    return  *this;
 }
 
 
@@ -352,22 +357,26 @@ template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator+=( const TMatrix2& iOther ) {
     mCols[0] += iOther.mCols[0];
     mCols[1] += iOther.mCols[1];
+    return  *this;
 }
 
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator-=( const TMatrix2& iOther ) {
     mCols[0] -= iOther.mCols[0];
     mCols[1] -= iOther.mCols[1];
+    return  *this;
 }
 
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator*=( const TMatrix2& iOther ) {
     return  ( *this = *this * iOther );
+    return  *this;
 }
 
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T >& TMatrix2< T >::operator/=( const TMatrix2& iOther ) {
     return  ( *this *= iOther.Inverse() );
+    return  *this;
 }
 
 
@@ -477,10 +486,10 @@ ULIS_MATRIX_FUNC TMatrix2< T > operator-( const TMatrix2< T >& iMat, const TMatr
 template< typename T >
 ULIS_MATRIX_FUNC TMatrix2< T > operator*( const TMatrix2< T >& iMat, const TMatrix2< T >& iOther ) {
     return  TMatrix2< T >(
-          iMat[0][0] * & iOther[0][0] + iMat[1][0] * & iOther[0][1]
-        , iMat[0][1] * & iOther[0][0] + iMat[1][1] * & iOther[0][1]
-        , iMat[0][0] * & iOther[1][0] + iMat[1][0] * & iOther[1][1]
-        , iMat[0][1] * & iOther[1][0] + iMat[1][1] * & iOther[1][1]
+          iMat[0][0] * iOther[0][0] + iMat[1][0] * iOther[0][1]
+        , iMat[0][1] * iOther[0][0] + iMat[1][1] * iOther[0][1]
+        , iMat[0][0] * iOther[1][0] + iMat[1][0] * iOther[1][1]
+        , iMat[0][1] * iOther[1][0] + iMat[1][1] * iOther[1][1]
     );
 }
 

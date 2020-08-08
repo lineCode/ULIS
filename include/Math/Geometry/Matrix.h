@@ -17,3 +17,9 @@
 #include "Math/Geometry/Matrix3.h"
 #include "Math/Geometry/Matrix4.h"
 
+ULIS_NAMESPACE_BEGIN
+template class ULIS_API TMatrix2< float >;
+template class ULIS_API TMatrix3< float >;
+template class ULIS_API TMatrix4< float >;
+ULIS_NAMESPACE_END
+

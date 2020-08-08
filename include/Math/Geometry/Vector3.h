@@ -94,7 +94,7 @@ struct TVector3
     ULIS_VECTOR_FUNC T DotProduct( const TVector3& iOther ) const;
 
     /*! Return the cross product of the vector */
-    ULIS_VECTOR_FUNC T CrossProduct( const TVector3& iOther ) const;
+    ULIS_VECTOR_FUNC TVector3< T > CrossProduct( const TVector3& iOther ) const;
 
     /*! Normalize this vector. */
     ULIS_VECTOR_FUNC const TVector3& Normalize();
@@ -129,9 +129,6 @@ struct TVector3
     /*! Divide this vector by the input value and return a reference to this vector. */
     ULIS_VECTOR_FUNC TVector3& operator/=( T iValue );
 
-    /*! Compute modulo of this vector by the input value and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector3& operator%=( T iValue );
-
 
 
     // Unary Operators with vector
@@ -146,9 +143,6 @@ struct TVector3
 
     /*! Divide this vector by the input vector and return a reference to this vector. */
     ULIS_VECTOR_FUNC TVector3& operator/=(const TVector3& iOther );
-
-    /*! Compute modulo of this vector by the input vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector3& operator%=(const TVector3& iOther );
 
 
 
@@ -228,7 +222,7 @@ ULIS_VECTOR_FUNC T TVector3< T >::DotProduct( const TVector3& iOther ) const {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC T TVector3< T >::CrossProduct( const TVector3& iOther ) const {
+ULIS_VECTOR_FUNC TVector3< T > TVector3< T >::CrossProduct( const TVector3& iOther ) const {
     return  TVector3< T >(
           y * iOther.z - z * iOther.y
         , z * iOther.x - x * iOther.z
@@ -309,15 +303,6 @@ ULIS_VECTOR_FUNC TVector3< T >& TVector3< T >::operator/=( T iValue ) {
     return  *this;
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector3< T >& TVector3< T >::operator%=( T iValue ) {
-    ULIS_ASSERT( iValue != 0, "Division by zero" );
-    x %= iValue;
-    y %= iValue;
-    z %= iValue;
-    return  *this;
-}
-
 
 
 // Unary Operators with vectors
@@ -353,17 +338,6 @@ ULIS_VECTOR_FUNC TVector3< T >& TVector3< T >::operator/=(const TVector3& iOther
     x /= iOther.x;
     y /= iOther.y;
     z /= iOther.z;
-    return  *this;
-}
-
-template< typename T >
-ULIS_VECTOR_FUNC TVector3< T >& TVector3< T >::operator%=(const TVector3& iOther ) {
-    ULIS_ASSERT( iOther.x != 0, "Division by zero" );
-    ULIS_ASSERT( iOther.y != 0, "Division by zero" );
-    ULIS_ASSERT( iOther.z != 0, "Division by zero" );
-    x %= iOther.x;
-    y %= iOther.y;
-    z %= iOther.z;
     return  *this;
 }
 
@@ -426,18 +400,6 @@ ULIS_VECTOR_FUNC TVector3< T > operator/( T iValue, const TVector3< T >& iVector
     );
 }
 
-template< typename T >
-ULIS_VECTOR_FUNC TVector3< T > operator%( T iValue, const TVector3< T >& iVector ) {
-    ULIS_ASSERT( iVector.x != 0, "Division by zero" );
-    ULIS_ASSERT( iVector.y != 0, "Division by zero" );
-    ULIS_ASSERT( iVector.z != 0, "Division by zero" );
-    return  TVector3< T >(
-          iValue % iVector.x
-        , iValue % iVector.y
-        , iValue % iVector.z
-    );
-}
-
 
 
 // Binary Operators with scalar on right hand side
@@ -475,16 +437,6 @@ ULIS_VECTOR_FUNC TVector3< T > operator/( const TVector3< T >& iVector, T iValue
           iVector.x / iValue
         , iVector.y / iValue
         , iVector.z / iValue
-    );
-}
-
-template< typename T >
-ULIS_VECTOR_FUNC TVector3< T > operator%( const TVector3< T >& iVector, T iValue ) {
-    ULIS_ASSERT( iValue != 0, "Division by zero" );
-    return  TVector3< T >(
-          iVector.x % iValue
-        , iVector.y % iValue
-        , iVector.z % iValue
     );
 }
 
@@ -526,18 +478,6 @@ ULIS_VECTOR_FUNC TVector3< T > operator/( const TVector3< T >& iVector, const TV
           iVector.x / iOther.x
         , iVector.y / iOther.y
         , iVector.z / iOther.z
-    );
-}
-
-template< typename T >
-ULIS_VECTOR_FUNC TVector3< T > operator%( const TVector3< T >& iVector, const TVector3< T >& iOther ) {
-    ULIS_ASSERT( iOther.x != 0, "Division by zero" );
-    ULIS_ASSERT( iOther.y != 0, "Division by zero" );
-    ULIS_ASSERT( iOther.z != 0, "Division by zero" );
-    return  TVector3< T >(
-          iVector.x % iOther.x
-        , iVector.y % iOther.y
-        , iVector.z % iOther.y
     );
 }
 

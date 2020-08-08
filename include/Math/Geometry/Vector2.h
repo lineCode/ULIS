@@ -134,10 +134,6 @@ struct TVector2
     template< typename U >
     ULIS_VECTOR_FUNC TVector2& operator/=( U iValue );
 
-    /*! Compute modulo of this vector by the input value and return a reference to this vector. */
-    template< typename U >
-    ULIS_VECTOR_FUNC TVector2& operator%=( U iValue );
-
 
 
     // Unary Operators with vector
@@ -152,9 +148,6 @@ struct TVector2
 
     /*! Divide this vector by the input vector and return a reference to this vector. */
     ULIS_VECTOR_FUNC TVector2& operator/=(const TVector2& iOther );
-
-    /*! Compute modulo of this vector by the input vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator%=(const TVector2& iOther );
 
 
 
@@ -236,7 +229,7 @@ ULIS_VECTOR_FUNC const TVector2< T >& TVector2< T >::Normalize() {
     ULIS_ASSERT( distance != 0, "Division by zero" );
     x /= distance;
     y /= distance;
-    return  *this
+    return  *this;
 }
 
 template< typename T >
@@ -248,8 +241,8 @@ ULIS_VECTOR_FUNC TVector2< T > TVector2< T >::Normalized() const {
 template< typename T >
 ULIS_VECTOR_FUNC TVector2< T > TVector2< T >::DecimalPart() const {
     return  TVector2< T >(
-          FMath::FloatingPartOfNumber( x )
-        , FMath::FloatingPartOfNumber( y )
+          FMath::FloatingPartOfNumber( static_cast< float >( x ) )
+        , FMath::FloatingPartOfNumber( static_cast< float >( y ) )
     );
 }
 
@@ -271,7 +264,10 @@ ULIS_VECTOR_FUNC bool TVector2< T >::operator!=(const TVector2< T >& iOther ) co
 // Unary negative operator
 template< typename T >
 ULIS_VECTOR_FUNC TVector2< T > TVector2< T >::operator-() const {
+    #pragma warning(push)
+    #pragma warning(disable : 4146) // Shut warning unary negative on unsigned type.
     return  TVector2< T >( -x, -y );
+    #pragma warning(pop)
 }
 
 
@@ -310,15 +306,6 @@ ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator/=( U iValue ) {
     return  *this;
 }
 
-template< typename T >
-template< typename U >
-ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator%=( U iValue ) {
-    ULIS_ASSERT( iValue != 0, "Division by zero" );
-    x %= iValue;
-    y %= iValue;
-    return  *this;
-}
-
 
 
 // Unary Operators with vectors
@@ -349,15 +336,6 @@ ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator/=(const TVector2& iOther
     ULIS_ASSERT( iOther.y != 0, "Division by zero" );
     x /= iOther.x;
     y /= iOther.y;
-    return  *this;
-}
-
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator%=(const TVector2& iOther ) {
-    ULIS_ASSERT( iOther.x != 0, "Division by zero" );
-    ULIS_ASSERT( iOther.y != 0, "Division by zero" );
-    x %= iOther.x;
-    y %= iOther.y;
     return  *this;
 }
 
@@ -415,16 +393,6 @@ ULIS_VECTOR_FUNC TVector2< T > operator/( U iValue, const TVector2< T >& iVector
     );
 }
 
-template< typename T, typename U >
-ULIS_VECTOR_FUNC TVector2< T > operator%( U iValue, const TVector2< T >& iVector ) {
-    ULIS_ASSERT( iVector.x != 0, "Division by zero" );
-    ULIS_ASSERT( iVector.y != 0, "Division by zero" );
-    return  TVector2< T >(
-          iValue % iVector.x
-        , iValue % iVector.y
-    );
-}
-
 
 
 // Binary Operators with scalar on right hand side
@@ -461,14 +429,6 @@ ULIS_VECTOR_FUNC TVector2< T > operator/( const TVector2< T >& iVector, U iValue
     );
 }
 
-template< typename T, typename U >
-ULIS_VECTOR_FUNC TVector2< T > operator%( const TVector2< T >& iVector, U iValue ) {
-    ULIS_ASSERT( iValue != 0, "Division by zero" );
-    return  TVector2< T >(
-          iVector.x % iValue
-        , iVector.y % iValue
-    );
-}
 
 
 // Binary Operators with vector
@@ -503,16 +463,6 @@ ULIS_VECTOR_FUNC TVector2< T > operator/( const TVector2< T >& iVector, const TV
     return  TVector2< T >(
           iVector.x / iOther.x
         , iVector.y / iOther.y
-    );
-}
-
-template< typename T >
-ULIS_VECTOR_FUNC TVector2< T > operator%( const TVector2< T >& iVector, const TVector2< T >& iOther ) {
-    ULIS_ASSERT( iOther.x != 0, "Division by zero" );
-    ULIS_ASSERT( iOther.y != 0, "Division by zero" );
-    return  TVector2< T >(
-          iVector.x % iOther.x
-        , iVector.y % iOther.y
     );
 }
 

@@ -204,7 +204,11 @@ void BlendTiled( FThreadPool*               iThreadPool
     const int   translationX = dst_roi.x - iDestRect.x;
     const int   translationY = dst_roi.y - iDestRect.y;
     FVec2I translation( translationX, translationY );
-    FVec2I mod_shift = FMath::PyModulo( - FMath::PyModulo( iShift - translation, src_size ), src_size );
+
+    FVec2I mod_shift(
+          FMath::PyModulo( - FMath::PyModulo( iShift.x - translation.x, src_size.x ), src_size.x )
+        , FMath::PyModulo( - FMath::PyModulo( iShift.y - translation.y, src_size.y ), src_size.y )
+    );
 
     // Bake forward params, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
     auto commandArgs = std::make_shared< FBlendArgs >();
