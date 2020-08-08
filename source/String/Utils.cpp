@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Base/StringUtils.h"
+#include "String/Utils.h"
 #include <iostream>
 #include <cstring>
 #include <cassert>

@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Data/ColorSpace.h"
+#include "Image/ColorSpace.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END

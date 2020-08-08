@@ -15,10 +15,10 @@
 #include "Core/Core.h"
 #include "Conv/ConvBuffer.h"
 #include "Conv/ConvHelpers.h"
-#include "Data/Color.h"
-#include "Data/Format.h"
-#include "Data/Pixel.h"
-#include "Data/Sample.h"
+#include "Image/Color.h"
+#include "Image/Format.h"
+#include "Image/Pixel.h"
+#include "Image/Sample.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

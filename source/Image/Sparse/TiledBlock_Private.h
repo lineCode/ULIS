@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Data/Sparse/Tile.h"
-#include "Data/Sparse/TiledBlock.h"
-#include "Data/Sparse/Chunk_Private.h"
+#include "Image/Sparse/Tile.h"
+#include "Image/Sparse/TiledBlock.h"
+#include "Image/Sparse/Chunk_Private.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include <vector>

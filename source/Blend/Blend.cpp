@@ -15,7 +15,7 @@
 #include "Blend/BlendArgs.h"
 #include "Blend/BlendDispatch.ipp"
 #include "Conv/Conv.h"
-#include "Data/Block.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"

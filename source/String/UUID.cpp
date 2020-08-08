@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Base/UUID.h"
+#include "String/UUID.h"
 #include <iostream>
 #include <sstream>
 #include <random>

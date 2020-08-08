@@ -12,10 +12,10 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Fill/Fill.h"
-#include "Base/HostDeviceInfo.h"
+#include "System/HostDeviceInfo.h"
 #include "Conv/Conv.h"
-#include "Data/Block.h"
-#include "Data/Pixel.h"
+#include "Image/Block.h"
+#include "Image/Pixel.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Thread/ThreadPool.h"

@@ -17,7 +17,7 @@
 #include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.ipp"
-#include "Data/Block.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Thread/ThreadPool.h"

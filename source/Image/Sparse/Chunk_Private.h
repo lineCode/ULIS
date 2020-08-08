@@ -13,15 +13,15 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Data/Block.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Copy/Copy.h"
-#include "Base/HostDeviceInfo.h"
+#include "System/HostDeviceInfo.h"
 #include "Raster/Draw.h"
 #include "Raster/Sparse/DrawSparse.h"
-#include "Data/Sparse/TiledBlock_Private.h"
-#include "Data/Sparse/TilePool_Private.h"
+#include "Image/Sparse/TiledBlock_Private.h"
+#include "Image/Sparse/TilePool_Private.h"
 #include <static_math/static_math.h>
 
 ULIS_NAMESPACE_BEGIN

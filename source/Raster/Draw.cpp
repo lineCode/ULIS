@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Raster/Draw.h"
-#include "Data/Block.h"
+#include "Image/Block.h"
 #include "Conv/ConvBuffer.h"
 #include "Conv/Conv.h"
 #include "Math/Math.h"

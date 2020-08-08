@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Data/Pixel.h"
+#include "Image/Pixel.h"
 
 ULIS_NAMESPACE_BEGIN
 FPixel::~FPixel()

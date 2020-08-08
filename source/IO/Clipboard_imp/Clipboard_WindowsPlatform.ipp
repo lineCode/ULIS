@@ -12,8 +12,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "IO/Clipboard.h"
-#include "Data/Block.h"
-#include "Base/HostDeviceInfo.h"
+#include "Image/Block.h"
+#include "System/HostDeviceInfo.h"
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
 #include "Thread/ThreadPool.h"

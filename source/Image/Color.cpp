@@ -11,8 +11,8 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Data/Color.h"
-#include "Data/Pixel.h"
+#include "Image/Color.h"
+#include "Image/Pixel.h"
 
 ULIS_NAMESPACE_BEGIN
 namespace detail {

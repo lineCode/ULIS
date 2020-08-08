@@ -15,9 +15,9 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Data/Sparse/TilePool.h"
-#include "Data/Sparse/TiledBlock.h"
-#include "Data/Sparse/TiledBlock_Private.h"
+#include "Image/Sparse/TilePool.h"
+#include "Image/Sparse/TiledBlock.h"
+#include "Image/Sparse/TiledBlock_Private.h"
 
 #include <static_math/static_math.h>
 

@@ -13,8 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Data/ColorSpace.h"
-#include "Data/Format.h"
+#include "Image/ColorSpace.h"
+#include "Image/Format.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

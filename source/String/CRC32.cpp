@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Base/CRC32.h"
+#include "String/CRC32.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

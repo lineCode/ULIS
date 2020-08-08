@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Data/Format.h"
+#include "Image/Format.h"
 
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 #include <vectorclass.h>

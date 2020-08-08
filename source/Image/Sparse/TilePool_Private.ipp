@@ -12,10 +12,10 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Base/HostDeviceInfo.h"
+#include "System/HostDeviceInfo.h"
 #include "Clear/Clear.h"
-#include "Data/Block.h"
-#include "Data/Sparse/Tile.h"
+#include "Image/Block.h"
+#include "Image/Sparse/Tile.h"
 #include <algorithm>
 
 ULIS_NAMESPACE_BEGIN

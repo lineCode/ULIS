@@ -13,15 +13,15 @@
 */
 #pragma once
 // Data
-#include "Data/Block.h"
-#include "Data/Color.h"
-#include "Data/ColorSpace.h"
-#include "Data/Format.h"
-#include "Data/Pixel.h"
-#include "Data/Sample.h"
+#include "Image/Block.h"
+#include "Image/Color.h"
+#include "Image/ColorSpace.h"
+#include "Image/Format.h"
+#include "Image/Pixel.h"
+#include "Image/Sample.h"
 // Base
-#include "Base/HostDeviceInfo.h"
-#include "Base/FilePathRegistry.h"
+#include "System/HostDeviceInfo.h"
+#include "System/FilePathRegistry.h"
 // Thread
 #include "Thread/ThreadInterface.h"
 // Maths
@@ -55,6 +55,6 @@
 #include "Raster/Draw.h"
 #include "Mix/Mix.h"
 #include "Transform/Transform.h"
-#include "Data/Sparse/TiledBlock.h"
-#include "Data/Sparse/TilePool.h"
+#include "Image/Sparse/TiledBlock.h"
+#include "Image/Sparse/TilePool.h"
 

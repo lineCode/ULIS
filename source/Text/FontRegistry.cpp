@@ -12,8 +12,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Text/FontRegistry.h"
-#include "Base/FilePathRegistry.h"
-#include "Base/StringUtils.h"
+#include "System/FilePathRegistry.h"
+#include "String/Utils.h"
 #include "Text/TextEngine.h"
 #include "Text/Font.h"
 

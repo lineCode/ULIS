@@ -11,10 +11,10 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Data/Sparse/TilePool.h"
+#include "Image/Sparse/TilePool.h"
 
 #ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
-#include "Data/Sparse/TilePool_Private.h"
+#include "Image/Sparse/TilePool_Private.h"
 #endif
 
 ULIS_NAMESPACE_BEGIN

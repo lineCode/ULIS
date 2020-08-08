@@ -12,8 +12,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
-#include "Data/Block.h"
-#include "Base/HostDeviceInfo.h"
+#include "Image/Block.h"
+#include "System/HostDeviceInfo.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Thread/ThreadPool.h"

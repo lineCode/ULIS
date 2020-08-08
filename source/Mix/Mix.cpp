@@ -13,9 +13,9 @@
 */
 #include "Mix/Mix.h"
 #include "Conv/Conv.h"
-#include "Data/Pixel.h"
-#include "Data/Color.h"
-#include "Data/Sample.h"
+#include "Image/Pixel.h"
+#include "Image/Color.h"
+#include "Image/Sample.h"
 #include "Math/Math.h"
 #include "Conv/srgb2linear.h"
 

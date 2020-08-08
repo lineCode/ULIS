@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Data/Block.h"
+#include "Image/Block.h"
 #include <new>
 
 ULIS_NAMESPACE_BEGIN

@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Data/Sample.h"
+#include "Image/Sample.h"
 
 ULIS_NAMESPACE_BEGIN
 ISample::~ISample()

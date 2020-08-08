@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Data/Sample.h"
+#include "Image/Sample.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

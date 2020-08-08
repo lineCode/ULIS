@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Base/HostDeviceInfo.h"
+#include "System/HostDeviceInfo.h"
 #include "cpu_x86.h"
 
 ULIS_NAMESPACE_BEGIN

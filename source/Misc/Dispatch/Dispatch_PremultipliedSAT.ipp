@@ -12,9 +12,9 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Misc/SummedAreaTable.h"
-#include "Base/HostDeviceInfo.h"
+#include "System/HostDeviceInfo.h"
 #include "Misc/Filter.h"
-#include "Data/Block.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"

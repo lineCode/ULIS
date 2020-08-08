@@ -12,9 +12,9 @@
 * @license      Please refer to LICENSE.md
 */
 #include "IO/Disk.h"
-#include "Base/HostDeviceInfo.h"
-#include "Base/StringUtils.h"
-#include "Data/Block.h"
+#include "System/HostDeviceInfo.h"
+#include "String/Utils.h"
+#include "Image/Block.h"
 #include "Conv/Conv.h"
 
 // STD
