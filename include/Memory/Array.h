@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include <cmath>
+#include "Memory/Memory.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -21,11 +21,25 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The TArray class provides a simple dynamic array or vector
 ///             class for ULIS interfaces.
 /// @details    The need of a custom TArray class rose from the fact that std::
-///             classes cannot be exported safely accross dll boundaries when
+///             classes cannot be exported easily accross dll boundaries when
 ///             ULIS is compiled as a shared library.
 template< typename T >
 class TArray
 {
+public:
+    /*! Destroy the Array and cleanup memory. */
+    ~TArray< T >();
+
+    /*! Default constructor with size 0, uninitialized. */
+    TArray< T >();
+
+    /*! Constructor with known size, both capacity and size will match the requested size. */
+    TArray< T >( uint64 iSize );
+
+private:
+    T* mBulk;
+    uint64 mCapacity;
+    uint64 mSize;
 };
 
 ULIS_NAMESPACE_END
