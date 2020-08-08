@@ -104,32 +104,37 @@ FColor::~FColor()
 }
 
 FColor::FColor()
-    : ISample( new uint8[ BytesPerPixel() ], eFormat::Format_RGBA8 )
+    : ISample( nullptr, eFormat::Format_RGBA8 )
 {
+    mSignal = new uint8[ BytesPerPixel() ];
     memset( mSignal, 0, BytesPerPixel() );
 }
 
 FColor::FColor( eFormat iFormat, const FColorSpace* iColorSpace )
-    : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
+    : ISample( nullptr, iFormat, iColorSpace )
 {
+    mSignal = new uint8[ BytesPerPixel() ];
     memset( mSignal, 0, BytesPerPixel() );
 }
 
 FColor::FColor( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
-    : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
+    : ISample( nullptr, iFormat, iColorSpace )
 {
+    mSignal = new uint8[ BytesPerPixel() ];
     memcpy( mSignal, iData, BytesPerPixel() );
 }
 
 FColor::FColor( const FPixel& iPixel )
-    : ISample( new uint8[ BytesPerPixel() ], iPixel.Format(), iPixel.ColorSpace() )
+    : ISample( nullptr, iPixel.Format(), iPixel.ColorSpace() )
 {
+    mSignal = new uint8[ BytesPerPixel() ];
     memcpy( mSignal, iPixel.Bits(), BytesPerPixel() );
 }
 
 FColor::FColor( const FColor& iValue )
-    : ISample( new uint8[ BytesPerPixel() ], iValue.Format(), iValue.ColorSpace() )
+    : ISample( nullptr, iValue.Format(), iValue.ColorSpace() )
 {
+    mSignal = new uint8[ BytesPerPixel() ];
     memcpy( mSignal, iValue.Bits(), BytesPerPixel() );
 }
 
@@ -137,6 +142,7 @@ FColor::FColor( const FColor& iValue )
 FColor::FColor( FColor&& iValue )
     : ISample( iValue.mSignal, iValue.Format(), iValue.ColorSpace() )
 {
+    mSignal = new uint8[ BytesPerPixel() ];
     iValue.mSignal = nullptr;
 }
 
@@ -156,8 +162,9 @@ FColor::operator=( const FColor& iOther ) {
 
 template< typename T >
 FColor::FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace )
-    : ISample( new uint8[ BytesPerPixel() ], iFormat, iColorSpace )
+    : ISample( nullptr, iFormat, iColorSpace )
 {
+    mSignal = new uint8[ BytesPerPixel() ];
     #define TMP_CALL( iTypeID, iType, iE2, iE3 ) detail::TColorInitializer< iType >::Run< T >( this, iValues ); break;
     ULIS_SWITCH_FOR_ALL_DO( Type(), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
     #undef TMP_CALL
