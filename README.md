@@ -3,7 +3,7 @@
 </p>
 
 ## Overview
-ULIS is a graphics library written in C++. It is aimed at software rasterization and digital image processing, with scalable multiprocessor parallel programming, high performance with SIMD extensions, and hardware awareness in mind.
+ULIS is a rendering library written in C++. It is aimed at software rasterization and digital image processing.
 
 ## Samples
 ![](meta/image/sample/BlendNormals.png) | ![](meta/image/sample/RasterText.png) | ![](meta/image/sample/Transforms.png)
