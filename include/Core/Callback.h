@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         Callbacks.h
+* @file         Callback.h
 * @author       Clement Berthaud
 * @brief        This file provides declarations for the generic callbacks mechanisms.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

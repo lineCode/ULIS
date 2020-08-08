@@ -21,7 +21,7 @@
 
 #include <chrono>
 
-using namespace ::ul3;
+using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {

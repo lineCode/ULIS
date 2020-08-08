@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         StringUtils.cpp
+* @file         Utils.cpp
 * @author       Clement Berthaud
 * @brief        This file provides string utility tools.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

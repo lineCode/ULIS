@@ -5,13 +5,13 @@
 *   ULIS3
 *__________________
 *
-* @file         Callbacks.cpp
+* @file         Callback.cpp
 * @author       Clement Berthaud
 * @brief        This file provides definitions for the image callbacks.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Base/Callbacks.h"
+#include "Core/Callback.h"
 
 ULIS_NAMESPACE_BEGIN
 void OnCleanup_FreeMemory( uint8* iData, void* iInfo )

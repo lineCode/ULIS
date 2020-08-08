@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Base/Callbacks.h"
+#include "Core/Callback.h"
 #include "Image/ColorSpace.h"
 #include "Image/Format.h"
 #include "Image/Pixel.h"
