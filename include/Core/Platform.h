@@ -75,7 +75,7 @@
 #endif
 
 /////////////////////////////////////////////////////
-// Safety disable thread and SIMD for Emscripten target
+// Disable thread and SIMD for Emscripten target
 #ifdef ULIS_EMSCRIPTEN
 #define ULIS_NO_THREAD_SUPPORT
 #define ULIS_NO_SIMD_SUPPORT
@@ -152,19 +152,12 @@
 
 /////////////////////////////////////////////////////
 // Define Namespaces
-#define ULIS_NAMESPACE_NAME        ULIS3
-#define ULIS_SHORT_NAMESPACE_NAME  ul3
+#define ULIS_NAMESPACE_NAME        ULIS
+#define ULIS_SHORT_NAMESPACE_NAME  ul
 #define ULIS_NAMESPACE_BEGIN       namespace ULIS_NAMESPACE_NAME {
 #define ULIS_NAMESPACE_END         }
 namespace ULIS_NAMESPACE_NAME {}
 namespace ULIS_SHORT_NAMESPACE_NAME = ULIS_NAMESPACE_NAME;
-
-/////////////////////////////////////////////////////
-// Version Specification
-#define ULIS_VERSION_MAJOR      3
-#define ULIS_VERSION_MINOR      0
-#define ULIS_VERSION_MAJOR_STR  "3"
-#define ULIS_VERSION_MINOR_STR  "0"
 
 /////////////////////////////////////////////////////
 // Crash Behaviours
@@ -209,10 +202,3 @@ namespace ULIS_SHORT_NAMESPACE_NAME = ULIS_NAMESPACE_NAME;
     #endif
 #endif
 
-/////////////////////////////////////////////////////
-// glm FORCE extensions, before any glm related includes
-#ifdef ULIS_COMPILED_WITH_SIMD_SUPPORT
-#define GLM_FORCE_SSE42
-#define GLM_FORCE_INTRINSICS
-#endif
-#define GLM_FORCE_SWIZZLE

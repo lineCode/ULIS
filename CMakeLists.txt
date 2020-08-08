@@ -5,6 +5,7 @@ option( ULIS_BUILD_PYTHON_MODULE    "Build the library python module"           
 option( ULIS_BUILD_TESTS            "Build the library test modules"                    OFF )
 option( ULIS_BUILD_SAMPLES          "Build the library sample modules"                  OFF )
 option( ULIS_FORCE_ASSERTS          "Build the library with forced assert in release"   OFF )
+SET( ULIS_BINARY_PREFIX             "" CACHE STRING "Indicates a prefix for the output binaries" )
 SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package" )
 SET( ULIS_PYTHON_REL_LIB            "" CACHE STRING "Indicates the path to python release static library" )
 SET( ULIS_PYTHON_DEB_LIB            "" CACHE STRING "Indicates the path to python debug static library" )
@@ -28,6 +29,9 @@ endif()
 
 # Create solution
 project( ULIS )
+set( ULIS_VERSION_MAJOR 3 )
+set( ULIS_VERSION_MINOR 0 )
+set( ULIS_VERSION_PATCH 0 )
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 
 # Flags for Compiler / Platforms
@@ -104,10 +108,9 @@ if( ${ULIS_FORCE_ASSERTS} )
 endif()
 
 target_compile_definitions( ULIS PUBLIC UNICODE )
-
-
-set_target_properties( ULIS PROPERTIES OUTPUT_NAME "ULIS" )
-set_target_properties( ULIS PROPERTIES PREFIX "" )
+target_compile_definitions( ULIS PRIVATE ULIS_VERSION_MAJOR=${ULIS_VERSION_MAJOR} ULIS_VERSION_MINOR=${ULIS_VERSION_MINOR} ULIS_VERSION_PATCH=${ULIS_VERSION_PATCH} )
+set_target_properties( ULIS PROPERTIES OUTPUT_NAME "ULIS${ULIS_VERSION_MAJOR}" )
+set_target_properties( ULIS PROPERTIES PREFIX "${ULIS_BINARY_PREFIX}" )
 set_target_properties( ULIS PROPERTIES FOLDER ULIS )
 target_link_libraries( ULIS PRIVATE clip )
 target_link_libraries( ULIS PRIVATE lcms2 )
