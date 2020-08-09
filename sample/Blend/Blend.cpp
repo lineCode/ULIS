@@ -25,6 +25,14 @@ using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {
+
+    TArray< int > vector0;
+    vector0.Size();
+    vector0.Capacity();
+    vector0.EmplaceBack( 50 );
+    int a = vector0[0];
+    auto dummy = 0;
+
     // Gather start time to output the time it took to perform the blend composition
     auto startTime = std::chrono::steady_clock::now();
 
@@ -49,9 +57,9 @@ main( int argc, char *argv[] ) {
     // We can do that because both loading processes are independant and do not interfere with each other
     // Passing ULIS_NONBLOCKING avoids stalling beetween the two functions.
     // ( Note: the 'X' prefix before a function name always means the function allocates a block and returns the pointer,
-    // the caller is now responsible for the FBlock* lifetime, and should delete it ).
-    FBlock* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathBase, Format_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathOver, Format_RGBA8 );
+    // the caller is now responsible for the FRasterImage2D* lifetime, and should delete it ).
+    FRasterImage2D* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathBase, Format_RGBA8 );
+    FRasterImage2D* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathOver, Format_RGBA8 );
 
     // Fence the pool here,
     // After the two calls to XLoadFromFile, the functions returned immediately even though the data isn't loaded yet
@@ -74,7 +82,7 @@ main( int argc, char *argv[] ) {
     // Allocate a new block
     // The caller is responsible for destructing the blockCanvas object here too.
     // The block has the same format ULIS_FORMAT_RGBA8 as requested for the two blocks before.
-    FBlock* blockCanvas = new  FBlock( w, h, Format_RGBA8 );
+    FRasterImage2D* blockCanvas = new  FRasterImage2D( w, h, Format_RGBA8 );
 
     // Start processing the blocks
     // We will first tile the base block layout on a regular grid in the blockCanvas block

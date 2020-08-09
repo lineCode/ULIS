@@ -21,7 +21,7 @@ ULIS_API FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                           , uint32                  iPerfIntent
                                           , const FHostDeviceInfo&  iHostDeviceInfo
                                           , bool                    iCallCB
-                                          , const FBlock*           iSource );
+                                          , const FRasterImage2D*           iSource );
 
 ULIS_NAMESPACE_END
 

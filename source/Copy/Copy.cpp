@@ -63,8 +63,8 @@ Copy_imp( FThreadPool*              iThreadPool
         , uint32                    iPerfIntent
         , const FHostDeviceInfo&    iHostDeviceInfo
         , bool                      iCallCB
-        , const FBlock*             iSource
-        , FBlock*                   iDestination
+        , const FRasterImage2D*             iSource
+        , FRasterImage2D*                   iDestination
         , const FRectI&              iSrcROI
         , const FRectI&              iDstROI
         , const FVec2I&             iShift )
@@ -108,8 +108,8 @@ void Copy( FThreadPool*             iThreadPool
          , uint32                   iPerfIntent
          , const FHostDeviceInfo&   iHostDeviceInfo
          , bool                     iCallCB
-         , const FBlock*            iSource
-         , FBlock*                  iDestination
+         , const FRasterImage2D*            iSource
+         , FRasterImage2D*                  iDestination
          , const FRectI&             iArea
          , const FVec2I&            iPos )
 {
@@ -144,12 +144,12 @@ void Copy( FThreadPool*             iThreadPool
     iDestination->Dirty( dst_fit, iCallCB );
 }
 
-FBlock* XCopy( FThreadPool*           iThreadPool
+FRasterImage2D* XCopy( FThreadPool*           iThreadPool
              , bool                   iBlocking
              , uint32                 iPerfIntent
              , const FHostDeviceInfo& iHostDeviceInfo
              , bool                   iCallCB
-             , const FBlock*          iSource
+             , const FRasterImage2D*          iSource
              , const FRectI&           iArea )
 {
     ULIS_ASSERT( iSource, "Bad source." );
@@ -159,13 +159,13 @@ FBlock* XCopy( FThreadPool*           iThreadPool
     if( src_roi.Area() <= 0 )
         return  nullptr;
 
-    FBlock* ret = new FBlock( src_roi.w, src_roi.h, iSource->Format() );
+    FRasterImage2D* ret = new FRasterImage2D( src_roi.w, src_roi.h, iSource->Format() );
     Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret, src_roi, FVec2I( 0, 0 ) );
     return  ret;
 }
 
 void
-CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB ) {
+CopyRaw( const FRasterImage2D* iSrc, FRasterImage2D* iDst, bool iCallCB ) {
     // Assertions
     ULIS_ASSERT( iSrc,                             "Bad source"                                );
     ULIS_ASSERT( iDst,                             "Bad destination"                           );
@@ -179,11 +179,11 @@ CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB ) {
     iDst->Dirty( iCallCB );
 }
 
-FBlock*
-XCopyRaw( const FBlock* iSrc, bool iCallCB ) {
+FRasterImage2D*
+XCopyRaw( const FRasterImage2D* iSrc, bool iCallCB ) {
     // Assertions
     ULIS_ASSERT( iSrc, "Bad source" );
-    FBlock* ret = new FBlock( iSrc->Width(), iSrc->Height(), iSrc->Format() );
+    FRasterImage2D* ret = new FRasterImage2D( iSrc->Width(), iSrc->Height(), iSrc->Format() );
     memcpy( ret->Bits(), iSrc->Bits(), iSrc->BytesTotal() );
     return  ret;
 }

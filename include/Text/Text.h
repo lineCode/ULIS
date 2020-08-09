@@ -24,7 +24,7 @@ ULIS_API void RenderText(
     , uint32 iPerfIntent
     , const FHostDeviceInfo& iHostDeviceInfo
     , bool iCallCB
-    , FBlock* iDestination
+    , FRasterImage2D* iDestination
     , const std::wstring iText
     , const FFont& iFont
     , int iSize

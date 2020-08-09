@@ -25,8 +25,8 @@ ULIS_API void TransformAffine( FThreadPool*              iThreadPool
                               , uint32                    iPerfIntent
                               , const FHostDeviceInfo&    iHostDeviceInfo
                               , bool                      iCallCB
-                              , const FBlock*             iSource
-                              , FBlock*                   iDestination
+                              , const FRasterImage2D*             iSource
+                              , FRasterImage2D*                   iDestination
                               , const FRectI&              iSourceRect
                               , const FTransformation2D&       iTransform
                               , eResamplingMethod         iMethod );
@@ -38,8 +38,8 @@ ULIS_API void TransformAffineTiled( FThreadPool*              iThreadPool
                                    , uint32                    iPerfIntent
                                    , const FHostDeviceInfo&    iHostDeviceInfo
                                    , bool                      iCallCB
-                                   , const FBlock*             iSource
-                                   , FBlock*                   iDestination
+                                   , const FRasterImage2D*             iSource
+                                   , FRasterImage2D*                   iDestination
                                    , const FRectI&              iSourceRect
                                    , const FRectI&              iDestRect
                                    , const FTransformation2D&       iTransform
@@ -52,8 +52,8 @@ ULIS_API void TransformPerspective( FThreadPool*              iThreadPool
                                    , uint32                    iPerfIntent
                                    , const FHostDeviceInfo&    iHostDeviceInfo
                                    , bool                      iCallCB
-                                   , const FBlock*             iSource
-                                   , FBlock*                   iDestination
+                                   , const FRasterImage2D*             iSource
+                                   , FRasterImage2D*                   iDestination
                                    , const FRectI&              iSourceRect
                                    , const FTransformation2D&       iTransform
                                    , eResamplingMethod         iMethod );
@@ -65,8 +65,8 @@ ULIS_API void TransformBezier( FThreadPool*                                    i
                               , uint32                                          iPerfIntent
                               , const FHostDeviceInfo&                          iHostDeviceInfo
                               , bool                                            iCallCB
-                              , const FBlock*                                   iSource
-                              , FBlock*                                         iDestination
+                              , const FRasterImage2D*                                   iSource
+                              , FRasterImage2D*                                         iDestination
                               , const FRectI&                                    iSourceRect
                               , const std::vector< FCubicBezierControlPoint >&  iControlPoints
                               , float                                           iThreshold
@@ -80,8 +80,8 @@ ULIS_API void Resize( FThreadPool*             iThreadPool
                      , uint32                   iPerfIntent
                      , const FHostDeviceInfo&   iHostDeviceInfo
                      , bool                     iCallCB
-                     , const FBlock*            iSource
-                     , FBlock*                  iDestination
+                     , const FRasterImage2D*            iSource
+                     , FRasterImage2D*                  iDestination
                      , const FRectI&             iSourceRect
                      , const FVec2F&            iSize
                      , const FVec2F&            iPos
@@ -89,36 +89,36 @@ ULIS_API void Resize( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // XResize
-ULIS_API FBlock* XResize( FThreadPool*             iThreadPool
+ULIS_API FRasterImage2D* XResize( FThreadPool*             iThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
                          , bool                     iCallCB
-                         , const FBlock*            iSource
+                         , const FRasterImage2D*            iSource
                          , const FRectI&             iSourceRect
                          , const FVec2F&            iSize
                          , eResamplingMethod        iMethod );
 
 /////////////////////////////////////////////////////
 // XTransformAffine
-ULIS_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
+ULIS_API FRasterImage2D* XTransformAffine( FThreadPool*            iThreadPool
                                   , bool                    iBlocking
                                   , uint32                  iPerfIntent
                                   , const FHostDeviceInfo&  iHostDeviceInfo
                                   , bool                    iCallCB
-                                  , const FBlock*           iSource
+                                  , const FRasterImage2D*           iSource
                                   , const FRectI&            iSourceRect
                                   , const FTransformation2D&     iTransform
                                   , eResamplingMethod       iMethod );
 
 /////////////////////////////////////////////////////
 // XTransformAffineTiled
-ULIS_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
+ULIS_API FRasterImage2D* XTransformAffineTiled( FThreadPool*              iThreadPool
                                        , bool                      iBlocking
                                        , uint32                    iPerfIntent
                                        , const FHostDeviceInfo&    iHostDeviceInfo
                                        , bool                      iCallCB
-                                       , const FBlock*             iSource
+                                       , const FRasterImage2D*             iSource
                                        , const FRectI&              iSourceRect
                                        , const FRectI&              iDestRect
                                        , const FTransformation2D&       iTransform
@@ -126,24 +126,24 @@ ULIS_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // XMakeTileableTransformedPattern
-ULIS_API FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
+ULIS_API FRasterImage2D* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
                                                  , bool                      iBlocking
                                                  , uint32                    iPerfIntent
                                                  , const FHostDeviceInfo&    iHostDeviceInfo
                                                  , bool                      iCallCB
-                                                 , const FBlock*             iSource
+                                                 , const FRasterImage2D*             iSource
                                                  , const FRectI&              iSourceRect
                                                  , const FTransformation2D&       iTransform
                                                  , eResamplingMethod         iMethod );
 
 /////////////////////////////////////////////////////
 // XTransformPerspective
-ULIS_API FBlock* XTransformPerspective( FThreadPool*                   iThreadPool
+ULIS_API FRasterImage2D* XTransformPerspective( FThreadPool*                   iThreadPool
                                        , bool                           iBlocking
                                        , uint32                         iPerfIntent
                                        , const FHostDeviceInfo&         iHostDeviceInfo
                                        , bool                           iCallCB
-                                       , const FBlock*                  iSource
+                                       , const FRasterImage2D*                  iSource
                                        , const FRectI&                   iSourceRect
                                        , const std::vector< FVec2F >&   iDestinationPoints
                                        , eResamplingMethod              iMethod );

@@ -76,7 +76,7 @@ Premultiply( FThreadPool*           iThreadPool
            , uint32                 iPerfIntent
            , const FHostDeviceInfo& iHostDeviceInfo
            , bool                   iCallCB
-           , FBlock*                iDestination )
+           , FRasterImage2D*                iDestination )
 {
     // Assertions
     ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
@@ -105,7 +105,7 @@ Unpremultiply( FThreadPool*             iThreadPool
              , uint32                   iPerfIntent
              , const FHostDeviceInfo&   iHostDeviceInfo
              , bool                     iCallCB
-             , FBlock*                  iDestination )
+             , FRasterImage2D*                  iDestination )
 {
     // Assertions
     ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );

@@ -63,10 +63,10 @@ public:
 
 public:
     // Tile API
-    virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const = 0;
+    virtual const FRasterImage2D* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const = 0;
     virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords  ) = 0;
-    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
-    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
+    virtual  void DrawDebugWireframe( FRasterImage2D* iDst, const FVec2I64& iPos, float iScale ) = 0;
+    virtual  void DrawDebugTileContent( FRasterImage2D* iDst, const FVec2I64& iPos ) = 0;
     virtual  void Clear() = 0;
     virtual  void SanitizeNow() = 0;
 };

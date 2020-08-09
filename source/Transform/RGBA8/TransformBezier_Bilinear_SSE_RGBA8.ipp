@@ -22,7 +22,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformBezierMTProcessScanline_Bilinear_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask, const Vec4i iIDT ) {
+InvokeTransformBezierMTProcessScanline_Bilinear_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FRasterImage2D > iField, std::shared_ptr< const FRasterImage2D > iMask, const Vec4i iIDT ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormat&      fmt     = info.destination->FormatInfo();
     uint8*                  dst     = iDst;
@@ -86,7 +86,7 @@ InvokeTransformBezierMTProcessScanline_Bilinear_SSE_RGBA8( uint8* iDst, int32 iL
 }
 
 void
-TransformBezierMT_Bilinear_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
+TransformBezierMT_Bilinear_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FRasterImage2D > iField, std::shared_ptr< const FRasterImage2D > iMask ) {
     const FTransformArgs&   info        = *iInfo;
     uint8*                  dst         = info.destination->Bits();
     const uint32             dst_bps     = info.destination->BytesPerScanLine();

@@ -32,7 +32,7 @@ struct ULIS_API FTileElement {
         , mDirty( false )
     {}
 
-    FTileElement( FBlock* iPtr )
+    FTileElement( FRasterImage2D* iPtr )
         : mBlock( iPtr )
         , mHash( 0 )
         , mRefCount( 0 )
@@ -42,7 +42,7 @@ struct ULIS_API FTileElement {
     void DecreaseRefCount() { mRefCount--; };
     void IncreaseRefCount() { mRefCount++; };
 
-    FBlock* mBlock;
+    FRasterImage2D* mBlock;
     uint32  mHash;
     std::atomic< uint32 >   mRefCount;
     std::atomic< bool >     mDirty;

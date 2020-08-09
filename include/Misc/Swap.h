@@ -21,7 +21,7 @@ ULIS_API void Swap( FThreadPool*           iThreadPool
                    , uint32                 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo
                    , bool                   iCallCB
-                   , FBlock*                iDestination
+                   , FRasterImage2D*                iDestination
                    , uint8                  iChannel1
                    , uint8                  iChannel2 );
 

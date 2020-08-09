@@ -33,8 +33,8 @@ void TransformAffine( FThreadPool*              iThreadPool
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
                     , bool                      iCallCB
-                    , const FBlock*             iSource
-                    , FBlock*                   iDestination
+                    , const FRasterImage2D*             iSource
+                    , FRasterImage2D*                   iDestination
                     , const FRectI&              iSourceRect
                     , const FTransformation2D&       iTransform
                     , eResamplingMethod         iMethod )
@@ -84,8 +84,8 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
                          , uint32                    iPerfIntent
                          , const FHostDeviceInfo&    iHostDeviceInfo
                          , bool                      iCallCB
-                         , const FBlock*             iSource
-                         , FBlock*                   iDestination
+                         , const FRasterImage2D*             iSource
+                         , FRasterImage2D*                   iDestination
                          , const FRectI&              iSourceRect
                          , const FRectI&              iDestRect
                          , const FTransformation2D&       iTransform
@@ -136,8 +136,8 @@ void TransformPerspective( FThreadPool*         iThreadPool
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
                     , bool                      iCallCB
-                    , const FBlock*             iSource
-                    , FBlock*                   iDestination
+                    , const FRasterImage2D*             iSource
+                    , FRasterImage2D*                   iDestination
                     , const FRectI&              iSourceRect
                     , const FTransformation2D&       iTransform
                     , eResamplingMethod         iMethod )
@@ -190,8 +190,8 @@ void TransformBezier( FThreadPool*                                      iThreadP
                     , uint32                                            iPerfIntent
                     , const FHostDeviceInfo&                            iHostDeviceInfo
                     , bool                                              iCallCB
-                    , const FBlock*                                     iSource
-                    , FBlock*                                           iDestination
+                    , const FRasterImage2D*                                     iSource
+                    , FRasterImage2D*                                           iDestination
                     , const FRectI&                                      iSourceRect
                     , const std::vector< FCubicBezierControlPoint >&    iControlPoints
                     , float                                             iThreshold
@@ -220,8 +220,8 @@ void TransformBezier( FThreadPool*                                      iThreadP
         return;
 
     FVec2F shift( static_cast< float >( trans.x ), static_cast< float >( trans.y ) );
-    std::shared_ptr< FBlock > field   = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, eFormat::Format_GAF );
-    std::shared_ptr< FBlock > mask    = std::make_shared< FBlock >( dst_fit.w, dst_fit.h, eFormat::Format_G8 );
+    std::shared_ptr< FRasterImage2D > field   = std::make_shared< FRasterImage2D >( dst_fit.w, dst_fit.h, eFormat::Format_GAF );
+    std::shared_ptr< FRasterImage2D > mask    = std::make_shared< FRasterImage2D >( dst_fit.w, dst_fit.h, eFormat::Format_G8 );
     ClearRaw( mask.get(), ULIS_NOCB );
     std::vector< FCubicBezierControlPoint > tempPoints;
     tempPoints.reserve( 4 );
@@ -291,8 +291,8 @@ void Resize( FThreadPool*             iThreadPool
            , uint32                   iPerfIntent
            , const FHostDeviceInfo&   iHostDeviceInfo
            , bool                     iCallCB
-           , const FBlock*            iSource
-           , FBlock*                  iDestination
+           , const FRasterImage2D*            iSource
+           , FRasterImage2D*                  iDestination
            , const FRectI&             iSourceRect
            , const FVec2F&            iSize
            , const FVec2F&            iPos
@@ -344,7 +344,7 @@ void Resize( FThreadPool*             iThreadPool
     commandArgsRef.shift             = shift;
 
     if( iMethod == INTERP_AREA ) {
-        std::shared_ptr< FBlock > sh( XGetPremultipliedSummedAreaTable( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource ) );
+        std::shared_ptr< FRasterImage2D > sh( XGetPremultipliedSummedAreaTable( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource ) );
         commandArgsRef.optionalSAT = sh;
     } else {
         commandArgsRef.optionalSAT = nullptr;
@@ -360,12 +360,12 @@ void Resize( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // XResize
-FBlock* XResize( FThreadPool*           iThreadPool
+FRasterImage2D* XResize( FThreadPool*           iThreadPool
                , bool                   iBlocking
                , uint32                 iPerfIntent
                , const FHostDeviceInfo& iHostDeviceInfo
                , bool                   iCallCB
-               , const FBlock*          iSource
+               , const FRasterImage2D*          iSource
                , const FRectI&           iSourceRect
                , const FVec2F&          iSize
                , eResamplingMethod      iMethod ) {
@@ -378,7 +378,7 @@ FBlock* XResize( FThreadPool*           iThreadPool
     if( iSize.x <= 0.f || iSize.y <= 0.f )
         return  nullptr;
 
-    FBlock* dst = new FBlock( static_cast< int >( FMath::RoundToPositiveInfinity( iSize.x ) )
+    FRasterImage2D* dst = new FRasterImage2D( static_cast< int >( FMath::RoundToPositiveInfinity( iSize.x ) )
                             , static_cast< int >( FMath::RoundToPositiveInfinity( iSize.y ) ), iSource->Format() );
     Resize( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, iSourceRect, iSize, FVec2F(), iMethod );
     return  dst;
@@ -386,12 +386,12 @@ FBlock* XResize( FThreadPool*           iThreadPool
 
 /////////////////////////////////////////////////////
 // XTransformAffine
-FBlock* XTransformAffine( FThreadPool*              iThreadPool
+FRasterImage2D* XTransformAffine( FThreadPool*              iThreadPool
                         , bool                      iBlocking
                         , uint32                    iPerfIntent
                         , const FHostDeviceInfo&    iHostDeviceInfo
                         , bool                      iCallCB
-                        , const FBlock*             iSource
+                        , const FRasterImage2D*             iSource
                         , const FRectI&              iSourceRect
                         , const FTransformation2D&       iTransform
                         , eResamplingMethod         iMethod ) {
@@ -408,7 +408,7 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
     if( !trans.Area() )
         return  nullptr;
 
-    FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
+    FRasterImage2D* dst = new FRasterImage2D( trans.w, trans.h, iSource->Format() );
     FTransformation2D fixedTransform( FMat3F::MakeTranslationMatrix( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ) * iTransform.Matrix() );
     TransformAffine( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, fixedTransform, iMethod );
     return  dst;
@@ -416,12 +416,12 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // XTransformAffineTiled
-FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
+FRasterImage2D* XTransformAffineTiled( FThreadPool*              iThreadPool
                              , bool                      iBlocking
                              , uint32                    iPerfIntent
                              , const FHostDeviceInfo&    iHostDeviceInfo
                              , bool                      iCallCB
-                             , const FBlock*             iSource
+                             , const FRasterImage2D*             iSource
                              , const FRectI&              iSourceRect
                              , const FRectI&              iDestRect
                              , const FTransformation2D&       iTransform
@@ -440,19 +440,19 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return nullptr;
 
-    FBlock* dst = new FBlock( dst_fit.w, dst_fit.h, iSource->Format() );
+    FRasterImage2D* dst = new FRasterImage2D( dst_fit.w, dst_fit.h, iSource->Format() );
     TransformAffineTiled( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, dst_fit, iTransform, iMethod );
     return  dst;
 }
 
 /////////////////////////////////////////////////////
 // XMakeTileableTransformedPattern
-FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
+FRasterImage2D* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
                                        , bool                      iBlocking
                                        , uint32                    iPerfIntent
                                        , const FHostDeviceInfo&    iHostDeviceInfo
                                        , bool                      iCallCB
-                                       , const FBlock*             iSource
+                                       , const FRasterImage2D*             iSource
                                        , const FRectI&              iSourceRect
                                        , const FTransformation2D&       iTransform
                                        , eResamplingMethod         iMethod ) {
@@ -470,19 +470,19 @@ FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return nullptr;
 
-    FBlock* dst = new FBlock( dst_fit.w, dst_fit.h, iSource->Format() );
+    FRasterImage2D* dst = new FRasterImage2D( dst_fit.w, dst_fit.h, iSource->Format() );
     TransformAffineTiled( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, dst_fit, iTransform, iMethod );
     return  dst;
 }
 
 /////////////////////////////////////////////////////
 // XTransformPerspective
-FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
+FRasterImage2D* XTransformPerspective( FThreadPool*                 iThreadPool
                              , bool                         iBlocking
                              , uint32                       iPerfIntent
                              , const FHostDeviceInfo&       iHostDeviceInfo
                              , bool                         iCallCB
-                             , const FBlock*                iSource
+                             , const FRasterImage2D*                iSource
                              , const FRectI&                 iSourceRect
                              , const std::vector< FVec2F >& iDestinationPoints
                              , eResamplingMethod            iMethod ) {
@@ -512,7 +512,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
     if( !trans.Area() )
         return  nullptr;
 
-    FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
+    FRasterImage2D* dst = new FRasterImage2D( trans.w, trans.h, iSource->Format() );
     TransformPerspective( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, persp, iMethod );
     return  dst;
 }

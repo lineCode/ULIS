@@ -18,7 +18,7 @@
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
-void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
+void DrawDotNoAA( FRasterImage2D* iDst, const FColor& iColor, const FVec2I iPos ) {
     if( !iDst->Rect().HitTest( iPos ) )
         return;
 
@@ -27,7 +27,7 @@ void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
     fptr( iColor.FormatInfo(), iColor.Bits(), iDst->FormatInfo(), ptr, 1 );
 }
 
-void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor, int iX1, int iX2, int iY ) {
+void DrawHorizontalLineNoAA_UnsafeColor( FRasterImage2D* iDst, const uint8* iCorrectColor, int iX1, int iX2, int iY ) {
     FRectI rect = iDst->Rect();
     if( !rect.InVerticalRange( iY ) )
         return;
@@ -45,14 +45,14 @@ void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColo
     }
 }
 
-void DrawHorizontalLineNoAA( FBlock* iDst, const FColor& iColor, int iX1, int iX2, int iY ) {
+void DrawHorizontalLineNoAA( FRasterImage2D* iDst, const FColor& iColor, int iX1, int iX2, int iY ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Bits();
     DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iX1, iX2, iY );
 }
 
-void DrawVerticalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor, int iY1, int iY2, int iX ) {
+void DrawVerticalLineNoAA_UnsafeColor( FRasterImage2D* iDst, const uint8* iCorrectColor, int iY1, int iY2, int iX ) {
     FRectI rect = iDst->Rect();
     if( !rect.InHorizontalRange( iX ) )
         return;
@@ -71,7 +71,7 @@ void DrawVerticalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor,
     }
 }
 
-void DrawVerticalLineNoAA( FBlock* iDst, const FColor& iColor, int iY1, int iY2, int iX ) {
+void DrawVerticalLineNoAA( FRasterImage2D* iDst, const FColor& iColor, int iY1, int iY2, int iX ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Bits();
@@ -79,7 +79,7 @@ void DrawVerticalLineNoAA( FBlock* iDst, const FColor& iColor, int iY1, int iY2,
 }
 
 
-void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRectI& iRect ) {
+void DrawRectOutlineNoAA( FRasterImage2D* iDst, const FColor& iColor, const FRectI& iRect ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Bits();
@@ -89,7 +89,7 @@ void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRectI& iRec
     DrawVerticalLineNoAA_UnsafeColor( iDst, src, iRect.y, iRect.y + iRect.h, iRect.x + iRect.w );
 }
 
-void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRectI& iRect, int iNumSubdiv ) {
+void DrawUniformGridOutlineNoAA( FRasterImage2D* iDst, const FColor& iColor, const FRectI& iRect, int iNumSubdiv ) {
     FColor color( iDst->Format() );
     Conv( iColor, color );
     uint8* src = color.Bits();

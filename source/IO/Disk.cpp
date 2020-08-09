@@ -35,7 +35,7 @@
 #include <cppfs/FilePath.h>
 
 ULIS_NAMESPACE_BEGIN
-FBlock*
+FRasterImage2D*
 XLoadFromFile( FThreadPool*             iThreadPool
              , bool                     iBlocking
              , uint32                   iPerfIntent
@@ -98,10 +98,10 @@ XLoadFromFile( FThreadPool*             iThreadPool
     channels = channels - hea;
 
     eFormat fmt = static_cast< eFormat >( ULIS_W_TYPE( type ) | ULIS_W_CHANNELS( channels ) | ULIS_W_MODEL( model ) | ULIS_W_ALPHA( hea ) | ULIS_W_DEPTH( depth ) | ULIS_W_FLOATING( floating ) );
-    FBlock* ret = new FBlock( data, width, height, fmt, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
+    FRasterImage2D* ret = new FRasterImage2D( data, width, height, fmt, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
 
     if( iDesiredFormat != 0 && iDesiredFormat != fmt ) {
-        FBlock* conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, ret, iDesiredFormat );
+        FRasterImage2D* conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, ret, iDesiredFormat );
         delete ret;
         ret = conv;
     }
@@ -114,7 +114,7 @@ void SaveToFile( FThreadPool*           iThreadPool
                , uint32                 iPerfIntent
                , const FHostDeviceInfo& iHostDeviceInfo
                , bool                   iCallCB
-               , const FBlock*          iSource
+               , const FRasterImage2D*          iSource
                , const std::string&     iPath
                , eImageFormat           iImageFormat
                , int                    iQuality )
@@ -137,7 +137,7 @@ void SaveToFile( FThreadPool*           iThreadPool
     int h = iSource->Height();
     int c = iSource->SamplesPerPixel();
     const uint8* dat = iSource->Bits();
-    FBlock* conv = nullptr;
+    FRasterImage2D* conv = nullptr;
     if( !( layout_valid && model_valid && type_valid ) ) {
         eFormat dstformat = static_cast< eFormat >( 0 );
         if( iImageFormat == IM_HDR )    dstformat = eFormat::Format_RGBF;

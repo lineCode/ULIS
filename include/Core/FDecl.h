@@ -15,7 +15,7 @@
 #include "Core/Platform.h"
 
 ULIS_NAMESPACE_BEGIN
-class   FBlock;
+class   FRasterImage2D;
 class   ISample;
 class   FColor;
 class   FPixel;

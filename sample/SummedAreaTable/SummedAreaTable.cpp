@@ -24,7 +24,7 @@ main() {
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     int size = 9;
-    FBlock* block = new FBlock( size, size, ULIS_FORMAT_RGBA8 );
+    FRasterImage2D* block = new FRasterImage2D( size, size, ULIS_FORMAT_RGBA8 );
     for( int y = 0; y < size; ++y ) {
         for( int x = 0; x < size; ++x ) {
             FPixel prox = block->Pixel( x, y );
@@ -38,7 +38,7 @@ main() {
     }
 
     std::cout << "\n==\n" << std::endl;
-    FBlock* sat = XGetSummedAreaTable( threadPool, ULIS_BLOCKING, perfIntent4, host, ULIS_NOCB, block );
+    FRasterImage2D* sat = XGetSummedAreaTable( threadPool, ULIS_BLOCKING, perfIntent4, host, ULIS_NOCB, block );
     ULIS_ASSERT( sat, "Error " );
     ULIS_ASSERT( sat->Width() == size, "Error " );
     ULIS_ASSERT( sat->Height() == size, "Error " );

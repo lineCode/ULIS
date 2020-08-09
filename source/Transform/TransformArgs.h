@@ -27,8 +27,8 @@ struct FTransformArgs {
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;
     uint32                  perfIntent;
-    const FBlock*           source;
-    FBlock*                 destination;
+    const FRasterImage2D*           source;
+    FRasterImage2D*                 destination;
     FRectI                   src_roi;
     FRectI                   dst_roi;
     eResamplingMethod       method;
@@ -42,14 +42,14 @@ struct FResizeArgs {
     bool                                blocking;
     const FHostDeviceInfo*              hostDeviceInfo;
     uint32                              perfIntent;
-    const FBlock*                       source;
-    FBlock*                             destination;
+    const FRasterImage2D*                       source;
+    FRasterImage2D*                             destination;
     FRectI                               src_roi;
     FRectI                               dst_roi;
     eResamplingMethod                   method;
     FVec2F                              inverseScale;
     FVec2F                              shift;
-    std::shared_ptr< const FBlock >     optionalSAT;
+    std::shared_ptr< const FRasterImage2D >     optionalSAT;
 };
 
 ULIS_NAMESPACE_END

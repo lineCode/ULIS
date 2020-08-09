@@ -80,10 +80,10 @@ Extract( FThreadPool*           iThreadPool
        , uint32                 iPerfIntent
        , const FHostDeviceInfo& iHostDeviceInfo
        , bool                   iCallCB
-       , const FBlock*          iSource
+       , const FRasterImage2D*          iSource
        , bool                   iSourceRawIndicesFlag
        , uint8                  iSourceExtractMask
-       , FBlock*                iDestination
+       , FRasterImage2D*                iDestination
        , bool                   iDestinationRawIndicesFlag
        , uint8                  iDestinationExtractMask )
 {
@@ -156,12 +156,12 @@ Extract( FThreadPool*           iThreadPool
 }
 
 
-FBlock* XExtract( FThreadPool*              iThreadPool
+FRasterImage2D* XExtract( FThreadPool*              iThreadPool
                 , bool                      iBlocking
                 , uint32                    iPerfIntent
                 , const FHostDeviceInfo&    iHostDeviceInfo
                 , bool                      iCallCB
-                , const FBlock*             iSource
+                , const FRasterImage2D*             iSource
                 , bool                      iSourceRawIndicesFlag
                 , uint8                     iSourceExtractMask
                 , eFormat                   iDestinationFormat
@@ -170,7 +170,7 @@ FBlock* XExtract( FThreadPool*              iThreadPool
 {
     // Assertions
     ULIS_ASSERT( iSource, "Bad source." );
-    FBlock* ret = new  FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
+    FRasterImage2D* ret = new  FRasterImage2D( iSource->Width(), iSource->Height(), iDestinationFormat );
     Extract( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iSourceRawIndicesFlag, iSourceExtractMask, ret, iDestinationRawIndicesFlag, iDestinationExtractMask );
     return  ret;
 }

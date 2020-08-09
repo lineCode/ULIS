@@ -60,7 +60,7 @@ ULIS_NAMESPACE_BEGIN
 // Typedefs
 typedef void (*fpTransformInvocation)( std::shared_ptr< const FTransformArgs > );
 typedef void (*fpResizeInvocation)( std::shared_ptr< const FResizeArgs > );
-typedef void (*fpBezierTransformInvocation)( std::shared_ptr< const FTransformArgs >, std::shared_ptr< const FBlock >, std::shared_ptr< const FBlock > );
+typedef void (*fpBezierTransformInvocation)( std::shared_ptr< const FTransformArgs >, std::shared_ptr< const FRasterImage2D >, std::shared_ptr< const FRasterImage2D > );
 
 /////////////////////////////////////////////////////
 // Implementors

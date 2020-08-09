@@ -232,7 +232,7 @@ TTiledBlock< _MICRO, _MACRO >::QueryRootEntryAtChunkSector( const FVec2I32& iPos
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Tile API
 template< uint8 _MICRO, uint8 _MACRO >
-const FBlock*
+const FRasterImage2D*
 TTiledBlock< _MICRO, _MACRO >::QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const {
     static FVec2I64 modLeaf( static_cast< int64 >( micro_chunk_size_as_pixels ) );
     static FVec2I64 modRoot( static_cast< int64 >( macro_chunk_size_as_pixels ) );
@@ -252,7 +252,7 @@ TTiledBlock< _MICRO, _MACRO >::QueryOneMutableTileElementForImminentDirtyOperati
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
-TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) {
+TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FRasterImage2D* iDst, const FVec2I64& iPos, float iScale ) {
     for( auto& it : mSparseMap ) {
         auto pos = PixelCoordinatesFromKey( it.first );
         pos.x = static_cast< int64 >( pos.x * iScale );
@@ -263,7 +263,7 @@ TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FBlock* iDst, const FVec2I64&
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
-TTiledBlock< _MICRO, _MACRO >::DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) {
+TTiledBlock< _MICRO, _MACRO >::DrawDebugTileContent( FRasterImage2D* iDst, const FVec2I64& iPos ) {
     for( auto& it : mSparseMap ) {
         auto pos = PixelCoordinatesFromKey( it.first );
         it.second->DrawDebugTileContent( iDst, iPos + pos );

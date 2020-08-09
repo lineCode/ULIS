@@ -55,8 +55,8 @@ SWindow::SWindow()
     , mDarkParticleColor( nullptr )
     , mLightParticleColor( nullptr )
 {
-    mWetCanvas = new FBlock( 1280, 900, ULIS_FORMAT_RGBA8 );
-    mDryCanvas = new FBlock( 1280, 900, ULIS_FORMAT_RGBA8 );
+    mWetCanvas = new FRasterImage2D( 1280, 900, ULIS_FORMAT_RGBA8 );
+    mDryCanvas = new FRasterImage2D( 1280, 900, ULIS_FORMAT_RGBA8 );
     mParticles.reserve( 10000 );
     mImage = new QImage( mWetCanvas->Bits(), mWetCanvas->Width(), mWetCanvas->Height(), mWetCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
@@ -180,7 +180,7 @@ SWindow::RedrawParticle() {
     if( mParticle )
         delete  mParticle;
 
-    mParticle = new FBlock( mParticleSize, mParticleSize, ULIS_FORMAT_RGBA8 );
+    mParticle = new FRasterImage2D( mParticleSize, mParticleSize, ULIS_FORMAT_RGBA8 );
     ClearRaw( mParticle, ULIS_NOCB );
     Fill( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mParticle, *mCurrentParticleColor, mParticle->Rect() );
 

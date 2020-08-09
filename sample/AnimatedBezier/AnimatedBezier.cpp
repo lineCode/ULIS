@@ -48,7 +48,7 @@ SWindow::SWindow()
     uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     std::string path = "C:/Users/PRAXINOS/Documents/work/TEST.png";
     mSRC = XLoadFromFile( mPool, ULIS_BLOCKING, perfIntent, mHost, ULIS_NOCB, path, ULIS_FORMAT_RGBA8 );
-    mDST = new  FBlock( 1024, 512, ULIS_FORMAT_RGBA8 );
+    mDST = new  FRasterImage2D( 1024, 512, ULIS_FORMAT_RGBA8 );
     Clear( mPool, ULIS_BLOCKING, perfIntent, mHost, ULIS_NOCB, mDST, mDST->Rect() );
     mImage = new QImage( mDST->Bits(), mDST->Width(), mDST->Height(), mDST->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );

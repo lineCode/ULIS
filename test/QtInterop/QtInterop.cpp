@@ -27,11 +27,11 @@ main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    FBlock* blockA = new FBlock( 1024, 1024, ULIS_FORMAT_RGBA8 );
+    FRasterImage2D* blockA = new FRasterImage2D( 1024, 1024, ULIS_FORMAT_RGBA8 );
 
     ::ul3::Clear( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockA, blockA->Rect() );
     FColor color = FColor::FromRGBA8( 255, 0, 0, 255 );
-    FBlock col( color.Bits(), 1, 1, ULIS_FORMAT_RGBA8 );
+    FRasterImage2D col( color.Bits(), 1, 1, ULIS_FORMAT_RGBA8 );
 
     FVec2F P0( 474.984253, 551.79988 );
     FVec2F P1( 474.984253, 551.79988 );

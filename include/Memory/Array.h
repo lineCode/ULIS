@@ -49,7 +49,7 @@ public:
         , mSize( iSize )
     {
         if( iSize > 0 ) {
-            mBulk = XMalloc( sizeof( T ) * iSize )
+            mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iSize ) );
             for( uint64 i = 0; i < mSize; ++i ) {
                 new  ( mBulk + i )  T;
             }
@@ -155,7 +155,7 @@ public:
     void Reserve( uint64 iCapacity ) {
         uint64 max_desired = FMath::Max( iCapacity, mCapacity );
         if( max_desired > mCapacity ) {
-            T* temp_bulk = XMalloc( sizeof( T ) * max_desired );
+            T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * max_desired ) );
             if( mBulk != nullptr ) {
                 memcpy( temp_bulk, mBulk, mSize );
                 XFree( mBulk );
@@ -173,7 +173,7 @@ public:
     void Shrink() {
         ULIS_ASSERT( mCapacity >= mSize, "Error, invalid state, mCapacity shouldn't be smaller than mSize" );
         if( mCapacity > mSize ) {
-            T* temp_bulk = XMalloc( sizeof( T ) * mSize );
+            T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * mSize ) );
             if( mBulk != nullptr ) {
                 memcpy( temp_bulk, mBulk, mSize );
                 XFree( mBulk );
@@ -191,7 +191,7 @@ public:
             Clear();
         } else {
             uint64 min_desired = FMath::Min( iSize, mSize );
-            T* temp_bulk = XMalloc( sizeof( T ) * iSize );
+            T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iSize ) );
             if( mBulk != nullptr ) {
                 memcpy( temp_bulk, mBulk, min_desired );
                 XFree( mBulk );
@@ -221,7 +221,7 @@ public:
     void PopBack() {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
         ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
-        mBulk[ (--mSize) ] -> ~T();
+        mBulk[ (--mSize) ].~T();
     }
 
     /*!
@@ -231,7 +231,7 @@ public:
     void PushBack( const T& iValue ) {
         if( mBulk == nullptr ) {
             ULIS_ASSERT( mCapacity == 0, "Invalid state" );
-            mBulk = XMalloc( sizeof( T ) );
+            mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) ) );
             mCapacity = 1;
             mSize = 1;
             new  ( mBulk )  T( iValue );
@@ -239,7 +239,7 @@ public:
             if( mSize == mCapacity ) {
                 ULIS_ASSERT( mCapacity > 0, "Invalid state" );
                 uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
-                T* temp_bulk = XMalloc( sizeof( T ) * new_cap );
+                T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
                 memcpy( temp_bulk, mBulk, mSize );
                 XFree( mBulk );
                 new  ( mBulk + mSize )  T( iValue );
@@ -255,7 +255,7 @@ public:
     void PushBack( T&& iValue ) {
         if( mBulk == nullptr ) {
             ULIS_ASSERT( mCapacity == 0, "Invalid state" );
-            mBulk = XMalloc( sizeof( T ) );
+            mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) ) );
             mCapacity = 1;
             mSize = 1;
             new  ( mBulk )  T( iValue );
@@ -263,7 +263,7 @@ public:
             if( mSize == mCapacity ) {
                 ULIS_ASSERT( mCapacity > 0, "Invalid state" );
                 uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
-                T* temp_bulk = XMalloc( sizeof( T ) * new_cap );
+                T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
                 memcpy( temp_bulk, mBulk, mSize );
                 XFree( mBulk );
                 new  ( mBulk + mSize )  T( iValue );
@@ -280,7 +280,7 @@ public:
     void EmplaceBack( Args&& ... args ) {
         if( mBulk == nullptr ) {
             ULIS_ASSERT( mCapacity == 0, "Invalid state" );
-            mBulk = XMalloc( sizeof( T ) );
+            mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) ) );
             mCapacity = 1;
             mSize = 1;
             new  ( mBulk )  T( std::forward< Args >(args)... );
@@ -288,7 +288,7 @@ public:
             if( mSize == mCapacity ) {
                 ULIS_ASSERT( mCapacity > 0, "Invalid state" );
                 uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
-                T* temp_bulk = XMalloc( sizeof( T ) * new_cap );
+                T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
                 memcpy( temp_bulk, mBulk, mSize );
                 XFree( mBulk );
                 new  ( mBulk + mSize )  T( std::forward< Args >(args)... );
@@ -305,7 +305,7 @@ private:
     void CleanupBulk() {
         if( mBulk != nullptr ) {
             for( uint64 i = 0; i < mSize; ++i ) {
-                mBulk[i] -> ~T();
+                mBulk[i].~T();
             }
             XFree( mBulk );
             mBulk = nullptr;

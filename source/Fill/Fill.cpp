@@ -27,7 +27,7 @@ ULIS_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
 void ULIS_VECTORCALL
-InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FBlock > iBuf, const uint32 iCount, const uint32 iStride ) {
+InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FRasterImage2D > iBuf, const uint32 iCount, const uint32 iStride ) {
     __m256i src = _mm256_lddqu_si256( (const __m256i*)iBuf->Bits() );
 
     uint32 index = 0;
@@ -45,7 +45,7 @@ InvokeFillMTProcessScanline_AX2( uint8* iDst, std::shared_ptr< const FBlock > iB
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 void ULIS_VECTORCALL
-InvokeFillMTProcessScanline_SSE( uint8* iDst, std::shared_ptr< const FBlock > iBuf, const uint32 iCount, const uint32 iStride ) {
+InvokeFillMTProcessScanline_SSE( uint8* iDst, std::shared_ptr< const FRasterImage2D > iBuf, const uint32 iCount, const uint32 iStride ) {
     __m128i src = _mm_lddqu_si128( (const __m128i*)iBuf->Bits() );
 
     uint32 index;
@@ -77,7 +77,7 @@ Fill_imp( FThreadPool*                          iThreadPool
         , uint32                                iPerfIntent
         , const FHostDeviceInfo&                iHostDeviceInfo
         , bool                                  iCallCB
-        , FBlock*                               iDestination
+        , FRasterImage2D*                               iDestination
         , std::shared_ptr< const FColor >  iColor
         , const FRectI&                          iDstROI )
 {
@@ -92,7 +92,7 @@ Fill_imp( FThreadPool*                          iThreadPool
     if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bpp <= 32 && bps >= 32 ) {
         uint32   count   = iDstROI.w * bpp;
         uint32   stride  = 32 - ( 32 % bpp );
-        std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 32, 1, eFormat::Format_G8 );
+        std::shared_ptr< FRasterImage2D > buf = std::make_shared< FRasterImage2D >( 32, 1, eFormat::Format_G8 );
         uint8* srcb = buf->Bits();
 
         for( uint32 i = 0; i < stride; i+= bpp )
@@ -107,7 +107,7 @@ Fill_imp( FThreadPool*                          iThreadPool
     if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bpp <= 16 && bps >= 16 ) {
         uint32   count   = iDstROI.w * bpp;
         uint32   stride  = 16 - ( 16 % bpp );
-        std::shared_ptr< FBlock > buf = std::make_shared< FBlock >( 16, 1, eFormat::Format_G8 );
+        std::shared_ptr< FRasterImage2D > buf = std::make_shared< FRasterImage2D >( 16, 1, eFormat::Format_G8 );
         uint8* srcb = buf->Bits();
 
         for( uint32 i = 0; i < stride; i+= bpp )
@@ -133,7 +133,7 @@ Fill( FThreadPool*              iThreadPool
     , uint32                    iPerfIntent
     , const FHostDeviceInfo&    iHostDeviceInfo
     , bool                      iCallCB
-    , FBlock*                   iDestination
+    , FRasterImage2D*                   iDestination
     , const ISample&             iColor
     , const FRectI&              iArea )
 {

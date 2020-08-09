@@ -42,7 +42,7 @@ int clear( int argc, char *argv[] ) {
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
-    FBlock* block = new FBlock( size, size, format );
+    FRasterImage2D* block = new FRasterImage2D( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         Clear( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, block, block->Rect() );
@@ -69,7 +69,7 @@ int fill( int argc, char *argv[] ) {
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
-    FBlock* block = new FBlock( size, size, format );
+    FRasterImage2D* block = new FRasterImage2D( size, size, format );
     FColor source( format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
@@ -97,8 +97,8 @@ int copy( int argc, char *argv[] ) {
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
-    FBlock* src = new FBlock( size, size, format );
-    FBlock* dst = new FBlock( size, size, format );
+    FRasterImage2D* src = new FRasterImage2D( size, size, format );
+    FRasterImage2D* dst = new FRasterImage2D( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         Copy( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, src, dst, src->Rect(), FVec2I() );
@@ -129,8 +129,8 @@ int blend( int argc, char *argv[] ) {
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
-    FBlock* src = new FBlock( size, size, format );
-    FBlock* dst = new FBlock( size, size, format );
+    FRasterImage2D* src = new FRasterImage2D( size, size, format );
+    FRasterImage2D* dst = new FRasterImage2D( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         Blend( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, src, dst, src->Rect(), FVec2F(), subpixelFlag, blendingMode, alphaMode, 0.5f );
@@ -160,8 +160,8 @@ int conv( int argc, char *argv[] ) {
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
-    FBlock* src = new FBlock( size, size, format );
-    FBlock* dst = new FBlock( size, size, dstFormat );
+    FRasterImage2D* src = new FRasterImage2D( size, size, format );
+    FRasterImage2D* dst = new FRasterImage2D( size, size, dstFormat );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         Conv( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, src, dst );
@@ -183,7 +183,7 @@ int clearRaw( int argc, char *argv[] ) {
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    FBlock* block = new FBlock( size, size, format );
+    FRasterImage2D* block = new FRasterImage2D( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         ClearRaw( block, ULIS_NOCB );
@@ -203,8 +203,8 @@ int copyRaw( int argc, char *argv[] ) {
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    FBlock* src = new FBlock( size, size, format );
-    FBlock* dst = new FBlock( size, size, format );
+    FRasterImage2D* src = new FRasterImage2D( size, size, format );
+    FRasterImage2D* dst = new FRasterImage2D( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         CopyRaw( src, dst, ULIS_NOCB );
@@ -242,9 +242,9 @@ int transform( int argc, char *argv[] ) {
     FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
-    FBlock* src = new FBlock( size, size, format );
+    FRasterImage2D* src = new FRasterImage2D( size, size, format );
     FRectI dstmetrics = TransformAffineMetrics( src->Rect(), mat, method );
-    FBlock* dst = new FBlock( dstmetrics.w, dstmetrics.h, format );
+    FRasterImage2D* dst = new FRasterImage2D( dstmetrics.w, dstmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         TransformAffine( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, src, dst, src->Rect(), mat, method );
@@ -286,7 +286,7 @@ int text( int argc, char *argv[] ) {
     FFont font( fontRegistry, fam, style );
     FRectI textmetrics = TextMetrics( wtxt, font, fontSize, FTransformation2D() );
     FColor color( format );
-    FBlock* dst = new FBlock( textmetrics.w, textmetrics.h, format );
+    FRasterImage2D* dst = new FRasterImage2D( textmetrics.w, textmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         RenderText( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, dst, wtxt, font, fontSize, color, FTransformation2D(), antialiasingFlag );

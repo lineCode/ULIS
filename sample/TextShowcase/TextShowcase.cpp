@@ -39,7 +39,7 @@ main( int argc, char *argv[] ) {
     int canvasHeight = entryHeight * gridy;
 
     FRectI globalRect( 0, 0, canvasWidth, canvasHeight );
-    FBlock* blockCanvas = new  FBlock( globalRect.w, globalRect.h, ULIS_FORMAT_RGBA8 );
+    FRasterImage2D* blockCanvas = new  FRasterImage2D( globalRect.w, globalRect.h, ULIS_FORMAT_RGBA8 );
     FColor black( ULIS_FORMAT_RGBA8, { 0, 0, 0, 255 } );
     FColor white( ULIS_FORMAT_RGBA8, { 255, 255, 255, 255 } );
     Fill( threadPool, ULIS_NONBLOCKING, ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2, host, ULIS_NOCB, blockCanvas, white, globalRect );

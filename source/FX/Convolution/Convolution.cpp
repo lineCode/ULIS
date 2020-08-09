@@ -30,7 +30,7 @@ Convolution( FThreadPool*            iThreadPool
            , uint32                  iPerfIntent
            , const FHostDeviceInfo&  iHostDeviceInfo
            , bool                    iCallCB
-           , FBlock*                 iDestination
+           , FRasterImage2D*                 iDestination
            , const FKernel&          iKernel
            , const FRectI&            iArea
            , eExtrapolationMethod    iEdgeMode )

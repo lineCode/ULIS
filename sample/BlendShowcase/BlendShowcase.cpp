@@ -36,8 +36,8 @@ main( int argc, char *argv[] ) {
     uint32 perfIntentCopy   = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     uint32 perfIntentBlend  = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     uint32 perfIntentText   = 0;
-    FBlock* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntentLoad, host, ULIS_NOCB, pathBase, ULIS_FORMAT_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntentLoad, host, ULIS_NOCB, pathOver, ULIS_FORMAT_RGBA8 );
+    FRasterImage2D* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntentLoad, host, ULIS_NOCB, pathBase, ULIS_FORMAT_RGBA8 );
+    FRasterImage2D* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntentLoad, host, ULIS_NOCB, pathOver, ULIS_FORMAT_RGBA8 );
     Fence( *threadPool );
 
     FRectI sourceRect = blockBase->Rect();
@@ -46,8 +46,8 @@ main( int argc, char *argv[] ) {
 
     int shadeW = sourceRect.w;
     int shadeH = 20;
-    FBlock* blockCanvas = new  FBlock( w, h, ULIS_FORMAT_RGBA8 );
-    FBlock* blockShade = new  FBlock( shadeW, shadeH, ULIS_FORMAT_RGBA8 );
+    FRasterImage2D* blockCanvas = new  FRasterImage2D( w, h, ULIS_FORMAT_RGBA8 );
+    FRasterImage2D* blockShade = new  FRasterImage2D( shadeW, shadeH, ULIS_FORMAT_RGBA8 );
     FRectI shadeRect = blockBase->Rect();
     FColor black( ULIS_FORMAT_RGBA8, { 0, 0, 0, 255 } );
     FColor white( ULIS_FORMAT_RGBA8, { 255, 255, 255, 255 } );

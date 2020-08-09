@@ -21,21 +21,21 @@ ULIS_API void Copy( FThreadPool*           iThreadPool
                    , uint32                 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo
                    , bool                   iCallCB
-                   , const FBlock*          iSource
-                   , FBlock*                iDestination
+                   , const FRasterImage2D*          iSource
+                   , FRasterImage2D*                iDestination
                    , const FRectI&           iArea
                    , const FVec2I&          iPos );
 
-ULIS_API FBlock* XCopy( FThreadPool*           iThreadPool
+ULIS_API FRasterImage2D* XCopy( FThreadPool*           iThreadPool
                        , bool                   iBlocking
                        , uint32                 iPerfIntent
                        , const FHostDeviceInfo& iHostDeviceInfo
                        , bool                   iCallCB
-                       , const FBlock*          iSource
+                       , const FRasterImage2D*          iSource
                        , const FRectI&           iArea );
 
-ULIS_API void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB );
-ULIS_API FBlock* XCopyRaw( const FBlock* iSrc, bool iCallCB );
+ULIS_API void CopyRaw( const FRasterImage2D* iSrc, FRasterImage2D* iDst, bool iCallCB );
+ULIS_API FRasterImage2D* XCopyRaw( const FRasterImage2D* iSrc, bool iCallCB );
 
 ULIS_NAMESPACE_END
 

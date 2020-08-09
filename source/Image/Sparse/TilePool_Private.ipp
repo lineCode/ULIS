@@ -41,13 +41,13 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( e
     : mTileSize                                             ( scPixelDim, scPixelDim                                                                                        )
     , mTileFormat                                           ( iFormat                                                                                                       )
     , mTileColorProfile                                     ( iProfile                                                                                                      )
-    , mEmptyTile                                            ( new FBlock( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile )                                        )
+    , mEmptyTile                                            ( new FRasterImage2D( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile )                                        )
     , mBytesPerTile                                         ( mEmptyTile->BytesTotal()                                                                                      )
     , mSWAPUsageCapTargetAtomic                             ( 0                                                                                                             )
     , mRAMUsageCapTargetAtomic                              ( 0                                                                                                             )
     , mCurrentRAMUsageAtomic                                ( 0                                                                                                             )
-    , mTilesScheduledForClear                               ( std::forward_list< FBlock* >()                                                                                )
-    , mFreshTilesAvailableForQuery                          ( std::forward_list< FBlock* >()                                                                                )
+    , mTilesScheduledForClear                               ( std::forward_list< FRasterImage2D* >()                                                                                )
+    , mFreshTilesAvailableForQuery                          ( std::forward_list< FRasterImage2D* >()                                                                                )
     , mDirtyHashedTilesCurrentlyInUse                       ( std::list< FTileElement* >()                                                                                  )
     , mCorrectlyHashedTilesCurrentlyInUse                   ( std::unordered_map< uint32, FTileElement* >()                                                                 )
     , mRegisteredTiledBlocks                                ( std::list< tTiledBlock* >()                                                                                   )
@@ -70,7 +70,7 @@ template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::TTilePool( e
 //--------------------------------------------------------------------------- Public API
 template< uint8 _MICRO, uint8 _MACRO > const FVec2I&        TTilePool< _MICRO, _MACRO >::TileSize()                                 const   { return  mTileSize;                                    }
 template< uint8 _MICRO, uint8 _MACRO > uint32               TTilePool< _MICRO, _MACRO >::EmptyCRC32Hash()                           const   { return  mEmptyCRC32Hash;                              }
-template< uint8 _MICRO, uint8 _MACRO > const FBlock*        TTilePool< _MICRO, _MACRO >::EmptyTile()                                const   { return  mEmptyTile;                                   }
+template< uint8 _MICRO, uint8 _MACRO > const FRasterImage2D*        TTilePool< _MICRO, _MACRO >::EmptyTile()                                const   { return  mEmptyTile;                                   }
 template< uint8 _MICRO, uint8 _MACRO > eFormat              TTilePool< _MICRO, _MACRO >::TileFormat()                               const   { return  mTileFormat;                                  }
 template< uint8 _MICRO, uint8 _MACRO > const FFormat&   TTilePool< _MICRO, _MACRO >::TileFormatInfo()                           const   { return  mEmptyTile->FormatInfo();                     }
 template< uint8 _MICRO, uint8 _MACRO > const FColorSpace* TTilePool< _MICRO, _MACRO >::TileColorProfile()                         const   { return  mTileColorProfile;                            }
@@ -176,7 +176,7 @@ TTilePool< _MICRO, _MACRO >::XQueryFreshTile() {
     if( mFreshTilesAvailableForQuery.empty() )
         ClearNowDirect_Unsafe( 1 );
 
-    FBlock* block = mFreshTilesAvailableForQuery.front();
+    FRasterImage2D* block = mFreshTilesAvailableForQuery.front();
     mFreshTilesAvailableForQuery.pop_front();
     mMutexFreshTilesAvailableForQueryLock.unlock();
     --mNumFreshTilesAvailableForQueryAtomic;
@@ -215,14 +215,14 @@ TTilePool< _MICRO, _MACRO >::PerformRedundantHashMergeReturnCorrect( FTileElemen
     if( it == end ) {
         mMutexFreshTilesAvailableForQueryLock.lock();
         if( mFreshTilesAvailableForQuery.empty() ) {
-            FBlock* block = new FBlock( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile );
+            FRasterImage2D* block = new FRasterImage2D( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile );
             mCurrentRAMUsageAtomic.fetch_add( mBytesPerTile );
             ClearRaw( block );
             mFreshTilesAvailableForQuery.emplace_front( block );
             ++mNumFreshTilesAvailableForQueryAtomic;
         }
 
-        FBlock* block = mFreshTilesAvailableForQuery.front();
+        FRasterImage2D* block = mFreshTilesAvailableForQuery.front();
         mFreshTilesAvailableForQuery.pop_front();
         mMutexFreshTilesAvailableForQueryLock.unlock();
         --mNumFreshTilesAvailableForQueryAtomic;
@@ -279,7 +279,7 @@ TTilePool< _MICRO, _MACRO >::XPerformDataCopyForImminentMutableChangeIfNeeded( F
 
 template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::AllocateNow_Unsafe( int32 iNum ) {
     for( int i = 0; i < iNum; ++i )
-        mTilesScheduledForClear.emplace_front( new FBlock( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile ) );
+        mTilesScheduledForClear.emplace_front( new FRasterImage2D( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile ) );
 
     mNumTilesScheduledForClearAtomic.fetch_add( iNum );
     mCurrentRAMUsageAtomic.fetch_add( mBytesPerTile * iNum );
@@ -287,7 +287,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Allocat
 
 template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::ClearNowDirect_Unsafe( int32 iNum ) {
     for( int i = 0; i < iNum; ++i ) {
-        FBlock* block = new FBlock( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile );
+        FRasterImage2D* block = new FRasterImage2D( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile );
         ClearRaw( block );
         mFreshTilesAvailableForQuery.emplace_front( block );
     }
@@ -302,7 +302,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Dealloc
         const std::lock_guard<std::mutex> lock( mMutexTilesScheduledForClearLock );
         if( !( mTilesScheduledForClear.empty() ) )
         {
-            FBlock* block = mTilesScheduledForClear.front();
+            FRasterImage2D* block = mTilesScheduledForClear.front();
             mTilesScheduledForClear.pop_front();
             delete  block;
             --mNumTilesScheduledForClearAtomic;
@@ -321,7 +321,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::Dealloc
         const std::lock_guard<std::mutex> lock( mMutexFreshTilesAvailableForQueryLock );
         if( clearEmpty && !( mFreshTilesAvailableForQuery.empty() ) )
         {
-            FBlock* block = mFreshTilesAvailableForQuery.front();
+            FRasterImage2D* block = mFreshTilesAvailableForQuery.front();
             mFreshTilesAvailableForQuery.pop_front();
             delete  block;
             --mNumFreshTilesAvailableForQueryAtomic;
@@ -334,7 +334,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::AllocOn
     if( mCurrentRAMUsageAtomic.load() < mRAMUsageCapTargetAtomic.load() )
     {
         const std::lock_guard<std::mutex> lock( mMutexTilesScheduledForClearLock );
-        mTilesScheduledForClear.emplace_front( new FBlock( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile ) );
+        mTilesScheduledForClear.emplace_front( new FRasterImage2D( mTileSize.x, mTileSize.y, mTileFormat, mTileColorProfile ) );
         ++mNumTilesScheduledForClearAtomic;
         mCurrentRAMUsageAtomic.fetch_add( mBytesPerTile );
     }
@@ -344,7 +344,7 @@ template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::ClearOn
     const std::lock_guard<std::mutex> lock( mMutexTilesScheduledForClearLock );
     if( !( mTilesScheduledForClear.empty() ) )
     {
-        FBlock* block = mTilesScheduledForClear.front();
+        FRasterImage2D* block = mTilesScheduledForClear.front();
         mTilesScheduledForClear.pop_front();
         --mNumTilesScheduledForClearAtomic;
 

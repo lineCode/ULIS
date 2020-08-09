@@ -23,15 +23,15 @@ ULIS_API void Conv( FThreadPool*           iThreadPool
                    , uint32                 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo
                    , bool                   iCallCB
-                   , const FBlock*          iSource
-                   , FBlock*                iDestination );
+                   , const FRasterImage2D*          iSource
+                   , FRasterImage2D*                iDestination );
 
-ULIS_API FBlock* XConv( FThreadPool*           iThreadPool
+ULIS_API FRasterImage2D* XConv( FThreadPool*           iThreadPool
                        , bool                   iBlocking
                        , uint32                 iPerfIntent
                        , const FHostDeviceInfo& iHostDeviceInfo
                        , bool                   iCallCB
-                       , const FBlock*          iSource
+                       , const FRasterImage2D*          iSource
                        , eFormat                iDestinationFormat );
 
 ULIS_NAMESPACE_END

@@ -16,7 +16,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-ULIS_API FBlock* XLoadFromClipboard( FThreadPool*              iThreadPool
+ULIS_API FRasterImage2D* XLoadFromClipboard( FThreadPool*              iThreadPool
                                     , bool                      iBlocking
                                     , uint32                    iPerfIntent
                                     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -28,7 +28,7 @@ ULIS_API void SaveToClipboard( FThreadPool*            iThreadPool
                               , uint32                  iPerfIntent
                               , const FHostDeviceInfo&  iHostDeviceInfo
                               , bool                    iCallCB
-                              , const FBlock*           iSource );
+                              , const FRasterImage2D*           iSource );
 
 ULIS_API bool ClipboardHasImageData();
 

@@ -26,8 +26,8 @@ int main( int argc, char *argv[] ) {
     int size = 128;
     uint32 format = ULIS_FORMAT_BGRA8;
     uint32 repeat = 500;
-    FBlock* src = new FBlock( size, size, format );
-    FBlock* dst = new FBlock( size, size, format );
+    FRasterImage2D* src = new FRasterImage2D( size, size, format );
+    FRasterImage2D* dst = new FRasterImage2D( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
         Blend( pool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, src, dst, src->Rect(), FVec2F(), ULIS_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );

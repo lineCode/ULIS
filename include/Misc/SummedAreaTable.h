@@ -16,19 +16,19 @@
 
 ULIS_NAMESPACE_BEGIN
 
-ULIS_API FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
+ULIS_API FRasterImage2D* XGetSummedAreaTable( FThreadPool*             iThreadPool
                                      , bool                     iBlocking
                                      , uint32                   iPerfIntent
                                      , const FHostDeviceInfo&   iHostDeviceInfo
                                      , bool                     iCallCB
-                                     , const FBlock*            iSource );
+                                     , const FRasterImage2D*            iSource );
 
-ULIS_API FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
+ULIS_API FRasterImage2D* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
                                                   , bool                     iBlocking
                                                   , uint32                   iPerfIntent
                                                   , const FHostDeviceInfo&   iHostDeviceInfo
                                                   , bool                     iCallCB
-                                                  , const FBlock*            iSource );
+                                                  , const FRasterImage2D*            iSource );
 
 ULIS_NAMESPACE_END
 

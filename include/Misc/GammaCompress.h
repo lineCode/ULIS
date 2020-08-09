@@ -21,14 +21,14 @@ ULIS_API void ApplysRGB2Linear( FThreadPool*           iThreadPool
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
                                , bool                   iCallCB
-                               , FBlock*                iDestination );
+                               , FRasterImage2D*                iDestination );
 
 ULIS_API void ApplyLinear2sRGB( FThreadPool*           iThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
                                , bool                   iCallCB
-                               , FBlock*                iDestination );
+                               , FRasterImage2D*                iDestination );
 
 ULIS_NAMESPACE_END
 
