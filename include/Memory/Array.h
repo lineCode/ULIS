@@ -14,6 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Memory/Memory.h"
+#include "Math/Math.h"
+#include <utility>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -28,18 +30,292 @@ class TArray
 {
 public:
     /*! Destroy the Array and cleanup memory. */
-    ~TArray< T >();
+    ~TArray< T >()
+    {
+        CleanupBulk();
+    }
 
-    /*! Default constructor with size 0, uninitialized. */
-    TArray< T >();
+    /*! Default constructor with size 0, capicity 1, uninitialized. */
+    TArray< T >()
+        : mBulk( nullptr )
+        , mCapacity( 0 )
+        , mSize( 0 )
+    {}
 
     /*! Constructor with known size, both capacity and size will match the requested size. */
-    TArray< T >( uint64 iSize );
+    TArray< T >( uint64 iSize )
+        : mBulk( nullptr )
+        , mCapacity( iSize )
+        , mSize( iSize )
+    {
+        if( iSize > 0 ) {
+            mBulk = XMalloc( sizeof( T ) * iSize )
+            for( uint64 i = 0; i < mSize; ++i ) {
+                new  ( mBulk + i )  T;
+            }
+        }
+    }
+
+    /*! Returns the raw bits. */
+    uint8* Bits() {
+        return  reinterpret_cast< uint8* >( mBulk );
+    }
+
+    /*! Returns the raw const bits. */
+    const uint8* Bits() const {
+        return  reinterpret_cast< const uint8* >( mBulk );
+    }
+
+    /*! Returns the raw storage. */
+    T* Data() {
+        return  mBulk;
+    }
+
+    /*! Returns the raw storage. */
+    const T* Data() const {
+        return  mBulk;
+    }
+
+    /*! Access component at index. */
+    T& operator[]( uint64 iIndex ) {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+        ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
+        return  mBulk[ iIndex ];
+    }
+
+    /*! Access const component at index. */
+    const T& operator[]( uint64 iIndex ) const {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+        ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
+        return  mBulk[ iIndex ];
+    }
+
+    /*! Access component at index. */
+    T& At( uint64 iIndex ) {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+        ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
+        return  mBulk[ iIndex ];
+    }
+
+    /*! Access const component at index. */
+    const T& At( uint64 iIndex ) const {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+        ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
+        return  mBulk[ iIndex ];
+    }
+
+    /*! Access component at front. */
+    T& Front() {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        return  At( 0 );
+    }
+
+    /*! Access const component at front. */
+    const T& Front() const {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        return  At( 0 );
+    }
+
+    /*! Access component at back. */
+    T& Back() {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        return  At( mSize - 1 );
+    }
+
+    /*! Access const component at back. */
+    const T& Back() const {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        return  At( mSize - 1 );
+    }
+
+    /*! Returns wether the array is empty or not. */
+    bool IsEmpty() const {
+        return  mSize == 0;
+    }
+
+    /*! Returns the array capacity. */
+    uint64 Capacity() const {
+        return  mCapacity;
+    }
+
+    /*! Returns the array size. */
+    uint64 Size() const {
+        return  mSize;
+    }
+
+    /*!
+        Reserve some capacity for future usage, if iCapacity is bigger than the
+        current capacity. If iCapacity is lower or equal to capacity, this
+        function does nothing.
+    */
+    void Reserve( uint64 iCapacity ) {
+        uint64 max_desired = FMath::Max( iCapacity, mCapacity );
+        if( max_desired > mCapacity ) {
+            T* temp_bulk = XMalloc( sizeof( T ) * max_desired );
+            if( mBulk != nullptr ) {
+                memcpy( temp_bulk, mBulk, mSize );
+                XFree( mBulk );
+            }
+            mBulk = temp_bulk;
+            mCapacity = iCapacity;
+        }
+    }
+
+    /*!
+        Shrink the capacity to fit the size.
+        If the capacity is already the same as the size, the function does
+        nothing.
+    */
+    void Shrink() {
+        ULIS_ASSERT( mCapacity >= mSize, "Error, invalid state, mCapacity shouldn't be smaller than mSize" );
+        if( mCapacity > mSize ) {
+            T* temp_bulk = XMalloc( sizeof( T ) * mSize );
+            if( mBulk != nullptr ) {
+                memcpy( temp_bulk, mBulk, mSize );
+                XFree( mBulk );
+            }
+            mBulk = temp_bulk;
+            mCapacity = mSize;
+        }
+    }
+
+    /*!
+        Resize the usage size of the container.
+    */
+    void Resize( uint64 iSize ) {
+        if( iSize == 0 ) {
+            Clear();
+        } else {
+            uint64 min_desired = FMath::Min( iSize, mSize );
+            T* temp_bulk = XMalloc( sizeof( T ) * iSize );
+            if( mBulk != nullptr ) {
+                memcpy( temp_bulk, mBulk, min_desired );
+                XFree( mBulk );
+            }
+
+            for( uint64 i = min_desired; i < iSize; ++i ) {
+                new  ( mBulk + i )  T;
+            }
+
+            mCapacity = iSize;
+            mSize = iSize;
+        }
+    }
+
+    /*!
+        Clear the array, deallocating everything.
+    */
+    void Clear() {
+        CleanupBulk();
+        mCapacity = 0;
+        mSize = 0;
+    }
+
+    /*!
+        PopBack, remove last element.
+    */
+    void PopBack() {
+        ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
+        ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
+        mBulk[ (--mSize) ] -> ~T();
+    }
+
+    /*!
+        PushBack, insert a new element at the end of the buffer, possibly
+        reallocating the underlying storage if the capacity has been reached.
+    */
+    void PushBack( const T& iValue ) {
+        if( mBulk == nullptr ) {
+            ULIS_ASSERT( mCapacity == 0, "Invalid state" );
+            mBulk = XMalloc( sizeof( T ) );
+            mCapacity = 1;
+            mSize = 1;
+            new  ( mBulk )  T( iValue );
+        } else {
+            if( mSize == mCapacity ) {
+                ULIS_ASSERT( mCapacity > 0, "Invalid state" );
+                uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
+                T* temp_bulk = XMalloc( sizeof( T ) * new_cap );
+                memcpy( temp_bulk, mBulk, mSize );
+                XFree( mBulk );
+                new  ( mBulk + mSize )  T( iValue );
+                mSize++;
+            }
+        }
+    }
+
+    /*!
+        PushBack, insert a new element at the end of the buffer, possibly
+        reallocating the underlying storage if the capacity has been reached.
+    */
+    void PushBack( T&& iValue ) {
+        if( mBulk == nullptr ) {
+            ULIS_ASSERT( mCapacity == 0, "Invalid state" );
+            mBulk = XMalloc( sizeof( T ) );
+            mCapacity = 1;
+            mSize = 1;
+            new  ( mBulk )  T( iValue );
+        } else {
+            if( mSize == mCapacity ) {
+                ULIS_ASSERT( mCapacity > 0, "Invalid state" );
+                uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
+                T* temp_bulk = XMalloc( sizeof( T ) * new_cap );
+                memcpy( temp_bulk, mBulk, mSize );
+                XFree( mBulk );
+                new  ( mBulk + mSize )  T( iValue );
+                mSize++;
+            }
+        }
+    }
+
+    /*!
+        PushBack, emplace a new element at the end of the buffer, possibly
+        reallocating the underlying storage if the capacity has been reached.
+    */
+    template< class... Args >
+    void EmplaceBack( Args&& ... args ) {
+        if( mBulk == nullptr ) {
+            ULIS_ASSERT( mCapacity == 0, "Invalid state" );
+            mBulk = XMalloc( sizeof( T ) );
+            mCapacity = 1;
+            mSize = 1;
+            new  ( mBulk )  T( std::forward< Args >(args)... );
+        } else {
+            if( mSize == mCapacity ) {
+                ULIS_ASSERT( mCapacity > 0, "Invalid state" );
+                uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
+                T* temp_bulk = XMalloc( sizeof( T ) * new_cap );
+                memcpy( temp_bulk, mBulk, mSize );
+                XFree( mBulk );
+                new  ( mBulk + mSize )  T( std::forward< Args >(args)... );
+                mSize++;
+            }
+        }
+    }
 
 private:
-    T* mBulk;
-    uint64 mCapacity;
-    uint64 mSize;
+    /*!
+        CleanupBulk explicitely calls destructors on elements to be removed, then
+        deallocates the underlying bulk buffer and sets mBulk to nullptr.
+    */
+    void CleanupBulk() {
+        if( mBulk != nullptr ) {
+            for( uint64 i = 0; i < mSize; ++i ) {
+                mBulk[i] -> ~T();
+            }
+            XFree( mBulk );
+            mBulk = nullptr;
+        }
+    }
+
+private:
+    T* mBulk; ///< The main buffer storage.
+    uint64 mCapacity; ///< The array capacity, may be bigger than size.
+    uint64 mSize; ///< The array usage size.
 };
 
 ULIS_NAMESPACE_END
