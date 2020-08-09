@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         Block.h
+* @file         RasterImage2D.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the FRasterImage2D class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

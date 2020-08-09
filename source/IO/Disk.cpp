@@ -14,7 +14,7 @@
 #include "IO/Disk.h"
 #include "System/HostDeviceInfo.h"
 #include "String/Utils.h"
-#include "Image/Block.h"
+#include "Image/RasterImage2D.h"
 #include "Conv/Conv.h"
 
 // STD

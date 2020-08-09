@@ -12,7 +12,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Image/Block.h"
+#include "Image/RasterImage2D.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"

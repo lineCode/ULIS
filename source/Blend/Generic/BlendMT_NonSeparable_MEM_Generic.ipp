@@ -19,7 +19,7 @@
 #include "Blend/Func/AlphaFuncF.ipp"
 #include "Blend/Func/NonSeparableBlendFuncF.ipp"
 #include "Conv/ConvBuffer.h"
-#include "Image/Block.h"
+#include "Image/RasterImage2D.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Thread/ThreadPool.h"

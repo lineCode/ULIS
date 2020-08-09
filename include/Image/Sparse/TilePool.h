@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Image/Sparse/TiledBlock.h"
+#include "Image/Sparse/TiledRasterImage2D.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

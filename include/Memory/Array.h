@@ -56,6 +56,20 @@ public:
         }
     }
 
+    /*! Copy constructor. */
+    TArray< T >( const TArray< T >& iOther ) = delete;
+
+    /*! Move constructor. */
+    TArray< T >( TArray< T >&& iOther )
+        : mBulk( iOther.mBulk )
+        , mCapacity( iOther.mCapacity )
+        , mSize( iOther.mSize )
+    {
+        iOther.mBulk = nullptr;
+        iOther.mSize = 0;
+        iOther.mCapacity = 0;
+    }
+
     /*! Returns the raw bits. */
     uint8* Bits() {
         return  reinterpret_cast< uint8* >( mBulk );

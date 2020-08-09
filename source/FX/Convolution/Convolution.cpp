@@ -15,7 +15,7 @@
 //#include "FX/Convolution/KernelSSE.h"
 #include "System/HostDeviceInfo.h"
 #include "Conv/Conv.h"
-#include "Image/Block.h"
+#include "Image/RasterImage2D.h"
 #include "Image/Pixel.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"

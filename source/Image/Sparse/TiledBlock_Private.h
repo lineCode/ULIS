@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         TiledBlock.h
+* @file         TiledRasterImage2D.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the TTiledBlock class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Image/Sparse/Tile.h"
-#include "Image/Sparse/TiledBlock.h"
+#include "Image/Sparse/TiledRasterImage2D.h"
 #include "Image/Sparse/Chunk_Private.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"

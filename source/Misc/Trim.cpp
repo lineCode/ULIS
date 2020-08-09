@@ -13,7 +13,7 @@
 */
 #include "Misc/Trim.h"
 #include "System/HostDeviceInfo.h"
-#include "Image/Block.h"
+#include "Image/RasterImage2D.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"

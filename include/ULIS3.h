@@ -28,13 +28,13 @@
 // FX
 //#include "FX/.h"
 // Image
-#include "Image/Block.h"
+#include "Image/RasterImage2D.h"
 #include "Image/Color.h"
 #include "Image/ColorSpace.h"
 #include "Image/Format.h"
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
-#include "Image/Sparse/TiledBlock.h"
+#include "Image/Sparse/TiledRasterImage2D.h"
 #include "Image/Sparse/TilePool.h"
 // IO
 #include "IO/Clipboard.h"

@@ -14,7 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Raster/Draw.h"
-#include "Image/Block.h"
+#include "Image/RasterImage2D.h"
 #include "Image/Pixel.h"
 
 ULIS_NAMESPACE_BEGIN
