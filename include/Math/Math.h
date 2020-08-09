@@ -22,10 +22,11 @@ ULIS_NAMESPACE_BEGIN
 // FMath
 struct ULIS_API FMath
 {
-    // Do not change this value !
+    // Do not change this value
     static constexpr float  kEpsilonf = .000001f;
     static constexpr double kPId = 3.1415926535897932;
     static constexpr float  kPIf = 3.14159265f;
+    static constexpr float  kGoldenRatio = 1.61803398875f;
 
     static ULIS_FORCEINLINE int32 FloorToInt( ufloat iValue ) {
         #ifdef ULIS_COMPILED_WITH_SIMD_SUPPORT
