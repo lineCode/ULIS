@@ -332,5 +332,10 @@ private:
     uint64 mSize; ///< The array usage size.
 };
 
+typedef TArray< char > FCharArray;
+typedef TArray< wchar_t > FWCharArray;
+template class ULIS_API TArray< char >;
+template class ULIS_API TArray< wchar_t >;
+
 ULIS_NAMESPACE_END
 
