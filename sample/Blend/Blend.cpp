@@ -26,11 +26,41 @@ using namespace ::ULIS;
 int
 main( int argc, char *argv[] ) {
 
-    TArray< int > vector0;
+    TArray< FVec2F > vector0;
     vector0.Size();
     vector0.Capacity();
-    vector0.EmplaceBack( 50 );
-    int a = vector0[0];
+    vector0.Reserve( 5 );
+    vector0.EmplaceBack( 1 );
+    vector0.EmplaceBack( 2 );
+    vector0.EmplaceBack( 3 );
+    vector0.EmplaceBack( 4 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.EmplaceBack( 5 );
+    vector0.Shrink();
+    vector0.Resize( 2 );
+    vector0.Shrink();
+    auto a = vector0[0];
     auto dummy = 0;
 
     // Gather start time to output the time it took to perform the blend composition
