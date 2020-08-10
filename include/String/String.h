@@ -21,6 +21,8 @@ ULIS_NAMESPACE_BEGIN
 /// @details    The need of a custom FString class rose from the fact that std::
 ///             classes cannot be exported easily accross dll boundaries when
 ///             ULIS is compiled as a shared library.
+///
+///             \sa FWString
 class ULIS_API FString
 {
 public:
@@ -121,7 +123,7 @@ public:
     int ToInt() const;
 
     /* To Unsigned Int */
-    int ToUnsignedInt() const;
+    unsigned int ToUnsignedInt() const;
 
     /* To Float */
     float ToFloat() const;
@@ -212,6 +214,12 @@ public:
 
     /* Replace all occurences */
     uint64 ReplaceAll( const FString& iA, const FString& iB ) const;
+
+    /* Compute MD5 for this string. */
+    FString MD5() const;
+
+    /* Compute CRC32 for this string. */
+    uint32 CRC32() const;
 
 private:
     char_type* mBulk; ///< The main raw string buffer storage.
