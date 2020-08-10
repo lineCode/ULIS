@@ -56,8 +56,11 @@ public:
         }
     }
 
-    /*! Copy constructor. */
+    /*! Copy constructor, explicitely removed. */
     TArray< T >( const TArray< T >& iOther ) = delete;
+
+    /*! Assignment Operator, explicitely removed. */
+    TArray< T >& operator=( const TArray< T >& iOther ) = delete;
 
     /*! Move constructor. */
     TArray< T >( TArray< T >&& iOther )
@@ -165,13 +168,14 @@ public:
         Reserve some capacity for future usage, if iCapacity is bigger than the
         current capacity. If iCapacity is lower or equal to capacity, this
         function does nothing.
+        This function might invalid the underlying buffer.
+        The size doesn't change.
     */
     void Reserve( uint64 iCapacity ) {
-        uint64 max_desired = FMath::Max( iCapacity, mCapacity );
-        if( max_desired > mCapacity ) {
-            T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * max_desired ) );
+        if( iCapacity > mCapacity ) {
+            T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iCapacity ) );
             if( mBulk != nullptr ) {
-                memcpy( temp_bulk, mBulk, mSize );
+                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
                 XFree( mBulk );
             }
             mBulk = temp_bulk;
@@ -183,13 +187,14 @@ public:
         Shrink the capacity to fit the size.
         If the capacity is already the same as the size, the function does
         nothing.
+        This function might invalid the underlying buffer.
+        The size doesn't change.
     */
     void Shrink() {
-        ULIS_ASSERT( mCapacity >= mSize, "Error, invalid state, mCapacity shouldn't be smaller than mSize" );
         if( mCapacity > mSize ) {
             T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * mSize ) );
             if( mBulk != nullptr ) {
-                memcpy( temp_bulk, mBulk, mSize );
+                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
                 XFree( mBulk );
             }
             mBulk = temp_bulk;
@@ -198,25 +203,44 @@ public:
     }
 
     /*!
-        Resize the usage size of the container.
+        Resize the actual usage size of the container.
+        This function might invalid the underlying buffer.
     */
     void Resize( uint64 iSize ) {
+        if( iSize == mSize )
+            return;
+
         if( iSize == 0 ) {
             Clear();
         } else {
-            uint64 min_desired = FMath::Min( iSize, mSize );
-            T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iSize ) );
-            if( mBulk != nullptr ) {
-                memcpy( temp_bulk, mBulk, min_desired );
-                XFree( mBulk );
-            }
 
-            for( uint64 i = min_desired; i < iSize; ++i ) {
-                new  ( mBulk + i )  T;
-            }
+            if( mCapacity > iSize ) {
+                if( iSize < mSize ) {
+                    for( uint64 i = iSize; i < mSize; ++i ) {
+                        mBulk[ i ].~T();
+                    }
+                } else {
+                    for( uint64 i = iSize; i < mSize; ++i ) {
+                        mBulk[ i ].~T();
+                    }
+                }
+                mSize = iSize;
+            } else {
+                ULIS_ASSERT( iSize > mSize, "Bad state" );
+                T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iSize ) );
+                if( mBulk != nullptr ) {
+                    memcpy( temp_bulk, mBulk, sizeof( T ) * iSize );
+                    XFree( mBulk );
+                }
+                mBulk = temp_bulk;
 
-            mCapacity = iSize;
-            mSize = iSize;
+                for( uint64 i = mSize; i < iSize; ++i ) {
+                    new  ( mBulk + i )  T;
+                }
+
+                mCapacity = iSize;
+                mSize = iSize;
+            }
         }
     }
 
@@ -254,8 +278,14 @@ public:
                 ULIS_ASSERT( mCapacity > 0, "Invalid state" );
                 uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
                 T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
-                memcpy( temp_bulk, mBulk, mSize );
+                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
                 XFree( mBulk );
+                mBulk = temp_bulk;
+                new  ( mBulk + mSize )  T( iValue );
+                mSize++;
+                mCapacity = new_cap;
+            } else {
+                ULIS_ASSERT( mSize < mCapacity, "Bad state" );
                 new  ( mBulk + mSize )  T( iValue );
                 mSize++;
             }
@@ -278,8 +308,14 @@ public:
                 ULIS_ASSERT( mCapacity > 0, "Invalid state" );
                 uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
                 T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
-                memcpy( temp_bulk, mBulk, mSize );
+                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
                 XFree( mBulk );
+                mBulk = temp_bulk;
+                new  ( mBulk + mSize )  T( iValue );
+                mSize++;
+                mCapacity = new_cap;
+            } else {
+                ULIS_ASSERT( mSize < mCapacity, "Bad state" );
                 new  ( mBulk + mSize )  T( iValue );
                 mSize++;
             }
@@ -303,8 +339,14 @@ public:
                 ULIS_ASSERT( mCapacity > 0, "Invalid state" );
                 uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
                 T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
-                memcpy( temp_bulk, mBulk, mSize );
+                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
                 XFree( mBulk );
+                mBulk = temp_bulk;
+                new  ( mBulk + mSize )  T( std::forward< Args >(args)... );
+                mSize++;
+                mCapacity = new_cap;
+            } else {
+                ULIS_ASSERT( mSize < mCapacity, "Bad state" );
                 new  ( mBulk + mSize )  T( std::forward< Args >(args)... );
                 mSize++;
             }
@@ -331,11 +373,6 @@ private:
     uint64 mCapacity; ///< The array capacity, may be bigger than size.
     uint64 mSize; ///< The array usage size.
 };
-
-typedef TArray< char > FCharArray;
-typedef TArray< wchar_t > FWCharArray;
-template class ULIS_API TArray< char >;
-template class ULIS_API TArray< wchar_t >;
 
 ULIS_NAMESPACE_END
 
