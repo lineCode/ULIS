@@ -35,6 +35,10 @@ struct  FFormat;
 struct  FTileElement;
 class   ITiledBlock;
 class   ITilePool;
+class   FString;
+class   FWString;
+
+template< typename T > class TArray;
 
 template< typename T > struct   TVector2;
 typedef TVector2< int >         FVec2I;
