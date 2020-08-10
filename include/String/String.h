@@ -222,6 +222,10 @@ public:
     uint32 CRC32() const;
 
 private:
+    void CleanupBulk();
+    FString( uint64 iSize );
+
+private:
     char_type* mBulk; ///< The main raw string buffer storage.
     uint64 mCapacity; ///< The string capacity, may be bigger than size.
     uint64 mSize; ///< The string usage size.
