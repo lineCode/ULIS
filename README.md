@@ -3,7 +3,7 @@
 </p>
 
 ## Honor
-Maxim Shemanarev is my hero, i never use his code but I think i did something worthy.
+Maxim Shemanarev is my hero, he did a great job.
 
 ## Overview
 ULIS is a rendering library written in C++. It is aimed at software rasterization and digital image processing.
