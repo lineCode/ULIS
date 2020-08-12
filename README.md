@@ -2,6 +2,9 @@
     <img src="meta/image/logo/github.png">
 </p>
 
+## Honor
+Maxim Shemanarev is my hero, i never use his code but I think i did something worthy.
+
 ## Overview
 ULIS is a rendering library written in C++. It is aimed at software rasterization and digital image processing.
 
