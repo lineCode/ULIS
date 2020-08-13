@@ -13,25 +13,26 @@
 */
 #pragma once
 #include "String/String.h"
-#include "String/WString.h"
+#include "Memory/Array.h"
+#include "Math/Math.h"
 #include "String/CRC32.h"
 #include "String/MD5.h"
 #include "String/UUID.h"
-#include "Math/Math.h"
-#include "Memory/Array.h"
+#include "String/WString.h"
+#include <string>
 #include <cstring>
 
 ULIS_NAMESPACE_BEGIN
 FString::~FString() {
-    CleanupBulk();
+    if( mBulk )
+        CleanupBulk();
 }
 
 FString::FString()
-    : mBulk( nullptr )
+    : mBulk( new char_type[1] )
     , mCapacity( 1 )
     , mSize( 0 )
 {
-    mBulk = new char_type[1];
     mBulk[0] = '\0';
 }
 
@@ -40,11 +41,11 @@ FString::FString( const char_type* iStr )
     , mCapacity( 0 )
     , mSize( 0 )
 {
-    uint64 len = strlen( iStr ) + 1;
-    mBulk = new char_type[ len ];
-    memcpy( mBulk, iStr, sizeof( char_type ) * len );
-    mCapacity = len;
-    mSize = len - 1;
+    uint64 cap = strlen( iStr ) + 1;
+    mBulk = new char_type[ cap ];
+    memcpy( mBulk, iStr, sizeof( char_type ) * cap );
+    mCapacity = cap;
+    mSize = cap - 1;
 }
 
 FString::FString( const FString& iStr )
@@ -52,11 +53,11 @@ FString::FString( const FString& iStr )
     , mCapacity( 0 )
     , mSize( 0 )
 {
-    uint64 len = iStr.Size() + 1;
-    mBulk = new char_type[ len ];
-    memcpy( mBulk, iStr.mBulk, sizeof( char_type ) * len );
-    mCapacity = len;
-    mSize = len - 1;
+    uint64 cap = iStr.Size() + 1;
+    mBulk = new char_type[ cap ];
+    memcpy( mBulk, iStr.mBulk, sizeof( char_type ) * cap );
+    mCapacity = cap;
+    mSize = cap - 1;
 }
 
 FString::FString( FString&& iStr )
@@ -71,22 +72,21 @@ FString::FString( FString&& iStr )
 
 FString::FString( const FWString& iWStr )
     : mBulk( nullptr )
-    , mCapacity( 1 )
+    , mCapacity( 0 )
     , mSize( 0 )
 {
     ULIS_ASSERT( false, "TODO" );
-    mBulk = new char_type[1];
-    mBulk[0] = '\0';
 }
 
 FString&
 FString::operator=( const FString& iStr ) {
     CleanupBulk();
-    uint64 len = iStr.Size() + 1;
-    mBulk = new char_type[ len ];
-    memcpy( mBulk, iStr.mBulk, sizeof( char_type ) * len );
-    mCapacity = len;
-    mSize = len - 1;
+    uint64 cap = iStr.Size() + 1;
+    mBulk = new char_type[ cap ];
+    memcpy( mBulk, iStr.mBulk, sizeof( char_type ) * cap );
+    mCapacity = cap;
+    mSize = cap - 1;
+    return  (*this);
 }
 
 FString&
@@ -97,6 +97,7 @@ FString::operator=( FString&& iStr ) {
     iStr.mBulk = nullptr;
     iStr.mCapacity = 0;
     iStr.mSize = 0;
+    return  (*this);
 }
 
 FString
@@ -202,132 +203,222 @@ FString::ToWString() const {
 
 FString&
 FString::Append( const FString& iStr ) {
-    uint64 len = mSize + iStr.mSize + 1;
-    char_type* tmp = new char_type[ len ];
-    memcpy( tmp, mBulk, mSize );
-    memcpy( tmp + mSize, iStr.mBulk, iStr.mSize );
-    mCapacity = len;
-    mSize = len - 1;
-    tmp[ len ] = '\0';
-    CleanupBulk();
-    mBulk = tmp;
+    uint64 len = mSize + iStr.mSize;
+    GrowBulk( len );
+    mSize = len;
+    memcpy( mBulk + mSize, iStr.mBulk + 1, iStr.mSize );
+    return  (*this);
 }
 
 FString&
 FString::Append( const char_type* iStr ) {
     uint64 olen = strlen( iStr );
-    uint64 len = mSize + olen + 1;
-    char_type* tmp = new char_type[ len ];
-    memcpy( tmp, mBulk, mSize );
-    memcpy( tmp + mSize, iStr, olen );
-    mCapacity = len;
-    mSize = len - 1;
-    tmp[ len ] = '\0';
-    CleanupBulk();
-    mBulk = tmp;
+    uint64 len = mSize + olen;
+    GrowBulk( len );
+    memcpy( mBulk + mSize, iStr, olen + 1 );
+    mSize = len;
+    return  (*this);
 }
 
 FString&
 FString::Append( char_type iChar ) {
-    uint64 len = mSize + 1 + 1;
-    char_type* tmp = new char_type[ len ];
-    memcpy( tmp, mBulk, mSize );
-    tmp[ mSize ] = iChar;
-    mCapacity = len;
-    mSize = len - 1;
-    tmp[ len ] = '\0';
-    CleanupBulk();
-    mBulk = tmp;
+    uint64 len = mSize + 1;
+    GrowBulk( len );
+    mBulk[ mSize ] = iChar;
+    mSize = len;
+    return  (*this);
 }
 
 FString&
 FString::Prepend( const FString& iStr ) {
+    uint64 len = mSize + iStr.mSize;
+    GrowBulk( len, iStr.mSize );
+    mSize = len;
+    memcpy( mBulk, iStr.mBulk, iStr.mSize );
+    return  (*this);
 }
 
 FString&
 FString::Prepend( const char_type* iStr ) {
+    uint64 olen = strlen( iStr );
+    uint64 len = mSize + olen;
+    GrowBulk( len, olen );
+    memcpy( mBulk, iStr, olen + 1 );
+    mSize = len;
+    return  (*this);
 }
 
 FString&
 FString::Prepend( char_type iChar ) {
+    uint64 len = mSize + 1;
+    GrowBulk( len, 1 );
+    mBulk[ 0 ] = iChar;
+    mSize = len;
+    return  (*this);
 }
 
 bool
 FString::operator==( const FString& iOther ) {
+    if( mSize != iOther.mSize )
+        return  false;
+
+    for( uint64 i = 0; i < mSize; ++i )
+        if( mBulk[i] != iOther.mBulk[i] )
+            return  false;
+
+    return  true;
 }
 
 bool
 FString::operator!=( const FString& iOther ) {
+    return  !( (*this) == iOther );
 }
 
 int
 FString::ToInt() const {
+    return  std::atoi( mBulk );
 }
 
 unsigned int
 FString::ToUnsignedInt() const {
+    return  std::stoul( mBulk );
 }
 
 
 float
 FString::ToFloat() const {
+    return  std::stof( mBulk );
 }
 
 double
 FString::ToDouble() const {
+    return  std::stod( mBulk );
 }
 
 //static
 FString
 FString::FromInt( int iValue ) {
+    std::string tmp = std::to_string( iValue );
+    uint64 len = strlen( tmp.c_str() );
+    FString result( len );
+    memcpy( result.mBulk, tmp.c_str(), len + 1 );
+
 }
 
 //static
 FString
 FString::FromUnsignedInt( unsigned int iValue ) {
+    std::string tmp = std::to_string( iValue );
+    uint64 len = strlen( tmp.c_str() );
+    FString result( len );
+    memcpy( result.mBulk, tmp.c_str(), len + 1 );
 }
 
 //static
 FString
 FString::FromFloat( float iValue ) {
+    std::string tmp = std::to_string( iValue );
+    uint64 len = strlen( tmp.c_str() );
+    FString result( len );
+    memcpy( result.mBulk, tmp.c_str(), len + 1 );
 }
 
 //static
 FString
 FString::FromDouble( double iValue ) {
+    std::string tmp = std::to_string( iValue );
+    uint64 len = strlen( tmp.c_str() );
+    FString result( len );
+    memcpy( result.mBulk, tmp.c_str(), len + 1 );
 }
 
 //static
 FString
 FString::FromWString( const FWString& iValue ) {
+    ULIS_ASSERT( false, "TODO" );
+}
+
+FString&
+FString::TransformUpperCase() {
+    for( uint64 i = 0; i < mSize; ++i )
+        mBulk[i] = toupper( mBulk[i] );
+    return  (*this);
+}
+
+FString&
+FString::TransformLowerCase() {
+    for( uint64 i = 0; i < mSize; ++i )
+        mBulk[i] = tolower( mBulk[i] );
+    return  (*this);
 }
 
 FString
 FString::ToUpper() const {
+    FString result( *this );
+    result.TransformUpperCase();
+    return  result;
 }
 
 FString
 FString::ToLower() const {
+    FString result( *this );
+    result.TransformLowerCase();
+    return  result;
 }
 
 bool
 FString::IsEmpty() const {
+    return  mSize == 0;
 }
 
 void
 FString::Reserve( uint64 iCapacity ) {
+    if( iCapacity > mCapacity ) {
+        char_type* tmp = new char_type[ iCapacity ];
+        memcpy( tmp, mBulk, mSize + 1 );
+        mCapacity = iCapacity;
+        CleanupBulk();
+        mBulk = tmp;
+    }
 }
 
 void
 FString::Shrink() {
+    uint64 cap = mSize + 1;
+    if( mCapacity > cap ) {
+        char_type* tmp = new char_type[ cap ];
+        memcpy( tmp, mBulk, cap );
+        mCapacity = cap;
+        CleanupBulk();
+        mBulk = tmp;
+    }
 }
 
 void
-FString::Resize( uint64 iSize ) {
+FString::Resize( uint64 iSize, char_type iChar ) {
+    if( iSize == mSize )
+        return;
+
+    if( iSize == 0 ) {
+        Clear();
+    } else {
+        GrowBulk( iSize );
+        for( uint64 i = mSize; i < iSize; ++i ) {
+            mBulk[i] = iChar;
+        }
+
+        mSize = iSize;
+        mBulk[ mSize ] = '\0';
+    }
 }
 
 void
 FString::Clear() {
+    CleanupBulk();
+    mBulk = new char_type[1];
+    mCapacity = 1;
+    mSize = 0;
+    mBulk[0] = '\0';
 }
 
 TArray< FString >
@@ -338,12 +429,22 @@ TArray< FString >
 FString::Split( char_type iSep ) const {
 }
 
-void
-FString::Erase( uint64 iPos, uint64 iCount ) const {
+FString&
+FString::Erase( uint64 iPos, uint64 iCount ) {
+    uint64 start = FMath::Min( iPos, mSize );
+    uint64 end = FMath::Min( iPos + iCount, mSize );
+    uint64 rem = mSize - end;
+    uint64 len = rem + start;
+    memmove( mBulk + start, mBulk + end, rem );
+    mSize = len;
+    mBulk[ mSize ] = '\0';
 }
 
-void
-FString::Insert( uint64 iPos, const FString& iStr ) const {
+FString&
+FString::Insert( uint64 iPos, const FString& iStr ) {
+    // Implemented this way because i'm lazy.
+    // Can be optimized.
+    return  operator=( std::move( SubString( 0, iPos ).Append( iStr ).Append( SubString( iPos + iStr.Size(), mSize ) ) ) );
 }
 
 int64
@@ -385,9 +486,20 @@ FString::CRC32() const {
 // Private
 void
 FString::CleanupBulk() {
-    if( mBulk != nullptr ) {
-        delete [] mBulk;
-        mBulk = nullptr;
+    ULIS_ASSERT( mBulk, "Bad State" );
+    delete [] mBulk;
+    mBulk = nullptr;
+}
+
+void
+FString::GrowBulk( uint64 iSize, uint64 iCopyOffset ) {
+    uint64 cap = iSize + 1;
+    if( cap > mCapacity ) {
+        char_type* tmp = new char_type[ cap ];
+        memcpy( tmp + iCopyOffset, mBulk, mSize + 1 );
+        mCapacity = cap;
+        CleanupBulk();
+        mBulk = tmp;
     }
 }
 

@@ -146,6 +146,12 @@ public:
     /* Static Maker from WString */
     static FString FromWString( const FWString& iValue );
 
+    /* Transform in place to uppercase */
+    FString& TransformUpperCase();
+
+    /* Transform in place to lowercase */
+    FString& TransformLowerCase();
+
     /* Conversion to uppercase */
     FString ToUpper() const;
 
@@ -177,7 +183,7 @@ public:
         Resize the actual usage size of the container.
         This function might invalid the underlying buffer.
     */
-    void Resize( uint64 iSize );
+    void Resize( uint64 iSize, char_type iChar = char_type() );
 
     /*! Clear the string, deallocating everything. */
     void Clear();
@@ -189,10 +195,10 @@ public:
     TArray< FString > Split( char_type iSep ) const;
 
     /* Erase part of string */
-    void Erase( uint64 iPos, uint64 iCount ) const;
+    FString& Erase( uint64 iPos, uint64 iCount );
 
     /* Insert part of string */
-    void Insert( uint64 iPos, const FString& iStr ) const;
+    FString& Insert( uint64 iPos, const FString& iStr );
 
     /* Find First occurence */
     int64 FindFirst( const FString& iStr ) const;
@@ -223,12 +229,13 @@ public:
 
 private:
     void CleanupBulk();
+    void GrowBulk( uint64 iSize, uint64 iCopyOffset = 0 );
     FString( uint64 iSize );
 
 private:
-    char_type* mBulk; ///< The main raw string buffer storage.
-    uint64 mCapacity; ///< The string capacity, may be bigger than size.
-    uint64 mSize; ///< The string usage size.
+    char_type* mBulk; ///< The main raw string buffer storage. A pascal string or C string with trailing null termination character.
+    uint64 mCapacity; ///< The string capacity, may be bigger than size. The real size of the buffer storage, including the null termination character.
+    uint64 mSize; ///< The string usage size, not including the null termination character, althoug other null characters can be inside the usable string.
 };
 
 ULIS_NAMESPACE_END
