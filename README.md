@@ -2,8 +2,10 @@
     <img src="meta/image/logo/github.png">
 </p>
 
-## Honor
-Maxim Shemanarev is my hero, he did a great job.
+## Other Libraries
+Other solutions exists that achieve in some parts the same goals as ULIS.
+[Blend2D](https://github.com/blend2d/blend2d) ( Petr Kobalicek )
+[AGG](https://antigrain.com/) ( Maxim Shemanarev )
 
 ## Overview
 ULIS is a rendering library written in C++. It is aimed at software rasterization and digital image processing.
