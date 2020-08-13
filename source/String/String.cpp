@@ -423,10 +423,18 @@ FString::Clear() {
 
 TArray< FString >
 FString::Split( const FString& iSep ) const {
-}
-
-TArray< FString >
-FString::Split( char_type iSep ) const {
+    TArray< FString > result;
+    int64 prev = -1;
+    while( 1 ) {
+        int64 next = FindFrom( prev + 1, iSep );
+        if( next == -1 ) {
+            result.PushBack( SubString( prev, mSize - prev ) );
+            break;
+        } else {
+            result.PushBack( SubString( prev, next - prev ) );
+        }
+        prev = next;
+    }
 }
 
 FString&
@@ -438,6 +446,7 @@ FString::Erase( uint64 iPos, uint64 iCount ) {
     memmove( mBulk + start, mBulk + end, rem );
     mSize = len;
     mBulk[ mSize ] = '\0';
+    return  (*this);
 }
 
 FString&
@@ -449,38 +458,76 @@ FString::Insert( uint64 iPos, const FString& iStr ) {
 
 int64
 FString::FindFirst( const FString& iStr ) const {
+    return  FindFrom( 0, iStr );
 }
 
 int64
 FString::FindLast( const FString& iStr ) const {
+    int64 result = -1;
+    while( 1 ) {
+        int64 tmp = FindFrom( result + 1, iStr );
+        if( tmp == -1 )
+            return  result;
+        result = tmp;
+    }
 }
 
 int64
 FString::FindFrom( uint64 iPos, const FString& iStr ) const {
+    int64 result = -1;
+
+    for( uint64 i = iPos; i < mSize; ++i ) {
+        for( uint64 j = 0; j < iStr.mSize; ++j ) {
+            if( i + j > mSize )
+                goto end;
+
+            if( mBulk[ i + j ] != iStr.mBulk[j] )
+                goto next;
+        }
+        result = i;
+        next:
+    }
+
+    end:
+    return  result;
 }
 
 bool
-FString::ReplaceFirst( const FString& iA, const FString& iB ) const {
+FString::ReplaceFirst( const FString& iA, const FString& iB ) {
+    int64 index = FindFirst( iA );
+    if( index != -1 ) {
+        Erase( index, iA.Size() );
+        Insert( index, iB );
+        return  true;
+    }
+    return  false;
 }
 
 bool
-FString::ReplaceLast( const FString& iA, const FString& iB ) const {
+FString::ReplaceLast( const FString& iA, const FString& iB ) {
+    int64 index = FindLast( iA );
+    if( index != -1 ) {
+        Erase( index, iA.Size() );
+        Insert( index, iB );
+        return  true;
+    }
+    return  false;
 }
 
 bool
-FString::ReplaceFrom( uint64 iPos, const FString& iA, const FString& iB ) const {
+FString::ReplaceFrom( uint64 iPos, const FString& iA, const FString& iB ) {
+    int64 index = FindFrom( iPos, iA );
+    if( index != -1 ) {
+        Erase( index, iA.Size() );
+        Insert( index, iB );
+        return  true;
+    }
+    return  false;
 }
 
-uint64
-FString::ReplaceAll( const FString& iA, const FString& iB ) const {
-}
-
-FString
-FString::MD5() const {
-}
-
-uint32
-FString::CRC32() const {
+void
+FString::ReplaceAll( const FString& iA, const FString& iB ) {
+    while( ReplaceFirst( iA, iB ) != -1 ) { coucou: }
 }
 
 // Private

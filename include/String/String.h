@@ -191,9 +191,6 @@ public:
     /*! Split the string. */
     TArray< FString > Split( const FString& iSep ) const;
 
-    /*! Split the string. */
-    TArray< FString > Split( char_type iSep ) const;
-
     /* Erase part of string */
     FString& Erase( uint64 iPos, uint64 iCount );
 
@@ -210,22 +207,16 @@ public:
     int64 FindFrom( uint64 iPos, const FString& iStr ) const;
 
     /* Replace First occurence */
-    bool ReplaceFirst( const FString& iA, const FString& iB ) const;
+    bool ReplaceFirst( const FString& iA, const FString& iB );
 
     /* Replace Last occurence */
-    bool ReplaceLast( const FString& iA, const FString& iB ) const;
+    bool ReplaceLast( const FString& iA, const FString& iB );
 
     /* Replace occurence starting for position */
-    bool ReplaceFrom( uint64 iPos, const FString& iA, const FString& iB ) const;
+    bool ReplaceFrom( uint64 iPos, const FString& iA, const FString& iB );
 
     /* Replace all occurences */
-    uint64 ReplaceAll( const FString& iA, const FString& iB ) const;
-
-    /* Compute MD5 for this string. */
-    FString MD5() const;
-
-    /* Compute CRC32 for this string. */
-    uint32 CRC32() const;
+    void ReplaceAll( const FString& iA, const FString& iB );
 
 private:
     void CleanupBulk();
