@@ -2,11 +2,6 @@
     <img src="meta/image/logo/github.png">
 </p>
 
-## Other Libraries
-Other solutions exists that achieve in some parts the same goals as ULIS:
-- [Blend2D](https://github.com/blend2d/blend2d) ( Petr Kobalicek )
-- [AGG](https://antigrain.com/) ( Maxim Shemanarev )
-
 ## Overview
 ULIS is a rendering library written in C++. It is aimed at software rasterization and digital image processing.
 
@@ -31,3 +26,7 @@ Check LICENSE.md, ULIS is licensed under a commercial license and is NOT availab
 ## Documentation
 Check the [documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/) for the API reference and details on the build process.  
 
+## Others
+Other solutions exists that achieve in some parts the same goals as ULIS:
+- [Blend2D](https://github.com/blend2d/blend2d) ( Petr Kobalicek )
+- [AGG](https://antigrain.com/) ( Maxim Shemanarev )
