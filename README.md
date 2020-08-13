@@ -26,7 +26,21 @@ Check LICENSE.md, ULIS is licensed under a commercial license and is NOT availab
 ## Documentation
 Check the [documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/) for the API reference and details on the build process.  
 
-## Others
-Other solutions exists that achieve in some parts the same goals as ULIS:
+## Why
+Other libraries and solutions exist, and some of them can achieve parts the same goals as ULIS:
 - [Blend2D](https://github.com/blend2d/blend2d) ( Petr Kobalicek )
 - [AGG](https://antigrain.com/) ( Maxim Shemanarev )
+- OpenGL
+- OpenCL
+- OpenCV
+- GraphicsMagic
+- ImageMagick
+- Qt
+- GIL
+- CImg
+- Cairo
+- Skia
+- SFML
+- SDL
+
+Each have their pros and cons. They are discussed extensively in the documentation.
