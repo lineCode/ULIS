@@ -14,6 +14,9 @@
 #pragma once
 #include "String/String.h"
 #include "String/WString.h"
+#include "String/CRC32.h"
+#include "String/MD5.h"
+#include "String/UUID.h"
 #include "Math/Math.h"
 #include "Memory/Array.h"
 #include <cstring>
@@ -26,7 +29,7 @@ FString::~FString() {
 FString::FString()
     : mBulk( nullptr )
     , mCapacity( 1 )
-    , mSize( 1 )
+    , mSize( 0 )
 {
     mBulk = new char_type[1];
     mBulk[0] = '\0';
@@ -41,7 +44,7 @@ FString::FString( const char_type* iStr )
     mBulk = new char_type[ len ];
     memcpy( mBulk, iStr, sizeof( char_type ) * len );
     mCapacity = len;
-    mSize = len;
+    mSize = len - 1;
 }
 
 FString::FString( const FString& iStr )
@@ -49,12 +52,11 @@ FString::FString( const FString& iStr )
     , mCapacity( 0 )
     , mSize( 0 )
 {
-    uint64 len = iStr.Size();
-    ULIS_ASSERT( len >= 1, "Bad size" );
+    uint64 len = iStr.Size() + 1;
     mBulk = new char_type[ len ];
     memcpy( mBulk, iStr.mBulk, sizeof( char_type ) * len );
     mCapacity = len;
-    mSize = len;
+    mSize = len - 1;
 }
 
 FString::FString( FString&& iStr )
@@ -62,7 +64,6 @@ FString::FString( FString&& iStr )
     , mCapacity( iStr.mCapacity )
     , mSize( iStr.mSize )
 {
-    ULIS_ASSERT( mSize >= 1, "Bad size" );
     iStr.mBulk = nullptr;
     iStr.mCapacity = 0;
     iStr.mSize = 0;
@@ -71,7 +72,7 @@ FString::FString( FString&& iStr )
 FString::FString( const FWString& iWStr )
     : mBulk( nullptr )
     , mCapacity( 1 )
-    , mSize( 1 )
+    , mSize( 0 )
 {
     ULIS_ASSERT( false, "TODO" );
     mBulk = new char_type[1];
@@ -81,20 +82,18 @@ FString::FString( const FWString& iWStr )
 FString&
 FString::operator=( const FString& iStr ) {
     CleanupBulk();
-    uint64 len = iStr.Size();
-    ULIS_ASSERT( len >= 1, "Bad size" );
+    uint64 len = iStr.Size() + 1;
     mBulk = new char_type[ len ];
     memcpy( mBulk, iStr.mBulk, sizeof( char_type ) * len );
     mCapacity = len;
-    mSize = len;
+    mSize = len - 1;
 }
 
 FString&
-FString::operator=( FString& iStr ) {
+FString::operator=( FString&& iStr ) {
     mBulk = iStr.mBulk;
     mCapacity = iStr.mCapacity;
     mSize = iStr.mSize;
-    ULIS_ASSERT( mSize >= 1, "Bad size" );
     iStr.mBulk = nullptr;
     iStr.mCapacity = 0;
     iStr.mSize = 0;
@@ -107,70 +106,138 @@ FString::Copy() const {
 
 FString
 FString::SubString( uint64 iPos, uint64 iCount ) const {
-    //TODO
+    uint64 start = FMath::Min( iPos, mSize );
+    uint64 end = FMath::Min( iPos + iCount, mSize );
+    uint64 len = end - start;
+    FString result( len );
+    memcpy( result.mBulk, mBulk + start, len );
+    result.mBulk[len] = '\0';
+
+    return  result;
 }
 
 uint64
 FString::Capacity() const {
+    return  mCapacity;
 }
 
 uint64
 FString::Size() const {
+    return  mSize;
 }
 
 const FString::char_type*
 FString::Data() const {
+    return  mBulk;
 }
 
 
 FString::char_type&
 FString::operator[]( uint64 iIndex ) {
+    ULIS_ASSERT( mSize > 0, "Bad call, string is empty" );
+    ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+    ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, string is uninitialized" );
+    return  mBulk[ iIndex ];
 }
 
 const FString::char_type&
 FString::operator[]( uint64 iIndex ) const {
+    ULIS_ASSERT( mSize > 0, "Bad call, string is empty" );
+    ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+    ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, string is uninitialized" );
+    return  mBulk[ iIndex ];
 }
 
 FString::char_type&
 FString::At( uint64 iIndex ) {
+    ULIS_ASSERT( mSize > 0, "Bad call, string is empty" );
+    ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+    ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, string is uninitialized" );
+    return  mBulk[ iIndex ];
 }
 
 const FString::char_type&
 FString::At( uint64 iIndex ) const {
+    ULIS_ASSERT( mSize > 0, "Bad call, string is empty" );
+    ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+    ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, string is uninitialized" );
+    return  mBulk[ iIndex ];
 }
 
 FString::char_type&
 FString::Front() {
+    ULIS_ASSERT( mSize > 0, "Bad call, string is empty" );
+    ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, string is uninitialized" );
+    return  mBulk[ 0 ];
 }
 
 const
 FString::char_type&
 FString::Front() const {
+    ULIS_ASSERT( mSize > 0, "Bad call, string is empty" );
+    ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, string is uninitialized" );
+    return  mBulk[ 0 ];
 }
 
 FString::char_type&
 FString::Back() {
+    ULIS_ASSERT( mSize > 0, "Bad call, string is empty" );
+    ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, string is uninitialized" );
+    return  mBulk[ mSize - 1 ];
 }
 
 const FString::char_type&
 FString::Back() const {
+    ULIS_ASSERT( mSize > 0, "Bad call, string is empty" );
+    ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, string is uninitialized" );
+    return  mBulk[ mSize - 1 ];
 }
-
 
 FWString
 FString::ToWString() const {
+    ULIS_ASSERT( false, "TODO" );
+    FWString result;
+    return  result;
 }
 
 FString&
 FString::Append( const FString& iStr ) {
+    uint64 len = mSize + iStr.mSize + 1;
+    char_type* tmp = new char_type[ len ];
+    memcpy( tmp, mBulk, mSize );
+    memcpy( tmp + mSize, iStr.mBulk, iStr.mSize );
+    mCapacity = len;
+    mSize = len - 1;
+    tmp[ len ] = '\0';
+    CleanupBulk();
+    mBulk = tmp;
 }
 
 FString&
 FString::Append( const char_type* iStr ) {
+    uint64 olen = strlen( iStr );
+    uint64 len = mSize + olen + 1;
+    char_type* tmp = new char_type[ len ];
+    memcpy( tmp, mBulk, mSize );
+    memcpy( tmp + mSize, iStr, olen );
+    mCapacity = len;
+    mSize = len - 1;
+    tmp[ len ] = '\0';
+    CleanupBulk();
+    mBulk = tmp;
 }
 
 FString&
 FString::Append( char_type iChar ) {
+    uint64 len = mSize + 1 + 1;
+    char_type* tmp = new char_type[ len ];
+    memcpy( tmp, mBulk, mSize );
+    tmp[ mSize ] = iChar;
+    mCapacity = len;
+    mSize = len - 1;
+    tmp[ len ] = '\0';
+    CleanupBulk();
+    mBulk = tmp;
 }
 
 FString&
@@ -325,11 +392,10 @@ FString::CleanupBulk() {
 }
 
 FString::FString( uint64 iSize )
-    : mBulk( new char_type[ iSize ] )
-    , mCapacity( iSize )
+    : mBulk( new char_type[ iSize + 1 ] )
+    , mCapacity( iSize + 1 )
     , mSize( iSize )
 {
-    memset( mBulk, 0, iSize );
 }
 
 ULIS_NAMESPACE_END

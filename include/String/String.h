@@ -51,7 +51,7 @@ public:
     FString& operator=( const FString& iStr );
 
     /* Move assignment operator. */
-    FString& operator=( FString& iStr );
+    FString& operator=( FString&& iStr );
 
     /* Request explicit copy of string */
     FString Copy() const;
