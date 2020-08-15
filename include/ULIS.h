@@ -5,7 +5,7 @@
 *   ULIS3
 *__________________
 *
-* @file         ULIS3.h
+* @file         ULIS.h
 * @author       Clement Berthaud
 * @brief        This file provides a unique way to include all the necessary library files.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
