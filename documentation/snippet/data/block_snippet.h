@@ -1,18 +1,18 @@
-//! [FBlock on stack]
+//! [FRasterImage2D on stack]
     { // Begin local scope
-        FBlock image( 64, 64, eFormat::Format_RGBA8 );
+        FRasterImage2D image( 64, 64, eFormat::Format_RGBA8 );
         // Work with your image.
     } // End local scope, image is destroyed and so is the underlying data.
-//! [FBlock on stack]
+//! [FRasterImage2D on stack]
 
-//! [FBlock on heap]
-    FBlock* image = new FBlock( 64, 64, eFormat::Format_RGBA8 );
+//! [FRasterImage2D on heap]
+    FRasterImage2D* image = new FRasterImage2D( 64, 64, eFormat::Format_RGBA8 );
     // Work with your image.
     delete  image;
-//! [FBlock on heap]
+//! [FRasterImage2D on heap]
 
-//! [FBlock X Version]
-    FBlock* image = FBlock::XMake( 64, 64, eFormat::Format_RGBA8 );
+//! [FRasterImage2D X Version]
+    FRasterImage2D* image = FRasterImage2D::XMake( 64, 64, eFormat::Format_RGBA8 );
     // Work with your image.
-    FBlock::XDelete( image );
-//! [FBlock X Version]
+    FRasterImage2D::XDelete( image );
+//! [FRasterImage2D X Version]
