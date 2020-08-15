@@ -302,7 +302,7 @@ FWString::FromInt( int iValue ) {
     uint64 len = wcslen( tmp.c_str() );
     FWString result( len );
     memcpy( result.mBulk, tmp.c_str(), len + 1 );
-
+    return  result;
 }
 
 //static
@@ -312,6 +312,7 @@ FWString::FromUnsignedInt( unsigned int iValue ) {
     uint64 len = wcslen( tmp.c_str() );
     FWString result( len );
     memcpy( result.mBulk, tmp.c_str(), len + 1 );
+    return  result;
 }
 
 //static
@@ -321,6 +322,7 @@ FWString::FromFloat( float iValue ) {
     uint64 len = wcslen( tmp.c_str() );
     FWString result( len );
     memcpy( result.mBulk, tmp.c_str(), len + 1 );
+    return  result;
 }
 
 //static
@@ -330,12 +332,14 @@ FWString::FromDouble( double iValue ) {
     uint64 len = wcslen( tmp.c_str() );
     FWString result( len );
     memcpy( result.mBulk, tmp.c_str(), len + 1 );
+    return  result;
 }
 
 //static
 FWString
 FWString::FromString( const FString& iValue ) {
     ULIS_ASSERT( false, "TODO" );
+    return  FWString();
 }
 
 FWString&
@@ -435,6 +439,7 @@ FWString::Split( const FWString& iSep ) const {
         }
         prev = next;
     }
+    return  result;
 }
 
 FWString&
@@ -486,6 +491,7 @@ FWString::FindFrom( uint64 iPos, const FWString& iStr ) const {
         }
         result = i;
         next:
+        continue;
     }
 
     end:
@@ -527,7 +533,7 @@ FWString::ReplaceFrom( uint64 iPos, const FWString& iA, const FWString& iB ) {
 
 void
 FWString::ReplaceAll( const FWString& iA, const FWString& iB ) {
-    while( ReplaceFirst( iA, iB ) != -1 ) { coucou: }
+    while( ReplaceFirst( iA, iB ) ) {}
 }
 
 // Private

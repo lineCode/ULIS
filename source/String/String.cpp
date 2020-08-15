@@ -302,7 +302,7 @@ FString::FromInt( int iValue ) {
     uint64 len = strlen( tmp.c_str() );
     FString result( len );
     memcpy( result.mBulk, tmp.c_str(), len + 1 );
-
+    return  result;
 }
 
 //static
@@ -312,6 +312,7 @@ FString::FromUnsignedInt( unsigned int iValue ) {
     uint64 len = strlen( tmp.c_str() );
     FString result( len );
     memcpy( result.mBulk, tmp.c_str(), len + 1 );
+    return  result;
 }
 
 //static
@@ -321,6 +322,7 @@ FString::FromFloat( float iValue ) {
     uint64 len = strlen( tmp.c_str() );
     FString result( len );
     memcpy( result.mBulk, tmp.c_str(), len + 1 );
+    return  result;
 }
 
 //static
@@ -330,12 +332,14 @@ FString::FromDouble( double iValue ) {
     uint64 len = strlen( tmp.c_str() );
     FString result( len );
     memcpy( result.mBulk, tmp.c_str(), len + 1 );
+    return  result;
 }
 
 //static
 FString
 FString::FromWString( const FWString& iValue ) {
     ULIS_ASSERT( false, "TODO" );
+    return  FString();
 }
 
 FString&
@@ -435,6 +439,7 @@ FString::Split( const FString& iSep ) const {
         }
         prev = next;
     }
+    return  result;
 }
 
 FString&
@@ -486,6 +491,7 @@ FString::FindFrom( uint64 iPos, const FString& iStr ) const {
         }
         result = i;
         next:
+        continue;
     }
 
     end:
@@ -527,7 +533,7 @@ FString::ReplaceFrom( uint64 iPos, const FString& iA, const FString& iB ) {
 
 void
 FString::ReplaceAll( const FString& iA, const FString& iB ) {
-    while( ReplaceFirst( iA, iB ) != -1 ) { coucou: }
+    while( ReplaceFirst( iA, iB ) ) {}
 }
 
 // Private
