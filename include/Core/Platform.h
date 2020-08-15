@@ -15,6 +15,32 @@
 #include <iostream>
 
 /////////////////////////////////////////////////////
+// Macros detect def version
+#ifdef  ULIS_DEF_VERSION_MAJOR
+#define ULIS_VERSION_MAJOR ULIS_DEF_VERSION_MAJOR
+#else
+#define ULIS_VERSION_MAJOR 0
+#endif //  ULIS_DEF_VERSION_MAJOR
+
+#ifdef  ULIS_DEF_VERSION_MINOR
+#define ULIS_VERSION_MINOR ULIS_DEF_VERSION_MINOR
+#else
+#define ULIS_VERSION_MINOR 0
+#endif //  ULIS_DEF_VERSION_MINOR
+
+#ifdef  ULIS_DEF_VERSION_PATCH
+#define ULIS_VERSION_PATCH ULIS_DEF_VERSION_PATCH
+#else
+#define ULIS_VERSION_PATCH 0
+#endif //  ULIS_DEF_VERSION_PATCH
+
+#define ULIS_XSTRINGIFY( X ) #X
+#define ULIS_STRINGIFY( X ) ULIS_XSTRINGIFY( X )
+#define ULIS_VERSION_MAJOR_STR ULIS_STRINGIFY( ULIS_VERSION_MAJOR )
+#define ULIS_VERSION_MINOR_STR ULIS_STRINGIFY( ULIS_VERSION_MINOR )
+#define ULIS_VERSION_PATCH_STR ULIS_STRINGIFY( ULIS_VERSION_PATCH )
+
+/////////////////////////////////////////////////////
 // Detect Build Configuration
 #ifdef NDEBUG
     #define ULIS_RELEASE
