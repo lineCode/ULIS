@@ -16,13 +16,13 @@
 #include "String/String.h"
 
 ULIS_NAMESPACE_BEGIN
-FString VersionString();
-FString VersionMajorString();
-FString VersionMinorString();
-FString VersionPatchString();
-uint64 VersionMajor();
-uint64 VersionMinor();
-uint64 VersionPatch();
-FString CompilationTimeStamp();
+ULIS_API FString VersionString();
+ULIS_API FString VersionMajorString();
+ULIS_API FString VersionMinorString();
+ULIS_API FString VersionPatchString();
+ULIS_API uint64 VersionMajor();
+ULIS_API uint64 VersionMinor();
+ULIS_API uint64 VersionPatch();
+ULIS_API FString CompilationTimeStamp();
 ULIS_NAMESPACE_END
 
