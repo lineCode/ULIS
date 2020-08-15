@@ -12,7 +12,6 @@ ULIS uses multiple mechanisms for dispatching implementations of image processin
     + [Multithreaded Scheduling Options](@ref multithreaded-scheduling-options)
     + [Implementation Variants](@ref implementation-variants)
     + [CPU vs GPU](@ref cpu-vs-gpu)
-- [Details](@ref details)
 
 ---
 
