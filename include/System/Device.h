@@ -27,7 +27,7 @@ ULIS_NAMESPACE_BEGIN
 ///             cross platform way of detecting wether the consumer of the library
 ///             code is able to rely on the implementations compiled with these
 ///             SIMD features in mind. Additionnaly, it provides extra information
-///             about the CPU vendor, and some information about the OS is relation
+///             about the CPU vendor, and some information about the OS, in relation
 ///             to its support for the features sets or for 64bit features, although
 ///             64bit is always assumed to be true within ULIS.
 ///
