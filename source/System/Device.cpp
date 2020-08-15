@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "System/Device.h"
+
 /////////////////////////////////////////////////////
 // Device info bit field "bField" in base 64
 //
@@ -70,6 +71,84 @@
 //          9: __reserved__
 //          +: __reserved__
 //          /: __reserved__
+/////////////////////////////////////////////////////
+// Bitfield Macro Operators
+//Write
+#define ULIS_W_HW_AMD( i )          ( ( i & 1 ) << 0    )
+#define ULIS_W_HW_INTEL( i )        ( ( i & 1 ) << 1    )
+#define ULIS_W_OS_X64( i )          ( ( i & 1 ) << 2    )
+#define ULIS_W_OS_AVX( i )          ( ( i & 1 ) << 3    )
+#define ULIS_W_OS_AVX512( i )       ( ( i & 1 ) << 4    )
+#define ULIS_W_HW_X64( i )          ( ( i & 1 ) << 5    )
+#define ULIS_W_HW_MMX( i )          ( ( i & 1 ) << 6    )
+#define ULIS_W_HW_ABM( i )          ( ( i & 1 ) << 7    )
+#define ULIS_W_HW_RDRAND( i )       ( ( i & 1 ) << 8    )
+#define ULIS_W_HW_BMI1( i )         ( ( i & 1 ) << 9    )
+#define ULIS_W_HW_BMI2( i )         ( ( i & 1 ) << 10   )
+#define ULIS_W_HW_ADX( i )          ( ( i & 1 ) << 11   )
+#define ULIS_W_HW_PREFETCHWT1( i )  ( ( i & 1 ) << 12   )
+#define ULIS_W_HW_MPX( i )          ( ( i & 1 ) << 13   )
+#define ULIS_W_HW_SSE( i )          ( ( i & 1 ) << 14   )
+#define ULIS_W_HW_SSE2( i )         ( ( i & 1 ) << 15   )
+#define ULIS_W_HW_SSE3( i )         ( ( i & 1 ) << 16   )
+#define ULIS_W_HW_SSSE3( i )        ( ( i & 1 ) << 17   )
+#define ULIS_W_HW_SSE41( i )        ( ( i & 1 ) << 18   )
+#define ULIS_W_HW_SSE42( i )        ( ( i & 1 ) << 19   )
+#define ULIS_W_HW_SSE4A( i )        ( ( i & 1 ) << 20   )
+#define ULIS_W_HW_AES( i )          ( ( i & 1 ) << 21   )
+#define ULIS_W_HW_SHA( i )          ( ( i & 1 ) << 22   )
+#define ULIS_W_HW_AVX( i )          ( ( i & 1 ) << 23   )
+#define ULIS_W_HW_XOP( i )          ( ( i & 1 ) << 24   )
+#define ULIS_W_HW_FMA3( i )         ( ( i & 1 ) << 25   )
+#define ULIS_W_HW_FMA4( i )         ( ( i & 1 ) << 26   )
+#define ULIS_W_HW_AVX2( i )         ( ( i & 1 ) << 27   )
+#define ULIS_W_HW_AVX512_F( i )     ( ( i & 1 ) << 28   )
+#define ULIS_W_HW_AVX512_PF( i )    ( ( i & 1 ) << 29   )
+#define ULIS_W_HW_AVX512_ER( i )    ( ( i & 1 ) << 30   )
+#define ULIS_W_HW_AVX512_CD( i )    ( ( i & 1 ) << 31   )
+#define ULIS_W_HW_AVX512_VL( i )    ( ( i & 1 ) << 32   )
+#define ULIS_W_HW_AVX512_BW( i )    ( ( i & 1 ) << 33   )
+#define ULIS_W_HW_AVX512_DQ( i )    ( ( i & 1 ) << 34   )
+#define ULIS_W_HW_AVX512_IFMA( i )  ( ( i & 1 ) << 35   )
+#define ULIS_W_HW_AVX512_VBMI( i )  ( ( i & 1 ) << 36   )
+// Read
+#define ULIS_R_HW_AMD( i )          ( ( i >> 0 )    & 1 )
+#define ULIS_R_HW_INTEL( i )        ( ( i >> 1 )    & 1 )
+#define ULIS_R_OS_X64( i )          ( ( i >> 2 )    & 1 )
+#define ULIS_R_OS_AVX( i )          ( ( i >> 3 )    & 1 )
+#define ULIS_R_OS_AVX512( i )       ( ( i >> 4 )    & 1 )
+#define ULIS_R_HW_X64( i )          ( ( i >> 5 )    & 1 )
+#define ULIS_R_HW_MMX( i )          ( ( i >> 6 )    & 1 )
+#define ULIS_R_HW_ABM( i )          ( ( i >> 7 )    & 1 )
+#define ULIS_R_HW_RDRAND( i )       ( ( i >> 8 )    & 1 )
+#define ULIS_R_HW_BMI1( i )         ( ( i >> 9 )    & 1 )
+#define ULIS_R_HW_BMI2( i )         ( ( i >> 10 )   & 1 )
+#define ULIS_R_HW_ADX( i )          ( ( i >> 11 )   & 1 )
+#define ULIS_R_HW_PREFETCHWT1( i )  ( ( i >> 12 )   & 1 )
+#define ULIS_R_HW_MPX( i )          ( ( i >> 13 )   & 1 )
+#define ULIS_R_HW_SSE( i )          ( ( i >> 14 )   & 1 )
+#define ULIS_R_HW_SSE2( i )         ( ( i >> 15 )   & 1 )
+#define ULIS_R_HW_SSE3( i )         ( ( i >> 16 )   & 1 )
+#define ULIS_R_HW_SSSE3( i )        ( ( i >> 17 )   & 1 )
+#define ULIS_R_HW_SSE41( i )        ( ( i >> 18 )   & 1 )
+#define ULIS_R_HW_SSE42( i )        ( ( i >> 19 )   & 1 )
+#define ULIS_R_HW_SSE4A( i )        ( ( i >> 20 )   & 1 )
+#define ULIS_R_HW_AES( i )          ( ( i >> 21 )   & 1 )
+#define ULIS_R_HW_SHA( i )          ( ( i >> 22 )   & 1 )
+#define ULIS_R_HW_AVX( i )          ( ( i >> 23 )   & 1 )
+#define ULIS_R_HW_XOP( i )          ( ( i >> 24 )   & 1 )
+#define ULIS_R_HW_FMA3( i )         ( ( i >> 25 )   & 1 )
+#define ULIS_R_HW_FMA4( i )         ( ( i >> 26 )   & 1 )
+#define ULIS_R_HW_AVX2( i )         ( ( i >> 27 )   & 1 )
+#define ULIS_R_HW_AVX512_F( i )     ( ( i >> 28 )   & 1 )
+#define ULIS_R_HW_AVX512_PF( i )    ( ( i >> 29 )   & 1 )
+#define ULIS_R_HW_AVX512_ER( i )    ( ( i >> 30 )   & 1 )
+#define ULIS_R_HW_AVX512_CD( i )    ( ( i >> 31 )   & 1 )
+#define ULIS_R_HW_AVX512_VL( i )    ( ( i >> 32 )   & 1 )
+#define ULIS_R_HW_AVX512_BW( i )    ( ( i >> 33 )   & 1 )
+#define ULIS_R_HW_AVX512_DQ( i )    ( ( i >> 34 )   & 1 )
+#define ULIS_R_HW_AVX512_IFMA( i )  ( ( i >> 35 )   & 1 )
+#define ULIS_R_HW_AVX512_VBMI( i )  ( ( i >> 36 )   & 1 )
 
 #if defined(ULIS_WIN)
 #include "System/Device_Windows.ipp"
@@ -80,4 +159,47 @@
 #else
 #include "System/Device_Generic.ipp"
 #endif
+
+ULIS_NAMESPACE_BEGIN
+bool    FDevice::IsHardwareAMD() const {            return  ULIS_R_HW_AMD(          bField ); }
+bool    FDevice::IsHardwareIntel() const {          return  ULIS_R_HW_INTEL(        bField ); }
+bool    FDevice::IsOSx64() const {                  return  ULIS_R_OS_X64(          bField ); }
+bool    FDevice::HasOSAVX() const {                 return  ULIS_R_OS_AVX(          bField ); }
+bool    FDevice::HasOSAVX512() const {              return  ULIS_R_OS_AVX512(       bField ); }
+bool    FDevice::HasHardwarex64() const {           return  ULIS_R_HW_X64(          bField ); }
+bool    FDevice::HasHardwareMMX() const {           return  ULIS_R_HW_MMX(          bField ); }
+bool    FDevice::HasHardwareABM() const {           return  ULIS_R_HW_ABM(          bField ); }
+bool    FDevice::HasHardwareRDRAND() const {        return  ULIS_R_HW_RDRAND(       bField ); }
+bool    FDevice::HasHardwareBMI1() const {          return  ULIS_R_HW_BMI1(         bField ); }
+bool    FDevice::HasHardwareBMI2() const {          return  ULIS_R_HW_BMI2(         bField ); }
+bool    FDevice::HasHardwareADX() const {           return  ULIS_R_HW_ADX(          bField ); }
+bool    FDevice::HasHardwarePREFETCHWT1() const {   return  ULIS_R_HW_PREFETCHWT1(  bField ); }
+bool    FDevice::HasHardwareMPX() const {           return  ULIS_R_HW_MPX(          bField ); }
+bool    FDevice::HasHardwareSSE() const {           return  ULIS_R_HW_SSE(          bField ); }
+bool    FDevice::HasHardwareSSE2() const {          return  ULIS_R_HW_SSE2(         bField ); }
+bool    FDevice::HasHardwareSSE3() const {          return  ULIS_R_HW_SSE3(         bField ); }
+bool    FDevice::HasHardwareSSSE3() const {         return  ULIS_R_HW_SSSE3(        bField ); }
+bool    FDevice::HasHardwareSSE41() const {         return  ULIS_R_HW_SSE41(        bField ); }
+bool    FDevice::HasHardwareSSE42() const {         return  ULIS_R_HW_SSE42(        bField ); }
+bool    FDevice::HasHardwareSSE4a() const {         return  ULIS_R_HW_SSE4A(        bField ); }
+bool    FDevice::HasHardwareAES() const {           return  ULIS_R_HW_AES(          bField ); }
+bool    FDevice::HasHardwareSHA() const {           return  ULIS_R_HW_SHA(          bField ); }
+bool    FDevice::HasHardwareAVX() const {           return  ULIS_R_HW_AVX(          bField ); }
+bool    FDevice::HasHardwareXOP() const {           return  ULIS_R_HW_XOP(          bField ); }
+bool    FDevice::HasHardwareFMA3() const {          return  ULIS_R_HW_FMA3(         bField ); }
+bool    FDevice::HasHardwareFMA4() const {          return  ULIS_R_HW_FMA4(         bField ); }
+bool    FDevice::HasHardwareAVX2() const {          return  ULIS_R_HW_AVX2(         bField ); }
+bool    FDevice::HasHardwareAVX512_F() const {      return  ULIS_R_HW_AVX512_F(     bField ); }
+bool    FDevice::HasHardwareAVX512_PF() const {     return  ULIS_R_HW_AVX512_PF(    bField ); }
+bool    FDevice::HasHardwareAVX512_ER() const {     return  ULIS_R_HW_AVX512_ER(    bField ); }
+bool    FDevice::HasHardwareAVX512_CD() const {     return  ULIS_R_HW_AVX512_CD(    bField ); }
+bool    FDevice::HasHardwareAVX512_VL() const {     return  ULIS_R_HW_AVX512_VL(    bField ); }
+bool    FDevice::HasHardwareAVX512_BW() const {     return  ULIS_R_HW_AVX512_BW(    bField ); }
+bool    FDevice::HasHardwareAVX512_DQ() const {     return  ULIS_R_HW_AVX512_DQ(    bField ); }
+bool    FDevice::HasHardwareAVX512_IFMA() const {   return  ULIS_R_HW_AVX512_IFMA(  bField ); }
+bool    FDevice::HasHardwareAVX512_VBMI() const {   return  ULIS_R_HW_AVX512_VBMI(  bField ); }
+uint32  FDevice::MaxWorkers() const {               return  mMaxWorkers; }
+uint32  FDevice::L1CacheSize() const {              return  mL1CacheSize; }
+uint32  FDevice::L1CacheLineSize() const {          return  mL1CacheLineSize; }
+ULIS_NAMESPACE_END
 
