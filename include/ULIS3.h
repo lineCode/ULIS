@@ -64,6 +64,9 @@
 #include "Mix/Mix.h"
 // Raster
 #include "Raster/Draw.h"
+// String
+#include "String/String.h"
+#include "String/WString.h"
 // System
 #include "System/FilePathRegistry.h"
 #include "System/HostDeviceInfo.h"
