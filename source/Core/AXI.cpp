@@ -61,7 +61,8 @@ VersionPatch()
 FString
 CompilationTimeStamp()
 {
-    return  FString( ULIS_STRINGIFY( __DATE__ ) ) + "_" + ULIS_STRINGIFY( __TIME__ );
+    return  FString( ULIS_STRINGIFY( __DATE__ ) ) + " " + ULIS_STRINGIFY( __TIME__ );
 }
+
 ULIS_NAMESPACE_END
 
