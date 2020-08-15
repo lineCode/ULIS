@@ -218,6 +218,12 @@ public:
     /* Replace all occurences */
     void ReplaceAll( const FString& iA, const FString& iB );
 
+    /* Operator += */
+    FString& operator+=( const FString& iOther );
+
+    /* Operator += */
+    FString& operator+=( const char_type* iOther );
+
 private:
     void CleanupBulk();
     void GrowBulk( uint64 iSize, uint64 iCopyOffset = 0 );
@@ -228,6 +234,9 @@ private:
     uint64 mCapacity; ///< The string capacity, may be bigger than size. The real size of the buffer storage, including the null termination character.
     uint64 mSize; ///< The string usage size, not including the null termination character, althoug other null characters can be inside the usable string.
 };
+
+FString operator+( const FString& iA, const FString& iB );
+FString operator+( const FString& iA, const FString::char_type* iB );
 
 ULIS_NAMESPACE_END
 

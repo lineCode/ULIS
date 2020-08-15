@@ -536,6 +536,17 @@ FString::ReplaceAll( const FString& iA, const FString& iB ) {
     while( ReplaceFirst( iA, iB ) ) {}
 }
 
+// Internal operators
+FString&
+FString::operator+=( const FString& iOther ) {
+    return  Append( iOther );
+}
+
+FString&
+FString::operator+=( const char_type* iOther ) {
+    return  Append( iOther );
+}
+
 // Private
 void
 FString::CleanupBulk() {
@@ -561,6 +572,16 @@ FString::FString( uint64 iSize )
     , mCapacity( iSize + 1 )
     , mSize( iSize )
 {
+}
+
+FString
+operator+( const FString& iA, const FString& iB ) {
+    return  iA.Copy().Append( iB );
+}
+
+FString
+operator+( const FString& iA, const FString::char_type* iB ) {
+    return  iA.Copy().Append( iB );
 }
 
 ULIS_NAMESPACE_END
