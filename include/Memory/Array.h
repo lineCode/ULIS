@@ -220,8 +220,8 @@ public:
                         mBulk[ i ].~T();
                     }
                 } else {
-                    for( uint64 i = iSize; i < mSize; ++i ) {
-                        mBulk[ i ].~T();
+                    for( uint64 i = mSize; i < iSize; ++i ) {
+                        new  ( mBulk + i )  T;
                     }
                 }
                 mSize = iSize;
