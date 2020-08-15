@@ -15,6 +15,24 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+/// @class      FDevice
+/// @brief      The FDevice class provides a mean of fetching and reading
+///             informations about the CPU in a single-CPU, multicore environment.
+///
+/// @details    FDevice provides functions to fetch wether support for 64bit
+///             features or SIMD extensions are supported on the CPU that runs
+///             the compiled code, at runtime. It has no relation wathsoever with
+///             the computer that compiled the code in the first place, it is a
+///             cross platform way of detecting wether the consumer of the library
+///             code is able to rely on the implementations compiled with these
+///             SIMD features in mind. Additionnaly, it provides extra information
+///             about the CPU vendor, and some information about the OS is relation
+///             to its support for the features sets or for 64bit features, although
+///             64bit is always assumed to be true within ULIS.
+///
+///             FDevice also provides some insight about the hardware such as the
+///             number of available cores, or the size of cache lines.
 class ULIS_API FDevice
 {
 public:
