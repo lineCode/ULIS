@@ -7,7 +7,7 @@
 *
 * @file         Device.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FDecie tools.
+* @brief        This file provides the declaration for the FDevice tools.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -18,68 +18,56 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FDevice
 {
 public:
-    ~FDevice();
+    /*! Constructor. */
     FDevice();
 
+public:
+    bool IsHardwareAMD() const;
+    bool IsHardwareIntel() const;
+    bool IsOSx64() const;
+    bool HasOSAVX() const;
+    bool HasOSAVX512() const;
+    bool HasHardwarex64() const;
+    bool HasHardwareMMX() const;
+    bool HasHardwareABM() const;
+    bool HasHardwareRDRAND() const;
+    bool HasHardwareBMI1() const;
+    bool HasHardwareBMI2() const;
+    bool HasHardwareADX() const;
+    bool HasHardwarePREFETCHWT1() const;
+    bool HasHardwareMPX() const;
+    bool HasHardwareSSE() const;
+    bool HasHardwareSSE2() const;
+    bool HasHardwareSSE3() const;
+    bool HasHardwareSSSE3() const;
+    bool HasHardwareSSE41() const;
+    bool HasHardwareSSE42() const;
+    bool HasHardwareSSE4a() const;
+    bool HasHardwareAES() const;
+    bool HasHardwareSHA() const;
+    bool HasHardwareAVX() const;
+    bool HasHardwareXOP() const;
+    bool HasHardwareFMA3() const;
+    bool HasHardwareFMA4() const;
+    bool HasHardwareAVX2() const;
+    bool HasHardwareAVX512_F() const;
+    bool HasHardwareAVX512_PF() const;
+    bool HasHardwareAVX512_ER() const;
+    bool HasHardwareAVX512_CD() const;
+    bool HasHardwareAVX512_VL() const;
+    bool HasHardwareAVX512_BW() const;
+    bool HasHardwareAVX512_DQ() const;
+    bool HasHardwareAVX512_IFMA() const;
+    bool HasHardwareAVX512_VBMI() const;
+    uint32 MaxWorkers() const;
+    uint32 L1CacheSize() const;
+    uint32 L1CacheLineSize() const;
+
 private:
-    /////////////////////////////////////////////////////
-    // Device info bit field "bField" in base 64
-    //
-    //   64|      60|  56|  52|  48|      44|  40|  36|  32|      28|  24|  20|  16|      12|   8|   4|   0
-    //          •••• •••• •••• ••••     •••• •••• •••• ••••     •••• •••• •••• ••••     •••• •••• •••• ••••
-    //          /+98 7654 3210 zyxw     vuts rqpo nmlk jihg     fedc baZY XWVU TSRQ     PONM LKJI HGFE DCBA
-    //
-    //          bit index caption:
-    //          A: Is Hardware AMD;
-    //          B: Is Hardware Intel;
-    //          C: Is OS x64;
-    //          D: Has OS AVX;
-    //          E: Has OS AVX512;
-    //          F: Has Hardware x64;
-    //          G: Has Hardware MMX;
-    //          H: Has Hardware ABM;
-    //          I: Has Hardware RDRAND;
-    //          J: Has Hardware BMI1;
-    //          K: Has Hardware BMI2;
-    //          L: Has Hardware ADX;
-    //          M: Has Hardware PREFETCHWT1;
-    //          N: Has Hardware MPX;
-    //          O: Has Hardware SSE;
-    //          P: Has Hardware SSE2;
-    //          Q: Has Hardware SSE3;
-    //          R: Has Hardware SSSE3;
-    //          S: Has Hardware SSE41;
-    //          T: Has Hardware SSE42;
-    //          U: Has Hardware SSE4a;
-    //          V: Has Hardware AES;
-    //          W: Has Hardware SHA;
-    //          X: Has Hardware AVX;
-    //          Y: Has Hardware XOP;
-    //          Z: Has Hardware FMA3;
-    //          a: Has Hardware FMA4;
-    //          b: Has Hardware AVX2;
-    //          c: Has Hardware AVX512_F;
-    //          d: Has Hardware AVX512_PF;
-    //          e: Has Hardware AVX512_ER;
-    //          f: Has Hardware AVX512_CD;
-    //          g: Has Hardware AVX512_VL;
-    //          h: Has Hardware AVX512_BW;
-    //          i: Has Hardware AVX512_DQ;
-    //          j: Has Hardware AVX512_IFMA;
-    //          k: Has Hardware AVX512_VBMI;
-    //          0: __reserved__
-    //          1: __reserved__
-    //          2: __reserved__
-    //          3: __reserved__
-    //          4: __reserved__
-    //          5: __reserved__
-    //          6: __reserved__
-    //          7: __reserved__
-    //          8: __reserved__
-    //          9: __reserved__
-    //          +: __reserved__
-    //          /: __reserved__
     uint64 bField;
+    uint32 mMaxWorkers;
+    uint32 mL1CacheSize;
+    uint32 mL1CacheLineSize;
 };
 
 ULIS_NAMESPACE_END

@@ -24,23 +24,33 @@ template< typename R, typename ... Ts >
 class TCallback
 {
 public:
+    /*! Typedef tFptr for the internal function pointer type. */
     typedef R (*tFptr)( Ts ..., void* );
+
+    /*! Default null constructor. */
     TCallback()
         : mFptr( nullptr )
         , mInfo( nullptr )
     {}
 
+    /*! Constructor from function pointer and optional extra info. */
     TCallback( tFptr iFptr, void* iInfo = nullptr )
         : mFptr( iFptr )
         , mInfo( iInfo )
     {}
 
-    // No return value because we can't ensure a generic default return value if not bound.
+    /*!
+        Call the function pointer only if set.
+        No return value because we can't ensure a generic default return value if not bound.
+    */
     ULIS_FORCEINLINE void ExecuteIfBound( Ts ... args ) const {
         if( mFptr )
             mFptr( args ..., mInfo );
     }
 
+    /*!
+        Call the function pointer without checking if it is set.
+    */
     ULIS_FORCEINLINE R Execute( Ts ... args ) const {
         ULIS_ASSERT( mFptr, "Error: Callback not set." );
         return  mFptr( args ..., mInfo );
