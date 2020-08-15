@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /*
 *
-*   ULIS3
+*   ULIS
 *__________________
 *
 * @file         TransformPerspectiveMT_NN_SSE_RGBA8.ipp

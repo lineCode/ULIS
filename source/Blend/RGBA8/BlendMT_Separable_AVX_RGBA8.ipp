@@ -2,7 +2,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /*
 *
-*   ULIS3
+*   ULIS
 *__________________
 *
 * @file         BlendMT_Separable_AVX_RGBA8.ipp

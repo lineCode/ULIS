@@ -1,7 +1,7 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /*
 *
-*   ULIS3
+*   ULIS
 *__________________
 *
 * @file         TransformBezier_Bilinear_MEM_Generic.ipp

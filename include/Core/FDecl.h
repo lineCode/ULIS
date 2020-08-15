@@ -2,12 +2,12 @@
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /*
 *
-*   ULIS3
+*   ULIS
 *__________________
 *
 * @file         FDecl.h
 * @author       Clement Berthaud
-* @brief        This file provides core forward declarations for the ULIS3 library.
+* @brief        This file provides core forward declarations for the ULIS library.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
