@@ -14,11 +14,11 @@
 #include "System/Device.h"
 #include "System/DeviceHelpers.h"
 
-#if defined(ULIS_WIN)
+#if defined( ULIS_WIN )
 #include "System/Device_Windows.ipp"
-#elif defined(ULIS_MACOS)
+#elif defined( ULIS_MACOS )
 #include "System/Device_macOS.ipp"
-#elif defined(ULIS_LINUX)
+#elif defined( ULIS_LINUX )
 #include "System/Device_Linux.ipp"
 #else
 #include "System/Device_Generic.ipp"
