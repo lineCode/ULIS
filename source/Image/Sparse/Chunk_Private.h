@@ -18,8 +18,8 @@
 #include "Math/Geometry/Vector.h"
 #include "Copy/Copy.h"
 #include "System/HostDeviceInfo.h"
-#include "Raster/Draw.h"
-#include "Raster/Sparse/DrawSparse.h"
+#include "Draw/Draw.h"
+#include "Draw/Sparse/DrawSparse.h"
 #include "Image/Sparse/TiledBlock_Private.h"
 #include "Image/Sparse/TilePool_Private.h"
 #include <static_math/static_math.h>

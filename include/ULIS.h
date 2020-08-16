@@ -63,7 +63,7 @@
 // Mix
 #include "Mix/Mix.h"
 // Raster
-#include "Raster/Draw.h"
+#include "Draw/Draw.h"
 // String
 #include "String/String.h"
 #include "String/WString.h"
