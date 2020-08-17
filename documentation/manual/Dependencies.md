@@ -20,7 +20,7 @@ Additionaly, these libraries can be used with ULIS to test samples programs or b
 Older dependencies were used before but removed after ULIS3:
 |Dependency         |Link                                                           |License            |Status                                             |
 |-------------------|---------------------------------------------------------------|-------------------|---------------------------------------------------|
-|eigen              |https://gitlab.com/libeigen/eigen                              |MPL2               |Remove and implement Mat8x8                        |
-|FeatureDetector    |https://github.com/Mysticial/FeatureDetector                   |CC0 1.0 Universal  |Remove and implement custom device info fetching   |
-|glm                |https://github.com/g-truc/glm                                  |MIT                |Remove and implement vec and mat types             |
-|OCL-SDK            |https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/releases   |-                  |No need to track as dependency especially for MacOS|
+|eigen              |https://gitlab.com/libeigen/eigen                              |MPL2               |Removed                                            |
+|FeatureDetector    |https://github.com/Mysticial/FeatureDetector                   |CC0 1.0 Universal  |Removed                                            |
+|glm                |https://github.com/g-truc/glm                                  |MIT                |Removed                                            |
+|OCL-SDK            |https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/releases   |-                  |Removed                                            |
