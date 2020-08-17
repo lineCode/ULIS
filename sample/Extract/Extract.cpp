@@ -30,7 +30,7 @@ main( int argc, char *argv[] ) {
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     FVec2I size( 800, 600 );
-    FRasterImage2D* blockSRC = new FRasterImage2D( size.x, size.y, ULIS_FORMAT_RGBA8 );
+    FBlock* blockSRC = new FBlock( size.x, size.y, ULIS_FORMAT_RGBA8 );
     Clear( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockSRC, blockSRC->Rect() );
     FVec2I mid = size / 2;
     int rad = 250;
@@ -46,7 +46,7 @@ main( int argc, char *argv[] ) {
         }
     }
 
-    FRasterImage2D* blockDST = XExtract( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockSRC, false, 1 << blockSRC->AlphaIndex(), ULIS_FORMAT_G8, false, 1 );
+    FBlock* blockDST = XExtract( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockSRC, false, 1 << blockSRC->AlphaIndex(), ULIS_FORMAT_G8, false, 1 );
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();

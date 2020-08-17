@@ -63,7 +63,7 @@ void Clear_imp( FThreadPool*            iThreadPool
               , uint32                  iPerfIntent
               , const FHostDeviceInfo&  iHostDeviceInfo
               , bool                    iCallCB
-              , FRasterImage2D*                 iDestination
+              , FBlock*                 iDestination
               , const FRectI&            iArea )
 {
     const FFormat&  fmt     = iDestination->FormatInfo();
@@ -105,7 +105,7 @@ void Clear_imp( FThreadPool*            iThreadPool
            , uint32                    iPerfIntent
            , const FHostDeviceInfo&    iHostDeviceInfo
            , bool                      iCallCB
-           , FRasterImage2D*                   iDestination
+           , FBlock*                   iDestination
            , const FRectI&              iArea )
 {
     // Assertions
@@ -128,7 +128,7 @@ void Clear_imp( FThreadPool*            iThreadPool
 
 /////////////////////////////////////////////////////
 // ClearRaw
-void ClearRaw( FRasterImage2D* iDst, bool iCallCB ) {
+void ClearRaw( FBlock* iDst, bool iCallCB ) {
     ULIS_ASSERT( iDst, "Bad destination" );
     memset( iDst->Bits(), 0, iDst->BytesTotal() );
     iDst->Dirty( iCallCB );

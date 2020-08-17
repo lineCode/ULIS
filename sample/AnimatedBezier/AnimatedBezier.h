@@ -45,8 +45,8 @@ private:
 private:
     FHostDeviceInfo             mHost;
     FThreadPool*                mPool;
-    FRasterImage2D*                     mSRC;
-    FRasterImage2D*                     mDST;
+    FBlock*                     mSRC;
+    FBlock*                     mDST;
     std::vector< FCubicBezierControlPoint > mCtrlPts;
     float                       mEvolutiveAngle;
 

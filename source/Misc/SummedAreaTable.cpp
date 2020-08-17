@@ -25,12 +25,12 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // SAT
-FRasterImage2D* XGetSummedAreaTable( FThreadPool*             iThreadPool
+FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
                            , bool                     iBlocking
                            , uint32                   iPerfIntent
                            , const FHostDeviceInfo&   iHostDeviceInfo
                            , bool                     iCallCB
-                           , const FRasterImage2D*            iSource )
+                           , const FBlock*            iSource )
 {
     // Assertions
     ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
@@ -39,7 +39,7 @@ FRasterImage2D* XGetSummedAreaTable( FThreadPool*             iThreadPool
 
     eFormat satFormat = static_cast< eFormat >( ( ( ( iSource->Format() & ULIS_E_TYPE ) & ULIS_E_DEPTH ) ) | ULIS_W_TYPE( ULIS_TYPE_UFLOAT ) | ULIS_W_FLOATING( 1 ) | ULIS_W_DEPTH( 4 ) ) );
     eFormat test = eFormat::Format_RGBAF;
-    FRasterImage2D* sat = new FRasterImage2D( iSource->Width(), iSource->Height(), satFormat );
+    FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method
     fpDispatchedSATFunc fptr = QueryDispatchedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );
@@ -53,12 +53,12 @@ FRasterImage2D* XGetSummedAreaTable( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // Premultiplied SAT
-FRasterImage2D* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
+FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
                                         , bool                     iBlocking
                                         , uint32                   iPerfIntent
                                         , const FHostDeviceInfo&   iHostDeviceInfo
                                         , bool                     iCallCB
-                                        , const FRasterImage2D*            iSource )
+                                        , const FBlock*            iSource )
 {
     // Assertions
     ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
@@ -67,7 +67,7 @@ FRasterImage2D* XGetPremultipliedSummedAreaTable( FThreadPool*             iThre
 
     eFormat satFormat = static_cast< eFormat >( ( ( ( iSource->Format() & ULIS_E_TYPE ) & ULIS_E_DEPTH ) ) | ULIS_W_TYPE( ULIS_TYPE_UFLOAT ) | ULIS_W_FLOATING( 1 ) | ULIS_W_DEPTH( 4 ) ) );
     eFormat test = eFormat::Format_RGBAF;
-    FRasterImage2D* sat = new FRasterImage2D( iSource->Width(), iSource->Height(), satFormat );
+    FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method
     fpDispatchedSATFunc fptr = QueryDispatchedPremultipliedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );

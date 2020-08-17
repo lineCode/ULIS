@@ -39,10 +39,10 @@ private:
 private:
     FHostDeviceInfo                     mHost;
     FThreadPool*                        mPool;
-    FRasterImage2D*                             mCanvas;
-    FRasterImage2D*                             mRAMUSAGEBLOCK1;
-    FRasterImage2D*                             mRAMUSAGEBLOCK2;
-    FRasterImage2D*                             mRAMUSAGESWAPBUFFER;
+    FBlock*                             mCanvas;
+    FBlock*                             mRAMUSAGEBLOCK1;
+    FBlock*                             mRAMUSAGEBLOCK2;
+    FBlock*                             mRAMUSAGESWAPBUFFER;
     FTextEngine                         mTextEngine;
     FFontRegistry                       mFontReg;
     FFont                               mFont;

@@ -26,7 +26,7 @@
 #include <clip.h>
 
 ULIS_NAMESPACE_BEGIN
-FRasterImage2D* XLoadFromClipboard( FThreadPool*            iThreadPool
+FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
@@ -61,8 +61,8 @@ FRasterImage2D* XLoadFromClipboard( FThreadPool*            iThreadPool
     eFormat dstFormat = iDesiredFormat;
     if( dstFormat <= 0 ) dstFormat = srcFormat;
 
-    FRasterImage2D tmp( src, w, h, srcFormat );
-    FRasterImage2D* ret = new FRasterImage2D( w, h, dstFormat );
+    FBlock tmp( src, w, h, srcFormat );
+    FBlock* ret = new FBlock( w, h, dstFormat );
 
     // Assertions
     fpConversionInvocation fptr = QueryDispatchedConversionInvocation( srcFormat, dstFormat );
@@ -95,13 +95,13 @@ void SaveToClipboard( FThreadPool*              iThreadPool
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
                     , bool                      iCallCB
-                    , const FRasterImage2D*             iSource )
+                    , const FBlock*             iSource )
 {
     // Assertions
     ULIS_ASSERT( iSource,                  "Bad source."                                           );
     ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
 
-    FRasterImage2D* tmpConv = XConv( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, eFormat::Format_BGRA8 );
+    FBlock* tmpConv = XConv( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, eFormat::Format_BGRA8 );
 
     clip::image_spec spec;
     spec.width = tmpConv->Width();

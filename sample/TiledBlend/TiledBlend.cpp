@@ -32,12 +32,12 @@ main( int argc, char *argv[] ) {
     std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
     std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
 
-    FRasterImage2D* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathBase, ULIS_FORMAT_RGBA8 );
-    FRasterImage2D* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathOver, ULIS_FORMAT_RGBA8 );
+    FBlock* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathBase, ULIS_FORMAT_RGBA8 );
+    FBlock* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathOver, ULIS_FORMAT_RGBA8 );
 
     Fence( *threadPool );
 
-    FRasterImage2D* blockCanvas = new  FRasterImage2D( 800, 600, ULIS_FORMAT_RGBA8 );
+    FBlock* blockCanvas = new  FBlock( 800, 600, ULIS_FORMAT_RGBA8 );
     Fill( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, FColor::FromRGBAF( 0.5f, 0.5f, 1.f ), blockCanvas->Rect() );
 
     BlendTiled(  threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockBase, blockCanvas, FRectI( 40, 40, 80, 80 ), FRectI( -40, 0, 1000, 400 ), FVec2I( -20, -40 ), BM_DISSOLVE, AM_NORMAL, 0.3f );

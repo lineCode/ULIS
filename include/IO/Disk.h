@@ -32,7 +32,7 @@ static const char* kwImageFormat[] = {
     , "hdr"
 };
 
-ULIS_API FRasterImage2D* XLoadFromFile( FThreadPool*           iThreadPool
+ULIS_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
@@ -45,7 +45,7 @@ ULIS_API void SaveToFile( FThreadPool*             iThreadPool
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
                          , bool                     iCallCB
-                         , const FRasterImage2D*            iSource
+                         , const FBlock*            iSource
                          , const std::string&       iPath
                          , eImageFormat             iImageFormat
                          , int                      iQuality );

@@ -28,8 +28,8 @@ void Blend( FThreadPool*            iThreadPool
           , uint32                  iPerfIntent
           , const FHostDeviceInfo&  iHostDeviceInfo
           , bool                    iCallCB
-          , const FRasterImage2D*           iSource
-          , FRasterImage2D*                 iBackdrop
+          , const FBlock*           iSource
+          , FBlock*                 iBackdrop
           , const FRectI&            iSourceRect
           , const FVec2F&           iPosition
           , bool                    iSubpixelFlag
@@ -100,8 +100,8 @@ void AlphaBlend( FThreadPool*           iThreadPool
                , uint32                 iPerfIntent
                , const FHostDeviceInfo& iHostDeviceInfo
                , bool                   iCallCB
-               , const FRasterImage2D*          iSource
-               , FRasterImage2D*                iBackdrop
+               , const FBlock*          iSource
+               , FBlock*                iBackdrop
                , const FRectI&           iSourceRect
                , const FVec2F&          iPosition
                , bool                   iSubpixelFlag
@@ -171,8 +171,8 @@ void BlendTiled( FThreadPool*               iThreadPool
                , uint32                     iPerfIntent
                , const FHostDeviceInfo&     iHostDeviceInfo
                , bool                       iCallCB
-               , const FRasterImage2D*              iSource
-               , FRasterImage2D*                    iBackdrop
+               , const FBlock*              iSource
+               , FBlock*                    iBackdrop
                , const FRectI&               iSourceRect
                , const FRectI&               iDestRect
                , const FVec2I&              iShift
@@ -245,7 +245,7 @@ void BlendColor( FThreadPool*           iThreadPool
                , const FHostDeviceInfo& iHostDeviceInfo
                , bool                   iCallCB
                , const FColor&     iColor
-               , FRasterImage2D*                iBackdrop
+               , FBlock*                iBackdrop
                , const FRectI&           iDestRect
                , eBlendingMode          iBlendingMode
                , eAlphaMode             iAlphaMode
@@ -257,7 +257,7 @@ void BlendColor( FThreadPool*           iThreadPool
 
     FColor color( iBackdrop->Format() );
     Conv( iColor, color );
-    FRasterImage2D block( color.Bits(), 1, 1, iBackdrop->Format() );
+    FBlock block( color.Bits(), 1, 1, iBackdrop->Format() );
     BlendTiled( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRectI( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );
 }
 

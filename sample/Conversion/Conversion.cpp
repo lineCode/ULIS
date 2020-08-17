@@ -42,8 +42,8 @@ main( int argc, char *argv[] ) {
     // Second block is RGBA8 meaning layout in memory RGBARGBARGBA... with channel type uint8. With alpha, no problem for conversion compatibility.
     int w = 800;
     int h = 600;
-    FRasterImage2D* blockLAB = new  FRasterImage2D( w, h, ULIS_FORMAT_LabD );
-    FRasterImage2D* blockRGB = new  FRasterImage2D( w, h, ULIS_FORMAT_RGBA8 );
+    FBlock* blockLAB = new  FBlock( w, h, ULIS_FORMAT_LabD );
+    FBlock* blockRGB = new  FBlock( w, h, ULIS_FORMAT_RGBA8 );
 
     // To illustrate the conversion operation, we will first perform a gradient in the Lab block, taking avantage of the nice color interpolation in LAB
     // We will then convert the Lab gradient to RGB to see the result, and observe the interpolation goes through a more appropriate chromatic path

@@ -54,7 +54,7 @@ SCanvas::SCanvas()
 {
     uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
 
-    mCanvas = new  FRasterImage2D( 320, 600, ULIS_FORMAT_RGBA8 );
+    mCanvas = new  FBlock( 320, 600, ULIS_FORMAT_RGBA8 );
 
     Clear( mPool, ULIS_BLOCKING, perfIntent, mHost, ULIS_NOCB, mCanvas, mCanvas->Rect() );
 
@@ -73,8 +73,8 @@ SCanvas::SCanvas()
     mTilePool   = ITilePool::XCreateTilePool( ULIS_FORMAT_RGBA8, nullptr, eMicro::MICRO_128, eMacro::MACRO_16 );
     mTiledBlock = mTilePool->CreateNewTiledBlock();
 
-    mRAMUSAGEBLOCK1 = new FRasterImage2D( 300, 100, ULIS_FORMAT_RGBA8 );
-    mRAMUSAGEBLOCK2 = new FRasterImage2D( 300, 100, ULIS_FORMAT_RGBA8 );
+    mRAMUSAGEBLOCK1 = new FBlock( 300, 100, ULIS_FORMAT_RGBA8 );
+    mRAMUSAGEBLOCK2 = new FBlock( 300, 100, ULIS_FORMAT_RGBA8 );
     mRAMUSAGESWAPBUFFER = mRAMUSAGEBLOCK1;
     Fill( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mRAMUSAGEBLOCK1, FColor( ULIS_FORMAT_G8, { 15 } ), mRAMUSAGEBLOCK1->Rect() );
 }
@@ -189,8 +189,8 @@ SCanvas::tickEvent() {
     RenderText( mPool, ULIS_BLOCKING, 0, mHost, ULIS_NOCB, mCanvas, L"Num Registered Blocks      : " + std::to_wstring( mTilePool->NumRegisteredTiledBlocks() ),                 mFont, 12, FColor( ULIS_FORMAT_G8, { 220 } ), FTransformation2D::MakeTranslationTransform( 10, 70 ), ULIS_NOAA );
     Copy( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mRAMUSAGESWAPBUFFER, mCanvas, mRAMUSAGESWAPBUFFER->Rect(), FVec2I( 10, 80 ) );
 
-    FRasterImage2D* oldram = mRAMUSAGESWAPBUFFER;
-    FRasterImage2D* newram = mRAMUSAGESWAPBUFFER == mRAMUSAGEBLOCK1 ? mRAMUSAGEBLOCK2 : mRAMUSAGEBLOCK1;
+    FBlock* oldram = mRAMUSAGESWAPBUFFER;
+    FBlock* newram = mRAMUSAGESWAPBUFFER == mRAMUSAGEBLOCK1 ? mRAMUSAGEBLOCK2 : mRAMUSAGEBLOCK1;
     Fill( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, newram, FColor( ULIS_FORMAT_G8, { 15 } ), newram->Rect() );
     Copy( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, oldram, newram, oldram->Rect(), FVec2I( -1, 0 ) );
     mRAMUSAGESWAPBUFFER = newram;
@@ -200,7 +200,7 @@ SCanvas::tickEvent() {
     mTiledBlock->DrawDebugTileContent(  mCanvas, FVec2I64( 10, 80+HH+10 ) );
     mTiledBlock->DrawDebugWireframe(    mCanvas, FVec2I64( 10, 80+HH+10 ), 1.f );
 
-    FRasterImage2D* shade = new FRasterImage2D( 256, 256, ULIS_FORMAT_RGBA8 );
+    FBlock* shade = new FBlock( 256, 256, ULIS_FORMAT_RGBA8 );
     Fill( mPool, ULIS_BLOCKING,  ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, shade, FColor( ULIS_FORMAT_G8, { 0 } ), shade->Rect() );
     FRectI outline = mTiledBlock->GetOperativeGeometry();
     Clear( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, shade, outline );

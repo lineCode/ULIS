@@ -17,11 +17,11 @@
 #include "Math/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
-ULIS_API void DrawDotNoAA( FRasterImage2D* iDst, const FColor& iColor, const FVec2I iPos );
-ULIS_API void DrawHorizontalLineNoAA(  FRasterImage2D* iDst, const FColor& iColor, int iX1, int iX2, int iY );
-ULIS_API void DrawVerticalLineNoAA(    FRasterImage2D* iDst, const FColor& iColor, int iY1, int iY2, int iX );
-ULIS_API void DrawRectOutlineNoAA( FRasterImage2D* iDst, const FColor& iColor, const FRectI& iRect );
-ULIS_API void DrawUniformGridOutlineNoAA( FRasterImage2D* iDst, const FColor& iColor, const FRectI& iRect, int iNumSubdiv );
+ULIS_API void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos );
+ULIS_API void DrawHorizontalLineNoAA(  FBlock* iDst, const FColor& iColor, int iX1, int iX2, int iY );
+ULIS_API void DrawVerticalLineNoAA(    FBlock* iDst, const FColor& iColor, int iY1, int iY2, int iX );
+ULIS_API void DrawRectOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRectI& iRect );
+ULIS_API void DrawUniformGridOutlineNoAA( FBlock* iDst, const FColor& iColor, const FRectI& iRect, int iNumSubdiv );
 /*
 ULIS_API void DrawDot();
 ULIS_API void DrawDotNoAA();

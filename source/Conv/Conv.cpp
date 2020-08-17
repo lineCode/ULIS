@@ -47,8 +47,8 @@ void Conv( FThreadPool*           iThreadPool
          , uint32                 iPerfIntent
          , const FHostDeviceInfo& iHostDeviceInfo
          , bool                   iCallCB
-         , const FRasterImage2D*          iSource
-         , FRasterImage2D*                iDestination )
+         , const FBlock*          iSource
+         , FBlock*                iDestination )
 {
     // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                          );
@@ -94,12 +94,12 @@ void Conv( FThreadPool*           iThreadPool
     iDestination->Dirty( iDestination->Rect(), iCallCB );
 }
 
-FRasterImage2D* XConv( FThreadPool*           iThreadPool
+FBlock* XConv( FThreadPool*           iThreadPool
              , bool                   iBlocking
              , uint32                 iPerfIntent
              , const FHostDeviceInfo& iHostDeviceInfo
              , bool                   iCallCB
-             , const FRasterImage2D*          iSource
+             , const FBlock*          iSource
              , eFormat                iDestinationFormat )
 {
     // Assertions
@@ -108,7 +108,7 @@ FRasterImage2D* XConv( FThreadPool*           iThreadPool
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Alloc return buffer in desired format use the same size, then perform conversion
-    FRasterImage2D* ret = new FRasterImage2D( iSource->Width(), iSource->Height(), iDestinationFormat );
+    FBlock* ret = new FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
     Conv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret );
     return  ret;
 }

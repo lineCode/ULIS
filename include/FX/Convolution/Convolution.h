@@ -22,7 +22,7 @@ ULIS_API void Convolution( FThreadPool*            iThreadPool
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
                           , bool                    iCallCB
-                          , FRasterImage2D*                 iDestination
+                          , FBlock*                 iDestination
                           , const FKernel&          iKernel
                           , const FRectI&            iArea
                           , eExtrapolationMethod    iEdgeMode );

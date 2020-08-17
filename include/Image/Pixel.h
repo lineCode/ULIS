@@ -49,9 +49,9 @@ public:
 
     /*!
     Move the underlying pointer to a compatible signal, usually obtained with
-    PixelBits() from the FRasterImage2D this FPixel object was initially obtained from.
+    PixelBits() from the FBlock this FPixel object was initially obtained from.
 
-    \sa FRasterImage2D
+    \sa FBlock
     */
     void SetPointer( uint8* iPtr );
 };

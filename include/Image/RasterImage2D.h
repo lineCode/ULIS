@@ -7,7 +7,7 @@
 *
 * @file         RasterImage2D.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FRasterImage2D class.
+* @brief        This file provides the declaration for the FBlock class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -23,11 +23,11 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FRasterImage2D
-/// @brief      The FRasterImage2D class provides a mean of storing and manipulating
+/// @class      FBlock
+/// @brief      The FBlock class provides a mean of storing and manipulating
 ///             digital images in various formats, with direct access to pixel
 ///             data.
-/// @details    FRasterImage2D is the primary class to use when manipulating images
+/// @details    FBlock is the primary class to use when manipulating images
 ///             with ULIS.
 ///
 ///             The block has a format which specifies the type, memory layout,
@@ -35,7 +35,7 @@ ULIS_NAMESPACE_BEGIN
 ///             The underlying data is always a regular contiguous buffer
 ///             storage that lives on RAM with no alignment requirement.
 ///
-///             The FRasterImage2D class is very lightweight, the memory load is in the
+///             The FBlock class is very lightweight, the memory load is in the
 ///             data it points to, and the class never performs any kind of
 ///             heavy operations. It does not communicate with the GPU or use
 ///             any kind of hardware accelerated feature just by itself.
@@ -44,7 +44,7 @@ ULIS_NAMESPACE_BEGIN
 ///             need to copy image data, you can use the explicit Copy or XCopy
 ///             functions that ULIS provides.
 ///
-///             FRasterImage2D supports loading an external data pointer and
+///             FBlock supports loading an external data pointer and
 ///             treat it as its own storage: this is useful for sharing memory
 ///             without having to copy it and you can grab or release ownership
 ///             at any time with the help of the cleanup callbacks, just make
@@ -56,20 +56,20 @@ ULIS_NAMESPACE_BEGIN
 ///             is dirty, for example use it to upload a small rect of the
 ///             image to a GPU texture when triggered.
 ///
-///             It is perfectly fine to create FRasterImage2D objects on the stack:
-///             \snippet data/block_snippet.h FRasterImage2D on stack
+///             It is perfectly fine to create FBlock objects on the stack:
+///             \snippet data/block_snippet.h FBlock on stack
 ///             But you can also allocate blocks dynamically:
-///             \snippet data/block_snippet.h FRasterImage2D on heap
+///             \snippet data/block_snippet.h FBlock on heap
 ///             It is also sometimes handy to use the CRT safe version if
 ///             using the \a X functions in your application with dynamic link:
-///             \snippet data/block_snippet.h FRasterImage2D X Version
-class ULIS_API FRasterImage2D final
+///             \snippet data/block_snippet.h FBlock X Version
+class ULIS_API FBlock final
     : public IHasFormat
     , public IHasColorSpace
 {
 public:
     /*! Destroy the block and invoke the cleanup callback. */
-    ~FRasterImage2D();
+    ~FBlock();
 
     /*!
     Construct a block with input size and format.
@@ -80,7 +80,7 @@ public:
     \warning The \a iWidth and \a iHeight parameters should be greater than
     zero. A block doesn't own nor manage lifetime of its color-space.
     */
-    FRasterImage2D(
+    FBlock(
           uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
@@ -107,7 +107,7 @@ public:
     \warning The \a iWidth and \a iHeight parameters should be greater than
     zero. A block doesn't own nor manage lifetime of its color-space.
     */
-    FRasterImage2D(
+    FBlock(
           uint8* iData
         , uint16 iWidth
         , uint16 iHeight
@@ -126,7 +126,7 @@ public:
     If you need to make a deep copy of the image data, use the explicit Copy or
     XCopy functions that ULIS provides.
     */
-    FRasterImage2D( const FRasterImage2D& ) = delete;
+    FBlock( const FBlock& ) = delete;
 
     /*!
     Explicitely disabled copy assignment operator.
@@ -137,10 +137,10 @@ public:
     If you need to make a deep copy of the image data, use the explicit Copy or
     XCopy functions that ULIS provides.
     */
-    FRasterImage2D& operator=( const FRasterImage2D& ) = delete;
+    FBlock& operator=( const FBlock& ) = delete;
 
     /*!
-    Static maker for the FRasterImage2D class
+    Static maker for the FBlock class
 
     Construct a block with input size and format.
 
@@ -164,7 +164,7 @@ public:
     \sa XDelete()
     */
     static
-    FRasterImage2D* XMake(
+    FBlock* XMake(
           uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
@@ -174,7 +174,7 @@ public:
     );
 
     /*!
-    Static maker for the FRasterImage2D class
+    Static maker for the FBlock class
 
     Construct a block from an existing external buffer with input size and
     format.
@@ -208,7 +208,7 @@ public:
     \sa XDelete()
     */
     static
-    FRasterImage2D* XMake(
+    FBlock* XMake(
           uint8* iData
         , uint16 iWidth
         , uint16 iHeight
@@ -219,7 +219,7 @@ public:
     );
 
     /*!
-    Static deleter for the FRasterImage2D class
+    Static deleter for the FBlock class
 
     Delete a block that has been previously created using XMake()
     In case of dynamic linking, deallocate the storage for the block instance
@@ -231,7 +231,7 @@ public:
 
     \sa XMake()
     */
-    static void XDelete( FRasterImage2D* iBlock );
+    static void XDelete( FBlock* iBlock );
 
     /*!
     Obtain a pointer to the raw data at the base element of the underlying
@@ -492,7 +492,7 @@ public:
     cleaning the data if needed. Although the format might change, references
     to the format info object itself are not invalidated.
 
-    \sa FRasterImage2D()
+    \sa FBlock()
     */
     void ReloadFromData(
           uint8* iData

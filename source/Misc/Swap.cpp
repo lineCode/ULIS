@@ -38,7 +38,7 @@ Swap( FThreadPool*              iThreadPool
     , uint32                    iPerfIntent
     , const FHostDeviceInfo&    iHostDeviceInfo
     , bool                      iCallCB
-    , FRasterImage2D*                   iDestination
+    , FBlock*                   iDestination
     , uint8                     iChannel1
     , uint8                     iChannel2 )
 {
@@ -52,7 +52,7 @@ Swap( FThreadPool*              iThreadPool
     if( iChannel1 == iChannel2 )
         return;
 
-    FRasterImage2D* dst = iDestination;
+    FBlock* dst = iDestination;
     const uint32 bpc = dst->BytesPerSample();
     const uint32 bpp = dst->BytesPerPixel();
     const uint32 w   = dst->Width();

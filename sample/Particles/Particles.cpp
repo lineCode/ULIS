@@ -45,8 +45,8 @@ SWindow::SWindow()
     , mTimer( nullptr )
     , mLeftButtonDown( false )
 {
-    mCanvas = new FRasterImage2D( 800, 600, ULIS_FORMAT_RGBA8 );
-    mParticle = new FRasterImage2D( 3, 3, ULIS_FORMAT_RGBA8 );
+    mCanvas = new FBlock( 800, 600, ULIS_FORMAT_RGBA8 );
+    mParticle = new FBlock( 3, 3, ULIS_FORMAT_RGBA8 );
     ClearRaw( mParticle, ULIS_NOCB );
     mParticles.reserve( 1000 );
     mImage = new QImage( mCanvas->Bits(), mCanvas->Width(), mCanvas->Height(), mCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );

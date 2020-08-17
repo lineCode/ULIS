@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 
 template< typename T >
 void 
-InvokeComputePremultipliedSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FRasterImage2D* iSAT, const uint8* iSrc, uint8* iDst ) {
+InvokeComputePremultipliedSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, const uint8* iSrc, uint8* iDst ) {
     const FFormat& fmt = iSAT->FormatInfo();
     const T* src = reinterpret_cast< const T* >( iSrc )  + fmt.SPP;
     float*   dst = reinterpret_cast< float* >( iDst )    + fmt.SPP;
@@ -49,7 +49,7 @@ InvokeComputePremultipliedSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, 
 
 template< typename T >
 void 
-InvokeComputePremultipliedSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, FRasterImage2D* iSAT, uint8* iDst ) {
+InvokeComputePremultipliedSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, uint8* iDst ) {
     const FFormat& fmt = iSAT->FormatInfo();
     const uint32 stride = iSAT->Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( iDst ) + stride;
@@ -67,8 +67,8 @@ void ComputePremultipliedSummedAreaTable_MEM_Generic( FThreadPool*              
                                                     , bool                      iBlocking
                                                     , uint32                    iPerfIntent
                                                     , const FHostDeviceInfo&    iHostDeviceInfo
-                                                    , const FRasterImage2D*             iSource
-                                                    , FRasterImage2D*                   iSAT )
+                                                    , const FBlock*             iSource
+                                                    , FBlock*                   iSAT )
 {
     const uint8*    src     = iSource->Bits();
     uint8*          bdp     = iSAT->Bits();
@@ -136,7 +136,7 @@ InvokeComputePremultipliedSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, 
 }
 
 void 
-InvokeComputePremultipliedSummedAreaTable_YPass_SSE42_RGBA8( const uint32 iLen, const FRasterImage2D* iSource, FRasterImage2D* iSAT, const uint8* iSrc, uint8* iDst ) {
+InvokeComputePremultipliedSummedAreaTable_YPass_SSE42_RGBA8( const uint32 iLen, const FBlock* iSource, FBlock* iSAT, const uint8* iSrc, uint8* iDst ) {
     const uint32 stride = iSAT->Width() * 4;
     float* dst = reinterpret_cast< float* >( iDst ) + stride;
     for( uint32 y = 1; y < iLen; ++y ) {
@@ -152,8 +152,8 @@ void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FThreadPool*              
                                                     , bool                      iBlocking
                                                     , uint32                    iPerfIntent
                                                     , const FHostDeviceInfo&    iHostDeviceInfo
-                                                    , const FRasterImage2D*             iSource
-                                                    , FRasterImage2D*                   iSAT )
+                                                    , const FBlock*             iSource
+                                                    , FBlock*                   iSAT )
 {
     const uint8*    src     = iSource->Bits();
     uint8*          bdp     = iSAT->Bits();
@@ -199,8 +199,8 @@ typedef void (*fpDispatchedSATFunc)( FThreadPool*             iThreadPool
                                    , bool                     iBlocking
                                    , uint32                   iPerfIntent
                                    , const FHostDeviceInfo&   iHostDeviceInfo
-                                   , const FRasterImage2D*            iSource
-                                   , FRasterImage2D*                  iSAT );
+                                   , const FBlock*            iSource
+                                   , FBlock*                  iSAT );
 
 template< typename T >
 fpDispatchedSATFunc

@@ -39,8 +39,8 @@ main() {
     auto mat = FTransformation2D::GetPerspectiveTransform( A, B );
     auto inverse = mat.Inverse();
 
-    FRasterImage2D PP( 0, 0, 0 );
-    FRasterImage2D MM( 0, 0, 0 );
+    FBlock PP( 0, 0, 0 );
+    FBlock MM( 0, 0, 0 );
     PP = MM;
 
     FVec2F C[4];

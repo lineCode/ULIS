@@ -25,7 +25,7 @@ struct _FPrivateTextInfo {
     bool                    blocking;
     uint32                  perfIntent;
     const FHostDeviceInfo*  hostDeviceInfo;
-    FRasterImage2D*                 destination;
+    FBlock*                 destination;
     const std::wstring*     text;
     const FFont*            font;
     int                     size;

@@ -27,13 +27,13 @@ typedef void ( *tBlendInvocation )( const FBlendArguments& );
 /// @class      FRasterContext
 /// @brief      The FRasterContext class provides a context for calling image
 ///             raster and composition functions for a given format.
-/// @details    The FRasterContext works on FRasterImage2D and is bound to a
+/// @details    The FRasterContext works on FBlock and is bound to a
 ///             specific format. It prefetches the dispatched implementation to
 ///             select the fastest method according to the format, and its
 ///             specializations if available, and according to the current runtime
 ///             device and its support for SIMD features or thread support.
 ///
-///             \sa FRasterImage2D
+///             \sa FBlock
 ///             \sa FThreadPool
 ///             \sa FDevice
 ///             \sa FCommandQueue

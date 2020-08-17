@@ -67,10 +67,10 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const = 0;
-    virtual  const FRasterImage2D* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const = 0;
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const = 0;
     virtual  FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( tTilePool* iPool, const FVec2I64& iPos ) = 0;
-    virtual  void DrawDebugWireframe( FRasterImage2D* iDst, const FVec2I64& iPos, float iScale ) = 0;
-    virtual  void DrawDebugTileContent( FRasterImage2D* iDst, const FVec2I64& iPos ) = 0;
+    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
     virtual  void SanitizeNow( tTilePool* iPool ) = 0;
     virtual  FRectI GetRoughLeafGeometry( const FVec2I64& iPos ) const = 0;
 protected:
@@ -102,10 +102,10 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const = 0;
-    virtual  const FRasterImage2D* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const = 0;
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const = 0;
     virtual  FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( tTilePool* iPool, const FVec2I64& iPos ) = 0;
-    virtual  void DrawDebugWireframe( FRasterImage2D* iDst, const FVec2I64& iPos, float iScale ) = 0;
-    virtual  void DrawDebugTileContent( FRasterImage2D* iDst, const FVec2I64& iPos ) = 0;
+    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) = 0;
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) = 0;
     virtual  void SanitizeNow( tTilePool* iPool ) = 0;
     virtual  FRectI GetRoughLeafGeometry( const FVec2I64& iPos ) const = 0;
 
@@ -150,7 +150,7 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kRoot; }
-    virtual  const FRasterImage2D* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const override {
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const override {
         return  mChild ? iPool->EmptyTile() : mChild->QueryConstBlockAtPixelCoordinates( iPool, iPos );
     }
 
@@ -182,7 +182,7 @@ public:
         return  mChild->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( iPool, iPos );
     }
 
-    virtual  void DrawDebugWireframe( FRasterImage2D* iDst, const FVec2I64& iPos, float iScale ) override {
+    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
         auto size = round( tSuperClass::local_chunk_size_as_pixels * iScale );
         DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRectI( static_cast< int >( iPos.x )
                                                                        , static_cast< int >( iPos.y )
@@ -192,7 +192,7 @@ public:
             mChild->DrawDebugWireframe( iDst, iPos, iScale );
     }
 
-    virtual  void DrawDebugTileContent( FRasterImage2D* iDst, const FVec2I64& iPos ) override {
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
         if( mChild )
             mChild->DrawDebugTileContent( iDst, iPos );
     }
@@ -276,7 +276,7 @@ public:
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kData; }
-    virtual  const FRasterImage2D* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const override {
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const override {
         return  mPtr->mBlock;
     }
 
@@ -291,7 +291,7 @@ public:
         return  &mPtr;
     }
 
-    virtual  void DrawDebugWireframe( FRasterImage2D* iDst, const FVec2I64& iPos, float iScale ) override {
+    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
         auto size = static_cast< int >( round( tSuperClass::local_chunk_size_as_pixels * iScale ) );
         if( mPtr->mDirty )
             DrawRectOutlineNoAA( iDst, dirty_wireframe_debug_color, FRectI( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
@@ -299,7 +299,7 @@ public:
             DrawRectOutlineNoAA( iDst, correct_wireframe_debug_color, FRectI( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
     }
 
-    virtual  void DrawDebugTileContent( FRasterImage2D* iDst, const FVec2I64& iPos ) override {
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
         for( int i = 0; i < tSuperClass::local_chunk_size_as_pixels; i+= tSuperClass::micro_chunk_size_as_pixels ) {
             for( int j = 0; j < tSuperClass::local_chunk_size_as_pixels; j+= tSuperClass::micro_chunk_size_as_pixels ) {
                 Copy( nullptr, ULIS_NONBLOCKING, 0, debug_host, ULIS_NOCB, mPtr->mBlock, iDst, mPtr->mBlock->Rect(), iPos + FVec2I64( i, j ) );
@@ -381,7 +381,7 @@ private:
 public:
     // Public API
     virtual  eChunkType  Type()  const override { return  eChunkType::kQuadree; }
-    virtual  const FRasterImage2D* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const override {
+    virtual  const FBlock* QueryConstBlockAtPixelCoordinates( const tTilePool* iPool, const FVec2I64& iPos ) const override {
         uint8 index = IndexFromSubChunkCoordinates( SubChunkCoordinatesFromLocalPixelCoordinates( iPos ) );
         return  mQuad[index] == nullptr ? iPool->EmptyTile() : mQuad[index]->QueryConstBlockAtPixelCoordinates( iPool, iPos % tSuperClass::local_chunk_halfsize_as_pixels );
     }
@@ -413,7 +413,7 @@ public:
         return  mQuad[index]->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( iPool, iPos % tSuperClass::local_chunk_halfsize_as_pixels );
     }
 
-    virtual  void DrawDebugWireframe( FRasterImage2D* iDst, const FVec2I64& iPos, float iScale ) override {
+    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override {
         auto size  = static_cast< int >( round( tSuperClass::local_chunk_size_as_pixels * iScale ) );
         auto hsize = static_cast< int >( round( tSuperClass::local_chunk_halfsize_as_pixels * iScale ) );
         DrawRectOutlineNoAA( iDst, default_wireframe_debug_color, FRectI( static_cast< int >( iPos.x ), static_cast< int >( iPos.y ), size, size ) );
@@ -422,7 +422,7 @@ public:
                 mQuad[i]->DrawDebugWireframe( iDst, iPos + SubChunkCoordinatesFromIndex( i ) * hsize, iScale );
     }
 
-    virtual  void DrawDebugTileContent( FRasterImage2D* iDst, const FVec2I64& iPos ) override {
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override {
         auto size  = tSuperClass::local_chunk_size_as_pixels;
         auto hsize = tSuperClass::local_chunk_halfsize_as_pixels;
         for( int i = 0; i < 4; ++i )

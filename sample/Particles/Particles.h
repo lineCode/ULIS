@@ -49,8 +49,8 @@ private:
 
     FHostDeviceInfo             mHost;
     FThreadPool*                mPool;
-    FRasterImage2D*                     mCanvas;
-    FRasterImage2D*                     mParticle;
+    FBlock*                     mCanvas;
+    FBlock*                     mParticle;
 
     QPoint                      mPos;
     QImage*                     mImage;

@@ -47,7 +47,7 @@ public:
     // Public API
     const FVec2I&                               TileSize()                              const;
     uint32                                      EmptyCRC32Hash()                        const;
-    const FRasterImage2D*                               EmptyTile()                             const;
+    const FBlock*                               EmptyTile()                             const;
     eFormat                                     TileFormat()                            const;
     const FFormat&                          TileFormatInfo()                        const;
     const FColorSpace*                        TileColorProfile()                      const;
@@ -100,7 +100,7 @@ private:
     FColorSpace         * const                                   mTileColorProfile;
 
     // Empty Tile Ref
-    FRasterImage2D                * const                                   mEmptyTile;
+    FBlock                * const                                   mEmptyTile;
     uint32                                                          mEmptyCRC32Hash;
     const uint64                                                    mBytesPerTile;
 
@@ -110,8 +110,8 @@ private:
     std::atomic< uint64 >                                           mCurrentRAMUsageAtomic;
 
     // Memory Pools
-    std::forward_list< FRasterImage2D* >                                    mTilesScheduledForClear;
-    std::forward_list< FRasterImage2D* >                                    mFreshTilesAvailableForQuery;
+    std::forward_list< FBlock* >                                    mTilesScheduledForClear;
+    std::forward_list< FBlock* >                                    mFreshTilesAvailableForQuery;
 
     // Usage Pools
     std::list< FTileElement* >                                      mDirtyHashedTilesCurrentlyInUse;

@@ -21,21 +21,21 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void InvokeFilter( const size_t iLen, const FRasterImage2D* iBlock, const uint8* iPtr, const size_t iSrcBPP, std::function< void( const FRasterImage2D* iBlock, const uint8* iPtr ) > iFunc ) {
+void InvokeFilter( const size_t iLen, const FBlock* iBlock, const uint8* iPtr, const size_t iSrcBPP, std::function< void( const FBlock* iBlock, const uint8* iPtr ) > iFunc ) {
     for( size_t i = 0; i < iLen; ++i ) {
         iFunc( iBlock, iPtr );
         iPtr += iSrcBPP;
     }
 }
 
-void InvokeFilterInPlace( const size_t iLen, FRasterImage2D* iBlock, uint8* iPtr, const size_t iSrcBPP, std::function< void( FRasterImage2D* iBlock, uint8* iPtr ) > iFunc ) {
+void InvokeFilterInPlace( const size_t iLen, FBlock* iBlock, uint8* iPtr, const size_t iSrcBPP, std::function< void( FBlock* iBlock, uint8* iPtr ) > iFunc ) {
     for( size_t i = 0; i < iLen; ++i ) {
         iFunc( iBlock, iPtr );
         iPtr += iSrcBPP;
     }
 }
 
-void InvokeFilterInto( const size_t iLen, const FRasterImage2D* iSrcBlock, const uint8* iSrcPtr, const size_t iSrcBPP, FRasterImage2D* iDstBlock, uint8* iDstPtr, const size_t iDstBPP, std::function< void( const FRasterImage2D* iSrcBlock, const uint8* iSrcPtr, FRasterImage2D* iDstBlock, uint8* iDstPtr ) > iFunc ) {
+void InvokeFilterInto( const size_t iLen, const FBlock* iSrcBlock, const uint8* iSrcPtr, const size_t iSrcBPP, FBlock* iDstBlock, uint8* iDstPtr, const size_t iDstBPP, std::function< void( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr ) > iFunc ) {
     for( size_t i = 0; i < iLen; ++i ) {
         iFunc( iSrcBlock, iSrcPtr, iDstBlock, iDstPtr );
         iSrcPtr += iSrcBPP;
@@ -48,8 +48,8 @@ void Filter( FThreadPool*           iThreadPool
            , uint32                 iPerfIntent
            , const FHostDeviceInfo& iHostDeviceInfo
            , bool                   iCallCB
-           , const FRasterImage2D*          iSource
-           , std::function< void( const FRasterImage2D* iBlock, const uint8* iPtr ) > iFunc )
+           , const FBlock*          iSource
+           , std::function< void( const FBlock* iBlock, const uint8* iPtr ) > iFunc )
 {
     // Assertions
     ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
@@ -76,8 +76,8 @@ void FilterInPlace( FThreadPool*            iThreadPool
                   , uint32                  iPerfIntent
                   , const FHostDeviceInfo&  iHostDeviceInfo
                   , bool                    iCallCB
-                  , FRasterImage2D*                 iSource
-                  , std::function< void( FRasterImage2D* iBlock, uint8* iPtr ) > iFunc )
+                  , FBlock*                 iSource
+                  , std::function< void( FBlock* iBlock, uint8* iPtr ) > iFunc )
 {
     ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
@@ -105,9 +105,9 @@ void FilterInto( FThreadPool*              iThreadPool
                , uint32                    iPerfIntent
                , const FHostDeviceInfo&    iHostDeviceInfo
                , bool                      iCallCB
-               , const FRasterImage2D*             iSource
-               , FRasterImage2D*                   iDestination
-               , std::function< void( const FRasterImage2D* iSrcBlock, const uint8* iSrcPtr, FRasterImage2D* iDstBlock, uint8* iDstPtr ) > iFunc )
+               , const FBlock*             iSource
+               , FBlock*                   iDestination
+               , std::function< void( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr ) > iFunc )
 {
     ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );

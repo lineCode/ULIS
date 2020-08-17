@@ -53,7 +53,7 @@ FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                 , uint32                  iPerfIntent
                                 , const FHostDeviceInfo&  iHostDeviceInfo
                                 , bool                    iCallCB
-                                , const FRasterImage2D*           iSource )
+                                , const FBlock*           iSource )
 {
     // Assertions
     ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );

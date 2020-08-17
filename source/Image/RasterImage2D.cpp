@@ -7,7 +7,7 @@
 *
 * @file         Block.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FRasterImage2D class.
+* @brief        This file provides the definition for the FBlock class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -15,12 +15,12 @@
 #include <new>
 
 ULIS_NAMESPACE_BEGIN
-FRasterImage2D::~FRasterImage2D()
+FBlock::~FBlock()
 {
     mOnCleanup.ExecuteIfBound( mBitmap );
 }
 
-FRasterImage2D::FRasterImage2D(
+FBlock::FBlock(
       uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
@@ -50,7 +50,7 @@ FRasterImage2D::FRasterImage2D(
     ULIS_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );
 }
 
-FRasterImage2D::FRasterImage2D(
+FBlock::FBlock(
       uint8* iData
     , uint16 iWidth
     , uint16 iHeight
@@ -76,8 +76,8 @@ FRasterImage2D::FRasterImage2D(
 }
 
 //static
-FRasterImage2D*
-FRasterImage2D::XMake(
+FBlock*
+FBlock::XMake(
       uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
@@ -86,7 +86,7 @@ FRasterImage2D::XMake(
     , const FOnCleanup& iOnCleanup
 )
 {
-    return  new FRasterImage2D(
+    return  new FBlock(
           iWidth
         , iHeight
         , iFormat
@@ -97,8 +97,8 @@ FRasterImage2D::XMake(
 }
 
 //static
-FRasterImage2D*
-FRasterImage2D::XMake(
+FBlock*
+FBlock::XMake(
       uint8* iData
     , uint16 iWidth
     , uint16 iHeight
@@ -108,7 +108,7 @@ FRasterImage2D::XMake(
     , const FOnCleanup& iOnCleanup
 )
 {
-    return  new FRasterImage2D(
+    return  new FBlock(
           iData
         , iWidth
         , iHeight
@@ -121,19 +121,19 @@ FRasterImage2D::XMake(
 
 //static
 void
-FRasterImage2D::XDelete( FRasterImage2D* iBlock )
+FBlock::XDelete( FBlock* iBlock )
 {
     delete  iBlock;
 }
 
 uint8*
-FRasterImage2D::Bits()
+FBlock::Bits()
 {
     return  mBitmap;
 }
 
 uint8*
-FRasterImage2D::ScanlineBits( uint16 iRow )
+FBlock::ScanlineBits( uint16 iRow )
 {
     ULIS_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
     return  mBitmap + ( iRow * mBytesPerScanline );
@@ -141,7 +141,7 @@ FRasterImage2D::ScanlineBits( uint16 iRow )
 
 
 uint8*
-FRasterImage2D::PixelBits( uint16 iX, uint16 iY )
+FBlock::PixelBits( uint16 iX, uint16 iY )
 {
     ULIS_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
     ULIS_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
@@ -149,20 +149,20 @@ FRasterImage2D::PixelBits( uint16 iX, uint16 iY )
 }
 
 const uint8*
-FRasterImage2D::Bits() const
+FBlock::Bits() const
 {
     return  mBitmap;
 }
 
 const uint8*
-FRasterImage2D::ScanlineBits( uint16 iRow ) const
+FBlock::ScanlineBits( uint16 iRow ) const
 {
     ULIS_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
     return  mBitmap + ( iRow * mBytesPerScanline );
 }
 
 const uint8*
-FRasterImage2D::PixelBits( uint16 iX, uint16 iY ) const
+FBlock::PixelBits( uint16 iX, uint16 iY ) const
 {
     ULIS_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
     ULIS_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
@@ -170,52 +170,52 @@ FRasterImage2D::PixelBits( uint16 iX, uint16 iY ) const
 }
 
 uint16
-FRasterImage2D::Width() const
+FBlock::Width() const
 {
     return  mWidth;
 }
 
 
 uint16
-FRasterImage2D::Height() const
+FBlock::Height() const
 {
     return  mHeight;
 }
 
 uint32
-FRasterImage2D::Area() const
+FBlock::Area() const
 {
     return  mWidth * mHeight;
 }
 
 FRectI
-FRasterImage2D::Rect() const
+FBlock::Rect() const
 {
     return  FRectI( 0, 0, mWidth, mHeight );
 }
 
 uint32
-FRasterImage2D::BytesPerScanLine() const
+FBlock::BytesPerScanLine() const
 {
     return  mBytesPerScanline;
 }
 
 
 uint64
-FRasterImage2D::BytesTotal() const
+FBlock::BytesTotal() const
 {
     return  mBytesTotal;
 }
 
 void
-FRasterImage2D::Dirty( bool iCall ) const
+FBlock::Dirty( bool iCall ) const
 {
     Dirty( Rect(), iCall );
 }
 
 
 void
-FRasterImage2D::Dirty( const FRectI& iRect, bool iCall ) const
+FBlock::Dirty( const FRectI& iRect, bool iCall ) const
 {
     if( !iCall )
         return;
@@ -239,38 +239,38 @@ FRasterImage2D::Dirty( const FRectI& iRect, bool iCall ) const
 }
 
 FColor
-FRasterImage2D::Color( uint16 iX, uint16 iY ) const
+FBlock::Color( uint16 iX, uint16 iY ) const
 {
     return  FColor( PixelBits( iX, iY ), Format(), ColorSpace() );
 }
 
 FPixel
-FRasterImage2D::Pixel( uint16 iX, uint16 iY )
+FBlock::Pixel( uint16 iX, uint16 iY )
 {
     return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace() );
 }
 
 
 const FPixel
-FRasterImage2D::Pixel( uint16 iX, uint16 iY ) const
+FBlock::Pixel( uint16 iX, uint16 iY ) const
 {
     return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace() );
 }
 
 void
-FRasterImage2D::OnInvalid( const FOnInvalid& iOnInvalid )
+FBlock::OnInvalid( const FOnInvalid& iOnInvalid )
 {
     mOnInvalid = iOnInvalid;
 }
 
 void
-FRasterImage2D::OnCleanup( const FOnCleanup& iOnCleanup )
+FBlock::OnCleanup( const FOnCleanup& iOnCleanup )
 {
     mOnCleanup = iOnCleanup;
 }
 
 void
-FRasterImage2D::ReloadFromData(
+FBlock::ReloadFromData(
       uint8* iData
     , uint16 iWidth
     , uint16 iHeight

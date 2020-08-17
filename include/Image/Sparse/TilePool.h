@@ -38,7 +38,7 @@ public:
     // Public API
     virtual const FVec2I&                               TileSize()                              const       = 0;
     virtual uint32                                      EmptyCRC32Hash()                        const       = 0;
-    virtual const FRasterImage2D*                               EmptyTile()                             const       = 0;
+    virtual const FBlock*                               EmptyTile()                             const       = 0;
     virtual eFormat                                     TileFormat()                            const       = 0;
     virtual const FFormat&                          TileFormatInfo()                        const       = 0;
     virtual const FColorSpace*                        TileColorProfile()                      const       = 0;

@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
-typedef void (*fpInvalidateFunction)( const FRasterImage2D* /* block */, void* /* info */, const FRectI& /* rect */ );
+typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRectI& /* rect */ );
 typedef void (*fpCleanupFunction)( uint8* /* data */, void* /* info */ );
 
 ULIS_API void OnCleanup_FreeMemory( uint8* iData, void* iInfo );
@@ -62,9 +62,9 @@ private:
 };
 
 typedef TCallback< void, uint8* > FOnCleanup;
-typedef TCallback< void, const FRasterImage2D*, const FRectI& > FOnInvalid;
+typedef TCallback< void, const FBlock*, const FRectI& > FOnInvalid;
 template class ULIS_API TCallback< void, uint8* >;
-template class ULIS_API TCallback< void, const FRasterImage2D*, const FRectI& >;
+template class ULIS_API TCallback< void, const FBlock*, const FRectI& >;
 
 ULIS_NAMESPACE_END
 

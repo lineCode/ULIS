@@ -25,8 +25,8 @@ struct FBlendArgs {
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;
     uint32                  perfIntent;
-    const FRasterImage2D*           source;
-    FRasterImage2D*                 backdrop;
+    const FBlock*           source;
+    FBlock*                 backdrop;
     FRectI                   sourceRect;
     FVec2F                  subpixelComponent;
     FVec2F                  buspixelComponent;

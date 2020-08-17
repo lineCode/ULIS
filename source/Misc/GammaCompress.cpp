@@ -75,7 +75,7 @@ ApplysRGB2Linear( FThreadPool*           iThreadPool
                 , uint32                 iPerfIntent
                 , const FHostDeviceInfo& iHostDeviceInfo
                 , bool                   iCallCB
-                , FRasterImage2D*                iDestination )
+                , FBlock*                iDestination )
 {
     // Assertions
     ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
@@ -104,7 +104,7 @@ ApplyLinear2sRGB( FThreadPool*           iThreadPool
                 , uint32                 iPerfIntent
                 , const FHostDeviceInfo& iHostDeviceInfo
                 , bool                   iCallCB
-                , FRasterImage2D*                iDestination )
+                , FBlock*                iDestination )
 {
     // Assertions
     ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );

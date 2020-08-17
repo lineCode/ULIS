@@ -21,7 +21,7 @@ ULIS_API void SanitizeZeroAlpha( FThreadPool*            iThreadPool
                                 , uint32                  iPerfIntent
                                 , const FHostDeviceInfo&  iHostDeviceInfo
                                 , bool                    iCallCB
-                                , FRasterImage2D*                 iDestination );
+                                , FBlock*                 iDestination );
 
 ULIS_NAMESPACE_END
 

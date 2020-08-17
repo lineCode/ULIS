@@ -69,10 +69,10 @@ private:
 
 public:
     // Tile API
-    virtual const FRasterImage2D* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const override;
+    virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const override;
     virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) override;
-    virtual  void DrawDebugWireframe( FRasterImage2D* iDst, const FVec2I64& iPos, float iScale ) override;
-    virtual  void DrawDebugTileContent( FRasterImage2D* iDst, const FVec2I64& iPos ) override;
+    virtual  void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override;
+    virtual  void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override;
     virtual  void Clear() override;
     virtual  void SanitizeNow() override;
     const tMap& GetSparseMap() const;

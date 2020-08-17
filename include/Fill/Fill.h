@@ -22,7 +22,7 @@ ULIS_API void Fill( FThreadPool* iThreadPool
                    , uint32 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo
                    , bool iCallCB
-                   , FRasterImage2D* iDestination
+                   , FBlock* iDestination
                    , const ISample& iColor
                    , const FRectI& iArea );
 

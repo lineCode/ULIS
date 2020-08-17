@@ -45,7 +45,7 @@ main( int argc, char *argv[] ) {
     // Let's define everything:
     int w = 900;
     int h = 600;
-    FRasterImage2D* blockCanvas = new FRasterImage2D( w, h, ULIS_FORMAT_RGBA8 );
+    FBlock* blockCanvas = new FBlock( w, h, ULIS_FORMAT_RGBA8 );
     FColor color = FColor::FromRGBA8( 255, 0, 0 );
     std::wstring str1 = L"ULIS";
     std::wstring str2 = L"ユリッス";

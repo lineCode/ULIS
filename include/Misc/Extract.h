@@ -21,19 +21,19 @@ ULIS_API void Extract( FThreadPool*            iThreadPool
                       , uint32                  iPerfIntent
                       , const FHostDeviceInfo&  iHostDeviceInfo
                       , bool                    iCallCB
-                      , const FRasterImage2D*           iSource
+                      , const FBlock*           iSource
                       , bool                    iSourceRawIndicesFlag
                       , uint8                   iSourceExtractMask
-                      , FRasterImage2D*                 iDestination
+                      , FBlock*                 iDestination
                       , bool                    iDestinationRawIndicesFlag
                       , uint8                   iDestinationExtractMask );
 
-ULIS_API FRasterImage2D* XExtract( FThreadPool*            iThreadPool
+ULIS_API FBlock* XExtract( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
                           , bool                    iCallCB
-                          , const FRasterImage2D*           iSource
+                          , const FBlock*           iSource
                           , bool                    iSourceRawIndicesFlag
                           , uint8                   iSourceExtractMask
                           , eFormat                 iDestinationFormat

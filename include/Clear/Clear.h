@@ -22,12 +22,12 @@ ULIS_API void Clear( FThreadPool*              iThreadPool
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
                     , bool                      iCallCB
-                    , FRasterImage2D*                   iDestination
+                    , FBlock*                   iDestination
                     , const FRectI&              iArea );
 
 /////////////////////////////////////////////////////
 // ClearRaw
-ULIS_API void ClearRaw( FRasterImage2D* iSrc, bool iCallCB = false );
+ULIS_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
 
 ULIS_NAMESPACE_END
 

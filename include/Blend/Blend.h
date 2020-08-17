@@ -23,8 +23,8 @@ ULIS_API void Blend( FThreadPool*              iThreadPool
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
                     , bool                      iCallCB
-                    , const FRasterImage2D*             iSource
-                    , FRasterImage2D*                   iBackdrop
+                    , const FBlock*             iSource
+                    , FBlock*                   iBackdrop
                     , const FRectI&              iSourceRect
                     , const FVec2F&             iPosition
                     , bool                      iSubpixelFlag
@@ -39,8 +39,8 @@ ULIS_API void AlphaBlend( FThreadPool*             iThreadPool
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
                          , bool                     iCallCB
-                         , const FRasterImage2D*            iSource
-                         , FRasterImage2D*                  iBackdrop
+                         , const FBlock*            iSource
+                         , FBlock*                  iBackdrop
                          , const FRectI&             iSourceRect
                          , const FVec2F&            iPosition
                          , bool                     iSubpixelFlag
@@ -53,8 +53,8 @@ ULIS_API void BlendTiled( FThreadPool*             iThreadPool
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
                          , bool                     iCallCB
-                         , const FRasterImage2D*            iSource
-                         , FRasterImage2D*                  iBackdrop
+                         , const FBlock*            iSource
+                         , FBlock*                  iBackdrop
                          , const FRectI&             iSourceRect
                          , const FRectI&             iDestRect
                          , const FVec2I&            iShift
@@ -69,7 +69,7 @@ ULIS_API void BlendColor( FThreadPool*             iThreadPool
                          , const FHostDeviceInfo&   iHostDeviceInfo
                          , bool                     iCallCB
                          , const FColor&       iColor
-                         , FRasterImage2D*                  iBackdrop
+                         , FBlock*                  iBackdrop
                          , const FRectI&             iDestRect
                          , eBlendingMode            iBlendingMode
                          , eAlphaMode               iAlphaMode
