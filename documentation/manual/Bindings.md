@@ -3,6 +3,6 @@ ULIS officialy maintains a few bindings of the library. They are listed under th
 
 |Target                             |Name               |
 |-----------------------------------|-------------------|
-|Python                             |PyULIS3            |
-|WebAssembly( wasm )                |wULIS3             |
+|Python                             |PyULIS             |
+|WebAssembly                        |wasmULIS           |
 |UnrealEngine4 ThirdParty Module    |ULIS               |
