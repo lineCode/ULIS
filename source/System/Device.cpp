@@ -63,7 +63,7 @@ bool    FDevice::HasHardwareAVX512_DQ() const {     return  ULIS_R_HW_AVX512_DQ(
 bool    FDevice::HasHardwareAVX512_IFMA() const {   return  ULIS_R_HW_AVX512_IFMA(  bField ); }
 bool    FDevice::HasHardwareAVX512_VBMI() const {   return  ULIS_R_HW_AVX512_VBMI(  bField ); }
 uint32  FDevice::MaxWorkers() const {               return  mMaxWorkers; }
-uint32  FDevice::L1CacheSize() const {              return  mL1CacheSize; }
-uint32  FDevice::L1CacheLineSize() const {          return  mL1CacheLineSize; }
+uint64  FDevice::L1CacheSize() const {              return  mL1CacheSize; }
+uint64  FDevice::L1CacheLineSize() const {          return  mL1CacheLineSize; }
 ULIS_NAMESPACE_END
 

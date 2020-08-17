@@ -78,8 +78,8 @@ public:
     bool HasHardwareAVX512_IFMA() const;
     bool HasHardwareAVX512_VBMI() const;
     uint32 MaxWorkers() const;
-    uint32 L1CacheSize() const;
-    uint32 L1CacheLineSize() const;
+    uint64 L1CacheSize() const;
+    uint64 L1CacheLineSize() const;
 
 private:
     uint64 bField;
