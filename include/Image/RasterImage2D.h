@@ -488,6 +488,10 @@ public:
     Reconstruct the internal representation from an existing external buffer
     with input size and format.
 
+    If a cleanup callback was setup, it will be called beforehand, effectively
+    cleaning the data if needed. Although the format might change, references
+    to the format info object itself are not invalidated.
+
     \sa FRasterImage2D()
     */
     void ReloadFromData(
