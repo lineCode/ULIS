@@ -50,23 +50,24 @@ This is because backward binary compatibility is retained with the minor increme
 During runtime, wihtin the application, it can be useful to know details about the library version that is linked, since this can be different from the initial assumption.
 There are several functions that are guaranteed to be available as long as binary compatibility is preserved, which are listed here:
 
-    VersionString();
-    VersionMajorString();
-    VersionMinorString();
-    VersionPatchString();
-    VersionMajor();
-    VersionMinor();
-    VersionPatch();
+    VersionString();        // "4.1.5"
+    VersionMajorString();   // "4"
+    VersionMinorString();   // "1"
+    VersionPatchString();   // "5"
+    VersionMajor();         // 4
+    VersionMinor();         // 1
+    VersionPatch();         // 5
 
 Additionaly, more information is available about the compiled library using these functions:
 
-    CompilerInformationString();
-    CompilerNameString();
-    CompilerVersionString();
-    CompiledFor64Bit()
-    CompiledWithAVX2();
-    CompiledWithSSE42();
-    CompilationTimeStamp();
+    CompilerInformationString();    //
+    CompilerNameString();           // "MSVC"
+    CompilerVersionString();        // "1912"
+    CompiledFor64Bit()              // true
+    CompiledWithAVX2();             // true
+    CompiledWithSSE42();            // true
+    CompilationTimeStamp();         // "Aug 15 2020 15:12:04"
+    FullLibraryInformationString(); // "ULIS 4.1.5 (Aug 15 2020 15:12:04) [MSVC 1912]"
 
 ## Versioning Checklist
 For each increment in major, minor or patch, the appropriate value should be updated in the CMakeLists.txt at the root of the repository. It should also be updated for the documentation, the documentation should be regenerated and uploaded to the appropriate host.

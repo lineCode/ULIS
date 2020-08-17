@@ -37,7 +37,7 @@ ULIS_API uint64 VersionMinor();
 /*! Retrieve the patch version number. */
 ULIS_API uint64 VersionPatch();
 
-/*! Retrieve the compilation date and time e.g: "Aug 15 2020 15:12:04. */
+/*! Retrieve the compilation date and time e.g: "Aug 15 2020 15:12:04". */
 ULIS_API FString CompilationTimeStamp();
 
 /*! Retrieve the compiler name string */
