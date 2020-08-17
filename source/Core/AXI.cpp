@@ -15,6 +15,8 @@
 #include "Core/AXI.h"
 
 ULIS_NAMESPACE_BEGIN
+// Help links:
+// https://blog.kowalczyk.info/article/j/guide-to-predefined-macros-in-c-compilers-gcc-clang-msvc-etc..html
 FString
 VersionString()
 {
