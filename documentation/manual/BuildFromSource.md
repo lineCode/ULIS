@@ -126,16 +126,17 @@ The following sections describes the step-by-step process for Linux.
 On top of the default CMake generation process, you can specify more build options to customize your build or enable or disable components in the ULIS library.
 | Option Name                   | Type      | Default   | Meaning                                                                                                   |
 |------------------------------ |-----------|-----------|-----------------------------------------------------------------------------------------------------------|
-| ULIS3_BUILD_SHARED            | BOOL      | ON        | Wether to build dynamic library or not.                                                                   |
-| ULIS3_BUILD_PYTHON_MODULE     | BOOL      | OFF       | Wether to generate and build the python binding or not.                                                   |
-| ULIS3_BUILD_TESTS             | BOOL      | OFF       | Wether to generate and build the tests or not.                                                            |
-| ULIS3_BUILD_SAMPLES           | BOOL      | OFF       | Wether to generate and build the samples or not.                                                          |
-| ULIS3_FORCE_ASSERTS           | BOOL      | OFF       | Wether to force asserts in RelWithDebInfo or Release builds or not ( recommended for RelWithDebInfo ).    |
-| ULIS3_QT_CMAKE_PATH           | STRING    | ""        | The path to Qt, needed for the samples and some tests.                                                    |
-| ULIS3_PYTHON_REL_LIB          | STRING    | ""        | The path to python release libraries.                                                                     |
-| ULIS3_PYTHON_DEB_LIB          | STRING    | ""        | The path to python debug libraries.                                                                       |
-| ULIS3_PYTHON_INCLUDE_PATH1    | STRING    | ""        | The path to python headers.                                                                               |
-| ULIS3_PYTHON_INCLUDE_PATH2    | STRING    | ""        | Extra path to python headers.                                                                             |
+| ULIS_BUILD_SHARED             | BOOL      | ON        | Wether to build dynamic library or not.                                                                   |
+| ULIS_BUILD_PYTHON_MODULE      | BOOL      | OFF       | Wether to generate and build the python binding or not.                                                   |
+| ULIS_BUILD_TESTS              | BOOL      | OFF       | Wether to generate and build the tests or not.                                                            |
+| ULIS_BUILD_SAMPLES            | BOOL      | OFF       | Wether to generate and build the samples or not.                                                          |
+| ULIS_FORCE_ASSERTS            | BOOL      | OFF       | Wether to force asserts in RelWithDebInfo or Release builds or not ( recommended for RelWithDebInfo ).    |
+| ULIS_BINARY_PREFIX            | STRING    | ""        | Indicates a prefix for the output binaries.                                                               |
+| ULIS_QT_CMAKE_PATH            | STRING    | ""        | The path to Qt, needed for the samples and some tests.                                                    |
+| ULIS_PYTHON_REL_LIB           | STRING    | ""        | The path to python release libraries.                                                                     |
+| ULIS_PYTHON_DEB_LIB           | STRING    | ""        | The path to python debug libraries.                                                                       |
+| ULIS_PYTHON_INCLUDE_PATH1     | STRING    | ""        | The path to python headers.                                                                               |
+| ULIS_PYTHON_INCLUDE_PATH2     | STRING    | ""        | Extra path to python headers.                                                                             |
 
 This is an example for Windows, Visual Studio 16 2019 - MSVC, with all options:
 ```d
@@ -144,15 +145,15 @@ This is an example for Windows, Visual Studio 16 2019 - MSVC, with all options:
     cd ULIS_Build
     cmake   -G "Visual Studio 16 2019"                                                              ^
             -A x64                                                                                  ^
-            -DULIS3_BUILD_SHARED=ON                                                                 ^
-            -DULIS3_BUILD_PYTHON_MODULE=ON                                                          ^
-            -ULIS3_BUILD_TESTS=ON                                                                   ^
-            -ULIS3_BUILD_SAMPLES=ON                                                                 ^
-            -DULIS3_QT_CMAKE_PATH:STRING="C:/Qt/5.12.6/msvc2017_64/lib/cmake/"                      ^
-            -DULIS3_PYTHON_REL_LIB:STRING="C:/Users/xxx/work/cpython/PCbuild/amd64/python39.lib"    ^
-            -DULIS3_PYTHON_DEB_LIB:STRING="C:/Users/xxx/work/cpython/PCbuild/amd64/python39_d.lib"  ^
-            -DULIS3_PYTHON_INCLUDE_PATH1:STRING="C:/Users/xxx/work/cpython/Include/"                ^
-            -DULIS3_PYTHON_INCLUDE_PATH2:STRING="C:/Users/xxx/work/cpython/PC/"                     ^
+            -DULIS_BUILD_SHARED=ON                                                                  ^
+            -DULIS_BUILD_PYTHON_MODULE=ON                                                           ^
+            -ULIS_BUILD_TESTS=ON                                                                    ^
+            -ULIS_BUILD_SAMPLES=ON                                                                  ^
+            -DULIS_QT_CMAKE_PATH:STRING="C:/Qt/5.12.6/msvc2017_64/lib/cmake/"                       ^
+            -DULIS_PYTHON_REL_LIB:STRING="C:/Users/xxx/work/cpython/PCbuild/amd64/python39.lib"     ^
+            -DULIS_PYTHON_DEB_LIB:STRING="C:/Users/xxx/work/cpython/PCbuild/amd64/python39_d.lib"   ^
+            -DULIS_PYTHON_INCLUDE_PATH1:STRING="C:/Users/xxx/work/cpython/Include/"                 ^
+            -DULIS_PYTHON_INCLUDE_PATH2:STRING="C:/Users/xxx/work/cpython/PC/"                      ^
             ../ULIS
 ```
 
