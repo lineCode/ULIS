@@ -84,8 +84,8 @@ public:
 private:
     uint64 bField;
     uint32 mMaxWorkers;
-    uint32 mL1CacheSize;
-    uint32 mL1CacheLineSize;
+    uint64 mL1CacheSize;
+    uint64 mL1CacheLineSize;
 };
 
 ULIS_NAMESPACE_END

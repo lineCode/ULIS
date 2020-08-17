@@ -19,11 +19,13 @@
 #include <intrin.h>
 #include <stdint.h>
 #include <string>
+#include <stdlib.h>
 #include <thread>
 
 ULIS_NAMESPACE_BEGIN
 
 namespace detail {
+
 void
 cpuid(int32_t out[4], int32_t x)
 {
@@ -78,8 +80,8 @@ detect_OS_AVX() {
 
     if (osUsesXSAVE_XRSTORE && cpuAVXSuport)
     {
-        uint64_t xcrFeatureMask = xgetbv(_XCR_XFEATURE_ENABLED_MASK);
-        avxSupported = (xcrFeatureMask & 0x6) == 0x6;
+        uint64_t xcrFeatureMask = xgetbv( _XCR_XFEATURE_ENABLED_MASK );
+        avxSupported = ( xcrFeatureMask & 0x6 ) == 0x6;
     }
 
     return  avxSupported;
@@ -90,8 +92,8 @@ detect_OS_AVX512() {
     if (!detect_OS_AVX())
         return  false;
 
-    uint64_t xcrFeatureMask = xgetbv(_XCR_XFEATURE_ENABLED_MASK);
-    return  (xcrFeatureMask & 0xe6) == 0xe6;
+    uint64_t xcrFeatureMask = xgetbv( _XCR_XFEATURE_ENABLED_MASK );
+    return  ( xcrFeatureMask & 0xe6 ) == 0xe6;
 }
 
 std::string
@@ -108,8 +110,27 @@ get_vendor_string() {
     return  name;
 }
 
-} // namespace detail
+void cache_info( uint8 iLevel, uint64 *oCacheSize, uint64* oLineSize ) {
+    DWORD buffer_size = 0;
+    DWORD i = 0;
+    SYSTEM_LOGICAL_PROCESSOR_INFORMATION * buffer = 0;
 
+    GetLogicalProcessorInformation(0, &buffer_size);
+    buffer = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION *)malloc(buffer_size);
+    GetLogicalProcessorInformation(&buffer[0], &buffer_size);
+
+    for (i = 0; i != buffer_size / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION); ++i) {
+        if( buffer[i].Relationship == RelationCache && buffer[i].Cache.Level == iLevel ) {
+            *oLineSize = buffer[i].Cache.LineSize;
+            *oCacheSize = buffer[i].Cache.Size;
+            break;
+        }
+    }
+
+    free( buffer );
+}
+
+} // namespace detail
 
 FDevice::FDevice()
     : bField( 0 )
@@ -117,45 +138,68 @@ FDevice::FDevice()
     , mL1CacheSize( 65536 )
     , mL1CacheLineSize( 64 )
 {
+    detail::cache_info( 1, &mL1CacheSize, &mL1CacheLineSize );
 
-    bField =
-          ULIS_W_HW_AMD( 0 )
-        | ULIS_W_HW_INTEL( 0 )
-        | ULIS_W_OS_X64( 1 )
-        | ULIS_W_OS_AVX( 0 )
-        | ULIS_W_OS_AVX512( 0 )
-        | ULIS_W_HW_X64( 1 )
-        | ULIS_W_HW_MMX( 0 )
-        | ULIS_W_HW_ABM( 0 )
-        | ULIS_W_HW_RDRAND( 0 )
-        | ULIS_W_HW_BMI1( 0 )
-        | ULIS_W_HW_BMI2( 0 )
-        | ULIS_W_HW_ADX( 0 )
-        | ULIS_W_HW_PREFETCHWT1( 0 )
-        | ULIS_W_HW_MPX( 0 )
-        | ULIS_W_HW_SSE( 0 )
-        | ULIS_W_HW_SSE2( 0 )
-        | ULIS_W_HW_SSE3( 0 )
-        | ULIS_W_HW_SSSE3( 0 )
-        | ULIS_W_HW_SSE41( 0 )
-        | ULIS_W_HW_SSE42( 0 )
-        | ULIS_W_HW_SSE4A( 0 )
-        | ULIS_W_HW_AES( 0 )
-        | ULIS_W_HW_SHA( 0 )
-        | ULIS_W_HW_AVX( 0 )
-        | ULIS_W_HW_XOP( 0 )
-        | ULIS_W_HW_FMA3( 0 )
-        | ULIS_W_HW_FMA4( 0 )
-        | ULIS_W_HW_AVX2( 0 )
-        | ULIS_W_HW_AVX512_F( 0 )
-        | ULIS_W_HW_AVX512_PF( 0 )
-        | ULIS_W_HW_AVX512_ER( 0 )
-        | ULIS_W_HW_AVX512_CD( 0 )
-        | ULIS_W_HW_AVX512_VL( 0 )
-        | ULIS_W_HW_AVX512_BW( 0 )
-        | ULIS_W_HW_AVX512_DQ( 0 )
-        | ULIS_W_HW_AVX512_IFMA( 0 )
-        | ULIS_W_HW_AVX512_VBMI( 0 );
+    bField |= ULIS_W_OS_X64( detail::detect_OS_x64() );
+    bField |= ULIS_W_OS_AVX( detail::detect_OS_AVX() );
+    bField |= ULIS_W_OS_AVX512( detail::detect_OS_AVX512() );
+
+    std::string vendor( detail::get_vendor_string() );
+    if( vendor == "GenuineIntel" )
+        bField |= ULIS_R_HW_INTEL( 1 );
+    else if( vendor == "AuthenticAMD")
+        bField |= ULIS_R_HW_AMD( 1 );
+
+    int info[4] { 0, 0, 0, 0 };
+    detail::cpuid( info, 0 );
+    int nIds = info[0];
+
+    detail::cpuid( info, 0x80000000 );
+    uint32_t nExIds = info[0];
+
+    if( nIds >= 0x00000001 ) {
+        detail::cpuid( info, 0x00000001 );
+        bField |= ULIS_W_HW_MMX(    info[3] & ( 1 << 23 ) );
+        bField |= ULIS_W_HW_SSE(    info[3] & ( 1 << 25 ) );
+        bField |= ULIS_W_HW_SSE2(   info[3] & ( 1 << 26 ) );
+        bField |= ULIS_W_HW_SSE3(   info[2] & ( 1 << 0  ) );
+        bField |= ULIS_W_HW_SSSE3(  info[2] & ( 1 << 9  ) );
+        bField |= ULIS_W_HW_SSE41(  info[2] & ( 1 << 19 ) );
+        bField |= ULIS_W_HW_SSE42(  info[2] & ( 1 << 20 ) );
+        bField |= ULIS_W_HW_AES(    info[2] & ( 1 << 25 ) );
+        bField |= ULIS_W_HW_AVX(    info[2] & ( 1 << 28 ) );
+        bField |= ULIS_W_HW_FMA3(   info[2] & ( 1 << 12 ) );
+        bField |= ULIS_W_HW_RDRAND( info[2] & ( 1 << 30 ) );
+    }
+
+    if( nIds >= 0x00000007 ) {
+        detail::cpuid( info, 0x00000007 );
+        bField |= ULIS_W_HW_AVX2(           info[1] & ( 1 << 5  ) );
+        bField |= ULIS_W_HW_BMI1(           info[1] & ( 1 << 3  ) );
+        bField |= ULIS_W_HW_BMI2(           info[1] & ( 1 << 8  ) );
+        bField |= ULIS_W_HW_ADX(            info[1] & ( 1 << 19 ) );
+        bField |= ULIS_W_HW_MPX(            info[1] & ( 1 << 14 ) );
+        bField |= ULIS_W_HW_SHA(            info[1] & ( 1 << 29 ) );
+        bField |= ULIS_W_HW_PREFETCHWT1(    info[2] & ( 1 << 0  ) );
+        bField |= ULIS_W_HW_AVX512_F(       info[1] & ( 1 << 16 ) );
+        bField |= ULIS_W_HW_AVX512_CD(      info[1] & ( 1 << 28 ) );
+        bField |= ULIS_W_HW_AVX512_PF(      info[1] & ( 1 << 26 ) );
+        bField |= ULIS_W_HW_AVX512_ER(      info[1] & ( 1 << 27 ) );
+        bField |= ULIS_W_HW_AVX512_VL(      info[1] & ( 1 << 31 ) );
+        bField |= ULIS_W_HW_AVX512_BW(      info[1] & ( 1 << 30 ) );
+        bField |= ULIS_W_HW_AVX512_DQ(      info[1] & ( 1 << 17 ) );
+        bField |= ULIS_W_HW_AVX512_IFMA(    info[1] & ( 1 << 21 ) );
+        bField |= ULIS_W_HW_AVX512_VBMI(    info[2] & ( 1 << 1  ) );
+    }
+
+    if( nExIds >= 0x80000001 ) {
+        detail::cpuid( info, 0x80000001 );
+        bField |= ULIS_W_HW_X64(    info[3] & ( 1 << 29 ) );
+        bField |= ULIS_W_HW_ABM(    info[2] & ( 1 << 5  ) );
+        bField |= ULIS_W_HW_SSE4A(  info[2] & ( 1 << 6  ) );
+        bField |= ULIS_W_HW_FMA4(   info[2] & ( 1 << 16 ) );
+        bField |= ULIS_W_HW_XOP(    info[2] & ( 1 << 11 ) );
+    }
 }
 
 ULIS_NAMESPACE_END
