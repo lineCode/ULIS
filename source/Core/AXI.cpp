@@ -63,5 +63,77 @@ CompilationTimeStamp()
     return  FString( ULIS_STRINGIFY( __DATE__ ) ) + " " + ULIS_STRINGIFY( __TIME__ );
 }
 
+FString
+CompilerNameString()
+{
+#if defined( ULIS_CLANG )
+    return  FString( "CLANG" );
+#elif defined( ULIS_GCC )
+    return  FString( "GCC" );
+#elif defined( ULIS_MSVC )
+    return  FString( "MSVC" );
+#elif defined( ULIS_MINGW64 )
+    return  FString( "MINGW64" );
+#else
+    return  FString( "UNKNOWN" );
+#endif
+}
+
+FString
+CompilerVersionString()
+{
+#if defined( ULIS_CLANG )
+    return  FString( ULIS_STRINGIFY( __clang_major__ ) ) + "." + ULIS_STRINGIFY( __clang_minor__ ) + "." + ULIS_STRINGIFY( __clang_patchlevel__ );
+#elif defined( ULIS_GCC )
+    return  FString( ULIS_STRINGIFY( __GNUC__ ) ) + "." + ULIS_STRINGIFY( __GNUC_MINOR__ );
+#elif defined( ULIS_MSVC )
+    return  FString( ULIS_STRINGIFY( _MSC_VER ) );
+#elif defined( ULIS_MINGW64 )
+    return  FString( ULIS_STRINGIFY( __MINGW64_VERSION_MAJOR ) ) + "." + ULIS_STRINGIFY( __MINGW64_VERSION_MINOR );
+#else
+    return  FString( "v0000" );
+#endif
+}
+
+FString
+CompilerInformationString()
+{
+    return  CompilerNameString() + " " + CompilerVersionString();
+}
+
+bool
+CompiledFor64Bit()
+{
+    // We just assume this to be always true for now.
+    // Compilation for 32 bits should fail anyways.
+    return  true;
+}
+
+bool
+CompiledWithAVX2()
+{
+#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+    return  true;
+#else
+    return  false;
+#endif
+}
+
+bool
+CompiledWithSSE42()
+{
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+    return  true;
+#else
+    return  false;
+#endif
+}
+
+FString
+FullLibraryInformationString()
+{
+    return  FString( "ULIS" ) + " " + VersionString() + " (" + CompilationTimeStamp() + ") [" + CompilerInformationString() + "]";
+}
+
 ULIS_NAMESPACE_END
 

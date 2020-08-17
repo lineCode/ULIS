@@ -56,6 +56,8 @@
     #define ULIS_GCC
 #elif defined(_MSC_VER)
     #define ULIS_MSVC
+#elif defined(__MINGW64__)
+    #define ULIS_MINGW64
 #else
     #define ULIS_UNKNOWN_COMPILER
 #endif

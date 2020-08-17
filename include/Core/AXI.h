@@ -40,5 +40,26 @@ ULIS_API uint64 VersionPatch();
 /*! Retrieve the compilation date and time e.g: "Aug 15 2020 15:12:04. */
 ULIS_API FString CompilationTimeStamp();
 
+/*! Retrieve the compiler name string */
+ULIS_API FString CompilerNameString();
+
+/*! Retrieve the compiler version string */
+ULIS_API FString CompilerVersionString();
+
+/*! Retrieve the full information string */
+ULIS_API FString CompilerInformationString();
+
+/*! Retrieve wether the library was compiled for x64 target */
+ULIS_API bool CompiledFor64Bit();
+
+/*! Retrieve wether the library was compiled with AVX2 support */
+ULIS_API bool CompiledWithAVX2();
+
+/*! Retrieve wether the library was compiled with SSE42 support */
+ULIS_API bool CompiledWithSSE42();
+
+/*! Retrieve the full library identification string */
+ULIS_API FString FullLibraryInformationString();
+
 ULIS_NAMESPACE_END
 
