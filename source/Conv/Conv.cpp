@@ -15,7 +15,7 @@
 #include "Conv/ConvBuffer.h"
 #include "Conv/srgb2linear.h"
 #include "Copy/Copy.h"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Image/Pixel.h"
 #include "Math/Math.h"
 #include "Thread/ThreadPool.h"

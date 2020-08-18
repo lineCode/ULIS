@@ -14,7 +14,7 @@
 #pragma once
 #include "System/HostDeviceInfo.h"
 #include "Clear/Clear.h"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Image/Sparse/Tile.h"
 #include <algorithm>
 

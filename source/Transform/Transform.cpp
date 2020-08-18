@@ -15,7 +15,7 @@
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformDispatch.ipp"
 #include "Clear/Clear.h"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Math/Interpolation/Bezier.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"

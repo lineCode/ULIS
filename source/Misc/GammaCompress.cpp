@@ -14,7 +14,7 @@
 #include "Misc/GammaCompress.h"
 #include "System/HostDeviceInfo.h"
 #include "Conv/srgb2linear.h"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"

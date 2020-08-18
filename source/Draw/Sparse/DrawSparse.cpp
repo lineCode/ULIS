@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Draw/Draw.h"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Conv/ConvBuffer.h"
 
 ULIS_NAMESPACE_BEGIN

@@ -28,7 +28,7 @@
 // FX
 //#include "FX/.h"
 // Image
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Image/Color.h"
 #include "Image/ColorSpace.h"
 #include "Image/Format.h"

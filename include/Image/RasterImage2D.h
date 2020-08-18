@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         RasterImage2D.h
+* @file         Block.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the FBlock class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

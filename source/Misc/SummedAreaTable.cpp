@@ -14,7 +14,7 @@
 #include "Misc/SummedAreaTable.h"
 #include "System/HostDeviceInfo.h"
 #include "Misc/Filter.h"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"

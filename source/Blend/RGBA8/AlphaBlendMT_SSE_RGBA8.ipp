@@ -19,7 +19,7 @@
 #include "Blend/Func/AlphaFuncF.ipp"
 #include "Blend/Func/AlphaFuncSSEF.ipp"
 #include "Blend/Func/SeparableBlendFuncSSEF.ipp"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Thread/ThreadPool.h"

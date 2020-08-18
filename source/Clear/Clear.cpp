@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "System/HostDeviceInfo.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"

@@ -13,7 +13,7 @@
 */
 #include "Misc/Premult.h"
 #include "System/HostDeviceInfo.h"
-#include "Image/RasterImage2D.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
