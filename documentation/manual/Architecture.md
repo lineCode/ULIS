@@ -12,6 +12,8 @@ In ["An Image Processing Library in Modern C++"](https://hal.archives-ouvertes.f
     + [0.1) Means](@ref r0-1)
     + [0.2) Audience](@ref r0-2)
     + [0.3) Purpose](@ref r0-3)
+- [1) Implementation](@ref r1)
+    + [1.0) Principles](@ref r1-0)
 
 ## 0) Overview {#r0}
 First, a global view of the range of topics covered by ULIS, its goals and philosophy.
@@ -100,3 +102,10 @@ In that sense, the purpose of ULIS is to fill-in the gaps, provide a semantic wa
 Of course we are making a number of bold claims here, and the implementation has to keep up with that ambition, so i'd like to make it clear that while ULIS is trying to solve these problems, it is probably not perfect as a universal library for imaging and i'm sure you can find the same kind of issues the other libraries display on some parts it tries to cover. So it is good to keep in mind that ULIS is still an evolving product, and to remain modest about it. Also, i am myself an avid user of several of these libraries, and was really inspired by some of the authors of these libraries, such as Petr Kobalicek who wrote the Blend2D library, or Maxim Shemanarev who wrote the AGG library.
 
 To account for the imperfect nature of ULIS, some low level elements, the pipes, gears and porcelain that are usually hidden behind the curtain, are made available through dedicated functions, such as retrieving the raw pointer to a memory buffer containing an image, in order to allow inter-operability with any other framework you choose to use in combination to overcome these issues. Of course that defeats the purpose of ULIS in the first place if you have to use a combination of imaging libraries, but sometimes it's also handy to operate with the GPU or pass data to a GUI library for example.
+
+
+## 1) Implementation {#r1}
+A review over the implementation principles, guidelines and tools involved in ULIS.
+
+### 1.0) Principles {#r1-0}
+We discuss the implementation principles of ULIS, to give a better idea of the concepts introduced and involved in building an image processing pipeline that meets the goals set for ULIS.
