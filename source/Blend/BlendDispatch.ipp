@@ -48,29 +48,29 @@ typedef void (*fpBlendInvocation)( std::shared_ptr< const FBlendArgs > iBlendPar
 
 /////////////////////////////////////////////////////
 // Implementors
-#define ULIS_IMP_BLEND_INVOCATION_SELECTOR( TAG, MISC, MISCAA, SEP, SEPAA, NSEP, NSEPAA )      \
-fpBlendInvocation TAG ( const FBlendArgs& iInfo ) {                                             \
-    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {                                     \
-        case BMQ_MISC           : return  iInfo.subpixelFlag ? MISCAA   : MISC;                 \
-        case BMQ_SEPARABLE      : return  iInfo.subpixelFlag ? SEPAA    : SEP;                  \
-        case BMQ_NONSEPARABLE   : return  iInfo.subpixelFlag ? NSEPAA   : NSEP;                 \
-        default                 : return  nullptr;                                              \
-    }                                                                                           \
+#define ULIS_IMP_BLEND_INVOCATION_SELECTOR( TAG, MISC, MISCAA, SEP, SEPAA, NSEP, NSEPAA )   \
+fpBlendInvocation TAG ( const FBlendArgs& iInfo ) {                                         \
+    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {                                 \
+        case BMQ_MISC           : return  iInfo.subpixelFlag ? MISCAA   : MISC;             \
+        case BMQ_SEPARABLE      : return  iInfo.subpixelFlag ? SEPAA    : SEP;              \
+        case BMQ_NONSEPARABLE   : return  iInfo.subpixelFlag ? NSEPAA   : NSEP;             \
+        default                 : return  nullptr;                                          \
+    }                                                                                       \
 }
 
-#define ULIS_IMP_ALPHABLEND_INVOCATION_SELECTOR( TAG, SEP, SEPAA ) \
+#define ULIS_IMP_ALPHABLEND_INVOCATION_SELECTOR( TAG, SEP, SEPAA )  \
 fpBlendInvocation TAG ( const FBlendArgs& iInfo ) {                 \
     return  iInfo.subpixelFlag ? SEPAA    : SEP;                    \
 }
 
-#define ULIS_IMP_TILEDBLEND_INVOCATION_SELECTOR( TAG, MISC, SEP, NSEP )    \
-fpBlendInvocation TAG ( const FBlendArgs& iInfo ) {                         \
-    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {                 \
-        case BMQ_MISC           : return  MISC;                             \
-        case BMQ_SEPARABLE      : return  SEP;                              \
-        case BMQ_NONSEPARABLE   : return  NSEP;                             \
-        default                 : return  nullptr;                          \
-    }                                                                       \
+#define ULIS_IMP_TILEDBLEND_INVOCATION_SELECTOR( TAG, MISC, SEP, NSEP ) \
+fpBlendInvocation TAG ( const FBlendArgs& iInfo ) {                     \
+    switch( BlendingModeQualifier( iInfo.blendingMode ) ) {             \
+        case BMQ_MISC           : return  MISC;                         \
+        case BMQ_SEPARABLE      : return  SEP;                          \
+        case BMQ_NONSEPARABLE   : return  NSEP;                         \
+        default                 : return  nullptr;                      \
+    }                                                                   \
 }
 
 /////////////////////////////////////////////////////
@@ -114,17 +114,17 @@ ULIS_IMP_ALPHABLEND_INVOCATION_SELECTOR( SelectAlphaBlendInvocationMEMRGBA8
 /////////////////////////////////////////////////////
 // TiledBlend Invocation Selectors
 template< typename T > ULIS_IMP_TILEDBLEND_INVOCATION_SELECTOR( SelectTiledBlendInvocationMEMGeneric
-    , &TiledBlendMT_Misc_MEM_Generic< T >, &TiledBlendMT_Separable_MEM_Generic< T >, &TiledBlendMT_NonSeparable_MEM_Generic< T > )
+    , &TiledBlendMT_Misc_MEM_Generic< T >,      &TiledBlendMT_Separable_MEM_Generic< T >, &TiledBlendMT_NonSeparable_MEM_Generic< T > )
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
 ULIS_IMP_TILEDBLEND_INVOCATION_SELECTOR( SelectTiledBlendInvocationAVXRGBA8
-    , &TiledBlendMT_Misc_MEM_Generic< uint8 >, &TiledBlendMT_NonSeparable_SSE_RGBA8, &TiledBlendMT_NonSeparable_SSE_RGBA8 )
+    , &TiledBlendMT_Misc_MEM_Generic< uint8 >,  &TiledBlendMT_NonSeparable_SSE_RGBA8, &TiledBlendMT_NonSeparable_SSE_RGBA8 )
 #endif // ULIS_COMPILETIME_AVX2_SUPPORT
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 ULIS_IMP_TILEDBLEND_INVOCATION_SELECTOR( SelectTiledBlendInvocationSSERGBA8
-    , &TiledBlendMT_Misc_MEM_Generic< uint8 >, &TiledBlendMT_Separable_SSE_RGBA8, &TiledBlendMT_NonSeparable_SSE_RGBA8 )
+    , &TiledBlendMT_Misc_MEM_Generic< uint8 >,  &TiledBlendMT_Separable_SSE_RGBA8, &TiledBlendMT_NonSeparable_SSE_RGBA8 )
 #endif // ULIS_COMPILETIME_SSE42_SUPPORT
 ULIS_IMP_TILEDBLEND_INVOCATION_SELECTOR( SelectTiledBlendInvocationMEMRGBA8
-    , &TiledBlendMT_Misc_MEM_Generic< uint8 >, &TiledBlendMT_Separable_MEM_Generic< uint8 >, &TiledBlendMT_NonSeparable_MEM_Generic< uint8 > )
+    , &TiledBlendMT_Misc_MEM_Generic< uint8 >,  &TiledBlendMT_Separable_MEM_Generic< uint8 >, &TiledBlendMT_NonSeparable_MEM_Generic< uint8 > )
 
 /////////////////////////////////////////////////////
 // Blend Dispatcher
