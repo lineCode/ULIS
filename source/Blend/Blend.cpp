@@ -13,7 +13,7 @@
 */
 #include "Blend/Blend.h"
 #include "Blend/BlendArgs.h"
-#include "Blend/BlendDispatch.ipp"
+#include "Blend/BlendDispatch.h"
 #include "Conv/Conv.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"

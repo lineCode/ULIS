@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         BlendDispatch.ipp
+* @file         BlendDispatch.h
 * @author       Clement Berthaud
 * @brief        This file provides the dispatch mechanism for Blend invocations.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
