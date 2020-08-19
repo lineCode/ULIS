@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         AlphaFuncAVX.ipp
+* @file         AlphaFuncAVX.h
 * @author       Clement Berthaud
 * @brief        This file provides the implementations for the Vec8f Alpha Modes functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
