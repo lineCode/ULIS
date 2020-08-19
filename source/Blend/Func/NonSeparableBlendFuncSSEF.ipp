@@ -16,6 +16,7 @@
 #include "Blend/Modes.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
+#include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
