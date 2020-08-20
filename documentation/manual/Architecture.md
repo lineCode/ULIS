@@ -13,7 +13,14 @@ In ["An Image Processing Library in Modern C++"](https://hal.archives-ouvertes.f
     + [0.2) Audience](@ref r0-2)
     + [0.3) Purpose](@ref r0-3)
 - [1) Implementation](@ref r1)
-    + [1.0) Principles](@ref r1-0)
+    + [1.0) Problems](@ref r1-0)
+    + [1.1) Propositions](@ref r1-1)
+        - [1.1.0) Raw](@ref r1-1-0)
+        - [1.1.1) Template](@ref r1-1-1)
+        - [1.1.2) Context](@ref r1-1-2)
+    + [1.2) Solution](@ref r1-2)
+        - [1.2.0) Concepts](@ref r1-2-0)
+        - [1.2.1) Details](@ref r1-2-1)
 
 ## 0) Overview {#r0}
 First, a global view of the range of topics covered by ULIS, its goals and philosophy.
@@ -107,5 +114,20 @@ To account for the imperfect nature of ULIS, some low level elements, the pipes,
 ## 1) Implementation {#r1}
 A review over the implementation principles, guidelines and tools involved in ULIS.
 
-### 1.0) Principles {#r1-0}
+### 1.0) Problems {#r1-0}
+
+### 1.1) Propositions {#r1-1}
+
+#### 1.1.0) Raw {#r1-1-0}
+
+#### 1.1.1) Template {#r1-1-1}
+
+#### 1.1.2) Context {#r1-1-2}
+
+### 1.2) Solution {#r1-2}
 We discuss the implementation principles of ULIS, to give a better idea of the concepts introduced and involved in building an image processing pipeline that meets the goals set for ULIS.
+
+#### 1.2.0) Concepts {#r1-2-0}
+
+#### 1.2.1) Details {#r1-2-1}
+
