@@ -100,7 +100,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSr
 
 template< typename T >
 void
-BlendMT_NonSeparable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
@@ -167,7 +167,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8*
 
 template< typename T >
 void
-BlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleBlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

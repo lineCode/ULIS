@@ -16,14 +16,6 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Invocations parameters
-class FBlendArguments;
-
-/////////////////////////////////////////////////////
-// Invocations function pointers
-typedef void ( *tBlendInvocation )( const FBlendArguments& );
-
-/////////////////////////////////////////////////////
 /// @class      FRasterContext
 /// @brief      The FRasterContext class provides a context for calling image
 ///             raster and composition functions for a given format.
@@ -39,6 +31,9 @@ typedef void ( *tBlendInvocation )( const FBlendArguments& );
 ///             \sa FCommandQueue
 class ULIS_API FRasterContext
 {
+private:
+    struct FContextualDispatchTable;
+
 public:
     /*! Destructor */
     ~FRasterContext();
@@ -47,10 +42,7 @@ public:
     FRasterContext();
 
 private:
-    tBlendInvocation  fpBlend;
-    tBlendInvocation  fpBlendColor;
-    tBlendInvocation  fpBlendTiled;
-    tBlendInvocation  fpBlendAlpha;
+    FContextualDispatchTable* mContextualDispatchTable;
 };
 
 ULIS_NAMESPACE_END

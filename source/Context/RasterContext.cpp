@@ -13,7 +13,37 @@
 */
 #pragma once
 #include "Context/RasterContext.h"
+#include "Blend/BlendDispatch.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// FRasterContext::FContextualDispatchTable
+struct FRasterContext::FContextualDispatchTable
+{
+public:
+    /*! Constructor */
+    FContextualDispatchTable()
+    {}
+
+    /*! Destructor */
+    ~FContextualDispatchTable()
+    {}
+
+public:
+    fpBlendInvocationScheduler  mScheduleBlendSeparable;
+};
+
+/////////////////////////////////////////////////////
+// FRasterContext
+FRasterContext::~FRasterContext()
+{
+    delete  mContextualDispatchTable;
+}
+
+FRasterContext::FRasterContext()
+    : mContextualDispatchTable( nullptr )
+{
+    mContextualDispatchTable = new  FContextualDispatchTable();
+}
 ULIS_NAMESPACE_END
 

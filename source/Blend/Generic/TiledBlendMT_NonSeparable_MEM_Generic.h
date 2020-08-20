@@ -77,7 +77,7 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, u
 
 template< typename T >
 void
-TiledBlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleTiledBlendMT_NonSeparable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

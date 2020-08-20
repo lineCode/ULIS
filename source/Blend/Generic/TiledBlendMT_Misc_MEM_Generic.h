@@ -78,7 +78,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iB
 
 template< typename T >
 void
-TiledBlendMT_Misc_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleTiledBlendMT_Misc_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

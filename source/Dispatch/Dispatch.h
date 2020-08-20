@@ -140,7 +140,7 @@ const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
     #endif
 #endif
 
-#define ULIS_END_DISPATCHER( TAG )                                                                             \
+#define ULIS_END_DISPATCHER( TAG )                                                                              \
     { nullptr, nullptr, nullptr, nullptr }                                                                      \
 };                                                                                                              \
 const int TAG::spec_size = sizeof( TAG::spec_table ) / sizeof( TAG::FSpecDispatchGroup ) - 1;
