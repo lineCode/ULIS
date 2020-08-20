@@ -5,15 +5,14 @@
 *   ULIS
 *__________________
 *
-* @file         TiledBlendMT_Separable_SSE_RGBA8.ipp
+* @file         TiledBlendMT_Separable_SSE_RGBA8.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the implementation for a Blend specialization as described in the title.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Core/Core.h"
-#include "Blend/BlendArgs.h"
+#include "Blend/RGBA8/TiledBlendMT_Separable_SSE_RGBA8.h"
 #include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.h"
@@ -27,7 +26,13 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
+InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8(
+      const uint8* iSrc
+    , uint8* iBdp
+    , int32 iLine
+    , std::shared_ptr< const FBlendArgs > iInfo
+)
+{
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
@@ -62,7 +67,10 @@ InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8( const uint8* iSrc, uint8*
 }
 
 void
-TiledBlendMT_Separable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
+TiledBlendMT_Separable_SSE_RGBA8(
+    std::shared_ptr< const FBlendArgs > iInfo
+)
+{
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

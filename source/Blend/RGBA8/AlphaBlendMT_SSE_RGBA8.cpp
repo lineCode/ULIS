@@ -5,20 +5,19 @@
 *   ULIS
 *__________________
 *
-* @file         BlendMT_NonSeparable_SSE_RGBA8.ipp
+* @file         AlphaBlendMT_SSE_RGBA8.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the implementation for a Blend specialization as described in the title.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Core/Core.h"
-#include "Blend/BlendArgs.h"
+#include "Blend/RGBA8/AlphaBlendMT_SSE_RGBA8.h"
 #include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/AlphaFuncSSEF.h"
-#include "Blend/Func/NonSeparableBlendFuncSSEF.h"
+#include "Blend/Func/SeparableBlendFuncSSEF.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
@@ -26,20 +25,26 @@
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
-ULIS_FORCEINLINE void BuildRGBA8IndexTable( uint8 iRS, Vec4i* oIDT ) {
-    switch( iRS ) {
-        case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
-        case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); break;
-        case 3:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); break;
-        default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); break;
-    }
+
+ULIS_FORCEINLINE
+__m128i
+Downscale( __m128i iVal ) {
+    return  _mm_srli_epi16( _mm_adds_epu16( _mm_adds_epu16( iVal, _mm_set1_epi16( 1 ) ), _mm_srli_epi16( iVal, 8 ) ), 8 );
 }
 
 void
-InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
+InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
+      const uint8* iSrc
+    , uint8* iBdp
+    , int32 iLine
+    , const uint32 iSrcBps
+    , std::shared_ptr< const FBlendArgs > iInfo
+)
+{
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
-
+    const uint8*        src     = iSrc;
+    uint8*              bdp     = iBdp;
     const bool notLastLine  = iLine < info.backdropCoverage.y;
     const bool notFirstLine = iLine > 0;
     const bool onLeftBorder = info.backdropWorkingRect.x == 0;
@@ -75,36 +80,32 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel( const uint8* iSrc,
         smpch_m11 = ( notLastCol && notLastLine )                     ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc              ) ) ) ) ) / 255.f : 0.f;
         smpch_m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc - iSrcBps    ) ) ) ) ) / 255.f : 0.f;
         smpch_vv1 = ( smpch_m10 * alpha_m10 ) * TY + ( smpch_m11 * alpha_m11 )  * UY;
-        smpch_smp = lookup4( iIDT, select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * TX + smpch_vv1 * UX ) / alpha_smp ) );
+        smpch_smp = select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * TX + smpch_vv1 * UX ) / alpha_smp );
 
         Vec4f alpha_bdp     = *( iBdp + fmt.AID ) / 255.f;
         Vec4f alpha_src     = alpha_smp * info.opacityValue;
         Vec4f alpha_comp    = AlphaNormalSSEF( alpha_src, alpha_bdp );
         Vec4f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
-        Vec4f alpha_result;
-        ULIS_ASSIGN_ALPHASSEF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        Vec4f bdp_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f );
-        smpch_smp.insert( 3, 0.f );
-        bdp_chan.insert( 3, 0.f );
+        Vec4f bdp_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f;
         Vec4f res_chan;
-        #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = NonSeparableCompOpSSEF< _BM >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
-        #undef TMP_ASSIGN
+        res_chan = SeparableCompOpSSEF< BM_NORMAL >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
 
-        res_chan = lookup4( iIDT, res_chan );
         auto _pack = _mm_cvtps_epi32( res_chan );
         _pack = _mm_packus_epi32( _pack, _pack );
         _pack = _mm_packus_epi16( _pack, _pack );
         *( uint32* )iBdp = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
-        *( iBdp + fmt.AID ) = uint8( alpha_result[0] * 0xFF );
+        *( iBdp + fmt.AID ) = uint8( alpha_comp[0] * 0xFF );
         iSrc += 4;
         iBdp += 4;
     }
 }
 
 void
-BlendMT_NonSeparable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
+AlphaBlendMT_Separable_SSE_RGBA8_Subpixel(
+    std::shared_ptr< const FBlendArgs > iInfo
+)
+{
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
@@ -113,51 +114,60 @@ BlendMT_NonSeparable_SSE_RGBA8_Subpixel( std::shared_ptr< const FBlendArgs > iIn
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    Vec4i idt;
-    BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
-                                   , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel
+                                   , InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
                                    , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                   , pLINE , src_bps, iInfo, idt );
+                                   , pLINE , src_bps, iInfo );
 }
 
 void
-InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
+InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8(
+      const uint8* iSrc
+    , uint8* iBdp
+    , int32 iLine
+    , std::shared_ptr< const FBlendArgs > iInfo
+)
+{
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
-
-    for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
-        ufloat alpha_bdp    = iBdp[fmt.AID] / 255.f;
-        ufloat alpha_src    = ( iSrc[fmt.AID] / 255.f ) * info.opacityValue;
-        ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
-        ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-        ufloat alpha_result;
-        ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
-
-        Vec4f src_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iSrc ) ) ) ) ) / 255.f );
-        Vec4f bdp_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f );
-        src_chan.insert( 3, 0.f );
-        bdp_chan.insert( 3, 0.f );
-        Vec4f res_chan;
-        #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_chan = NonSeparableCompOpSSEF< _BM >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
-        ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
-        #undef TMP_ASSIGN
-
-        res_chan = lookup4( iIDT, res_chan );
-        auto _pack = _mm_cvtps_epi32( res_chan );
-        _pack = _mm_packus_epi32( _pack, _pack );
-        _pack = _mm_packus_epi16( _pack, _pack );
-        *( uint32* )iBdp = static_cast< uint32 >( _mm_cvtsi128_si32( _pack ) );
-        *( iBdp + fmt.AID ) = uint8( alpha_result * 0xFF );
-        iSrc += 4;
-        iBdp += 4;
+    const uint8*        src     = iSrc;
+    uint8*              bdp     = iBdp;
+    const __m128i FF = _mm_set1_epi16( 0xFF );
+    for( int x = 0; x < info.backdropWorkingRect.w; x+=2 ) {
+        const uint8 alpha_bdp0 = bdp[fmt.AID];
+        const uint8 alpha_bdp1 = bdp[fmt.AID + 4];
+        const uint8 alpha_src0 = static_cast< uint8 >( src[fmt.AID] * info.opacityValue );
+        const uint8 alpha_src1 = static_cast< uint8 >( src[fmt.AID + 4] * info.opacityValue );
+        const uint8 alpha_result0 = static_cast< uint8 >( ( alpha_src0 + alpha_bdp0 ) - ConvType< uint16, uint8 >( alpha_src0 * alpha_bdp0 ) );
+        const uint8 alpha_result1 = static_cast< uint8 >( ( alpha_src1 + alpha_bdp1 ) - ConvType< uint16, uint8 >( alpha_src1 * alpha_bdp1 ) );
+        const uint8 var0 = alpha_result0 == 0 ? 0 : ( alpha_src0 * 0xFF ) / alpha_result0;
+        const uint8 var1 = alpha_result1 == 0 ? 0 : ( alpha_src1 * 0xFF ) / alpha_result1;
+        const __m128i var = _mm_set_epi16( var0, var0, var0, var0, var1, var1, var1, var1 );
+        const __m128i alpha_bdp = _mm_set_epi16( alpha_bdp0, alpha_bdp0, alpha_bdp0, alpha_bdp0, alpha_bdp1, alpha_bdp1, alpha_bdp1, alpha_bdp1 );
+        const __m128i src_chan = _mm_cvtepu8_epi16( _mm_loadu_si128( reinterpret_cast< const __m128i* >( src ) ) );
+        const __m128i bdp_chan = _mm_cvtepu8_epi16( _mm_loadu_si128( reinterpret_cast< const __m128i* >( bdp ) ) );
+        __m128i termA = Downscale( _mm_mullo_epi16( _mm_sub_epi16( FF, var ), bdp_chan ) );
+        __m128i termB = Downscale( _mm_mullo_epi16( alpha_bdp, src_chan ) );
+        __m128i termC = Downscale( _mm_mullo_epi16( _mm_sub_epi16( FF, alpha_bdp ), src_chan ) );
+        __m128i termD = _mm_add_epi16( termB, termC );
+        __m128i termE = Downscale( _mm_mullo_epi16( var, termD ) );
+        __m128i termF = _mm_add_epi16( termA, termE );
+        __m128i pack = _mm_packus_epi16( termF, termF );
+        *( reinterpret_cast< int64* >( bdp ) )= _mm_cvtsi128_si64( pack );
+        bdp[fmt.AID] = static_cast< uint8 >( alpha_result0 );
+        bdp[fmt.AID + 4] = static_cast< uint8 >( alpha_result1 );
+        src += 8;
+        bdp += 8;
     }
 }
 
 void
-BlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
+AlphaBlendMT_Separable_SSE_RGBA8(
+    std::shared_ptr< const FBlendArgs > iInfo
+)
+{
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
@@ -166,14 +176,12 @@ BlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
     const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    Vec4i idt;
-    BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
-                                , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8
+                                , InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8
                                 , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
                                 , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                , pLINE , iInfo, idt );
+                                , pLINE , iInfo );
 }
 
 ULIS_NAMESPACE_END

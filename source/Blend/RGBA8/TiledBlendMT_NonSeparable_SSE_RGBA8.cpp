@@ -5,15 +5,14 @@
 *   ULIS
 *__________________
 *
-* @file         TiledBlendMT_NonSeparable_SSE_RGBA8.ipp
+* @file         TiledBlendMT_NonSeparable_SSE_RGBA8.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the implementation for a Blend specialization as described in the title.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Core/Core.h"
-#include "Blend/BlendArgs.h"
+#include "Blend/RGBA8/TiledBlendMT_NonSeparable_SSE_RGBA8.h"
 #include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.h"
@@ -26,8 +25,30 @@
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
+ULIS_FORCEINLINE
 void
-InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo, const Vec4i iIDT ) {
+BuildRGBA8IndexTable(
+      uint8 iRS
+    , Vec4i* oIDT
+)
+{
+    switch( iRS ) {
+        case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
+        case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); break;
+        case 3:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); break;
+        default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); break;
+    }
+}
+
+void
+InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
+      const uint8* iSrc
+    , uint8* iBdp
+    , int32 iLine
+    , std::shared_ptr< const FBlendArgs > iInfo
+    , const Vec4i iIDT
+)
+{
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
@@ -64,7 +85,10 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8( const uint8* iSrc, uin
 }
 
 void
-TiledBlendMT_NonSeparable_SSE_RGBA8( std::shared_ptr< const FBlendArgs > iInfo ) {
+TiledBlendMT_NonSeparable_SSE_RGBA8(
+    std::shared_ptr< const FBlendArgs > iInfo
+)
+{
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
