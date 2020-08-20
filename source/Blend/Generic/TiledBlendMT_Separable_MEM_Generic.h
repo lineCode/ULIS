@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         TiledBlendMT_Separable_MEM_Generic.ipp
+* @file         TiledBlendMT_Separable_MEM_Generic.h
 * @author       Clement Berthaud
 * @brief        This file provides the implementation for a Blend specialization as described in the title.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

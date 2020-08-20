@@ -18,13 +18,13 @@
 #include "Dispatch/Dispatch.h"
 
 // Include MEM Generic Implementation
-#include "Blend/Generic/BlendMT_Separable_MEM_Generic.ipp"
-#include "Blend/Generic/BlendMT_NonSeparable_MEM_Generic.ipp"
-#include "Blend/Generic/BlendMT_Misc_MEM_Generic.ipp"
-#include "Blend/Generic/AlphaBlendMT_MEM_Generic.ipp"
-#include "Blend/Generic/TiledBlendMT_Separable_MEM_Generic.ipp"
-#include "Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.ipp"
-#include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.ipp"
+#include "Blend/Generic/BlendMT_Separable_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_NonSeparable_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_Misc_MEM_Generic.h"
+#include "Blend/Generic/AlphaBlendMT_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_Separable_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
 
 // Include SSE RGBA8 Implementation
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
