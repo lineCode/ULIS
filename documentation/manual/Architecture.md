@@ -1,10 +1,14 @@
 # Architecture
 ULIS architecture and design principles, *Clément Berthaud*, 2020
 
+---
+
 ## Introduction
 The architecture of ULIS does not differ fundamentally from other existing traditional graphic libraries, however it pursues its own philosophy and design principles, which leads to its ease of use and efficiency. We discuss here what choices led to the current design, and try to explain them. Other libraries are mentioned and sometimes compared with, with their respective drawbacks and advantages, assuming the usage context ULIS targets, which is explained in details later.
 
 In ["An Image Processing Library in Modern C++"](https://hal.archives-ouvertes.fr/hal-02176414/document), *Michaël Roynard*, *Edwin Carlinet* and *Thierry Géraud* provide insight to achieve simplicity and efficiency with generic programming, in the context of an image processing library in modern C++. While I don't agree with everything stated here, and although this resource was encountered after the architecture of ULIS4+ was designed, I recommend reading it, since it is relevant to the topic, and it describes common pitfalls ULIS encountered in the early stages of its design. Some principles discussed in the paper will also be discussed here.
+
+---
 
 ## Table of Contents
 - [0) Overview](@ref r0)
@@ -12,6 +16,7 @@ In ["An Image Processing Library in Modern C++"](https://hal.archives-ouvertes.f
     + [0.1) Means](@ref r0-1)
     + [0.2) Audience](@ref r0-2)
     + [0.3) Purpose](@ref r0-3)
+    + [0.4) Summary](@ref r0-4)
 - [1) Implementation](@ref r1)
     + [1.0) Problems](@ref r1-0)
     + [1.1) Propositions](@ref r1-1)
@@ -21,6 +26,8 @@ In ["An Image Processing Library in Modern C++"](https://hal.archives-ouvertes.f
     + [1.2) Solution](@ref r1-2)
         - [1.2.0) Concepts](@ref r1-2-0)
         - [1.2.1) Details](@ref r1-2-1)
+
+---
 
 ## 0) Overview {#r0}
 First, a global view of the range of topics covered by ULIS, its goals and philosophy.
@@ -110,6 +117,14 @@ Of course we are making a number of bold claims here, and the implementation has
 
 To account for the imperfect nature of ULIS, some low level elements, the pipes, gears and porcelain that are usually hidden behind the curtain, are made available through dedicated functions, such as retrieving the raw pointer to a memory buffer containing an image, in order to allow inter-operability with any other framework you choose to use in combination to overcome these issues. Of course that defeats the purpose of ULIS in the first place if you have to use a combination of imaging libraries, but sometimes it's also handy to operate with the GPU or pass data to a GUI library for example.
 
+### 0.4) Summary {#r0-4}
+ULIS is a rendering library written in modern C++ with available bindings for other languages such as Python,  
+It is aimed at applications offering interactive image or video edition capabilities, for the industries of Animation, Films, VFX, Illustration, Printing, etc.  
+ULIS aggregates other libraries to handle text or color managed pipelines.  
+It appeals to software developpers willing to smooth the process the development of an image processing application, and tries to deliver professional quality components.  
+ULIS was born to fill what feels like a gap in the other available imaging libraries, but is able to inter operate and work hand to hand with them too.
+
+---
 
 ## 1) Implementation {#r1}
 A review over the implementation principles, guidelines and tools involved in ULIS.
