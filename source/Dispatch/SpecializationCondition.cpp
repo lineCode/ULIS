@@ -16,12 +16,12 @@
 #include "Image/Format.h"
 
 ULIS_NAMESPACE_BEGIN
-bool DispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) {
-    return  ( iFormatInfo.FMT & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBA8;
+bool DispatchTestIsUnorderedRGBA8( eFormat iFormat ) {
+    return  ( iFormat & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBA8;
 }
 
-bool DispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) {
-    return  ( iFormatInfo.FMT & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBAF;
+bool DispatchTestIsUnorderedRGBAF( eFormat iFormat ) {
+    return  ( iFormat & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBAF;
 }
 
 ULIS_NAMESPACE_END

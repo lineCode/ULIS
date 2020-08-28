@@ -20,9 +20,9 @@ ULIS_NAMESPACE_BEGIN
 template< typename IMP >
 class TDispatcher {
 public:
-    static ULIS_FORCEINLINE typename IMP::fpQuery Query( const FDevice& iDevice, const FFormat& iFormatInfo ) {
+    static ULIS_FORCEINLINE typename IMP::fpQuery Query( const FDevice& iDevice, eFormat iFormat ) {
         for( int i = 0; i < IMP::spec_size; ++i ) {
-            if( IMP::spec_table[i].select_cond( iFormatInfo ) ) {
+            if( IMP::spec_table[i].select_cond( iFormat ) ) {
                 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
                     if( iDevice.HasHardwareAVX2() )
                         return  IMP::spec_table[i].select_AVX;
@@ -37,8 +37,8 @@ public:
             }
         }
 
-        #define TMP_CALL( _TYPE_ID, _E0, _E2, _E3 ) return  QueryGeneric< _E0 >( iDevice, iFormatInfo );
-        ULIS_SWITCH_FOR_ALL_DO( iFormatInfo.TP, ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+        #define TMP_CALL( _TYPE_ID, _E0, _E2, _E3 ) return  QueryGeneric< _E0 >( iDevice, iFormat );
+        ULIS_SWITCH_FOR_ALL_DO( iFormat.TP, ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
         #undef TMP_CALL
 
         ULIS_ASSERT( false, "No Dispatch found." );
@@ -47,7 +47,7 @@ public:
 
 private:
     template< typename T >
-    static ULIS_FORCEINLINE typename IMP::fpQuery QueryGeneric( const FDevice& iDevice, const FFormat& iFormatInfo ) {
+    static ULIS_FORCEINLINE typename IMP::fpQuery QueryGeneric( const FDevice& iDevice, eFormat iFormat ) {
         #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
             if( iDevice.HasHardwareAVX2() )
                 return  IMP:: template TGenericDispatchGroup< T >::select_AVX_Generic;

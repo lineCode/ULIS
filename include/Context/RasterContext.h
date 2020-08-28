@@ -39,10 +39,12 @@ public:
     ~FRasterContext();
 
     /*! Constructor */
-    FRasterContext();
+    FRasterContext( const FDevice& iDevice, eFormat iFormat );
 
 private:
     FContextualDispatchTable* mContextualDispatchTable;
+    const FDevice& mDevice;
+    eFormat mFormat;
 };
 
 ULIS_NAMESPACE_END

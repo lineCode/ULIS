@@ -13,22 +13,29 @@
 */
 #pragma once
 #include "Context/RasterContext.h"
+#include "Blend/BlendDispatch.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FRasterContext::FContextualDispatchTable
 struct FRasterContext::FContextualDispatchTable
 {
+    friend class FRasterContext;
+
 public:
     /*! Constructor */
-    FContextualDispatchTable()
-    {}
+    FContextualDispatchTable( const FDevice& iDevice, eFormat iFormat )
+        : mScheduleBlendSeparable( TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >::Query( iDevice, iFormat ) )
+    {
+        ULIS_ASSERT( mScheduleBlendSeparable, "Bad bad bad !" );
+    }
 
     /*! Destructor */
     ~FContextualDispatchTable()
     {}
 
-public:
+private:
+    fpBlendInvocationScheduler mScheduleBlendSeparable;
 };
 
 /////////////////////////////////////////////////////
@@ -38,10 +45,12 @@ FRasterContext::~FRasterContext()
     delete  mContextualDispatchTable;
 }
 
-FRasterContext::FRasterContext()
+FRasterContext::FRasterContext( const FDevice& iDevice, eFormat iFormat )
     : mContextualDispatchTable( nullptr )
+    , mDevice( iDevice )
+    , mFormat( iFormat )
 {
-    mContextualDispatchTable = new  FContextualDispatchTable();
+    mContextualDispatchTable = new  FContextualDispatchTable( iDevice, iFormat );
 }
 
 ULIS_NAMESPACE_END

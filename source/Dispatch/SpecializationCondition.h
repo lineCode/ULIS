@@ -15,9 +15,9 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
-typedef bool (*fpCond)( const FFormat& iFormatInfo );
-bool DispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo );
-bool DispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo );
+typedef bool (*fpCond)( eFormat );
+bool DispatchTestIsUnorderedRGBA8( eFormat iFormat );
+bool DispatchTestIsUnorderedRGBAF( eFormat iFormat );
 
 ULIS_NAMESPACE_END
 
