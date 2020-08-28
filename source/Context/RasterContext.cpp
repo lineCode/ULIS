@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Context/RasterContext.h"
-#include "Blend/BlendDispatch.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -30,7 +29,6 @@ public:
     {}
 
 public:
-    fpBlendInvocationScheduler  mScheduleBlendSeparable;
 };
 
 /////////////////////////////////////////////////////
@@ -45,5 +43,6 @@ FRasterContext::FRasterContext()
 {
     mContextualDispatchTable = new  FContextualDispatchTable();
 }
+
 ULIS_NAMESPACE_END
 
