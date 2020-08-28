@@ -83,31 +83,30 @@ private:
 #define ULIS_DISPATCH_SELECT_GENMEM( TAG, MEM )                                                                         \
     template< typename T > const typename TAG::fpQuery TAG::TGenericDispatchGroup< T >::select_MEM_Generic = MEM;
 
-#define ULIS_BEGIN_DISPATCHER( TAG, FPT, EXT, GENAVX, GENSSE, GENMEM )  \
-struct TAG {                                                            \
-    typedef FPT fpQuery;                                                \
-    typedef EXT tExtra;                                                 \
-    struct FSpecDispatchGroup {                                         \
-        const fpCond    select_cond;                                    \
-        const fpQuery  select_AVX;                                      \
-        const fpQuery  select_SSE;                                      \
-        const fpQuery  select_MEM;                                      \
-    };                                                                  \
-    static const FSpecDispatchGroup spec_table[];                       \
-    static const int spec_size;                                         \
-    template< typename T >                                              \
-    struct TGenericDispatchGroup {                                      \
-        static const fpQuery select_AVX_Generic;                        \
-        static const fpQuery select_SSE_Generic;                        \
-        static const fpQuery select_MEM_Generic;                        \
-    };                                                                  \
-};                                                                      \
-ULIS_DISPATCH_SELECT_GENAVX( TAG, GENAVX );                             \
-ULIS_DISPATCH_SELECT_GENSSE( TAG, GENSSE );                             \
-ULIS_DISPATCH_SELECT_GENMEM( TAG, GENMEM );                             \
+#define ULIS_BEGIN_DISPATCHER( TAG, FPT, GENAVX, GENSSE, GENMEM )   \
+struct TAG {                                                        \
+    typedef FPT fpQuery;                                            \
+    struct FSpecDispatchGroup {                                     \
+        const fpCond    select_cond;                                \
+        const fpQuery  select_AVX;                                  \
+        const fpQuery  select_SSE;                                  \
+        const fpQuery  select_MEM;                                  \
+    };                                                              \
+    static const FSpecDispatchGroup spec_table[];                   \
+    static const int spec_size;                                     \
+    template< typename T >                                          \
+    struct TGenericDispatchGroup {                                  \
+        static const fpQuery select_AVX_Generic;                    \
+        static const fpQuery select_SSE_Generic;                    \
+        static const fpQuery select_MEM_Generic;                    \
+    };                                                              \
+};                                                                  \
+ULIS_DISPATCH_SELECT_GENAVX( TAG, GENAVX );                         \
+ULIS_DISPATCH_SELECT_GENSSE( TAG, GENSSE );                         \
+ULIS_DISPATCH_SELECT_GENMEM( TAG, GENMEM );                         \
 const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
-#define ULIS_BEGIN_DISPATCHER_GENERIC( TAG, FPT, EXT, GENMEM )  ULIS_BEGIN_DISPATCHER( TAG, FPT, EXT, GENMEM, GENMEM, GENMEM )
+#define ULIS_BEGIN_DISPATCHER_GENERIC( TAG, FPT, GENMEM )  ULIS_BEGIN_DISPATCHER( TAG, FPT, GENMEM, GENMEM, GENMEM )
 
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
