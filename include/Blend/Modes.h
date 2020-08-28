@@ -173,7 +173,7 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
 
 /////////////////////////////////////////////////////
 // Macros
-#define ULIS_FOR_ALL_SEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )  \
+#define ULIS_FOR_ALL_SEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )   \
     X( BM_NORMAL            , _E0, _E1, _E2, _E3 )              \
     X( BM_TOP               , _E0, _E1, _E2, _E3 )              \
     X( BM_BACK              , _E0, _E1, _E2, _E3 )              \
@@ -204,7 +204,7 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( BM_AVERAGE           , _E0, _E1, _E2, _E3 )              \
     X( BM_NEGATION          , _E0, _E1, _E2, _E3 )
 
-#define ULIS_FOR_ALL_NONSEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )   \
+#define ULIS_FOR_ALL_NONSEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )    \
     X( BM_DARKERCOLOR       , _E0, _E1, _E2, _E3 )                  \
     X( BM_LIGHTERCOLOR      , _E0, _E1, _E2, _E3 )                  \
     X( BM_HUE               , _E0, _E1, _E2, _E3 )                  \
@@ -215,16 +215,16 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( BM_WHITEOUT          , _E0, _E1, _E2, _E3 )                  \
     X( BM_ANGLECORRECTED    , _E0, _E1, _E2, _E3 )
 
-#define ULIS_FOR_ALL_MISC_BM_DO( X, _E0, _E1, _E2, _E3 )   \
+#define ULIS_FOR_ALL_MISC_BM_DO( X, _E0, _E1, _E2, _E3 )    \
     X( BM_DISSOLVE          , _E0, _E1, _E2, _E3 )          \
     X( BM_BAYERDITHER8x8    , _E0, _E1, _E2, _E3 )
 
-#define ULIS_FOR_ALL_BM_DO( X, _E0, _E1, _E2, _E3 )            \
-    ULIS_FOR_ALL_SEPARABLE_BM_DO(      X, _E0, _E1, _E2, _E3 ) \
-    ULIS_FOR_ALL_NONSEPARABLE_BM_DO(   X, _E0, _E1, _E2, _E3 ) \
+#define ULIS_FOR_ALL_BM_DO( X, _E0, _E1, _E2, _E3 )             \
+    ULIS_FOR_ALL_SEPARABLE_BM_DO(      X, _E0, _E1, _E2, _E3 )  \
+    ULIS_FOR_ALL_NONSEPARABLE_BM_DO(   X, _E0, _E1, _E2, _E3 )  \
     ULIS_FOR_ALL_MISC_BM_DO(           X, _E0, _E1, _E2, _E3 )
 
-#define ULIS_FOR_ALL_AM_DO( X, _E0, _E1, _E2, _E3 )    \
+#define ULIS_FOR_ALL_AM_DO( X, _E0, _E1, _E2, _E3 )     \
     X( AM_NORMAL        , _E0, _E1, _E2, _E3 )          \
     X( AM_ERASE         , _E0, _E1, _E2, _E3 )          \
     X( AM_TOP           , _E0, _E1, _E2, _E3 )          \

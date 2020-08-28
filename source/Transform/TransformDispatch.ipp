@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Transform/Methods.h"
 #include "Transform/TransformArgs.h"
-#include "Dispatch/Dispatch.h"
+#include "Dispatch/OldDispatch.h"
 
 // Include MEM Generic Implementation
 #include "Transform/Generic/ResizeMT_NN_MEM_Generic.ipp"
