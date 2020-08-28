@@ -98,7 +98,7 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
 }
 
 void
-BlendMT_Separable_SSE_RGBA8_Subpixel(
+ScheduleBlendMT_Separable_SSE_RGBA8_Subpixel(
     std::shared_ptr< const FBlendArgs > iInfo
 )
 {
@@ -158,7 +158,7 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8(
 }
 
 void
-BlendMT_Separable_SSE_RGBA8(
+ScheduleBlendMT_Separable_SSE_RGBA8(
     std::shared_ptr< const FBlendArgs > iInfo
 )
 {

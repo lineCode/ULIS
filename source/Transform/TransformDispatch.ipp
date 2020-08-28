@@ -192,33 +192,33 @@ ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpResizeInvocation, SelectResizeInvocati
 
 /////////////////////////////////////////////////////
 // TransformAffine Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC( FTransformAffineInvocationSelector, fpTransformInvocation, FTransformArgs, &SelectTransformAffineInvocationMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectTransformAffineInvocationSSERGBA8, &SelectTransformAffineInvocationSSERGBA8, &SelectTransformAffineInvocationMEMRGBA8 )
-ULIS_END_DISPATCHER( FTransformAffineInvocationSelector )
+ULIS_BEGIN_OLDDISPATCHER_GENERIC( FTransformAffineInvocationSelector, fpTransformInvocation, FTransformArgs, &SelectTransformAffineInvocationMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectTransformAffineInvocationSSERGBA8, &SelectTransformAffineInvocationSSERGBA8, &SelectTransformAffineInvocationMEMRGBA8 )
+ULIS_END_OLDDISPATCHER( FTransformAffineInvocationSelector )
 
 /////////////////////////////////////////////////////
 // TransformAffineTiled Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC( FTransformAffineTiledInvocationSelector, fpTransformInvocation, FTransformArgs, &SelectTransformAffineTiledInvocationMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectTransformAffineTiledInvocationSSERGBA8, &SelectTransformAffineTiledInvocationSSERGBA8, &SelectTransformAffineTiledInvocationMEMRGBA8 )
-ULIS_END_DISPATCHER( FTransformAffineTiledInvocationSelector )
+ULIS_BEGIN_OLDDISPATCHER_GENERIC( FTransformAffineTiledInvocationSelector, fpTransformInvocation, FTransformArgs, &SelectTransformAffineTiledInvocationMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectTransformAffineTiledInvocationSSERGBA8, &SelectTransformAffineTiledInvocationSSERGBA8, &SelectTransformAffineTiledInvocationMEMRGBA8 )
+ULIS_END_OLDDISPATCHER( FTransformAffineTiledInvocationSelector )
 
 /////////////////////////////////////////////////////
 // TransformPerspective Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC( FTransformPerspectiveInvocationSelector, fpTransformInvocation, FTransformArgs, &SelectTransformPerspectiveInvocationMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectTransformPerspectiveInvocationSSERGBA8, &SelectTransformPerspectiveInvocationSSERGBA8, &SelectTransformPerspectiveInvocationMEMRGBA8 )
-ULIS_END_DISPATCHER( FTransformPerspectiveInvocationSelector )
+ULIS_BEGIN_OLDDISPATCHER_GENERIC( FTransformPerspectiveInvocationSelector, fpTransformInvocation, FTransformArgs, &SelectTransformPerspectiveInvocationMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectTransformPerspectiveInvocationSSERGBA8, &SelectTransformPerspectiveInvocationSSERGBA8, &SelectTransformPerspectiveInvocationMEMRGBA8 )
+ULIS_END_OLDDISPATCHER( FTransformPerspectiveInvocationSelector )
 
 /////////////////////////////////////////////////////
 // TransformBezier Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC( FTransformBezierInvocationSelector, fpBezierTransformInvocation, FTransformArgs, &SelectTransformBezierInvocationMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectTransformBezierInvocationSSERGBA8, &SelectTransformBezierInvocationSSERGBA8, &SelectTransformBezierInvocationMEMRGBA8 )
-ULIS_END_DISPATCHER( FTransformBezierInvocationSelector )
+ULIS_BEGIN_OLDDISPATCHER_GENERIC( FTransformBezierInvocationSelector, fpBezierTransformInvocation, FTransformArgs, &SelectTransformBezierInvocationMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectTransformBezierInvocationSSERGBA8, &SelectTransformBezierInvocationSSERGBA8, &SelectTransformBezierInvocationMEMRGBA8 )
+ULIS_END_OLDDISPATCHER( FTransformBezierInvocationSelector )
 
 /////////////////////////////////////////////////////
 // Resize Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC( FResizeInvocationSelector, fpResizeInvocation, FResizeArgs, &SelectResizeInvocationMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectResizeInvocationSSERGBA8, &SelectResizeInvocationSSERGBA8, &SelectResizeInvocationMEMRGBA8 )
-ULIS_END_DISPATCHER( FResizeInvocationSelector )
+ULIS_BEGIN_OLDDISPATCHER_GENERIC( FResizeInvocationSelector, fpResizeInvocation, FResizeArgs, &SelectResizeInvocationMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectResizeInvocationSSERGBA8, &SelectResizeInvocationSSERGBA8, &SelectResizeInvocationMEMRGBA8 )
+ULIS_END_OLDDISPATCHER( FResizeInvocationSelector )
 
 ULIS_NAMESPACE_END
 

@@ -51,9 +51,9 @@ void InvokeXRGBAFMEM2( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBAFMEM2 call
 
 /////////////////////////////////////////////////////
 // Table
-static ULIS_FORCEINLINE bool DispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) { return  ( iFormatInfo.TP == TYPE_UINT8 ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB ); }
-static ULIS_FORCEINLINE bool DispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) { return  ( iFormatInfo.TP == TYPE_UFLOAT ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB ); }
-typedef bool (*fpCond)( const FFormat& iFormatInfo );
+static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) { return  ( iFormatInfo.TP == TYPE_UINT8 ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB ); }
+static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) { return  ( iFormatInfo.TP == TYPE_UFLOAT ) && ( iFormatInfo.HEA ) && ( iFormatInfo.NCC == 3 ) && ( iFormatInfo.CM == CM_RGB ); }
+typedef bool (*fpOldCond)( const FFormat& iFormatInfo );
 
 /*
 template< typename F, typename T, typename E >
@@ -69,7 +69,7 @@ struct TMultiDispatchTable {
 /////////////////////////////////////////////////////
 // Dispatcher
 template< typename D >
-class TDispatcher {
+class TOldDispatcher {
 public:
     static ULIS_FORCEINLINE typename D::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename D::tExtra& iExtra ) {
         for( int i = 0; i < D::spec_size; ++i ) {
@@ -124,23 +124,23 @@ private:
 #endif
 
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-    #define ULIS_DISPATCH_SELECT_GENSSE( TAG, SSE )                                                                    \
+    #define ULIS_OLDDISPATCH_SELECT_GENSSE( TAG, SSE )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_SSE_Generic = SSE;
 #else
     #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_SSE_Generic = nullptr;
 #endif
 
-#define ULIS_DISPATCH_SELECT_GENMEM( TAG, MEM )                                                                        \
+#define ULIS_OLDDISPATCH_SELECT_GENMEM( TAG, MEM )                                                                        \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_MEM_Generic = MEM;
 
-#define ULIS_BEGIN_DISPATCHER( TAG, FPT, EXT, GENAVX, GENSSE, GENMEM ) \
+#define ULIS_BEGIN_OLDDISPATCHER( TAG, FPT, EXT, GENAVX, GENSSE, GENMEM ) \
 struct TAG {                                                            \
     typedef FPT fpQuery;                                                \
     typedef EXT tExtra;                                                 \
     typedef fpQuery(*fpSelect)( const tExtra& );                        \
     struct FSpecDispatchGroup {                                         \
-        const fpCond    select_cond;                                    \
+        const fpOldCond    select_cond;                                    \
         const fpSelect  select_AVX;                                     \
         const fpSelect  select_SSE;                                     \
         const fpSelect  select_MEM;                                     \
@@ -155,25 +155,25 @@ struct TAG {                                                            \
     };                                                                  \
 };                                                                      \
 ULIS_DISPATCH_SELECT_GENAVX( TAG, GENAVX );                            \
-ULIS_DISPATCH_SELECT_GENSSE( TAG, GENSSE );                            \
-ULIS_DISPATCH_SELECT_GENMEM( TAG, GENMEM );                            \
+ULIS_OLDDISPATCH_SELECT_GENSSE( TAG, GENSSE );                            \
+ULIS_OLDDISPATCH_SELECT_GENMEM( TAG, GENMEM );                            \
 const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, _AVX, _SSE, _MEM },
+        #define ULIS_DECL_OLDDISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, _AVX, _SSE, _MEM },
     #else
-        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
+        #define ULIS_DECL_OLDDISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
     #endif
 #else
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
+        #define ULIS_DECL_OLDDISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
     #else
-        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, _MEM },
+        #define ULIS_DECL_OLDDISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, _MEM },
     #endif
 #endif
 
-#define ULIS_END_DISPATCHER( TAG )                                                                             \
+#define ULIS_END_OLDDISPATCHER( TAG )                                                                             \
     { nullptr, nullptr, nullptr, nullptr }                                                                      \
 };                                                                                                              \
 const int TAG::spec_size = sizeof( TAG::spec_table ) / sizeof( TAG::FSpecDispatchGroup ) - 1;
@@ -199,10 +199,10 @@ IMP_DISPATCH_SELECT( SelectDispatchMEMRGBAF, &InvokeXRGBAFMEM0, &InvokeXRGBAFMEM
 IMP_DISPATCH_SELECT( SelectDispatchSSERGBAF, &InvokeXRGBAFSSE0, &InvokeXRGBAFSSE1, &InvokeXRGBAFSSE2 )
 IMP_DISPATCH_SELECT( SelectDispatchAVXRGBAF, &InvokeXRGBAFAVX0, &InvokeXRGBAFAVX1, &InvokeXRGBAFAVX2 )
 
-ULIS_BEGIN_DISPATCHER( FBlendDispatchTable, fpDispatchedXFunc, int, &SelectDispatchAVXGeneric< T >, &SelectDispatchSSEGeneric< T >, &SelectDispatchMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectDispatchAVXRGBA8, &SelectDispatchSSERGBA8, &SelectDispatchMEMRGBA8 )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBAF, &SelectDispatchAVXRGBAF, &SelectDispatchSSERGBAF, &SelectDispatchMEMRGBAF )
-ULIS_END_DISPATCHER( FBlendDispatchTable )
+ULIS_BEGIN_OLDDISPATCHER( FBlendDispatchTable, fpDispatchedXFunc, int, &SelectDispatchAVXGeneric< T >, &SelectDispatchSSEGeneric< T >, &SelectDispatchMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectDispatchAVXRGBA8, &SelectDispatchSSERGBA8, &SelectDispatchMEMRGBA8 )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBAF, &SelectDispatchAVXRGBAF, &SelectDispatchSSERGBAF, &SelectDispatchMEMRGBAF )
+ULIS_END_OLDDISPATCHER( FBlendDispatchTable )
 
 /////////////////////////////////////////////////////
 // Main
@@ -216,7 +216,7 @@ main() {
 
     int extra = 1;
 
-    fpDispatchedXFunc fptr = TDispatcher< FBlendDispatchTable >::Query( intent, host, format, extra );
+    fpDispatchedXFunc fptr = TOldDispatcher< FBlendDispatchTable >::Query( intent, host, format, extra );
     if( fptr )
         fptr();
 

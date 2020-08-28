@@ -86,7 +86,7 @@ void Blend( FThreadPool*            iThreadPool
     commandArgsRef.backdropWorkingRect  = dst_fit;
 
     // Query dispatched method
-    fpBlendInvocation dispatchedInvocation = TDispatcher< FBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    fpBlendInvocation dispatchedInvocation = TOldDispatcher< FBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
     dispatchedInvocation( commandArgs );
 
     // Invalid
@@ -157,7 +157,7 @@ void AlphaBlend( FThreadPool*           iThreadPool
     commandArgsRef.backdropWorkingRect  = dst_fit;
 
     // Query dispatched method
-    fpBlendInvocation dispatchedInvocation = TDispatcher< FAlphaBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    fpBlendInvocation dispatchedInvocation = TOldDispatcher< FAlphaBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
     dispatchedInvocation( commandArgs );
 
     // Invalid
@@ -231,7 +231,7 @@ void BlendTiled( FThreadPool*               iThreadPool
     commandArgsRef.backdropWorkingRect  = dst_roi;
 
     // Query dispatched method
-    fpBlendInvocation dispatchedInvocation = TDispatcher< FTiledBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    fpBlendInvocation dispatchedInvocation = TOldDispatcher< FTiledBlendInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
     dispatchedInvocation( commandArgs );
 
     // Invalid

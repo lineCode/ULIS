@@ -70,7 +70,7 @@ void TransformAffine( FThreadPool*              iThreadPool
     commandArgsRef.inverseTransform = iTransform.InverseMatrix();
 
     // Query dispatched method
-    fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformAffineInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    fpTransformInvocation dispatchedInvocation = TOldDispatcher< FTransformAffineInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
     dispatchedInvocation( commandArgs );
 
     // Invalid
@@ -121,7 +121,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     commandArgsRef.inverseTransform = iTransform.InverseMatrix();
 
     // Query dispatched method
-    fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformAffineTiledInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    fpTransformInvocation dispatchedInvocation = TOldDispatcher< FTransformAffineTiledInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
     dispatchedInvocation( commandArgs );
 
 
@@ -176,7 +176,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
     commandArgsRef.inverseTransform = iTransform.InverseMatrix();
 
     // Query dispatched method
-    fpTransformInvocation dispatchedInvocation = TDispatcher< FTransformPerspectiveInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    fpTransformInvocation dispatchedInvocation = TOldDispatcher< FTransformPerspectiveInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
     dispatchedInvocation( commandArgs );
 
     // Invalid
@@ -276,7 +276,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
     commandArgsRef.inverseTransform = FMat3F();
 
     // Query dispatched method
-    fpBezierTransformInvocation dispatchedInvocation = TDispatcher< FTransformBezierInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    fpBezierTransformInvocation dispatchedInvocation = TOldDispatcher< FTransformBezierInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
     dispatchedInvocation( commandArgs, field, mask );
 
 
@@ -351,7 +351,7 @@ void Resize( FThreadPool*             iThreadPool
     }
 
     // Query dispatched method
-    fpResizeInvocation dispatchedInvocation = TDispatcher< FResizeInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
+    fpResizeInvocation dispatchedInvocation = TOldDispatcher< FResizeInvocationSelector >::Query( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo(), commandArgsRef );
     dispatchedInvocation( commandArgs );
 
     // Invalid

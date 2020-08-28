@@ -129,38 +129,38 @@ ULIS_IMP_TILEDBLEND_INVOCATION_SELECTOR( SelectTiledBlendInvocationMEMRGBA8
 
 /////////////////////////////////////////////////////
 // Blend Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC( FBlendInvocationSelector, fpBlendInvocation, FBlendArgs, &SelectBlendInvocationMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectBlendInvocationAVXRGBA8, &SelectBlendInvocationSSERGBA8, &SelectBlendInvocationMEMRGBA8 )
-ULIS_END_DISPATCHER( FBlendInvocationSelector )
+ULIS_BEGIN_OLDDISPATCHER_GENERIC( FBlendInvocationSelector, fpBlendInvocation, FBlendArgs, &SelectBlendInvocationMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectBlendInvocationAVXRGBA8, &SelectBlendInvocationSSERGBA8, &SelectBlendInvocationMEMRGBA8 )
+ULIS_END_OLDDISPATCHER( FBlendInvocationSelector )
 
 /////////////////////////////////////////////////////
 // AlphaBlend Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC( FAlphaBlendInvocationSelector, fpBlendInvocation, FBlendArgs, &SelectAlphaBlendInvocationMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectAlphaBlendInvocationAVXRGBA8, &SelectAlphaBlendInvocationSSERGBA8, &SelectAlphaBlendInvocationMEMRGBA8 )
-ULIS_END_DISPATCHER( FAlphaBlendInvocationSelector )
+ULIS_BEGIN_OLDDISPATCHER_GENERIC( FAlphaBlendInvocationSelector, fpBlendInvocation, FBlendArgs, &SelectAlphaBlendInvocationMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectAlphaBlendInvocationAVXRGBA8, &SelectAlphaBlendInvocationSSERGBA8, &SelectAlphaBlendInvocationMEMRGBA8 )
+ULIS_END_OLDDISPATCHER( FAlphaBlendInvocationSelector )
 
 /////////////////////////////////////////////////////
 // TiledBlend Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC( FTiledBlendInvocationSelector, fpBlendInvocation, FBlendArgs, &SelectTiledBlendInvocationMEMGeneric< T > )
-    ULIS_DECL_DISPATCH_SPEC( &DispatchTestIsUnorderedRGBA8, &SelectTiledBlendInvocationAVXRGBA8, &SelectTiledBlendInvocationSSERGBA8, &SelectTiledBlendInvocationMEMRGBA8 )
-ULIS_END_DISPATCHER( FTiledBlendInvocationSelector )
+ULIS_BEGIN_OLDDISPATCHER_GENERIC( FTiledBlendInvocationSelector, fpBlendInvocation, FBlendArgs, &SelectTiledBlendInvocationMEMGeneric< T > )
+    ULIS_DECL_OLDDISPATCH_SPEC( &OldDispatchTestIsUnorderedRGBA8, &SelectTiledBlendInvocationAVXRGBA8, &SelectTiledBlendInvocationSSERGBA8, &SelectTiledBlendInvocationMEMRGBA8 )
+ULIS_END_OLDDISPATCHER( FTiledBlendInvocationSelector )
 
 // V2
 /////////////////////////////////////////////////////
 // Blend Dispatcher
-ULIS_BEGIN_DISPATCHER_GENERIC(
+ULIS_BEGIN_OLDDISPATCHER_GENERIC(
       FDispatchedBlendSeparableInvocationSchedulerSelector
     , fpBlendInvocationScheduler
     , FBlendArgs
-    , &BlendMT_Separable_MEM_Generic< T >
+    , &ScheduleBlendMT_Separable_MEM_Generic< T >
 )
-    ULIS_DECL_DISPATCH_SPEC(
-          &DispatchTestIsUnorderedRGBA8
+    ULIS_DECL_OLDDISPATCH_SPEC(
+          &OldDispatchTestIsUnorderedRGBA8
         , &ScheduleBlendMT_Separable_AVX_RGBA8
         , &ScheduleBlendMT_Separable_SSE_RGBA8
         , &ScheduleBlendMT_Separable_MEM_Generic< uint8 >
     )
-ULIS_END_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector )
+ULIS_END_OLDDISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 
