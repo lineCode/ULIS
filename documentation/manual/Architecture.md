@@ -130,6 +130,23 @@ To account for the imperfect nature of ULIS, some low level elements, the pipes,
 A review over the implementation principles, guidelines and tools involved in ULIS.
 
 ### 1.0) Problems {#r1-0}
+After making these claims about the nature of ULIS, let's see in details what it is trying to solve, why these problems are hard to solve and required designing such an architecture in the first place. The essence of the problems is manyfold: ULIS aims to be usable as an image library, that:
+- covers a wide range of features
+- is highly efficient and competitive
+- offers generic tools and little constraint
+- offers an API that feels smooth and easy to learn
+
+Very often, these concepts work against one another, or privileging a concept over another one brings unbalanced architectures which will not satisfy all requirements. For example, offering competitive performance might come at the cost of a more complex API in order to fine tune the performances intents based on the context in the first place. Performing caching of redundant calculations is sometimes usefull, but might prove inefficient if it ends up bloating the memory. Covering a wide range of features can be a hassle because it requires lots of code to maintain. Using generic programming prevents the programmer from making blunt assumptions, and the genericity introduces some amount of overhead where shortcuts could be used. Generic programming makes it difficult to introduce performance improvments using SIMD extension, as the level of abstraction makes the task absurdely difficult and error prone.
+
+Another aspect of these problems, is wether the mechanisms involved to solve them involve run-time decision making, or compile-time decision making. This is not trivial, and to some extent both cases are often needed, as run-time decision making introduces overhead at runtime, and compile-time decision making might slow down compilation time or simply output huge binaries size, which is unacceptable.
+
+A way to alleviate these issues is to consider the following ideas at the core of the designing process:
+- Performance is driven by context, so the architecture design should allow the programmer to focus its decision making on the context, not the detail of the implementation.
+- Decision making is driven by the set of available concepts, ULIS offers such as classes involved to solve image related problems. These should be simple and few.
+- Segmentation of the functional properties of these objects should be clear and unambiguous.
+- More features require more code, there is no way around that and it will take effort. However standardizing the segmentation of the underlying implementations should allow better code reuse, browsing, and overall maintenance.
+
+The core idea here is that ULIS should provide well thought concepts to make context the core and emphasis of every situation where ULIS is used. Various concepts propositions are presented, and it should be noted that over the course of its evolution, different solutions were adopted by ULIS. The concepts were not invented first, then proceeding to the implementation. It is the requirements of the implementation, and the worry of its efficiency, that led to the invention of these concepts.
 
 ### 1.1) Propositions {#r1-1}
 
