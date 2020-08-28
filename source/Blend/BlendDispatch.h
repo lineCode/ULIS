@@ -16,6 +16,7 @@
 #include "Blend/Modes.h"
 #include "Blend/BlendArgs.h"
 #include "Dispatch/Dispatch.h"
+#include "Dispatch/Dispatcher.h"
 
 // Include MEM Generic Implementation
 #include "Blend/Generic/BlendMT_Separable_MEM_Generic.h"
@@ -148,19 +149,18 @@ ULIS_END_OLDDISPATCHER( FTiledBlendInvocationSelector )
 // V2
 /////////////////////////////////////////////////////
 // Blend Dispatcher
-ULIS_BEGIN_OLDDISPATCHER_GENERIC(
+ULIS_BEGIN_DISPATCHER_GENERIC(
       FDispatchedBlendSeparableInvocationSchedulerSelector
     , fpBlendInvocationScheduler
-    , FBlendArgs
     , &ScheduleBlendMT_Separable_MEM_Generic< T >
 )
-    ULIS_DECL_OLDDISPATCH_SPEC(
+    ULIS_DECL_DISPATCH_SPEC(
           &OldDispatchTestIsUnorderedRGBA8
         , &ScheduleBlendMT_Separable_AVX_RGBA8
         , &ScheduleBlendMT_Separable_SSE_RGBA8
         , &ScheduleBlendMT_Separable_MEM_Generic< uint8 >
     )
-ULIS_END_OLDDISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector )
+ULIS_END_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 
