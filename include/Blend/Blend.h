@@ -74,20 +74,5 @@ ULIS_API void BlendColor( FThreadPool*             iThreadPool
                          , eBlendingMode            iBlendingMode
                          , eAlphaMode               iAlphaMode
                          , float                    iOpacityValue );
-
-/////////////////////////////////////////////////////
-// Blend PRNG for pseudo random modes like Dissolve
-/*! Reset the PRNG Seed for pseudo random Blend modes like Dissolve. */
-ULIS_API void ResetBlendPRNGSeed();
-
-/*! Set the PRNG Seed for pseudo random Blend modes like Dissolve. */
-ULIS_API void SetBlendPRNGSeed( uint32 iVal );
-
-/*! Get the PRNG Seed for pseudo random Blend modes like Dissolve. */
-ULIS_API uint32 GetBlendPRNGSeed();
-
-/*! Generate a pseudo random number for Blend modes like Dissolve. */
-ULIS_API uint32 GenerateBlendPRNG();
-
 ULIS_NAMESPACE_END
 

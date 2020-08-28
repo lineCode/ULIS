@@ -261,29 +261,5 @@ void BlendColor( FThreadPool*           iThreadPool
     BlendTiled( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, &block, iBackdrop, FRectI( 0, 0, 1, 1 ), iDestRect, FVec2I( 0 ), iBlendingMode, iAlphaMode, iOpacityValue );
 }
 
-/////////////////////////////////////////////////////
-// Blend PRNG for pseudo random modes like Dissolve
-namespace detail {
-/*! Arbitrary seed. */
-static uint32 sgBlendPRNGSeed = 5323;
-} // namespace detail
-
-void ResetBlendPRNGSeed() {
-    detail::sgBlendPRNGSeed = 5323;
-}
-
-void SetBlendPRNGSeed( uint32 iVal ) {
-    detail::sgBlendPRNGSeed = iVal;
-}
-
-uint32 GetBlendPRNGSeed() {
-    return  detail::sgBlendPRNGSeed;
-}
-
-uint32 GenerateBlendPRNG() {
-    detail::sgBlendPRNGSeed = 8253729 * detail::sgBlendPRNGSeed + 2396403;
-    return detail::sgBlendPRNGSeed % 65537;
-}
-
 ULIS_NAMESPACE_END
 
