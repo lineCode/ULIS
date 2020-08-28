@@ -17,6 +17,7 @@
 #include "Blend/BlendHelpers.h"
 #include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.h"
+#include "Blend/PRNG.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
