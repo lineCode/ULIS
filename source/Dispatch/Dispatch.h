@@ -33,23 +33,23 @@ typedef bool (*fpOldCond)( const FFormat& iFormatInfo );
 
 /////////////////////////////////////////////////////
 // Actual Dispatch Implementation
-template< typename _DISPATCHER >
+template< typename IMP >
 class TOldDispatcher {
 public:
-    static ULIS_FORCEINLINE typename _DISPATCHER::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
-        for( int i = 0; i < _DISPATCHER::spec_size; ++i ) {
-            if( _DISPATCHER::spec_table[i].select_cond( iFormatInfo ) ) {
+    static ULIS_FORCEINLINE typename IMP::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename IMP::tExtra& iExtra ) {
+        for( int i = 0; i < IMP::spec_size; ++i ) {
+            if( IMP::spec_table[i].select_cond( iFormatInfo ) ) {
                 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
                     if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
-                        return  _DISPATCHER::spec_table[i].select_AVX( iExtra );
+                        return  IMP::spec_table[i].select_AVX( iExtra );
                     else
                 #endif
                 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
                     if( iPerfIntent & ULIS_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
-                        return  _DISPATCHER::spec_table[i].select_SSE( iExtra );
+                        return  IMP::spec_table[i].select_SSE( iExtra );
                     else
                 #endif
-                        return  _DISPATCHER::spec_table[i].select_MEM( iExtra );
+                        return  IMP::spec_table[i].select_MEM( iExtra );
             }
         }
 
@@ -63,18 +63,18 @@ public:
 
 private:
     template< typename T >
-    static ULIS_FORCEINLINE typename _DISPATCHER::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename _DISPATCHER::tExtra& iExtra ) {
+    static ULIS_FORCEINLINE typename IMP::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename IMP::tExtra& iExtra ) {
         #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
             if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
-                return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );
+                return  IMP:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );
             else
         #endif
         #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
             if( iPerfIntent & ULIS_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
-                return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_SSE_Generic( iExtra );
+                return  IMP:: template TGenericDispatchGroup< T >::select_SSE_Generic( iExtra );
             else
         #endif
-                return  _DISPATCHER:: template TGenericDispatchGroup< T >::select_MEM_Generic( iExtra );
+                return  IMP:: template TGenericDispatchGroup< T >::select_MEM_Generic( iExtra );
     }
 };
 
