@@ -13,6 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Blend/Modes.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -40,6 +43,36 @@ public:
 
     /*! Constructor */
     FRasterContext( const FDevice& iDevice, eFormat iFormat );
+
+public:
+/////////////////////////////////////////////////////
+// Blend
+    /*!
+        Perform a blend operation with iSource composited on top of iBackdrop.
+        iBackdrop is modified to receive the result of the operation, while
+        iSource is left untouched.
+
+        You can specify a sub-portion of the iSource image by specifying the
+        iSourceRect to the desired part of the picture. If you want to blend the
+        whole image, use the FBlock::Rect() method on the iSource block.
+        You can also specify where in iBackdrop the iSource FBlock should be
+        composited, in integer coordinates.
+
+        If the iSourceRect and/or iPosition lead to a destination geometry that
+        does not intersect the rectangular geometry of iBackdrop, the call will
+        not perform any computation and will return safely, so it is safe to
+        specify out-of-bounds positions.
+
+        \sa BlendAA()
+    */
+    void Blend( const FBlock& iSource
+              , FBlock& iBackdrop
+              , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+              , const FVec2I& iPosition = FVec2I()
+              , eBlendingMode iBlendingMode = BM_NORMAL
+              , eAlphaMode iAlphaMode = AM_NORMAL
+              , ufloat iOpacity = 1.0f
+    );
 
 private:
     FContextualDispatchTable* mContextualDispatchTable;

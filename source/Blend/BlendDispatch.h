@@ -27,6 +27,7 @@
 ULIS_NAMESPACE_BEGIN
 struct FBlendArgs;
 typedef void (*fpBlendInvocationScheduler)( std::shared_ptr< const FBlendArgs > iBlendParams );
+
 ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector, fpBlendInvocationScheduler )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendSeparableInvocationSchedulerSelector, &ScheduleBlendMT_Separable_MEM_Generic< T > )
 

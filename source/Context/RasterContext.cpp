@@ -29,9 +29,9 @@ public:
         , mScheduleBlendNonSeparable(   TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector >  ::Query( iDevice, iFormat ) )
         , mScheduleBlendMisc(           TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector >          ::Query( iDevice, iFormat ) )
     {
-        ULIS_ASSERT( mScheduleBlendSeparable,       "Bad bad bad !" );
-        ULIS_ASSERT( mScheduleBlendNonSeparable,    "Bad bad bad !" );
-        ULIS_ASSERT( mScheduleBlendMisc,            "Bad bad bad !" );
+        ULIS_ASSERT( mScheduleBlendSeparable,       "Error: No dispatch found." );
+        ULIS_ASSERT( mScheduleBlendNonSeparable,    "Error: No dispatch found." );
+        ULIS_ASSERT( mScheduleBlendMisc,            "Error: No dispatch found." );
     }
 
     /*! Destructor */
@@ -45,7 +45,7 @@ private:
 };
 
 /////////////////////////////////////////////////////
-// FRasterContext
+// FRasterContext: Construction / Destruction
 FRasterContext::~FRasterContext()
 {
     delete  mContextualDispatchTable;
@@ -58,6 +58,30 @@ FRasterContext::FRasterContext( const FDevice& iDevice, eFormat iFormat )
 {
     mContextualDispatchTable = new  FContextualDispatchTable( iDevice, iFormat );
 }
+
+/////////////////////////////////////////////////////
+// FRasterContext: Blend
+void
+FRasterContext::Blend(
+      const FBlock& iSource
+    , FBlock& iBackdrop
+    , const FRectI& iSourceRect
+    , const FVec2I& iPosition
+    , eBlendingMode iBlendingMode
+    , eAlphaMode iAlphaMode
+    , ufloat iOpacity )
+{
+    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendSeparable,      "Error: No dispatch found." );
+    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendNonSeparable,   "Error: No dispatch found." );
+    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendMisc,           "Error: No dispatch found." );
+    switch( BlendingModeQualifier( iBlendingMode ) ) {
+        case BMQ_MISC           : return;
+        case BMQ_SEPARABLE      : return;
+        case BMQ_NONSEPARABLE   : return;
+        default                 : ULIS_ASSERT( false, "Error: Implementation path is not hooked for qualifier." ); return;
+    }
+}
+
 
 ULIS_NAMESPACE_END
 
