@@ -38,7 +38,7 @@ public:
         }
 
         #define TMP_CALL( _TYPE_ID, _E0, _E2, _E3 ) return  QueryGeneric< _E0 >( iDevice, iFormat );
-        ULIS_SWITCH_FOR_ALL_DO( iFormat.TP, ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+        ULIS_SWITCH_FOR_ALL_DO( static_cast< eType >( ULIS_R_TYPE( iFormat ) ), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
         #undef TMP_CALL
 
         ULIS_ASSERT( false, "No Dispatch found." );
@@ -83,46 +83,50 @@ private:
 #define ULIS_DISPATCH_SELECT_GENMEM( TAG, MEM )                                                                         \
     template< typename T > const typename TAG::fpQuery TAG::TGenericDispatchGroup< T >::select_MEM_Generic = MEM;
 
-#define ULIS_BEGIN_DISPATCHER( TAG, FPT, GENAVX, GENSSE, GENMEM )   \
-struct TAG {                                                        \
-    typedef FPT fpQuery;                                            \
-    struct FSpecDispatchGroup {                                     \
-        const fpCond    select_cond;                                \
-        const fpQuery  select_AVX;                                  \
-        const fpQuery  select_SSE;                                  \
-        const fpQuery  select_MEM;                                  \
-    };                                                              \
-    static const FSpecDispatchGroup spec_table[];                   \
-    static const int spec_size;                                     \
-    template< typename T >                                          \
-    struct TGenericDispatchGroup {                                  \
-        static const fpQuery select_AVX_Generic;                    \
-        static const fpQuery select_SSE_Generic;                    \
-        static const fpQuery select_MEM_Generic;                    \
-    };                                                              \
-};                                                                  \
-ULIS_DISPATCH_SELECT_GENAVX( TAG, GENAVX );                         \
-ULIS_DISPATCH_SELECT_GENSSE( TAG, GENSSE );                         \
-ULIS_DISPATCH_SELECT_GENMEM( TAG, GENMEM );                         \
-const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
+#define ULIS_DECLARE_DISPATCHER( TAG, FPT )         \
+struct TAG {                                        \
+    typedef FPT fpQuery;                            \
+    struct FSpecDispatchGroup {                     \
+        const fpCond    select_cond;                \
+        const fpQuery   select_AVX;                 \
+        const fpQuery   select_SSE;                 \
+        const fpQuery   select_MEM;                 \
+    };                                              \
+    static const FSpecDispatchGroup spec_table[];   \
+    static const int spec_size;                     \
+    template< typename T >                          \
+    struct TGenericDispatchGroup {                  \
+        static const fpQuery select_AVX_Generic;    \
+        static const fpQuery select_SSE_Generic;    \
+        static const fpQuery select_MEM_Generic;    \
+    };                                              \
+};
 
-#define ULIS_BEGIN_DISPATCHER_GENERIC( TAG, FPT, GENMEM )  ULIS_BEGIN_DISPATCHER( TAG, FPT, GENMEM, GENMEM, GENMEM )
+#define ULIS_DEFINE_DISPATCHER_GENERIC_GROUP( TAG, GENAVX, GENSSE, GENMEM ) \
+ULIS_DISPATCH_SELECT_GENAVX( TAG, GENAVX );                                 \
+ULIS_DISPATCH_SELECT_GENSSE( TAG, GENSSE );                                 \
+ULIS_DISPATCH_SELECT_GENMEM( TAG, GENMEM );
+
+#define ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( TAG, GENMEM ) ULIS_DEFINE_DISPATCHER_GENERIC_GROUP( TAG, GENMEM, GENMEM, GENMEM )
+
+#define ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( TAG ) \
+const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, _AVX, _SSE, _MEM },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, _AVX, _SSE, _MEM },
     #else
-        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
     #endif
 #else
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
     #else
-        #define ULIS_DECL_DISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, _MEM },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, _MEM },
     #endif
 #endif
 
-#define ULIS_END_DISPATCHER( TAG )                                                              \
+#define ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( TAG )                                    \
     { nullptr, nullptr, nullptr, nullptr }                                                      \
 };                                                                                              \
 const int TAG::spec_size = sizeof( TAG::spec_table ) / sizeof( TAG::FSpecDispatchGroup ) - 1;
