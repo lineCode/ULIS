@@ -20,13 +20,26 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FRasterContext
-/// @brief      The FRasterContext class provides a context for calling image
-///             raster and composition functions for a given format.
+/// @brief      The FRasterContext class provides a monolithic context for
+///             calling image raster and composition functions for a given format.
 /// @details    The FRasterContext works on FBlock and is bound to a
 ///             specific format. It prefetches the dispatched implementation to
 ///             select the fastest method according to the format, and its
 ///             specializations if available, and according to the current runtime
 ///             device and its support for SIMD features or thread support.
+///
+///             There can be multiple FRasterContext object instances for
+///             different formats, each sharing the same FDevice. Keep in mind
+///             this object is rather heavy as it caches the pre-dispatched
+///             paths to the specific implementations of each feature it exposes.
+///
+///             FRasterContext can be expected to reach a size in the Ko
+///             magnitude, and there is a significant overhead during
+///             instanciation at runtime. But once created, the gain is
+///             significant as the path to the implementation has been cached
+///             once and for all. The only exception is for the Conversion
+///             functions, which are not cached as it would bloat the memory due
+///             to the many possible combinations of source and targets ( 1M+ ).
 ///
 ///             \sa FBlock
 ///             \sa FThreadPool
