@@ -25,9 +25,13 @@ struct FRasterContext::FContextualDispatchTable
 public:
     /*! Constructor */
     FContextualDispatchTable( const FDevice& iDevice, eFormat iFormat )
-        : mScheduleBlendSeparable( TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >::Query( iDevice, iFormat ) )
+        : mScheduleBlendSeparable(      TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >     ::Query( iDevice, iFormat ) )
+        , mScheduleBlendNonSeparable(   TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector >  ::Query( iDevice, iFormat ) )
+        , mScheduleBlendMisc(           TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector >          ::Query( iDevice, iFormat ) )
     {
-        ULIS_ASSERT( mScheduleBlendSeparable, "Bad bad bad !" );
+        ULIS_ASSERT( mScheduleBlendSeparable,       "Bad bad bad !" );
+        ULIS_ASSERT( mScheduleBlendNonSeparable,    "Bad bad bad !" );
+        ULIS_ASSERT( mScheduleBlendMisc,            "Bad bad bad !" );
     }
 
     /*! Destructor */
@@ -36,6 +40,8 @@ public:
 
 private:
     fpBlendInvocationScheduler mScheduleBlendSeparable;
+    fpBlendInvocationScheduler mScheduleBlendNonSeparable;
+    fpBlendInvocationScheduler mScheduleBlendMisc;
 };
 
 /////////////////////////////////////////////////////

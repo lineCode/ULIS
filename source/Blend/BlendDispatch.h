@@ -30,6 +30,12 @@ typedef void (*fpBlendInvocationScheduler)( std::shared_ptr< const FBlendArgs > 
 ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector, fpBlendInvocationScheduler )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendSeparableInvocationSchedulerSelector, &ScheduleBlendMT_Separable_MEM_Generic< T > )
 
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableInvocationSchedulerSelector, fpBlendInvocationScheduler )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendNonSeparableInvocationSchedulerSelector, &ScheduleBlendMT_NonSeparable_MEM_Generic< T > )
+
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscInvocationSchedulerSelector, fpBlendInvocationScheduler )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendMiscInvocationSchedulerSelector, &ScheduleBlendMT_Misc_MEM_Generic< T > )
+
 
 ULIS_NAMESPACE_END
 

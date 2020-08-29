@@ -40,5 +40,16 @@ ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendSeparableInvoca
         , &ScheduleBlendMT_Separable_MEM_Generic< uint8 > )
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendSeparableInvocationSchedulerSelector )
 
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendNonSeparableInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleBlendMT_NonSeparable_SSE_RGBA8
+        , &ScheduleBlendMT_NonSeparable_SSE_RGBA8
+        , &ScheduleBlendMT_NonSeparable_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendNonSeparableInvocationSchedulerSelector )
+
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendMiscInvocationSchedulerSelector )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendMiscInvocationSchedulerSelector )
+
 ULIS_NAMESPACE_END
 
