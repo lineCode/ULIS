@@ -81,7 +81,38 @@ public:
     void Blend( const FBlock& iSource
               , FBlock& iBackdrop
               , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-              , const FVec2I& iPosition = FVec2I()
+              , const FVec2I& iPosition = FVec2I( 0, 0 )
+              , eBlendingMode iBlendingMode = BM_NORMAL
+              , eAlphaMode iAlphaMode = AM_NORMAL
+              , ufloat iOpacity = 1.0f
+    );
+
+    /*!
+        Perform an antialiased blend operation with iSource composited on top of
+        iBackdrop. iBackdrop is modified to receive the result of the operation,
+        while iSource is left untouched.
+
+        An antialiasing blend accepts floating point coordinates and performs
+        antialiasing at the same time as it performs the compositing, this is
+        useful for drawing, sometimes also referred to as subpixel blending.
+
+        You can specify a sub-portion of the iSource image by specifying the
+        iSourceRect to the desired part of the picture. If you want to blend the
+        whole image, use the FBlock::Rect() method on the iSource block.
+        You can also specify where in iBackdrop the iSource FBlock should be
+        composited, in floating point coordinates.
+
+        If the iSourceRect and/or iPosition lead to a destination geometry that
+        does not intersect the rectangular geometry of iBackdrop, the call will
+        not perform any computation and will return safely, so it is safe to
+        specify out-of-bounds positions.
+
+        \sa Blend()
+    */
+    void BlendAA( const FBlock& iSource
+              , FBlock& iBackdrop
+              , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+              , const FVec2F& iPosition = FVec2F( 0.f, 0.f )
               , eBlendingMode iBlendingMode = BM_NORMAL
               , eAlphaMode iAlphaMode = AM_NORMAL
               , ufloat iOpacity = 1.0f

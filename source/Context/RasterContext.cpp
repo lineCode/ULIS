@@ -25,13 +25,19 @@ struct FRasterContext::FContextualDispatchTable
 public:
     /*! Constructor */
     FContextualDispatchTable( const FDevice& iDevice, eFormat iFormat )
-        : mScheduleBlendSeparable(      TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >     ::Query( iDevice, iFormat ) )
-        , mScheduleBlendNonSeparable(   TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector >  ::Query( iDevice, iFormat ) )
-        , mScheduleBlendMisc(           TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector >          ::Query( iDevice, iFormat ) )
+        : mScheduleBlendSeparable(              TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >             ::Query( iDevice, iFormat ) )
+        , mScheduleBlendNonSeparable(           TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector >          ::Query( iDevice, iFormat ) )
+        , mScheduleBlendMisc(                   TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector >                  ::Query( iDevice, iFormat ) )
+        , mScheduleBlendSeparableSubpixel(      TDispatcher< FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector >     ::Query( iDevice, iFormat ) )
+        , mScheduleBlendNonSeparableSubpixel(   TDispatcher< FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector >  ::Query( iDevice, iFormat ) )
+        , mScheduleBlendMiscSubpixel(           TDispatcher< FDispatchedBlendMiscSubpixelInvocationSchedulerSelector >          ::Query( iDevice, iFormat ) )
     {
-        ULIS_ASSERT( mScheduleBlendSeparable,       "Error: No dispatch found." );
-        ULIS_ASSERT( mScheduleBlendNonSeparable,    "Error: No dispatch found." );
-        ULIS_ASSERT( mScheduleBlendMisc,            "Error: No dispatch found." );
+        ULIS_ASSERT( mScheduleBlendSeparable,               "Error: No dispatch found." );
+        ULIS_ASSERT( mScheduleBlendNonSeparable,            "Error: No dispatch found." );
+        ULIS_ASSERT( mScheduleBlendMisc,                    "Error: No dispatch found." );
+        ULIS_ASSERT( mScheduleBlendSeparableSubpixel,       "Error: No dispatch found." );
+        ULIS_ASSERT( mScheduleBlendNonSeparableSubpixel,    "Error: No dispatch found." );
+        ULIS_ASSERT( mScheduleBlendMiscSubpixel,            "Error: No dispatch found." );
     }
 
     /*! Destructor */
@@ -42,6 +48,9 @@ private:
     fpBlendInvocationScheduler mScheduleBlendSeparable;
     fpBlendInvocationScheduler mScheduleBlendNonSeparable;
     fpBlendInvocationScheduler mScheduleBlendMisc;
+    fpBlendInvocationScheduler mScheduleBlendSeparableSubpixel;
+    fpBlendInvocationScheduler mScheduleBlendNonSeparableSubpixel;
+    fpBlendInvocationScheduler mScheduleBlendMiscSubpixel;
 };
 
 /////////////////////////////////////////////////////
@@ -74,6 +83,27 @@ FRasterContext::Blend(
     ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendSeparable,      "Error: No dispatch found." );
     ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendNonSeparable,   "Error: No dispatch found." );
     ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendMisc,           "Error: No dispatch found." );
+    switch( BlendingModeQualifier( iBlendingMode ) ) {
+        case BMQ_MISC           : return;
+        case BMQ_SEPARABLE      : return;
+        case BMQ_NONSEPARABLE   : return;
+        default                 : ULIS_ASSERT( false, "Error: Implementation path is not hooked for qualifier." ); return;
+    }
+}
+
+void
+FRasterContext::BlendAA(
+      const FBlock& iSource
+    , FBlock& iBackdrop
+    , const FRectI& iSourceRect
+    , const FVec2F& iPosition
+    , eBlendingMode iBlendingMode
+    , eAlphaMode iAlphaMode
+    , ufloat iOpacity )
+{
+    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendSeparableSubpixel,      "Error: No dispatch found." );
+    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendNonSeparableSubpixel,   "Error: No dispatch found." );
+    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendMiscSubpixel,           "Error: No dispatch found." );
     switch( BlendingModeQualifier( iBlendingMode ) ) {
         case BMQ_MISC           : return;
         case BMQ_SEPARABLE      : return;

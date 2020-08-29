@@ -32,6 +32,8 @@
 #endif // ULIS_COMPILETIME_AVX2_SUPPORT
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Blend
 ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendSeparableInvocationSchedulerSelector )
     ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
           &DispatchTestIsUnorderedRGBA8
@@ -50,6 +52,27 @@ ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendNonSeparableInvoc
 
 ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendMiscInvocationSchedulerSelector )
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendMiscInvocationSchedulerSelector )
+
+/////////////////////////////////////////////////////
+// Blend Subpixel
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleBlendMT_Separable_AVX_RGBA8_Subpixel
+        , &ScheduleBlendMT_Separable_SSE_RGBA8_Subpixel
+        , &ScheduleBlendMT_Separable_MEM_Generic_Subpixel< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector )
+
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel
+        , &ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel
+        , &ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector )
+
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 
