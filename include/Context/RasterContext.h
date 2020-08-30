@@ -87,7 +87,7 @@ public:
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , eBlendMode iBlendingMode = Blend_Normal
-        , eAlphaMode iAlphaMode = AM_NORMAL
+        , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , const FTaskEvent& iWait = FTaskEvent()
@@ -122,7 +122,7 @@ public:
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FVec2F& iPosition = FVec2F( 0.f, 0.f )
         , eBlendMode iBlendingMode = Blend_Normal
-        , eAlphaMode iAlphaMode = AM_NORMAL
+        , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , const FTaskEvent& iWait = FTaskEvent()

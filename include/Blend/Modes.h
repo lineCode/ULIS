@@ -113,15 +113,15 @@ static const char* kwBlendMode[] =
 // eAlphaMode
 enum eAlphaMode
 {
-      AM_NORMAL
-    , AM_ERASE
-    , AM_TOP
-    , AM_BACK
-    , AM_SUB
-    , AM_ADD
-    , AM_MUL
-    , AM_MIN
-    , AM_MAX
+      Alpha_Normal
+    , Alpha_Erase
+    , Alpha_Top
+    , Alpha_Back
+    , Alpha_Sub
+    , Alpha_Add
+    , Alpha_Mul
+    , Alpha_Min
+    , Alpha_Max
     , NumAlphaModes
 };
 
@@ -156,67 +156,67 @@ eBlendQualifier
 BlendingModeQualifier( eBlendMode iBlendingMode )
 {
     switch( iBlendingMode ) {
-        case Blend_Dissolve            :   return  BlendQualifier_Misc;
-        case Blend_BayerDither8x8      :   return  BlendQualifier_Misc;
-        case Blend_DarkerColor         :   return  BlendQualifier_NonSeparable;
-        case Blend_LighterColor        :   return  BlendQualifier_NonSeparable;
-        case Blend_Hue                 :   return  BlendQualifier_NonSeparable;
-        case Blend_Saturation          :   return  BlendQualifier_NonSeparable;
-        case Blend_Color               :   return  BlendQualifier_NonSeparable;
-        case Blend_Luminosity          :   return  BlendQualifier_NonSeparable;
-        case Blend_PartialDerivative   :   return  BlendQualifier_NonSeparable;
-        case Blend_Whiteout            :   return  BlendQualifier_NonSeparable;
-        case Blend_AngleCorrected      :   return  BlendQualifier_NonSeparable;
-        default                     :   return  BlendQualifier_Separable;
+        case Blend_Dissolve             : return  BlendQualifier_Misc;
+        case Blend_BayerDither8x8       : return  BlendQualifier_Misc;
+        case Blend_DarkerColor          : return  BlendQualifier_NonSeparable;
+        case Blend_LighterColor         : return  BlendQualifier_NonSeparable;
+        case Blend_Hue                  : return  BlendQualifier_NonSeparable;
+        case Blend_Saturation           : return  BlendQualifier_NonSeparable;
+        case Blend_Color                : return  BlendQualifier_NonSeparable;
+        case Blend_Luminosity           : return  BlendQualifier_NonSeparable;
+        case Blend_PartialDerivative    : return  BlendQualifier_NonSeparable;
+        case Blend_Whiteout             : return  BlendQualifier_NonSeparable;
+        case Blend_AngleCorrected       : return  BlendQualifier_NonSeparable;
+        default                         : return  BlendQualifier_Separable;
     }
 }
 
 /////////////////////////////////////////////////////
 // Macros
 #define ULIS_FOR_ALL_SEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )   \
-    X( Blend_Normal            , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Top               , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Back              , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Behind            , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Darken            , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Multiply          , _E0, _E1, _E2, _E3 )              \
-    X( Blend_ColorBurn         , _E0, _E1, _E2, _E3 )              \
-    X( Blend_LinearBurn        , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Lighten           , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Screen            , _E0, _E1, _E2, _E3 )              \
-    X( Blend_ColorDodge        , _E0, _E1, _E2, _E3 )              \
-    X( Blend_LinearDodge       , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Overlay           , _E0, _E1, _E2, _E3 )              \
-    X( Blend_SoftLight         , _E0, _E1, _E2, _E3 )              \
-    X( Blend_HardLight         , _E0, _E1, _E2, _E3 )              \
-    X( Blend_VividLight        , _E0, _E1, _E2, _E3 )              \
-    X( Blend_LinearLight       , _E0, _E1, _E2, _E3 )              \
-    X( Blend_PinLight          , _E0, _E1, _E2, _E3 )              \
-    X( Blend_HardMix           , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Phoenix           , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Reflect           , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Glow              , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Difference        , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Exclusion         , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Add               , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Substract         , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Divide            , _E0, _E1, _E2, _E3 )              \
-    X( Blend_Average           , _E0, _E1, _E2, _E3 )              \
+    X( Blend_Normal            , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Top               , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Back              , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Behind            , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Darken            , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Multiply          , _E0, _E1, _E2, _E3 )           \
+    X( Blend_ColorBurn         , _E0, _E1, _E2, _E3 )           \
+    X( Blend_LinearBurn        , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Lighten           , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Screen            , _E0, _E1, _E2, _E3 )           \
+    X( Blend_ColorDodge        , _E0, _E1, _E2, _E3 )           \
+    X( Blend_LinearDodge       , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Overlay           , _E0, _E1, _E2, _E3 )           \
+    X( Blend_SoftLight         , _E0, _E1, _E2, _E3 )           \
+    X( Blend_HardLight         , _E0, _E1, _E2, _E3 )           \
+    X( Blend_VividLight        , _E0, _E1, _E2, _E3 )           \
+    X( Blend_LinearLight       , _E0, _E1, _E2, _E3 )           \
+    X( Blend_PinLight          , _E0, _E1, _E2, _E3 )           \
+    X( Blend_HardMix           , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Phoenix           , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Reflect           , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Glow              , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Difference        , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Exclusion         , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Add               , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Substract         , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Divide            , _E0, _E1, _E2, _E3 )           \
+    X( Blend_Average           , _E0, _E1, _E2, _E3 )           \
     X( Blend_Negation          , _E0, _E1, _E2, _E3 )
 
 #define ULIS_FOR_ALL_NONSEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )    \
-    X( Blend_DarkerColor       , _E0, _E1, _E2, _E3 )                  \
-    X( Blend_LighterColor      , _E0, _E1, _E2, _E3 )                  \
-    X( Blend_Hue               , _E0, _E1, _E2, _E3 )                  \
-    X( Blend_Saturation        , _E0, _E1, _E2, _E3 )                  \
-    X( Blend_Color             , _E0, _E1, _E2, _E3 )                  \
-    X( Blend_Luminosity        , _E0, _E1, _E2, _E3 )                  \
-    X( Blend_PartialDerivative , _E0, _E1, _E2, _E3 )                  \
-    X( Blend_Whiteout          , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_DarkerColor       , _E0, _E1, _E2, _E3 )               \
+    X( Blend_LighterColor      , _E0, _E1, _E2, _E3 )               \
+    X( Blend_Hue               , _E0, _E1, _E2, _E3 )               \
+    X( Blend_Saturation        , _E0, _E1, _E2, _E3 )               \
+    X( Blend_Color             , _E0, _E1, _E2, _E3 )               \
+    X( Blend_Luminosity        , _E0, _E1, _E2, _E3 )               \
+    X( Blend_PartialDerivative , _E0, _E1, _E2, _E3 )               \
+    X( Blend_Whiteout          , _E0, _E1, _E2, _E3 )               \
     X( Blend_AngleCorrected    , _E0, _E1, _E2, _E3 )
 
 #define ULIS_FOR_ALL_MISC_BM_DO( X, _E0, _E1, _E2, _E3 )    \
-    X( Blend_Dissolve          , _E0, _E1, _E2, _E3 )          \
+    X( Blend_Dissolve          , _E0, _E1, _E2, _E3 )       \
     X( Blend_BayerDither8x8    , _E0, _E1, _E2, _E3 )
 
 #define ULIS_FOR_ALL_BM_DO( X, _E0, _E1, _E2, _E3 )             \
@@ -225,15 +225,15 @@ BlendingModeQualifier( eBlendMode iBlendingMode )
     ULIS_FOR_ALL_MISC_BM_DO(           X, _E0, _E1, _E2, _E3 )
 
 #define ULIS_FOR_ALL_AM_DO( X, _E0, _E1, _E2, _E3 )     \
-    X( AM_NORMAL        , _E0, _E1, _E2, _E3 )          \
-    X( AM_ERASE         , _E0, _E1, _E2, _E3 )          \
-    X( AM_TOP           , _E0, _E1, _E2, _E3 )          \
-    X( AM_BACK          , _E0, _E1, _E2, _E3 )          \
-    X( AM_SUB           , _E0, _E1, _E2, _E3 )          \
-    X( AM_ADD           , _E0, _E1, _E2, _E3 )          \
-    X( AM_MUL           , _E0, _E1, _E2, _E3 )          \
-    X( AM_MIN           , _E0, _E1, _E2, _E3 )          \
-    X( AM_MAX           , _E0, _E1, _E2, _E3 )
+    X( Alpha_Normal        , _E0, _E1, _E2, _E3 )          \
+    X( Alpha_Erase         , _E0, _E1, _E2, _E3 )          \
+    X( Alpha_Top           , _E0, _E1, _E2, _E3 )          \
+    X( Alpha_Back          , _E0, _E1, _E2, _E3 )          \
+    X( Alpha_Sub           , _E0, _E1, _E2, _E3 )          \
+    X( Alpha_Add           , _E0, _E1, _E2, _E3 )          \
+    X( Alpha_Mul           , _E0, _E1, _E2, _E3 )          \
+    X( Alpha_Min           , _E0, _E1, _E2, _E3 )          \
+    X( Alpha_Max           , _E0, _E1, _E2, _E3 )
 
 ULIS_NAMESPACE_END
 

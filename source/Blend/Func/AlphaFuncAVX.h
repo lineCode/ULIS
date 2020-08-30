@@ -77,15 +77,15 @@ ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF( Vec8f iCs, Vec8f iCb ) {
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------ AlphaAVXF Template Selector Specializations
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_NORMAL    >( Vec8f iCs, Vec8f iCb ) { return  AlphaNormalAVXF(    iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_ERASE     >( Vec8f iCs, Vec8f iCb ) { return  AlphaEraseAVXF(     iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_TOP       >( Vec8f iCs, Vec8f iCb ) { return  AlphaTopAVXF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_BACK      >( Vec8f iCs, Vec8f iCb ) { return  AlphaBackAVXF(      iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_SUB       >( Vec8f iCs, Vec8f iCb ) { return  AlphaSubAVXF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_ADD       >( Vec8f iCs, Vec8f iCb ) { return  AlphaAddAVXF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_MUL       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMulAVXF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_MIN       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMinAVXF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< AM_MAX       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMaxAVXF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_NORMAL    >( Vec8f iCs, Vec8f iCb ) { return  AlphaNormalAVXF(    iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_ERASE     >( Vec8f iCs, Vec8f iCb ) { return  AlphaEraseAVXF(     iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_TOP       >( Vec8f iCs, Vec8f iCb ) { return  AlphaTopAVXF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_BACK      >( Vec8f iCs, Vec8f iCb ) { return  AlphaBackAVXF(      iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_SUB       >( Vec8f iCs, Vec8f iCb ) { return  AlphaSubAVXF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_ADD       >( Vec8f iCs, Vec8f iCb ) { return  AlphaAddAVXF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_MUL       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMulAVXF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_MIN       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMinAVXF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec8f ULIS_VECTORCALL AlphaAVXF< Alpha_MAX       >( Vec8f iCs, Vec8f iCb ) { return  AlphaMaxAVXF(       iCs, iCb ); }
 
 ULIS_NAMESPACE_END
 
