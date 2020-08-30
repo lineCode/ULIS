@@ -15,6 +15,22 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
+enum eScheduleRunPolicy : bool {
+      ScheduleRun_Mono  = false
+    , ScheduleRun_Multi = true
+};
+
+enum eScheduleModePolicy : uint8 {
+      ScheduleMode_Scanlines = 0
+    , ScheduleMode_Chunks = 1
+};
+
+enum eScheduleParameterPolicy : uint8 {
+      ScheduleParameter_Unused = 0
+    , ScheduleParameter_ChunkLength = 1
+    , ScheduleParameter_ChunkCount = 2
+};
+
 /////////////////////////////////////////////////////
 /// @class      FSchedulePolicy
 /// @brief      The FSchedulePolicy class provides a way to control how a task
@@ -23,7 +39,7 @@ ULIS_NAMESPACE_BEGIN
 /// @details    The FSchedulePolicy specifies wether a task should be
 ///             multithreaded or not, and if so which policy should be applied.
 ///             Wether the scheduling is done on a chunk basis, or on a scanline
-///             approach, for example.
+///             basis, for example.
 ///
 ///             \sa FRasterContext
 ///             \sa FThreadPool
@@ -31,6 +47,38 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FCommandQueue
 class ULIS_API FSchedulePolicy
 {
+public:
+    /*! Destructor */
+    ~FSchedulePolicy();
+
+    /*!
+        Constructor with default values.
+        Defaults to mono scanline run.
+    */
+    FSchedulePolicy(
+          eScheduleRunPolicy iRun = ScheduleRun_Mono
+        , eScheduleModePolicy iMode = ScheduleMode_Scanlines
+        , eScheduleParameterPolicy iParam = ScheduleParameter_Unused
+        , uint32 iValue = 0
+    );
+
+    /*! Getter for the Run Policy. */
+    eScheduleRunPolicy RunPolicy() const;
+
+    /*! Getter for the Mode Policy. */
+    eScheduleModePolicy ModePolicy() const;
+
+    /*! Getter for the Parameter Policy. */
+    eScheduleParameterPolicy ParameterPolicy() const;
+
+    /*! Getter for the Parameter Value. */
+    uint32 Value() const;
+
+private:
+    eScheduleRunPolicy          mRun;
+    eScheduleModePolicy         mMode;
+    eScheduleParameterPolicy    mParameter;
+    uint32                      mValue;
 };
 
 ULIS_NAMESPACE_END

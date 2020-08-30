@@ -15,5 +15,48 @@
 #include "Dispatch/SchedulePolicy.h"
 
 ULIS_NAMESPACE_BEGIN
+FSchedulePolicy::~FSchedulePolicy()
+{
+    // Nothing ATM
+}
+
+FSchedulePolicy::FSchedulePolicy(
+      eScheduleRunPolicy iRun
+    , eScheduleModePolicy iMode
+    , eScheduleParameterPolicy iParam
+    , uint32 iValue
+)
+    : mRun( iRun )
+    , mMode( iMode )
+    , mParameter( iParam )
+    , mValue( iValue )
+{
+}
+
+
+eScheduleRunPolicy
+FSchedulePolicy::RunPolicy() const
+{
+    return  mRun;
+}
+
+eScheduleModePolicy
+FSchedulePolicy::ModePolicy() const
+{
+    return  mMode;
+}
+
+eScheduleParameterPolicy
+FSchedulePolicy::ParameterPolicy() const
+{
+    return  mParameter;
+}
+
+uint32
+FSchedulePolicy::Value() const
+{
+    return  mValue;
+}
+
 ULIS_NAMESPACE_END
 
