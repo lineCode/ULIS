@@ -63,7 +63,7 @@ enum eBlendMode
 };
 
 
-static const char* kwBlendingMode[] =
+static const char* kwBlendMode[] =
 {
       "Normal"
     , "Top"
