@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Scheduling/SchedulePolicy.h"
+#include "Dispatch/SchedulePolicy.h"
 
 ULIS_NAMESPACE_BEGIN
 FSchedulePolicy::~FSchedulePolicy()

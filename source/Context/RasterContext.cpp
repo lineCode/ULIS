@@ -14,7 +14,7 @@
 #pragma once
 #include "Context/RasterContext.h"
 #include "Blend/BlendDispatch.h"
-#include "Dispatch/SchedulePolicy.h"
+#include "Scheduling/SchedulePolicy.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
