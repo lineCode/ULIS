@@ -537,3 +537,7 @@ span.comment {
 span.keyword {
     color: #0066ff;
 }
+
+.memname td {
+    padding-left: 5px;
+}
