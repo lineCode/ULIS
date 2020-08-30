@@ -31,9 +31,8 @@ enum eScheduleModePolicy : uint8 {
 };
 
 enum eScheduleParameterPolicy : uint8 {
-      ScheduleParameter_ScanlinesPerUnit = 0
-    , ScheduleParameter_ChunkLength = 1
-    , ScheduleParameter_ChunkCount = 2
+      ScheduleParameter_Count
+    , ScheduleParameter_Length
 };
 
 /////////////////////////////////////////////////////
@@ -64,7 +63,7 @@ public:
           eScheduleRunPolicy iRun = ScheduleRun_Mono
         , eScheduleFlowPolicy iFlow = ScheduleFlow_Blocking
         , eScheduleModePolicy iMode = ScheduleMode_Scanlines
-        , eScheduleParameterPolicy iParam = ScheduleParameter_ScanlinesPerUnit
+        , eScheduleParameterPolicy iParam = ScheduleParameter_Count
         , uint32 iValue = 1
     );
 
