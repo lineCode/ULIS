@@ -185,35 +185,35 @@ ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec
 
 //--------------------------------------------------------------------------------------
 //----------------------------------- SeparableCompOpAVXF Template Selector Specializations
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_NORMAL      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendNormalAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_BEHIND      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendBehindAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_DARKEN      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendDarkenAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_MULTIPLY    >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendMultiplyAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_COLORBURN   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendColorBurnAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_LINEARBURN  >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendLinearBurnAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_LIGHTEN     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendLightenAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_SCREEN      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendScreenAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_COLORDODGE  >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendColorDodgeAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_LINEARDODGE >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendLinearDodgeAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_OVERLAY     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendOverlayAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_SOFTLIGHT   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendSoftLightAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_HARDLIGHT   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendHardLightAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_VIVIDLIGHT  >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendVividLightAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_LINEARLIGHT >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendLinearLightAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_PINLIGHT    >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendPinLightAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_HARDMIX     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendHardMixAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_PHOENIX     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendPhoenixAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_REFLECT     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendReflectAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_GLOW        >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendGlowAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_DIFFERENCE  >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendDifferenceAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_EXCLUSION   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendExclusionAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_ADD         >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendAddAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_SUBSTRACT   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendSubstractAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_DIVIDE      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendDivideAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_AVERAGE     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendAverageAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_NEGATION    >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendNegationAVXF( iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_TOP         >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  iCs; }
-template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_BACK        >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  iCb; }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Normal      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendNormalAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Behind      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendBehindAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Darken      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendDarkenAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Multiply    >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendMultiplyAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_ColorBurn   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendColorBurnAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_LinearBurn  >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendLinearBurnAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Lighten     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendLightenAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Screen      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendScreenAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_ColorDodge  >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendColorDodgeAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_LinearDodge >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendLinearDodgeAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Overlay     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendOverlayAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_SoftLight   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendSoftLightAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_HardLight   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendHardLightAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_VividLight  >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendVividLightAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_LinearLight >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendLinearLightAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_PinLight    >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendPinLightAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_HardMix     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendHardMixAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Phoenix     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendPhoenixAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Reflect     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendReflectAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Glow        >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendGlowAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Difference  >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendDifferenceAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Exclusion   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendExclusionAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Add         >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendAddAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Substract   >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendSubstractAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Divide      >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendDivideAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Average     >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendAverageAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Negation    >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  ComposeAVXF( iCs, iCb, iAb, iVar, BlendNegationAVXF( iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Top         >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  iCs; }
+template<> ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF< Blend_Back        >( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) { return  iCb; }
 
 ULIS_NAMESPACE_END
 

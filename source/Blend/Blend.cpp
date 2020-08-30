@@ -149,7 +149,7 @@ void AlphaBlend( FThreadPool*           iThreadPool
     commandArgsRef.subpixelComponent    = subpixelComponent;
     commandArgsRef.buspixelComponent    = FVec2F( 1.f - subpixelComponent.x, 1.f - subpixelComponent.y );
     commandArgsRef.subpixelFlag         = iSubpixelFlag;
-    commandArgsRef.blendingMode         = Blend_NORMAL;
+    commandArgsRef.blendingMode         = Blend_Normal;
     commandArgsRef.alphaMode            = AM_NORMAL;
     commandArgsRef.opacityValue         = FMath::Clamp( iOpacityValue, 0.f, 1.f );
     commandArgsRef.shift                = FVec2I( translationX, translationY );

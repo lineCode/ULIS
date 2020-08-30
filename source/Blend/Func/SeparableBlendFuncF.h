@@ -185,35 +185,35 @@ ULIS_FORCEINLINE ufloat SeparableCompOpF( ufloat iCs, ufloat iCb, ufloat iAb, uf
 
 //--------------------------------------------------------------------------------------
 //----------------------------------- SeparableCompOpF Template Selector Specializations
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_NORMAL         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendNormalF(         iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_BEHIND         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendBehindF(         iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_DARKEN         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendDarkenF(         iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_MULTIPLY       >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendMultiplyF(       iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_COLORBURN      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendColorBurnF(      iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_LINEARBURN     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLinearBurnF(     iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_LIGHTEN        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLightenF(        iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_SCREEN         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendScreenF(         iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_COLORDODGE     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendColorDodgeF(     iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_LINEARDODGE    >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLinearDodgeF(    iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_OVERLAY        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendOverlayF(        iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_SOFTLIGHT      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendSoftLightF(      iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_HARDLIGHT      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendHardLightF(      iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_VIVIDLIGHT     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendVividLightF(     iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_LINEARLIGHT    >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLinearLightF(    iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_PINLIGHT       >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendPinLightF(       iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_HARDMIX        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendHardMixF(        iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_PHOENIX        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendPhoenixF(        iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_REFLECT        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendReflectF(        iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_GLOW           >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendGlowF(           iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_DIFFERENCE     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendDifferenceF(     iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_EXCLUSION      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendExclusionF(      iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_ADD            >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendAddF(            iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_SUBSTRACT      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendSubstractF(      iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_DIVIDE         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendDivideF(         iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_AVERAGE        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendAverageF(        iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_NEGATION       >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendNegationF(       iCs, iCb ) ); }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_TOP            >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  iCs; }
-template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_BACK           >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  iCb; }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Normal         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendNormalF(         iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Behind         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendBehindF(         iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Darken         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendDarkenF(         iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Multiply       >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendMultiplyF(       iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_ColorBurn      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendColorBurnF(      iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_LinearBurn     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLinearBurnF(     iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Lighten        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLightenF(        iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Screen         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendScreenF(         iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_ColorDodge     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendColorDodgeF(     iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_LinearDodge    >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLinearDodgeF(    iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Overlay        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendOverlayF(        iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_SoftLight      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendSoftLightF(      iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_HardLight      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendHardLightF(      iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_VividLight     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendVividLightF(     iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_LinearLight    >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendLinearLightF(    iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_PinLight       >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendPinLightF(       iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_HardMix        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendHardMixF(        iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Phoenix        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendPhoenixF(        iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Reflect        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendReflectF(        iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Glow           >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendGlowF(           iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Difference     >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendDifferenceF(     iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Exclusion      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendExclusionF(      iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Add            >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendAddF(            iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Substract      >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendSubstractF(      iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Divide         >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendDivideF(         iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Average        >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendAverageF(        iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Negation       >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  ComposeF( iCs, iCb, iAb, iVar, BlendNegationF(       iCs, iCb ) ); }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Top            >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  iCs; }
+template<> ULIS_FORCEINLINE ufloat SeparableCompOpF< Blend_Back           >( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) { return  iCb; }
 
 ULIS_NAMESPACE_END
 

@@ -202,15 +202,15 @@ ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF( Vec4f iCs, Vec4f iCb ) {
 
 //--------------------------------------------------------------------------------------
 //------------------------------------ NonSeparableOpSSEF Template Selector Specializations
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_DARKERCOLOR          >( Vec4f iCs, Vec4f iCb ) { return  BlendDarkerColorSSEF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_LIGHTERCOLOR         >( Vec4f iCs, Vec4f iCb ) { return  BlendLighterColorSSEF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_HUE                  >( Vec4f iCs, Vec4f iCb ) { return  BlendHueSSEF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_SATURATION           >( Vec4f iCs, Vec4f iCb ) { return  BlendSaturationSSEF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_COLOR                >( Vec4f iCs, Vec4f iCb ) { return  BlendColorSSEF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_LUMINOSITY           >( Vec4f iCs, Vec4f iCb ) { return  BlendLuminositySSEF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_PARTIALDERIVATIVE    >( Vec4f iCs, Vec4f iCb ) { return  BlendPartialDerivativeSSEF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_WHITEOUT             >( Vec4f iCs, Vec4f iCb ) { return  BlendWhiteoutSSEF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_ANGLECORRECTED       >( Vec4f iCs, Vec4f iCb ) { return  BlendAngleCorrectedSSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_DarkerColor          >( Vec4f iCs, Vec4f iCb ) { return  BlendDarkerColorSSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_LighterColor         >( Vec4f iCs, Vec4f iCb ) { return  BlendLighterColorSSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_Hue                  >( Vec4f iCs, Vec4f iCb ) { return  BlendHueSSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_Saturation           >( Vec4f iCs, Vec4f iCb ) { return  BlendSaturationSSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_Color                >( Vec4f iCs, Vec4f iCb ) { return  BlendColorSSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_Luminosity           >( Vec4f iCs, Vec4f iCb ) { return  BlendLuminositySSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_PartialDerivative    >( Vec4f iCs, Vec4f iCb ) { return  BlendPartialDerivativeSSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_Whiteout             >( Vec4f iCs, Vec4f iCb ) { return  BlendWhiteoutSSEF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< Blend_AngleCorrected       >( Vec4f iCs, Vec4f iCb ) { return  BlendAngleCorrectedSSEF( iCs, iCb ); }
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- CompOp Version
