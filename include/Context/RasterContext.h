@@ -16,6 +16,8 @@
 #include "Blend/Modes.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include "Scheduling/SchedulePolicy.h"
+#include "Scheduling/TaskEvent.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -78,14 +80,17 @@ public:
 
         \sa BlendAA()
     */
-    void Blend( const FBlock& iSource
-              , FBlock& iBackdrop
-              , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-              , const FVec2I& iPosition = FVec2I( 0, 0 )
-              , eBlendingMode iBlendingMode = BM_NORMAL
-              , eAlphaMode iAlphaMode = AM_NORMAL
-              , ufloat iOpacity = 1.0f
-              , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    const FTaskEvent&
+    Blend(
+          const FBlock& iSource
+        , FBlock& iBackdrop
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , eBlendingMode iBlendingMode = BM_NORMAL
+        , eAlphaMode iAlphaMode = AM_NORMAL
+        , ufloat iOpacity = 1.0f
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FTaskEvent& iWait = FTaskEvent()
     );
 
     /*!
@@ -110,14 +115,17 @@ public:
 
         \sa Blend()
     */
-    void BlendAA( const FBlock& iSource
-              , FBlock& iBackdrop
-              , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-              , const FVec2F& iPosition = FVec2F( 0.f, 0.f )
-              , eBlendingMode iBlendingMode = BM_NORMAL
-              , eAlphaMode iAlphaMode = AM_NORMAL
-              , ufloat iOpacity = 1.0f
-              , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    const FTaskEvent&
+    BlendAA(
+          const FBlock& iSource
+        , FBlock& iBackdrop
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2F& iPosition = FVec2F( 0.f, 0.f )
+        , eBlendingMode iBlendingMode = BM_NORMAL
+        , eAlphaMode iAlphaMode = AM_NORMAL
+        , ufloat iOpacity = 1.0f
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FTaskEvent& iWait = FTaskEvent()
     );
 
 private:

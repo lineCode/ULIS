@@ -14,7 +14,6 @@
 #pragma once
 #include "Context/RasterContext.h"
 #include "Blend/BlendDispatch.h"
-#include "Scheduling/SchedulePolicy.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -71,7 +70,7 @@ FRasterContext::FRasterContext( const FDevice& iDevice, eFormat iFormat )
 
 /////////////////////////////////////////////////////
 // FRasterContext: Blend
-void
+const FTaskEvent&
 FRasterContext::Blend(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -81,6 +80,7 @@ FRasterContext::Blend(
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
     , const FSchedulePolicy& iPolicy
+    , const FTaskEvent& iWait
 )
 {
     fpBlendInvocationScheduler run = nullptr;
@@ -90,9 +90,12 @@ FRasterContext::Blend(
         case BMQ_NONSEPARABLE   : run = mContextualDispatchTable->mScheduleBlendNonSeparable;
     }
     ULIS_ASSERT( run, "Error: No dispatch found." );
+
+    // TMP Workaround return temporary:
+    return  FTaskEvent();
 }
 
-void
+const FTaskEvent&
 FRasterContext::BlendAA(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -102,6 +105,7 @@ FRasterContext::BlendAA(
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
     , const FSchedulePolicy& iPolicy
+    , const FTaskEvent& iWait
 )
 {
     fpBlendInvocationScheduler run = nullptr;
@@ -111,6 +115,8 @@ FRasterContext::BlendAA(
         case BMQ_NONSEPARABLE   : run = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
     }
     ULIS_ASSERT( run, "Error: No dispatch found." );
+
+    return  FTaskEvent();
 }
 
 ULIS_NAMESPACE_END

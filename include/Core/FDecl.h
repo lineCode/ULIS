@@ -39,6 +39,7 @@ class   ITilePool;
 class   FString;
 class   FWString;
 class   FSchedulePolicy;
+class   FTaskEvent;
 
 template< typename T > class TArray;
 
