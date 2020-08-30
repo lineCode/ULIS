@@ -177,7 +177,7 @@ ULIS_FORCEINLINE Vec4f BlendGlowSSEF( Vec4f iCs, Vec4f iCb ) {
 // SeparableCompOpSSEF Template Selector
 //--------------------------------------------------------------------------------------
 //------------------------------------------- Generic SeparableCompOpSSEF Template Selector
-template< eBlendingMode _BM >
+template< eBlendMode _BM >
 ULIS_FORCEINLINE Vec4f SeparableCompOpSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) {
     ULIS_ASSERT( false, "Blend Specialization Not Implemented" );
     return  0.f;

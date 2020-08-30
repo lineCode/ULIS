@@ -171,7 +171,7 @@ ULIS_FORCEINLINE FRGBF BlendAngleCorrectedF( const FRGBF& iCs, const FRGBF& iCb 
 // NonSeparableOpF Template Selector
 //--------------------------------------------------------------------------------------
 //-------------------------------------------- Generic NonSeparableOpF Template Selector
-template< eBlendingMode _BM >
+template< eBlendMode _BM >
 ULIS_FORCEINLINE FRGBF NonSeparableOpF( const FRGBF& iCs, const FRGBF& iCb ) {
     ULIS_ASSERT( false, "Blend Specialization Not Implemented" );
     return  {};

@@ -177,7 +177,7 @@ ULIS_FORCEINLINE Vec8f BlendGlowAVXF( Vec8f iCs, Vec8f iCb ) {
 // SeparableCompOpAVXF Template Selector
 //--------------------------------------------------------------------------------------
 //------------------------------------------- Generic SeparableCompOpAVXF Template Selector
-template< eBlendingMode _BM >
+template< eBlendMode _BM >
 ULIS_FORCEINLINE Vec8f SeparableCompOpAVXF( Vec8f iCs, Vec8f iCb, Vec8f iAb, Vec8f iVar ) {
     ULIS_ASSERT( false, "Blend Specialization Not Implemented" );
     return  0.f;

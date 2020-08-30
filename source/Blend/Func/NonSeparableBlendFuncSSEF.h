@@ -194,7 +194,7 @@ ULIS_FORCEINLINE Vec4f BlendAngleCorrectedSSEF( Vec4f iCs, Vec4f iCb ) {
 // NonSeparableOpSSEF Template Selector
 //--------------------------------------------------------------------------------------
 //-------------------------------------------- Generic NonSeparableOpSSEF Template Selector
-template< eBlendingMode _BM >
+template< eBlendMode _BM >
 ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF( Vec4f iCs, Vec4f iCb ) {
     ULIS_ASSERT( false, "Blend Specialization Not Implemented" );
     return  {};
@@ -214,7 +214,7 @@ template<> ULIS_FORCEINLINE Vec4f NonSeparableOpSSEF< BM_ANGLECORRECTED       >(
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------- CompOp Version
-template< eBlendingMode _BM > ULIS_FORCEINLINE Vec4f NonSeparableCompOpSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeNonSeparableSSEF( iCs, iCb, iAb, iVar, NonSeparableOpSSEF< _BM >( iCs, iCb ) ); }
+template< eBlendMode _BM > ULIS_FORCEINLINE Vec4f NonSeparableCompOpSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar ) { return  ComposeNonSeparableSSEF( iCs, iCb, iAb, iVar, NonSeparableOpSSEF< _BM >( iCs, iCb ) ); }
 
 ULIS_NAMESPACE_END
 

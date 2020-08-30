@@ -16,8 +16,8 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// eBlendingMode
-enum eBlendingMode
+// eBlendMode
+enum eBlendMode
 {
       BM_NORMAL
     , BM_TOP
@@ -153,7 +153,7 @@ static
 inline
 constexpr
 eBlendQualifier
-BlendingModeQualifier( eBlendingMode iBlendingMode )
+BlendingModeQualifier( eBlendMode iBlendingMode )
 {
     switch( iBlendingMode ) {
         case BM_DISSOLVE            :   return  BlendQualifier_Misc;

@@ -61,7 +61,7 @@ main( int argc, char *argv[] ) {
         int x = ( i % 8 ) * sourceRect.w;
         int y = ( i / 8 ) * sourceRect.h;
         Copy(   threadPool, ULIS_BLOCKING, perfIntentCopy, host, ULIS_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
-        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), AM_NORMAL, 0.5f );
         Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
         Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS_NOAA, BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
         std::string bm = kwBlendingMode[i];

@@ -177,7 +177,7 @@ ULIS_FORCEINLINE ufloat BlendGlowF( ufloat iCs, ufloat iCb ) {
 // SeparableCompOpF Template Selector
 //--------------------------------------------------------------------------------------
 //------------------------------------------- Generic SeparableCompOpF Template Selector
-template< eBlendingMode _BM >
+template< eBlendMode _BM >
 ULIS_FORCEINLINE ufloat SeparableCompOpF( ufloat iCs, ufloat iCb, ufloat iAb, ufloat iVar ) {
     ULIS_ASSERT( false, "Blend Specialization Not Implemented" );
     return  0.f;

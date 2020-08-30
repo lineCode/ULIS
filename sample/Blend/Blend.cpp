@@ -129,9 +129,9 @@ main( int argc, char *argv[] ) {
         // Notice the BLOCKING here: we don't want Copy and Blend to be concurrent as they work on the same region in a given loop iteration.
         Copy(   threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
 
-        // Then we perform the blend by iterating over all blending modes ( see i cast to eBlendingMode enum value ).
+        // Then we perform the blend by iterating over all blending modes ( see i cast to eBlendMode enum value ).
         // By default we'll use a normal alphaMode for nicer results in this context, and an opacity of 0.5, which is a normalized value that corresponds to 50%, half-fade.
-        Blend(  threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendingMode >( i ), AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), AM_NORMAL, 0.5f );
     }
     // Fence the pool here to make sure the very last blend is completed.
     // You may have noticed that we did not fence after Blend inside the loop.

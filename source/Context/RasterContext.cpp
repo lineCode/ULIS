@@ -76,7 +76,7 @@ FRasterContext::Blend(
     , FBlock& iBackdrop
     , const FRectI& iSourceRect
     , const FVec2I& iPosition
-    , eBlendingMode iBlendingMode
+    , eBlendMode iBlendingMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
     , const FSchedulePolicy& iPolicy
@@ -101,7 +101,7 @@ FRasterContext::BlendAA(
     , FBlock& iBackdrop
     , const FRectI& iSourceRect
     , const FVec2F& iPosition
-    , eBlendingMode iBlendingMode
+    , eBlendMode iBlendingMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
     , const FSchedulePolicy& iPolicy

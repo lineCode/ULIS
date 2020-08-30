@@ -28,7 +28,7 @@ ULIS_API void Blend( FThreadPool*              iThreadPool
                     , const FRectI&              iSourceRect
                     , const FVec2F&             iPosition
                     , bool                      iSubpixelFlag
-                    , eBlendingMode             iBlendingMode
+                    , eBlendMode             iBlendingMode
                     , eAlphaMode                iAlphaMode
                     , float                     iOpacityValue );
 
@@ -58,7 +58,7 @@ ULIS_API void BlendTiled( FThreadPool*             iThreadPool
                          , const FRectI&             iSourceRect
                          , const FRectI&             iDestRect
                          , const FVec2I&            iShift
-                         , eBlendingMode            iBlendingMode
+                         , eBlendMode            iBlendingMode
                          , eAlphaMode               iAlphaMode
                          , float                    iOpacityValue );
 
@@ -71,7 +71,7 @@ ULIS_API void BlendColor( FThreadPool*             iThreadPool
                          , const FColor&       iColor
                          , FBlock*                  iBackdrop
                          , const FRectI&             iDestRect
-                         , eBlendingMode            iBlendingMode
+                         , eBlendMode            iBlendingMode
                          , eAlphaMode               iAlphaMode
                          , float                    iOpacityValue );
 ULIS_NAMESPACE_END

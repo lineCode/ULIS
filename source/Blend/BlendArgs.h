@@ -31,7 +31,7 @@ struct FBlendArgs {
     FVec2F                  subpixelComponent;
     FVec2F                  buspixelComponent;
     bool                    subpixelFlag;
-    eBlendingMode           blendingMode;
+    eBlendMode           blendingMode;
     eAlphaMode              alphaMode;
     ufloat                  opacityValue;
     FVec2I                  shift;

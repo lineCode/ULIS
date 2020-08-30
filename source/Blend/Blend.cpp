@@ -33,7 +33,7 @@ void Blend( FThreadPool*            iThreadPool
           , const FRectI&            iSourceRect
           , const FVec2F&           iPosition
           , bool                    iSubpixelFlag
-          , eBlendingMode           iBlendingMode
+          , eBlendMode           iBlendingMode
           , eAlphaMode              iAlphaMode
           , float                   iOpacityValue )
 {
@@ -176,7 +176,7 @@ void BlendTiled( FThreadPool*               iThreadPool
                , const FRectI&               iSourceRect
                , const FRectI&               iDestRect
                , const FVec2I&              iShift
-               , eBlendingMode              iBlendingMode
+               , eBlendMode              iBlendingMode
                , eAlphaMode                 iAlphaMode
                , float                      iOpacityValue )
 {
@@ -247,7 +247,7 @@ void BlendColor( FThreadPool*           iThreadPool
                , const FColor&     iColor
                , FBlock*                iBackdrop
                , const FRectI&           iDestRect
-               , eBlendingMode          iBlendingMode
+               , eBlendMode          iBlendingMode
                , eAlphaMode             iAlphaMode
                , float                  iOpacityValue )
 {

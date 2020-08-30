@@ -120,7 +120,7 @@ int blend( int argc, char *argv[] ) {
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
     std::string opt = std::string( argv[6] );
-    eBlendingMode   blendingMode    = static_cast< eBlendingMode >( std::atoi( std::string( argv[7] ).c_str() ) );
+    eBlendMode   blendingMode    = static_cast< eBlendMode >( std::atoi( std::string( argv[7] ).c_str() ) );
     eAlphaMode      alphaMode       = static_cast< eAlphaMode >( std::atoi( std::string( argv[8] ).c_str() ) );
     bool            subpixelFlag    = static_cast< bool >( std::atoi( std::string( argv[9] ).c_str() ) );
     uint32 optBit = 0;

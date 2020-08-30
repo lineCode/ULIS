@@ -68,7 +68,7 @@ private:
     FColor*                mBGParticleColor;
     FColor*                mDarkParticleColor;
     FColor*                mLightParticleColor;
-    eBlendingMode               mCurrentBlendingMode;
+    eBlendMode               mCurrentBlendingMode;
     float                       mCurrentOpacity;
     float                       mMul;
 };
