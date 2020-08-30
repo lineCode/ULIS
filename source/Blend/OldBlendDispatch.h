@@ -52,9 +52,9 @@ typedef void (*fpBlendInvocationScheduler)( std::shared_ptr< const FBlendArgs > 
 #define ULIS_IMP_BLEND_INVOCATION_SELECTOR( TAG, MISC, MISCAA, SEP, SEPAA, NSEP, NSEPAA )   \
 fpBlendInvocation TAG ( const FBlendArgs& iInfo ) {                                         \
     switch( BlendingModeQualifier( iInfo.blendingMode ) ) {                                 \
-        case BMQ_MISC           : return  iInfo.subpixelFlag ? MISCAA   : MISC;             \
-        case BMQ_SEPARABLE      : return  iInfo.subpixelFlag ? SEPAA    : SEP;              \
-        case BMQ_NONSEPARABLE   : return  iInfo.subpixelFlag ? NSEPAA   : NSEP;             \
+        case BlendQualifier_Misc           : return  iInfo.subpixelFlag ? MISCAA   : MISC;  \
+        case BlendQualifier_Separable      : return  iInfo.subpixelFlag ? SEPAA    : SEP;   \
+        case BlendQualifier_NonSeparable   : return  iInfo.subpixelFlag ? NSEPAA   : NSEP;  \
         default                 : return  nullptr;                                          \
     }                                                                                       \
 }
@@ -67,9 +67,9 @@ fpBlendInvocation TAG ( const FBlendArgs& iInfo ) {                 \
 #define ULIS_IMP_TILEDBLEND_INVOCATION_SELECTOR( TAG, MISC, SEP, NSEP ) \
 fpBlendInvocation TAG ( const FBlendArgs& iInfo ) {                     \
     switch( BlendingModeQualifier( iInfo.blendingMode ) ) {             \
-        case BMQ_MISC           : return  MISC;                         \
-        case BMQ_SEPARABLE      : return  SEP;                          \
-        case BMQ_NONSEPARABLE   : return  NSEP;                         \
+        case BlendQualifier_Misc           : return  MISC;              \
+        case BlendQualifier_Separable      : return  SEP;               \
+        case BlendQualifier_NonSeparable   : return  NSEP;              \
         default                 : return  nullptr;                      \
     }                                                                   \
 }

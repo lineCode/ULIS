@@ -144,9 +144,9 @@ static const char* kwAlphaMode[] =
 // eBlendQualifier
 enum eBlendQualifier
 {
-      BMQ_SEPARABLE
-    , BMQ_NONSEPARABLE
-    , BMQ_MISC
+      BlendQualifier_Separable
+    , BlendQualifier_NonSeparable
+    , BlendQualifier_Misc
 };
 
 static
@@ -156,18 +156,18 @@ eBlendQualifier
 BlendingModeQualifier( eBlendingMode iBlendingMode )
 {
     switch( iBlendingMode ) {
-        case BM_DISSOLVE            :   return  BMQ_MISC;
-        case BM_BAYERDITHER8x8      :   return  BMQ_MISC;
-        case BM_DARKERCOLOR         :   return  BMQ_NONSEPARABLE;
-        case BM_LIGHTERCOLOR        :   return  BMQ_NONSEPARABLE;
-        case BM_HUE                 :   return  BMQ_NONSEPARABLE;
-        case BM_SATURATION          :   return  BMQ_NONSEPARABLE;
-        case BM_COLOR               :   return  BMQ_NONSEPARABLE;
-        case BM_LUMINOSITY          :   return  BMQ_NONSEPARABLE;
-        case BM_PARTIALDERIVATIVE   :   return  BMQ_NONSEPARABLE;
-        case BM_WHITEOUT            :   return  BMQ_NONSEPARABLE;
-        case BM_ANGLECORRECTED      :   return  BMQ_NONSEPARABLE;
-        default                     :   return  BMQ_SEPARABLE;
+        case BM_DISSOLVE            :   return  BlendQualifier_Misc;
+        case BM_BAYERDITHER8x8      :   return  BlendQualifier_Misc;
+        case BM_DARKERCOLOR         :   return  BlendQualifier_NonSeparable;
+        case BM_LIGHTERCOLOR        :   return  BlendQualifier_NonSeparable;
+        case BM_HUE                 :   return  BlendQualifier_NonSeparable;
+        case BM_SATURATION          :   return  BlendQualifier_NonSeparable;
+        case BM_COLOR               :   return  BlendQualifier_NonSeparable;
+        case BM_LUMINOSITY          :   return  BlendQualifier_NonSeparable;
+        case BM_PARTIALDERIVATIVE   :   return  BlendQualifier_NonSeparable;
+        case BM_WHITEOUT            :   return  BlendQualifier_NonSeparable;
+        case BM_ANGLECORRECTED      :   return  BlendQualifier_NonSeparable;
+        default                     :   return  BlendQualifier_Separable;
     }
 }
 

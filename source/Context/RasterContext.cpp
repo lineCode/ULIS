@@ -85,9 +85,9 @@ FRasterContext::Blend(
 {
     fpBlendInvocationScheduler run = nullptr;
     switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BMQ_MISC           : run = mContextualDispatchTable->mScheduleBlendMisc;
-        case BMQ_SEPARABLE      : run = mContextualDispatchTable->mScheduleBlendSeparable;
-        case BMQ_NONSEPARABLE   : run = mContextualDispatchTable->mScheduleBlendNonSeparable;
+        case BlendQualifier_Misc            : run = mContextualDispatchTable->mScheduleBlendMisc;
+        case BlendQualifier_Separable       : run = mContextualDispatchTable->mScheduleBlendSeparable;
+        case BlendQualifier_NonSeparable    : run = mContextualDispatchTable->mScheduleBlendNonSeparable;
     }
     ULIS_ASSERT( run, "Error: No dispatch found." );
 
@@ -110,9 +110,9 @@ FRasterContext::BlendAA(
 {
     fpBlendInvocationScheduler run = nullptr;
     switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BMQ_MISC           : run = mContextualDispatchTable->mScheduleBlendMiscSubpixel;
-        case BMQ_SEPARABLE      : run = mContextualDispatchTable->mScheduleBlendSeparableSubpixel;
-        case BMQ_NONSEPARABLE   : run = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
+        case BlendQualifier_Misc            : run = mContextualDispatchTable->mScheduleBlendMiscSubpixel;
+        case BlendQualifier_Separable       : run = mContextualDispatchTable->mScheduleBlendSeparableSubpixel;
+        case BlendQualifier_NonSeparable    : run = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
     }
     ULIS_ASSERT( run, "Error: No dispatch found." );
 
