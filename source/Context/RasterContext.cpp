@@ -83,15 +83,13 @@ FRasterContext::Blend(
     , const FSchedulePolicy& iPolicy
 )
 {
-    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendSeparable,      "Error: No dispatch found." );
-    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendNonSeparable,   "Error: No dispatch found." );
-    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendMisc,           "Error: No dispatch found." );
+    fpBlendInvocationScheduler run = nullptr;
     switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BMQ_MISC           : return;
-        case BMQ_SEPARABLE      : return;
-        case BMQ_NONSEPARABLE   : return;
-        default                 : ULIS_ASSERT( false, "Error: Implementation path is not hooked for qualifier." ); return;
+        case BMQ_MISC           : run = mContextualDispatchTable->mScheduleBlendMisc;
+        case BMQ_SEPARABLE      : run = mContextualDispatchTable->mScheduleBlendSeparable;
+        case BMQ_NONSEPARABLE   : run = mContextualDispatchTable->mScheduleBlendNonSeparable;
     }
+    ULIS_ASSERT( run, "Error: No dispatch found." );
 }
 
 void
@@ -106,15 +104,13 @@ FRasterContext::BlendAA(
     , const FSchedulePolicy& iPolicy
 )
 {
-    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendSeparableSubpixel,      "Error: No dispatch found." );
-    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendNonSeparableSubpixel,   "Error: No dispatch found." );
-    ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendMiscSubpixel,           "Error: No dispatch found." );
+    fpBlendInvocationScheduler run = nullptr;
     switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BMQ_MISC           : return;
-        case BMQ_SEPARABLE      : return;
-        case BMQ_NONSEPARABLE   : return;
-        default                 : ULIS_ASSERT( false, "Error: Implementation path is not hooked for qualifier." ); return;
+        case BMQ_MISC           : run = mContextualDispatchTable->mScheduleBlendMiscSubpixel;
+        case BMQ_SEPARABLE      : run = mContextualDispatchTable->mScheduleBlendSeparableSubpixel;
+        case BMQ_NONSEPARABLE   : run = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
     }
+    ULIS_ASSERT( run, "Error: No dispatch found." );
 }
 
 
