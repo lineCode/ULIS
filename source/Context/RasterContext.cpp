@@ -113,6 +113,5 @@ FRasterContext::BlendAA(
     ULIS_ASSERT( run, "Error: No dispatch found." );
 }
 
-
 ULIS_NAMESPACE_END
 
