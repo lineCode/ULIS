@@ -541,3 +541,7 @@ span.keyword {
 .memname td {
     padding-left: 5px;
 }
+
+.paramname code, .paramname code a, .paramname code a:visited {
+    color: #aeaeae;
+}
