@@ -59,7 +59,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* i
             float s11, s01, s10, s00, v1, v2, srcvf;
             SampleSubpixelChannel( srcvf, r );
             float bdpvf = TYPE2FLOAT( bdp, r );
-            FLOAT2TYPE( bdp, r, SeparableCompOpF< Blend_NORMAL >( srcvf, bdpvf, alpha_bdp, var ) );
+            FLOAT2TYPE( bdp, r, SeparableCompOpF< Blend_Normal >( srcvf, bdpvf, alpha_bdp, var ) );
         }
 
         FLOAT2TYPE( bdp, fmt.AID, alpha_comp );
@@ -105,7 +105,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint
             uint8 r = fmt.IDT[j];
             float srcvf = TYPE2FLOAT( src, r );
             float bdpvf = TYPE2FLOAT( bdp, r );
-            FLOAT2TYPE( bdp, r, SeparableCompOpF< Blend_NORMAL >( srcvf, bdpvf, alpha_bdp, var ) );
+            FLOAT2TYPE( bdp, r, SeparableCompOpF< Blend_Normal >( srcvf, bdpvf, alpha_bdp, var ) );
         }
 
         FLOAT2TYPE( bdp, fmt.AID, alpha_comp );

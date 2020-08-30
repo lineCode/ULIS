@@ -77,15 +77,15 @@ ULIS_FORCEINLINE ufloat AlphaF( ufloat iCs, ufloat iCb ) {
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------- AlphaF Template Selector Specializations
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_NORMAL   >( ufloat iCs, ufloat iCb ) { return  AlphaNormalF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_ERASE    >( ufloat iCs, ufloat iCb ) { return  AlphaEraseF(  iCs, iCb ); }
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_TOP      >( ufloat iCs, ufloat iCb ) { return  AlphaTopF(    iCs, iCb ); }
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_BACK     >( ufloat iCs, ufloat iCb ) { return  AlphaBackF(   iCs, iCb ); }
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_SUB      >( ufloat iCs, ufloat iCb ) { return  AlphaSubF(    iCs, iCb ); }
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_ADD      >( ufloat iCs, ufloat iCb ) { return  AlphaAddF(    iCs, iCb ); }
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_MUL      >( ufloat iCs, ufloat iCb ) { return  AlphaMulF(    iCs, iCb ); }
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_MIN      >( ufloat iCs, ufloat iCb ) { return  AlphaMinF(    iCs, iCb ); }
-template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_MAX      >( ufloat iCs, ufloat iCb ) { return  AlphaMaxF(    iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Normal   >( ufloat iCs, ufloat iCb ) { return  AlphaNormalF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Erase    >( ufloat iCs, ufloat iCb ) { return  AlphaEraseF(  iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Top      >( ufloat iCs, ufloat iCb ) { return  AlphaTopF(    iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Back     >( ufloat iCs, ufloat iCb ) { return  AlphaBackF(   iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Sub      >( ufloat iCs, ufloat iCb ) { return  AlphaSubF(    iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Add      >( ufloat iCs, ufloat iCb ) { return  AlphaAddF(    iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Mul      >( ufloat iCs, ufloat iCb ) { return  AlphaMulF(    iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Min      >( ufloat iCs, ufloat iCb ) { return  AlphaMinF(    iCs, iCb ); }
+template<> ULIS_FORCEINLINE ufloat AlphaF< Alpha_Max      >( ufloat iCs, ufloat iCb ) { return  AlphaMaxF(    iCs, iCb ); }
 
 ULIS_NAMESPACE_END
 

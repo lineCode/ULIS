@@ -77,15 +77,15 @@ ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF( Vec4f iCs, Vec4f iCb ) {
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------ AlphaSSEF Template Selector Specializations
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_NORMAL    >( Vec4f iCs, Vec4f iCb ) { return  AlphaNormalSSEF(    iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_ERASE     >( Vec4f iCs, Vec4f iCb ) { return  AlphaEraseSSEF(     iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_TOP       >( Vec4f iCs, Vec4f iCb ) { return  AlphaTopSSEF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_BACK      >( Vec4f iCs, Vec4f iCb ) { return  AlphaBackSSEF(      iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_SUB       >( Vec4f iCs, Vec4f iCb ) { return  AlphaSubSSEF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_ADD       >( Vec4f iCs, Vec4f iCb ) { return  AlphaAddSSEF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_MUL       >( Vec4f iCs, Vec4f iCb ) { return  AlphaMulSSEF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_MIN       >( Vec4f iCs, Vec4f iCb ) { return  AlphaMinSSEF(       iCs, iCb ); }
-template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_MAX       >( Vec4f iCs, Vec4f iCb ) { return  AlphaMaxSSEF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Normal    >( Vec4f iCs, Vec4f iCb ) { return  AlphaNormalSSEF(    iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Erase     >( Vec4f iCs, Vec4f iCb ) { return  AlphaEraseSSEF(     iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Top       >( Vec4f iCs, Vec4f iCb ) { return  AlphaTopSSEF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Back      >( Vec4f iCs, Vec4f iCb ) { return  AlphaBackSSEF(      iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Sub       >( Vec4f iCs, Vec4f iCb ) { return  AlphaSubSSEF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Add       >( Vec4f iCs, Vec4f iCb ) { return  AlphaAddSSEF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Mul       >( Vec4f iCs, Vec4f iCb ) { return  AlphaMulSSEF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Min       >( Vec4f iCs, Vec4f iCb ) { return  AlphaMinSSEF(       iCs, iCb ); }
+template<> ULIS_FORCEINLINE Vec4f ULIS_VECTORCALL AlphaSSEF< Alpha_Max       >( Vec4f iCs, Vec4f iCb ) { return  AlphaMaxSSEF(       iCs, iCb ); }
 
 ULIS_NAMESPACE_END
 

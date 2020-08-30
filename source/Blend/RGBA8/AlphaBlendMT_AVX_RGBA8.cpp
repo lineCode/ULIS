@@ -124,7 +124,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
         memcpy( &bdp128, iBdp, 8 );
         Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( bdp128 ) ) ) / 255.f;
         Vec8f   res_chan;
-        res_chan = SeparableCompOpAVXF< Blend_NORMAL >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
+        res_chan = SeparableCompOpAVXF< Blend_Normal >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
 
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
         Vec8us _pack1 = compress( _pack0 );
@@ -186,7 +186,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
         Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( iSrc ) ) ) ) / 255.f;
         Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( iBdp ) ) ) ) / 255.f;
         Vec8f   res_chan;
-        res_chan = SeparableCompOpAVXF< Blend_NORMAL >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
+        res_chan = SeparableCompOpAVXF< Blend_Normal >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
 
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
         Vec8us _pack1 = compress( _pack0 );
@@ -210,7 +210,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
         Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( iSrc ) ) ) ) / 255.f;
         Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( iBdp ) ) ) ) / 255.f;
         Vec8f   res_chan;
-        res_chan = SeparableCompOpAVXF< Blend_NORMAL >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
+        res_chan = SeparableCompOpAVXF< Blend_Normal >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
 
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
         Vec8us _pack1 = compress( _pack0 );

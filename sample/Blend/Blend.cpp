@@ -118,7 +118,7 @@ main( int argc, char *argv[] ) {
     // We will first tile the base block layout on a regular grid in the blockCanvas block
     // For that we do not need to perform a blend, a simple copy should suffice.
     // Then we blend the over block over the canvas, where the base has been copied first.
-    for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
+    for( int i = 0; i < NumBlendingModes; ++i ) {
         // Compute x & y in regular grid, remember we tile it in a 8 * 5 grid and NUM_BLENDING_MODES = 40.
         int x = ( i % 8 ) * sourceRect.w;
         int y = ( i / 8 ) * sourceRect.h;
@@ -131,7 +131,7 @@ main( int argc, char *argv[] ) {
 
         // Then we perform the blend by iterating over all blending modes ( see i cast to eBlendMode enum value ).
         // By default we'll use a normal alphaMode for nicer results in this context, and an opacity of 0.5, which is a normalized value that corresponds to 50%, half-fade.
-        Blend(  threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f );
     }
     // Fence the pool here to make sure the very last blend is completed.
     // You may have noticed that we did not fence after Blend inside the loop.

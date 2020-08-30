@@ -33,7 +33,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iB
     uint8*              bdp     = iBdp;
 
     switch( info.blendingMode ) {
-        case Blend_DISSOLVE: {
+        case Blend_Dissolve: {
             int32 seedy = info.backdropWorkingRect.y + iLine + 1;
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
 
@@ -56,7 +56,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iB
             break;
         }
 
-        case Blend_BAYERDITHER8x8: {
+        case Blend_BayerDither8x8: {
             for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
                 const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
                 const float alpha_src   = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;
