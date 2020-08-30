@@ -7,7 +7,7 @@
 *
 * @file         CommmandArgs.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the ICommmandArgs structure.
+* @brief        This file provides the definition for the ICommmandArgs class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
