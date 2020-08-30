@@ -20,7 +20,8 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FBlendArgs
-struct FBlendArgs {
+class FBlendArgs {
+public:
     FThreadPool*            pool;
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;

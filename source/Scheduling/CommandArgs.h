@@ -5,25 +5,23 @@
 *   ULIS
 *__________________
 *
-* @file         CommmandArgs.cpp
+* @file         CommmandArgs.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the ICommmandArgs structure.
+* @brief        This file provides the declaration for the ICommmandArgs structure.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Scheduling/CommandArgs.h"
+#include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FBlendArgs
-ICommandArgs::~ICommandArgs()
-{
-}
-
-ICommandArgs::ICommandArgs()
-{
-}
+class ICommandArgs {
+public:
+    virtual ~ICommandArgs() = 0;
+    ICommandArgs();
+};
 
 ULIS_NAMESPACE_END
 

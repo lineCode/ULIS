@@ -25,7 +25,7 @@
 #include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
 
 ULIS_NAMESPACE_BEGIN
-struct FBlendArgs;
+class FBlendArgs;
 typedef void (*fpBlendInvocationScheduler)( std::shared_ptr< const FBlendArgs > iBlendParams );
 
 /////////////////////////////////////////////////////
