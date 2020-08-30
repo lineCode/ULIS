@@ -224,15 +224,15 @@ BlendingModeQualifier( eBlendMode iBlendingMode )
     ULIS_FOR_ALL_NONSEPARABLE_BM_DO(   X, _E0, _E1, _E2, _E3 )  \
     ULIS_FOR_ALL_MISC_BM_DO(           X, _E0, _E1, _E2, _E3 )
 
-#define ULIS_FOR_ALL_AM_DO( X, _E0, _E1, _E2, _E3 )     \
-    X( Alpha_Normal        , _E0, _E1, _E2, _E3 )          \
-    X( Alpha_Erase         , _E0, _E1, _E2, _E3 )          \
-    X( Alpha_Top           , _E0, _E1, _E2, _E3 )          \
-    X( Alpha_Back          , _E0, _E1, _E2, _E3 )          \
-    X( Alpha_Sub           , _E0, _E1, _E2, _E3 )          \
-    X( Alpha_Add           , _E0, _E1, _E2, _E3 )          \
-    X( Alpha_Mul           , _E0, _E1, _E2, _E3 )          \
-    X( Alpha_Min           , _E0, _E1, _E2, _E3 )          \
+#define ULIS_FOR_ALL_AM_DO( X, _E0, _E1, _E2, _E3 ) \
+    X( Alpha_Normal        , _E0, _E1, _E2, _E3 )   \
+    X( Alpha_Erase         , _E0, _E1, _E2, _E3 )   \
+    X( Alpha_Top           , _E0, _E1, _E2, _E3 )   \
+    X( Alpha_Back          , _E0, _E1, _E2, _E3 )   \
+    X( Alpha_Sub           , _E0, _E1, _E2, _E3 )   \
+    X( Alpha_Add           , _E0, _E1, _E2, _E3 )   \
+    X( Alpha_Mul           , _E0, _E1, _E2, _E3 )   \
+    X( Alpha_Min           , _E0, _E1, _E2, _E3 )   \
     X( Alpha_Max           , _E0, _E1, _E2, _E3 )
 
 ULIS_NAMESPACE_END
