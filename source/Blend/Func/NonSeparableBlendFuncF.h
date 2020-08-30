@@ -179,15 +179,15 @@ ULIS_FORCEINLINE FRGBF NonSeparableOpF( const FRGBF& iCs, const FRGBF& iCb ) {
 
 //--------------------------------------------------------------------------------------
 //------------------------------------ NonSeparableOpF Template Selector Specializations
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_DARKERCOLOR          >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendDarkerColorF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_LIGHTERCOLOR         >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLighterColorF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_HUE                  >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendHueF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_SATURATION           >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendSaturationF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_COLOR                >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendColorF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_LUMINOSITY           >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLuminosityF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_PARTIALDERIVATIVE    >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendPartialDerivativeF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_WHITEOUT             >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendWhiteoutF( iCs, iCb ); }
-template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< BM_ANGLECORRECTED       >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendAngleCorrectedF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_DARKERCOLOR          >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendDarkerColorF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_LIGHTERCOLOR         >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLighterColorF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_HUE                  >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendHueF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_SATURATION           >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendSaturationF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_COLOR                >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendColorF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_LUMINOSITY           >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendLuminosityF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_PARTIALDERIVATIVE    >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendPartialDerivativeF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_WHITEOUT             >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendWhiteoutF( iCs, iCb ); }
+template<> ULIS_FORCEINLINE FRGBF NonSeparableOpF< Blend_ANGLECORRECTED       >( const FRGBF& iCs, const FRGBF& iCb ) { return  BlendAngleCorrectedF( iCs, iCb ); }
 
 ULIS_NAMESPACE_END
 

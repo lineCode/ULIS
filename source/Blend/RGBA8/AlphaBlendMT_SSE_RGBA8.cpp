@@ -88,7 +88,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
 
         Vec4f bdp_chan = Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( iBdp ) ) ) ) ) / 255.f;
         Vec4f res_chan;
-        res_chan = SeparableCompOpSSEF< BM_NORMAL >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
+        res_chan = SeparableCompOpSSEF< Blend_NORMAL >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
 
         auto _pack = _mm_cvtps_epi32( res_chan );
         _pack = _mm_packus_epi32( _pack, _pack );

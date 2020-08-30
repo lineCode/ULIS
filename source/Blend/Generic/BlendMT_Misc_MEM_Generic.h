@@ -39,7 +39,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const uint8* iSrc, uint8
     const bool hasTopData   = info.sourceRect.y + info.shift.y > 0;
 
     switch( info.blendingMode ) {
-        case BM_DISSOLVE: {
+        case Blend_DISSOLVE: {
             int32 seedy = info.backdropWorkingRect.y + iLine + 1;
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
             float m11, m01, m10, m00, vv0, vv1, res;
@@ -69,7 +69,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel( const uint8* iSrc, uint8
             break;
         }
 
-        case BM_BAYERDITHER8x8: {
+        case Blend_BAYERDITHER8x8: {
             float m11, m01, m10, m00, vv0, vv1, res;
             m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,              fmt.AID ) : 0.f;
             m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - fmt.BPP,    fmt.AID ) : 0.f;
@@ -128,7 +128,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, i
     uint8*              bdp     = iBdp;
 
     switch( info.blendingMode ) {
-        case BM_DISSOLVE: {
+        case Blend_DISSOLVE: {
             int32 seedy = info.backdropWorkingRect.y + iLine + 1;
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
 
@@ -149,7 +149,7 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, i
             break;
         }
 
-        case BM_BAYERDITHER8x8: {
+        case Blend_BAYERDITHER8x8: {
             for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
                 const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
                 const float alpha_src   = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;

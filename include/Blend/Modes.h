@@ -19,47 +19,47 @@ ULIS_NAMESPACE_BEGIN
 // eBlendMode
 enum eBlendMode
 {
-      BM_NORMAL
-    , BM_TOP
-    , BM_BACK
-    , BM_BEHIND
-    , BM_DISSOLVE
-    , BM_BAYERDITHER8x8
-    , BM_DARKEN
-    , BM_MULTIPLY
-    , BM_COLORBURN
-    , BM_LINEARBURN
-    , BM_DARKERCOLOR
-    , BM_LIGHTEN
-    , BM_SCREEN
-    , BM_COLORDODGE
-    , BM_LINEARDODGE
-    , BM_LIGHTERCOLOR
-    , BM_OVERLAY
-    , BM_SOFTLIGHT
-    , BM_HARDLIGHT
-    , BM_VIVIDLIGHT
-    , BM_LINEARLIGHT
-    , BM_PINLIGHT
-    , BM_HARDMIX
-    , BM_PHOENIX
-    , BM_REFLECT
-    , BM_GLOW
-    , BM_DIFFERENCE
-    , BM_EXCLUSION
-    , BM_ADD
-    , BM_SUBSTRACT
-    , BM_DIVIDE
-    , BM_AVERAGE
-    , BM_NEGATION
-    , BM_HUE
-    , BM_SATURATION
-    , BM_COLOR
-    , BM_LUMINOSITY
-    , BM_PARTIALDERIVATIVE
-    , BM_WHITEOUT
-    , BM_ANGLECORRECTED
-    , NUM_BLENDING_MODES
+      Blend_NORMAL
+    , Blend_TOP
+    , Blend_BACK
+    , Blend_BEHIND
+    , Blend_DISSOLVE
+    , Blend_BAYERDITHER8x8
+    , Blend_DARKEN
+    , Blend_MULTIPLY
+    , Blend_COLORBURN
+    , Blend_LINEARBURN
+    , Blend_DARKERCOLOR
+    , Blend_LIGHTEN
+    , Blend_SCREEN
+    , Blend_COLORDODGE
+    , Blend_LINEARDODGE
+    , Blend_LIGHTERCOLOR
+    , Blend_OVERLAY
+    , Blend_SOFTLIGHT
+    , Blend_HARDLIGHT
+    , Blend_VIVIDLIGHT
+    , Blend_LINEARLIGHT
+    , Blend_PINLIGHT
+    , Blend_HARDMIX
+    , Blend_PHOENIX
+    , Blend_REFLECT
+    , Blend_GLOW
+    , Blend_DIFFERENCE
+    , Blend_EXCLUSION
+    , Blend_ADD
+    , Blend_SUBSTRACT
+    , Blend_DIVIDE
+    , Blend_AVERAGE
+    , Blend_NEGATION
+    , Blend_HUE
+    , Blend_SATURATION
+    , Blend_COLOR
+    , Blend_LUMINOSITY
+    , Blend_PARTIALDERIVATIVE
+    , Blend_WHITEOUT
+    , Blend_ANGLECORRECTED
+    , NumBlendingModes
 };
 
 
@@ -122,7 +122,7 @@ enum eAlphaMode
     , AM_MUL
     , AM_MIN
     , AM_MAX
-    , NUM_ALPHA_MODES
+    , NumAlphaModes
 };
 
 
@@ -156,17 +156,17 @@ eBlendQualifier
 BlendingModeQualifier( eBlendMode iBlendingMode )
 {
     switch( iBlendingMode ) {
-        case BM_DISSOLVE            :   return  BlendQualifier_Misc;
-        case BM_BAYERDITHER8x8      :   return  BlendQualifier_Misc;
-        case BM_DARKERCOLOR         :   return  BlendQualifier_NonSeparable;
-        case BM_LIGHTERCOLOR        :   return  BlendQualifier_NonSeparable;
-        case BM_HUE                 :   return  BlendQualifier_NonSeparable;
-        case BM_SATURATION          :   return  BlendQualifier_NonSeparable;
-        case BM_COLOR               :   return  BlendQualifier_NonSeparable;
-        case BM_LUMINOSITY          :   return  BlendQualifier_NonSeparable;
-        case BM_PARTIALDERIVATIVE   :   return  BlendQualifier_NonSeparable;
-        case BM_WHITEOUT            :   return  BlendQualifier_NonSeparable;
-        case BM_ANGLECORRECTED      :   return  BlendQualifier_NonSeparable;
+        case Blend_DISSOLVE            :   return  BlendQualifier_Misc;
+        case Blend_BAYERDITHER8x8      :   return  BlendQualifier_Misc;
+        case Blend_DARKERCOLOR         :   return  BlendQualifier_NonSeparable;
+        case Blend_LIGHTERCOLOR        :   return  BlendQualifier_NonSeparable;
+        case Blend_HUE                 :   return  BlendQualifier_NonSeparable;
+        case Blend_SATURATION          :   return  BlendQualifier_NonSeparable;
+        case Blend_COLOR               :   return  BlendQualifier_NonSeparable;
+        case Blend_LUMINOSITY          :   return  BlendQualifier_NonSeparable;
+        case Blend_PARTIALDERIVATIVE   :   return  BlendQualifier_NonSeparable;
+        case Blend_WHITEOUT            :   return  BlendQualifier_NonSeparable;
+        case Blend_ANGLECORRECTED      :   return  BlendQualifier_NonSeparable;
         default                     :   return  BlendQualifier_Separable;
     }
 }
@@ -174,50 +174,50 @@ BlendingModeQualifier( eBlendMode iBlendingMode )
 /////////////////////////////////////////////////////
 // Macros
 #define ULIS_FOR_ALL_SEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )   \
-    X( BM_NORMAL            , _E0, _E1, _E2, _E3 )              \
-    X( BM_TOP               , _E0, _E1, _E2, _E3 )              \
-    X( BM_BACK              , _E0, _E1, _E2, _E3 )              \
-    X( BM_BEHIND            , _E0, _E1, _E2, _E3 )              \
-    X( BM_DARKEN            , _E0, _E1, _E2, _E3 )              \
-    X( BM_MULTIPLY          , _E0, _E1, _E2, _E3 )              \
-    X( BM_COLORBURN         , _E0, _E1, _E2, _E3 )              \
-    X( BM_LINEARBURN        , _E0, _E1, _E2, _E3 )              \
-    X( BM_LIGHTEN           , _E0, _E1, _E2, _E3 )              \
-    X( BM_SCREEN            , _E0, _E1, _E2, _E3 )              \
-    X( BM_COLORDODGE        , _E0, _E1, _E2, _E3 )              \
-    X( BM_LINEARDODGE       , _E0, _E1, _E2, _E3 )              \
-    X( BM_OVERLAY           , _E0, _E1, _E2, _E3 )              \
-    X( BM_SOFTLIGHT         , _E0, _E1, _E2, _E3 )              \
-    X( BM_HARDLIGHT         , _E0, _E1, _E2, _E3 )              \
-    X( BM_VIVIDLIGHT        , _E0, _E1, _E2, _E3 )              \
-    X( BM_LINEARLIGHT       , _E0, _E1, _E2, _E3 )              \
-    X( BM_PINLIGHT          , _E0, _E1, _E2, _E3 )              \
-    X( BM_HARDMIX           , _E0, _E1, _E2, _E3 )              \
-    X( BM_PHOENIX           , _E0, _E1, _E2, _E3 )              \
-    X( BM_REFLECT           , _E0, _E1, _E2, _E3 )              \
-    X( BM_GLOW              , _E0, _E1, _E2, _E3 )              \
-    X( BM_DIFFERENCE        , _E0, _E1, _E2, _E3 )              \
-    X( BM_EXCLUSION         , _E0, _E1, _E2, _E3 )              \
-    X( BM_ADD               , _E0, _E1, _E2, _E3 )              \
-    X( BM_SUBSTRACT         , _E0, _E1, _E2, _E3 )              \
-    X( BM_DIVIDE            , _E0, _E1, _E2, _E3 )              \
-    X( BM_AVERAGE           , _E0, _E1, _E2, _E3 )              \
-    X( BM_NEGATION          , _E0, _E1, _E2, _E3 )
+    X( Blend_NORMAL            , _E0, _E1, _E2, _E3 )              \
+    X( Blend_TOP               , _E0, _E1, _E2, _E3 )              \
+    X( Blend_BACK              , _E0, _E1, _E2, _E3 )              \
+    X( Blend_BEHIND            , _E0, _E1, _E2, _E3 )              \
+    X( Blend_DARKEN            , _E0, _E1, _E2, _E3 )              \
+    X( Blend_MULTIPLY          , _E0, _E1, _E2, _E3 )              \
+    X( Blend_COLORBURN         , _E0, _E1, _E2, _E3 )              \
+    X( Blend_LINEARBURN        , _E0, _E1, _E2, _E3 )              \
+    X( Blend_LIGHTEN           , _E0, _E1, _E2, _E3 )              \
+    X( Blend_SCREEN            , _E0, _E1, _E2, _E3 )              \
+    X( Blend_COLORDODGE        , _E0, _E1, _E2, _E3 )              \
+    X( Blend_LINEARDODGE       , _E0, _E1, _E2, _E3 )              \
+    X( Blend_OVERLAY           , _E0, _E1, _E2, _E3 )              \
+    X( Blend_SOFTLIGHT         , _E0, _E1, _E2, _E3 )              \
+    X( Blend_HARDLIGHT         , _E0, _E1, _E2, _E3 )              \
+    X( Blend_VIVIDLIGHT        , _E0, _E1, _E2, _E3 )              \
+    X( Blend_LINEARLIGHT       , _E0, _E1, _E2, _E3 )              \
+    X( Blend_PINLIGHT          , _E0, _E1, _E2, _E3 )              \
+    X( Blend_HARDMIX           , _E0, _E1, _E2, _E3 )              \
+    X( Blend_PHOENIX           , _E0, _E1, _E2, _E3 )              \
+    X( Blend_REFLECT           , _E0, _E1, _E2, _E3 )              \
+    X( Blend_GLOW              , _E0, _E1, _E2, _E3 )              \
+    X( Blend_DIFFERENCE        , _E0, _E1, _E2, _E3 )              \
+    X( Blend_EXCLUSION         , _E0, _E1, _E2, _E3 )              \
+    X( Blend_ADD               , _E0, _E1, _E2, _E3 )              \
+    X( Blend_SUBSTRACT         , _E0, _E1, _E2, _E3 )              \
+    X( Blend_DIVIDE            , _E0, _E1, _E2, _E3 )              \
+    X( Blend_AVERAGE           , _E0, _E1, _E2, _E3 )              \
+    X( Blend_NEGATION          , _E0, _E1, _E2, _E3 )
 
 #define ULIS_FOR_ALL_NONSEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )    \
-    X( BM_DARKERCOLOR       , _E0, _E1, _E2, _E3 )                  \
-    X( BM_LIGHTERCOLOR      , _E0, _E1, _E2, _E3 )                  \
-    X( BM_HUE               , _E0, _E1, _E2, _E3 )                  \
-    X( BM_SATURATION        , _E0, _E1, _E2, _E3 )                  \
-    X( BM_COLOR             , _E0, _E1, _E2, _E3 )                  \
-    X( BM_LUMINOSITY        , _E0, _E1, _E2, _E3 )                  \
-    X( BM_PARTIALDERIVATIVE , _E0, _E1, _E2, _E3 )                  \
-    X( BM_WHITEOUT          , _E0, _E1, _E2, _E3 )                  \
-    X( BM_ANGLECORRECTED    , _E0, _E1, _E2, _E3 )
+    X( Blend_DARKERCOLOR       , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_LIGHTERCOLOR      , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_HUE               , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_SATURATION        , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_COLOR             , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_LUMINOSITY        , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_PARTIALDERIVATIVE , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_WHITEOUT          , _E0, _E1, _E2, _E3 )                  \
+    X( Blend_ANGLECORRECTED    , _E0, _E1, _E2, _E3 )
 
 #define ULIS_FOR_ALL_MISC_BM_DO( X, _E0, _E1, _E2, _E3 )    \
-    X( BM_DISSOLVE          , _E0, _E1, _E2, _E3 )          \
-    X( BM_BAYERDITHER8x8    , _E0, _E1, _E2, _E3 )
+    X( Blend_DISSOLVE          , _E0, _E1, _E2, _E3 )          \
+    X( Blend_BAYERDITHER8x8    , _E0, _E1, _E2, _E3 )
 
 #define ULIS_FOR_ALL_BM_DO( X, _E0, _E1, _E2, _E3 )             \
     ULIS_FOR_ALL_SEPARABLE_BM_DO(      X, _E0, _E1, _E2, _E3 )  \
