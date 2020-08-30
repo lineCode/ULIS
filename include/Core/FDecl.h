@@ -38,6 +38,7 @@ class   ITiledBlock;
 class   ITilePool;
 class   FString;
 class   FWString;
+class   FSchedulePolicy;
 
 template< typename T > class TArray;
 

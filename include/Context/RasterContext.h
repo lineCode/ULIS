@@ -85,6 +85,7 @@ public:
               , eBlendingMode iBlendingMode = BM_NORMAL
               , eAlphaMode iAlphaMode = AM_NORMAL
               , ufloat iOpacity = 1.0f
+              , const FSchedulePolicy& iPolicy = FSchedulePolicy()
     );
 
     /*!
@@ -116,6 +117,7 @@ public:
               , eBlendingMode iBlendingMode = BM_NORMAL
               , eAlphaMode iAlphaMode = AM_NORMAL
               , ufloat iOpacity = 1.0f
+              , const FSchedulePolicy& iPolicy = FSchedulePolicy()
     );
 
 private:

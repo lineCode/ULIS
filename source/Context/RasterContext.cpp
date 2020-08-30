@@ -14,6 +14,7 @@
 #pragma once
 #include "Context/RasterContext.h"
 #include "Blend/BlendDispatch.h"
+#include "Dispatch/SchedulePolicy.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -78,7 +79,9 @@ FRasterContext::Blend(
     , const FVec2I& iPosition
     , eBlendingMode iBlendingMode
     , eAlphaMode iAlphaMode
-    , ufloat iOpacity )
+    , ufloat iOpacity
+    , const FSchedulePolicy& iPolicy
+)
 {
     ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendSeparable,      "Error: No dispatch found." );
     ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendNonSeparable,   "Error: No dispatch found." );
@@ -99,7 +102,9 @@ FRasterContext::BlendAA(
     , const FVec2F& iPosition
     , eBlendingMode iBlendingMode
     , eAlphaMode iAlphaMode
-    , ufloat iOpacity )
+    , ufloat iOpacity
+    , const FSchedulePolicy& iPolicy
+)
 {
     ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendSeparableSubpixel,      "Error: No dispatch found." );
     ULIS_ASSERT( mContextualDispatchTable.mScheduleBlendNonSeparableSubpixel,   "Error: No dispatch found." );
