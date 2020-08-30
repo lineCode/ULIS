@@ -41,6 +41,9 @@ public:
     /*! Constructor */
     FTaskEvent();
 
+    /*! Getter for the task policy */
+    const FSchedulePolicy& Policy() const;
+
 private:
     FSchedulePolicy mPolicy;
 };
