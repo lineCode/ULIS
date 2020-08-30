@@ -141,8 +141,8 @@ static const char* kwAlphaMode[] =
 };
 
 /////////////////////////////////////////////////////
-// eBlendingModeQualifier
-enum eBlendingModeQualifier
+// eBlendQualifier
+enum eBlendQualifier
 {
       BMQ_SEPARABLE
     , BMQ_NONSEPARABLE
@@ -152,7 +152,7 @@ enum eBlendingModeQualifier
 static
 inline
 constexpr
-eBlendingModeQualifier
+eBlendQualifier
 BlendingModeQualifier( eBlendingMode iBlendingMode )
 {
     switch( iBlendingMode ) {
