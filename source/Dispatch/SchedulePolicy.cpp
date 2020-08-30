@@ -22,11 +22,13 @@ FSchedulePolicy::~FSchedulePolicy()
 
 FSchedulePolicy::FSchedulePolicy(
       eScheduleRunPolicy iRun
+    , eScheduleFlowPolicy iFlow
     , eScheduleModePolicy iMode
     , eScheduleParameterPolicy iParam
     , uint32 iValue
 )
     : mRun( iRun )
+    , mFlow( iFlow )
     , mMode( iMode )
     , mParameter( iParam )
     , mValue( iValue )
@@ -38,6 +40,12 @@ eScheduleRunPolicy
 FSchedulePolicy::RunPolicy() const
 {
     return  mRun;
+}
+
+eScheduleFlowPolicy
+FSchedulePolicy::FlowPolicy() const
+{
+    return  mFlow;
 }
 
 eScheduleModePolicy

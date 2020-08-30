@@ -20,6 +20,11 @@ enum eScheduleRunPolicy : bool {
     , ScheduleRun_Multi = true
 };
 
+enum eScheduleFlowPolicy : bool {
+      ScheduleFlow_Blocking = false
+    , ScheduleFlow_NonBlocking = true
+};
+
 enum eScheduleModePolicy : uint8 {
       ScheduleMode_Scanlines = 0
     , ScheduleMode_Chunks = 1
@@ -57,6 +62,7 @@ public:
     */
     FSchedulePolicy(
           eScheduleRunPolicy iRun = ScheduleRun_Mono
+        , eScheduleFlowPolicy iFlow = ScheduleFlow_Blocking
         , eScheduleModePolicy iMode = ScheduleMode_Scanlines
         , eScheduleParameterPolicy iParam = ScheduleParameter_Unused
         , uint32 iValue = 0
@@ -64,6 +70,9 @@ public:
 
     /*! Getter for the Run Policy. */
     eScheduleRunPolicy RunPolicy() const;
+
+    /*! Getter for the Flow Policy. */
+    eScheduleFlowPolicy FlowPolicy() const;
 
     /*! Getter for the Mode Policy. */
     eScheduleModePolicy ModePolicy() const;
@@ -76,6 +85,7 @@ public:
 
 private:
     eScheduleRunPolicy          mRun;
+    eScheduleFlowPolicy         mFlow;
     eScheduleModePolicy         mMode;
     eScheduleParameterPolicy    mParameter;
     uint32                      mValue;
