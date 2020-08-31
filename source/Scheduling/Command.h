@@ -18,6 +18,9 @@
 #include "Scheduling/TaskEvent.h"
 
 ULIS_NAMESPACE_BEGIN
+class FCommand;
+typedef void (*fpCommandScheduler)( FCommand* );
+
 /////////////////////////////////////////////////////
 /// @class      FCommand
 /// @brief      The FCommand class provides a way to store awaiting commands in
@@ -44,9 +47,10 @@ public:
     FCommand& operator=( FCommand&& ) = delete;
 
 private:
-    ICommandArgs*   mArgs;
-    FTaskEvent      mEvent;
-    FSchedulePolicy mPolicy;
+    ICommandArgs*       mArgs;
+    FTaskEvent          mEvent;
+    FSchedulePolicy     mPolicy;
+    fpCommandScheduler  mCommand;
 };
 
 ULIS_NAMESPACE_END

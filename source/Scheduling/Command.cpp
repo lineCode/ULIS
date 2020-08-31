@@ -26,6 +26,7 @@ FCommand::FCommand( ICommandArgs* iArgs )
     : mArgs( iArgs )
     , mEvent( FTaskEvent() )
     , mPolicy( FSchedulePolicy() )
+    , mCommand( nullptr )
 {
 }
 
