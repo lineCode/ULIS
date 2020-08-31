@@ -18,12 +18,11 @@ ULIS_NAMESPACE_BEGIN
 
 FCommand::~FCommand()
 {
-    if( mArgs )
-        delete  mArgs;
+    delete  mArgs;
 }
 
-FCommand::FCommand()
-    : mArgs( nullptr )
+FCommand::FCommand( ICommandArgs* iArgs )
+    : mArgs( iArgs )
     , mEvent( FTaskEvent() )
     , mPolicy( FSchedulePolicy() )
 {

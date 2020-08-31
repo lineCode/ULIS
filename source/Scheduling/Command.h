@@ -13,9 +13,9 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Scheduling/CommandArgs.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/TaskEvent.h"
-#include "Scheduling/CommandArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -35,7 +35,13 @@ public:
     ~FCommand();
 
     /*! Constructor */
-    FCommand();
+    FCommand( ICommandArgs* iArgs );
+
+    FCommand() = delete;
+    FCommand( const FCommand& ) = delete;
+    FCommand( FCommand&& ) = delete;
+    FCommand& operator=( const FCommand& ) = delete;
+    FCommand& operator=( FCommand&& ) = delete;
 
 private:
     ICommandArgs*   mArgs;
