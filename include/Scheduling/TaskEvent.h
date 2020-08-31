@@ -52,7 +52,7 @@ public:
 
 private:
     FSchedulePolicy mPolicy;
-    eTaskStatus     mStatus
+    eTaskStatus     mStatus;
 };
 
 ULIS_NAMESPACE_END
