@@ -16,11 +16,14 @@
 #include "Blend/Modes.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include "Scheduling/CommandArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FBlendArgs
-class FBlendArgs {
+class FBlendArgs
+    : public ICommandArgs
+{
 public:
     FThreadPool*            pool;
     bool                    blocking;
@@ -32,7 +35,7 @@ public:
     FVec2F                  subpixelComponent;
     FVec2F                  buspixelComponent;
     bool                    subpixelFlag;
-    eBlendMode           blendingMode;
+    eBlendMode              blendingMode;
     eAlphaMode              alphaMode;
     ufloat                  opacityValue;
     FVec2I                  shift;
