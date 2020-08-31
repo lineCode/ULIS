@@ -35,7 +35,7 @@ public:
         CleanupBulk();
     }
 
-    /*! Default constructor with size 0, capicity 1, uninitialized. */
+    /*! Default constructor with size 0, capicity 0, uninitialized. */
     TArray< T >()
         : mBulk( nullptr )
         , mCapacity( 0 )
