@@ -22,6 +22,7 @@ FTaskEvent::~FTaskEvent()
 
 FTaskEvent::FTaskEvent()
     : mPolicy( FSchedulePolicy() )
+    , mStatus( TaskStatus_Idle )
 {
     // Nothing ATM
 }

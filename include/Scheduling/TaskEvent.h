@@ -16,6 +16,12 @@
 #include "Scheduling/SchedulePolicy.h"
 
 ULIS_NAMESPACE_BEGIN
+enum eTaskStatus : uint8 {
+      TaskStatus_Idle
+    , TaskStatus_Scheduled
+    , TaskStatus_Processing
+    , TaskStatus_Finished
+};
 /////////////////////////////////////////////////////
 /// @class      FTaskEvent
 /// @brief      The FTaskEvent class provides a way to get asynchronous status
@@ -46,6 +52,7 @@ public:
 
 private:
     FSchedulePolicy mPolicy;
+    eTaskStatus     mStatus
 };
 
 ULIS_NAMESPACE_END
