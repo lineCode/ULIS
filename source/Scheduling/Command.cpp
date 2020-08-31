@@ -18,7 +18,8 @@ ULIS_NAMESPACE_BEGIN
 
 FCommand::~FCommand()
 {
-    delete  mArgs;
+    if( mArgs )
+        delete  mArgs;
 }
 
 FCommand::FCommand()
