@@ -298,29 +298,10 @@ public:
         reallocating the underlying storage if the capacity has been reached.
     */
     void PushBack( const T& iValue ) {
-        if( mBulk == nullptr ) {
-            ULIS_ASSERT( mCapacity == 0, "Invalid state" );
-            mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) ) );
-            mCapacity = 1;
-            mSize = 1;
-            new  ( mBulk )  T( iValue );
-        } else {
-            if( mSize == mCapacity ) {
-                ULIS_ASSERT( mCapacity > 0, "Invalid state" );
-                uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
-                T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
-                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
-                XFree( mBulk );
-                mBulk = temp_bulk;
-                new  ( mBulk + mSize )  T( iValue );
-                mSize++;
-                mCapacity = new_cap;
-            } else {
-                ULIS_ASSERT( mSize < mCapacity, "Bad state" );
-                new  ( mBulk + mSize )  T( iValue );
-                mSize++;
-            }
-        }
+        if( mSize == mCapacity )
+            ReallocBulk( FMath::Max( 1, FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ) );
+        new  ( mBulk + mSize )  T( iValue );
+        mSize++;
     }
 
     /*!
@@ -328,29 +309,10 @@ public:
         reallocating the underlying storage if the capacity has been reached.
     */
     void PushBack( T&& iValue ) {
-        if( mBulk == nullptr ) {
-            ULIS_ASSERT( mCapacity == 0, "Invalid state" );
-            mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) ) );
-            mCapacity = 1;
-            mSize = 1;
-            new  ( mBulk )  T( iValue );
-        } else {
-            if( mSize == mCapacity ) {
-                ULIS_ASSERT( mCapacity > 0, "Invalid state" );
-                uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
-                T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
-                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
-                XFree( mBulk );
-                mBulk = temp_bulk;
-                new  ( mBulk + mSize )  T( iValue );
-                mSize++;
-                mCapacity = new_cap;
-            } else {
-                ULIS_ASSERT( mSize < mCapacity, "Bad state" );
-                new  ( mBulk + mSize )  T( iValue );
-                mSize++;
-            }
-        }
+        if( mSize == mCapacity )
+            ReallocBulk( FMath::Max( 1, FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ) );
+        new  ( mBulk + mSize )  T( std::forward( iValue ) );
+        mSize++;
     }
 
     /*!
@@ -359,29 +321,10 @@ public:
     */
     template< class... Args >
     void EmplaceBack( Args&& ... args ) {
-        if( mBulk == nullptr ) {
-            ULIS_ASSERT( mCapacity == 0, "Invalid state" );
-            mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) ) );
-            mCapacity = 1;
-            mSize = 1;
-            new  ( mBulk )  T( std::forward< Args >(args)... );
-        } else {
-            if( mSize == mCapacity ) {
-                ULIS_ASSERT( mCapacity > 0, "Invalid state" );
-                uint64 new_cap = static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) );
-                T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * new_cap ) );
-                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
-                XFree( mBulk );
-                mBulk = temp_bulk;
-                new  ( mBulk + mSize )  T( std::forward< Args >(args)... );
-                mSize++;
-                mCapacity = new_cap;
-            } else {
-                ULIS_ASSERT( mSize < mCapacity, "Bad state" );
-                new  ( mBulk + mSize )  T( std::forward< Args >(args)... );
-                mSize++;
-            }
-        }
+        if( mSize == mCapacity )
+            ReallocBulk( FMath::Max( 1, FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ) );
+        new  ( mBulk + mSize )  T( std::forward< Args >(args)... );
+        mSize++;
     }
 
 private:
