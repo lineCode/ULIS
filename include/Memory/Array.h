@@ -322,7 +322,7 @@ public:
     }
 
     /*!
-        Instert, insert a new element at pos in the buffer, possibly
+        Insert, insert a new element at pos in the buffer, possibly
         reallocating the underlying storage if the capacity has been reached.
     */
     void Insert( uint64 iPos, const T& iValue ) {
@@ -334,7 +334,7 @@ public:
     }
 
     /*!
-        Instert, insert a new element at pos in the buffer, possibly
+        Insert, insert a new element at pos in the buffer, possibly
         reallocating the underlying storage if the capacity has been reached.
     */
     void Insert( uint64 iPos, T&& iValue ) {
@@ -356,6 +356,19 @@ public:
         memmove( mBulk + iPos + 1, mBulk + iPos, mSize - iPos );
         new  ( mBulk + iPos )  T( std::forward< Args >(args)... );
         mSize++;
+    }
+
+    /*!
+        Insert, insert count new elements at pos in the buffer, possibly
+        reallocating the underlying storage if the capacity has been reached.
+    */
+    void Insert( uint64 iPos, uint64 iCount, const T& iValue ) {
+        ULIS_ASSERT( iPos < mSize, "Bad Index" );
+        Reserve( mSize + iCount );
+        memmove( mBulk + iPos + iCount, mBulk + iPos, mSize - iPos );
+        for( uint64 i = iPos; i < iPos + iCount; ++i )
+            new  ( mBulk + i )  T( iValue );
+        mSize += iCount;
     }
 
 private:
