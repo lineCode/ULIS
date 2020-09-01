@@ -298,10 +298,8 @@ public:
         reallocating the underlying storage if the capacity has been reached.
     */
     void PushBack( const T& iValue ) {
-        if( mSize == mCapacity )
-            ReallocBulk( FMath::Max( 1, FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ) );
-        new  ( mBulk + mSize )  T( iValue );
-        mSize++;
+        CheckGrowBulk();
+        new  ( mBulk + ( mSize++ ) )  T( iValue );
     }
 
     /*!
@@ -309,21 +307,54 @@ public:
         reallocating the underlying storage if the capacity has been reached.
     */
     void PushBack( T&& iValue ) {
-        if( mSize == mCapacity )
-            ReallocBulk( FMath::Max( 1, FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ) );
-        new  ( mBulk + mSize )  T( std::forward( iValue ) );
-        mSize++;
+        CheckGrowBulk();
+        new  ( mBulk + ( mSize++ ) )  T( std::forward< T >( iValue ) );
     }
 
     /*!
-        PushBack, emplace a new element at the end of the buffer, possibly
+        EmplaceBack, emplace a new element at the end of the buffer, possibly
         reallocating the underlying storage if the capacity has been reached.
     */
     template< class... Args >
     void EmplaceBack( Args&& ... args ) {
-        if( mSize == mCapacity )
-            ReallocBulk( FMath::Max( 1, FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ) );
-        new  ( mBulk + mSize )  T( std::forward< Args >(args)... );
+        CheckGrowBulk();
+        new  ( mBulk + ( mSize++ ) )  T( std::forward< Args >(args)... );
+    }
+
+    /*!
+        Instert, insert a new element at pos in the buffer, possibly
+        reallocating the underlying storage if the capacity has been reached.
+    */
+    void Insert( uint64 iPos, const T& iValue ) {
+        ULIS_ASSERT( iPos < mSize, "Bad Index" );
+        CheckGrowBulk();
+        memmove( mBulk + iPos + 1, mBulk + iPos, mSize - iPos );
+        new  ( mBulk + iPos )  T( iValue );
+        mSize++;
+    }
+
+    /*!
+        Instert, insert a new element at pos in the buffer, possibly
+        reallocating the underlying storage if the capacity has been reached.
+    */
+    void Insert( uint64 iPos, T&& iValue ) {
+        ULIS_ASSERT( iPos < mSize, "Bad Index" );
+        CheckGrowBulk();
+        memmove( mBulk + iPos + 1, mBulk + iPos, mSize - iPos );
+        new  ( mBulk + iPos )  T( std::forward< T >( iValue ) );
+        mSize++;
+    }
+
+    /*!
+        Emplace, emplace a new element at pos in the buffer, possibly
+        reallocating the underlying storage if the capacity has been reached.
+    */
+    template< class... Args >
+    void Emplace( uint64 iPos,  Args&& ... args ) {
+        ULIS_ASSERT( iPos < mSize, "Bad Index" );
+        CheckGrowBulk();
+        memmove( mBulk + iPos + 1, mBulk + iPos, mSize - iPos );
+        new  ( mBulk + iPos )  T( std::forward< Args >(args)... );
         mSize++;
     }
 
@@ -363,6 +394,14 @@ private:
         mBulk = new_bulk;
         // Save new capacity.
         mCapacity = iCapacity;
+    }
+
+    /*!
+        Call Realloc bulk with ratio increment if needed.
+    */
+    void CheckGrowBulk() {
+        if( mSize == mCapacity )
+            ReallocBulk( FMath::Max( uint64(1), static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ) ) );
     }
 
 private:
