@@ -58,6 +58,8 @@ private:
         U mValue;
     };
 
+    typedef TForwardListNode< T > tNode;
+
 public:
     /*! Destroy the list and cleanup memory. */
     ~TForwardList< T >()
@@ -145,11 +147,26 @@ public:
         return  mSize;
     }
 
+    /*!
+        Clear the list, deallocating everything.
+    */
+    void Clear() {
+        tNode* node = mFront;
+        while( node ) {
+            tNode* next = node->mNext;
+            delete  node;
+            node = next;
+        }
+        mSize = 0;
+        mFront = nullptr;
+        mBack = nullptr;
+    }
+
 
 
 private:
-    TForwardListNode< T >* mFront; ///< The head of the list, start iterating from there.
-    TForwardListNode< T >* mBack; ///< The back of the list. Although traversal is one way, this is here to allow easy push back on the list.
+    tNode* mFront; ///< The head of the list, start iterating from there.
+    tNode* mBack; ///< The back of the list. Although traversal is one way, this is here to allow easy push back on the list.
     uint64 mSize; ///< The list size.
 };
 
