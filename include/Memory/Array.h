@@ -371,6 +371,19 @@ public:
         mSize += iCount;
     }
 
+    /*!
+        Erase elements at pos in the array.
+        Behaviour is undefined if the array is empty.
+    */
+    void Erase( uint64 iPos, uint64 iCount = 1 ) {
+        ULIS_ASSERT( iPos + iCount <= mSize, "Bad arguments" );
+        for( uint64 i = iPos; i < iPos + iCount; ++i )
+            mBulk[i].~T();
+
+        memmove( mBulk + iPos, mBulk + iPos + iCount, mSize - ( iPos + iCount ) );
+        mSize -= iCount;
+    }
+
 private:
     /*!
         CleanupBulk explicitely calls destructors on elements to be removed, then
