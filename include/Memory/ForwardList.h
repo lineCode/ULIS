@@ -64,6 +64,7 @@ public:
     /*! Destroy the list and cleanup memory. */
     ~TForwardList< T >()
     {
+        Clear();
     }
 
     /*! Default constructor ( empty ). */
@@ -162,7 +163,39 @@ public:
         mBack = nullptr;
     }
 
+    /*!
+        PushFront, insert a new element at the front of the list.
+    */
+    void PushFront( const T& iValue ) {
+        tNode* node = new tNode( mFront, iValue );
+        mFront = node;
 
+        if( !mBack )
+            mBack = mFront;
+    }
+
+    /*!
+        PushFront, insert a new element at the front of the list.
+    */
+    void PushFront( T&& iValue ) {
+        tNode* node = new tNode( mFront, std::forward< T >( iValue ) );
+        mFront = node;
+
+        if( !mBack )
+            mBack = mFront;
+    }
+
+    /*!
+        EmplaceFront, emplace a new element at front end of the list.
+    */
+    template< class... Args >
+    void EmplaceFront( Args&& ... args ) {
+        tNode* node = new tNode( mFront, std::forward< Args >(args)... );
+        mFront = node;
+
+        if( !mBack )
+            mBack = mFront;
+    }
 
 private:
     tNode* mFront; ///< The head of the list, start iterating from there.
