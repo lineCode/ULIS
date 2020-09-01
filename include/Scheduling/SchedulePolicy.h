@@ -15,25 +15,27 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
-enum eScheduleRunPolicy : bool {
-      ScheduleRun_Mono  = false
-    , ScheduleRun_Multi = true
+enum eScheduleRunPolicy : uint8 {
+      ScheduleRun_Mono  = 0
+    , ScheduleRun_Multi = 1
 };
 
-enum eScheduleFlowPolicy : bool {
-      ScheduleFlow_Blocking = false
-    , ScheduleFlow_NonBlocking = true
+enum eScheduleFlowPolicy : uint8 {
+      ScheduleFlow_Blocking = 0
+    , ScheduleFlow_NonBlocking = 2
 };
 
 enum eScheduleModePolicy : uint8 {
       ScheduleMode_Scanlines = 0
-    , ScheduleMode_Chunks = 1
+    , ScheduleMode_Chunks = 4
 };
 
 enum eScheduleParameterPolicy : uint8 {
-      ScheduleParameter_Count
-    , ScheduleParameter_Length
+      ScheduleParameter_Count = 0
+    , ScheduleParameter_Length = 8
 };
+
+typedef uint8 tSchedulePolicy;
 
 /////////////////////////////////////////////////////
 /// @class      FSchedulePolicy
