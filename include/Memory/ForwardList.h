@@ -197,6 +197,22 @@ public:
             mBack = mFront;
     }
 
+    /*!
+        PopFront, pop the front element.
+        The behaviour is undefined is the list is empty.
+    */
+    void PopFront() {
+        tNode* next = mFront->mNext;
+        delete  mFront;
+        mFront = next;
+        mSize--;
+        if( mSize <= 1 ) {
+            mBack = mFront;
+        }
+    }
+
+
+
 private:
     tNode* mFront; ///< The head of the list, start iterating from there.
     tNode* mBack; ///< The back of the list. Although traversal is one way, this is here to allow easy push back on the list.
