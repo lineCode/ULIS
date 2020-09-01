@@ -62,8 +62,11 @@ public:
     /*! Copy constructor, explicitely removed. */
     TArray< T >( const TArray< T >& iOther ) = delete;
 
-    /*! Assignment Operator, explicitely removed. */
+    /*! Copy Assignment Operator, explicitely removed. */
     TArray< T >& operator=( const TArray< T >& iOther ) = delete;
+
+    /*! Move Assignment Operator, explicitely removed. */
+    TArray< T >& operator=( TArray< T >&& iOther ) = delete;
 
     /*!
         Move constructor.

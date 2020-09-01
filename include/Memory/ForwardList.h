@@ -59,19 +59,98 @@ private:
     };
 
 public:
-    /*! Destroy the Array and cleanup memory. */
+    /*! Destroy the list and cleanup memory. */
     ~TForwardList< T >()
     {
     }
 
     /*! Default constructor ( empty ). */
     TForwardList< T >()
-        : mHead( nullptr )
+        : mFront( nullptr )
+        , mBack( nullptr )
+        , mSize( 0 )
     {}
+
+    /*! Copy constructor, explicitely removed. */
+    TForwardList< T >( const TForwardList< T >& iOther ) = delete;
+
+    /*! Copy Assignment Operator, explicitely removed. */
+    TForwardList< T >& operator=( const TForwardList< T >& iOther ) = delete;
+
+    /*! Move Assignment Operator, explicitely removed. */
+    TForwardList< T >& operator=( TForwardList< T >&& iOther ) = delete;
+
+    /*!
+        Move constructor.
+        The first object is left in a valid but empty state.
+        The second object steals the state.
+    */
+    TForwardList< T >( TForwardList< T >&& iOther )
+        : mFront( iOther.mFront )
+        , mBack( iOther.mBack )
+        , mSize( iOther.mSize )
+    {
+        iOther.mFront = nullptr;
+        iOther.mBack = nullptr;
+        iOther.mSize = 0;
+    }
+
+    /*!
+        Access component at front.
+        The behaviour is undefined if the list is empty.
+    */
+    T& Front() {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( mFront, "Bad state" );
+        return  mFront->mValue;
+    }
+
+    /*!
+        Access const component at front.
+        The behaviour is undefined if the list is empty.
+    */
+    T& Front() const {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( mFront, "Bad state" );
+        return  mFront->mValue;
+    }
+
+    /*!
+        Access component at back.
+        The behaviour is undefined if the list is empty.
+    */
+    T& Back() {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( mBack, "Bad state" );
+        return  mBack->mValue;
+    }
+
+    /*!
+        Access const component at back.
+        The behaviour is undefined if the list is empty.
+    */
+    const T& Back() const {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( mBack, "Bad state" );
+        return  mBack->mValue;
+    }
+
+    /*! Returns wether the list is empty or not. */
+    bool IsEmpty() const {
+        return  mSize == 0;
+    }
+
+    /*! Returns the list size. */
+    uint64 Size() const {
+        return  mSize;
+    }
+
+
 
 private:
     TForwardListNode< T >* mFront; ///< The head of the list, start iterating from there.
     TForwardListNode< T >* mBack; ///< The back of the list. Although traversal is one way, this is here to allow easy push back on the list.
+    uint64 mSize; ///< The list size.
 };
 
 ULIS_NAMESPACE_END
