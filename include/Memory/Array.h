@@ -42,7 +42,10 @@ public:
         , mSize( 0 )
     {}
 
-    /*! Constructor with known size, both capacity and size will match the requested size. */
+    /*!
+        Constructor with known size, both capacity and size will match the requested size.
+        The array will have a size of iSize and the elements are default constructed.
+    */
     TArray< T >( uint64 iSize )
         : mBulk( nullptr )
         , mCapacity( iSize )
@@ -62,7 +65,11 @@ public:
     /*! Assignment Operator, explicitely removed. */
     TArray< T >& operator=( const TArray< T >& iOther ) = delete;
 
-    /*! Move constructor. */
+    /*!
+        Move constructor.
+        The first object is left in a valid but empty state.
+        The second object steals the buffer and the state ( size and capacity ).
+    */
     TArray< T >( TArray< T >&& iOther )
         : mBulk( iOther.mBulk )
         , mCapacity( iOther.mCapacity )
@@ -78,72 +85,104 @@ public:
         return  reinterpret_cast< uint8* >( mBulk );
     }
 
-    /*! Returns the raw const bits. */
+    /*! Returns the const raw bits. */
     const uint8* Bits() const {
         return  reinterpret_cast< const uint8* >( mBulk );
     }
 
-    /*! Returns the raw storage. */
+    /*! Returns the storage. */
     T* Data() {
         return  mBulk;
     }
 
-    /*! Returns the raw storage. */
+    /*! Returns the const storage. */
     const T* Data() const {
         return  mBulk;
     }
 
-    /*! Access component at index. */
+    /*!
+        Access component at index.
+        The behaviour is undefined if the array has no size.
+        The behaviour is undefined if the index is greater than the size.
+        The behaviour is undefined if the underlying buffer is NULL, which
+        indicates a corrupted states anyway.
+    */
     T& operator[]( uint64 iIndex ) {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
-        ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
         return  mBulk[ iIndex ];
     }
 
-    /*! Access const component at index. */
+    /*!
+        Access const component at index.
+        The behaviour is undefined if the array has no size.
+        The behaviour is undefined if the index is greater than the size.
+        The behaviour is undefined if the underlying buffer is NULL, which
+        indicates a corrupted states anyway.
+    */
     const T& operator[]( uint64 iIndex ) const {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
-        ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
         return  mBulk[ iIndex ];
     }
 
-    /*! Access component at index. */
+    /*!
+        Access component at index. Alias of operator[]()
+
+        \sa operator[]()
+    */
     T& At( uint64 iIndex ) {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
-        ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
         return  mBulk[ iIndex ];
     }
 
-    /*! Access const component at index. */
+    /*!
+        Access component at index. Alias of operator[]()
+
+        \sa operator[]() const
+    */
     const T& At( uint64 iIndex ) const {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
-        ULIS_ASSERT( iIndex >= 0 && iIndex < mSize, "Bad Index" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
         return  mBulk[ iIndex ];
     }
 
-    /*! Access component at front. */
+    /*!
+        Access component at front.
+        The behaviour is undefined if the array is empty.
+    */
     T& Front() {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
         return  At( 0 );
     }
 
-    /*! Access const component at front. */
+    /*!
+        Access const component at front.
+        The behaviour is undefined if the array is empty.
+    */
     const T& Front() const {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
         return  At( 0 );
     }
 
-    /*! Access component at back. */
+    /*!
+        Access component at back.
+        The behaviour is undefined if the array is empty.
+    */
     T& Back() {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
         return  At( mSize - 1 );
     }
 
-    /*! Access const component at back. */
+    /*!
+        Access const component at back.
+        The behaviour is undefined if the array is empty.
+    */
     const T& Back() const {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
         return  At( mSize - 1 );
@@ -166,21 +205,18 @@ public:
 
     /*!
         Reserve some capacity for future usage, if iCapacity is bigger than the
-        current capacity. If iCapacity is lower or equal to capacity, this
-        function does nothing.
-        This function might invalid the underlying buffer.
+        current capacity.
+
+        If iCapacity is lower or equal to capacity, this function does nothing.
+
+        This function might invalid existing pointers to the underlying buffer.
+
         The size doesn't change.
     */
     void Reserve( uint64 iCapacity ) {
-        if( iCapacity > mCapacity ) {
-            T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iCapacity ) );
-            if( mBulk != nullptr ) {
-                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
-                XFree( mBulk );
-            }
-            mBulk = temp_bulk;
-            mCapacity = iCapacity;
-        }
+        // Only if requested a bigger capacity
+        if( iCapacity > mCapacity )
+            ReallocBulk( iCapacity );
     }
 
     /*!
@@ -191,57 +227,53 @@ public:
         The size doesn't change.
     */
     void Shrink() {
-        if( mCapacity > mSize ) {
-            T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * mSize ) );
-            if( mBulk != nullptr ) {
-                memcpy( temp_bulk, mBulk, sizeof( T ) * mSize );
-                XFree( mBulk );
-            }
-            mBulk = temp_bulk;
-            mCapacity = mSize;
-        }
+        // Only if capacity is bigger than size
+        if( mCapacity > mSize )
+            ReallocBulk( mSize );
     }
 
     /*!
         Resize the actual usage size of the container.
-        This function might invalid the underlying buffer.
+        This function might invalid the underlying buffer when requesting a bigger size.
+        It has no effect if the requested size is the same as the current size.
     */
     void Resize( uint64 iSize ) {
-        if( iSize == mSize )
+        // If requested size equal to size, do nothing.
+        if( iSize == mSize ) {
+            // The buffer references remain valid.
             return;
-
-        if( iSize == 0 ) {
-            Clear();
-        } else {
-
-            if( mCapacity > iSize ) {
-                if( iSize < mSize ) {
-                    for( uint64 i = iSize; i < mSize; ++i ) {
-                        mBulk[ i ].~T();
-                    }
-                } else {
-                    for( uint64 i = mSize; i < iSize; ++i ) {
-                        new  ( mBulk + i )  T;
-                    }
-                }
-                mSize = iSize;
-            } else {
-                ULIS_ASSERT( iSize > mSize, "Bad state" );
-                T* temp_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iSize ) );
-                if( mBulk != nullptr ) {
-                    memcpy( temp_bulk, mBulk, sizeof( T ) * iSize );
-                    XFree( mBulk );
-                }
-                mBulk = temp_bulk;
-
-                for( uint64 i = mSize; i < iSize; ++i ) {
-                    new  ( mBulk + i )  T;
-                }
-
-                mCapacity = iSize;
-                mSize = iSize;
-            }
         }
+
+        // If request size 0, do a clear.
+        if( iSize == 0 ) {
+            // The buffer references become invalid.
+            Clear();
+            return;
+        }
+
+        // If there is enough capacity, no realloc is needed
+        if( mCapacity >= iSize ) {
+            // If the requested size is smaller, we just need to destroy the extras
+            for( uint64 i = iSize; i < mSize; ++i )
+                mBulk[ i ].~T();
+
+            // If the requested size is bigger, we just need to create the extras
+            for( uint64 i = mSize; i < iSize; ++i )
+                new  ( mBulk + i )  T;
+
+            // Set new size, capacity is untouched, the buffer references remain valid.
+            mSize = iSize;
+            return;
+        }
+
+        // Last case: there is not enough capacity and the requested size is bigger
+        // Realloc bulk
+        ReallocBulk( iSize );
+        // Create the extras
+        for( uint64 i = mSize; i < iSize; ++i )
+            new  ( mBulk + i )  T;
+        // Save new size.
+        mSize = iSize;
     }
 
     /*!
@@ -249,17 +281,16 @@ public:
     */
     void Clear() {
         CleanupBulk();
-        mCapacity = 0;
-        mSize = 0;
     }
 
     /*!
         PopBack, remove last element.
+        Behaviour is undefined if the array is empty.
     */
     void PopBack() {
         ULIS_ASSERT( mSize > 0, "Bad call, array is empty" );
         ULIS_ASSERT( mBulk != nullptr, "Error, no bulk, array is uninitialized" );
-        mBulk[ (--mSize) ].~T();
+        mBulk[ ( --mSize ) ].~T();
     }
 
     /*!
@@ -366,6 +397,29 @@ private:
             XFree( mBulk );
             mBulk = nullptr;
         }
+        mCapacity = 0;
+        mSize = 0;
+    }
+
+    /*!
+        Realloc bulk explicitely resize the bulk and performs a copy of what was
+        previously there if any.
+    */
+    void ReallocBulk( uint64 iCapacity ) {
+        // Allocate new bulk with new capacity.
+        T* new_bulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iCapacity ) );
+        // If the old bulk was already initialized beforehand
+        if( mBulk != nullptr ) {
+            // Copy the old bulk in the new bulk, for the range the size.
+            // What is outside the bounds of the size is left uninitialized
+            memcpy( new_bulk, mBulk, sizeof( T ) * mSize );
+            // Free the old bulk.
+            XFree( mBulk );
+        }
+        // Swap the old bulk and the new bulk
+        mBulk = new_bulk;
+        // Save new capacity.
+        mCapacity = iCapacity;
     }
 
 private:
