@@ -1,4 +1,3 @@
-[![License](https://img.shields.io/badge/License-Commercial-black)](#)
 [![Documentation](https://img.shields.io/badge/Documentation-Visit-yellow)](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/)
 [![Discord](https://img.shields.io/discord/639891086369882112?label=Discord&style=flat&logo=Discord&logoColor=whitesmoke&color=mediumslateblue)](https://discordapp.com/invite/gEd6pj7)
 [![Patreon](https://img.shields.io/badge/Patreon-Donate-tomato.svg?style=flat&logo=Patreon)](https://www.patreon.com/praxinos)
