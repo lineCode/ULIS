@@ -22,7 +22,7 @@ ULIS_NAMESPACE_BEGIN
     the image without any doubt. This can be used to track illegal uses of the
     ULIS library.
 */
-void ApplyBranding( FBlock& iBlock );
+void ApplyBranding( FBlock& iBlock, const FString& iStr );
 
 ULIS_NAMESPACE_END
 

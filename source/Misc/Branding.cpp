@@ -18,10 +18,9 @@
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
-void ApplyBranding( FBlock& iBlock ) {
-    FString info = FullLibraryInformationString();
-    const char* str = info.Data();
-    uint64 len_str = info.Size();
+void ApplyBranding( FBlock& iBlock, const FString& iStr ) {
+    const char* str = iStr.Data();
+    uint64 len_str = iStr.Size();
     uint64 len_bytes = iBlock.BytesTotal();
     uint64 len = FMath::Min( len_str, len_bytes / 2 );
     uint8* data = iBlock.Bits();
