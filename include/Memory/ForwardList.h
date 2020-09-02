@@ -169,6 +169,7 @@ public:
     void PushFront( const T& iValue ) {
         tNode* node = new tNode( mFront, iValue );
         mFront = node;
+        mSize++;
 
         if( !mBack )
             mBack = mFront;
@@ -180,6 +181,7 @@ public:
     void PushFront( T&& iValue ) {
         tNode* node = new tNode( mFront, std::forward< T >( iValue ) );
         mFront = node;
+        mSize++;
 
         if( !mBack )
             mBack = mFront;
@@ -192,6 +194,7 @@ public:
     void EmplaceFront( Args&& ... args ) {
         tNode* node = new tNode( mFront, std::forward< Args >(args)... );
         mFront = node;
+        mSize++;
 
         if( !mBack )
             mBack = mFront;
@@ -202,6 +205,7 @@ public:
         The behaviour is undefined is the list is empty.
     */
     void PopFront() {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         tNode* next = mFront->mNext;
         delete  mFront;
         mFront = next;
@@ -211,7 +215,80 @@ public:
         }
     }
 
+    /*!
+        PushFront, insert a new element at the back of the list.
+    */
+    void PushBack( const T& iValue ) {
+        tNode* node = new tNode( nullptr, iValue );
+        mSize++;
 
+        if( mBack ) {
+            mBack->mNext = node;
+        } else {
+            mFront = node;
+            mBack = node;
+        }
+    }
+
+    /*!
+        Access component at index.
+        The behaviour is undefined if the list has no size.
+        The behaviour is undefined if the index is greater than the size.
+        The behaviour is undefined if the underlying buffer is NULL, which
+        indicates a corrupted states anyway.
+    */
+    T& operator[]( uint64 iIndex ) {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
+        tNode* node = mFront;
+        for( uint64 i = 0; i < mSize; ++i )
+            node = node->mNext;
+        return  node->mValue;
+    }
+
+    /*!
+        Access const component at index.
+        The behaviour is undefined if the list has no size.
+        The behaviour is undefined if the index is greater than the size.
+        The behaviour is undefined if the underlying buffer is NULL, which
+        indicates a corrupted states anyway.
+    */
+    const T& operator[]( uint64 iIndex ) const {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
+        tNode* node = mFront;
+        for( uint64 i = 0; i < mSize; ++i )
+            node = node->mNext;
+        return  node->mValue;
+    }
+
+    /*!
+        Access component at index. Alias of operator[]()
+
+        \sa operator[]()
+    */
+    T& At( uint64 iIndex ) {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
+        tNode* node = mFront;
+        for( uint64 i = 0; i < mSize; ++i )
+            node = node->mNext;
+        return  node->mValue;
+    }
+
+    /*!
+        Access component at index. Alias of operator[]()
+
+        \sa operator[]() const
+    */
+    const T& At( uint64 iIndex ) const {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
+        tNode* node = mFront;
+        for( uint64 i = 0; i < mSize; ++i )
+            node = node->mNext;
+        return  node->mValue;
+    }
 
 private:
     tNode* mFront; ///< The head of the list, start iterating from there.
