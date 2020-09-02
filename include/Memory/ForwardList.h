@@ -216,10 +216,41 @@ public:
     }
 
     /*!
-        PushFront, insert a new element at the back of the list.
+        PushBack, insert a new element at the back of the list.
     */
     void PushBack( const T& iValue ) {
         tNode* node = new tNode( nullptr, iValue );
+        mSize++;
+
+        if( mBack ) {
+            mBack->mNext = node;
+        } else {
+            mFront = node;
+            mBack = node;
+        }
+    }
+
+    /*!
+        PushBack, insert a new element at the back of the list.
+    */
+    void PushBack( T&& iValue ) {
+        tNode* node = new tNode( mFront, std::forward< T >( iValue ) );
+        mSize++;
+
+        if( mBack ) {
+            mBack->mNext = node;
+        } else {
+            mFront = node;
+            mBack = node;
+        }
+    }
+
+    /*!
+        EmplaceBack, emplace a new element at back of the list.
+    */
+    template< class... Args >
+    void EmplaceBack( Args&& ... args ) {
+        tNode* node = new tNode( mFront, std::forward< Args >(args)... );
         mSize++;
 
         if( mBack ) {
