@@ -112,7 +112,7 @@ public:
         Access const component at front.
         The behaviour is undefined if the list is empty.
     */
-    T& Front() const {
+    const T& Front() const {
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( mFront, "Bad state" );
         return  mFront->mValue;

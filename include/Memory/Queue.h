@@ -64,15 +64,15 @@ public:
         The behaviour is undefined if the queue is empty.
     */
     T& Front() {
-        return  Front();
+        return  tSuperClass::Front();
     }
 
     /*!
         Access const component at front.
         The behaviour is undefined if the queue is empty.
     */
-    T& Front() const {
-        return  Front();
+    const T& Front() const {
+        return  tSuperClass::Front();
     }
 
     /*!
@@ -80,7 +80,7 @@ public:
         The behaviour is undefined if the queue is empty.
     */
     T& Back() {
-        return  Back();
+        return  tSuperClass::Back();
     }
 
     /*!
@@ -88,38 +88,38 @@ public:
         The behaviour is undefined if the queue is empty.
     */
     const T& Back() const {
-        return  Back();
+        return  tSuperClass::Back();
     }
 
     /*! Returns wether the queue is empty or not. */
     bool IsEmpty() const {
-        return  IsEmpty();
+        return  tSuperClass::IsEmpty();
     }
 
     /*! Returns the queue size. */
     uint64 Size() const {
-        return  Size();
+        return  tSuperClass::Size();
     }
 
     /*!
         Clear the queue, deallocating everything.
     */
     void Clear() {
-        Clear();
+        tSuperClass::Clear();
     }
 
     /*!
         Push, insert a new element at the end of the queue.
     */
     void Push( const T& iValue ) {
-        PushBack( iValue );
+        tSuperClass::PushBack( iValue );
     }
 
     /*!
         Push, insert a new element at the end of the queue.
     */
     void Push( T&& iValue ) {
-        PushBack( std::forward< T >( iValue ) );
+        tSuperClass::PushBack( std::forward< T >( iValue ) );
     }
 
     /*!
@@ -127,7 +127,7 @@ public:
     */
     template< class... Args >
     void Emplace( Args&& ... args ) {
-        EmplaceBack( std::forward< Args >(args)... );
+        tSuperClass::EmplaceBack( std::forward< Args >(args)... );
     }
 
     /*!
@@ -135,7 +135,7 @@ public:
         The behaviour is undefined is the queue is empty.
     */
     void Pop() {
-        PopFront();
+        tSuperClass::PopFront();
     }
 };
 
