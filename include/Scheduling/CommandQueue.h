@@ -37,7 +37,7 @@ public:
     ~FCommandQueue();
 
     /*! Constructor */
-    FCommandQueue();
+    FCommandQueue( FThreadPool* iPool );
 
     /*!
         Push, insert a new command at the end of the queue.
@@ -46,6 +46,7 @@ public:
 
 private:
     tQueue mQueue;
+    FThreadPool* mPool;
 };
 
 ULIS_NAMESPACE_END
