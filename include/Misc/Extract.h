@@ -16,7 +16,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-ULIS_API void Extract( FThreadPool*            iThreadPool
+ULIS_API void Extract( FOldThreadPool*            iOldThreadPool
                       , bool                    iBlocking
                       , uint32                  iPerfIntent
                       , const FHostDeviceInfo&  iHostDeviceInfo
@@ -28,7 +28,7 @@ ULIS_API void Extract( FThreadPool*            iThreadPool
                       , bool                    iDestinationRawIndicesFlag
                       , uint8                   iDestinationExtractMask );
 
-ULIS_API FBlock* XExtract( FThreadPool*            iThreadPool
+ULIS_API FBlock* XExtract( FOldThreadPool*            iOldThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo

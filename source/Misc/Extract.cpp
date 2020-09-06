@@ -17,7 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 #include <vector>
 
 ULIS_NAMESPACE_BEGIN
@@ -75,7 +75,7 @@ fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcT
 
 
 void
-Extract( FThreadPool*           iThreadPool
+Extract( FOldThreadPool*           iOldThreadPool
        , bool                   iBlocking
        , uint32                 iPerfIntent
        , const FHostDeviceInfo& iHostDeviceInfo
@@ -88,7 +88,7 @@ Extract( FThreadPool*           iThreadPool
        , uint8                  iDestinationExtractMask )
 {
     // Assertions
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
@@ -148,7 +148,7 @@ Extract( FThreadPool*           iThreadPool
     const size_t    len = iSource->Width();
     fpDispatchedExtractInvoke fptr = QueryDispatchedExtractInvokeForParameters( srcFormatInfo.TP, dstFormatInfo.TP );
     ULIS_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , fptr, len, SRC, DST, sourceStrides, destinationStrides, src_spp, dst_spp )
 
@@ -156,7 +156,7 @@ Extract( FThreadPool*           iThreadPool
 }
 
 
-FBlock* XExtract( FThreadPool*              iThreadPool
+FBlock* XExtract( FOldThreadPool*              iOldThreadPool
                 , bool                      iBlocking
                 , uint32                    iPerfIntent
                 , const FHostDeviceInfo&    iHostDeviceInfo
@@ -171,7 +171,7 @@ FBlock* XExtract( FThreadPool*              iThreadPool
     // Assertions
     ULIS_ASSERT( iSource, "Bad source." );
     FBlock* ret = new  FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
-    Extract( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iSourceRawIndicesFlag, iSourceExtractMask, ret, iDestinationRawIndicesFlag, iDestinationExtractMask );
+    Extract( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iSourceRawIndicesFlag, iSourceExtractMask, ret, iDestinationRawIndicesFlag, iDestinationExtractMask );
     return  ret;
 }
 

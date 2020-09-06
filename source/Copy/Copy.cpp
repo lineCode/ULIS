@@ -16,7 +16,7 @@
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 
 
 ULIS_NAMESPACE_BEGIN
@@ -58,7 +58,7 @@ void InvokeCopyMTProcessScanline_MEM( uint8* iDst, const uint8* iSrc, uint32 iCo
 
 
 void
-Copy_imp( FThreadPool*              iThreadPool
+Copy_imp( FOldThreadPool*              iOldThreadPool
         , bool                      iBlocking
         , uint32                    iPerfIntent
         , const FHostDeviceInfo&    iHostDeviceInfo
@@ -83,27 +83,27 @@ Copy_imp( FThreadPool*              iThreadPool
     const uint32 count = iDstROI.w * bpp;
     #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && ( src_bps + dst_bps ) >= 64 ) {
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeCopyMTProcessScanline_AX2, DST, SRC, count, 32 )
     } else
     #endif
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
     if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && ( src_bps + dst_bps ) >= 32 ) {
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeCopyMTProcessScanline_SSE, DST, SRC, count, 16 )
     } else
     #endif
     {
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                        , iDstROI.h
                                        , InvokeCopyMTProcessScanline_MEM, DST, SRC, count )
     }
 }
 
 
-void Copy( FThreadPool*             iThreadPool
+void Copy( FOldThreadPool*             iOldThreadPool
          , bool                     iBlocking
          , uint32                   iPerfIntent
          , const FHostDeviceInfo&   iHostDeviceInfo
@@ -138,13 +138,13 @@ void Copy( FThreadPool*             iThreadPool
     const FVec2I shift( translationX, translationY );
 
     // Call
-    Copy_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iDestination, src_roi, dst_fit, shift );
+    Copy_imp( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iDestination, src_roi, dst_fit, shift );
 
     // Invalidate
     iDestination->Dirty( dst_fit, iCallCB );
 }
 
-FBlock* XCopy( FThreadPool*           iThreadPool
+FBlock* XCopy( FOldThreadPool*           iOldThreadPool
              , bool                   iBlocking
              , uint32                 iPerfIntent
              , const FHostDeviceInfo& iHostDeviceInfo
@@ -160,7 +160,7 @@ FBlock* XCopy( FThreadPool*           iThreadPool
         return  nullptr;
 
     FBlock* ret = new FBlock( src_roi.w, src_roi.h, iSource->Format() );
-    Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret, src_roi, FVec2I( 0, 0 ) );
+    Copy( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret, src_roi, FVec2I( 0, 0 ) );
     return  ret;
 }
 

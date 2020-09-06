@@ -32,7 +32,7 @@ static const char* kwImageFormat[] = {
     , "hdr"
 };
 
-ULIS_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
+ULIS_API FBlock* XLoadFromFile( FOldThreadPool*           iOldThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
                                , const FHostDeviceInfo& iHostDeviceInfo
@@ -40,7 +40,7 @@ ULIS_API FBlock* XLoadFromFile( FThreadPool*           iThreadPool
                                , const std::string&     iPath
                                , eFormat                iDesiredFormat );
 
-ULIS_API void SaveToFile( FThreadPool*             iThreadPool
+ULIS_API void SaveToFile( FOldThreadPool*             iOldThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo

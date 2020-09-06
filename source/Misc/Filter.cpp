@@ -17,7 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -43,7 +43,7 @@ void InvokeFilterInto( const size_t iLen, const FBlock* iSrcBlock, const uint8* 
     }
 }
 
-void Filter( FThreadPool*           iThreadPool
+void Filter( FOldThreadPool*           iOldThreadPool
            , bool                   iBlocking
            , uint32                 iPerfIntent
            , const FHostDeviceInfo& iHostDeviceInfo
@@ -52,7 +52,7 @@ void Filter( FThreadPool*           iThreadPool
            , std::function< void( const FBlock* iBlock, const uint8* iPtr ) > iFunc )
 {
     // Assertions
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS_ASSERT( iFunc,                                        "No func provided"                                      );
@@ -65,13 +65,13 @@ void Filter( FThreadPool*           iThreadPool
     uint32           src_bps = iSource->BytesPerScanLine();
     const int       max     = iSource->Height();
     const uint32     len     = iSource->Width();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , InvokeFilter
                                    , len, iSource, src + ( pLINE * src_bps ), srcFormatInfo.BPP, iFunc );
 }
 
-void FilterInPlace( FThreadPool*            iThreadPool
+void FilterInPlace( FOldThreadPool*            iOldThreadPool
                   , bool                    iBlocking
                   , uint32                  iPerfIntent
                   , const FHostDeviceInfo&  iHostDeviceInfo
@@ -79,7 +79,7 @@ void FilterInPlace( FThreadPool*            iThreadPool
                   , FBlock*                 iSource
                   , std::function< void( FBlock* iBlock, uint8* iPtr ) > iFunc )
 {
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS_ASSERT( iFunc,                                        "No func provided"                                      );
@@ -92,7 +92,7 @@ void FilterInPlace( FThreadPool*            iThreadPool
     uint32       src_bps = iSource->BytesPerScanLine();
     const int   max     = iSource->Height();
     const uint32 len     = iSource->Width();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , InvokeFilterInPlace
                                    , len, iSource, src + ( pLINE * src_bps ), srcFormatInfo.BPP, iFunc );
@@ -100,7 +100,7 @@ void FilterInPlace( FThreadPool*            iThreadPool
     iSource->Dirty( iCallCB );
 }
 
-void FilterInto( FThreadPool*              iThreadPool
+void FilterInto( FOldThreadPool*              iOldThreadPool
                , bool                      iBlocking
                , uint32                    iPerfIntent
                , const FHostDeviceInfo&    iHostDeviceInfo
@@ -109,7 +109,7 @@ void FilterInto( FThreadPool*              iThreadPool
                , FBlock*                   iDestination
                , std::function< void( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr ) > iFunc )
 {
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
@@ -129,7 +129,7 @@ void FilterInto( FThreadPool*              iThreadPool
     uint32           dst_bps = iDestination->BytesPerScanLine();
     const int       max     = iSource->Height();
     const uint32     len     = iSource->Width();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , InvokeFilterInto
                                    , len

@@ -76,7 +76,7 @@
 #include "Text/Text.h"
 #include "Text/TextEngine.h"
 // Thread
-#include "Thread/ThreadInterface.h"
+#include "Thread/OldThreadInterface.h"
 // Transform
 #include "Transform/Methods.h"
 #include "Transform/Transform.h"

@@ -17,7 +17,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Fill
-ULIS_API void Fill( FThreadPool* iThreadPool
+ULIS_API void Fill( FOldThreadPool* iOldThreadPool
                    , bool iBlocking
                    , uint32 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo

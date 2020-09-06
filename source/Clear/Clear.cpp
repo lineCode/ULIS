@@ -16,7 +16,7 @@
 #include "System/HostDeviceInfo.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ void InvokeFillMTProcessScanline_MEM( uint8* iDst, uint32 iCount, const uint32 i
 
 /////////////////////////////////////////////////////
 // Implementation
-void Clear_imp( FThreadPool*            iThreadPool
+void Clear_imp( FOldThreadPool*            iOldThreadPool
               , bool                    iBlocking
               , uint32                  iPerfIntent
               , const FHostDeviceInfo&  iHostDeviceInfo
@@ -78,7 +78,7 @@ void Clear_imp( FThreadPool*            iThreadPool
     #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const uint32 stride = 32;
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_AX2, DST, count, stride )
     } else
@@ -86,13 +86,13 @@ void Clear_imp( FThreadPool*            iThreadPool
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
     if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const uint32 stride = 16;
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
     } else
     #endif
     {
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_MEM, DST, count, bpp )
     }
@@ -100,7 +100,7 @@ void Clear_imp( FThreadPool*            iThreadPool
 
 /////////////////////////////////////////////////////
 // Clear
- void Clear( FThreadPool*              iThreadPool
+ void Clear( FOldThreadPool*              iOldThreadPool
            , bool                      iBlocking
            , uint32                    iPerfIntent
            , const FHostDeviceInfo&    iHostDeviceInfo
@@ -110,7 +110,7 @@ void Clear_imp( FThreadPool*            iThreadPool
 {
     // Assertions
     ULIS_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
     // Fit region of interest
     FRectI roi = iArea & iDestination->Rect();
@@ -120,7 +120,7 @@ void Clear_imp( FThreadPool*            iThreadPool
         return;
 
     // Call
-    Clear_imp( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iDestination, iArea );
+    Clear_imp( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iDestination, iArea );
 
     // Invalid
     iDestination->Dirty( roi, iCallCB );

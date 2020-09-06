@@ -27,15 +27,15 @@ enum eTaskStatus : uint8 {
 /// @brief      The FTaskEvent class provides a way to get asynchronous status
 ///             information about how a task is being processed, once it has been
 ///             dispatched and scheduled on a multithreaded system, in
-///             coordination with a FThreadPool and a FCommandQueue.
+///             coordination with a FOldThreadPool and a FCommandQueue.
 /// @details    The FTaskEvent allows to get a handle of the chosen policy for
 ///             a given task, and wether it has been completed or not. It is used
-///             in conjunction with FThreadPool, FSchedulePolicy, FCommandQueue
+///             in conjunction with FOldThreadPool, FSchedulePolicy, FCommandQueue
 ///             and FRasterContext.
 ///
 ///             \sa FRasterContext
 ///             \sa FSchedulePolicy
-///             \sa FThreadPool
+///             \sa FOldThreadPool
 ///             \sa FDevice
 ///             \sa FCommandQueue
 class ULIS_API FTaskEvent

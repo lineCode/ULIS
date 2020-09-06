@@ -16,7 +16,7 @@
 #include "System/HostDeviceInfo.h"
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 
 #include <array>
 #include <algorithm>
@@ -26,14 +26,14 @@
 #include <clip.h>
 
 ULIS_NAMESPACE_BEGIN
-FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
+FBlock* XLoadFromClipboard( FOldThreadPool*            iOldThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
                           , bool                    iCallCB
                           , eFormat                 iDesiredFormat )
 {
-    ULIS_ASSERT( iThreadPool, "Bad pool." );
+    ULIS_ASSERT( iOldThreadPool, "Bad pool." );
 
     if( !ClipboardHasImageData() )
         return  nullptr;
@@ -82,7 +82,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     const FFormat& dstnfo = ret->FormatInfo();
 
     // Call
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS_BLOCKING
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, ULIS_BLOCKING
                                    , numLines
                                    , fptr, srcnfo, SRC, dstnfo, DST, len );
 
@@ -90,7 +90,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     return  ret;
 }
 
-void SaveToClipboard( FThreadPool*              iThreadPool
+void SaveToClipboard( FOldThreadPool*              iOldThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -99,9 +99,9 @@ void SaveToClipboard( FThreadPool*              iThreadPool
 {
     // Assertions
     ULIS_ASSERT( iSource,                  "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
 
-    FBlock* tmpConv = XConv( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, eFormat::Format_BGRA8 );
+    FBlock* tmpConv = XConv( iOldThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, eFormat::Format_BGRA8 );
 
     clip::image_spec spec;
     spec.width = tmpConv->Width();

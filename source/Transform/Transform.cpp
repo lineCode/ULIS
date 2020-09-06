@@ -28,7 +28,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // TransformAffine
-void TransformAffine( FThreadPool*              iThreadPool
+void TransformAffine( FOldThreadPool*              iOldThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -43,7 +43,7 @@ void TransformAffine( FThreadPool*              iThreadPool
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
@@ -58,7 +58,7 @@ void TransformAffine( FThreadPool*              iThreadPool
 
     std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
     FTransformArgs& commandArgsRef = *commandArgs;
-    commandArgsRef.pool             = iThreadPool;
+    commandArgsRef.pool             = iOldThreadPool;
     commandArgsRef.blocking         = iBlocking;
     commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
     commandArgsRef.perfIntent       = iPerfIntent;
@@ -79,7 +79,7 @@ void TransformAffine( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformAffineTiled
-void TransformAffineTiled( FThreadPool*              iThreadPool
+void TransformAffineTiled( FOldThreadPool*              iOldThreadPool
                          , bool                      iBlocking
                          , uint32                    iPerfIntent
                          , const FHostDeviceInfo&    iHostDeviceInfo
@@ -95,7 +95,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
@@ -109,7 +109,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
 
     std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
     FTransformArgs& commandArgsRef = *commandArgs;
-    commandArgsRef.pool             = iThreadPool;
+    commandArgsRef.pool             = iOldThreadPool;
     commandArgsRef.blocking         = iBlocking;
     commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
     commandArgsRef.perfIntent       = iPerfIntent;
@@ -131,7 +131,7 @@ void TransformAffineTiled( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformPerspective
-void TransformPerspective( FThreadPool*         iThreadPool
+void TransformPerspective( FOldThreadPool*         iOldThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -146,7 +146,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
@@ -164,7 +164,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
 
     std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
     FTransformArgs& commandArgsRef = *commandArgs;
-    commandArgsRef.pool             = iThreadPool;
+    commandArgsRef.pool             = iOldThreadPool;
     commandArgsRef.blocking         = iBlocking;
     commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
     commandArgsRef.perfIntent       = iPerfIntent;
@@ -185,7 +185,7 @@ void TransformPerspective( FThreadPool*         iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformBezier
-void TransformBezier( FThreadPool*                                      iThreadPool
+void TransformBezier( FOldThreadPool*                                      iOldThreadPool
                     , bool                                              iBlocking
                     , uint32                                            iPerfIntent
                     , const FHostDeviceInfo&                            iHostDeviceInfo
@@ -202,7 +202,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS_ASSERT( iControlPoints.size() == 4,                   "Bad control points size" );
 
@@ -264,7 +264,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
 
     std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
     FTransformArgs& commandArgsRef = *commandArgs;
-    commandArgsRef.pool             = iThreadPool;
+    commandArgsRef.pool             = iOldThreadPool;
     commandArgsRef.blocking         = iBlocking;
     commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
     commandArgsRef.perfIntent       = iPerfIntent;
@@ -286,7 +286,7 @@ void TransformBezier( FThreadPool*                                      iThreadP
 
 /////////////////////////////////////////////////////
 // Resize
-void Resize( FThreadPool*             iThreadPool
+void Resize( FOldThreadPool*             iOldThreadPool
            , bool                     iBlocking
            , uint32                   iPerfIntent
            , const FHostDeviceInfo&   iHostDeviceInfo
@@ -301,7 +301,7 @@ void Resize( FThreadPool*             iThreadPool
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( iSource->Format() == iDestination->Format(),  "Formats do not match."                                 );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
 
@@ -331,7 +331,7 @@ void Resize( FThreadPool*             iThreadPool
 
     std::shared_ptr< FResizeArgs > commandArgs = std::make_shared< FResizeArgs >();
     FResizeArgs& commandArgsRef = *commandArgs;
-    commandArgsRef.pool              = iThreadPool;
+    commandArgsRef.pool              = iOldThreadPool;
     commandArgsRef.blocking          = iBlocking;
     commandArgsRef.hostDeviceInfo    = &iHostDeviceInfo;
     commandArgsRef.perfIntent        = iPerfIntent;
@@ -344,7 +344,7 @@ void Resize( FThreadPool*             iThreadPool
     commandArgsRef.shift             = shift;
 
     if( iMethod == INTERP_AREA ) {
-        std::shared_ptr< FBlock > sh( XGetPremultipliedSummedAreaTable( iThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource ) );
+        std::shared_ptr< FBlock > sh( XGetPremultipliedSummedAreaTable( iOldThreadPool, ULIS_BLOCKING, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource ) );
         commandArgsRef.optionalSAT = sh;
     } else {
         commandArgsRef.optionalSAT = nullptr;
@@ -360,7 +360,7 @@ void Resize( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // XResize
-FBlock* XResize( FThreadPool*           iThreadPool
+FBlock* XResize( FOldThreadPool*           iOldThreadPool
                , bool                   iBlocking
                , uint32                 iPerfIntent
                , const FHostDeviceInfo& iHostDeviceInfo
@@ -371,7 +371,7 @@ FBlock* XResize( FThreadPool*           iThreadPool
                , eResamplingMethod      iMethod ) {
     // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS_ASSERT( iSize.x > 0.f && iSize.y > 0.f,               "Bad Size." );
 
@@ -380,13 +380,13 @@ FBlock* XResize( FThreadPool*           iThreadPool
 
     FBlock* dst = new FBlock( static_cast< int >( FMath::RoundToPositiveInfinity( iSize.x ) )
                             , static_cast< int >( FMath::RoundToPositiveInfinity( iSize.y ) ), iSource->Format() );
-    Resize( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, iSourceRect, iSize, FVec2F(), iMethod );
+    Resize( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, iSourceRect, iSize, FVec2F(), iMethod );
     return  dst;
 }
 
 /////////////////////////////////////////////////////
 // XTransformAffine
-FBlock* XTransformAffine( FThreadPool*              iThreadPool
+FBlock* XTransformAffine( FOldThreadPool*              iOldThreadPool
                         , bool                      iBlocking
                         , uint32                    iPerfIntent
                         , const FHostDeviceInfo&    iHostDeviceInfo
@@ -397,7 +397,7 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
                         , eResamplingMethod         iMethod ) {
     // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
@@ -410,13 +410,13 @@ FBlock* XTransformAffine( FThreadPool*              iThreadPool
 
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
     FTransformation2D fixedTransform( FMat3F::MakeTranslationMatrix( static_cast< float >( -trans.x ), static_cast< float >( -trans.y ) ) * iTransform.Matrix() );
-    TransformAffine( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, fixedTransform, iMethod );
+    TransformAffine( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, fixedTransform, iMethod );
     return  dst;
 }
 
 /////////////////////////////////////////////////////
 // XTransformAffineTiled
-FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
+FBlock* XTransformAffineTiled( FOldThreadPool*              iOldThreadPool
                              , bool                      iBlocking
                              , uint32                    iPerfIntent
                              , const FHostDeviceInfo&    iHostDeviceInfo
@@ -428,7 +428,7 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
                              , eResamplingMethod         iMethod ) {
     // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
@@ -441,13 +441,13 @@ FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
         return nullptr;
 
     FBlock* dst = new FBlock( dst_fit.w, dst_fit.h, iSource->Format() );
-    TransformAffineTiled( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, dst_fit, iTransform, iMethod );
+    TransformAffineTiled( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, dst_fit, iTransform, iMethod );
     return  dst;
 }
 
 /////////////////////////////////////////////////////
 // XMakeTileableTransformedPattern
-FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
+FBlock* XMakeTileableTransformedPattern( FOldThreadPool*              iOldThreadPool
                                        , bool                      iBlocking
                                        , uint32                    iPerfIntent
                                        , const FHostDeviceInfo&    iHostDeviceInfo
@@ -458,7 +458,7 @@ FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
                                        , eResamplingMethod         iMethod ) {
         // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Fix AREA not available here
@@ -471,13 +471,13 @@ FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
         return nullptr;
 
     FBlock* dst = new FBlock( dst_fit.w, dst_fit.h, iSource->Format() );
-    TransformAffineTiled( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, dst_fit, iTransform, iMethod );
+    TransformAffineTiled( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, dst_fit, iTransform, iMethod );
     return  dst;
 }
 
 /////////////////////////////////////////////////////
 // XTransformPerspective
-FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
+FBlock* XTransformPerspective( FOldThreadPool*                 iOldThreadPool
                              , bool                         iBlocking
                              , uint32                       iPerfIntent
                              , const FHostDeviceInfo&       iHostDeviceInfo
@@ -488,7 +488,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
                              , eResamplingMethod            iMethod ) {
     // Assertions
     ULIS_ASSERT( iSource,                          "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,                      "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                      "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,            "Callback flag is specified on non-blocking operation." );
     ULIS_ASSERT( iDestinationPoints.size() == 4,   "Bad destination points"                                );
 
@@ -513,7 +513,7 @@ FBlock* XTransformPerspective( FThreadPool*                 iThreadPool
         return  nullptr;
 
     FBlock* dst = new FBlock( trans.w, trans.h, iSource->Format() );
-    TransformPerspective( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, persp, iMethod );
+    TransformPerspective( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dst, src_fit, persp, iMethod );
     return  dst;
 }
 

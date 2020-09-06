@@ -5,9 +5,9 @@
 *   ULIS
 *__________________
 *
-* @file         ThreadPool_imp.ipp
+* @file         OldThreadPool_imp.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FThreadPool class.
+* @brief        This file provides the declaration for the FOldThreadPool class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -27,23 +27,23 @@
 ULIS_NAMESPACE_BEGIN
 
 /////////////////////////////////////////////////////
-// FThreadPool
-class FThreadPool
+// FOldThreadPool
+class FOldThreadPool
 {
 public:
     // Construction / Destruction
 
-    FThreadPool( unsigned int iCount = std::thread::hardware_concurrency() )
+    FOldThreadPool( unsigned int iCount = std::thread::hardware_concurrency() )
         : busy( 0 )
         , stop( false )
         , processed( 0 )
     {
         unsigned int max = FMath::Min( iCount, std::thread::hardware_concurrency() );
         for( unsigned int i = 0; i < max; ++i )
-            workers.emplace_back( std::bind( &FThreadPool::ThreadProcess, this ) );
+            workers.emplace_back( std::bind( &FOldThreadPool::ThreadProcess, this ) );
     }
 
-    ~FThreadPool()
+    ~FOldThreadPool()
     {
         // set stop-condition
         std::unique_lock< std::mutex > latch( queue_mutex );
@@ -94,7 +94,7 @@ public:
 
         workers.clear();
         for( unsigned int i = 0; i < iValue; ++i )
-            workers.emplace_back( std::bind( &FThreadPool::ThreadProcess, this ) );
+            workers.emplace_back( std::bind( &FOldThreadPool::ThreadProcess, this ) );
     }
 
     unsigned int    GetProcessed() const    { return  processed; }

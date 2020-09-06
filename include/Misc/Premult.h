@@ -16,14 +16,14 @@
 
 ULIS_NAMESPACE_BEGIN
 
-ULIS_API void Premultiply( FThreadPool*            iThreadPool
+ULIS_API void Premultiply( FOldThreadPool*            iOldThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
                           , bool                    iCallCB
                           , FBlock*                 iDestination );
 
-ULIS_API void Unpremultiply( FThreadPool*              iThreadPool
+ULIS_API void Unpremultiply( FOldThreadPool*              iOldThreadPool
                             , bool                      iBlocking
                             , uint32                    iPerfIntent
                             , const FHostDeviceInfo&    iHostDeviceInfo

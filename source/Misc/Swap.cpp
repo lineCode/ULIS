@@ -16,7 +16,7 @@
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 void
@@ -33,7 +33,7 @@ InvokeSwapMTProcessScanline_MEM( uint8* iDst, uint32 iCount, uint8 iC1, uint8 iC
 }
 
 void
-Swap( FThreadPool*              iThreadPool
+Swap( FOldThreadPool*              iOldThreadPool
     , bool                      iBlocking
     , uint32                    iPerfIntent
     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -44,7 +44,7 @@ Swap( FThreadPool*              iThreadPool
 {
     // Assertions
     // Assertions
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS_ASSERT( iChannel1 < iDestination->SamplesPerPixel(),  "Bad channel"                                           );
@@ -60,7 +60,7 @@ Swap( FThreadPool*              iThreadPool
     uint8*      dsb = dst->Bits();
     #define DST dsb + ( pLINE * bps )
     const int max = dst->Height();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , InvokeSwapMTProcessScanline_MEM, DST, w, iChannel1, iChannel2, bpc, bpp )
 

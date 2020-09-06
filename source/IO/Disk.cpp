@@ -36,7 +36,7 @@
 
 ULIS_NAMESPACE_BEGIN
 FBlock*
-XLoadFromFile( FThreadPool*             iThreadPool
+XLoadFromFile( FOldThreadPool*             iOldThreadPool
              , bool                     iBlocking
              , uint32                   iPerfIntent
              , const FHostDeviceInfo&   iHostDeviceInfo
@@ -45,7 +45,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
              , eFormat                  iDesiredFormat )
 {
     // Assertions
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     cppfs::FileHandle   fh = cppfs::fs::open( iPath );
@@ -101,7 +101,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
     FBlock* ret = new FBlock( data, width, height, fmt, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
 
     if( iDesiredFormat != 0 && iDesiredFormat != fmt ) {
-        FBlock* conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, ret, iDesiredFormat );
+        FBlock* conv = XConv( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, ret, iDesiredFormat );
         delete ret;
         ret = conv;
     }
@@ -109,7 +109,7 @@ XLoadFromFile( FThreadPool*             iThreadPool
     return  ret;
 }
 
-void SaveToFile( FThreadPool*           iThreadPool
+void SaveToFile( FOldThreadPool*           iOldThreadPool
                , bool                   iBlocking
                , uint32                 iPerfIntent
                , const FHostDeviceInfo& iHostDeviceInfo
@@ -120,7 +120,7 @@ void SaveToFile( FThreadPool*           iThreadPool
                , int                    iQuality )
 {
     ULIS_ASSERT( iSource,             "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     //cppfs::FilePath     path( iPath );
@@ -143,7 +143,7 @@ void SaveToFile( FThreadPool*           iThreadPool
         if( iImageFormat == IM_HDR )    dstformat = eFormat::Format_RGBF;
         else if( model == CM_GREY )     dstformat = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( iSource->HasAlpha() ) );
         else                            dstformat = static_cast< eFormat >( eFormat::Format_RGB8 | ULIS_W_ALPHA( iSource->HasAlpha() ) );
-        conv = XConv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
+        conv = XConv( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
         dat = conv->Bits();
     }
 

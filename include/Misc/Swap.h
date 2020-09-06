@@ -16,7 +16,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-ULIS_API void Swap( FThreadPool*           iThreadPool
+ULIS_API void Swap( FOldThreadPool*           iOldThreadPool
                    , bool                   iBlocking
                    , uint32                 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo

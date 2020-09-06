@@ -14,7 +14,7 @@
 #include "IO/Clipboard.h"
 
 ULIS_NAMESPACE_BEGIN
-FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
+FBlock* XLoadFromClipboard( FOldThreadPool*            iOldThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo
@@ -24,7 +24,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     return  nullptr;
 }
 
-void SaveToClipboard( FThreadPool*              iThreadPool
+void SaveToClipboard( FOldThreadPool*              iOldThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo

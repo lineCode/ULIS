@@ -17,7 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T >
@@ -71,7 +71,7 @@ fpDispatchedAlphamulInvoke QueryDispatchedUnpremultInvokeForParameters( eType iT
 
 
 void
-Premultiply( FThreadPool*           iThreadPool
+Premultiply( FOldThreadPool*           iOldThreadPool
            , bool                   iBlocking
            , uint32                 iPerfIntent
            , const FHostDeviceInfo& iHostDeviceInfo
@@ -79,7 +79,7 @@ Premultiply( FThreadPool*           iThreadPool
            , FBlock*                iDestination )
 {
     // Assertions
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
@@ -92,7 +92,7 @@ Premultiply( FThreadPool*           iThreadPool
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
     ULIS_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
     iDestination->Dirty( iCallCB );
@@ -100,7 +100,7 @@ Premultiply( FThreadPool*           iThreadPool
 
 
 void
-Unpremultiply( FThreadPool*             iThreadPool
+Unpremultiply( FOldThreadPool*             iOldThreadPool
              , bool                     iBlocking
              , uint32                   iPerfIntent
              , const FHostDeviceInfo&   iHostDeviceInfo
@@ -108,7 +108,7 @@ Unpremultiply( FThreadPool*             iThreadPool
              , FBlock*                  iDestination )
 {
     // Assertions
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
@@ -121,7 +121,7 @@ Unpremultiply( FThreadPool*             iThreadPool
     const int       max = iDestination->Height();
     const size_t    len = iDestination->Width();
     ULIS_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
     iDestination->Dirty( iCallCB );

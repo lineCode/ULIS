@@ -18,7 +18,7 @@
 #include "Image/Block.h"
 #include "Image/Pixel.h"
 #include "Math/Math.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 #include "lcms2.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -42,7 +42,7 @@ FColor Conv( const ISample& iSrc, eFormat iDst ) {
     return  dst;
 }
 
-void Conv( FThreadPool*           iThreadPool
+void Conv( FOldThreadPool*           iOldThreadPool
          , bool                   iBlocking
          , uint32                 iPerfIntent
          , const FHostDeviceInfo& iHostDeviceInfo
@@ -53,7 +53,7 @@ void Conv( FThreadPool*           iThreadPool
     // Assertions
     ULIS_ASSERT( iSource,                                      "Bad source."                                          );
     ULIS_ASSERT( iDestination,                                 "Bad destination."                                     );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool"                                              );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool"                                              );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
     ULIS_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
     ULIS_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
@@ -64,7 +64,7 @@ void Conv( FThreadPool*           iThreadPool
 
     // Check same format perform copy ( faster ).
     if( iSource->Format() == iDestination->Format() ) {
-        Copy( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource, iDestination, iSource->Rect(), FVec2I() );
+        Copy( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource, iDestination, iSource->Rect(), FVec2I() );
         return;
     }
 
@@ -81,7 +81,7 @@ void Conv( FThreadPool*           iThreadPool
     const uint32 len = iSource->Width();
     const FFormat& srcnfo = iSource->FormatInfo();
     const FFormat& dstnfo = iDestination->FormatInfo();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , fptr
                                    , srcnfo
@@ -94,7 +94,7 @@ void Conv( FThreadPool*           iThreadPool
     iDestination->Dirty( iDestination->Rect(), iCallCB );
 }
 
-FBlock* XConv( FThreadPool*           iThreadPool
+FBlock* XConv( FOldThreadPool*           iOldThreadPool
              , bool                   iBlocking
              , uint32                 iPerfIntent
              , const FHostDeviceInfo& iHostDeviceInfo
@@ -104,12 +104,12 @@ FBlock* XConv( FThreadPool*           iThreadPool
 {
     // Assertions
     ULIS_ASSERT( iSource,                                       "Bad source."                                          );
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool"                                              );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool"                                              );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Alloc return buffer in desired format use the same size, then perform conversion
     FBlock* ret = new FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
-    Conv( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret );
+    Conv( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret );
     return  ret;
 }
 

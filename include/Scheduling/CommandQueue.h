@@ -22,12 +22,12 @@ template class ULIS_API TQueue< FCommand* >;
 /////////////////////////////////////////////////////
 /// @class      FCommandQueue
 /// @brief      The FCommandQueue class provides a way to enqueue tasks for being
-///             processed asynchronously in coordination with a FThreadPool
+///             processed asynchronously in coordination with a FOldThreadPool
 /// @details    The FCommandQueue stores a TQueue of FCommand and schedules the
-///             commands on the FThreadPool.
+///             commands on the FOldThreadPool.
 ///
 ///             \sa FCommand
-///             \sa FThreadPool
+///             \sa FOldThreadPool
 class FCommandQueue
 {
     typedef TQueue< FCommand* > tQueue;
@@ -37,7 +37,7 @@ public:
     ~FCommandQueue();
 
     /*! Constructor */
-    FCommandQueue( FThreadPool* iPool );
+    FCommandQueue( FOldThreadPool* iPool );
 
     /*!
         Push, insert a new command at the end of the queue.
@@ -46,7 +46,7 @@ public:
 
 private:
     tQueue mQueue;
-    FThreadPool* mPool;
+    FOldThreadPool* mPool;
 };
 
 ULIS_NAMESPACE_END

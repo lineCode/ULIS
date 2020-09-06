@@ -19,7 +19,7 @@ FCommandQueue::~FCommandQueue()
 {
 }
 
-FCommandQueue::FCommandQueue( FThreadPool* iPool )
+FCommandQueue::FCommandQueue( FOldThreadPool* iPool )
     : mPool( iPool )
 {
 }

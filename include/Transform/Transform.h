@@ -20,7 +20,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // TransformAffine
-ULIS_API void TransformAffine( FThreadPool*              iThreadPool
+ULIS_API void TransformAffine( FOldThreadPool*              iOldThreadPool
                               , bool                      iBlocking
                               , uint32                    iPerfIntent
                               , const FHostDeviceInfo&    iHostDeviceInfo
@@ -33,7 +33,7 @@ ULIS_API void TransformAffine( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformAffineTiled
-ULIS_API void TransformAffineTiled( FThreadPool*              iThreadPool
+ULIS_API void TransformAffineTiled( FOldThreadPool*              iOldThreadPool
                                    , bool                      iBlocking
                                    , uint32                    iPerfIntent
                                    , const FHostDeviceInfo&    iHostDeviceInfo
@@ -47,7 +47,7 @@ ULIS_API void TransformAffineTiled( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformPerspective
-ULIS_API void TransformPerspective( FThreadPool*              iThreadPool
+ULIS_API void TransformPerspective( FOldThreadPool*              iOldThreadPool
                                    , bool                      iBlocking
                                    , uint32                    iPerfIntent
                                    , const FHostDeviceInfo&    iHostDeviceInfo
@@ -60,7 +60,7 @@ ULIS_API void TransformPerspective( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // TransformBezier
-ULIS_API void TransformBezier( FThreadPool*                                    iThreadPool
+ULIS_API void TransformBezier( FOldThreadPool*                                    iOldThreadPool
                               , bool                                            iBlocking
                               , uint32                                          iPerfIntent
                               , const FHostDeviceInfo&                          iHostDeviceInfo
@@ -75,7 +75,7 @@ ULIS_API void TransformBezier( FThreadPool*                                    i
 
 /////////////////////////////////////////////////////
 // Resize
-ULIS_API void Resize( FThreadPool*             iThreadPool
+ULIS_API void Resize( FOldThreadPool*             iOldThreadPool
                      , bool                     iBlocking
                      , uint32                   iPerfIntent
                      , const FHostDeviceInfo&   iHostDeviceInfo
@@ -89,7 +89,7 @@ ULIS_API void Resize( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // XResize
-ULIS_API FBlock* XResize( FThreadPool*             iThreadPool
+ULIS_API FBlock* XResize( FOldThreadPool*             iOldThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo
@@ -101,7 +101,7 @@ ULIS_API FBlock* XResize( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // XTransformAffine
-ULIS_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
+ULIS_API FBlock* XTransformAffine( FOldThreadPool*            iOldThreadPool
                                   , bool                    iBlocking
                                   , uint32                  iPerfIntent
                                   , const FHostDeviceInfo&  iHostDeviceInfo
@@ -113,7 +113,7 @@ ULIS_API FBlock* XTransformAffine( FThreadPool*            iThreadPool
 
 /////////////////////////////////////////////////////
 // XTransformAffineTiled
-ULIS_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
+ULIS_API FBlock* XTransformAffineTiled( FOldThreadPool*              iOldThreadPool
                                        , bool                      iBlocking
                                        , uint32                    iPerfIntent
                                        , const FHostDeviceInfo&    iHostDeviceInfo
@@ -126,7 +126,7 @@ ULIS_API FBlock* XTransformAffineTiled( FThreadPool*              iThreadPool
 
 /////////////////////////////////////////////////////
 // XMakeTileableTransformedPattern
-ULIS_API FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThreadPool
+ULIS_API FBlock* XMakeTileableTransformedPattern( FOldThreadPool*              iOldThreadPool
                                                  , bool                      iBlocking
                                                  , uint32                    iPerfIntent
                                                  , const FHostDeviceInfo&    iHostDeviceInfo
@@ -138,7 +138,7 @@ ULIS_API FBlock* XMakeTileableTransformedPattern( FThreadPool*              iThr
 
 /////////////////////////////////////////////////////
 // XTransformPerspective
-ULIS_API FBlock* XTransformPerspective( FThreadPool*                   iThreadPool
+ULIS_API FBlock* XTransformPerspective( FOldThreadPool*                   iOldThreadPool
                                        , bool                           iBlocking
                                        , uint32                         iPerfIntent
                                        , const FHostDeviceInfo&         iHostDeviceInfo

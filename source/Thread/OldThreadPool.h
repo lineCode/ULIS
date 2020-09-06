@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         ThreadPool.h
+* @file         OldThreadPool.h
 * @author       Clement Berthaud
 * @brief        This file provides the dispatch to include thread pool if supported
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 
 #ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
-#include "Thread/ThreadPool_imp.ipp"
+#include "Thread/OldThreadPool_imp.ipp"
 #else
-#include "Thread/ThreadPool_dummy.ipp"
+#include "Thread/OldThreadPool_dummy.ipp"
 #endif

@@ -41,14 +41,14 @@ typedef uint8 tSchedulePolicy;
 /// @class      FSchedulePolicy
 /// @brief      The FSchedulePolicy class provides a way to control how a task
 ///             is dispatched and scheduled on a multithreaded system, in
-///             coordination with a FThreadPool and a FCommandQueue.
+///             coordination with a FOldThreadPool and a FCommandQueue.
 /// @details    The FSchedulePolicy specifies wether a task should be
 ///             multithreaded or not, and if so which policy should be applied.
 ///             Wether the scheduling is done on a chunk basis, or on a scanline
 ///             basis, for example.
 ///
 ///             \sa FRasterContext
-///             \sa FThreadPool
+///             \sa FOldThreadPool
 ///             \sa FDevice
 ///             \sa FCommandQueue
 class ULIS_API FSchedulePolicy

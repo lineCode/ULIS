@@ -19,13 +19,13 @@
 #include "Image/Pixel.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Convolution
 void
-Convolution( FThreadPool*            iThreadPool
+Convolution( FOldThreadPool*            iOldThreadPool
            , bool                    iBlocking
            , uint32                  iPerfIntent
            , const FHostDeviceInfo&  iHostDeviceInfo
@@ -37,7 +37,7 @@ Convolution( FThreadPool*            iThreadPool
 {
     // Assertions
     ULIS_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     // Fit region of interest

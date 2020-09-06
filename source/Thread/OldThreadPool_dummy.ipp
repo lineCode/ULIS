@@ -5,9 +5,9 @@
 *   ULIS
 *__________________
 *
-* @file         ThreadPool_dummy.ipp
+* @file         OldThreadPool_dummy.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the dummy FThreadPool class.
+* @brief        This file provides the declaration for the dummy FOldThreadPool class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -23,14 +23,14 @@
 ULIS_NAMESPACE_BEGIN
 
 /////////////////////////////////////////////////////
-// FThreadPool
-class FThreadPool
+// FOldThreadPool
+class FOldThreadPool
 {
 public:
     // Construction / Destruction
 
-    FThreadPool( unsigned int iCount = 0 ) {}
-    ~FThreadPool() {}
+    FOldThreadPool( unsigned int iCount = 0 ) {}
+    ~FOldThreadPool() {}
 
 public:
     // Public API

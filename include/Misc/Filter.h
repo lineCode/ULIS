@@ -21,7 +21,7 @@ typedef void (*fpFilterOPFunc)( const FBlock* iBlock, const uint8* iPtr );
 typedef void (*fpFilterOPInPlaceFunc)( FBlock* iBlock, uint8* iPtr );
 typedef void (*fpFilterOPInto)( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr );
 
-ULIS_API void Filter( FThreadPool*             iThreadPool
+ULIS_API void Filter( FOldThreadPool*             iOldThreadPool
                      , bool                     iBlocking
                      , uint32                   iPerfIntent
                      , const FHostDeviceInfo&   iHostDeviceInfo
@@ -29,7 +29,7 @@ ULIS_API void Filter( FThreadPool*             iThreadPool
                      , const FBlock*            iSource
                      , std::function< void( const FBlock* iBlock, const uint8* iPtr ) > iFunc );
 
-ULIS_API void FilterInPlace( FThreadPool*              iThreadPool
+ULIS_API void FilterInPlace( FOldThreadPool*              iOldThreadPool
                             , bool                      iBlocking
                             , uint32                    iPerfIntent
                             , const FHostDeviceInfo&    iHostDeviceInfo
@@ -37,7 +37,7 @@ ULIS_API void FilterInPlace( FThreadPool*              iThreadPool
                             , FBlock*                   iSource
                             , std::function< void( FBlock* iBlock, uint8* iPtr ) > iFunc );
 
-ULIS_API void FilterInto( FThreadPool*             iThreadPool
+ULIS_API void FilterInto( FOldThreadPool*             iOldThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
                          , const FHostDeviceInfo&   iHostDeviceInfo

@@ -21,7 +21,7 @@
 
 ULIS_NAMESPACE_BEGIN
 struct _FPrivateTextInfo {
-    FThreadPool*            pool;
+    FOldThreadPool*            pool;
     bool                    blocking;
     uint32                  perfIntent;
     const FHostDeviceInfo*  hostDeviceInfo;

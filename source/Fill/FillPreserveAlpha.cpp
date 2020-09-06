@@ -18,7 +18,7 @@
 #include "Image/Pixel.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForPar
 /////////////////////////////////////////////////////
 // FillPreserveAlpha
 void
-FillPreserveAlpha( FThreadPool*             iThreadPool
+FillPreserveAlpha( FOldThreadPool*             iOldThreadPool
                  , bool                     iBlocking
                  , uint32                   iPerfIntent
                  , const FHostDeviceInfo&   iHostDeviceInfo
@@ -63,7 +63,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
 {
     // Assertions
     ULIS_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     if( !( iDestination->HasAlpha() ) )
@@ -89,7 +89,7 @@ FillPreserveAlpha( FThreadPool*             iThreadPool
     const size_t    len = roi.w;
 
     // Call
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, iDestination->FormatInfo(), color )
 

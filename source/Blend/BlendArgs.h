@@ -25,7 +25,7 @@ class FBlendArgs
     : public ICommandArgs
 {
 public:
-    FThreadPool*            pool;
+    FOldThreadPool*            pool;
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;
     uint32                  perfIntent;

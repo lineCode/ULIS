@@ -17,7 +17,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FillPreserveAlpha
-ULIS_API void FillPreserveAlpha( FThreadPool* iThreadPool
+ULIS_API void FillPreserveAlpha( FOldThreadPool* iOldThreadPool
                                 , bool iBlocking
                                 , uint32 iPerfIntent
                                 , const FHostDeviceInfo& iHostDeviceInfo

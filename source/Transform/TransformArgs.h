@@ -23,7 +23,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransformArgs
 struct FTransformArgs {
-    FThreadPool*            pool;
+    FOldThreadPool*            pool;
     bool                    blocking;
     const FHostDeviceInfo*  hostDeviceInfo;
     uint32                  perfIntent;
@@ -38,7 +38,7 @@ struct FTransformArgs {
 /////////////////////////////////////////////////////
 // FResizeArgs
 struct FResizeArgs {
-    FThreadPool*                        pool;
+    FOldThreadPool*                        pool;
     bool                                blocking;
     const FHostDeviceInfo*              hostDeviceInfo;
     uint32                              perfIntent;

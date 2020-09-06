@@ -17,7 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 #include <atomic>
 
 ULIS_NAMESPACE_BEGIN
@@ -48,7 +48,7 @@ fpDispatchedDetectTrimAlphaEdgeInvoke QueryDispatchedDetectTrimAlphaEdgeInvokeFo
     return  nullptr;
 }
 
-FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
+FRectI GetTrimmedTransparencyRect( FOldThreadPool*            iOldThreadPool
                                 , bool                    iBlocking
                                 , uint32                  iPerfIntent
                                 , const FHostDeviceInfo&  iHostDeviceInfo
@@ -56,7 +56,7 @@ FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                 , const FBlock*           iSource )
 {
     // Assertions
-    ULIS_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
     ULIS_ASSERT( iSource,                                      "Bad source."                                           );
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
@@ -76,7 +76,7 @@ FRectI GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
 
     fpDispatchedDetectTrimAlphaEdgeInvoke fptr = QueryDispatchedDetectTrimAlphaEdgeInvokeForParameters( iSource->Type() );
     ULIS_ASSERT( fptr, "No invocation found." );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS_BLOCKING
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, ULIS_BLOCKING
                                    , max
                                    , fptr, pLINE, len, src, fmt, &left, &top, &right, &bot );
     iSource->Dirty( iCallCB );

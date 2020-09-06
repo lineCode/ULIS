@@ -16,7 +16,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-ULIS_API void Copy( FThreadPool*           iThreadPool
+ULIS_API void Copy( FOldThreadPool*           iOldThreadPool
                    , bool                   iBlocking
                    , uint32                 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo
@@ -26,7 +26,7 @@ ULIS_API void Copy( FThreadPool*           iThreadPool
                    , const FRectI&           iArea
                    , const FVec2I&          iPos );
 
-ULIS_API FBlock* XCopy( FThreadPool*           iThreadPool
+ULIS_API FBlock* XCopy( FOldThreadPool*           iOldThreadPool
                        , bool                   iBlocking
                        , uint32                 iPerfIntent
                        , const FHostDeviceInfo& iHostDeviceInfo

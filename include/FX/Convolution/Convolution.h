@@ -17,7 +17,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Convolution
-ULIS_API void Convolution( FThreadPool*            iThreadPool
+ULIS_API void Convolution( FOldThreadPool*            iOldThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
                           , const FHostDeviceInfo&  iHostDeviceInfo

@@ -28,7 +28,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-RenderText( FThreadPool*            iThreadPool
+RenderText( FOldThreadPool*            iOldThreadPool
           , bool                    iBlocking
           , uint32                  iPerfIntent
           , const FHostDeviceInfo&  iHostDeviceInfo
@@ -43,12 +43,12 @@ RenderText( FThreadPool*            iThreadPool
 {
     // Assertions
     ULIS_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
     std::shared_ptr< _FPrivateTextInfo > forwardTextParams = std::make_shared< _FPrivateTextInfo >();
     _FPrivateTextInfo& alias = *forwardTextParams;
-    alias.pool              = iThreadPool;
+    alias.pool              = iOldThreadPool;
     alias.blocking          = iBlocking;
     alias.hostDeviceInfo    = &iHostDeviceInfo;
     alias.perfIntent        = iPerfIntent;

@@ -18,7 +18,7 @@ ULIS_NAMESPACE_BEGIN
 ULIS_API void Conv( const ISample& iSrc, ISample& iDst );
 ULIS_API FColor Conv( const ISample& iSrc, eFormat iDst );
 
-ULIS_API void Conv( FThreadPool*           iThreadPool
+ULIS_API void Conv( FOldThreadPool*           iOldThreadPool
                    , bool                   iBlocking
                    , uint32                 iPerfIntent
                    , const FHostDeviceInfo& iHostDeviceInfo
@@ -26,7 +26,7 @@ ULIS_API void Conv( FThreadPool*           iThreadPool
                    , const FBlock*          iSource
                    , FBlock*                iDestination );
 
-ULIS_API FBlock* XConv( FThreadPool*           iThreadPool
+ULIS_API FBlock* XConv( FOldThreadPool*           iOldThreadPool
                        , bool                   iBlocking
                        , uint32                 iPerfIntent
                        , const FHostDeviceInfo& iHostDeviceInfo

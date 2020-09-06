@@ -18,14 +18,14 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-#include "Thread/ThreadPool.h"
+#include "Thread/OldThreadPool.h"
 #include "Misc/Dispatch/Dispatch_SAT.ipp"
 #include "Misc/Dispatch/Dispatch_PremultipliedSAT.ipp"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // SAT
-FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
+FBlock* XGetSummedAreaTable( FOldThreadPool*             iOldThreadPool
                            , bool                     iBlocking
                            , uint32                   iPerfIntent
                            , const FHostDeviceInfo&   iHostDeviceInfo
@@ -33,7 +33,7 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
                            , const FBlock*            iSource )
 {
     // Assertions
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
     ULIS_ASSERT( iSource,                  "Bad source."                                           );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
@@ -44,7 +44,7 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
     // Query dispatched method
     fpDispatchedSATFunc fptr = QueryDispatchedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );
     ULIS_ASSERT( fptr, "No dispatch function found." );
-    fptr( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
+    fptr( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 
     sat->Dirty( iCallCB );
 
@@ -53,7 +53,7 @@ FBlock* XGetSummedAreaTable( FThreadPool*             iThreadPool
 
 /////////////////////////////////////////////////////
 // Premultiplied SAT
-FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
+FBlock* XGetPremultipliedSummedAreaTable( FOldThreadPool*             iOldThreadPool
                                         , bool                     iBlocking
                                         , uint32                   iPerfIntent
                                         , const FHostDeviceInfo&   iHostDeviceInfo
@@ -61,7 +61,7 @@ FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
                                         , const FBlock*            iSource )
 {
     // Assertions
-    ULIS_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
     ULIS_ASSERT( iSource,                  "Bad source."                                           );
     ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
 
@@ -72,7 +72,7 @@ FBlock* XGetPremultipliedSummedAreaTable( FThreadPool*             iThreadPool
     // Query dispatched method
     fpDispatchedSATFunc fptr = QueryDispatchedPremultipliedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );
     ULIS_ASSERT( fptr, "No dispatch function found." );
-    fptr( iThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
+    fptr( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 
     sat->Dirty( iCallCB );
 
