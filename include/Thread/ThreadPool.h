@@ -1,0 +1,52 @@
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+// IDDN FR.001.250001.002.S.P.2019.000.00000
+/*
+*
+*   ULIS
+*__________________
+*
+* @file         ThreadPool.h
+* @author       Clement Berthaud
+* @brief        This file provides the declaration for the FThreadPool class.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
+#pragma once
+#include "Core/Core.h"
+#include <thread>
+
+ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+/// @class      FThreadPool
+/// @brief      The FThreadPool class provides a way to hold a thread pool with
+///             several threads running and waiting for commands, with no overhead
+///             related to thread launching and joining.
+/// @details    The FThreadPool holds a certain number of threads which actual
+///             implementation is irrelevant ( wether the backend is Posix threads,
+///             Intel TBB, or no thread support at all ). If the system doesn't
+///             support multithreading, the FThreadPool emulates a multithreaded
+///             behaviour anyway with no change to application logic, but it
+///             processes it in a linear monothreaded fashion.
+///
+///             \sa FDevice
+///             \sa FCommandQueue
+class ULIS_API FThreadPool
+{
+    class FThreadPool_private;
+
+public:
+    ~FThreadPool();
+    FThreadPool( uint32 iNumWorkers = MaxWorkers() );
+    void ScheduleJob( const FCommand& iCommand );
+    void WaitForCompletion();
+    void SetNumWorkers( uint32 iNumWorkers );
+    uint32 GetProcessed() const;
+    uint32 GetNumWorkers() const;
+    static uint32 MaxWorkers();
+       
+private:
+    FThreadPool_private* d;
+};
+
+ULIS_NAMESPACE_END
+
