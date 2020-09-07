@@ -14,6 +14,7 @@
 #pragma once
 #include "Context/RasterContext.h"
 #include "Blend/BlendDispatch.h"
+#include "Scheduling/CommandQueue.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -60,8 +61,9 @@ FRasterContext::~FRasterContext()
     delete  mContextualDispatchTable;
 }
 
-FRasterContext::FRasterContext( const FDevice& iDevice, eFormat iFormat )
+FRasterContext::FRasterContext( const FCommandQueue& iQueue, const FDevice& iDevice, eFormat iFormat )
     : mContextualDispatchTable( nullptr )
+    , mQueue( iQueue )
     , mDevice( iDevice )
     , mFormat( iFormat )
 {

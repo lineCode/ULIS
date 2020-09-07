@@ -57,7 +57,7 @@ public:
     ~FRasterContext();
 
     /*! Constructor */
-    FRasterContext( const FDevice& iDevice, eFormat iFormat );
+    FRasterContext( const FCommandQueue& iQueue, const FDevice& iDevice, eFormat iFormat );
 
 public:
 /////////////////////////////////////////////////////
@@ -130,6 +130,7 @@ public:
 
 private:
     FContextualDispatchTable* mContextualDispatchTable;
+    const FCommandQueue& mQueue;
     const FDevice& mDevice;
     eFormat mFormat;
 };

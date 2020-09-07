@@ -13,13 +13,14 @@
 */
 #pragma once
 #include "Scheduling/CommandQueue.h"
+#include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 FCommandQueue::~FCommandQueue()
 {
 }
 
-FCommandQueue::FCommandQueue( FOldThreadPool* iPool )
+FCommandQueue::FCommandQueue( FThreadPool* iPool )
     : mPool( iPool )
 {
 }
