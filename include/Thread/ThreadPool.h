@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include <thread>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -43,7 +42,7 @@ public:
     uint32 GetProcessed() const;
     uint32 GetNumWorkers() const;
     static uint32 MaxWorkers();
-       
+
 private:
     FThreadPool_private* d;
 };
