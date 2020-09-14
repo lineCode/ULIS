@@ -25,22 +25,22 @@ class FBlendArgs
     : public ICommandArgs
 {
 public:
-    FOldThreadPool*            pool;
-    bool                    blocking;
-    const FHostDeviceInfo*  hostDeviceInfo;
-    uint32                  perfIntent;
-    const FBlock*           source;
-    FBlock*                 backdrop;
-    FRectI                  sourceRect;
-    FVec2F                  subpixelComponent;
-    FVec2F                  buspixelComponent;
-    bool                    subpixelFlag;
-    eBlendMode              blendingMode;
-    eAlphaMode              alphaMode;
-    ufloat                  opacityValue;
-    FVec2I                  shift;
-    FVec2I                  backdropCoverage;
-    FRectI                  backdropWorkingRect;
+    struct FArgs {
+        const FBlock& source;
+        FBlock& backdrop;
+        FRectI sourceRect;
+        FVec2F subpixelComponent;
+        FVec2F buspixelComponent;
+        eBlendMode blendingMode;
+        eAlphaMode alphaMode;
+        ufloat opacity;
+        FVec2I shift;
+        FVec2I backdropCoverage;
+        FRectI backdropWorkingRect;
+    } bulk;
+
+    virtual ~FBlendArgs() {};
+    FBlendArgs( FArgs&& iInit ) : bulk( std::forward< FArgs >( iInit ) ) {}
 };
 
 ULIS_NAMESPACE_END

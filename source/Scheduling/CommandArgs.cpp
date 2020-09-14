@@ -16,12 +16,8 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FBlendArgs
+// ICommandArgs
 ICommandArgs::~ICommandArgs()
-{
-}
-
-ICommandArgs::ICommandArgs()
 {
 }
 

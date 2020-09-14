@@ -66,6 +66,11 @@ struct TRectangle
         return  TRectangle< T >( iXMin, iYMin, iXMax - iXMin, iYMax - iYMin );
     }
 
+    /*! Static named maker from pos and size input values. */
+    static TRectangle< T > FromPositionAndSize( const TVector2< T >& iPos, const TVector2< T >& iSize ) {
+        return  TRectangle< T >( iPos.x, iPos.y, iSize.x, iSize.y );
+    }
+
     /*! Collision test with TVector2. */
     bool HitTest( const TVector2< T >& iV ) {
         return  iV.x >= x
@@ -233,8 +238,13 @@ struct TRectangle
     }
 
     /*! Get x and y coordinates as vector. */
-    TVector2< T > GetShift() const {
+    TVector2< T > Position() const {
         return  TVector2< T >( x, y );
+    }
+
+    /*! Get the rectuangle size as vector. */
+    TVector2< T > Size() const {
+        return  TVector2< T >( w, h );
     }
 };
 

@@ -46,12 +46,12 @@ public:
     {}
 
 private:
-    fpBlendInvocationScheduler mScheduleBlendSeparable;
-    fpBlendInvocationScheduler mScheduleBlendNonSeparable;
-    fpBlendInvocationScheduler mScheduleBlendMisc;
-    fpBlendInvocationScheduler mScheduleBlendSeparableSubpixel;
-    fpBlendInvocationScheduler mScheduleBlendNonSeparableSubpixel;
-    fpBlendInvocationScheduler mScheduleBlendMiscSubpixel;
+    fpCommandScheduler mScheduleBlendSeparable;
+    fpCommandScheduler mScheduleBlendNonSeparable;
+    fpCommandScheduler mScheduleBlendMisc;
+    fpCommandScheduler mScheduleBlendSeparableSubpixel;
+    fpCommandScheduler mScheduleBlendNonSeparableSubpixel;
+    fpCommandScheduler mScheduleBlendMiscSubpixel;
 };
 
 /////////////////////////////////////////////////////
@@ -62,7 +62,7 @@ FRasterContext::~FRasterContext()
 }
 
 FRasterContext::FRasterContext(
-      const FCommandQueue& iQueue
+      FCommandQueue& iQueue
     , const FDevice& iDevice
     , eFormat iFormat
 )
@@ -91,13 +91,47 @@ FRasterContext::Blend(
     , FTaskEvent* iEvent
 )
 {
-    fpBlendInvocationScheduler run = nullptr;
+    // Sanitize geometry
+    FRectI src_roi = iSourceRect & iSource.Rect();
+    FRectI dst_target = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
+    FRectI dst_fit    = dst_target & iBackdrop.Rect();
+
+    // Check no-op
+    if( dst_fit.Area() <= 0 )
+        return;
+
+    // Select implementation
+    fpCommandScheduler sched = nullptr;
     switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BlendQualifier_Misc            : run = mContextualDispatchTable->mScheduleBlendMisc;
-        case BlendQualifier_Separable       : run = mContextualDispatchTable->mScheduleBlendSeparable;
-        case BlendQualifier_NonSeparable    : run = mContextualDispatchTable->mScheduleBlendNonSeparable;
+        case BlendQualifier_Misc            : sched = mContextualDispatchTable->mScheduleBlendMisc;
+        case BlendQualifier_Separable       : sched = mContextualDispatchTable->mScheduleBlendSeparable;
+        case BlendQualifier_NonSeparable    : sched = mContextualDispatchTable->mScheduleBlendNonSeparable;
     }
-    ULIS_ASSERT( run, "Error: No dispatch found." );
+
+    // Assert implementation found
+    ULIS_ASSERT( sched, "Error: No dispatch found." );
+
+    // Bake command
+    mQueue.Push(
+        new FCommand(
+            new FBlendArgs { {
+                  iSource
+                , iBackdrop
+                , src_roi
+                , FVec2F()
+                , FVec2F()
+                , iBlendingMode
+                , iAlphaMode
+                , FMath::Clamp( iOpacity, 0.f, 1.f )
+                , dst_fit.Position() - dst_target.Position()
+                , dst_fit.Size()
+                , dst_fit
+            } }
+            , nullptr
+            , iPolicy
+            , sched
+        )
+    );
 }
 
 void
@@ -115,13 +149,13 @@ FRasterContext::BlendAA(
     , FTaskEvent* iEvent
 )
 {
-    fpBlendInvocationScheduler run = nullptr;
+    fpCommandScheduler sched = nullptr;
     switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BlendQualifier_Misc            : run = mContextualDispatchTable->mScheduleBlendMiscSubpixel;
-        case BlendQualifier_Separable       : run = mContextualDispatchTable->mScheduleBlendSeparableSubpixel;
-        case BlendQualifier_NonSeparable    : run = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
+        case BlendQualifier_Misc            : sched = mContextualDispatchTable->mScheduleBlendMiscSubpixel;
+        case BlendQualifier_Separable       : sched = mContextualDispatchTable->mScheduleBlendSeparableSubpixel;
+        case BlendQualifier_NonSeparable    : sched = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
     }
-    ULIS_ASSERT( run, "Error: No dispatch found." );
+    ULIS_ASSERT( sched, "Error: No dispatch found." );
 }
 
 ULIS_NAMESPACE_END

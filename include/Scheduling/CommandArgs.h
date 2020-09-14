@@ -28,9 +28,6 @@ class ULIS_API ICommandArgs {
 public:
     /*! Destructor */
     virtual ~ICommandArgs() = 0;
-
-    /*! Constructor */
-    ICommandArgs();
 };
 
 ULIS_NAMESPACE_END

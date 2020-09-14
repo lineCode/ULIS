@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Dispatch/Dispatcher.h"
+#include "Scheduling/Command.h"
 
 // Include MEM Generic Implementation
 #include "Blend/Generic/BlendMT_Separable_MEM_Generic.h"
@@ -25,23 +26,21 @@
 #include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
 
 ULIS_NAMESPACE_BEGIN
-class FBlendArgs;
-typedef void (*fpBlendInvocationScheduler)( std::shared_ptr< const FBlendArgs > iBlendParams );
 
 /////////////////////////////////////////////////////
 // Blend
-ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector,      fpBlendInvocationScheduler )
-ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableInvocationSchedulerSelector,   fpBlendInvocationScheduler )
-ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscInvocationSchedulerSelector,           fpBlendInvocationScheduler )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector,      fpCommandScheduler )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableInvocationSchedulerSelector,   fpCommandScheduler )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscInvocationSchedulerSelector,           fpCommandScheduler )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendSeparableInvocationSchedulerSelector,    &ScheduleBlendMT_Separable_MEM_Generic< T > )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendNonSeparableInvocationSchedulerSelector, &ScheduleBlendMT_NonSeparable_MEM_Generic< T > )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendMiscInvocationSchedulerSelector,         &ScheduleBlendMT_Misc_MEM_Generic< T > )
 
 /////////////////////////////////////////////////////
 // Blend Subpixel
-ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector,      fpBlendInvocationScheduler )
-ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector,   fpBlendInvocationScheduler )
-ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector,           fpBlendInvocationScheduler )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector,      fpCommandScheduler )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector,   fpCommandScheduler )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector,           fpCommandScheduler )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector,    &ScheduleBlendMT_Separable_MEM_Generic_Subpixel< T > )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector, &ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel< T > )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector,         &ScheduleBlendMT_Misc_MEM_Generic_Subpixel< T > )
