@@ -28,7 +28,7 @@ FThreadPool::~FThreadPool()
 }
 
 FThreadPool::FThreadPool( uint32 iNumWorkers )
-    : d( new FThreadPool_private( iNumWorkers ) )
+    : d( new FThreadPool_Private( iNumWorkers ) )
 {
 }
 

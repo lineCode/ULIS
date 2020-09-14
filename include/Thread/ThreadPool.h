@@ -31,7 +31,7 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FCommandQueue
 class ULIS_API FThreadPool
 {
-    class FThreadPool_private;
+    class FThreadPool_Private;
 
 public:
     ~FThreadPool();
@@ -44,7 +44,7 @@ public:
     static uint32 MaxWorkers();
 
 private:
-    FThreadPool_private* d;
+    FThreadPool_Private* d;
 };
 
 ULIS_NAMESPACE_END

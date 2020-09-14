@@ -7,7 +7,7 @@
 *
 * @file         ThreadPool_Private_Generic.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FThreadPool_private
+* @brief        This file provides the definition for the FThreadPool_Private
 *               class for generic systems.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
@@ -24,18 +24,18 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FThreadPool_private
+/// @class      FThreadPool_Private
 /// @brief      The FThreadPool_Private class provides the private implementation
 ///             for FThreadPool using the pimpl idiom.
 /// @details    This version of the private implementation is for generic
 ///             systems with multithreading support.
 ///
 ///             \sa FThreadPool
-class ULIS_API FThreadPool::FThreadPool_private
+class ULIS_API FThreadPool::FThreadPool_Private
 {
 public:
-    ~FThreadPool_private();
-    FThreadPool_private( uint32 iNumWorkers = MaxWorkers() );
+    ~FThreadPool_Private();
+    FThreadPool_Private( uint32 iNumWorkers = MaxWorkers() );
     void ScheduleJob( const FCommand& iCommand );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
@@ -55,43 +55,43 @@ private:
     std::condition_variable             cv_finished;
 };
 
-FThreadPool::FThreadPool_private::~FThreadPool_private()
+FThreadPool::FThreadPool_Private::~FThreadPool_Private()
 {
 }
 
-FThreadPool::FThreadPool_private::FThreadPool_private( uint32 iNumWorkers )
-{
-}
-
-void
-FThreadPool::FThreadPool_private::ScheduleJob( const FCommand& iCommand )
+FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 {
 }
 
 void
-FThreadPool::FThreadPool_private::WaitForCompletion()
+FThreadPool::FThreadPool_Private::ScheduleJob( const FCommand& iCommand )
 {
 }
 
 void
-FThreadPool::FThreadPool_private::SetNumWorkers( uint32 iNumWorkers )
+FThreadPool::FThreadPool_Private::WaitForCompletion()
+{
+}
+
+void
+FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
 {
 }
 
 uint32
-FThreadPool::FThreadPool_private::GetProcessed() const
+FThreadPool::FThreadPool_Private::GetProcessed() const
 {
 }
 
 uint32
-FThreadPool::FThreadPool_private::GetNumWorkers() const
+FThreadPool::FThreadPool_Private::GetNumWorkers() const
 {
     return  1;
 }
 
 //static
 uint32
-FThreadPool::FThreadPool_private::MaxWorkers()
+FThreadPool::FThreadPool_Private::MaxWorkers()
 {
     return  1;
 }
