@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 ///             be used in a polymorphic way.
 ///
 ///             \sa FBlendArgs
-class ICommandArgs {
+class ULIS_API ICommandArgs {
 public:
     /*! Destructor */
     virtual ~ICommandArgs() = 0;

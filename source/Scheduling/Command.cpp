@@ -22,11 +22,16 @@ FCommand::~FCommand()
         delete  mArgs;
 }
 
-FCommand::FCommand( ICommandArgs* iArgs )
+FCommand::FCommand(
+      ICommandArgs* iArgs
+    , FTaskEvent* iEvent
+    , const FSchedulePolicy iPolicy
+    , fpCommandScheduler iCommand
+)
     : mArgs( iArgs )
-    , mEvent( FTaskEvent() )
-    , mPolicy( FSchedulePolicy() )
-    , mCommand( nullptr )
+    , mEvent( iEvent )
+    , mPolicy( iPolicy )
+    , mCommand( iCommand )
 {
 }
 

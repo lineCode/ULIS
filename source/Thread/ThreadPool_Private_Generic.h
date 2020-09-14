@@ -81,6 +81,7 @@ FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
 uint32
 FThreadPool::FThreadPool_Private::GetProcessed() const
 {
+    return  processed;
 }
 
 uint32

@@ -61,7 +61,11 @@ FRasterContext::~FRasterContext()
     delete  mContextualDispatchTable;
 }
 
-FRasterContext::FRasterContext( const FCommandQueue& iQueue, const FDevice& iDevice, eFormat iFormat )
+FRasterContext::FRasterContext(
+      const FCommandQueue& iQueue
+    , const FDevice& iDevice
+    , eFormat iFormat
+)
     : mContextualDispatchTable( nullptr )
     , mQueue( iQueue )
     , mDevice( iDevice )
@@ -72,7 +76,7 @@ FRasterContext::FRasterContext( const FCommandQueue& iQueue, const FDevice& iDev
 
 /////////////////////////////////////////////////////
 // FRasterContext: Blend
-const FTaskEvent&
+void
 FRasterContext::Blend(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -82,7 +86,9 @@ FRasterContext::Blend(
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
     , const FSchedulePolicy& iPolicy
-    , const FTaskEvent& iWait
+    , uint32 iNumWait
+    , const FTaskEvent* iWaitList
+    , FTaskEvent* iEvent
 )
 {
     fpBlendInvocationScheduler run = nullptr;
@@ -92,12 +98,9 @@ FRasterContext::Blend(
         case BlendQualifier_NonSeparable    : run = mContextualDispatchTable->mScheduleBlendNonSeparable;
     }
     ULIS_ASSERT( run, "Error: No dispatch found." );
-
-    // TMP Workaround return temporary:
-    return  FTaskEvent();
 }
 
-const FTaskEvent&
+void
 FRasterContext::BlendAA(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -107,7 +110,9 @@ FRasterContext::BlendAA(
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
     , const FSchedulePolicy& iPolicy
-    , const FTaskEvent& iWait
+    , uint32 iNumWait
+    , const FTaskEvent* iWaitList
+    , FTaskEvent* iEvent
 )
 {
     fpBlendInvocationScheduler run = nullptr;
@@ -117,8 +122,6 @@ FRasterContext::BlendAA(
         case BlendQualifier_NonSeparable    : run = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
     }
     ULIS_ASSERT( run, "Error: No dispatch found." );
-
-    return  FTaskEvent();
 }
 
 ULIS_NAMESPACE_END

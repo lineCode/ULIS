@@ -57,7 +57,11 @@ public:
     ~FRasterContext();
 
     /*! Constructor */
-    FRasterContext( const FCommandQueue& iQueue, const FDevice& iDevice, eFormat iFormat );
+    FRasterContext(
+          const FCommandQueue& iQueue
+        , const FDevice& iDevice
+        , eFormat iFormat
+    );
 
 public:
 /////////////////////////////////////////////////////
@@ -80,7 +84,7 @@ public:
 
         \sa BlendAA()
     */
-    const FTaskEvent&
+    void
     Blend(
           const FBlock& iSource
         , FBlock& iBackdrop
@@ -90,7 +94,9 @@ public:
         , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , const FTaskEvent& iWait = FTaskEvent()
+        , uint32 iNumWait = 0
+        , const FTaskEvent* iWaitList = nullptr
+        , FTaskEvent* iEvent = nullptr
     );
 
     /*!
@@ -115,7 +121,7 @@ public:
 
         \sa Blend()
     */
-    const FTaskEvent&
+    void
     BlendAA(
           const FBlock& iSource
         , FBlock& iBackdrop
@@ -125,7 +131,9 @@ public:
         , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , const FTaskEvent& iWait = FTaskEvent()
+        , uint32 iNumWait = 0
+        , const FTaskEvent* iWaitList = nullptr
+        , FTaskEvent* iEvent = nullptr
     );
 
 private:

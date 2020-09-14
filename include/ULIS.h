@@ -13,7 +13,6 @@
 */
 #pragma once
 // Blend
-#include "Blend/Blend.h"
 #include "Blend/Modes.h"
 // Clear
 #include "Clear/Clear.h"
@@ -70,6 +69,7 @@
 // System
 #include "System/FilePathRegistry.h"
 #include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 // Text
 #include "Text/Font.h"
 #include "Text/FontRegistry.h"
@@ -77,7 +77,16 @@
 #include "Text/TextEngine.h"
 // Thread
 #include "Thread/OldThreadInterface.h"
+#include "Thread/ThreadPool.h"
 // Transform
 #include "Transform/Methods.h"
 #include "Transform/Transform.h"
+// Context
+#include "Context/RasterContext.h"
+// Scheduling
+#include "Scheduling/Command.h"
+#include "Scheduling/CommandArgs.h"
+#include "Scheduling/CommandQueue.h"
+#include "Scheduling/SchedulePolicy.h"
+#include "Scheduling/TaskEvent.h"
 

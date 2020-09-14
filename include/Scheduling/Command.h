@@ -32,13 +32,18 @@ typedef void (*fpCommandScheduler)( FCommand* );
 ///             which operation arguments are stored in a ICommandArgs child class.
 ///
 ///             \sa FCommandQueue
-class FCommand {
+class ULIS_API FCommand {
 public:
     /*! Destructor */
     ~FCommand();
 
     /*! Constructor */
-    FCommand( ICommandArgs* iArgs );
+    FCommand(
+          ICommandArgs* iArgs
+        , FTaskEvent* iEvent
+        , const FSchedulePolicy iPolicy
+        , fpCommandScheduler iCommand
+    );
 
     FCommand() = delete;
     FCommand( const FCommand& ) = delete;
@@ -48,7 +53,7 @@ public:
 
 private:
     ICommandArgs*       mArgs;
-    FTaskEvent          mEvent;
+    FTaskEvent*         mEvent;
     FSchedulePolicy     mPolicy;
     fpCommandScheduler  mCommand;
 };

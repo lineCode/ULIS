@@ -45,7 +45,7 @@ private:
 
         TForwardListNode( TForwardListNode< U >* iNext, T&& iValue )
             : mNext( iNext )
-            , mValue( std::forward< U >( iValue )
+            , mValue( std::forward< U >( iValue ) )
         {}
 
         template< class... Args >

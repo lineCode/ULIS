@@ -50,6 +50,9 @@ public:
     /*! Getter for the task policy */
     const FSchedulePolicy& Policy() const;
 
+    /*! Static deleter for FTaskEvent */
+    static void XDelete( FTaskEvent* iEvent );
+
 private:
     FSchedulePolicy mPolicy;
     eTaskStatus     mStatus;

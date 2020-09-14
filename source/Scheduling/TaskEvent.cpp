@@ -34,5 +34,12 @@ FTaskEvent::Policy() const
     return  mPolicy;
 }
 
+//static
+void
+FTaskEvent::XDelete( FTaskEvent* iEvent )
+{
+    delete  iEvent;
+}
+
 ULIS_NAMESPACE_END
 

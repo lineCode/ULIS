@@ -28,7 +28,7 @@ template class ULIS_API TQueue< FCommand* >;
 ///
 ///             \sa FCommand
 ///             \sa FOldThreadPool
-class FCommandQueue
+class ULIS_API FCommandQueue
 {
     typedef TQueue< FCommand* > tQueue;
 
@@ -37,7 +37,7 @@ public:
     ~FCommandQueue();
 
     /*! Constructor */
-    FCommandQueue( FThreadPool* iPool );
+    FCommandQueue( FThreadPool& iPool );
 
     /*!
         Push, insert a new command at the end of the queue.
@@ -46,7 +46,7 @@ public:
 
 private:
     tQueue mQueue;
-    FThreadPool* mPool;
+    FThreadPool& mPool;
 };
 
 ULIS_NAMESPACE_END
