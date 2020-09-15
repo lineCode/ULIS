@@ -22,11 +22,11 @@ ULIS is a rendering library written in C++. It is aimed at software rasterizatio
 
 ## Links
 - [Official Github Repository](https://github.com/Praxinos/ULIS)  
-- [Author Webpage](http://clementberthaud.com/)  
 - [Praxinos Website](https://praxinos.coop/)  
+- [Documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/)
 
 ## License
-Check LICENSE.md, ULIS is licensed under a commercial license and is NOT available for free.
+Check LICENSE.md and the EULA and CLUF provided within the repository.
 
-## Documentation
+## Build and Documentation
 Check the [documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/) for the API reference and details on the build process.  
