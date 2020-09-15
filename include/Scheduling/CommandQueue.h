@@ -30,6 +30,7 @@ template class ULIS_API TQueue< FCommand* >;
 ///             \sa FOldThreadPool
 class ULIS_API FCommandQueue
 {
+    friend class FRasterContext;
     typedef TQueue< FCommand* > tQueue;
 
 public:
@@ -39,6 +40,7 @@ public:
     /*! Constructor */
     FCommandQueue( FThreadPool& iPool );
 
+private:
     /*!
         Push, insert a new command at the end of the queue.
     */
