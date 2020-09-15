@@ -111,10 +111,10 @@ FRasterContext::Blend(
     // Assert implementation found
     ULIS_ASSERT( sched, "Error: No dispatch found." );
 
-    // Bake command
+    // Bake and push command
     mQueue.Push(
         new FCommand(
-            new FBlendArgs { {
+            new FBlendArgs( {
                   iSource
                 , iBackdrop
                 , src_roi
@@ -126,7 +126,7 @@ FRasterContext::Blend(
                 , dst_fit.Position() - dst_target.Position()
                 , dst_fit.Size()
                 , dst_fit
-            } }
+            } )
             , nullptr
             , iPolicy
             , sched
