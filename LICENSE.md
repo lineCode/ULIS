@@ -1,3 +1,2 @@
-The ULIS repository and all related materials are licensed under a proprietary commercial license.
-Write to contact@praxinos.coop for more informations.
-
+The ULIS repository and all related materials are licensed under a proprietary license.
+See the EULA or CLUF at the root of the repository, or write to contact@praxinos.coop for more informations.
