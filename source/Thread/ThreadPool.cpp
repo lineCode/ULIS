@@ -33,7 +33,7 @@ FThreadPool::FThreadPool( uint32 iNumWorkers )
 }
 
 void
-FThreadPool::ScheduleJob( const FCommand& iCommand )
+FThreadPool::ScheduleJob( FCommand* iCommand )
 {
     d->ScheduleJob( iCommand );
 }
@@ -48,12 +48,6 @@ void
 FThreadPool::SetNumWorkers( uint32 iNumWorkers )
 {
     d->SetNumWorkers( iNumWorkers );
-}
-
-uint32
-FThreadPool::GetProcessed() const
-{
-    return  d->GetProcessed();
 }
 
 uint32

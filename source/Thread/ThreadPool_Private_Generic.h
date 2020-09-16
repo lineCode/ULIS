@@ -17,6 +17,8 @@
 #include <atomic>
 #include <condition_variable>
 #include <deque>
+#include "Memory/Array.h"
+#include "Memory/Queue.h"
 #include <functional>
 #include <mutex>
 #include <random>
@@ -36,10 +38,9 @@ class ULIS_API FThreadPool::FThreadPool_Private
 public:
     ~FThreadPool_Private();
     FThreadPool_Private( uint32 iNumWorkers = MaxWorkers() );
-    void ScheduleJob( const FCommand& iCommand );
+    void ScheduleJob( FCommand* iCommand );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
-    uint32 GetProcessed() const;
     uint32 GetNumWorkers() const;
     static uint32 MaxWorkers();
 
@@ -47,7 +48,6 @@ private:
     // Private Data
     unsigned int                        busy;
     bool                                stop;
-    std::atomic_uint                    processed;
     std::vector< std::thread >          workers;
     std::deque< std::function<void()> > tasks;
     std::mutex                          queue_mutex;
@@ -64,7 +64,7 @@ FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleJob( const FCommand& iCommand )
+FThreadPool::FThreadPool_Private::ScheduleJob( FCommand* iCommand )
 {
 }
 
@@ -76,12 +76,6 @@ FThreadPool::FThreadPool_Private::WaitForCompletion()
 void
 FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
 {
-}
-
-uint32
-FThreadPool::FThreadPool_Private::GetProcessed() const
-{
-    return  processed;
 }
 
 uint32
