@@ -270,7 +270,7 @@ FBlock::OnCleanup( const FOnCleanup& iOnCleanup )
 }
 
 void
-FBlock::ReloadFromData(
+FBlock::LoadFromData(
       uint8* iData
     , uint16 iWidth
     , uint16 iHeight

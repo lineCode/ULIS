@@ -46,12 +46,12 @@ public:
     {}
 
 private:
-    fpCommandScheduler mScheduleBlendSeparable;
-    fpCommandScheduler mScheduleBlendNonSeparable;
-    fpCommandScheduler mScheduleBlendMisc;
-    fpCommandScheduler mScheduleBlendSeparableSubpixel;
-    fpCommandScheduler mScheduleBlendNonSeparableSubpixel;
-    fpCommandScheduler mScheduleBlendMiscSubpixel;
+    const fpCommandScheduler mScheduleBlendSeparable;
+    const fpCommandScheduler mScheduleBlendNonSeparable;
+    const fpCommandScheduler mScheduleBlendMisc;
+    const fpCommandScheduler mScheduleBlendSeparableSubpixel;
+    const fpCommandScheduler mScheduleBlendNonSeparableSubpixel;
+    const fpCommandScheduler mScheduleBlendMiscSubpixel;
 };
 
 /////////////////////////////////////////////////////
@@ -66,12 +66,28 @@ FRasterContext::FRasterContext(
     , const FDevice& iDevice
     , eFormat iFormat
 )
-    : mContextualDispatchTable( nullptr )
+    : mContextualDispatchTable( new  FContextualDispatchTable( iDevice, iFormat ) )
     , mQueue( iQueue )
     , mDevice( iDevice )
     , mFormat( iFormat )
 {
-    mContextualDispatchTable = new  FContextualDispatchTable( iDevice, iFormat );
+}
+
+/////////////////////////////////////////////////////
+// FRasterContext: Control Flow
+void
+FRasterContext::Flush()
+{
+}
+
+void
+FRasterContext::Finish()
+{
+}
+
+void
+FRasterContext::Fence()
+{
 }
 
 /////////////////////////////////////////////////////
@@ -127,8 +143,8 @@ FRasterContext::Blend(
                 , dst_fit.Size()
                 , dst_fit
             } )
-            , nullptr
             , iPolicy
+            , iEvent
             , sched
         )
     );

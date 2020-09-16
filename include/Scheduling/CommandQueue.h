@@ -40,6 +40,22 @@ public:
     /*! Constructor */
     FCommandQueue( FThreadPool& iPool );
 
+public:
+    /*!
+        Issue all commands and return immediately.
+    */
+    void Flush();
+
+    /*!
+        Issue all commands and wait for completion
+    */
+    void Finish();
+
+    /*!
+        Wait for completion of all already issued commands
+    */
+    void Fence();
+
 private:
     /*!
         Push, insert a new command at the end of the queue.

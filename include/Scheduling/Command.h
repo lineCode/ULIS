@@ -40,9 +40,9 @@ public:
     /*! Constructor */
     FCommand(
           ICommandArgs* iArgs
+        , const FSchedulePolicy& iPolicy
         , FTaskEvent* iEvent
-        , const FSchedulePolicy iPolicy
-        , fpCommandScheduler iCommand
+        , fpCommandScheduler iSched
     );
 
     FCommand() = delete;
@@ -55,7 +55,7 @@ private:
     ICommandArgs*       mArgs;
     FTaskEvent*         mEvent;
     FSchedulePolicy     mPolicy;
-    fpCommandScheduler  mCommand;
+    fpCommandScheduler  mSched;
 };
 
 ULIS_NAMESPACE_END

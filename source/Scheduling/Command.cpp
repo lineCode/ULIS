@@ -24,14 +24,14 @@ FCommand::~FCommand()
 
 FCommand::FCommand(
       ICommandArgs* iArgs
+    , const FSchedulePolicy& iPolicy
     , FTaskEvent* iEvent
-    , const FSchedulePolicy iPolicy
-    , fpCommandScheduler iCommand
+    , fpCommandScheduler iSched
 )
     : mArgs( iArgs )
-    , mEvent( iEvent )
     , mPolicy( iPolicy )
-    , mCommand( iCommand )
+    , mEvent( iEvent )
+    , mSched( iSched )
 {
 }
 

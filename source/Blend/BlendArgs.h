@@ -40,6 +40,7 @@ public:
     } bulk;
 
     virtual ~FBlendArgs() {};
+    FBlendArgs( const FArgs& ) = delete;
     FBlendArgs( FArgs&& iInit ) : bulk( std::forward< FArgs >( iInit ) ) {}
 };
 

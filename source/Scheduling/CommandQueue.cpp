@@ -18,10 +18,31 @@
 ULIS_NAMESPACE_BEGIN
 FCommandQueue::~FCommandQueue()
 {
+    while( !mQueue.IsEmpty() )
+    {
+        FCommand* cmd = mQueue.Front();
+        delete  cmd;
+        mQueue.Pop();
+    }
 }
 
 FCommandQueue::FCommandQueue( FThreadPool& iPool )
     : mPool( iPool )
+{
+}
+
+void
+FCommandQueue::Flush()
+{
+}
+
+void
+FCommandQueue::Finish()
+{
+}
+
+void
+FCommandQueue::Fence()
 {
 }
 

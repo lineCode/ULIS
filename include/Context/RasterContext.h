@@ -53,15 +53,39 @@ private:
     struct FContextualDispatchTable;
 
 public:
-    /*! Destructor */
+    /*!
+        Destructor. Clean up the contextual dispatch table.
+    */
     ~FRasterContext();
 
-    /*! Constructor */
+    /*!
+        Constructor. Builds the contextual dispatch table. Construction has
+        significant overhead, preferably construct a context once at the beginning.
+        A queue can be shared beetween multiple contexts with no issue.
+    */
     FRasterContext(
           FCommandQueue& iQueue
         , const FDevice& iDevice
         , eFormat iFormat
     );
+
+public:
+/////////////////////////////////////////////////////
+// Control Flow
+    /*!
+        Issue all commands and return immediately.
+    */
+    void Flush();
+
+    /*!
+        Issue all commands and wait for completion
+    */
+    void Finish();
+
+    /*!
+        Wait for completion of all already issued commands
+    */
+    void Fence();
 
 public:
 /////////////////////////////////////////////////////
@@ -137,10 +161,10 @@ public:
     );
 
 private:
-    FContextualDispatchTable* mContextualDispatchTable;
+    const FContextualDispatchTable* mContextualDispatchTable;
     FCommandQueue& mQueue;
     const FDevice& mDevice;
-    eFormat mFormat;
+    const eFormat mFormat;
 };
 
 ULIS_NAMESPACE_END

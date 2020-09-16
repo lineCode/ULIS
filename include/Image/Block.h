@@ -494,7 +494,7 @@ public:
 
     \sa FBlock()
     */
-    void ReloadFromData(
+    void LoadFromData(
           uint8* iData
         , uint16 iWidth
         , uint16 iHeight
